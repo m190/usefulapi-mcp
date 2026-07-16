@@ -65,6 +65,9 @@ const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`le
 mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
 copyFileSync(new URL("portal/index.html", ROOT), `${outDir}/index.html`);
+for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
+  copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
+}
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
 console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/)`);
