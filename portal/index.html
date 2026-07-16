@@ -69,40 +69,30 @@
   </footer>
 </div>
 <script>
-  const MANIFEST = {
-    portal: { tagline: "Hosted MCP servers for the tools you already use." },
-    servers: [
-      { slug: "linear", name: "Linear", category: "project-management",
-        description: "Search, read and create Linear issues, projects, teams and cycles.",
-        endpoint: "https://linear.usefulapi.io/mcp",
-        tool_count: 11, free_limit: "100 calls/mo", pro: "$9/mo", status: "live" },
-      { slug: "betterstack", name: "Better Stack", category: "observability",
-        description: "Read monitors, incidents, heartbeats, on-call and status pages; ack/resolve incidents.",
-        endpoint: "https://betterstack.usefulapi.io/mcp",
-        tool_count: 11, free_limit: "100 calls/mo", pro: "$9/mo", status: "live" }
-    ]
-  };
-  document.getElementById('tagline').textContent = MANIFEST.portal.tagline;
-  const grid = document.getElementById('grid');
-  for (const s of MANIFEST.servers) {
-    const live = s.status === "live";
-    const el = document.createElement(live ? 'a' : 'div');
-    el.className = 'card' + (live ? '' : ' soon');
-    if (live) el.href = s.endpoint;
-    const statusChip = live
-      ? '<span class="chip live">live</span>'
-      : '<span class="chip soon">launching soon</span>';
-    el.innerHTML = `
-      <div class="top"><h2>${s.name}</h2>${statusChip}</div>
-      <p>${s.description}</p>
-      <div class="chips">
-        <span class="chip">${s.tool_count} tools</span>
-        <span class="chip">${s.category}</span>
-        <span class="chip">Free ${s.free_limit}</span>
-        <span class="chip">Pro ${s.pro}</span>
-      </div>`;
-    grid.appendChild(el);
-  }
+  // Single source of truth = /manifest.json (same file build.mjs uses for product pages).
+  fetch('/manifest.json').then(function (r) { return r.json(); }).then(function (MANIFEST) {
+    document.getElementById('tagline').textContent = MANIFEST.portal.tagline;
+    const grid = document.getElementById('grid');
+    for (const s of MANIFEST.servers) {
+      const live = s.status === "live";
+      const el = document.createElement('a');
+      el.className = 'card' + (live ? '' : ' soon');
+      el.href = '/' + s.slug;
+      const statusChip = live
+        ? '<span class="chip live">live</span>'
+        : '<span class="chip soon">launching soon</span>';
+      el.innerHTML = `
+        <div class="top"><h2>${s.name}</h2>${statusChip}</div>
+        <p>${s.description}</p>
+        <div class="chips">
+          <span class="chip">${s.tool_count} tools</span>
+          <span class="chip">${s.category}</span>
+          <span class="chip">Free ${s.free_limit}</span>
+          <span class="chip">Pro ${s.pro}</span>
+        </div>`;
+      grid.appendChild(el);
+    }
+  });
 </script>
 </body>
 </html>
