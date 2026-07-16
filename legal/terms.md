@@ -1,0 +1,85 @@
+<!-- ┌──────────────────────────────────────────────────────────────────────────┐
+     │ DRAFT — REVIEW BY COUNSEL BEFORE PUBLISHING. Not legal advice. Fill every  │
+     │ [BRACKETED] placeholder. Served in production at https://usefulapi.io/terms. │
+     └──────────────────────────────────────────────────────────────────────────┘ -->
+
+# Terms of Service
+
+**Effective date:** [EFFECTIVE DATE]
+**Operator:** [LEGAL ENTITY NAME] ("usefulapi", "we", "us"), [ENTITY ADDRESS].
+
+By connecting to or using a usefulapi MCP server or `usefulapi.io` (the "Service"), you agree to
+these Terms. If you use the Service on behalf of an organization, you represent that you are
+authorized to bind it.
+
+## 1. The Service
+
+usefulapi provides hosted MCP servers that let your AI client access third‑party services (e.g.
+Linear) **on your behalf**, using credentials you authorize. usefulapi is an **independent** product
+and is not endorsed by or affiliated with those third‑party providers.
+
+## 2. Your accounts and third‑party services
+
+You must have a valid account with, and comply with the terms of, each third‑party service you
+connect. Your use of that service through usefulapi remains subject to that provider's own terms and
+pricing. You are responsible for activity performed under your authorized credentials, including
+any **write** actions (e.g. creating issues or comments) initiated through the Service.
+
+## 3. Plans, billing, and cancellation
+
+- **Free tier:** up to the stated monthly call limit. **Paid plans** (e.g. Pro, Team) are billed via
+  Stripe on a recurring monthly or annual basis and **renew automatically** until cancelled.
+- You may cancel at any time; access continues through the end of the paid period. Except where
+  required by law, payments are **non‑refundable** and we do not provide partial‑period refunds.
+- Prices and limits may change; we will give reasonable notice of changes affecting your plan.
+- Applicable taxes (e.g. VAT) may be added.
+
+## 4. Acceptable use
+
+You will not: (a) use the Service unlawfully or to infringe others' rights; (b) attempt to access
+other users' data or credentials; (c) probe, overload, or circumvent limits, metering, or security;
+(d) resell the Service without authorization; or (e) use it in violation of a connected provider's
+terms.
+
+## 5. Availability and beta status
+
+Portions of the Service may be offered on a **beta / pre‑release** basis and may change or be
+discontinued. We do not guarantee uninterrupted or error‑free operation.
+
+## 6. Disclaimer of warranties
+
+THE SERVICE IS PROVIDED **"AS IS"** AND **"AS AVAILABLE"**, WITHOUT WARRANTIES OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON‑INFRINGEMENT. We
+are not responsible for the acts, content, or availability of third‑party services.
+
+## 7. Limitation of liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, [LEGAL ENTITY NAME] WILL NOT BE LIABLE FOR ANY INDIRECT,
+INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES, OR FOR LOST PROFITS OR DATA. OUR TOTAL
+LIABILITY FOR ANY CLAIM ARISING FROM THE SERVICE WILL NOT EXCEED THE **GREATER OF** THE AMOUNTS YOU
+PAID US IN THE **[3] MONTHS** BEFORE THE CLAIM **OR [USD 50]**.
+
+## 8. Indemnity
+
+You will indemnify [LEGAL ENTITY NAME] against claims arising from your use of the Service, your
+content or actions, or your violation of these Terms or a third‑party provider's terms.
+
+## 9. Termination
+
+You may stop using the Service and disconnect at any time. We may suspend or terminate access for
+violation of these Terms, non‑payment, or to comply with law. Sections that by their nature should
+survive (e.g. 6–8, 11) survive termination.
+
+## 10. Changes
+
+We may update these Terms; material changes will be posted here with a new effective date. Continued
+use after changes take effect constitutes acceptance.
+
+## 11. Governing law
+
+These Terms are governed by the laws of [JURISDICTION], and disputes are subject to the [courts /
+arbitration venue of JURISDICTION], excluding conflict‑of‑laws rules.
+
+## 12. Contact
+
+[LEGAL ENTITY NAME] — [support@usefulapi.io] — [ENTITY ADDRESS].
