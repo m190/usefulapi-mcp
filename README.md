@@ -10,6 +10,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | Server | Category | Tools | Auth | Docs |
 |--------|----------|------:|------|------|
 | [Linear](linear/) | project-management | 11 | OAuth | [linear/](linear/) |
+| [Better Stack](betterstack/) | observability | 11 | API token | [betterstack/](betterstack/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
