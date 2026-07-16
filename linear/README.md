@@ -1,11 +1,4 @@
-<!-- ┌─────────────────────────────────────────────────────────────────────┐
-     │ DRY RUN — NOT PUBLISHED. Preview of the public docs for Linear MCP.  │
-     │ Links use the production domain (linear.usefulapi.io); that endpoint │
-     │ goes live only after the custom-domain cutover. The server currently │
-     │ runs (test mode) at linear-mcp.usefulapi.workers.dev.                │
-     └─────────────────────────────────────────────────────────────────────┘ -->
-
-# Linear MCP
+# Linear MCP by usefulapi
 
 Manage [Linear](https://linear.app) from Claude, Cursor, or any MCP client — search and
 read issues, browse projects/teams/cycles, and create issues and comments. Hosted, no local

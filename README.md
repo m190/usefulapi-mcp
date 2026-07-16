@@ -1,6 +1,3 @@
-<!-- DRY RUN — NOT PUBLISHED. This is the working copy of the public docs monorepo
-     (would become github.com/m190/usefulapi-mcp). Docs only — no server source. -->
-
 # usefulapi
 
 Hosted [MCP](https://modelcontextprotocol.io) servers for the tools you already use — connect
