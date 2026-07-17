@@ -185,11 +185,69 @@ ${hint}
 <body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
 }
 
+// ---- homepage browse groups (SINGLE SOURCE) — injected into the homepage JS AND used to
+// statically pre-render the tiles so the server list is crawlable without JavaScript. ----
+const GROUP_ORDER = [
+  "Payments & Billing", "Messaging & Communication", "Developer Tools & Infrastructure",
+  "Documents & Delivery", "AI", "Data & Analytics", "Healthcare", "Media"
+];
+const CAT_GROUP = {
+  billing: "Payments & Billing", payments: "Payments & Billing", "payment-operations": "Payments & Billing",
+  fintech: "Payments & Billing", tax: "Payments & Billing", "usage-metering": "Payments & Billing", ecommerce: "Payments & Billing",
+  email: "Messaging & Communication", chat: "Messaging & Communication", notifications: "Messaging & Communication",
+  communications: "Messaging & Communication", calendar: "Messaging & Communication", marketing: "Messaging & Communication",
+  devops: "Developer Tools & Infrastructure", observability: "Developer Tools & Infrastructure", dns: "Developer Tools & Infrastructure",
+  paas: "Developer Tools & Infrastructure", "feature-flags": "Developer Tools & Infrastructure",
+  "project-management": "Developer Tools & Infrastructure", localization: "Developer Tools & Infrastructure",
+  realtime: "Developer Tools & Infrastructure", maps: "Developer Tools & Infrastructure",
+  documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
+  "ai-infra": "AI", "image-generation": "AI", "speech-to-text": "AI", "document-ai": "AI",
+  analytics: "Data & Analytics", "data-enrichment": "Data & Analytics", "financial-data": "Data & Analytics", "fraud-detection": "Data & Analytics",
+  healthcare: "Healthcare", "health-data": "Healthcare",
+  "image-cdn": "Media", "video-hosting": "Media"
+};
+const groupOf = (s) => CAT_GROUP[s.category] || "Other";
+const groupRank = (g) => { const i = GROUP_ORDER.indexOf(g); return i === -1 ? GROUP_ORDER.length : i; };
+const prettyCat = (c) => (c || "").replace(/-/g, " ").replace(/^\w/, (m) => m.toUpperCase());
+// Static tile — mirrors the homepage JS card(); the client re-renders identically on load.
+const homeCard = (s) => {
+  const live = s.status === "live";
+  const statusChip = live ? '<span class="chip live">live</span>' : '<span class="chip soon">launching soon</span>';
+  const ft = freeTier(s), pt = proTier(s);
+  return `<a class="card${live ? "" : " soon"}" href="/${esc(s.slug)}">` +
+    `<div class="top"><h2>${esc(s.name)}</h2>${statusChip}</div>` +
+    `<p>${esc(s.description)}</p>` +
+    `<div class="chips"><span class="chip">${toolCount(s)} tools</span>` +
+    `<span class="chip">${esc(prettyCat(s.category))}</span>` +
+    (ft ? `<span class="chip">Free ${esc(ft.limit)}</span>` : "") +
+    (pt ? `<span class="chip">Pro ${esc(priceText(pt))}</span>` : "") +
+    `</div></a>`;
+};
+// Default (grouped) view, sectioned in GROUP_ORDER with servers A–Z — matches the JS default.
+const homeResults = () => {
+  const buckets = {};
+  for (const s of manifest.servers) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
+  return Object.keys(buckets).sort((a, b) => groupRank(a) - groupRank(b)).map((g) =>
+    `<h2 class="group-head">${esc(g)} <span class="n">${buckets[g].length}</span></h2>` +
+    `<div class="grid">${buckets[g].sort((a, b) => a.name.localeCompare(b.name)).map(homeCard).join("")}</div>`
+  ).join("");
+};
+
 mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
 // Inject manifest.json (source of truth) into the portal, overriding its dev-fallback MANIFEST.
 let indexHtml = readFileSync(new URL("portal/index.html", ROOT), "utf8");
 indexHtml = indexHtml.replace(/const MANIFEST = [\s\S]*?\n {2}\};/, `const MANIFEST = ${JSON.stringify(manifest, null, 2)};`);
+// Make build.mjs authoritative for the browse groups: overwrite the page's inline dev-fallback
+// GROUP_ORDER/CAT_GROUP with the copies above (single source, no drift).
+indexHtml = indexHtml.replace(
+  /const GROUP_ORDER = \[[\s\S]*?const CAT_GROUP = \{[\s\S]*?\n {2}\};/,
+  `const GROUP_ORDER = ${JSON.stringify(GROUP_ORDER)};\n  const CAT_GROUP = ${JSON.stringify(CAT_GROUP)};`
+);
+// Statically pre-render the default grouped view so crawlers / no-JS clients see every product
+// link and description. The homepage JS re-renders the same content on load (progressive enhancement).
+indexHtml = indexHtml.replace('<main id="results"></main>', `<main id="results">${homeResults()}</main>`);
+indexHtml = indexHtml.replace('<p class="count" id="count"></p>', `<p class="count" id="count">${manifest.servers.length} servers</p>`);
 writeFileSync(`${outDir}/index.html`, indexHtml);
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
@@ -201,4 +259,14 @@ for (const s of manifest.servers) {
   mkdirSync(`${outDir}/${s.slug}`, { recursive: true });
   writeFileSync(`${outDir}/${s.slug}/index.html`, productPage(s));
 }
-console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
+
+// ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
+// for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
+const base = manifest.portal.domain.replace(/\/$/, "");
+const urls = [`${base}/`, `${base}/privacy`, `${base}/terms`, ...manifest.servers.map((s) => `${base}/${s.slug}`)];
+writeFileSync(`${outDir}/sitemap.xml`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+  urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
+writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`);
+
+console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
