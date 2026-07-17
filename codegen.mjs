@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 // codegen.mjs — regenerate the COMMITTED artifacts from manifest.json (the single
 // source of truth), so they can never drift from it:
-//   <slug>/server.json          — spec-valid MCP Registry record (io.usefulapi/<slug>)
-//   <slug>/README.md            — the ## Tools and ## Pricing sections
+//   servers/<slug>/server.json  — spec-valid MCP Registry record (io.usefulapi/<slug>)
+//   servers/<slug>/README.md    — the ## Tools and ## Pricing sections
 //   README.md (root)            — the Servers table
 // Run after editing manifest.json, then commit. build.mjs (the site) stays separate.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const ROOT = new URL("./", import.meta.url);
+// Per-product artifacts live under this subdir (keeps the repo root uncluttered).
+// This value is also the registry `repository.subfolder` prefix, so it must match
+// where the folders actually sit in the repo.
+const SUBDIR = "servers/";
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
 const { registryNamespace, repository } = manifest.portal;
 const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json";
@@ -21,7 +25,7 @@ function serverJson(s) {
         name: `${registryNamespace}/${s.slug}`,
         description: s.description,
         version: s.version || "1.0.0",
-        repository: { url: repository.url, source: repository.source, subfolder: s.slug },
+        repository: { url: repository.url, source: repository.source, subfolder: `${SUBDIR}${s.slug}` },
         remotes: [{ type: s.transport || "streamable-http", url: s.endpoint }],
       },
       null,
@@ -67,7 +71,7 @@ function rootServersTable() {
   const head = "| Server | Category | Tools | Auth | Docs |\n|--------|----------|------:|------|------|";
   const rows = manifest.servers.map((s) => {
     const auth = s.auth === "oauth" ? "OAuth" : "API token";
-    return `| [${s.name}](${s.slug}/) | ${s.category} | ${s.tools.length} | ${auth} | [${s.slug}/](${s.slug}/) |`;
+    return `| [${s.name}](${SUBDIR}${s.slug}/) | ${s.category} | ${s.tools.length} | ${auth} | [${SUBDIR}${s.slug}/](${SUBDIR}${s.slug}/) |`;
   });
   return `${head}\n${rows.join("\n")}`;
 }
@@ -75,8 +79,8 @@ function rootServersTable() {
 // ---- write ------------------------------------------------------------------
 let n = 0;
 for (const s of manifest.servers) {
-  writeFileSync(new URL(`${s.slug}/server.json`, ROOT), serverJson(s));
-  const readmePath = new URL(`${s.slug}/README.md`, ROOT);
+  writeFileSync(new URL(`${SUBDIR}${s.slug}/server.json`, ROOT), serverJson(s));
+  const readmePath = new URL(`${SUBDIR}${s.slug}/README.md`, ROOT);
   let md = readFileSync(readmePath, "utf8");
   md = replaceSection(md, "Tools", toolsSection(s));
   md = replaceSection(md, "Pricing", pricingSection(s));

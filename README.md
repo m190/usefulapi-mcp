@@ -9,62 +9,62 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 
 | Server | Category | Tools | Auth | Docs |
 |--------|----------|------:|------|------|
-| [Linear](linear/) | project-management | 11 | OAuth | [linear/](linear/) |
-| [Better Stack](betterstack/) | observability | 11 | API token | [betterstack/](betterstack/) |
-| [Loops](loops/) | email | 12 | API token | [loops/](loops/) |
-| [Mixpanel](mixpanel/) | analytics | 9 | API token | [mixpanel/](mixpanel/) |
-| [Fireworks AI](fireworks/) | ai-infra | 16 | API token | [fireworks/](fireworks/) |
-| [Uploadcare](uploadcare/) | image-cdn | 13 | API token | [uploadcare/](uploadcare/) |
-| [Cronitor](cronitor/) | observability | 8 | API token | [cronitor/](cronitor/) |
-| [MailerLite](mailerlite/) | email | 15 | API token | [mailerlite/](mailerlite/) |
-| [Checkly](checkly/) | observability | 24 | API token | [checkly/](checkly/) |
-| [Mindee](mindee/) | document-ai | 6 | API token | [mindee/](mindee/) |
-| [DocRaptor](docraptor/) | documents | 6 | API token | [docraptor/](docraptor/) |
-| [Mistral](mistral/) | ai-infra | 17 | API token | [mistral/](mistral/) |
-| [Orb](orb/) | billing | 28 | API token | [orb/](orb/) |
-| [Chargebee](chargebee/) | billing | 15 | API token | [chargebee/](chargebee/) |
-| [Lob](lob/) | direct-mail | 20 | API token | [lob/](lob/) |
-| [GoCardless](gocardless/) | payments | 17 | API token | [gocardless/](gocardless/) |
-| [Recurly](recurly/) | billing | 10 | API token | [recurly/](recurly/) |
-| [Braintree](braintree/) | payments | 9 | API token | [braintree/](braintree/) |
-| [Increase](increase/) | fintech | 20 | API token | [increase/](increase/) |
-| [Modern Treasury](modern-treasury/) | payment-operations | 19 | API token | [modern-treasury/](modern-treasury/) |
-| [MagicBell](magicbell/) | notifications | 15 | API token | [magicbell/](magicbell/) |
-| [Crowdin](crowdin/) | localization | 14 | API token | [crowdin/](crowdin/) |
-| [Dropbox Sign](dropbox-sign/) | esignature | 12 | API token | [dropbox-sign/](dropbox-sign/) |
-| [EasyPost](easypost/) | shipping | 13 | API token | [easypost/](easypost/) |
-| [DNSimple](dnsimple/) | dns | 14 | API token | [dnsimple/](dnsimple/) |
-| [Bird](bird/) | communications | 18 | API token | [bird/](bird/) |
-| [Ably](ably/) | realtime | 17 | API token | [ably/](ably/) |
-| [Amberflo](amberflo/) | usage-metering | 16 | API token | [amberflo/](amberflo/) |
-| [Anvil](anvil/) | documents | 12 | API token | [anvil/](anvil/) |
-| [Api2Pdf](api2pdf/) | documents | 18 | API token | [api2pdf/](api2pdf/) |
-| [api.video](apivideo/) | video-hosting | 17 | API token | [apivideo/](apivideo/) |
-| [Autumn](autumn/) | billing | 20 | API token | [autumn/](autumn/) |
-| [Bannerbear](bannerbear/) | image-generation | 17 | API token | [bannerbear/](bannerbear/) |
-| [Cliniko](cliniko/) | healthcare | 19 | API token | [cliniko/](cliniko/) |
-| [Codat](codat/) | financial-data | 30 | API token | [codat/](codat/) |
-| [Cronofy](cronofy/) | calendar | 10 | API token | [cronofy/](cronofy/) |
-| [Customer.io](customerio/) | marketing | 15 | API token | [customerio/](customerio/) |
-| [Healthie](healthie/) | healthcare | 18 | API token | [healthie/](healthie/) |
-| [Hypertune](hypertune/) | feature-flags | 7 | API token | [hypertune/](hypertune/) |
-| [Lago](lago/) | billing | 26 | API token | [lago/](lago/) |
-| [Laravel Forge](laravel-forge/) | devops | 19 | API token | [laravel-forge/](laravel-forge/) |
-| [Lemon Squeezy](lemonsqueezy/) | payments | 20 | API token | [lemonsqueezy/](lemonsqueezy/) |
-| [MapTiler](maptiler/) | maps | 10 | API token | [maptiler/](maptiler/) |
-| [Mercoa](mercoa/) | payments | 19 | API token | [mercoa/](mercoa/) |
-| [Northflank](northflank/) | devops | 19 | API token | [northflank/](northflank/) |
-| [Nylas](nylas/) | email | 17 | API token | [nylas/](nylas/) |
-| [Sendbird](sendbird/) | chat | 16 | API token | [sendbird/](sendbird/) |
-| [Speechmatics](speechmatics/) | speech-to-text | 9 | API token | [speechmatics/](speechmatics/) |
-| [Stream](stream/) | chat | 15 | API token | [stream/](stream/) |
-| [Swell](swell/) | ecommerce | 18 | API token | [swell/](swell/) |
-| [Quaderno](quaderno/) | tax | 25 | API token | [quaderno/](quaderno/) |
-| [MaxMind minFraud](maxmind-minfraud/) | fraud-detection | 6 | API token | [maxmind-minfraud/](maxmind-minfraud/) |
-| [People Data Labs](peopledatalabs/) | data-enrichment | 10 | API token | [peopledatalabs/](peopledatalabs/) |
-| [Scalingo](scalingo/) | paas | 23 | API token | [scalingo/](scalingo/) |
-| [Metriport](metriport/) | healthcare | 14 | API token | [metriport/](metriport/) |
-| [Vital](vital/) | health-data | 23 | API token | [vital/](vital/) |
+| [Linear](servers/linear/) | project-management | 11 | OAuth | [servers/linear/](servers/linear/) |
+| [Better Stack](servers/betterstack/) | observability | 11 | API token | [servers/betterstack/](servers/betterstack/) |
+| [Loops](servers/loops/) | email | 12 | API token | [servers/loops/](servers/loops/) |
+| [Mixpanel](servers/mixpanel/) | analytics | 9 | API token | [servers/mixpanel/](servers/mixpanel/) |
+| [Fireworks AI](servers/fireworks/) | ai-infra | 16 | API token | [servers/fireworks/](servers/fireworks/) |
+| [Uploadcare](servers/uploadcare/) | image-cdn | 13 | API token | [servers/uploadcare/](servers/uploadcare/) |
+| [Cronitor](servers/cronitor/) | observability | 8 | API token | [servers/cronitor/](servers/cronitor/) |
+| [MailerLite](servers/mailerlite/) | email | 15 | API token | [servers/mailerlite/](servers/mailerlite/) |
+| [Checkly](servers/checkly/) | observability | 24 | API token | [servers/checkly/](servers/checkly/) |
+| [Mindee](servers/mindee/) | document-ai | 6 | API token | [servers/mindee/](servers/mindee/) |
+| [DocRaptor](servers/docraptor/) | documents | 6 | API token | [servers/docraptor/](servers/docraptor/) |
+| [Mistral](servers/mistral/) | ai-infra | 17 | API token | [servers/mistral/](servers/mistral/) |
+| [Orb](servers/orb/) | billing | 28 | API token | [servers/orb/](servers/orb/) |
+| [Chargebee](servers/chargebee/) | billing | 15 | API token | [servers/chargebee/](servers/chargebee/) |
+| [Lob](servers/lob/) | direct-mail | 20 | API token | [servers/lob/](servers/lob/) |
+| [GoCardless](servers/gocardless/) | payments | 17 | API token | [servers/gocardless/](servers/gocardless/) |
+| [Recurly](servers/recurly/) | billing | 10 | API token | [servers/recurly/](servers/recurly/) |
+| [Braintree](servers/braintree/) | payments | 9 | API token | [servers/braintree/](servers/braintree/) |
+| [Increase](servers/increase/) | fintech | 20 | API token | [servers/increase/](servers/increase/) |
+| [Modern Treasury](servers/modern-treasury/) | payment-operations | 19 | API token | [servers/modern-treasury/](servers/modern-treasury/) |
+| [MagicBell](servers/magicbell/) | notifications | 15 | API token | [servers/magicbell/](servers/magicbell/) |
+| [Crowdin](servers/crowdin/) | localization | 14 | API token | [servers/crowdin/](servers/crowdin/) |
+| [Dropbox Sign](servers/dropbox-sign/) | esignature | 12 | API token | [servers/dropbox-sign/](servers/dropbox-sign/) |
+| [EasyPost](servers/easypost/) | shipping | 13 | API token | [servers/easypost/](servers/easypost/) |
+| [DNSimple](servers/dnsimple/) | dns | 14 | API token | [servers/dnsimple/](servers/dnsimple/) |
+| [Bird](servers/bird/) | communications | 18 | API token | [servers/bird/](servers/bird/) |
+| [Ably](servers/ably/) | realtime | 17 | API token | [servers/ably/](servers/ably/) |
+| [Amberflo](servers/amberflo/) | usage-metering | 16 | API token | [servers/amberflo/](servers/amberflo/) |
+| [Anvil](servers/anvil/) | documents | 12 | API token | [servers/anvil/](servers/anvil/) |
+| [Api2Pdf](servers/api2pdf/) | documents | 18 | API token | [servers/api2pdf/](servers/api2pdf/) |
+| [api.video](servers/apivideo/) | video-hosting | 17 | API token | [servers/apivideo/](servers/apivideo/) |
+| [Autumn](servers/autumn/) | billing | 20 | API token | [servers/autumn/](servers/autumn/) |
+| [Bannerbear](servers/bannerbear/) | image-generation | 17 | API token | [servers/bannerbear/](servers/bannerbear/) |
+| [Cliniko](servers/cliniko/) | healthcare | 19 | API token | [servers/cliniko/](servers/cliniko/) |
+| [Codat](servers/codat/) | financial-data | 30 | API token | [servers/codat/](servers/codat/) |
+| [Cronofy](servers/cronofy/) | calendar | 10 | API token | [servers/cronofy/](servers/cronofy/) |
+| [Customer.io](servers/customerio/) | marketing | 15 | API token | [servers/customerio/](servers/customerio/) |
+| [Healthie](servers/healthie/) | healthcare | 18 | API token | [servers/healthie/](servers/healthie/) |
+| [Hypertune](servers/hypertune/) | feature-flags | 7 | API token | [servers/hypertune/](servers/hypertune/) |
+| [Lago](servers/lago/) | billing | 26 | API token | [servers/lago/](servers/lago/) |
+| [Laravel Forge](servers/laravel-forge/) | devops | 19 | API token | [servers/laravel-forge/](servers/laravel-forge/) |
+| [Lemon Squeezy](servers/lemonsqueezy/) | payments | 20 | API token | [servers/lemonsqueezy/](servers/lemonsqueezy/) |
+| [MapTiler](servers/maptiler/) | maps | 10 | API token | [servers/maptiler/](servers/maptiler/) |
+| [Mercoa](servers/mercoa/) | payments | 19 | API token | [servers/mercoa/](servers/mercoa/) |
+| [Northflank](servers/northflank/) | devops | 19 | API token | [servers/northflank/](servers/northflank/) |
+| [Nylas](servers/nylas/) | email | 17 | API token | [servers/nylas/](servers/nylas/) |
+| [Sendbird](servers/sendbird/) | chat | 16 | API token | [servers/sendbird/](servers/sendbird/) |
+| [Speechmatics](servers/speechmatics/) | speech-to-text | 9 | API token | [servers/speechmatics/](servers/speechmatics/) |
+| [Stream](servers/stream/) | chat | 15 | API token | [servers/stream/](servers/stream/) |
+| [Swell](servers/swell/) | ecommerce | 18 | API token | [servers/swell/](servers/swell/) |
+| [Quaderno](servers/quaderno/) | tax | 25 | API token | [servers/quaderno/](servers/quaderno/) |
+| [MaxMind minFraud](servers/maxmind-minfraud/) | fraud-detection | 6 | API token | [servers/maxmind-minfraud/](servers/maxmind-minfraud/) |
+| [People Data Labs](servers/peopledatalabs/) | data-enrichment | 10 | API token | [servers/peopledatalabs/](servers/peopledatalabs/) |
+| [Scalingo](servers/scalingo/) | paas | 23 | API token | [servers/scalingo/](servers/scalingo/) |
+| [Metriport](servers/metriport/) | healthcare | 14 | API token | [servers/metriport/](servers/metriport/) |
+| [Vital](servers/vital/) | health-data | 23 | API token | [servers/vital/](servers/vital/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

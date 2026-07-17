@@ -75,7 +75,7 @@ for (const s of manifest.servers) {
 
 // Derived (never stored, so they can't drift): tool count + GitHub docs link.
 const toolCount = (s) => (s.tools ? s.tools.length : 0);
-const docsUrl = (s) => `${manifest.portal.repository.url}/tree/main/${s.slug}`;
+const docsUrl = (s) => `${manifest.portal.repository.url}/tree/main/servers/${s.slug}`;
 // "$9/mo · $90/yr" — a Free/$0 tier just shows "$0".
 const priceText = (p) => {
   if (!p.monthly || p.monthly === "$0") return "$0";
