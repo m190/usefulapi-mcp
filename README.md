@@ -59,6 +59,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Speechmatics](speechmatics/) | speech-to-text | 9 | API token | [speechmatics/](speechmatics/) |
 | [Stream](stream/) | chat | 15 | API token | [stream/](stream/) |
 | [Swell](swell/) | ecommerce | 18 | API token | [swell/](swell/) |
+| [Quaderno](quaderno/) | tax | 25 | API token | [quaderno/](quaderno/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
