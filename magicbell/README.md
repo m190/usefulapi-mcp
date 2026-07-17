@@ -22,23 +22,23 @@ On first connect you'll paste your MagicBell API key (and secret). It's validate
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `magicbell_list_broadcasts` | read | List broadcasts (notification-send batches) with cursor pagination. |
-| `magicbell_get_broadcast` | read | Fetch a single broadcast by id. |
-| `magicbell_list_users` | read | List users (notification recipients) with cursor pagination. |
-| `magicbell_get_user` | read | Fetch a single user by MagicBell id or external id. |
-| `magicbell_list_events` | read | List notification delivery events with cursor pagination. |
-| `magicbell_get_event` | read | Fetch a single delivery event by id. |
-| `magicbell_list_workflows` | read | List notification workflows with cursor pagination. |
-| `magicbell_list_workflow_runs` | read | List workflow runs (execution history) with cursor pagination. |
-| `magicbell_get_workflow_run` | read | Fetch a single workflow run by id. |
-| `magicbell_list_channels` | read | List delivery channels (in-app, email, push, SMS). |
-| `magicbell_list_integrations` | read | List configured provider integrations (Sendgrid, APNs, FCM, etc.). |
-| `magicbell_create_user` | **write** | Create a user (recipient) record. Additive — sends no notification. |
-| `magicbell_update_user` | **write** | Update a user record. Reversible — sends no notification. |
-| `magicbell_usage_status` | meta | Your tier + usage this month |
-| `magicbell_upgrade` | meta | Upgrade to Pro |
+| `magicbell_list_broadcasts` | read | List broadcasts |
+| `magicbell_get_broadcast` | read | Get a broadcast |
+| `magicbell_list_users` | read | List users |
+| `magicbell_get_user` | read | Get a user |
+| `magicbell_list_events` | read | List events |
+| `magicbell_get_event` | read | Get an event |
+| `magicbell_list_workflows` | read | List workflows |
+| `magicbell_list_workflow_runs` | read | List workflow runs |
+| `magicbell_get_workflow_run` | read | Get a workflow run |
+| `magicbell_list_channels` | read | List channels |
+| `magicbell_list_integrations` | read | List integrations |
+| `magicbell_create_user` | **write** | Create a user |
+| `magicbell_update_user` | **write** | Update a user |
+| `magicbell_usage_status` | meta | Usage status (free-tier meter) |
+| `magicbell_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

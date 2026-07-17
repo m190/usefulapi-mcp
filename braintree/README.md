@@ -22,17 +22,17 @@ On first connect you'll paste your Braintree merchant ID + keys. It's validated,
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `braintree_find_transaction` | read | Fetch one transaction by its GraphQL global ID — amount, status, timestamps, order id, and linked customer. |
-| `braintree_search_transactions` | read | Search transactions by created-at date range, status, and/or customer, returning a page of transaction nodes. |
-| `braintree_find_customer` | read | Fetch one customer by GraphQL global Customer ID — id, legacy id, name, company, and created-at. |
-| `braintree_customer_payment_methods` | read | List a customer's vaulted payment methods (credit cards, PayPal accounts) with usage and detail type. |
-| `braintree_list_subscriptions` | read | Trace a customer's recurring / subscription charge activity via their transactions (GraphQL has no native Subscription object). |
-| `braintree_refund_transaction` | **write** | Refund a settled (or settling) transaction — full, or a partial decimal amount — returning money to the customer. |
-| `braintree_void_transaction` | **write** | Void (cancel) a transaction that has not yet settled, such as an authorization or one submitted for settlement. |
-| `braintree_usage_status` | meta | Your tier + usage this month |
-| `braintree_upgrade` | meta | Upgrade to Pro |
+| `braintree_find_transaction` | read | Find a transaction |
+| `braintree_search_transactions` | read | Search transactions |
+| `braintree_find_customer` | read | Find a customer |
+| `braintree_customer_payment_methods` | read | List a customer's payment methods |
+| `braintree_list_subscriptions` | read | List a customer's subscription activity |
+| `braintree_refund_transaction` | **write** | Refund a transaction |
+| `braintree_void_transaction` | **write** | Void a transaction |
+| `braintree_usage_status` | meta | Usage status (free-tier meter) |
+| `braintree_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

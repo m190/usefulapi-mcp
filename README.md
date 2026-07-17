@@ -25,6 +25,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Chargebee](chargebee/) | billing | 15 | API token | [chargebee/](chargebee/) |
 | [Lob](lob/) | direct-mail | 20 | API token | [lob/](lob/) |
 | [GoCardless](gocardless/) | payments | 17 | API token | [gocardless/](gocardless/) |
+| [Recurly](recurly/) | billing | 10 | API token | [recurly/](recurly/) |
+| [Braintree](braintree/) | payments | 9 | API token | [braintree/](braintree/) |
+| [Increase](increase/) | fintech | 20 | API token | [increase/](increase/) |
+| [Modern Treasury](modern-treasury/) | payment-operations | 19 | API token | [modern-treasury/](modern-treasury/) |
+| [MagicBell](magicbell/) | notifications | 15 | API token | [magicbell/](magicbell/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

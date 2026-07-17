@@ -22,27 +22,27 @@ On first connect you'll paste your Modern Treasury org ID + API key. It's valida
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `modern_treasury_ping` | read | Verify connectivity and credentials |
-| `modern_treasury_list_counterparties` | read | List counterparties (contacts) |
-| `modern_treasury_get_counterparty` | read | Get a counterparty by id |
-| `modern_treasury_list_internal_accounts` | read | List your organization's internal bank accounts |
-| `modern_treasury_list_external_accounts` | read | List external (counterparty) bank accounts |
-| `modern_treasury_list_payment_orders` | read | List payment orders (read only) |
-| `modern_treasury_get_payment_order` | read | Get a payment order by id |
+| `modern_treasury_ping` | read | Ping (auth check) |
+| `modern_treasury_list_counterparties` | read | List counterparties |
+| `modern_treasury_get_counterparty` | read | Get counterparty |
+| `modern_treasury_list_internal_accounts` | read | List internal accounts |
+| `modern_treasury_list_external_accounts` | read | List external accounts |
+| `modern_treasury_list_payment_orders` | read | List payment orders |
+| `modern_treasury_get_payment_order` | read | Get payment order |
 | `modern_treasury_list_expected_payments` | read | List expected payments |
-| `modern_treasury_list_transactions` | read | List bank transactions |
-| `modern_treasury_get_transaction` | read | Get a transaction by id |
-| `modern_treasury_list_returns` | read | List payment returns (e.g. ACH returns) |
-| `modern_treasury_list_ledgers` | read | List double-entry ledgers |
+| `modern_treasury_list_transactions` | read | List transactions |
+| `modern_treasury_get_transaction` | read | Get transaction |
+| `modern_treasury_list_returns` | read | List returns |
+| `modern_treasury_list_ledgers` | read | List ledgers |
 | `modern_treasury_list_ledger_accounts` | read | List ledger accounts |
-| `modern_treasury_get_ledger_account` | read | Get a ledger account with balances |
+| `modern_treasury_get_ledger_account` | read | Get ledger account |
 | `modern_treasury_list_ledger_transactions` | read | List ledger transactions |
-| `modern_treasury_list_ledger_entries` | read | List ledger entries (individual debits/credits) |
-| `modern_treasury_create_counterparty` | **write** | Create a contact-only counterparty record (no bank details, moves no money) |
-| `modern-treasury_usage_status` | meta | Your tier + usage this month |
-| `modern-treasury_upgrade` | meta | Upgrade to Pro |
+| `modern_treasury_list_ledger_entries` | read | List ledger entries |
+| `modern_treasury_create_counterparty` | **write** | Create counterparty |
+| `modern_treasury_usage_status` | meta | Usage status (free-tier meter) |
+| `modern_treasury_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

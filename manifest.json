@@ -1822,60 +1822,69 @@
           "plan": "Pro",
           "limit": "Unlimited",
           "monthly": "$9",
-          "yearly": "$90",
-          "scope": "per user"
+          "yearly": "$90"
         }
       ],
       "tools": [
         {
           "name": "recurly_list_accounts",
           "type": "read",
-          "title": "List customer accounts"
+          "title": "List accounts",
+          "description": "List customer accounts on the site. Supports cursor pagination and filtering. Recurly: GET /accounts."
         },
         {
           "name": "recurly_get_account",
           "type": "read",
-          "title": "Get an account by id or code"
+          "title": "Get account",
+          "description": "Fetch one account by its id (no prefix, e.g. e28zov4fw0v2) or by your own code prefixed with `code-` (e.g. code-bob). Recurly: GET /accounts/{account_id}."
         },
         {
           "name": "recurly_list_subscriptions",
           "type": "read",
-          "title": "List subscriptions (site-wide or per account)"
+          "title": "List subscriptions",
+          "description": "List subscriptions across the site, optionally scoped to one account and/or filtered by state. Provide `account_id` to use GET /accounts/{account_id}/subscriptions; otherwise GET /subscriptions."
         },
         {
           "name": "recurly_get_subscription",
           "type": "read",
-          "title": "Get a subscription by id"
+          "title": "Get subscription",
+          "description": "Fetch one subscription by its id (no prefix) or by uuid prefixed with `uuid-`. Recurly: GET /subscriptions/{subscription_id}."
         },
         {
           "name": "recurly_list_invoices",
           "type": "read",
-          "title": "List invoices (site-wide or per account)"
+          "title": "List invoices",
+          "description": "List invoices across the site, or for one account when `account_id` is given (GET /accounts/{account_id}/invoices). Recurly: GET /invoices."
         },
         {
           "name": "recurly_list_plans",
           "type": "read",
-          "title": "List subscription plans"
+          "title": "List plans",
+          "description": "List the site's subscription plans, optionally filtered by state. Recurly: GET /plans."
         },
         {
           "name": "recurly_cancel_subscription",
           "type": "write",
-          "title": "Cancel a subscription (term-end or next bill date)"
+          "title": "Cancel subscription (WRITE — changes billing)",
+          "description": "Cancel a subscription. By default it stays active until the end of the current term (`term_end`); pass timeframe `bill_date` to cancel effective the next bill date. This changes billing state. Recurly: PUT /subscriptions/{subscription_id}/cancel."
         },
         {
           "name": "recurly_pause_subscription",
           "type": "write",
-          "title": "Pause or resume a subscription for N cycles"
+          "title": "Pause subscription (WRITE — changes billing)",
+          "description": "Pause a subscription for a number of upcoming billing cycles. Set `remaining_pause_cycles` to 0 to resume/cancel an existing pause. This changes billing state. Recurly: PUT /subscriptions/{subscription_id}/pause."
         },
         {
           "name": "recurly_usage_status",
           "type": "meta",
-          "title": "Usage status (free-tier meter)"
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
         },
         {
           "name": "recurly_upgrade",
           "type": "meta",
-          "title": "Upgrade to Pro (unlimited)"
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Recurly tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
         }
       ]
     },
@@ -1899,55 +1908,63 @@
           "plan": "Pro",
           "limit": "Unlimited",
           "monthly": "$9",
-          "yearly": "$90",
-          "scope": "per user"
+          "yearly": "$90"
         }
       ],
       "tools": [
         {
           "name": "braintree_find_transaction",
           "type": "read",
-          "title": "Fetch one transaction by its GraphQL global ID — amount, status, timestamps, order id, and linked customer."
+          "title": "Find a transaction",
+          "description": "Fetch one transaction by its GraphQL global ID (the opaque `id` returned by braintree_search_transactions, NOT the short legacy id). Uses the GraphQL `node` query. Returns amount, status, timestamps, order id, and the linked customer."
         },
         {
           "name": "braintree_search_transactions",
           "type": "read",
-          "title": "Search transactions by created-at date range, status, and/or customer, returning a page of transaction nodes."
+          "title": "Search transactions",
+          "description": "Search transactions by created-at date range, status, and/or customer. Builds a TransactionSearchInput (operators: status `in`, createdAt `greaterThanOrEqualTo`/`lessThanOrEqualTo`, customer.id `is`). Returns a page of transaction nodes (id, legacyId, amount, status, createdAt). GraphQL `search { transactions }`."
         },
         {
           "name": "braintree_find_customer",
           "type": "read",
-          "title": "Fetch one customer by GraphQL global Customer ID — id, legacy id, name, company, and created-at."
+          "title": "Find a customer",
+          "description": "Fetch one customer by GraphQL global Customer ID via the `node` query. Returns id, legacyId, name, company, and created-at. To also enumerate stored cards/PayPal accounts use braintree_customer_payment_methods."
         },
         {
           "name": "braintree_customer_payment_methods",
           "type": "read",
-          "title": "List a customer's vaulted payment methods (credit cards, PayPal accounts) with usage and detail type."
+          "title": "List a customer's payment methods",
+          "description": "List the vaulted payment methods (credit cards, PayPal accounts, etc.) for one customer, by GraphQL global Customer ID. Returns each method's id, legacyId, usage, created-at, and detail type. GraphQL `node { ... on Customer { paymentMethods } }`."
         },
         {
           "name": "braintree_list_subscriptions",
           "type": "read",
-          "title": "Trace a customer's recurring / subscription charge activity via their transactions (GraphQL has no native Subscription object)."
+          "title": "List a customer's subscription activity",
+          "description": "List a customer's recurring / subscription payment activity. IMPORTANT: Braintree's GraphQL API does NOT expose native Subscription objects (recurring-billing management is still legacy-API only — see braintree/graphql-api issue #1). This tool therefore returns the customer's transactions (the observable evidence of subscription charges) via a TransactionSearchInput scoped to the customer; inspect each node's status/amount/createdAt to trace recurring charges. For full subscription CRUD you must use Braintree's legacy server SDK / REST API."
         },
         {
           "name": "braintree_refund_transaction",
           "type": "write",
-          "title": "Refund a settled (or settling) transaction — full, or a partial decimal amount — returning money to the customer."
+          "title": "Refund a transaction",
+          "description": "DESTRUCTIVE. Refund a SETTLED (or settling) transaction, returning money to the customer. Use the GraphQL global transaction ID. Omit `amount` for a full refund, or pass a decimal string for a partial refund. GraphQL mutation `refundTransaction`. For transactions not yet settled, use braintree_void_transaction instead."
         },
         {
           "name": "braintree_void_transaction",
           "type": "write",
-          "title": "Void (cancel) a transaction that has not yet settled, such as an authorization or one submitted for settlement."
+          "title": "Void a transaction",
+          "description": "DESTRUCTIVE. Void (cancel) a transaction that has NOT yet settled — e.g. an authorization or one submitted-for-settlement. Use the GraphQL global transaction ID. GraphQL mutation `voidTransaction`. For already-settled transactions use braintree_refund_transaction instead."
         },
         {
           "name": "braintree_usage_status",
           "type": "meta",
-          "title": "Usage status (free-tier meter)"
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
         },
         {
           "name": "braintree_upgrade",
           "type": "meta",
-          "title": "Upgrade to Pro (unlimited)"
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Braintree tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
         }
       ]
     },
@@ -1971,110 +1988,129 @@
           "plan": "Pro",
           "limit": "Unlimited",
           "monthly": "$9",
-          "yearly": "$90",
-          "scope": "per user"
+          "yearly": "$90"
         }
       ],
       "tools": [
         {
           "name": "increase_list_accounts",
           "type": "read",
-          "title": "List bank accounts, filtered by entity and status."
+          "title": "List accounts",
+          "description": "List bank accounts. Increase API: GET /accounts. Filter by entity and status (sent as status.in)."
         },
         {
           "name": "increase_get_account",
           "type": "read",
-          "title": "Retrieve a single bank account by id."
+          "title": "Get account",
+          "description": "Retrieve a single bank account by id. Increase API: GET /accounts/{account_id}."
         },
         {
           "name": "increase_get_account_balance",
           "type": "read",
-          "title": "Get an account's current and available balance, optionally as of a point in time."
+          "title": "Get account balance",
+          "description": "Retrieve an account's current and available balance. Increase API: GET /accounts/{account_id}/balance. Optionally as of a point in time."
         },
         {
           "name": "increase_list_account_numbers",
           "type": "read",
-          "title": "List deposit account/routing number pairs for an account."
+          "title": "List account numbers",
+          "description": "List account numbers (deposit routing/account number pairs). Increase API: GET /account_numbers. Filter by account and status (sent as status.in)."
         },
         {
           "name": "increase_list_transactions",
           "type": "read",
-          "title": "List settled transactions, filtered by account, category and date range."
+          "title": "List transactions",
+          "description": "List settled transactions. Increase API: GET /transactions. Filter by account, category (sent as category.in), and created date range (created_at.after / created_at.before)."
         },
         {
           "name": "increase_get_transaction",
           "type": "read",
-          "title": "Retrieve a single settled transaction by id."
+          "title": "Get transaction",
+          "description": "Retrieve a single transaction by id. Increase API: GET /transactions/{transaction_id}."
         },
         {
           "name": "increase_list_pending_transactions",
           "type": "read",
-          "title": "List pending (not-yet-settled) transactions for an account."
+          "title": "List pending transactions",
+          "description": "List pending (not-yet-settled) transactions. Increase API: GET /pending_transactions. Filter by account and status (sent as status.in)."
         },
         {
           "name": "increase_list_declined_transactions",
           "type": "read",
-          "title": "List declined transactions for an account."
+          "title": "List declined transactions",
+          "description": "List declined transactions. Increase API: GET /declined_transactions. Filter by account."
         },
         {
           "name": "increase_list_ach_transfers",
           "type": "read",
-          "title": "List ACH transfers (read-only; no transfers are created)."
+          "title": "List ACH transfers",
+          "description": "List ACH transfers (read-only observability; this server does NOT create transfers). Increase API: GET /ach_transfers. Filter by account and status (sent as status.in)."
         },
         {
           "name": "increase_get_ach_transfer",
           "type": "read",
-          "title": "Retrieve a single ACH transfer by id."
+          "title": "Get ACH transfer",
+          "description": "Retrieve a single ACH transfer by id. Increase API: GET /ach_transfers/{ach_transfer_id}."
         },
         {
           "name": "increase_list_wire_transfers",
           "type": "read",
-          "title": "List wire transfers (read-only; no transfers are created)."
+          "title": "List wire transfers",
+          "description": "List wire transfers (read-only observability; this server does NOT create transfers). Increase API: GET /wire_transfers. Filter by account."
         },
         {
           "name": "increase_list_check_transfers",
           "type": "read",
-          "title": "List check transfers (read-only; no transfers are created)."
+          "title": "List check transfers",
+          "description": "List check transfers (read-only observability; this server does NOT create transfers). Increase API: GET /check_transfers. Filter by account."
         },
         {
           "name": "increase_list_real_time_payments_transfers",
           "type": "read",
-          "title": "List Real-Time Payments (RTP) transfers (read-only; no transfers are created)."
+          "title": "List Real-Time Payments transfers",
+          "description": "List Real-Time Payments (RTP) transfers (read-only observability; this server does NOT create transfers). Increase API: GET /real_time_payments_transfers. Filter by account."
         },
         {
           "name": "increase_list_cards",
           "type": "read",
-          "title": "List cards for an account (read-only; no card actions are exposed)."
+          "title": "List cards",
+          "description": "List cards. Increase API: GET /cards. Filter by account and status (sent as status.in). Read-only; no card actions are exposed."
         },
         {
           "name": "increase_list_entities",
           "type": "read",
-          "title": "List entities — the people/businesses (KYC records) that own accounts."
+          "title": "List entities",
+          "description": "List entities (the people/businesses — KYC records — that own accounts). Increase API: GET /entities. Filter by status (sent as status.in)."
         },
         {
           "name": "increase_list_external_accounts",
           "type": "read",
-          "title": "List external (counterparty) bank accounts registered in Increase."
+          "title": "List external accounts",
+          "description": "List external (counterparty) bank accounts registered in Increase. Increase API: GET /external_accounts. Filter by status (sent as status.in)."
         },
         {
           "name": "increase_lookup_routing_number",
           "type": "read",
-          "title": "Look up a 9-digit ABA routing number to see supported ACH/RTP/wire services."
+          "title": "Look up routing number",
+          "description": "Look up a 9-digit ABA routing number to see which real-time services (ACH, Real-Time Payments, wire) that bank supports. Increase API: GET /routing_numbers."
         },
         {
           "name": "increase_create_external_account",
           "type": "write",
-          "title": "Register an external (counterparty) bank account for future transfers — creates a record only, moves no money."
+          "title": "Create external account",
+          "description": "Registers an external (counterparty) bank account in Increase for future transfers. This creates a record only — it MOVES NO MONEY. Increase API: POST /external_accounts."
         },
         {
           "name": "increase_usage_status",
           "type": "meta",
-          "title": "Usage status (free-tier meter)"
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
         },
         {
           "name": "increase_upgrade",
           "type": "meta",
-          "title": "Upgrade to Pro (unlimited)"
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Increase tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
         }
       ]
     },
@@ -2098,105 +2134,123 @@
           "plan": "Pro",
           "limit": "Unlimited",
           "monthly": "$9",
-          "yearly": "$90",
-          "scope": "per user"
+          "yearly": "$90"
         }
       ],
       "tools": [
         {
           "name": "modern_treasury_ping",
           "type": "read",
-          "title": "Verify connectivity and credentials"
+          "title": "Ping (auth check)",
+          "description": "Verify connectivity and credentials. API: GET /ping."
         },
         {
           "name": "modern_treasury_list_counterparties",
           "type": "read",
-          "title": "List counterparties (contacts)"
+          "title": "List counterparties",
+          "description": "List counterparties (contacts). API: GET /counterparties."
         },
         {
           "name": "modern_treasury_get_counterparty",
           "type": "read",
-          "title": "Get a counterparty by id"
+          "title": "Get counterparty",
+          "description": "Get a single counterparty by id. API: GET /counterparties/{id}."
         },
         {
           "name": "modern_treasury_list_internal_accounts",
           "type": "read",
-          "title": "List your organization's internal bank accounts"
+          "title": "List internal accounts",
+          "description": "List your organization's internal bank accounts. API: GET /internal_accounts."
         },
         {
           "name": "modern_treasury_list_external_accounts",
           "type": "read",
-          "title": "List external (counterparty) bank accounts"
+          "title": "List external accounts",
+          "description": "List external (counterparty) bank accounts. API: GET /external_accounts."
         },
         {
           "name": "modern_treasury_list_payment_orders",
           "type": "read",
-          "title": "List payment orders (read only)"
+          "title": "List payment orders",
+          "description": "List payment orders (READ ONLY — does not create or approve payments). API: GET /payment_orders."
         },
         {
           "name": "modern_treasury_get_payment_order",
           "type": "read",
-          "title": "Get a payment order by id"
+          "title": "Get payment order",
+          "description": "Get a single payment order by id (READ ONLY). API: GET /payment_orders/{id}."
         },
         {
           "name": "modern_treasury_list_expected_payments",
           "type": "read",
-          "title": "List expected payments"
+          "title": "List expected payments",
+          "description": "List expected payments (READ ONLY). API: GET /expected_payments."
         },
         {
           "name": "modern_treasury_list_transactions",
           "type": "read",
-          "title": "List bank transactions"
+          "title": "List transactions",
+          "description": "List bank transactions. API: GET /transactions."
         },
         {
           "name": "modern_treasury_get_transaction",
           "type": "read",
-          "title": "Get a transaction by id"
+          "title": "Get transaction",
+          "description": "Get a single transaction by id. API: GET /transactions/{id}."
         },
         {
           "name": "modern_treasury_list_returns",
           "type": "read",
-          "title": "List payment returns (e.g. ACH returns)"
+          "title": "List returns",
+          "description": "List payment returns (e.g. ACH returns). API: GET /returns."
         },
         {
           "name": "modern_treasury_list_ledgers",
           "type": "read",
-          "title": "List double-entry ledgers"
+          "title": "List ledgers",
+          "description": "List double-entry ledgers. API: GET /ledgers."
         },
         {
           "name": "modern_treasury_list_ledger_accounts",
           "type": "read",
-          "title": "List ledger accounts"
+          "title": "List ledger accounts",
+          "description": "List ledger accounts. API: GET /ledger_accounts."
         },
         {
           "name": "modern_treasury_get_ledger_account",
           "type": "read",
-          "title": "Get a ledger account with balances"
+          "title": "Get ledger account",
+          "description": "Get a single ledger account by id, including balances. API: GET /ledger_accounts/{id}."
         },
         {
           "name": "modern_treasury_list_ledger_transactions",
           "type": "read",
-          "title": "List ledger transactions"
+          "title": "List ledger transactions",
+          "description": "List ledger transactions (READ ONLY — does not post value). API: GET /ledger_transactions."
         },
         {
           "name": "modern_treasury_list_ledger_entries",
           "type": "read",
-          "title": "List ledger entries (individual debits/credits)"
+          "title": "List ledger entries",
+          "description": "List ledger entries (individual debits/credits). API: GET /ledger_entries."
         },
         {
           "name": "modern_treasury_create_counterparty",
           "type": "write",
-          "title": "Create a contact-only counterparty record (no bank details, moves no money)"
+          "title": "Create counterparty",
+          "description": "Creates a counterparty (contact) record in Modern Treasury. Creates a record only — no bank details, MOVES NO MONEY. API: POST /counterparties."
         },
         {
           "name": "modern_treasury_usage_status",
           "type": "meta",
-          "title": "Usage status (free-tier meter)"
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
         },
         {
           "name": "modern_treasury_upgrade",
           "type": "meta",
-          "title": "Upgrade to Pro (unlimited)"
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Modern Treasury tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
         }
       ]
     },
@@ -2220,85 +2274,99 @@
           "plan": "Pro",
           "limit": "Unlimited",
           "monthly": "$9",
-          "yearly": "$90",
-          "scope": "per user"
+          "yearly": "$90"
         }
       ],
       "tools": [
         {
           "name": "magicbell_list_broadcasts",
           "type": "read",
-          "title": "List broadcasts (notification-send batches) with cursor pagination."
+          "title": "List broadcasts",
+          "description": "List broadcasts (notification-send batches) with cursor pagination. Read-only observability. Project API: GET /broadcasts."
         },
         {
           "name": "magicbell_get_broadcast",
           "type": "read",
-          "title": "Fetch a single broadcast by id."
+          "title": "Get a broadcast",
+          "description": "Fetch a single broadcast by id. Project API: GET /broadcasts/{broadcast_id}."
         },
         {
           "name": "magicbell_list_users",
           "type": "read",
-          "title": "List users (notification recipients) with cursor pagination."
+          "title": "List users",
+          "description": "List users (notification recipients) with cursor pagination. Project API: GET /users."
         },
         {
           "name": "magicbell_get_user",
           "type": "read",
-          "title": "Fetch a single user by MagicBell id or external id."
+          "title": "Get a user",
+          "description": "Fetch a single user by MagicBell user id or external id. Project API: GET /users/{user_id}."
         },
         {
           "name": "magicbell_list_events",
           "type": "read",
-          "title": "List notification delivery events with cursor pagination."
+          "title": "List events",
+          "description": "List notification delivery events with cursor pagination. Read-only observability. Project API: GET /events."
         },
         {
           "name": "magicbell_get_event",
           "type": "read",
-          "title": "Fetch a single delivery event by id."
+          "title": "Get an event",
+          "description": "Fetch a single delivery event by id. Project API: GET /events/{event_id}."
         },
         {
           "name": "magicbell_list_workflows",
           "type": "read",
-          "title": "List notification workflows with cursor pagination."
+          "title": "List workflows",
+          "description": "List notification workflows with cursor pagination. Project API: GET /workflows."
         },
         {
           "name": "magicbell_list_workflow_runs",
           "type": "read",
-          "title": "List workflow runs (execution history) with cursor pagination."
+          "title": "List workflow runs",
+          "description": "List workflow runs (execution history) with cursor pagination. Project API: GET /workflows/runs."
         },
         {
           "name": "magicbell_get_workflow_run",
           "type": "read",
-          "title": "Fetch a single workflow run by id."
+          "title": "Get a workflow run",
+          "description": "Fetch a single workflow run by id. Project API: GET /workflows/runs/{run_id}."
         },
         {
           "name": "magicbell_list_channels",
           "type": "read",
-          "title": "List delivery channels (in-app, email, push, SMS)."
+          "title": "List channels",
+          "description": "List delivery channels (in-app, email, push, SMS, etc.) with cursor pagination. Project API: GET /channels."
         },
         {
           "name": "magicbell_list_integrations",
           "type": "read",
-          "title": "List configured provider integrations (Sendgrid, APNs, FCM, etc.)."
+          "title": "List integrations",
+          "description": "List configured provider integrations (e.g. Sendgrid, APNs, FCM). Project API: GET /integrations."
         },
         {
           "name": "magicbell_create_user",
           "type": "write",
-          "title": "Create a user (recipient) record. Additive — sends no notification."
+          "title": "Create a user",
+          "description": "Creates a user (notification recipient) record in MagicBell. Additive — sends no notification. Provide at least one identifier (external_id or email). Project API: POST /users."
         },
         {
           "name": "magicbell_update_user",
           "type": "write",
-          "title": "Update a user record. Reversible — sends no notification."
+          "title": "Update a user",
+          "description": "Updates a user record (reversible; sends no notification). Project API: PUT /users/{user_id}."
         },
         {
           "name": "magicbell_usage_status",
           "type": "meta",
-          "title": "Usage status (free-tier meter)"
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
         },
         {
           "name": "magicbell_upgrade",
           "type": "meta",
-          "title": "Upgrade to Pro (unlimited)"
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED MagicBell tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
         }
       ]
     }

@@ -22,18 +22,18 @@ On first connect you'll paste your Recurly API key. It's validated, stored per-u
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `recurly_list_accounts` | read | List customer accounts |
-| `recurly_get_account` | read | Get an account by id or code |
-| `recurly_list_subscriptions` | read | List subscriptions (site-wide or per account) |
-| `recurly_get_subscription` | read | Get a subscription by id |
-| `recurly_list_invoices` | read | List invoices (site-wide or per account) |
-| `recurly_list_plans` | read | List subscription plans |
-| `recurly_cancel_subscription` | **write** | Cancel a subscription (term-end or next bill date) |
-| `recurly_pause_subscription` | **write** | Pause or resume a subscription for N cycles |
-| `recurly_usage_status` | meta | Your tier + usage this month |
-| `recurly_upgrade` | meta | Upgrade to Pro |
+| `recurly_list_accounts` | read | List accounts |
+| `recurly_get_account` | read | Get account |
+| `recurly_list_subscriptions` | read | List subscriptions |
+| `recurly_get_subscription` | read | Get subscription |
+| `recurly_list_invoices` | read | List invoices |
+| `recurly_list_plans` | read | List plans |
+| `recurly_cancel_subscription` | **write** | Cancel subscription (WRITE — changes billing) |
+| `recurly_pause_subscription` | **write** | Pause subscription (WRITE — changes billing) |
+| `recurly_usage_status` | meta | Usage status (free-tier meter) |
+| `recurly_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 
