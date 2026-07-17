@@ -55,6 +55,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Mercoa](mercoa/) | payments | 19 | API token | [mercoa/](mercoa/) |
 | [Northflank](northflank/) | devops | 19 | API token | [northflank/](northflank/) |
 | [Nylas](nylas/) | email | 17 | API token | [nylas/](nylas/) |
+| [Sendbird](sendbird/) | chat | 16 | API token | [sendbird/](sendbird/) |
+| [Speechmatics](speechmatics/) | speech-to-text | 9 | API token | [speechmatics/](speechmatics/) |
+| [Stream](stream/) | chat | 15 | API token | [stream/](stream/) |
+| [Swell](swell/) | ecommerce | 18 | API token | [swell/](swell/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
