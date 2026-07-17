@@ -40,6 +40,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Anvil](anvil/) | documents | 12 | API token | [anvil/](anvil/) |
 | [Api2Pdf](api2pdf/) | documents | 18 | API token | [api2pdf/](api2pdf/) |
 | [api.video](apivideo/) | video-hosting | 17 | API token | [apivideo/](apivideo/) |
+| [Autumn](autumn/) | billing | 20 | API token | [autumn/](autumn/) |
+| [Bannerbear](bannerbear/) | image-generation | 17 | API token | [bannerbear/](bannerbear/) |
+| [Cliniko](cliniko/) | healthcare | 19 | API token | [cliniko/](cliniko/) |
+| [Codat](codat/) | financial-data | 30 | API token | [codat/](codat/) |
+| [Cronofy](cronofy/) | calendar | 10 | API token | [cronofy/](cronofy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
