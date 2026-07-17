@@ -60,6 +60,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Stream](stream/) | chat | 15 | API token | [stream/](stream/) |
 | [Swell](swell/) | ecommerce | 18 | API token | [swell/](swell/) |
 | [Quaderno](quaderno/) | tax | 25 | API token | [quaderno/](quaderno/) |
+| [MaxMind minFraud](maxmind-minfraud/) | fraud-detection | 6 | API token | [maxmind-minfraud/](maxmind-minfraud/) |
+| [People Data Labs](peopledatalabs/) | data-enrichment | 10 | API token | [peopledatalabs/](peopledatalabs/) |
+| [Scalingo](scalingo/) | paas | 23 | API token | [scalingo/](scalingo/) |
+| [Metriport](metriport/) | healthcare | 14 | API token | [metriport/](metriport/) |
+| [Vital](vital/) | health-data | 23 | API token | [vital/](vital/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
