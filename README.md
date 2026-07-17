@@ -30,6 +30,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Increase](increase/) | fintech | 20 | API token | [increase/](increase/) |
 | [Modern Treasury](modern-treasury/) | payment-operations | 19 | API token | [modern-treasury/](modern-treasury/) |
 | [MagicBell](magicbell/) | notifications | 15 | API token | [magicbell/](magicbell/) |
+| [Crowdin](crowdin/) | localization | 14 | API token | [crowdin/](crowdin/) |
+| [Dropbox Sign](dropbox-sign/) | esignature | 12 | API token | [dropbox-sign/](dropbox-sign/) |
+| [EasyPost](easypost/) | shipping | 13 | API token | [easypost/](easypost/) |
+| [DNSimple](dnsimple/) | dns | 14 | API token | [dnsimple/](dnsimple/) |
+| [Bird](bird/) | communications | 18 | API token | [bird/](bird/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
