@@ -73,7 +73,7 @@ and a tile on the [portal](https://usefulapi.io)._
 
 - `README.md` — what the server does, tools, pricing, the "Add to Claude" snippet
 - `server.json` — the [official MCP Registry](https://registry.modelcontextprotocol.io) record
-  (namespace `io.github.m190/*`), pointing at the hosted endpoint
+  (namespace `io.usefulapi/*`), pointing at the hosted endpoint
 
 ## License
 
