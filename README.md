@@ -45,6 +45,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Cliniko](cliniko/) | healthcare | 19 | API token | [cliniko/](cliniko/) |
 | [Codat](codat/) | financial-data | 30 | API token | [codat/](codat/) |
 | [Cronofy](cronofy/) | calendar | 10 | API token | [cronofy/](cronofy/) |
+| [Customer.io](customerio/) | marketing | 15 | API token | [customerio/](customerio/) |
+| [Healthie](healthie/) | healthcare | 18 | API token | [healthie/](healthie/) |
+| [Hypertune](hypertune/) | feature-flags | 7 | API token | [hypertune/](hypertune/) |
+| [Lago](lago/) | billing | 26 | API token | [lago/](lago/) |
+| [Laravel Forge](laravel-forge/) | devops | 19 | API token | [laravel-forge/](laravel-forge/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
