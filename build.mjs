@@ -64,6 +64,25 @@ const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`le
 
 // ---- per-product pages (generated from manifest.json — the single source of truth) ----
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
+
+// Guardrail: the MCP Registry caps server.json `description` at 100 chars. Fail the
+// build rather than ship a record the registry will reject.
+for (const s of manifest.servers) {
+  if ((s.description || "").length > 100) {
+    throw new Error(`description for "${s.slug}" is ${s.description.length} chars (max 100): ${s.description}`);
+  }
+}
+
+// Derived (never stored, so they can't drift): tool count + GitHub docs link.
+const toolCount = (s) => (s.tools ? s.tools.length : 0);
+const docsUrl = (s) => `${manifest.portal.repository.url}/tree/main/${s.slug}`;
+// "$9/mo · $90/yr" — a Free/$0 tier just shows "$0".
+const priceText = (p) => {
+  if (!p.monthly || p.monthly === "$0") return "$0";
+  return [p.monthly && `${p.monthly}/mo`, p.yearly && `${p.yearly}/yr`].filter(Boolean).join(" · ");
+};
+const proTier = (s) => (s.pricing || []).find((p) => /pro/i.test(p.plan));
+const freeTier = (s) => (s.pricing || []).find((p) => /free/i.test(p.plan));
 const MARK = `<svg class="mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient></defs><rect width="512" height="512" rx="114" fill="url(#tl)"/><g fill="#fff"><circle cx="169" cy="256" r="61"/><circle cx="343" cy="256" r="61"/><rect x="169" y="223" width="174" height="66" rx="33"/></g></svg>`;
 const PRODUCT_CSS = `
 :root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--card:#fff;--border:#e6e6e3;--accent:#4f46e5;--chip:#f0f0ee}
@@ -92,6 +111,18 @@ pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px 
 .chip.live{color:#12873f}@media (prefers-color-scheme:dark){.chip.live{color:#5fd68a}}
 .hint{color:var(--muted);font-size:14px;margin:24px 0 0;max-width:560px}
 code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px}
+h2.sec{font-size:22px;letter-spacing:-.01em;margin:44px 0 14px}
+h2.sec .n{color:var(--muted);font-weight:400;font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+table th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:0 12px 8px 0;border-bottom:1px solid var(--border)}
+table td{padding:10px 12px 10px 0;border-bottom:1px solid var(--border);vertical-align:top}
+table tr:last-child td{border-bottom:0}
+.tools td:first-child{white-space:nowrap}.tools code{font-size:12.5px}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em;background:var(--chip);color:var(--muted)}
+.tag.write{color:#b4530a;background:#fbeae0}.tag.read{color:#12873f;background:#e7f5ec}.tag.meta{color:var(--accent);background:var(--chip)}
+@media (prefers-color-scheme:dark){.tag.write{color:#f0a978;background:#2a1a10}.tag.read{color:#5fd68a;background:#12241a}}
+.pricing td:first-child{font-weight:600}.pricing .scope{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+.tname{font-weight:600;font-size:13px}.tdesc{color:var(--muted);font-size:13px;margin-top:2px}
 footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
@@ -115,12 +146,34 @@ function productPage(s) {
   }
 }</pre><button class="copy" type="button">Copy</button></div></div>
 </div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
-  const chips = `<div class="chips">${live ? chip("live", "live") : chip("launching soon")}${s.tool_count ? chip(`${s.tool_count} tools`) : ""}${s.free_limit ? chip(`Free ${esc(s.free_limit)}`) : ""}${s.pro ? chip(`Pro ${esc(s.pro)}`) : ""}</div>`;
+  const ft = freeTier(s), pt = proTier(s);
+  const chips = `<div class="chips">${live ? chip("live", "live") : chip("launching soon")}${chip(`${toolCount(s)} tools`)}${ft ? chip(`Free ${esc(ft.limit)}`) : ""}${pt ? chip(`Pro ${esc(priceText(pt))}`) : ""}</div>`;
+
+  const tagOf = (t) => `<span class="tag ${t.type}">${t.type}</span>`;
+  const toolRow = (t) =>
+    `<tr><td><code>${esc(t.name)}</code></td><td>${tagOf(t)}</td><td><div class="tname">${esc(t.title)}</div>` +
+    `${t.description && t.description !== t.title ? `<div class="tdesc">${esc(t.description)}</div>` : ""}</td></tr>`;
+  const toolsSection = (s.tools || []).length
+    ? `<h2 class="sec">Tools <span class="n">${s.tools.length}</span></h2>
+<table class="tools"><thead><tr><th>Tool</th><th>Type</th><th>What it does</th></tr></thead>
+<tbody>${s.tools.map(toolRow).join("")}</tbody></table>`
+    : "";
+  const priceRow = (p) =>
+    `<tr><td>${esc(p.plan)}${p.scope ? `<span class="scope">${esc(p.scope)}</span>` : ""}</td>` +
+    `<td>${esc(priceText(p))}</td><td>${esc(p.limit)}</td></tr>`;
+  const pricingSection = (s.pricing || []).length
+    ? `<h2 class="sec">Pricing</h2>
+<table class="pricing"><thead><tr><th>Plan</th><th>Price</th><th>Limit</th></tr></thead>
+<tbody>${s.pricing.map(priceRow).join("")}</tbody></table>`
+    : "";
+
   const hint = live ? `<p class="hint">This is a Model Context Protocol endpoint — meant to be connected from an AI client, not opened in a browser. An <code>invalid_token</code> response at the URL is the auth gate working as designed; clients authenticate automatically.</p>` : "";
   const body = `<div class="brand">${MARK}<h1>usefulapi</h1></div>
 <p class="sub"><strong>${esc(s.name)} MCP server.</strong> ${esc(s.description)}</p>
 ${cards}
 ${chips}
+${live ? toolsSection : ""}
+${pricingSection}
 ${hint}
 <footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">

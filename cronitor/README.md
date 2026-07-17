@@ -22,16 +22,16 @@ On first connect you'll paste your Cronitor API key. It's validated, stored per-
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `cronitor_list_monitors` | read | List monitors and their passing/failing status |
-| `cronitor_get_monitor` | read | Get one monitor's detail, events and health |
-| `cronitor_create_monitor` | **write** | Create a job, check, heartbeat or site monitor |
-| `cronitor_update_monitor` | **write** | Update a monitor — reschedule, pause or resume |
-| `cronitor_delete_monitor` | **write** | Delete a monitor |
-| `cronitor_ping_monitor` | **write** | Send a telemetry event (run/complete/fail/ok) |
-| `cronitor_usage_status` | meta | Your tier + usage this month |
-| `cronitor_upgrade` | meta | Upgrade to Pro |
+| `cronitor_list_monitors` | read | List monitors |
+| `cronitor_get_monitor` | read | Get monitor |
+| `cronitor_create_monitor` | **write** | Create monitor |
+| `cronitor_update_monitor` | **write** | Update monitor |
+| `cronitor_delete_monitor` | **write** | Delete monitor |
+| `cronitor_ping_monitor` | **write** | Ping monitor (telemetry) |
+| `cronitor_usage_status` | meta | Usage status (free-tier meter) |
+| `cronitor_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

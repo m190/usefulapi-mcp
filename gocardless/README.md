@@ -22,25 +22,25 @@ On first connect you'll paste your GoCardless access token. It's validated, stor
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `gocardless_list_customers` | read | List customers (payers) |
-| `gocardless_get_customer` | read | Get a customer by id |
-| `gocardless_list_customer_bank_accounts` | read | List customer bank accounts (masked) |
-| `gocardless_list_mandates` | read | List mandates (debit authorizations) |
-| `gocardless_get_mandate` | read | Get a mandate by id |
+| `gocardless_list_customers` | read | List customers |
+| `gocardless_get_customer` | read | Get customer |
+| `gocardless_list_customer_bank_accounts` | read | List customer bank accounts |
+| `gocardless_list_mandates` | read | List mandates |
+| `gocardless_get_mandate` | read | Get mandate |
 | `gocardless_list_payments` | read | List payments |
-| `gocardless_get_payment` | read | Get a payment by id |
+| `gocardless_get_payment` | read | Get payment |
 | `gocardless_list_subscriptions` | read | List subscriptions |
-| `gocardless_get_subscription` | read | Get a subscription by id |
-| `gocardless_list_payouts` | read | List payouts to your bank |
-| `gocardless_get_payout` | read | Get a payout by id |
+| `gocardless_get_subscription` | read | Get subscription |
+| `gocardless_list_payouts` | read | List payouts |
+| `gocardless_get_payout` | read | Get payout |
 | `gocardless_list_refunds` | read | List refunds |
-| `gocardless_list_events` | read | List events (audit / webhook log) |
-| `gocardless_list_creditors` | read | List creditors (merchant accounts) |
-| `gocardless_create_customer` | **write** | Create a contact-only customer (moves no money) |
-| `gocardless_usage_status` | meta | Your tier + usage this month |
-| `gocardless_upgrade` | meta | Upgrade to Pro |
+| `gocardless_list_events` | read | List events |
+| `gocardless_list_creditors` | read | List creditors |
+| `gocardless_create_customer` | **write** | Create customer |
+| `gocardless_usage_status` | meta | Usage status (free-tier meter) |
+| `gocardless_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

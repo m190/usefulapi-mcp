@@ -2,7 +2,12 @@
   "portal": {
     "name": "usefulapi",
     "tagline": "Hosted MCP servers for the tools you already use.",
-    "domain": "https://usefulapi.io"
+    "domain": "https://usefulapi.io",
+    "registryNamespace": "io.usefulapi",
+    "repository": {
+      "url": "https://github.com/m190/usefulapi-mcp",
+      "source": "github"
+    }
   },
   "servers": [
     {
@@ -11,12 +16,99 @@
       "category": "project-management",
       "description": "Search, read and create Linear issues, projects, teams and cycles.",
       "endpoint": "https://linear.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/linear",
+      "transport": "streamable-http",
       "auth": "oauth",
-      "tool_count": 11,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Team",
+          "limit": "Unlimited for all seats",
+          "monthly": "$99",
+          "yearly": "$990",
+          "scope": "per workspace"
+        }
+      ],
+      "tools": [
+        {
+          "name": "linear_search_issues",
+          "type": "read",
+          "title": "Search / filter issues",
+          "description": "Find issues, optionally filtered by a text query (matches title), team key, workflow-state name, or assignee email. Read-only. GraphQL: query issues(filter, first)."
+        },
+        {
+          "name": "linear_get_issue",
+          "type": "read",
+          "title": "Get one issue",
+          "description": "Fetch a single issue by its UUID or human identifier (e.g. \\"
+        },
+        {
+          "name": "linear_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams in the workspace (id, key, name). Use a team's id for linear_create_issue or its key for linear_search_issues. Read-only. GraphQL: query teams."
+        },
+        {
+          "name": "linear_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects in the workspace (id, name, state, progress, target date). Read-only. GraphQL: query projects."
+        },
+        {
+          "name": "linear_my_issues",
+          "type": "read",
+          "title": "My assigned issues",
+          "description": "List issues assigned to the current user (the API key's owner / OAuth actor) via viewer.assignedIssues. Read-only. GraphQL: query viewer { assignedIssues }."
+        },
+        {
+          "name": "linear_list_cycles",
+          "type": "read",
+          "title": "List cycles",
+          "description": "List cycles (sprints), optionally scoped to a team by key, with number, name and start/end dates. Read-only. GraphQL: query cycles(filter)."
+        },
+        {
+          "name": "linear_create_issue",
+          "type": "write",
+          "title": "Create issue (WRITE — mutates Linear)",
+          "description": "⚠️ WRITE / MUTATING: creates a new issue in Linear. Requires a teamId (from linear_list_teams) and a title. Optional description (markdown), priority (0=none,1=urgent,2=high,3=medium,4=low), and assigneeId. GraphQL: mutation issueCreate."
+        },
+        {
+          "name": "linear_add_comment",
+          "type": "write",
+          "title": "Add comment (WRITE — mutates Linear)",
+          "description": "⚠️ WRITE / MUTATING: posts a comment on an issue. Requires the issueId (UUID) and a markdown body. GraphQL: mutation commentCreate."
+        },
+        {
+          "name": "linear_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "linear_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Linear tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        },
+        {
+          "name": "linear_upgrade_team",
+          "type": "meta",
+          "title": "Upgrade workspace to Team (unlimited for everyone)",
+          "description": "Subscribe your entire Linear workspace to the Team plan (unlimited seats) for UNLIMITED Linear tool calls for EVERY member of the workspace (the free tier caps monthly usage per user). Choose monthly ($99/month) or yearly billing. Returns a Stripe Checkout link to open in your browser; after payment the whole workspace upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "betterstack",
@@ -24,12 +116,91 @@
       "category": "observability",
       "description": "Read monitors, incidents, heartbeats, on-call and status pages; acknowledge or resolve incidents.",
       "endpoint": "https://betterstack.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/betterstack",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 11,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "list_monitors",
+          "type": "read",
+          "title": "List monitors",
+          "description": "List uptime monitors with their status (up/down/paused/pending/maintenance/validating), check frequency, and alert settings. Good first call to discover what is being monitored. Uptime API: GET /api/v2/monitors."
+        },
+        {
+          "name": "get_monitor",
+          "type": "read",
+          "title": "Get a monitor",
+          "description": "Get a single monitor by id, including current status, last_checked_at, SSL/HTTP settings, regions, and alerting configuration. Uptime API: GET /api/v2/monitors/{id}."
+        },
+        {
+          "name": "list_incidents",
+          "type": "read",
+          "title": "List incidents",
+          "description": "List incidents (alerts triggered by monitors/heartbeats), filterable by date range, monitor, and acknowledged/resolved state. Each incident carries cause, started_at, acknowledged_at, resolved_at. Uptime API: GET /api/v3/incidents."
+        },
+        {
+          "name": "get_incident",
+          "type": "read",
+          "title": "Get an incident",
+          "description": "Get a single incident by id, including cause, status, timeline timestamps (started/acknowledged/resolved), who acknowledged/resolved it, and the related monitor. Uptime API: GET /api/v3/incidents/{id}."
+        },
+        {
+          "name": "list_heartbeats",
+          "type": "read",
+          "title": "List heartbeats",
+          "description": "List heartbeats (cron/background-job monitors that expect a periodic ping), with period, grace, and status (up/down/paused/pending). Uptime API: GET /api/v2/heartbeats."
+        },
+        {
+          "name": "list_on_call",
+          "type": "read",
+          "title": "List on-call schedules",
+          "description": "List on-call calendars/schedules and the users currently on call for escalation. Useful to see who gets paged. Uptime API: GET /api/v2/on-calls."
+        },
+        {
+          "name": "list_status_pages",
+          "type": "read",
+          "title": "List status pages",
+          "description": "List public/private status pages with company name, subdomain, aggregate_state, and published flag. Uptime API: GET /api/v2/status-pages."
+        },
+        {
+          "name": "acknowledge_incident",
+          "type": "read",
+          "title": "Acknowledge an incident",
+          "description": "Acknowledge an ongoing incident, signalling that someone is looking into it (stops further escalation). Idempotent-ish: acknowledging an already-acknowledged incident returns HTTP 409. Uptime API: POST /api/v3/incidents/{id}/acknowledge."
+        },
+        {
+          "name": "resolve_incident",
+          "type": "read",
+          "title": "Resolve an incident",
+          "description": "Resolve an ongoing incident, marking it as handled/closed. Idempotent-ish: resolving an already-resolved incident returns HTTP 409. Uptime API: POST /api/v3/incidents/{id}/resolve."
+        },
+        {
+          "name": "betterstack_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "betterstack_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Better Stack tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "loops",
@@ -37,12 +208,97 @@
       "category": "email",
       "description": "Manage Loops contacts, mailing lists, and transactional/event emails.",
       "endpoint": "https://loops.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/loops",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 12,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "loops_test_api_key",
+          "type": "read",
+          "title": "Test API key",
+          "description": "Verify the configured Loops API key and return the team name — a good first call. Loops API: GET /v1/api-key."
+        },
+        {
+          "name": "loops_find_contact",
+          "type": "read",
+          "title": "Find a contact",
+          "description": "Find a contact by email or userId (supply at least one). Loops API: GET /v1/contacts/find."
+        },
+        {
+          "name": "loops_list_contact_properties",
+          "type": "read",
+          "title": "List contact properties",
+          "description": "List contact fields / custom properties defined in Loops. Loops API: GET /v1/contacts/properties."
+        },
+        {
+          "name": "loops_list_mailing_lists",
+          "type": "read",
+          "title": "List mailing lists",
+          "description": "List all mailing lists in the Loops account (id + name). Loops API: GET /v1/lists."
+        },
+        {
+          "name": "loops_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Creates a contact in Loops (additive). Loops API: POST /v1/contacts/create."
+        },
+        {
+          "name": "loops_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Updates (or creates) a contact by email/userId. Upserts — creates the contact if not found. Loops API: PUT /v1/contacts/update."
+        },
+        {
+          "name": "loops_delete_contact",
+          "type": "write",
+          "title": "Delete a contact",
+          "description": "Deletes a contact from Loops. Destructive. Supply email OR userId. Loops API: POST /v1/contacts/delete."
+        },
+        {
+          "name": "loops_create_contact_property",
+          "type": "write",
+          "title": "Create a contact property",
+          "description": "Creates a custom contact property/field (additive schema change). Loops API: POST /v1/contacts/properties."
+        },
+        {
+          "name": "loops_send_event",
+          "type": "write",
+          "title": "Send an event",
+          "description": "Sends an event to Loops for a contact — TRIGGERS any automations/loops subscribed to this event. Loops API: POST /v1/events/send."
+        },
+        {
+          "name": "loops_send_transactional",
+          "type": "write",
+          "title": "Send a transactional email",
+          "description": "SENDS a real transactional email via a Loops template. This dispatches an actual email to the recipient. Loops API: POST /v1/transactional."
+        },
+        {
+          "name": "loops_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "loops_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Loops tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "mixpanel",
@@ -50,12 +306,79 @@
       "category": "analytics",
       "description": "Query Mixpanel events, funnels, retention, segmentation and insights (JQL).",
       "endpoint": "https://mixpanel.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/mixpanel",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 9,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mixpanel_top_events",
+          "type": "read",
+          "title": "Top events (today)",
+          "description": "List today's top events with counts and % change vs yesterday. Good first call to discover what events a project tracks. Query API: GET /events/top."
+        },
+        {
+          "name": "mixpanel_segmentation",
+          "type": "read",
+          "title": "Segment an event",
+          "description": "Count/segment/filter a single event over a date range. e.g. 'Signed up' by country last week. Params `on`/`where` use Mixpanel segmentation expressions like properties[\\"
+        },
+        {
+          "name": "mixpanel_retention",
+          "type": "read",
+          "title": "Retention report",
+          "description": "Cohort retention: of users who did `born_event`, how many came back and did `event` over subsequent intervals. Query API: GET /retention."
+        },
+        {
+          "name": "mixpanel_list_funnels",
+          "type": "read",
+          "title": "List saved funnels",
+          "description": "Get the funnel_id and name of every saved funnel in the project. Query API: GET /funnels/list."
+        },
+        {
+          "name": "mixpanel_query_funnel",
+          "type": "read",
+          "title": "Query a saved funnel",
+          "description": "Get conversion data for a saved funnel (use mixpanel_list_funnels to find funnel_id). Query API: GET /funnels."
+        },
+        {
+          "name": "mixpanel_query_insights",
+          "type": "read",
+          "title": "Query a saved Insights report",
+          "description": "Fetch the computed data behind a saved Insights report by bookmark_id (the report id in the board URL). Mixpanel's recommended, non-deprecated path for programmatic reporting. Query API: GET /insights."
+        },
+        {
+          "name": "mixpanel_jql",
+          "type": "read",
+          "title": "Run a JQL query",
+          "description": "Run a custom JQL (JavaScript Query Language) script for arbitrary analysis. Power-user escape hatch. Script must define main(). Query API: POST /jql. (Upstream maintenance mode; 2-min timeout, 5GB/query limit.)"
+        },
+        {
+          "name": "mixpanel_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mixpanel_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Mixpanel tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "fireworks",
@@ -63,12 +386,121 @@
       "category": "ai-infra",
       "description": "Inspect Fireworks AI models, deployments, datasets and fine-tuning jobs.",
       "endpoint": "https://fireworks.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/fireworks",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 14,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "fireworks_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Get the Fireworks account record (display name, state, etc.). Control-plane: GET /v1/accounts/{account_id}."
+        },
+        {
+          "name": "fireworks_list_models",
+          "type": "read",
+          "title": "List models",
+          "description": "List models in the account (base + fine-tuned). Control-plane: GET /v1/accounts/{account_id}/models."
+        },
+        {
+          "name": "fireworks_get_model",
+          "type": "read",
+          "title": "Get model",
+          "description": "Get a single model by id. Control-plane: GET /v1/accounts/{account_id}/models/{model_id}."
+        },
+        {
+          "name": "fireworks_list_deployments",
+          "type": "read",
+          "title": "List deployments",
+          "description": "List deployments (serving instances) in the account. Control-plane: GET /v1/accounts/{account_id}/deployments."
+        },
+        {
+          "name": "fireworks_get_deployment",
+          "type": "read",
+          "title": "Get deployment",
+          "description": "Get a single deployment by id. Control-plane: GET /v1/accounts/{account_id}/deployments/{deployment_id}."
+        },
+        {
+          "name": "fireworks_list_deployed_models",
+          "type": "read",
+          "title": "List deployed models",
+          "description": "List deployed models (model↔deployment bindings). Control-plane: GET /v1/accounts/{account_id}/deployedModels."
+        },
+        {
+          "name": "fireworks_list_datasets",
+          "type": "read",
+          "title": "List datasets",
+          "description": "List datasets in the account. Control-plane: GET /v1/accounts/{account_id}/datasets."
+        },
+        {
+          "name": "fireworks_get_dataset",
+          "type": "read",
+          "title": "Get dataset",
+          "description": "Get a single dataset by id. Control-plane: GET /v1/accounts/{account_id}/datasets/{dataset_id}."
+        },
+        {
+          "name": "fireworks_list_fine_tuning_jobs",
+          "type": "read",
+          "title": "List fine-tuning jobs",
+          "description": "List supervised fine-tuning jobs in the account. Control-plane: GET /v1/accounts/{account_id}/supervisedFineTuningJobs."
+        },
+        {
+          "name": "fireworks_get_fine_tuning_job",
+          "type": "read",
+          "title": "Get fine-tuning job",
+          "description": "Get a single supervised fine-tuning job by id. Control-plane: GET /v1/accounts/{account_id}/supervisedFineTuningJobs/{job_id}."
+        },
+        {
+          "name": "fireworks_list_batch_inference_jobs",
+          "type": "read",
+          "title": "List batch inference jobs",
+          "description": "List batch inference jobs in the account. Control-plane: GET /v1/accounts/{account_id}/batchInferenceJobs."
+        },
+        {
+          "name": "fireworks_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List account members (users). Control-plane: GET /v1/accounts/{account_id}/users."
+        },
+        {
+          "name": "fireworks_create_dataset",
+          "type": "write",
+          "title": "Create dataset",
+          "description": "Creates a dataset metadata record in Fireworks (additive; actual data is uploaded separately). Control-plane: POST /v1/accounts/{account_id}/datasets."
+        },
+        {
+          "name": "fireworks_delete_deployment",
+          "type": "write",
+          "title": "Delete deployment",
+          "description": "DELETES (shuts down) a Fireworks deployment — stops serving that model and stops its billing. Destructive. Control-plane: DELETE /v1/accounts/{account_id}/deployments/{deployment_id}."
+        },
+        {
+          "name": "fireworks_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fireworks_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Fireworks tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "uploadcare",
@@ -76,12 +508,103 @@
       "category": "image-cdn",
       "description": "Manage Uploadcare files, groups and webhooks; upload and store files.",
       "endpoint": "https://uploadcare.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/uploadcare",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 13,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "uploadcare_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Get project details: name, public key, collaborators, and whether autostore is enabled. REST API: GET /project/."
+        },
+        {
+          "name": "uploadcare_list_files",
+          "type": "read",
+          "title": "List files",
+          "description": "List files in the project (paginated envelope: next, previous, total, per_page, results). REST API: GET /files/."
+        },
+        {
+          "name": "uploadcare_get_file",
+          "type": "read",
+          "title": "Get file",
+          "description": "Get full info for a single file: uuid, url, original_filename, size, mime_type, is_image, is_ready, timestamps, variations, content_info, metadata, tags. REST API: GET /files/{uuid}/."
+        },
+        {
+          "name": "uploadcare_get_file_metadata",
+          "type": "read",
+          "title": "Get file metadata",
+          "description": "Get all custom metadata key/value pairs for a file. REST API: GET /files/{uuid}/metadata/."
+        },
+        {
+          "name": "uploadcare_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List file groups in the project (paginated envelope: next, previous, total, per_page, results). REST API: GET /groups/."
+        },
+        {
+          "name": "uploadcare_get_group",
+          "type": "read",
+          "title": "Get group",
+          "description": "Get info for a single file group by its id. REST API: GET /groups/{uuid}/."
+        },
+        {
+          "name": "uploadcare_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List all webhook subscriptions configured for the project. REST API: GET /webhooks/."
+        },
+        {
+          "name": "uploadcare_upload_from_url",
+          "type": "write",
+          "title": "Upload file from URL",
+          "description": "Uploads a file into the project from a public URL (additive). Uses the Upload API host with the public key. Returns { type: \\"
+        },
+        {
+          "name": "uploadcare_store_file",
+          "type": "write",
+          "title": "Store file",
+          "description": "Marks a file as permanently stored (otherwise unstored files are deleted after 24h). Additive. REST API: PUT /files/{uuid}/storage/."
+        },
+        {
+          "name": "uploadcare_delete_file",
+          "type": "write",
+          "title": "Delete file",
+          "description": "Permanently deletes a file from the project. Destructive. REST API: DELETE /files/{uuid}/."
+        },
+        {
+          "name": "uploadcare_create_webhook",
+          "type": "write",
+          "title": "Create webhook",
+          "description": "Creates a webhook subscription (additive). The project will POST to target_url when the chosen event fires. REST API: POST /webhooks/."
+        },
+        {
+          "name": "uploadcare_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "uploadcare_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Uploadcare tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "cronitor",
@@ -89,25 +612,189 @@
       "category": "observability",
       "description": "Manage Cronitor monitors and send telemetry pings — list, inspect, create, update, delete.",
       "endpoint": "https://cronitor.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/cronitor",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 8,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "cronitor_list_monitors",
+          "type": "read",
+          "title": "List monitors",
+          "description": "List monitors and their current passing/failing status. Cronitor API: GET /monitors (paginated via page + pageSize)."
+        },
+        {
+          "name": "cronitor_get_monitor",
+          "type": "read",
+          "title": "Get monitor",
+          "description": "Get full detail for one monitor (latest_event, latest_invocations, passing status) — the 'is X healthy right now?' tool. Cronitor API: GET /monitors/{key}."
+        },
+        {
+          "name": "cronitor_create_monitor",
+          "type": "write",
+          "title": "Create monitor",
+          "description": "Creates a monitor in Cronitor (additive). Cronitor API: POST /monitors. Sends only the fields you provide."
+        },
+        {
+          "name": "cronitor_update_monitor",
+          "type": "write",
+          "title": "Update monitor",
+          "description": "Creates or updates a monitor by key (e.g. change schedule, pause via paused:true). Cronitor API: PUT /monitors with a single monitor object. Sends only the fields you provide."
+        },
+        {
+          "name": "cronitor_delete_monitor",
+          "type": "write",
+          "title": "Delete monitor",
+          "description": "PERMANENTLY deletes a monitor from Cronitor. Destructive and irreversible. Cronitor API: DELETE /monitors/{key}."
+        },
+        {
+          "name": "cronitor_ping_monitor",
+          "type": "write",
+          "title": "Ping monitor (telemetry)",
+          "description": "Reports a telemetry event (run/complete/fail/ok/pause) for a monitor — records job/heartbeat activity and can clear or trigger alerts. Cronitor telemetry: GET {telemetryUrl}/p/{apiKey}/{monitorKey}?state=..."
+        },
+        {
+          "name": "cronitor_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cronitor_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Cronitor tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "mailerlite",
       "name": "MailerLite",
       "category": "email",
-      "description": "Read subscribers, groups, campaigns, fields, segments, automations and webhooks; safe additive writes.",
+      "description": "Read subscribers, groups, campaigns, fields, segments, automations, webhooks; safe additive writes.",
       "endpoint": "https://mailerlite.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/mailerlite",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 15,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mailerlite_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List subscribers, optionally filtered by status. Cursor-paginated. MailerLite API: GET /subscribers."
+        },
+        {
+          "name": "mailerlite_get_subscriber",
+          "type": "read",
+          "title": "Get subscriber",
+          "description": "Fetch a single subscriber by id or email address. MailerLite API: GET /subscribers/{id}."
+        },
+        {
+          "name": "mailerlite_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List subscriber groups/lists, optionally filtered by name. Page-paginated. MailerLite API: GET /groups."
+        },
+        {
+          "name": "mailerlite_list_group_subscribers",
+          "type": "read",
+          "title": "List group subscribers",
+          "description": "List the subscribers belonging to a group, optionally filtered by status. Cursor-paginated. MailerLite API: GET /groups/{group_id}/subscribers."
+        },
+        {
+          "name": "mailerlite_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns, optionally filtered by status. Page-paginated. Read-only — this server does NOT send campaigns. MailerLite API: GET /campaigns."
+        },
+        {
+          "name": "mailerlite_get_campaign",
+          "type": "read",
+          "title": "Get campaign",
+          "description": "Fetch a single campaign by id. Read-only. MailerLite API: GET /campaigns/{campaign_id}."
+        },
+        {
+          "name": "mailerlite_list_fields",
+          "type": "read",
+          "title": "List fields",
+          "description": "List custom/default subscriber fields, optionally filtered by type or keyword. Page-paginated. MailerLite API: GET /fields."
+        },
+        {
+          "name": "mailerlite_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List segments. Page-paginated. MailerLite API: GET /segments."
+        },
+        {
+          "name": "mailerlite_list_automations",
+          "type": "read",
+          "title": "List automations",
+          "description": "List automations (workflows), optionally filtered by enabled state. Page-paginated. MailerLite API: GET /automations."
+        },
+        {
+          "name": "mailerlite_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List configured webhooks. Page-paginated. MailerLite API: GET /webhooks."
+        },
+        {
+          "name": "mailerlite_upsert_subscriber",
+          "type": "write",
+          "title": "Upsert subscriber",
+          "description": "Creates or updates a subscriber (upsert by email). Additive — does NOT send any email. MailerLite API: POST /subscribers."
+        },
+        {
+          "name": "mailerlite_create_group",
+          "type": "write",
+          "title": "Create group",
+          "description": "Creates a subscriber group/list (additive). MailerLite API: POST /groups."
+        },
+        {
+          "name": "mailerlite_assign_subscriber_to_group",
+          "type": "write",
+          "title": "Assign subscriber to group",
+          "description": "Adds a subscriber to a group (additive membership). MailerLite API: POST /subscribers/{subscriber_id}/groups/{group_id}."
+        },
+        {
+          "name": "mailerlite_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mailerlite_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED MailerLite tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "checkly",
@@ -115,12 +802,169 @@
       "category": "observability",
       "description": "Query Checkly synthetic monitoring — checks, statuses, results, alerts, reporting and dashboards.",
       "endpoint": "https://checkly.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/checkly",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 24,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "checkly_get_account",
+          "type": "read",
+          "title": "Get current account",
+          "description": "Fetch details of the Checkly account tied to your credentials. Public API: GET /v1/accounts/me."
+        },
+        {
+          "name": "checkly_list_checks",
+          "type": "read",
+          "title": "List checks",
+          "description": "List all synthetic monitoring checks (API, browser, URL, heartbeat, etc.) in the account. Public API: GET /v1/checks."
+        },
+        {
+          "name": "checkly_get_check",
+          "type": "read",
+          "title": "Get a check",
+          "description": "Retrieve a single check's full configuration by id. Public API: GET /v1/checks/{id}."
+        },
+        {
+          "name": "checkly_list_check_groups",
+          "type": "read",
+          "title": "List check groups",
+          "description": "List all check groups (shared config for a set of checks). Public API: GET /v1/check-groups."
+        },
+        {
+          "name": "checkly_get_check_group",
+          "type": "read",
+          "title": "Get a check group",
+          "description": "Retrieve a single check group by id. Public API: GET /v1/check-groups/{id}."
+        },
+        {
+          "name": "checkly_list_check_statuses",
+          "type": "read",
+          "title": "List check statuses",
+          "description": "List the current pass/fail/degraded status of every check — the 'what's down right now' view. Public API: GET /v1/check-statuses."
+        },
+        {
+          "name": "checkly_get_check_status",
+          "type": "read",
+          "title": "Get check status",
+          "description": "Retrieve the current status details for a single check. Public API: GET /v1/check-statuses/{checkId}."
+        },
+        {
+          "name": "checkly_list_check_results",
+          "type": "read",
+          "title": "List check results",
+          "description": "List individual run results for a check (latency, success, location, response). Public API: GET /v1/check-results/{checkId}."
+        },
+        {
+          "name": "checkly_get_check_result",
+          "type": "read",
+          "title": "Get a check result",
+          "description": "Retrieve a single check-run result in full. Public API: GET /v1/check-results/{checkId}/{checkResultId}."
+        },
+        {
+          "name": "checkly_list_check_alerts",
+          "type": "read",
+          "title": "List check alerts",
+          "description": "List recent alert notifications fired across the whole account. Public API: GET /v1/check-alerts."
+        },
+        {
+          "name": "checkly_get_check_alerts",
+          "type": "read",
+          "title": "Get alerts for a check",
+          "description": "List alert notifications for one specific check. Public API: GET /v1/check-alerts/{checkId}."
+        },
+        {
+          "name": "checkly_get_reporting",
+          "type": "read",
+          "title": "Get reporting",
+          "description": "Aggregated availability / performance / SLA report across checks and groups. Public API: GET /v1/reporting."
+        },
+        {
+          "name": "checkly_list_dashboards",
+          "type": "read",
+          "title": "List dashboards",
+          "description": "List all public/private status dashboards. Public API: GET /v1/dashboards."
+        },
+        {
+          "name": "checkly_list_alert_channels",
+          "type": "read",
+          "title": "List alert channels",
+          "description": "List all alert channels (email, Slack, webhook, PagerDuty, etc.) configured in the account. Public API: GET /v1/alert-channels."
+        },
+        {
+          "name": "checkly_list_maintenance_windows",
+          "type": "read",
+          "title": "List maintenance windows",
+          "description": "List all maintenance windows (periods where alerts are silenced). Public API: GET /v1/maintenance-windows."
+        },
+        {
+          "name": "checkly_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List all public checking locations Checkly can run checks from. Public API: GET /v1/locations."
+        },
+        {
+          "name": "checkly_list_private_locations",
+          "type": "read",
+          "title": "List private locations",
+          "description": "List all private (self-hosted) checking locations. Public API: GET /v1/private-locations."
+        },
+        {
+          "name": "checkly_list_snippets",
+          "type": "read",
+          "title": "List snippets",
+          "description": "List all reusable code snippets. Public API: GET /v1/snippets."
+        },
+        {
+          "name": "checkly_list_variables",
+          "type": "read",
+          "title": "List variables",
+          "description": "List all account-level environment variables. Note: secret variable values are redacted by the API. Public API: GET /v1/variables."
+        },
+        {
+          "name": "checkly_list_runtimes",
+          "type": "read",
+          "title": "List runtimes",
+          "description": "List all supported runtimes (Node versions + bundled dependencies) for browser/API checks. Public API: GET /v1/runtimes."
+        },
+        {
+          "name": "checkly_create_variable",
+          "type": "write",
+          "title": "Create environment variable",
+          "description": "MODIFIES THE CHECKLY ACCOUNT: creates a new account-level environment variable. Additive (does not overwrite existing keys). Public API: POST /v1/variables."
+        },
+        {
+          "name": "checkly_create_maintenance_window",
+          "type": "write",
+          "title": "Create maintenance window",
+          "description": "MODIFIES THE CHECKLY ACCOUNT: schedules a maintenance window that silences alerts for a time range (e.g. during a deploy). Omit repeatUnit for a one-off window. Public API: POST /v1/maintenance-windows."
+        },
+        {
+          "name": "checkly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "checkly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Checkly tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "mindee",
@@ -128,12 +972,61 @@
       "category": "document-ai",
       "description": "Turn PDFs and images into typed fields — invoices, receipts, IDs and custom models — via Mindee OCR.",
       "endpoint": "https://mindee.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/mindee",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 6,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mindee_list_models",
+          "type": "read",
+          "title": "List extraction models",
+          "description": "List the document-extraction models available to your Mindee account (id, name, type). Use a model's `id` as the model_id for mindee_extract_document. V2 API: GET /v2/search/models."
+        },
+        {
+          "name": "mindee_get_job",
+          "type": "read",
+          "title": "Get job status",
+          "description": "Check the processing status of an enqueued document by job id. Status is Waiting | Processing | Processed | Failed. When Processed, the response carries a result_url; pass that inference id to mindee_get_inference. V2 API: GET /v2/jobs/{job_id}."
+        },
+        {
+          "name": "mindee_get_inference",
+          "type": "read",
+          "title": "Get extraction result",
+          "description": "Fetch the structured result of a completed inference by id, returned as a compact map of extracted fields (plus raw_text if it was requested). V2 API: GET /v2/inferences/{inference_id}."
+        },
+        {
+          "name": "mindee_extract_document",
+          "type": "read",
+          "title": "Extract data from a document",
+          "description": "Submit a document (PDF or image) to a Mindee extraction model and return the structured fields. Provide EITHER document_url (a public URL) OR file_base64 (+ filename). This enqueues an inference and polls until it completes (up to ~"
+        },
+        {
+          "name": "mindee_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mindee_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Mindee tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "docraptor",
@@ -141,12 +1034,61 @@
       "category": "documents",
       "description": "Turn HTML or a live URL into polished PDF and Excel files — hosted downloads, async jobs, history.",
       "endpoint": "https://docraptor.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/docraptor",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 6,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "docraptor_create_document",
+          "type": "write",
+          "title": "Create a document (PDF/XLS/XLSX)",
+          "description": "Generate a PDF or Excel document from HTML (document_content) or a URL (document_url)."
+        },
+        {
+          "name": "docraptor_get_document_status",
+          "type": "read",
+          "title": "Get async document status",
+          "description": "Check the status of an asynchronous document created with docraptor_create_document({async:true})."
+        },
+        {
+          "name": "docraptor_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List metadata for documents created on this account, most recent first (paginated)."
+        },
+        {
+          "name": "docraptor_list_ip_addresses",
+          "type": "read",
+          "title": "List DocRaptor IP addresses",
+          "description": "List the IP addresses DocRaptor uses to fetch remote assets / document_url. Useful for allowlisting DocRaptor on a firewall or asset host."
+        },
+        {
+          "name": "docraptor_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "docraptor_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED DocRaptor tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "mistral",
@@ -154,12 +1096,127 @@
       "category": "ai-infra",
       "description": "Manage your Mistral platform — models, files, batch jobs, agents and RAG document libraries.",
       "endpoint": "https://mistral.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/mistral",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 17,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mistral_list_models",
+          "type": "read",
+          "title": "List models",
+          "description": "List every model available to your account — Mistral base models plus your fine-tuned models. Management API: GET /v1/models."
+        },
+        {
+          "name": "mistral_get_model",
+          "type": "read",
+          "title": "Get a model",
+          "description": "Retrieve details for a single model (base or fine-tuned). Management API: GET /v1/models/{model_id}."
+        },
+        {
+          "name": "mistral_list_files",
+          "type": "read",
+          "title": "List files",
+          "description": "List uploaded files belonging to your organization (fine-tune data, batch inputs/outputs, etc.). Management API: GET /v1/files."
+        },
+        {
+          "name": "mistral_get_file",
+          "type": "read",
+          "title": "Get a file",
+          "description": "Retrieve metadata about a specific uploaded file. Management API: GET /v1/files/{file_id}."
+        },
+        {
+          "name": "mistral_get_file_url",
+          "type": "read",
+          "title": "Get a file download URL",
+          "description": "Get a temporary signed download URL for an uploaded file. Management API: GET /v1/files/{file_id}/url."
+        },
+        {
+          "name": "mistral_list_batch_jobs",
+          "type": "read",
+          "title": "List batch jobs",
+          "description": "List batch inference jobs for your organization and user, with optional filters. Management API: GET /v1/batch/jobs."
+        },
+        {
+          "name": "mistral_get_batch_job",
+          "type": "read",
+          "title": "Get a batch job",
+          "description": "Retrieve details and status for a single batch job. Management API: GET /v1/batch/jobs/{job_id}."
+        },
+        {
+          "name": "mistral_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List agent entities in your account, sorted by creation time. Management API: GET /v1/agents."
+        },
+        {
+          "name": "mistral_get_agent",
+          "type": "read",
+          "title": "Get an agent",
+          "description": "Retrieve a single agent entity with its configuration. Management API: GET /v1/agents/{agent_id}."
+        },
+        {
+          "name": "mistral_list_libraries",
+          "type": "read",
+          "title": "List document libraries",
+          "description": "List RAG document libraries you own or that have been shared with you. Management API: GET /v1/libraries."
+        },
+        {
+          "name": "mistral_get_library",
+          "type": "read",
+          "title": "Get a document library",
+          "description": "Retrieve details about a single document library. Management API: GET /v1/libraries/{library_id}."
+        },
+        {
+          "name": "mistral_list_library_documents",
+          "type": "read",
+          "title": "List documents in a library",
+          "description": "List the documents uploaded to a given document library. Management API: GET /v1/libraries/{library_id}/documents."
+        },
+        {
+          "name": "mistral_create_agent",
+          "type": "write",
+          "title": "Create an agent",
+          "description": "Creates a Mistral Agent (additive configuration). Management API: POST /v1/agents. Requires model and name; instructions, tools, completion_args, description and handoffs are optional."
+        },
+        {
+          "name": "mistral_cancel_batch_job",
+          "type": "write",
+          "title": "Cancel a batch job",
+          "description": "Cancels a running Mistral batch job — stops processing and further billing for that job. Management API: POST /v1/batch/jobs/{job_id}/cancel."
+        },
+        {
+          "name": "mistral_delete_file",
+          "type": "write",
+          "title": "Delete a file",
+          "description": "Permanently deletes an uploaded file from Mistral. Destructive. Management API: DELETE /v1/files/{file_id}."
+        },
+        {
+          "name": "mistral_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mistral_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Mistral tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "orb",
@@ -167,12 +1224,193 @@
       "category": "billing",
       "description": "Read Orb customers, subscriptions, invoices, usage and costs; create or update customers.",
       "endpoint": "https://orb.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/orb",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 28,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "orb_ping",
+          "type": "read",
+          "title": "Ping / auth check",
+          "description": "Health and auth check — verifies the API key works. Orb API: GET /ping."
+        },
+        {
+          "name": "orb_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers in the Orb account. Orb API: GET /customers."
+        },
+        {
+          "name": "orb_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Fetch a single customer by Orb customer id. Orb API: GET /customers/{customer_id}."
+        },
+        {
+          "name": "orb_get_customer_by_external_id",
+          "type": "read",
+          "title": "Get customer by external id",
+          "description": "Fetch a single customer by your external customer id. Orb API: GET /customers/external_customer_id/{external_customer_id}."
+        },
+        {
+          "name": "orb_get_customer_costs",
+          "type": "read",
+          "title": "Get customer costs",
+          "description": "Get costs incurred by a customer over a timeframe. Orb API: GET /customers/{customer_id}/costs."
+        },
+        {
+          "name": "orb_get_customer_credits",
+          "type": "read",
+          "title": "Get customer credit balances",
+          "description": "Get a customer's credit balances by currency. Orb API: GET /customers/{customer_id}/credits."
+        },
+        {
+          "name": "orb_get_customer_credits_ledger",
+          "type": "read",
+          "title": "Get customer credit ledger",
+          "description": "Get the append-only credit ledger for a customer. Orb API: GET /customers/{customer_id}/credits/ledger."
+        },
+        {
+          "name": "orb_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List plans configured in the Orb account. Orb API: GET /plans."
+        },
+        {
+          "name": "orb_get_plan",
+          "type": "read",
+          "title": "Get plan",
+          "description": "Fetch a single plan by id. Orb API: GET /plans/{plan_id}."
+        },
+        {
+          "name": "orb_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List subscriptions, optionally filtered by customer or status. Orb API: GET /subscriptions."
+        },
+        {
+          "name": "orb_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "Fetch a single subscription by id. Orb API: GET /subscriptions/{subscription_id}."
+        },
+        {
+          "name": "orb_get_subscription_costs",
+          "type": "read",
+          "title": "Get subscription costs",
+          "description": "Get costs for a subscription over a timeframe. Orb API: GET /subscriptions/{subscription_id}/costs."
+        },
+        {
+          "name": "orb_get_subscription_usage",
+          "type": "read",
+          "title": "Get subscription usage",
+          "description": "Get metered usage for a subscription over a timeframe. Orb API: GET /subscriptions/{subscription_id}/usage."
+        },
+        {
+          "name": "orb_get_subscription_schedule",
+          "type": "read",
+          "title": "Get subscription schedule",
+          "description": "Get the plan-change schedule for a subscription. Orb API: GET /subscriptions/{subscription_id}/schedule."
+        },
+        {
+          "name": "orb_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices, optionally filtered by customer, subscription, or status. Orb API: GET /invoices."
+        },
+        {
+          "name": "orb_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Fetch a single invoice by id. Orb API: GET /invoices/{invoice_id}."
+        },
+        {
+          "name": "orb_get_upcoming_invoice",
+          "type": "read",
+          "title": "Get upcoming invoice",
+          "description": "Preview the upcoming (draft) invoice for a subscription. Orb API: GET /invoices/upcoming."
+        },
+        {
+          "name": "orb_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List items (the things you bill for). Orb API: GET /items."
+        },
+        {
+          "name": "orb_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "Fetch a single item by id. Orb API: GET /items/{item_id}."
+        },
+        {
+          "name": "orb_list_prices",
+          "type": "read",
+          "title": "List prices",
+          "description": "List prices configured in the Orb account. Orb API: GET /prices."
+        },
+        {
+          "name": "orb_get_price",
+          "type": "read",
+          "title": "Get price",
+          "description": "Fetch a single price by id. Orb API: GET /prices/{price_id}."
+        },
+        {
+          "name": "orb_list_metrics",
+          "type": "read",
+          "title": "List billable metrics",
+          "description": "List billable metrics configured in the Orb account. Orb API: GET /metrics."
+        },
+        {
+          "name": "orb_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List coupons in the Orb account. Orb API: GET /coupons."
+        },
+        {
+          "name": "orb_list_alerts",
+          "type": "read",
+          "title": "List alerts",
+          "description": "List usage/spend alerts, optionally filtered by customer or subscription. Orb API: GET /alerts."
+        },
+        {
+          "name": "orb_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Creates a new customer in Orb (additive). Requires name and a valid email. Orb API: POST /customers."
+        },
+        {
+          "name": "orb_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "Updates an existing customer's details (reversible). Only provided fields are changed. Orb API: PUT /customers/{customer_id}."
+        },
+        {
+          "name": "orb_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "orb_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Orb tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "chargebee",
@@ -180,12 +1418,115 @@
       "category": "billing",
       "description": "Read Chargebee customers, subscriptions, invoices, items, transactions, credit notes and coupons.",
       "endpoint": "https://chargebee.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/chargebee",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 15,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "chargebee_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, newest first. Filter by email or creation time. Chargebee API: GET /customers."
+        },
+        {
+          "name": "chargebee_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Retrieve a single customer by id. Chargebee API: GET /customers/{customer_id}."
+        },
+        {
+          "name": "chargebee_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List subscriptions. Filter by customer or status. Chargebee API: GET /subscriptions."
+        },
+        {
+          "name": "chargebee_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "Retrieve a single subscription by id. Chargebee API: GET /subscriptions/{subscription_id}."
+        },
+        {
+          "name": "chargebee_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices. Filter by customer or status. Chargebee API: GET /invoices."
+        },
+        {
+          "name": "chargebee_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Retrieve a single invoice by id. Chargebee API: GET /invoices/{invoice_id}."
+        },
+        {
+          "name": "chargebee_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List Product Catalog 2.0 items (plans, addons, charges). Filter by type. Chargebee API: GET /items."
+        },
+        {
+          "name": "chargebee_list_item_prices",
+          "type": "read",
+          "title": "List item prices",
+          "description": "List Product Catalog 2.0 item prices. Filter by item. Chargebee API: GET /item_prices."
+        },
+        {
+          "name": "chargebee_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List payment/refund transactions. Filter by customer. Chargebee API: GET /transactions."
+        },
+        {
+          "name": "chargebee_list_credit_notes",
+          "type": "read",
+          "title": "List credit notes",
+          "description": "List credit notes. Filter by customer. Chargebee API: GET /credit_notes."
+        },
+        {
+          "name": "chargebee_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List coupons. Chargebee API: GET /coupons."
+        },
+        {
+          "name": "chargebee_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Creates a customer in Chargebee (additive). Chargebee auto-generates the id unless you pass one. Chargebee API: POST /customers."
+        },
+        {
+          "name": "chargebee_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "Updates a customer's details in Chargebee. Chargebee API: POST /customers/{customer_id}."
+        },
+        {
+          "name": "chargebee_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "chargebee_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Chargebee tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "lob",
@@ -193,25 +1534,773 @@
       "category": "direct-mail",
       "description": "Verify US & international addresses and send physical mail (postcards, letters, checks) via Lob.",
       "endpoint": "https://lob.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/lob",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 20,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "lob_verify_us_address",
+          "type": "read",
+          "title": "Verify a US address",
+          "description": "Validate & standardize a US address, returning deliverability, corrected components, and a confidence score."
+        },
+        {
+          "name": "lob_verify_intl_address",
+          "type": "read",
+          "title": "Verify an international address",
+          "description": "Validate & standardize a non-US address. `country` (2-letter ISO code) is required."
+        },
+        {
+          "name": "lob_us_zip_lookup",
+          "type": "read",
+          "title": "Look up a US ZIP code",
+          "description": "Return the cities and state associated with a US ZIP code. Non-mutating. Lob API: POST /v1/us_zip_lookups."
+        },
+        {
+          "name": "lob_us_autocomplete",
+          "type": "read",
+          "title": "Autocomplete a US address",
+          "description": "Suggest complete US addresses from a partial primary line — useful for address entry. Non-mutating."
+        },
+        {
+          "name": "lob_list_postcards",
+          "type": "read",
+          "title": "List postcards",
+          "description": "List sent/scheduled postcards, newest first. Lob API: GET /v1/postcards."
+        },
+        {
+          "name": "lob_get_postcard",
+          "type": "read",
+          "title": "Get a postcard",
+          "description": "Retrieve a single postcard by id, including status, PDF url, and expected delivery. Lob API: GET /v1/postcards/{id}."
+        },
+        {
+          "name": "lob_list_letters",
+          "type": "read",
+          "title": "List letters",
+          "description": "List sent/scheduled letters, newest first. Lob API: GET /v1/letters."
+        },
+        {
+          "name": "lob_get_letter",
+          "type": "read",
+          "title": "Get a letter",
+          "description": "Retrieve a single letter by id, including status, PDF url, and tracking. Lob API: GET /v1/letters/{id}."
+        },
+        {
+          "name": "lob_list_checks",
+          "type": "read",
+          "title": "List checks",
+          "description": "List sent/scheduled checks, newest first. Lob API: GET /v1/checks."
+        },
+        {
+          "name": "lob_get_check",
+          "type": "read",
+          "title": "Get a check",
+          "description": "Retrieve a single check by id, including amount, status, and check number. Lob API: GET /v1/checks/{id}."
+        },
+        {
+          "name": "lob_list_self_mailers",
+          "type": "read",
+          "title": "List self-mailers",
+          "description": "List sent/scheduled self-mailers, newest first. Lob API: GET /v1/self_mailers."
+        },
+        {
+          "name": "lob_list_addresses",
+          "type": "read",
+          "title": "List saved addresses",
+          "description": "List saved address records, newest first. Lob API: GET /v1/addresses."
+        },
+        {
+          "name": "lob_get_address",
+          "type": "read",
+          "title": "Get a saved address",
+          "description": "Retrieve a single saved address record by id. Lob API: GET /v1/addresses/{id}."
+        },
+        {
+          "name": "lob_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List saved HTML templates usable as postcard/letter artwork. Lob API: GET /v1/templates."
+        },
+        {
+          "name": "lob_create_address",
+          "type": "write",
+          "title": "Save an address record",
+          "description": "Create a reusable saved address record (does NOT send any mail). Returns an address id (adr_…) usable as `to`/`from` in mail tools. Lob API: POST /v1/addresses."
+        },
+        {
+          "name": "lob_create_postcard",
+          "type": "write",
+          "title": "Send a postcard (COSTS MONEY)",
+          "description": "⚠️ SENDS A REAL POSTCARD and charges your Lob account (use a test_ key to avoid real mail/charges)."
+        },
+        {
+          "name": "lob_create_letter",
+          "type": "write",
+          "title": "Send a letter (COSTS MONEY)",
+          "description": "⚠️ SENDS A REAL LETTER and charges your Lob account (use a test_ key to avoid real mail/charges)."
+        },
+        {
+          "name": "lob_cancel_postcard",
+          "type": "write",
+          "title": "Cancel a scheduled postcard",
+          "description": "Cancel a postcard before its send_date so it is never mailed (and not billed). Fails if the send window has passed. Lob API: DELETE /v1/postcards/{id}."
+        },
+        {
+          "name": "lob_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lob_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Lob tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
     },
     {
       "slug": "gocardless",
       "name": "GoCardless",
       "category": "payments",
-      "description": "Query your GoCardless account: customers, mandates, payments, subscriptions, payouts, refunds, events.",
+      "description": "Query GoCardless: customers, mandates, payments, subscriptions, payouts, refunds, events.",
       "endpoint": "https://gocardless.usefulapi.io/mcp",
-      "docs": "https://github.com/m190/usefulapi-mcp/tree/main/gocardless",
+      "transport": "streamable-http",
       "auth": "token",
-      "tool_count": 17,
-      "free_limit": "100 calls/mo",
-      "pro": "$9/mo",
-      "status": "live"
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "tools": [
+        {
+          "name": "gocardless_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (payers) with cursor pagination. Read-only observability. GoCardless: GET /customers."
+        },
+        {
+          "name": "gocardless_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Retrieve a single customer by id. Read-only. GoCardless: GET /customers/{id}."
+        },
+        {
+          "name": "gocardless_list_customer_bank_accounts",
+          "type": "read",
+          "title": "List customer bank accounts",
+          "description": "List customer bank accounts (account details are masked by GoCardless). Read-only. GoCardless: GET /customer_bank_accounts."
+        },
+        {
+          "name": "gocardless_list_mandates",
+          "type": "read",
+          "title": "List mandates",
+          "description": "List mandates (a mandate = a customer's authorization to debit their bank account). Read-only. GoCardless: GET /mandates."
+        },
+        {
+          "name": "gocardless_get_mandate",
+          "type": "read",
+          "title": "Get mandate",
+          "description": "Retrieve a single mandate by id. Read-only. GoCardless: GET /mandates/{id}."
+        },
+        {
+          "name": "gocardless_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments (READ ONLY — this server never creates or modifies payments). GoCardless: GET /payments."
+        },
+        {
+          "name": "gocardless_get_payment",
+          "type": "read",
+          "title": "Get payment",
+          "description": "Retrieve a single payment by id. Read-only. GoCardless: GET /payments/{id}."
+        },
+        {
+          "name": "gocardless_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List subscriptions (recurring payment schedules). Read-only. GoCardless: GET /subscriptions."
+        },
+        {
+          "name": "gocardless_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "Retrieve a single subscription by id. Read-only. GoCardless: GET /subscriptions/{id}."
+        },
+        {
+          "name": "gocardless_list_payouts",
+          "type": "read",
+          "title": "List payouts",
+          "description": "List payouts (funds GoCardless sends to your bank account). Read-only. GoCardless: GET /payouts."
+        },
+        {
+          "name": "gocardless_get_payout",
+          "type": "read",
+          "title": "Get payout",
+          "description": "Retrieve a single payout by id. Read-only. GoCardless: GET /payouts/{id}."
+        },
+        {
+          "name": "gocardless_list_refunds",
+          "type": "read",
+          "title": "List refunds",
+          "description": "List refunds (READ ONLY — this server never creates refunds). GoCardless: GET /refunds."
+        },
+        {
+          "name": "gocardless_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events — the audit / webhook event log (payment confirmed, mandate cancelled, etc.). Read-only. GoCardless: GET /events."
+        },
+        {
+          "name": "gocardless_list_creditors",
+          "type": "read",
+          "title": "List creditors",
+          "description": "List creditors (your merchant accounts that receive payouts). Read-only. GoCardless: GET /creditors."
+        },
+        {
+          "name": "gocardless_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Creates a customer record in GoCardless. Contact details only — no bank account, MOVES NO MONEY. GoCardless: POST /customers (body wrapped as { customers: {...} })."
+        },
+        {
+          "name": "gocardless_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gocardless_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED GoCardless tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "recurly",
+      "name": "Recurly",
+      "category": "billing",
+      "description": "MCP server for Recurly — accounts, subscriptions, invoices, plans; cancel & pause subs.",
+      "endpoint": "https://recurly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "recurly_list_accounts",
+          "type": "read",
+          "title": "List customer accounts"
+        },
+        {
+          "name": "recurly_get_account",
+          "type": "read",
+          "title": "Get an account by id or code"
+        },
+        {
+          "name": "recurly_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions (site-wide or per account)"
+        },
+        {
+          "name": "recurly_get_subscription",
+          "type": "read",
+          "title": "Get a subscription by id"
+        },
+        {
+          "name": "recurly_list_invoices",
+          "type": "read",
+          "title": "List invoices (site-wide or per account)"
+        },
+        {
+          "name": "recurly_list_plans",
+          "type": "read",
+          "title": "List subscription plans"
+        },
+        {
+          "name": "recurly_cancel_subscription",
+          "type": "write",
+          "title": "Cancel a subscription (term-end or next bill date)"
+        },
+        {
+          "name": "recurly_pause_subscription",
+          "type": "write",
+          "title": "Pause or resume a subscription for N cycles"
+        },
+        {
+          "name": "recurly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)"
+        },
+        {
+          "name": "recurly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)"
+        }
+      ]
+    },
+    {
+      "slug": "braintree",
+      "name": "Braintree",
+      "category": "payments",
+      "description": "Search Braintree transactions, customers and payment methods, and refund or void charges.",
+      "endpoint": "https://braintree.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "braintree_find_transaction",
+          "type": "read",
+          "title": "Fetch one transaction by its GraphQL global ID — amount, status, timestamps, order id, and linked customer."
+        },
+        {
+          "name": "braintree_search_transactions",
+          "type": "read",
+          "title": "Search transactions by created-at date range, status, and/or customer, returning a page of transaction nodes."
+        },
+        {
+          "name": "braintree_find_customer",
+          "type": "read",
+          "title": "Fetch one customer by GraphQL global Customer ID — id, legacy id, name, company, and created-at."
+        },
+        {
+          "name": "braintree_customer_payment_methods",
+          "type": "read",
+          "title": "List a customer's vaulted payment methods (credit cards, PayPal accounts) with usage and detail type."
+        },
+        {
+          "name": "braintree_list_subscriptions",
+          "type": "read",
+          "title": "Trace a customer's recurring / subscription charge activity via their transactions (GraphQL has no native Subscription object)."
+        },
+        {
+          "name": "braintree_refund_transaction",
+          "type": "write",
+          "title": "Refund a settled (or settling) transaction — full, or a partial decimal amount — returning money to the customer."
+        },
+        {
+          "name": "braintree_void_transaction",
+          "type": "write",
+          "title": "Void (cancel) a transaction that has not yet settled, such as an authorization or one submitted for settlement."
+        },
+        {
+          "name": "braintree_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)"
+        },
+        {
+          "name": "braintree_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)"
+        }
+      ]
+    },
+    {
+      "slug": "increase",
+      "name": "Increase",
+      "category": "fintech",
+      "description": "Read-only Increase banking observability plus one safe non-money-moving write, for AI agents.",
+      "endpoint": "https://increase.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "increase_list_accounts",
+          "type": "read",
+          "title": "List bank accounts, filtered by entity and status."
+        },
+        {
+          "name": "increase_get_account",
+          "type": "read",
+          "title": "Retrieve a single bank account by id."
+        },
+        {
+          "name": "increase_get_account_balance",
+          "type": "read",
+          "title": "Get an account's current and available balance, optionally as of a point in time."
+        },
+        {
+          "name": "increase_list_account_numbers",
+          "type": "read",
+          "title": "List deposit account/routing number pairs for an account."
+        },
+        {
+          "name": "increase_list_transactions",
+          "type": "read",
+          "title": "List settled transactions, filtered by account, category and date range."
+        },
+        {
+          "name": "increase_get_transaction",
+          "type": "read",
+          "title": "Retrieve a single settled transaction by id."
+        },
+        {
+          "name": "increase_list_pending_transactions",
+          "type": "read",
+          "title": "List pending (not-yet-settled) transactions for an account."
+        },
+        {
+          "name": "increase_list_declined_transactions",
+          "type": "read",
+          "title": "List declined transactions for an account."
+        },
+        {
+          "name": "increase_list_ach_transfers",
+          "type": "read",
+          "title": "List ACH transfers (read-only; no transfers are created)."
+        },
+        {
+          "name": "increase_get_ach_transfer",
+          "type": "read",
+          "title": "Retrieve a single ACH transfer by id."
+        },
+        {
+          "name": "increase_list_wire_transfers",
+          "type": "read",
+          "title": "List wire transfers (read-only; no transfers are created)."
+        },
+        {
+          "name": "increase_list_check_transfers",
+          "type": "read",
+          "title": "List check transfers (read-only; no transfers are created)."
+        },
+        {
+          "name": "increase_list_real_time_payments_transfers",
+          "type": "read",
+          "title": "List Real-Time Payments (RTP) transfers (read-only; no transfers are created)."
+        },
+        {
+          "name": "increase_list_cards",
+          "type": "read",
+          "title": "List cards for an account (read-only; no card actions are exposed)."
+        },
+        {
+          "name": "increase_list_entities",
+          "type": "read",
+          "title": "List entities — the people/businesses (KYC records) that own accounts."
+        },
+        {
+          "name": "increase_list_external_accounts",
+          "type": "read",
+          "title": "List external (counterparty) bank accounts registered in Increase."
+        },
+        {
+          "name": "increase_lookup_routing_number",
+          "type": "read",
+          "title": "Look up a 9-digit ABA routing number to see supported ACH/RTP/wire services."
+        },
+        {
+          "name": "increase_create_external_account",
+          "type": "write",
+          "title": "Register an external (counterparty) bank account for future transfers — creates a record only, moves no money."
+        },
+        {
+          "name": "increase_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)"
+        },
+        {
+          "name": "increase_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)"
+        }
+      ]
+    },
+    {
+      "slug": "modern-treasury",
+      "name": "Modern Treasury",
+      "category": "payment-operations",
+      "description": "MCP server for Modern Treasury — payment orders, transactions, counterparties and ledgers.",
+      "endpoint": "https://modern-treasury.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "modern_treasury_ping",
+          "type": "read",
+          "title": "Verify connectivity and credentials"
+        },
+        {
+          "name": "modern_treasury_list_counterparties",
+          "type": "read",
+          "title": "List counterparties (contacts)"
+        },
+        {
+          "name": "modern_treasury_get_counterparty",
+          "type": "read",
+          "title": "Get a counterparty by id"
+        },
+        {
+          "name": "modern_treasury_list_internal_accounts",
+          "type": "read",
+          "title": "List your organization's internal bank accounts"
+        },
+        {
+          "name": "modern_treasury_list_external_accounts",
+          "type": "read",
+          "title": "List external (counterparty) bank accounts"
+        },
+        {
+          "name": "modern_treasury_list_payment_orders",
+          "type": "read",
+          "title": "List payment orders (read only)"
+        },
+        {
+          "name": "modern_treasury_get_payment_order",
+          "type": "read",
+          "title": "Get a payment order by id"
+        },
+        {
+          "name": "modern_treasury_list_expected_payments",
+          "type": "read",
+          "title": "List expected payments"
+        },
+        {
+          "name": "modern_treasury_list_transactions",
+          "type": "read",
+          "title": "List bank transactions"
+        },
+        {
+          "name": "modern_treasury_get_transaction",
+          "type": "read",
+          "title": "Get a transaction by id"
+        },
+        {
+          "name": "modern_treasury_list_returns",
+          "type": "read",
+          "title": "List payment returns (e.g. ACH returns)"
+        },
+        {
+          "name": "modern_treasury_list_ledgers",
+          "type": "read",
+          "title": "List double-entry ledgers"
+        },
+        {
+          "name": "modern_treasury_list_ledger_accounts",
+          "type": "read",
+          "title": "List ledger accounts"
+        },
+        {
+          "name": "modern_treasury_get_ledger_account",
+          "type": "read",
+          "title": "Get a ledger account with balances"
+        },
+        {
+          "name": "modern_treasury_list_ledger_transactions",
+          "type": "read",
+          "title": "List ledger transactions"
+        },
+        {
+          "name": "modern_treasury_list_ledger_entries",
+          "type": "read",
+          "title": "List ledger entries (individual debits/credits)"
+        },
+        {
+          "name": "modern_treasury_create_counterparty",
+          "type": "write",
+          "title": "Create a contact-only counterparty record (no bank details, moves no money)"
+        },
+        {
+          "name": "modern_treasury_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)"
+        },
+        {
+          "name": "modern_treasury_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)"
+        }
+      ]
+    },
+    {
+      "slug": "magicbell",
+      "name": "MagicBell",
+      "category": "notifications",
+      "description": "Read MagicBell broadcasts, users, events, workflows and channels; create and update user records.",
+      "endpoint": "https://magicbell.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "version": "1.0.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "magicbell_list_broadcasts",
+          "type": "read",
+          "title": "List broadcasts (notification-send batches) with cursor pagination."
+        },
+        {
+          "name": "magicbell_get_broadcast",
+          "type": "read",
+          "title": "Fetch a single broadcast by id."
+        },
+        {
+          "name": "magicbell_list_users",
+          "type": "read",
+          "title": "List users (notification recipients) with cursor pagination."
+        },
+        {
+          "name": "magicbell_get_user",
+          "type": "read",
+          "title": "Fetch a single user by MagicBell id or external id."
+        },
+        {
+          "name": "magicbell_list_events",
+          "type": "read",
+          "title": "List notification delivery events with cursor pagination."
+        },
+        {
+          "name": "magicbell_get_event",
+          "type": "read",
+          "title": "Fetch a single delivery event by id."
+        },
+        {
+          "name": "magicbell_list_workflows",
+          "type": "read",
+          "title": "List notification workflows with cursor pagination."
+        },
+        {
+          "name": "magicbell_list_workflow_runs",
+          "type": "read",
+          "title": "List workflow runs (execution history) with cursor pagination."
+        },
+        {
+          "name": "magicbell_get_workflow_run",
+          "type": "read",
+          "title": "Fetch a single workflow run by id."
+        },
+        {
+          "name": "magicbell_list_channels",
+          "type": "read",
+          "title": "List delivery channels (in-app, email, push, SMS)."
+        },
+        {
+          "name": "magicbell_list_integrations",
+          "type": "read",
+          "title": "List configured provider integrations (Sendgrid, APNs, FCM, etc.)."
+        },
+        {
+          "name": "magicbell_create_user",
+          "type": "write",
+          "title": "Create a user (recipient) record. Additive — sends no notification."
+        },
+        {
+          "name": "magicbell_update_user",
+          "type": "write",
+          "title": "Update a user record. Reversible — sends no notification."
+        },
+        {
+          "name": "magicbell_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)"
+        },
+        {
+          "name": "magicbell_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)"
+        }
+      ]
     }
   ]
 }

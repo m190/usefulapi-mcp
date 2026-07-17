@@ -26,19 +26,18 @@ scoped to you. No API keys to paste.
 | Tool | Type | What it does |
 |------|------|--------------|
 | `linear_search_issues` | read | Search / filter issues |
-| `linear_get_issue` | read | Get one issue by id |
+| `linear_get_issue` | read | Get one issue |
 | `linear_list_teams` | read | List teams |
-| `linear_list_projects` | read | List projects (state, progress, target date) |
-| `linear_my_issues` | read | Your assigned issues |
+| `linear_list_projects` | read | List projects |
+| `linear_my_issues` | read | My assigned issues |
 | `linear_list_cycles` | read | List cycles |
-| `linear_create_issue` | **write** | Create an issue (mutates Linear) |
-| `linear_add_comment` | **write** | Add a comment to an issue (mutates Linear) |
-| `linear_usage_status` | meta | Show your current tier + usage this month |
-| `linear_upgrade` | meta | Upgrade yourself to Pro |
-| `linear_upgrade_team` | meta | Upgrade your whole workspace to Team |
+| `linear_create_issue` | **write** | Create issue (WRITE — mutates Linear) |
+| `linear_add_comment` | **write** | Add comment (WRITE — mutates Linear) |
+| `linear_usage_status` | meta | Usage status (free-tier meter) |
+| `linear_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `linear_upgrade_team` | meta | Upgrade workspace to Team (unlimited for everyone) |
 
-Read tools are annotated `readOnlyHint`; the two write tools are annotated `destructiveHint`
-so clients can gate them.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 
@@ -47,9 +46,6 @@ so clients can gate them.
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 | **Team** (per workspace) | **$99/mo** or **$990/yr** (2 months free) | Unlimited for all seats |
-
-Upgrade in-client with `linear_upgrade` / `linear_upgrade_team`, or manage billing from the
-[homepage](https://usefulapi.io/linear).
 
 ## License
 

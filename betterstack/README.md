@@ -25,20 +25,19 @@ It's validated, stored per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `list_monitors` | read | List uptime monitors |
-| `get_monitor` | read | Get one monitor |
+| `list_monitors` | read | List monitors |
+| `get_monitor` | read | Get a monitor |
 | `list_incidents` | read | List incidents |
-| `get_incident` | read | Get one incident |
+| `get_incident` | read | Get an incident |
 | `list_heartbeats` | read | List heartbeats |
 | `list_on_call` | read | List on-call schedules |
 | `list_status_pages` | read | List status pages |
-| `acknowledge_incident` | **write** | Acknowledge an incident |
-| `resolve_incident` | **write** | Resolve an incident |
-| `betterstack_usage_status` | meta | Your current tier + usage this month |
-| `betterstack_upgrade` | meta | Upgrade to Pro |
+| `acknowledge_incident` | read | Acknowledge an incident |
+| `resolve_incident` | read | Resolve an incident |
+| `betterstack_usage_status` | meta | Usage status (free-tier meter) |
+| `betterstack_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; the two write tools are annotated `destructiveHint` so
-clients can confirm before mutating Better Stack.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 
@@ -46,8 +45,6 @@ clients can confirm before mutating Better Stack.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
-
-Upgrade in-client with `betterstack_upgrade`.
 
 ## License
 

@@ -22,14 +22,14 @@ On first connect you'll paste your DocRaptor API key. It's validated, stored per
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `docraptor_get_document_status` | read | Poll an async render job; returns status + download URL |
-| `docraptor_list_documents` | read | List documents created on the account |
-| `docraptor_list_ip_addresses` | read | List DocRaptor's outbound IPs for allowlisting |
-| `docraptor_create_document` | **write** | Render a PDF/XLS/XLSX from HTML or a URL (test:true = free watermarked) |
-| `docraptor_usage_status` | meta | Your tier + usage this month |
-| `docraptor_upgrade` | meta | Upgrade to Pro |
+| `docraptor_create_document` | **write** | Create a document (PDF/XLS/XLSX) |
+| `docraptor_get_document_status` | read | Get async document status |
+| `docraptor_list_documents` | read | List documents |
+| `docraptor_list_ip_addresses` | read | List DocRaptor IP addresses |
+| `docraptor_usage_status` | meta | Usage status (free-tier meter) |
+| `docraptor_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

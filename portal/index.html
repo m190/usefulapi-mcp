@@ -70,6 +70,12 @@
 </div>
 <script>
   // Single source of truth = /manifest.json (same file build.mjs uses for product pages).
+  // Derived from the enriched schema (tools[]/pricing[]) so tiles never carry stale counts.
+  const priceText = function (p) {
+    if (!p || !p.monthly || p.monthly === "$0") return "$0";
+    return [p.monthly && p.monthly + "/mo", p.yearly && p.yearly + "/yr"].filter(Boolean).join(" · ");
+  };
+  const tier = function (s, re) { return (s.pricing || []).find(function (p) { return re.test(p.plan); }); };
   fetch('/manifest.json').then(function (r) { return r.json(); }).then(function (MANIFEST) {
     document.getElementById('tagline').textContent = MANIFEST.portal.tagline;
     const grid = document.getElementById('grid');
@@ -81,14 +87,16 @@
       const statusChip = live
         ? '<span class="chip live">live</span>'
         : '<span class="chip soon">launching soon</span>';
+      const free = tier(s, /free/i), pro = tier(s, /pro/i);
+      const toolN = (s.tools || []).length;
       el.innerHTML = `
         <div class="top"><h2>${s.name}</h2>${statusChip}</div>
         <p>${s.description}</p>
         <div class="chips">
-          <span class="chip">${s.tool_count} tools</span>
+          <span class="chip">${toolN} tools</span>
           <span class="chip">${s.category}</span>
-          <span class="chip">Free ${s.free_limit}</span>
-          <span class="chip">Pro ${s.pro}</span>
+          ${free ? `<span class="chip">Free ${free.limit}</span>` : ''}
+          ${pro ? `<span class="chip">Pro ${priceText(pro)}</span>` : ''}
         </div>`;
       grid.appendChild(el);
     }

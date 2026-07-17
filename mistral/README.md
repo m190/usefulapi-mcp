@@ -22,25 +22,25 @@ On first connect you'll paste your Mistral API key. It's validated, stored per-u
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `mistral_list_models` | read | List base and fine-tuned models |
-| `mistral_get_model` | read | Get one model's details |
-| `mistral_list_files` | read | List uploaded files |
-| `mistral_get_file` | read | Get file metadata |
-| `mistral_get_file_url` | read | Get a temporary download URL for a file |
-| `mistral_list_batch_jobs` | read | List batch inference jobs |
-| `mistral_get_batch_job` | read | Get one batch job's status |
+| `mistral_list_models` | read | List models |
+| `mistral_get_model` | read | Get a model |
+| `mistral_list_files` | read | List files |
+| `mistral_get_file` | read | Get a file |
+| `mistral_get_file_url` | read | Get a file download URL |
+| `mistral_list_batch_jobs` | read | List batch jobs |
+| `mistral_get_batch_job` | read | Get a batch job |
 | `mistral_list_agents` | read | List agents |
-| `mistral_get_agent` | read | Get one agent's configuration |
-| `mistral_list_libraries` | read | List RAG document libraries |
-| `mistral_get_library` | read | Get one library's details |
+| `mistral_get_agent` | read | Get an agent |
+| `mistral_list_libraries` | read | List document libraries |
+| `mistral_get_library` | read | Get a document library |
 | `mistral_list_library_documents` | read | List documents in a library |
-| `mistral_create_agent` | **write** | Create an agent with model, instructions and tools |
-| `mistral_cancel_batch_job` | **write** | Cancel a running batch job |
-| `mistral_delete_file` | **write** | Delete an uploaded file |
-| `mistral_usage_status` | meta | Your tier + usage this month |
-| `mistral_upgrade` | meta | Upgrade to Pro |
+| `mistral_create_agent` | **write** | Create an agent |
+| `mistral_cancel_batch_job` | **write** | Cancel a batch job |
+| `mistral_delete_file` | **write** | Delete a file |
+| `mistral_usage_status` | meta | Usage status (free-tier meter) |
+| `mistral_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

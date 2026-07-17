@@ -23,22 +23,22 @@ On first connect you'll paste your Chargebee API key and site. It's validated, s
 | Tool | Type | What it does |
 |------|------|--------------|
 | `chargebee_list_customers` | read | List customers |
-| `chargebee_get_customer` | read | Get a customer by id |
+| `chargebee_get_customer` | read | Get customer |
 | `chargebee_list_subscriptions` | read | List subscriptions |
-| `chargebee_get_subscription` | read | Get a subscription by id |
+| `chargebee_get_subscription` | read | Get subscription |
 | `chargebee_list_invoices` | read | List invoices |
-| `chargebee_get_invoice` | read | Get an invoice by id |
-| `chargebee_list_items` | read | List catalog items (plans, addons, charges) |
+| `chargebee_get_invoice` | read | Get invoice |
+| `chargebee_list_items` | read | List items |
 | `chargebee_list_item_prices` | read | List item prices |
-| `chargebee_list_transactions` | read | List payment/refund transactions |
+| `chargebee_list_transactions` | read | List transactions |
 | `chargebee_list_credit_notes` | read | List credit notes |
 | `chargebee_list_coupons` | read | List coupons |
-| `chargebee_create_customer` | **write** | Create a customer |
-| `chargebee_update_customer` | **write** | Update a customer's details |
-| `chargebee_usage_status` | meta | Your tier + usage this month |
-| `chargebee_upgrade` | meta | Upgrade to Pro |
+| `chargebee_create_customer` | **write** | Create customer |
+| `chargebee_update_customer` | **write** | Update customer |
+| `chargebee_usage_status` | meta | Usage status (free-tier meter) |
+| `chargebee_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

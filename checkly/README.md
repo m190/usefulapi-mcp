@@ -22,19 +22,32 @@ On first connect you'll paste your Checkly API key (and account ID). It's valida
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `checkly_list_checks` | read | List synthetic monitoring checks |
-| `checkly_list_check_statuses` | read | Live pass/fail/degraded status for every check |
-| `checkly_list_check_results` | read | Individual run results — latency, success, location |
-| `checkly_list_check_alerts` | read | Recent alert notifications |
-| `checkly_get_reporting` | read | Aggregated availability / SLA reporting |
-| `checkly_list_dashboards` | read | List status dashboards |
-| `checkly_list_locations` | read | Public checking locations |
-| `checkly_create_variable` | **write** | Create an account-level environment variable |
-| `checkly_create_maintenance_window` | **write** | Schedule a maintenance window (silences alerts) |
-| `checkly_usage_status` | meta | Your tier + usage this month |
-| `checkly_upgrade` | meta | Upgrade to Pro |
+| `checkly_get_account` | read | Get current account |
+| `checkly_list_checks` | read | List checks |
+| `checkly_get_check` | read | Get a check |
+| `checkly_list_check_groups` | read | List check groups |
+| `checkly_get_check_group` | read | Get a check group |
+| `checkly_list_check_statuses` | read | List check statuses |
+| `checkly_get_check_status` | read | Get check status |
+| `checkly_list_check_results` | read | List check results |
+| `checkly_get_check_result` | read | Get a check result |
+| `checkly_list_check_alerts` | read | List check alerts |
+| `checkly_get_check_alerts` | read | Get alerts for a check |
+| `checkly_get_reporting` | read | Get reporting |
+| `checkly_list_dashboards` | read | List dashboards |
+| `checkly_list_alert_channels` | read | List alert channels |
+| `checkly_list_maintenance_windows` | read | List maintenance windows |
+| `checkly_list_locations` | read | List locations |
+| `checkly_list_private_locations` | read | List private locations |
+| `checkly_list_snippets` | read | List snippets |
+| `checkly_list_variables` | read | List variables |
+| `checkly_list_runtimes` | read | List runtimes |
+| `checkly_create_variable` | **write** | Create environment variable |
+| `checkly_create_maintenance_window` | **write** | Create maintenance window |
+| `checkly_usage_status` | meta | Usage status (free-tier meter) |
+| `checkly_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

@@ -22,14 +22,14 @@ On first connect you'll paste your Mindee API key. It's validated, stored per-us
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `mindee_list_models` | read | List the extraction models on your account |
-| `mindee_get_job` | read | Check the status of an enqueued document by job id |
-| `mindee_get_inference` | read | Fetch the structured fields of a completed extraction |
-| `mindee_extract_document` | **write** | Submit a PDF/image to a model and return typed fields (spends credits) |
-| `mindee_usage_status` | meta | Your tier + usage this month |
-| `mindee_upgrade` | meta | Upgrade to Pro |
+| `mindee_list_models` | read | List extraction models |
+| `mindee_get_job` | read | Get job status |
+| `mindee_get_inference` | read | Get extraction result |
+| `mindee_extract_document` | read | Extract data from a document |
+| `mindee_usage_status` | meta | Usage status (free-tier meter) |
+| `mindee_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 

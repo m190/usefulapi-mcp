@@ -22,7 +22,7 @@ On first connect you'll paste your Loops API key. It's validated, stored per-use
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `loops_test_api_key` | read | Verify the API key |
+| `loops_test_api_key` | read | Test API key |
 | `loops_find_contact` | read | Find a contact |
 | `loops_list_contact_properties` | read | List contact properties |
 | `loops_list_mailing_lists` | read | List mailing lists |
@@ -32,10 +32,10 @@ On first connect you'll paste your Loops API key. It's validated, stored per-use
 | `loops_create_contact_property` | **write** | Create a contact property |
 | `loops_send_event` | **write** | Send an event |
 | `loops_send_transactional` | **write** | Send a transactional email |
-| `loops_usage_status` | meta | Your tier + usage this month |
-| `loops_upgrade` | meta | Upgrade to Pro |
+| `loops_usage_status` | meta | Usage status (free-tier meter) |
+| `loops_upgrade` | meta | Upgrade to Pro (unlimited) |
 
-Read tools are annotated `readOnlyHint`; write tools are `destructiveHint` so clients confirm before mutating.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
 ## Pricing
 
