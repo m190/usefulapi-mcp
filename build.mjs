@@ -89,11 +89,11 @@ const PRODUCT_CSS = `
 @media (prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--card:#17171a;--border:#262629;--accent:#8b83f8;--chip:#212125}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 a{color:inherit}
-.wrap{max-width:920px;margin:0 auto;padding:72px 24px 96px}
-.brand{display:flex;align-items:center;gap:14px;margin-bottom:10px}
-.brand .mark{width:44px;height:44px;border-radius:11px;flex:none}
-h1{font-size:40px;letter-spacing:-.02em;margin:0}
-.sub{color:var(--muted);font-size:18px;margin:0 0 40px;max-width:52ch}.sub strong{color:var(--fg)}
+.wrap{max-width:920px;margin:0 auto;padding:52px 24px 96px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.brand .mark{width:38px;height:38px;border-radius:10px;flex:none}
+h1{font-size:32px;letter-spacing:-.02em;margin:0}
+.sub{color:var(--muted);font-size:17px;margin:0 0 28px;max-width:52ch}.sub strong{color:var(--fg)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
 .card h2{font-size:16px;margin:0 0 4px}.card b{color:var(--fg)}
@@ -123,7 +123,8 @@ table tr:last-child td{border-bottom:0}
 @media (prefers-color-scheme:dark){.tag.write{color:#f0a978;background:#2a1a10}.tag.read{color:#5fd68a;background:#12241a}}
 .pricing td:first-child{font-weight:600}.pricing .scope{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
 .tname{font-weight:600;font-size:13px}.tdesc{color:var(--muted);font-size:13px;margin-top:2px}
-footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}`;
+footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}
+@media (max-width:560px){.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 function productPage(s) {
