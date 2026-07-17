@@ -50,6 +50,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Hypertune](hypertune/) | feature-flags | 7 | API token | [hypertune/](hypertune/) |
 | [Lago](lago/) | billing | 26 | API token | [lago/](lago/) |
 | [Laravel Forge](laravel-forge/) | devops | 19 | API token | [laravel-forge/](laravel-forge/) |
+| [Lemon Squeezy](lemonsqueezy/) | payments | 20 | API token | [lemonsqueezy/](lemonsqueezy/) |
+| [MapTiler](maptiler/) | maps | 10 | API token | [maptiler/](maptiler/) |
+| [Mercoa](mercoa/) | payments | 19 | API token | [mercoa/](mercoa/) |
+| [Northflank](northflank/) | devops | 19 | API token | [northflank/](northflank/) |
+| [Nylas](nylas/) | email | 17 | API token | [nylas/](nylas/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
