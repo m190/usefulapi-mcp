@@ -35,6 +35,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [EasyPost](easypost/) | shipping | 13 | API token | [easypost/](easypost/) |
 | [DNSimple](dnsimple/) | dns | 14 | API token | [dnsimple/](dnsimple/) |
 | [Bird](bird/) | communications | 18 | API token | [bird/](bird/) |
+| [Ably](ably/) | realtime | 17 | API token | [ably/](ably/) |
+| [Amberflo](amberflo/) | usage-metering | 16 | API token | [amberflo/](amberflo/) |
+| [Anvil](anvil/) | documents | 12 | API token | [anvil/](anvil/) |
+| [Api2Pdf](api2pdf/) | documents | 18 | API token | [api2pdf/](api2pdf/) |
+| [api.video](apivideo/) | video-hosting | 17 | API token | [apivideo/](apivideo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
