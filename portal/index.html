@@ -51,7 +51,12 @@
   .count { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
   .empty { color: var(--muted); font-size: 15px; padding: 40px 0; text-align: center; }
   .empty b { color: var(--fg); }
+  .group-head { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .05em; margin: 34px 0 14px; display: flex; align-items: baseline; gap: 8px; }
+  .group-head:first-child { margin-top: 0; }
+  .group-head .n { font-weight: 400; opacity: .7; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .grid + .group-head { margin-top: 34px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
     padding: 20px; text-decoration: none; color: inherit; display: flex; flex-direction: column;
     gap: 10px; transition: border-color .15s, transform .15s; }
@@ -81,15 +86,15 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
       <input id="search" type="search" placeholder="Search servers, tools, categories…" autocomplete="off" aria-label="Search servers">
     </label>
-    <select id="category" aria-label="Filter by category"></select>
+    <select id="group" aria-label="Filter by group"></select>
     <select id="sort" aria-label="Sort servers">
-      <option value="name">Name (A–Z)</option>
-      <option value="tools">Most tools</option>
-      <option value="category">Category</option>
+      <option value="group">Sort: group</option>
+      <option value="name">Sort: name (A–Z)</option>
+      <option value="tools">Sort: most tools</option>
     </select>
   </div>
   <p class="count" id="count"></p>
-  <main class="grid" id="grid"></main>
+  <main id="results"></main>
   <footer>
     Connect from Claude, Cursor, or any MCP client. &nbsp;·&nbsp;
     <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp;
@@ -109,28 +114,52 @@
   const prettyCat = function (c) { return (c || "").replace(/-/g, " ").replace(/^\w/, function (m) { return m.toUpperCase(); }); };
   const esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
 
+  // Coarse browse groups. Each fine manifest `category` maps to exactly one group; the group
+  // is derived here (not stored per-server) so it stays DRY and can't drift from the manifest.
+  const GROUP_ORDER = [
+    "Payments & Billing", "Messaging & Communication", "Developer Tools & Infrastructure",
+    "Documents & Delivery", "AI", "Data & Analytics", "Healthcare", "Media"
+  ];
+  const CAT_GROUP = {
+    billing: "Payments & Billing", payments: "Payments & Billing", "payment-operations": "Payments & Billing",
+    fintech: "Payments & Billing", tax: "Payments & Billing", "usage-metering": "Payments & Billing", ecommerce: "Payments & Billing",
+    email: "Messaging & Communication", chat: "Messaging & Communication", notifications: "Messaging & Communication",
+    communications: "Messaging & Communication", calendar: "Messaging & Communication", marketing: "Messaging & Communication",
+    devops: "Developer Tools & Infrastructure", observability: "Developer Tools & Infrastructure", dns: "Developer Tools & Infrastructure",
+    paas: "Developer Tools & Infrastructure", "feature-flags": "Developer Tools & Infrastructure",
+    "project-management": "Developer Tools & Infrastructure", localization: "Developer Tools & Infrastructure",
+    realtime: "Developer Tools & Infrastructure", maps: "Developer Tools & Infrastructure",
+    documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
+    "ai-infra": "AI", "image-generation": "AI", "speech-to-text": "AI", "document-ai": "AI",
+    analytics: "Data & Analytics", "data-enrichment": "Data & Analytics", "financial-data": "Data & Analytics", "fraud-detection": "Data & Analytics",
+    healthcare: "Healthcare", "health-data": "Healthcare",
+    "image-cdn": "Media", "video-hosting": "Media"
+  };
+  const groupOf = function (s) { return CAT_GROUP[s.category] || "Other"; };
+  const groupRank = function (g) { const i = GROUP_ORDER.indexOf(g); return i === -1 ? GROUP_ORDER.length : i; };
+
   fetch('/manifest.json').then(function (r) { return r.json(); }).then(function (MANIFEST) {
     document.getElementById('tagline').textContent = MANIFEST.portal.tagline;
-    const grid = document.getElementById('grid');
+    const results = document.getElementById('results');
     const countEl = document.getElementById('count');
     const searchEl = document.getElementById('search');
     const sortEl = document.getElementById('sort');
-    const catEl = document.getElementById('category');
+    const groupEl = document.getElementById('group');
     const servers = MANIFEST.servers.slice();
 
-    // Precompute a lowercase haystack per server: name, description, category, tool names + titles.
+    // Precompute a lowercase haystack per server: name, description, category, group, tool names + titles.
     const hay = new Map();
     for (const s of servers) {
       const toolText = (s.tools || []).map(function (t) { return (t.name || "") + " " + (t.title || "") + " " + (t.description || ""); }).join(" ");
-      hay.set(s, (s.name + " " + s.description + " " + prettyCat(s.category) + " " + s.category + " " + toolText).toLowerCase());
+      hay.set(s, (s.name + " " + s.description + " " + prettyCat(s.category) + " " + s.category + " " + groupOf(s) + " " + toolText).toLowerCase());
     }
 
-    // Populate the category filter with counts, sorted by frequency then name.
-    const catCounts = {};
-    for (const s of servers) catCounts[s.category] = (catCounts[s.category] || 0) + 1;
-    const cats = Object.keys(catCounts).sort(function (a, b) { return catCounts[b] - catCounts[a] || a.localeCompare(b); });
-    catEl.innerHTML = '<option value="">All categories (' + servers.length + ')</option>' +
-      cats.map(function (c) { return '<option value="' + esc(c) + '">' + esc(prettyCat(c)) + ' (' + catCounts[c] + ')</option>'; }).join("");
+    // Populate the group filter with counts, in GROUP_ORDER.
+    const groupCounts = {};
+    for (const s of servers) { const g = groupOf(s); groupCounts[g] = (groupCounts[g] || 0) + 1; }
+    const groups = Object.keys(groupCounts).sort(function (a, b) { return a.localeCompare(b); });
+    groupEl.innerHTML = '<option value="">All groups (' + servers.length + ')</option>' +
+      groups.map(function (g) { return '<option value="' + esc(g) + '">' + esc(g) + ' (' + groupCounts[g] + ')</option>'; }).join("");
 
     const card = function (s) {
       const live = s.status === "live";
@@ -148,34 +177,48 @@
           (pro ? '<span class="chip">Pro ' + esc(priceText(pro)) + '</span>' : '') +
         '</div></a>';
     };
+    const gridHtml = function (arr) { return '<div class="grid">' + arr.map(card).join("") + '</div>'; };
+    const byName = function (a, b) { return a.name.localeCompare(b.name); };
 
     const render = function () {
       const q = searchEl.value.trim().toLowerCase();
-      const cat = catEl.value;
+      const group = groupEl.value;
       const sort = sortEl.value;
-      let list = servers.filter(function (s) {
-        if (cat && s.category !== cat) return false;
+      const list = servers.filter(function (s) {
+        if (group && groupOf(s) !== group) return false;
         if (q && hay.get(s).indexOf(q) === -1) return false;
         return true;
       });
-      list.sort(function (a, b) {
-        if (sort === "tools") return toolN(b) - toolN(a) || a.name.localeCompare(b.name);
-        if (sort === "category") return a.category.localeCompare(b.category) || a.name.localeCompare(b.name);
-        return a.name.localeCompare(b.name);
-      });
-      grid.innerHTML = list.map(card).join("");
-      grid.style.display = list.length ? "" : "none";
+
       if (!list.length) {
+        results.innerHTML = '';
         countEl.innerHTML = '<span class="empty">No servers match <b>' + esc(searchEl.value.trim()) + '</b>.</span>';
+        return;
+      }
+      countEl.textContent = list.length + (list.length === 1 ? " server" : " servers") +
+        (q || group ? " of " + servers.length : "");
+
+      if (sort === "group") {
+        // Sectioned view: one labelled grid per group, groups in GROUP_ORDER, servers A–Z within.
+        const buckets = {};
+        for (const s of list) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
+        const order = Object.keys(buckets).sort(function (a, b) { return groupRank(a) - groupRank(b); });
+        results.innerHTML = order.map(function (g) {
+          return '<h2 class="group-head">' + esc(g) + ' <span class="n">' + buckets[g].length + '</span></h2>' +
+            gridHtml(buckets[g].sort(byName));
+        }).join("");
       } else {
-        countEl.textContent = list.length + (list.length === 1 ? " server" : " servers") +
-          (q || cat ? " of " + servers.length : "");
+        // Flat view.
+        list.sort(sort === "tools"
+          ? function (a, b) { return toolN(b) - toolN(a) || byName(a, b); }
+          : byName);
+        results.innerHTML = gridHtml(list);
       }
     };
 
     searchEl.addEventListener('input', render);
     sortEl.addEventListener('change', render);
-    catEl.addEventListener('change', render);
+    groupEl.addEventListener('change', render);
     render();
   });
 </script>
