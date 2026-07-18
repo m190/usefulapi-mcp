@@ -65,6 +65,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Scalingo](servers/scalingo/) | paas | 23 | API token | [servers/scalingo/](servers/scalingo/) |
 | [Metriport](servers/metriport/) | healthcare | 14 | API token | [servers/metriport/](servers/metriport/) |
 | [Vital](servers/vital/) | health-data | 23 | API token | [servers/vital/](servers/vital/) |
+| [Parabol](servers/parabol/) | project-management | 23 | API token | [servers/parabol/](servers/parabol/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
