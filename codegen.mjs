@@ -14,6 +14,29 @@ const ROOT = new URL("./", import.meta.url);
 const SUBDIR = "servers/";
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
 const { registryNamespace, repository } = manifest.portal;
+
+// Version is DERIVED from each server's package.json — the single source of truth
+// (release.sh bumps it via `npm version`, atomically == the git tag; see the
+// version-single-source-of-truth memory). Sync it into the manifest here so the
+// registry server.json and the portal always reflect the real released version,
+// never a stale hand-typed copy. Servers with no local repo keep their manifest value.
+function pkgVersion(slug) {
+  try {
+    return JSON.parse(readFileSync(new URL(`../servers/${slug}-mcp/package.json`, ROOT), "utf8")).version || null;
+  } catch {
+    return null;
+  }
+}
+let versionSynced = 0;
+for (const s of manifest.servers) {
+  const v = pkgVersion(s.slug);
+  if (v && v !== s.version) { s.version = v; versionSynced++; }
+  else if (!s.version) s.version = v || "1.0.0";
+}
+if (versionSynced) {
+  writeFileSync(new URL("manifest.json", ROOT), JSON.stringify(manifest, null, 2) + "\n");
+  console.log(`codegen: synced ${versionSynced} version(s) from package.json → manifest.json`);
+}
 const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json";
 
 // ---- server.json ------------------------------------------------------------
