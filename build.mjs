@@ -189,21 +189,28 @@ ${hint}
 // ---- homepage browse groups (SINGLE SOURCE) — injected into the homepage JS AND used to
 // statically pre-render the tiles so the server list is crawlable without JavaScript. ----
 const GROUP_ORDER = [
-  "Payments & Billing", "Messaging & Communication", "Developer Tools & Infrastructure",
-  "Documents & Delivery", "AI", "Data & Analytics", "Healthcare", "Media"
+  "Payments & Billing", "Fintech", "Commerce & Memberships",
+  "Messaging & Communication", "Scheduling",
+  "Developer Tools & Infrastructure", "Observability", "Project Management",
+  "Documents & Delivery", "AI", "Healthcare", "Data & Analytics", "Media"
 ];
 const CAT_GROUP = {
-  billing: "Payments & Billing", payments: "Payments & Billing", "payment-operations": "Payments & Billing",
-  fintech: "Payments & Billing", tax: "Payments & Billing", "usage-metering": "Payments & Billing", ecommerce: "Payments & Billing",
+  billing: "Payments & Billing", payments: "Payments & Billing", "usage-metering": "Payments & Billing",
+  fintech: "Fintech", "payment-operations": "Fintech", "financial-data": "Fintech", "fraud-detection": "Fintech", tax: "Fintech",
+  ecommerce: "Commerce & Memberships", membership: "Commerce & Memberships", fundraising: "Commerce & Memberships",
   email: "Messaging & Communication", chat: "Messaging & Communication", notifications: "Messaging & Communication",
-  communications: "Messaging & Communication", calendar: "Messaging & Communication", marketing: "Messaging & Communication",
-  devops: "Developer Tools & Infrastructure", observability: "Developer Tools & Infrastructure", dns: "Developer Tools & Infrastructure",
+  communications: "Messaging & Communication", marketing: "Messaging & Communication",
+  calendar: "Scheduling",
+  devops: "Developer Tools & Infrastructure", dns: "Developer Tools & Infrastructure",
   paas: "Developer Tools & Infrastructure", "feature-flags": "Developer Tools & Infrastructure",
-  "project-management": "Developer Tools & Infrastructure", localization: "Developer Tools & Infrastructure",
-  realtime: "Developer Tools & Infrastructure", maps: "Developer Tools & Infrastructure",
+  localization: "Developer Tools & Infrastructure", realtime: "Developer Tools & Infrastructure",
+  maps: "Developer Tools & Infrastructure", "no-code-database": "Developer Tools & Infrastructure",
+  observability: "Observability",
+  "project-management": "Project Management",
   documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
+  "knowledge-base": "Documents & Delivery",
   "ai-infra": "AI", "image-generation": "AI", "speech-to-text": "AI", "document-ai": "AI",
-  analytics: "Data & Analytics", "data-enrichment": "Data & Analytics", "financial-data": "Data & Analytics", "fraud-detection": "Data & Analytics",
+  analytics: "Data & Analytics", "data-enrichment": "Data & Analytics",
   healthcare: "Healthcare", "health-data": "Healthcare",
   "image-cdn": "Media", "video-hosting": "Media"
 };
