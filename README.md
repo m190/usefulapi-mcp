@@ -66,6 +66,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Metriport](servers/metriport/) | healthcare | 14 | API token | [servers/metriport/](servers/metriport/) |
 | [Vital](servers/vital/) | health-data | 23 | API token | [servers/vital/](servers/vital/) |
 | [Parabol](servers/parabol/) | project-management | 23 | API token | [servers/parabol/](servers/parabol/) |
+| [KnowledgeOwl](servers/knowledgeowl/) | knowledge-base | 26 | API token | [servers/knowledgeowl/](servers/knowledgeowl/) |
+| [Raisely](servers/raisely/) | fundraising | 25 | API token | [servers/raisely/](servers/raisely/) |
+| [YouCanBook.me](servers/youcanbookme/) | calendar | 20 | API token | [servers/youcanbookme/](servers/youcanbookme/) |
+| [Memberful](servers/memberful/) | membership | 14 | API token | [servers/memberful/](servers/memberful/) |
+| [Knack](servers/knack/) | no-code-database | 11 | API token | [servers/knack/](servers/knack/) |
+| [Olark](servers/olark/) | chat | 10 | API token | [servers/olark/](servers/olark/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
