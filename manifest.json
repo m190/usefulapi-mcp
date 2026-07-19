@@ -9143,6 +9143,468 @@
         }
       ],
       "version": "1.0.0"
+    },
+    {
+      "slug": "statuspal",
+      "name": "StatusPal",
+      "category": "observability",
+      "description": "Read status-page status, services, incidents and metrics; create, update and publish incidents.",
+      "endpoint": "https://statuspal.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "statuspal_get_summary",
+          "type": "read",
+          "title": "Get status page summary",
+          "description": "Get the FULL status-page summary — status_page, services[], incidents[], maintenances[], upcoming_maintenances[], info_notices[], and current_status_type. StatusPal: GET /status_pages/{subdomain}/summary."
+        },
+        {
+          "name": "statuspal_get_status",
+          "type": "read",
+          "title": "Get overall status",
+          "description": "Get the current overall status of the status page (the aggregate status type). StatusPal: GET /status_pages/{subdomain}/status."
+        },
+        {
+          "name": "statuspal_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services on a status page — each with {id, name, current_incident_type, children[]}. StatusPal: GET /status_pages/{subdomain}/services."
+        },
+        {
+          "name": "statuspal_get_service_status",
+          "type": "read",
+          "title": "Get service status",
+          "description": "Get the current status of a single service by its id. StatusPal: GET /status_pages/{subdomain}/services/{service_id}/status."
+        },
+        {
+          "name": "statuspal_list_incidents",
+          "type": "read",
+          "title": "List incidents",
+          "description": "List incidents for a status page. Returns {incidents[], links:{next,prev}, meta:{total_count}}. Use `before`/`after` cursors to paginate and `type` to filter. StatusPal: GET /status_pages/{subdomain}/incidents."
+        },
+        {
+          "name": "statuspal_get_incident",
+          "type": "read",
+          "title": "Get incident",
+          "description": "Get a single incident by its id. StatusPal: GET /status_pages/{subdomain}/incidents/{incident_id}."
+        },
+        {
+          "name": "statuspal_list_metrics",
+          "type": "read",
+          "title": "List metrics",
+          "description": "List the metrics configured on a status page. Use `before`/`after` cursors to paginate. StatusPal: GET /status_pages/{subdomain}/metrics."
+        },
+        {
+          "name": "statuspal_create_incident",
+          "type": "write",
+          "title": "Create incident",
+          "description": "PUBLISHES a new incident to the LIVE public status page (and, with notify=true, emails/notifies subscribers). type=\"major\" or \"minor\" is an outage incident; type=\"scheduled\" creates a scheduled maintenance window. StatusPal: POST /status_pages/{subdomain}/incidents."
+        },
+        {
+          "name": "statuspal_update_incident",
+          "type": "write",
+          "title": "Update incident",
+          "description": "UPDATES an existing incident on the LIVE public status page (title/type/services/timing). StatusPal: PUT /status_pages/{subdomain}/incidents/{incident_id}."
+        },
+        {
+          "name": "statuspal_create_incident_update",
+          "type": "write",
+          "title": "Post incident update",
+          "description": "POSTS an update (e.g. investigating → identified → monitoring → resolved) to an existing incident on the LIVE public status page (and, with notify=true, notifies subscribers). StatusPal: POST /status_pages/{subdomain}/incidents/{incident_id}/updates."
+        },
+        {
+          "name": "statuspal_delete_incident",
+          "type": "write",
+          "title": "Delete incident",
+          "description": "DELETES an incident from the LIVE public status page — this permanently removes it. StatusPal: DELETE /status_pages/{subdomain}/incidents/{incident_id}."
+        },
+        {
+          "name": "statuspal_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "statuspal_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED StatusPal tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "spikesh",
+      "name": "Spike.sh",
+      "category": "observability",
+      "description": "Read Spike.sh incidents, on-call, escalations and services; acknowledge, resolve, set priority.",
+      "endpoint": "https://spikesh.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "spike_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List all teams in the Spike.sh organization — {teams:[{_id, name, uid, private, org}]}. NOT team-scoped (no x-team-id needed). The `_id` values here are what you pass as `teamId` (x-team-id) to every other tool. Spike: GET /teams/get-all-teams."
+        },
+        {
+          "name": "spike_list_incidents",
+          "type": "read",
+          "title": "List incidents",
+          "description": "List incidents for a team — {incidents:[...], totalIncidents, totalOpenIncidents, pagination}. Each incident carries title, status, priority, severity, and timing. Spike: GET /incidents (team-scoped)."
+        },
+        {
+          "name": "spike_list_triggered_incidents",
+          "type": "read",
+          "title": "List triggered incidents",
+          "description": "List currently TRIGGERED (open, unacknowledged) incidents for a team — the active fire-fighting queue. Spike: GET /incidents/triggered (team-scoped)."
+        },
+        {
+          "name": "spike_list_acknowledged_incidents",
+          "type": "read",
+          "title": "List acknowledged incidents",
+          "description": "List currently ACKNOWLEDGED (being worked on, not yet resolved) incidents for a team. Spike: GET /incidents/acknowledged (team-scoped)."
+        },
+        {
+          "name": "spike_get_incident",
+          "type": "read",
+          "title": "Get incident",
+          "description": "Get a single incident's full detail by its counterId — {incident, duration, metadata, comments, repeatedIncidents}. Spike: GET /incidents/{counterId} (team-scoped)."
+        },
+        {
+          "name": "spike_get_incident_activity_log",
+          "type": "read",
+          "title": "Get incident activity log",
+          "description": "Get the chronological activity log for an incident — {incident, activities:[...]} (who acknowledged/resolved/commented and when). Spike: GET /incidents/{counterId}/activity-log (team-scoped)."
+        },
+        {
+          "name": "spike_list_on_calls",
+          "type": "read",
+          "title": "List on-call schedules",
+          "description": "List a team's on-call schedules — {oncalls:[...]}. Each on-call has an id, name, timezone, and layers. Use the id with spike_get_on_call / spike_who_is_on_call_next. Spike: GET /on-calls (team-scoped)."
+        },
+        {
+          "name": "spike_get_on_call",
+          "type": "read",
+          "title": "Get on-call schedule",
+          "description": "Get one on-call schedule by id — {oncall:{_id, name, timezone, teams, users, activeShift, renderedShifts}}. `from` optionally sets the window start for rendered shifts. Spike: GET /on-calls/{oncallId} (team-scoped)."
+        },
+        {
+          "name": "spike_who_is_on_call_next",
+          "type": "read",
+          "title": "Who is on call next",
+          "description": "Get the NEXT scheduled shift for an on-call schedule — {nextShift:{userId, startTimeInUTC, endTimeInUTC}} (or {} if none). Spike: GET /on-calls/{oncallId}/who-is-on-call-next (team-scoped)."
+        },
+        {
+          "name": "spike_list_escalations",
+          "type": "read",
+          "title": "List escalation policies",
+          "description": "List a team's escalation policies — {totalEscalations, escalations:[{_id, name, teams, org}], pagination}. Spike: GET /escalations (team-scoped)."
+        },
+        {
+          "name": "spike_get_escalation",
+          "type": "read",
+          "title": "Get escalation policy",
+          "description": "Get one escalation policy by id — {escalation, integrations:[...], isPinned, alertRules}. Spike: GET /escalations/{escalationId} (team-scoped)."
+        },
+        {
+          "name": "spike_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List a team's services — {totalServices, services:[{_id, counterId, name, desc, teams, org}], pagination}. Spike: GET /services (team-scoped)."
+        },
+        {
+          "name": "spike_get_service",
+          "type": "read",
+          "title": "Get service",
+          "description": "Get one service by its counterId — {service, org, openIncidentsCountForService, incidents, badgeURL}. Spike: GET /services/{counterId} (team-scoped)."
+        },
+        {
+          "name": "spike_acknowledge_incidents",
+          "type": "write",
+          "title": "Acknowledge incidents",
+          "description": "ACKNOWLEDGES one or more incidents — this CHANGES live incident state (stops escalation and marks them as being worked on). Spike: POST /incidents/acknowledge with {ids:[...]}."
+        },
+        {
+          "name": "spike_resolve_incidents",
+          "type": "write",
+          "title": "Resolve incidents",
+          "description": "RESOLVES (closes) one or more incidents — this CHANGES live incident state and marks them done. Spike: POST /incidents/resolve with {ids:[...]}."
+        },
+        {
+          "name": "spike_set_incident_priority",
+          "type": "write",
+          "title": "Set incident priority",
+          "description": "Sets the PRIORITY (p1..p5) on one or more incidents — this CHANGES live incident state. Spike: POST /incidents/priority with {ids:[...], priority}."
+        },
+        {
+          "name": "spike_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spike_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Spike.sh tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "groove-hq",
+      "name": "Groove",
+      "category": "communications",
+      "description": "Read Groove shared-inbox conversations, contacts, agents and tags; close, assign, snooze and tag.",
+      "endpoint": "https://groove-hq.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "groove_list_conversations",
+          "type": "read",
+          "title": "List conversations",
+          "description": "List support conversations (tickets) in the shared inbox, with rich filters. Filter by state, channel_id, folder_id, tag_name, assigned, starred, or keywords; paginate with first/after. Groove GraphQL: conversations(filter: ConversationFilter)."
+        },
+        {
+          "name": "groove_get_conversation",
+          "type": "read",
+          "title": "Get conversation",
+          "description": "Get a single conversation by id — subject, state, assignment, contact, channel, counts, and tags. Groove GraphQL: conversation(id: ID!)."
+        },
+        {
+          "name": "groove_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customer contacts (people who wrote in). Optional keyword search over name/email; paginate with first/after. Groove GraphQL: contacts(keywords: String)."
+        },
+        {
+          "name": "groove_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get a single contact by id — name, email, role, type, and conversation count. Groove GraphQL: contact(contactId: ID!)."
+        },
+        {
+          "name": "groove_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List agents (support staff / users) in the account, with role and state. Paginate with first/after. Groove GraphQL: agents."
+        },
+        {
+          "name": "groove_list_channels",
+          "type": "read",
+          "title": "List channels",
+          "description": "List channels (mailboxes / inboxes — email, chat, etc.) configured in the account. Paginate with first/after. Groove GraphQL: channels."
+        },
+        {
+          "name": "groove_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags defined in the account (id, name, color) — use tag ids with the tag/untag write tools. Paginate with first/after. Groove GraphQL: tags."
+        },
+        {
+          "name": "groove_list_folders",
+          "type": "read",
+          "title": "List folders",
+          "description": "List folders (saved views / smart folders that group conversations), with conversation counts. Paginate with first/after. Groove GraphQL: folders."
+        },
+        {
+          "name": "groove_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams (groups of agents that conversations can be assigned to). Paginate with first/after. Groove GraphQL: teams."
+        },
+        {
+          "name": "groove_close_conversation",
+          "type": "write",
+          "title": "Close conversation",
+          "description": "CLOSES a conversation (marks it resolved) in the shared inbox. Groove GraphQL: conversationClose."
+        },
+        {
+          "name": "groove_open_conversation",
+          "type": "write",
+          "title": "Open conversation",
+          "description": "RE-OPENS a closed/snoozed conversation in the shared inbox. Groove GraphQL: conversationOpen."
+        },
+        {
+          "name": "groove_snooze_conversation",
+          "type": "write",
+          "title": "Snooze conversation",
+          "description": "SNOOZES a conversation until the given time (ISO8601) — it drops out of the inbox until then. Groove GraphQL: conversationSnooze."
+        },
+        {
+          "name": "groove_star_conversation",
+          "type": "write",
+          "title": "Star conversation",
+          "description": "STARS a conversation (flags it for attention) in the shared inbox. Groove GraphQL: conversationStar."
+        },
+        {
+          "name": "groove_assign_conversation",
+          "type": "write",
+          "title": "Assign conversation",
+          "description": "ASSIGNS a conversation to an agent and/or team. Pass agent_id, team_id, or both (at least one is required). Groove GraphQL: conversationAssign."
+        },
+        {
+          "name": "groove_tag_conversation",
+          "type": "write",
+          "title": "Tag conversation",
+          "description": "ADDS tags (by tag id) to a conversation. Use groove_list_tags to find tag ids. Groove GraphQL: conversationTag."
+        },
+        {
+          "name": "groove_untag_conversation",
+          "type": "write",
+          "title": "Untag conversation",
+          "description": "REMOVES tags (by tag id) from a conversation. Use groove_list_tags to find tag ids. Groove GraphQL: conversationUntag."
+        },
+        {
+          "name": "groove_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "groove_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Groove tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "bettermode",
+      "name": "Bettermode",
+      "category": "membership",
+      "description": "Read Bettermode community spaces, members and posts; full-text search across your community.",
+      "endpoint": "https://bettermode.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "bettermode_get_network",
+          "type": "read",
+          "title": "Get network",
+          "description": "Get top-level info about the Bettermode community (\"network\") this token belongs to — id, name, primary domain/subdomain, status, creation date, and total member count. No arguments. Bettermode GraphQL query: network."
+        },
+        {
+          "name": "bettermode_list_spaces",
+          "type": "read",
+          "title": "List spaces",
+          "description": "List spaces (the containers for posts — e.g. discussions, Q&A, articles) in the community, with pagination. Optionally filter by name (`query`), order (`orderBy`, a SpaceListOrderByEnum value), and reverse the order. Returns edges[].node plus pageInfo and totalCount. Bettermode GraphQL query: spaces."
+        },
+        {
+          "name": "bettermode_get_space",
+          "type": "read",
+          "title": "Get space",
+          "description": "Get a single space by its `id` OR its `slug` (provide exactly one). Returns the space's name, slug, description, type, creation date, and member/post counts. Bettermode GraphQL query: space."
+        },
+        {
+          "name": "bettermode_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List members of the community, with pagination. Optionally filter by a search term (`query`, matches name/username/email), by role (`roleIds`), order (`orderBy`), and reverse. Returns edges[].node (with role) plus pageInfo and totalCount. Bettermode GraphQL query: members."
+        },
+        {
+          "name": "bettermode_get_member",
+          "type": "read",
+          "title": "Get member",
+          "description": "Get a single community member by their `id`. Returns name, username, email, status, creation date, role, and tagline. Bettermode GraphQL query: member."
+        },
+        {
+          "name": "bettermode_list_posts",
+          "type": "read",
+          "title": "List posts",
+          "description": "List posts across the community, with pagination. Optionally scope to one or more spaces (`spaceIds`), order (`orderBy`, passed through as a plain string), and reverse. Returns edges[].node (title, shortContent, space, owner) plus pageInfo and totalCount. Bettermode GraphQL query: posts."
+        },
+        {
+          "name": "bettermode_get_post",
+          "type": "read",
+          "title": "Get post",
+          "description": "Get a single post by its `id`. Returns title, shortContent, creation date, space, owner (member), and reaction/reply counts. Bettermode GraphQL query: post."
+        },
+        {
+          "name": "bettermode_search",
+          "type": "read",
+          "title": "Search",
+          "description": "Full-text search across the community (members, spaces, posts, …). Provide a `query` term; results come back grouped by entity type, each hit with id, title, subtitle, content, url, and entityId. Bettermode GraphQL query: search."
+        },
+        {
+          "name": "bettermode_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bettermode_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Bettermode tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
     }
   ]
 }

@@ -84,6 +84,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [EmailOctopus](servers/emailoctopus/) | email | 15 | API token | [servers/emailoctopus/](servers/emailoctopus/) |
 | [Healthchecks.io](servers/healthchecksio/) | observability | 14 | API token | [servers/healthchecksio/](servers/healthchecksio/) |
 | [Instatus](servers/instatus/) | observability | 16 | API token | [servers/instatus/](servers/instatus/) |
+| [StatusPal](servers/statuspal/) | observability | 13 | API token | [servers/statuspal/](servers/statuspal/) |
+| [Spike.sh](servers/spikesh/) | observability | 18 | API token | [servers/spikesh/](servers/spikesh/) |
+| [Groove](servers/groove-hq/) | communications | 18 | API token | [servers/groove-hq/](servers/groove-hq/) |
+| [Bettermode](servers/bettermode/) | membership | 10 | API token | [servers/bettermode/](servers/bettermode/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
