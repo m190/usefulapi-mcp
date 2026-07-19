@@ -88,6 +88,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Spike.sh](servers/spikesh/) | observability | 18 | API token | [servers/spikesh/](servers/spikesh/) |
 | [Groove](servers/groove-hq/) | communications | 18 | API token | [servers/groove-hq/](servers/groove-hq/) |
 | [Bettermode](servers/bettermode/) | membership | 10 | API token | [servers/bettermode/](servers/bettermode/) |
+| [Ecwid](servers/ecwid/) | ecommerce | 14 | API token | [servers/ecwid/](servers/ecwid/) |
+| [Foxy.io](servers/foxyio/) | ecommerce | 16 | API token | [servers/foxyio/](servers/foxyio/) |
+| [Acuity Scheduling](servers/acuity-scheduling/) | calendar | 20 | API token | [servers/acuity-scheduling/](servers/acuity-scheduling/) |
+| [Squadcast](servers/squadcast/) | observability | 18 | API token | [servers/squadcast/](servers/squadcast/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
