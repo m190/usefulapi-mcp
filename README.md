@@ -72,6 +72,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Memberful](servers/memberful/) | membership | 14 | API token | [servers/memberful/](servers/memberful/) |
 | [Knack](servers/knack/) | no-code-database | 11 | API token | [servers/knack/](servers/knack/) |
 | [Olark](servers/olark/) | chat | 10 | API token | [servers/olark/](servers/olark/) |
+| [All Quiet](servers/all-quiet/) | observability | 13 | API token | [servers/all-quiet/](servers/all-quiet/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
