@@ -80,6 +80,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Numeral](servers/numeral/) | tax | 13 | API token | [servers/numeral/](servers/numeral/) |
 | [Census](servers/census/) | analytics | 15 | API token | [servers/census/](servers/census/) |
 | [Portkey](servers/portkey/) | ai-infra | 18 | API token | [servers/portkey/](servers/portkey/) |
+| [SimpleTexting](servers/simpletexting/) | communications | 13 | API token | [servers/simpletexting/](servers/simpletexting/) |
+| [EmailOctopus](servers/emailoctopus/) | email | 15 | API token | [servers/emailoctopus/](servers/emailoctopus/) |
+| [Healthchecks.io](servers/healthchecksio/) | observability | 14 | API token | [servers/healthchecksio/](servers/healthchecksio/) |
+| [Instatus](servers/instatus/) | observability | 16 | API token | [servers/instatus/](servers/instatus/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
