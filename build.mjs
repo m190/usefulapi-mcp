@@ -277,4 +277,14 @@ writeFileSync(`${outDir}/sitemap.xml`,
   urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
 writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
-console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
+// robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
+// endpoints with nothing to index — the indexable surface is this portal's /<slug>/ page.
+// A Cloudflare Single Redirect maps <slug>.usefulapi.io/robots.txt here, because the worker
+// subdomains have no static-file surface of their own. Crawlers follow robots.txt redirects
+// and apply the final body to the requesting host.
+writeFileSync(`${outDir}/mcp-robots.txt`,
+  `# Applies to the <slug>.usefulapi.io MCP server subdomains (via redirect).\n` +
+  `# These hosts are JSON-RPC API endpoints; the human-readable pages live on ${base}.\n` +
+  `User-agent: *\nDisallow: /\n\nSitemap: ${base}/sitemap.xml\n`);
+
+console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, mcp-robots.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
