@@ -1,0 +1,56 @@
+# Lambda Labs MCP by usefulapi
+
+Use your [Lambda Labs](https://lambdalabs.com) account from Claude, Cursor, or any MCP client — read GPU instances, instance types, images, filesystems and firewall rules, and launch or terminate instances. Hosted,
+no local install: connect with your own credentials.
+
+**Live endpoint:** `https://lambda-labs.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "lambda-labs": {
+      "url": "https://lambda-labs.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Lambda Cloud API key** (Lambda Cloud dashboard → API keys). It is validated, stored per-user, and scoped to you — no
+keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `lambda_list_instances` | read | List instances |
+| `lambda_get_instance` | read | Get instance |
+| `lambda_list_instance_types` | read | List instance types |
+| `lambda_list_images` | read | List images |
+| `lambda_list_filesystems` | read | List filesystems |
+| `lambda_list_firewall_rules` | read | List firewall rules |
+| `lambda_list_firewall_rulesets` | read | List firewall rulesets |
+| `lambda_get_firewall_ruleset` | read | Get firewall ruleset |
+| `lambda_list_audit_events` | read | List audit events |
+| `lambda_launch_instance` | **write** | Launch instance |
+| `lambda_restart_instances` | **write** | Restart instances |
+| `lambda_terminate_instances` | **write** | Terminate instances |
+| `lambda_update_instance` | **write** | Update instance |
+| `lambda_create_filesystem` | **write** | Create filesystem |
+| `lambda_delete_filesystem` | **write** | Delete filesystem |
+| `lambda_usage_status` | meta | Usage status (free-tier meter) |
+| `lambda_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT — see [LICENSE](../LICENSE). Documentation only; the server is hosted.

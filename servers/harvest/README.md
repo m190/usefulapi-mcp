@@ -1,0 +1,61 @@
+# Harvest MCP by usefulapi
+
+Use your [Harvest](https://www.getharvest.com) account from Claude, Cursor, or any MCP client — read time entries, projects, clients, tasks and invoices, and log or update tracked time. Hosted,
+no local install: connect with your own credentials.
+
+**Live endpoint:** `https://harvest.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "harvest": {
+      "url": "https://harvest.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Harvest personal access token** and **Account ID** (id.getharvest.com → Developers). It is validated, stored per-user, and scoped to you — no
+keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `harvest_list_time_entries` | read | List time entries |
+| `harvest_get_time_entry` | read | Get time entry |
+| `harvest_list_projects` | read | List projects |
+| `harvest_get_project` | read | Get project |
+| `harvest_list_clients` | read | List clients |
+| `harvest_get_client` | read | Get client |
+| `harvest_list_tasks` | read | List tasks |
+| `harvest_list_users` | read | List users |
+| `harvest_get_current_user` | read | Get current user |
+| `harvest_list_project_assignments` | read | List my project assignments |
+| `harvest_list_invoices` | read | List invoices |
+| `harvest_get_invoice` | read | Get invoice |
+| `harvest_list_estimates` | read | List estimates |
+| `harvest_list_expenses` | read | List expenses |
+| `harvest_get_company` | read | Get company |
+| `harvest_create_time_entry` | **write** | Create time entry |
+| `harvest_update_time_entry` | **write** | Update time entry |
+| `harvest_stop_time_entry` | **write** | Stop running time entry |
+| `harvest_restart_time_entry` | **write** | Restart stopped time entry |
+| `harvest_delete_time_entry` | **write** | Delete time entry |
+| `harvest_usage_status` | meta | Usage status (free-tier meter) |
+| `harvest_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT — see [LICENSE](../LICENSE). Documentation only; the server is hosted.

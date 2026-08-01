@@ -92,6 +92,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Foxy.io](servers/foxyio/) | ecommerce | 16 | API token | [servers/foxyio/](servers/foxyio/) |
 | [Acuity Scheduling](servers/acuity-scheduling/) | calendar | 20 | API token | [servers/acuity-scheduling/](servers/acuity-scheduling/) |
 | [Squadcast](servers/squadcast/) | observability | 18 | API token | [servers/squadcast/](servers/squadcast/) |
+| [Mailchimp](servers/mailchimp/) | email | 20 | API token | [servers/mailchimp/](servers/mailchimp/) |
+| [Zendesk](servers/zendesk/) | support | 21 | API token | [servers/zendesk/](servers/zendesk/) |
+| [Finnhub](servers/finnhub/) | financial-data | 17 | API token | [servers/finnhub/](servers/finnhub/) |
+| [Pipedrive](servers/pipedrive/) | crm | 21 | API token | [servers/pipedrive/](servers/pipedrive/) |
+| [GitBook](servers/gitbook/) | documents | 16 | API token | [servers/gitbook/](servers/gitbook/) |
+| [ClickUp](servers/clickup/) | project-management | 16 | API token | [servers/clickup/](servers/clickup/) |
+| [Freshdesk](servers/freshdesk/) | support | 21 | API token | [servers/freshdesk/](servers/freshdesk/) |
+| [Tailscale](servers/tailscale/) | devops | 24 | API token | [servers/tailscale/](servers/tailscale/) |
+| [Harvest](servers/harvest/) | project-management | 22 | API token | [servers/harvest/](servers/harvest/) |
+| [Twenty](servers/twenty/) | crm | 22 | API token | [servers/twenty/](servers/twenty/) |
+| [Reclaim.ai](servers/reclaimai/) | calendar | 17 | API token | [servers/reclaimai/](servers/reclaimai/) |
+| [Plausible](servers/plausible-analytics/) | analytics | 10 | API token | [servers/plausible-analytics/](servers/plausible-analytics/) |
+| [Printify](servers/printify/) | ecommerce | 16 | API token | [servers/printify/](servers/printify/) |
+| [Gumroad](servers/gumroad/) | ecommerce | 22 | API token | [servers/gumroad/](servers/gumroad/) |
+| [Aircall](servers/aircall/) | communications | 27 | API token | [servers/aircall/](servers/aircall/) |
+| [Lambda Labs](servers/lambda-labs/) | ai-infra | 17 | API token | [servers/lambda-labs/](servers/lambda-labs/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

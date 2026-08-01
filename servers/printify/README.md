@@ -1,0 +1,55 @@
+# Printify MCP by usefulapi
+
+Use your [Printify](https://printify.com) account from Claude, Cursor, or any MCP client — read shops, catalog blueprints, print providers, products and orders, and create or publish products. Hosted,
+no local install: connect with your own credentials.
+
+**Live endpoint:** `https://printify.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "printify": {
+      "url": "https://printify.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Printify API token** (My profile → Connections → API tokens). It is validated, stored per-user, and scoped to you — no
+keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `printify_list_shops` | read | List shops |
+| `printify_list_products` | read | List products |
+| `printify_get_product` | read | Get product |
+| `printify_list_orders` | read | List orders |
+| `printify_get_order` | read | Get order |
+| `printify_calculate_shipping` | read | Calculate shipping |
+| `printify_list_catalog_blueprints` | read | List catalog blueprints |
+| `printify_get_blueprint` | read | Get blueprint |
+| `printify_get_print_providers` | read | Get blueprint print providers |
+| `printify_get_variants` | read | Get variants |
+| `printify_list_print_providers` | read | List print providers |
+| `printify_list_webhooks` | read | List webhooks |
+| `printify_list_uploads` | read | List uploads |
+| `printify_publish_product` | **write** | Publish product |
+| `printify_usage_status` | meta | Usage status (free-tier meter) |
+| `printify_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT — see [LICENSE](../LICENSE). Documentation only; the server is hosted.
