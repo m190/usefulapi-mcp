@@ -1,0 +1,48 @@
+# WHOOP MCP by usefulapi
+
+Read WHOOP recovery, sleep, cycles, workouts and body measurements. Hosted, no local install.
+
+**Live endpoint:** `https://whoop.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "whoop": {
+      "url": "https://whoop.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll paste your **WHOOP credentials**. They are validated, stored
+per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `whoop_get_profile` | read | Get profile |
+| `whoop_body_measurement` | read | Get body measurement |
+| `whoop_list_cycles` | read | List cycles |
+| `whoop_get_cycle` | read | Get cycle |
+| `whoop_get_cycle_recovery` | read | Get cycle recovery |
+| `whoop_list_recoveries` | read | List recoveries |
+| `whoop_list_sleep` | read | List sleep |
+| `whoop_get_sleep` | read | Get sleep |
+| `whoop_list_workouts` | read | List workouts |
+| `whoop_get_workout` | read | Get workout |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT

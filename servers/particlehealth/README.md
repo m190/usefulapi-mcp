@@ -1,0 +1,49 @@
+# Particle Health MCP by usefulapi
+
+Query Particle Health patient records across connected clinical networks. Hosted, no local install.
+
+**Live endpoint:** `https://particlehealth.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "particlehealth": {
+      "url": "https://particlehealth.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll paste your **Particle Health credentials**. They are validated, stored
+per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `particle_get_patient` | read | Get patient record |
+| `particle_search_patient` | read | Search for a patient |
+| `particle_get_query_status` | read | Get query status |
+| `particle_get_fhir` | read | Get FHIR bundle |
+| `particle_get_fhir_by_type` | read | Get FHIR resources by type |
+| `particle_get_flat` | read | Get flattened clinical data |
+| `particle_get_ccda` | read | Get C-CDA document(s) |
+| `particle_search_network_participants` | read | Search network participants |
+| `particle_get_patient_documents` | read | List patient documents |
+| `particle_submit_patient` | **write** | Submit (register) patient (WRITE) |
+| `particle_create_query` | **write** | Create clinical-record query (WRITE) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT
