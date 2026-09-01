@@ -1,0 +1,60 @@
+# Trigger.dev MCP by usefulapi
+
+Debug background jobs — runs, traces, spans, schedules, queues and deployments. Hosted, no local install.
+
+**Live endpoint:** `https://trigger-dev.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "trigger-dev": {
+      "url": "https://trigger-dev.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll paste your **Trigger.dev credentials**. They are validated,
+stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `trigger_list_runs` | read | List runs |
+| `trigger_get_run` | read | Get one run |
+| `trigger_get_run_trace` | read | Get a run's trace |
+| `trigger_get_run_span` | read | Get one span of a run |
+| `trigger_list_run_events` | read | List a run's events |
+| `trigger_get_run_metadata` | read | Get a run's metadata |
+| `trigger_get_batch_results` | read | Get a batch's results |
+| `trigger_list_schedules` | read | List schedules |
+| `trigger_get_schedule` | read | Get one schedule |
+| `trigger_list_queues` | read | List queues |
+| `trigger_get_queue` | read | Get one queue |
+| `trigger_get_current_deployment` | read | Get the current deployment |
+| `trigger_list_env_vars` | read | List environment variables |
+| `trigger_list_waitpoint_tokens` | read | List waitpoint tokens |
+| `trigger_list_bulk_actions` | read | List bulk actions |
+| `trigger_cancel_run` | **write** | Cancel a run |
+| `trigger_replay_run` | **write** | Replay a run |
+| `trigger_reschedule_run` | **write** | Reschedule a delayed run |
+| `trigger_add_run_tags` | **write** | Add tags to a run |
+| `trigger_activate_schedule` | **write** | Activate a schedule |
+| `trigger_deactivate_schedule` | **write** | Deactivate a schedule |
+| `trigger_pause_queue` | **write** | Pause or resume a queue |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT

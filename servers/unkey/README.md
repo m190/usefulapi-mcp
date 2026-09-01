@@ -1,0 +1,57 @@
+# Unkey MCP by usefulapi
+
+Manage API keys, identities, permissions, rate-limit overrides and verification analytics. Hosted, no local install.
+
+**Live endpoint:** `https://unkey.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "unkey": {
+      "url": "https://unkey.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll paste your **Unkey credentials**. They are validated,
+stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `unkey_liveness` | read | Check API health |
+| `unkey_get_key` | read | Get one key by id |
+| `unkey_whoami_key` | read | Look up a key by its secret |
+| `unkey_get_api` | read | Get one API |
+| `unkey_list_api_keys` | read | List the keys of an API |
+| `unkey_list_identities` | read | List identities |
+| `unkey_get_identity` | read | Get one identity |
+| `unkey_list_permissions` | read | List permissions |
+| `unkey_list_roles` | read | List roles |
+| `unkey_list_ratelimit_overrides` | read | List rate-limit overrides |
+| `unkey_get_ratelimit_override` | read | Get one rate-limit override |
+| `unkey_query_verification_analytics` | read | Query key-verification analytics |
+| `unkey_create_api` | **write** | Create an API |
+| `unkey_create_key` | **write** | Create an API key |
+| `unkey_update_key` | **write** | Update a key |
+| `unkey_update_key_credits` | **write** | Update a key's credits |
+| `unkey_delete_key` | **write** | Delete a key |
+| `unkey_create_identity` | **write** | Create an identity |
+| `unkey_set_ratelimit_override` | **write** | Set a rate-limit override |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT
