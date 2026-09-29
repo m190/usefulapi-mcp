@@ -64,6 +64,30 @@ const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`le
 
 // ---- per-product pages (generated from manifest.json — the single source of truth) ----
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
+const SITE = manifest.portal.domain.replace(/\/$/, "");
+
+// URL + SEO helpers. Canonical page URLs carry the trailing slash: Pages serves /<slug>/index.html
+// and 308-redirects /<slug> → /<slug>/, so links/sitemap/canonical all use the final form.
+const pagePath = (s) => `/${s.slug}/`;
+const groupSlug = (g) => g.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const categoryPath = (g) => `/category/${groupSlug(g)}/`;
+const attr = (s) => esc(String(s)).replace(/"/g, "&quot;");
+const jsonLd = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`;
+const headMeta = ({ title, desc, url }) => `<meta name="description" content="${attr(desc)}">
+<link rel="canonical" href="${attr(url)}">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="usefulapi">
+<meta property="og:title" content="${attr(title)}">
+<meta property="og:description" content="${attr(desc)}">
+<meta property="og:url" content="${attr(url)}">
+<meta property="og:image" content="${SITE}/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${attr(title)}">
+<meta name="twitter:description" content="${attr(desc)}">
+<meta name="twitter:image" content="${SITE}/og.png">`;
 
 // Guardrail: the MCP Registry caps server.json `description` at 100 chars. Fail the
 // build rather than ship a record the registry will reject.
@@ -124,6 +148,9 @@ table tr:last-child td{border-bottom:0}
 .pricing td:first-child{font-weight:600}.pricing .scope{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
 .tname{font-weight:600;font-size:13px}.tdesc{color:var(--muted);font-size:13px;margin-top:2px}
 footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}
+.crumbs{font-size:13px;color:var(--muted);margin:0 0 14px}.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
+.rel{display:flex;flex-wrap:wrap;gap:8px}.rel a{background:var(--chip);border-radius:999px;padding:4px 12px;font-size:13px;text-decoration:none}.rel a:hover{color:var(--accent)}
+.hint a{color:var(--accent)}a.tname{text-decoration:none}a.tname:hover{color:var(--accent)}
 @media (max-width:560px){.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
@@ -169,30 +196,91 @@ function productPage(s) {
     : "";
 
   const hint = live ? `<p class="hint">This is a Model Context Protocol endpoint — meant to be connected from an AI client, not opened in a browser. An <code>invalid_token</code> response at the URL is the auth gate working as designed; clients authenticate automatically.</p>` : "";
-  const body = `<div class="brand">${MARK}<h1>usefulapi</h1></div>
-<p class="sub"><strong>${esc(s.name)} MCP server.</strong> ${esc(s.description)}</p>
+  const g = groupOf(s);
+  const siblings = manifest.servers.filter((x) => x.slug !== s.slug && groupOf(x) === g).sort((a, b) => a.name.localeCompare(b.name));
+  const related = siblings.length
+    ? `<h2 class="sec">More ${esc(g)} MCP servers</h2>
+<div class="rel">${siblings.map((x) => `<a href="${pagePath(x)}">${esc(x.name)}</a>`).join("")}</div>
+<p class="hint"><a href="${categoryPath(g)}">All ${esc(g)} servers →</a></p>`
+    : "";
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="${categoryPath(g)}">${esc(g)}</a></nav>
+<div class="brand">${MARK}<h1>${esc(s.name)} MCP server</h1></div>
+<p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong> — connect from Claude, Cursor, or any MCP client.</p>
 ${cards}
 ${chips}
 ${live ? toolsSection : ""}
 ${pricingSection}
 ${hint}
-<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+${related}
+<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+  const url = `${SITE}${pagePath(s)}`;
+  const n = toolCount(s);
+  const title = `${s.name} MCP Server — hosted, ${n} tools | usefulapi`;
+  const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server for Claude, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
+  const offers = (s.pricing || []).map((p) => ({
+    "@type": "Offer", name: p.plan, priceCurrency: "USD",
+    price: String(p.monthly || "$0").replace(/[^0-9.]/g, "") || "0", description: p.limit
+  }));
+  const ld = [
+    {
+      "@context": "https://schema.org", "@type": "SoftwareApplication",
+      name: `${s.name} MCP Server by usefulapi`, url, description: s.description,
+      applicationCategory: "DeveloperApplication", operatingSystem: "Any (remote MCP server)",
+      offers, publisher: { "@type": "Organization", name: "usefulapi", url: SITE }
+    },
+    {
+      "@context": "https://schema.org", "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "usefulapi", item: `${SITE}/` },
+        { "@type": "ListItem", position: 2, name: g, item: `${SITE}${categoryPath(g)}` },
+        { "@type": "ListItem", position: 3, name: s.name, item: url }
+      ]
+    }
+  ];
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(s.name)} — usefulapi MCP server</title>
-<meta name="description" content="${esc(s.description)}">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<title>${esc(title)}</title>
+${headMeta({ title, desc, url })}
+${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}</style></head>
 <body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
+}
+
+// Category landing pages (/category/<group>/): crawlable internal-linking hubs, one per browse group.
+function categoryPage(g, list) {
+  const url = `${SITE}${categoryPath(g)}`;
+  const title = `${g} MCP servers — ${list.length} hosted servers | usefulapi`;
+  const desc = `${list.length} hosted ${g} MCP servers: ${list.slice(0, 6).map((s) => s.name).join(", ")}${list.length > 6 ? " and more" : ""}. Connect from Claude, Cursor or any MCP client.`;
+  const rows = list.map((s) =>
+    `<tr><td><a class="tname" href="${pagePath(s)}">${esc(s.name)}</a></td><td><div class="tdesc">${esc(s.description)}</div></td><td>${toolCount(s)}</td></tr>`).join("");
+  const others = GROUP_ORDER.filter((x) => x !== g && manifest.servers.some((s) => groupOf(s) === x));
+  const ld = {
+    "@context": "https://schema.org", "@type": "CollectionPage", name: `${g} MCP servers`, url, description: desc,
+    mainEntity: { "@type": "ItemList", itemListElement: list.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) }
+  };
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › ${esc(g)}</nav>
+<div class="brand">${MARK}<h1>${esc(g)} MCP servers</h1></div>
+<p class="sub">${list.length} hosted, remote MCP servers for ${esc(g)} tools. Each is a Streamable HTTP endpoint with a free tier — paste the URL into Claude, Cursor, or any MCP client.</p>
+<table class="tools"><thead><tr><th>Server</th><th>What it does</th><th>Tools</th></tr></thead><tbody>${rows}</tbody></table>
+<h2 class="sec">Other categories</h2>
+<div class="rel">${others.map((x) => `<a href="${categoryPath(x)}">${esc(x)}</a>`).join("")}</div>
+<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+${headMeta({ title, desc, url })}
+${jsonLd(ld)}
+<style>${PRODUCT_CSS}</style></head>
+<body><div class="wrap">${body}</div></body></html>`;
 }
 
 // ---- homepage browse groups (SINGLE SOURCE) — injected into the homepage JS AND used to
 // statically pre-render the tiles so the server list is crawlable without JavaScript. ----
 const GROUP_ORDER = [
   "Payments & Billing", "Fintech", "Commerce & Memberships",
-  "Messaging & Communication", "Scheduling",
+  "Messaging & Communication", "CRM & Sales", "Customer Support", "Scheduling",
   "Developer Tools & Infrastructure", "Observability", "Project Management",
-  "Documents & Delivery", "AI", "Healthcare", "Data & Analytics", "Media"
+  "Documents & Delivery", "Business Operations", "AI", "Healthcare", "Data & Analytics", "Media"
 ];
 const CAT_GROUP = {
   billing: "Payments & Billing", payments: "Payments & Billing", "usage-metering": "Payments & Billing",
@@ -205,6 +293,9 @@ const CAT_GROUP = {
   paas: "Developer Tools & Infrastructure", "feature-flags": "Developer Tools & Infrastructure",
   localization: "Developer Tools & Infrastructure", realtime: "Developer Tools & Infrastructure",
   maps: "Developer Tools & Infrastructure", "no-code-database": "Developer Tools & Infrastructure",
+  devtools: "Developer Tools & Infrastructure", "dev-infra": "Developer Tools & Infrastructure",
+  cloud: "Developer Tools & Infrastructure", security: "Developer Tools & Infrastructure",
+  crm: "CRM & Sales", support: "Customer Support", productivity: "Business Operations",
   observability: "Observability",
   "project-management": "Project Management",
   documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
@@ -222,7 +313,7 @@ const homeCard = (s) => {
   const live = s.status === "live";
   const statusChip = live ? '<span class="chip live">live</span>' : '<span class="chip soon">launching soon</span>';
   const ft = freeTier(s), pt = proTier(s);
-  return `<a class="card${live ? "" : " soon"}" href="/${esc(s.slug)}">` +
+  return `<a class="card${live ? "" : " soon"}" href="${pagePath(s)}">` +
     `<div class="top"><h2>${esc(s.name)}</h2>${statusChip}</div>` +
     `<p>${esc(s.description)}</p>` +
     `<div class="chips"><span class="chip">${toolCount(s)} tools</span>` +
@@ -236,7 +327,7 @@ const homeResults = () => {
   const buckets = {};
   for (const s of manifest.servers) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
   return Object.keys(buckets).sort((a, b) => groupRank(a) - groupRank(b)).map((g) =>
-    `<h2 class="group-head">${esc(g)} <span class="n">${buckets[g].length}</span></h2>` +
+    `<h2 class="group-head"><a href="${categoryPath(g)}">${esc(g)}</a> <span class="n">${buckets[g].length}</span></h2>` +
     `<div class="grid">${buckets[g].sort((a, b) => a.name.localeCompare(b.name)).map(homeCard).join("")}</div>`
   ).join("");
 };
@@ -256,6 +347,28 @@ indexHtml = indexHtml.replace(
 // link and description. The homepage JS re-renders the same content on load (progressive enhancement).
 indexHtml = indexHtml.replace('<main id="results"></main>', `<main id="results">${homeResults()}</main>`);
 indexHtml = indexHtml.replace('<p class="count" id="count"></p>', `<p class="count" id="count">${manifest.servers.length} servers</p>`);
+// SEO: server count in the title/description, canonical, structured data, and a static
+// "Browse by category" footer nav (crawlable hub links; not touched by the homepage JS).
+const N = manifest.servers.length;
+const homeTitle = `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
+const homeDesc = `${N} hosted, remote MCP servers for the SaaS and developer tools you already use — CRM, payments, messaging, healthcare, DevOps and more. Free tier on every server.`;
+const replaceOnce = (html, from, to) => { if (!html.includes(from)) throw new Error(`portal/index.html: marker not found: ${from}`); return html.replace(from, to); };
+indexHtml = replaceOnce(indexHtml, "<title>usefulapi — hosted MCP servers</title>", `<title>${esc(homeTitle)}</title>`);
+indexHtml = indexHtml.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(homeDesc)}">`);
+indexHtml = indexHtml.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${attr(homeTitle)}">`);
+indexHtml = indexHtml.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${attr(homeDesc)}">`);
+indexHtml = indexHtml.replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${SITE}/">`);
+const groupsPresent = GROUP_ORDER.concat(["Other"]).filter((g) => manifest.servers.some((s) => groupOf(s) === g));
+const homeLd = [
+  { "@context": "https://schema.org", "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: `${SITE}/icon-512.png`, email: "support@usefulapi.io" },
+  { "@context": "https://schema.org", "@type": "WebSite", name: "usefulapi", url: `${SITE}/`, description: homeDesc },
+  { "@context": "https://schema.org", "@type": "ItemList", name: "Hosted MCP servers", numberOfItems: N,
+    itemListElement: manifest.servers.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: `${s.name} MCP Server`, url: `${SITE}${pagePath(s)}` })) }
+];
+indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
+indexHtml = replaceOnce(indexHtml, "  <footer>",
+  `  <nav class="cats" aria-label="Browse by category"><h2 class="group-head">Browse by category</h2>` +
+  groupsPresent.map((g) => `<a href="${categoryPath(g)}">${esc(g)}</a>`).join("") + `</nav>\n  <footer>`);
 writeFileSync(`${outDir}/index.html`, indexHtml);
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
@@ -267,11 +380,21 @@ for (const s of manifest.servers) {
   mkdirSync(`${outDir}/${s.slug}`, { recursive: true });
   writeFileSync(`${outDir}/${s.slug}/index.html`, productPage(s));
 }
+for (const g of groupsPresent) {
+  const list = manifest.servers.filter((s) => groupOf(s) === g).sort((a, b) => a.name.localeCompare(b.name));
+  mkdirSync(`${outDir}${categoryPath(g)}`, { recursive: true });
+  writeFileSync(`${outDir}${categoryPath(g)}index.html`, categoryPage(g, list));
+}
+// A top-level 404.html makes Cloudflare Pages return a real 404 for unknown paths instead of its
+// SPA fallback (serving index.html with 200 for every URL = soft-404s / duplicate content).
+writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found</h1>
+<p>That page doesn't exist. <a href="/">Browse all ${manifest.servers.length} usefulapi MCP servers</a>, or pick a category:</p>
+<ul>${groupsPresent.map((g) => `<li><a href="${categoryPath(g)}">${esc(g)}</a></li>`).join("")}</ul>`).replace("<head>", '<head><meta name="robots" content="noindex">'));
 
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
-const base = manifest.portal.domain.replace(/\/$/, "");
-const urls = [`${base}/`, `${base}/privacy`, `${base}/terms`, ...manifest.servers.map((s) => `${base}/${s.slug}`)];
+const base = SITE;
+const urls = [`${base}/`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`)];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);

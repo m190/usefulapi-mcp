@@ -55,6 +55,12 @@
     letter-spacing: .05em; margin: 34px 0 14px; display: flex; align-items: baseline; gap: 8px; }
   .group-head:first-child { margin-top: 0; }
   .group-head .n { font-weight: 400; opacity: .7; }
+  .group-head a { color: inherit; text-decoration: none; }
+  .group-head a:hover { color: var(--accent); }
+  .cats { margin-top: 44px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cats .group-head { width: 100%; margin: 0 0 4px; }
+  .cats a { background: var(--chip); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--muted); text-decoration: none; }
+  .cats a:hover { color: var(--accent); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
   .grid + .group-head { margin-top: 34px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
@@ -122,7 +128,7 @@
   <main id="results"></main>
   <footer>
     Connect from Claude, Cursor, or any MCP client. &nbsp;·&nbsp;
-    <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp;
+    <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp;
     <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>
   </footer>
 </div>
@@ -161,6 +167,8 @@
     "image-cdn": "Media", "video-hosting": "Media"
   };
   const groupOf = function (s) { return CAT_GROUP[s.category] || "Other"; };
+  // Must match build.mjs groupSlug() — category pages live at /category/<slug>/.
+  const groupSlug = function (g) { return g.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); };
   const groupRank = function (g) { const i = GROUP_ORDER.indexOf(g); return i === -1 ? GROUP_ORDER.length : i; };
 
   fetch('/manifest.json').then(function (r) { return r.json(); }).then(function (MANIFEST) {
@@ -192,7 +200,7 @@
         ? '<span class="chip live">live</span>'
         : '<span class="chip soon">launching soon</span>';
       const free = tier(s, /free/i), pro = tier(s, /pro/i);
-      return '<a class="card' + (live ? '' : ' soon') + '" href="/' + esc(s.slug) + '">' +
+      return '<a class="card' + (live ? '' : ' soon') + '" href="/' + esc(s.slug) + '/">' +
         '<div class="top"><h2>' + esc(s.name) + '</h2>' + statusChip + '</div>' +
         '<p>' + esc(s.description) + '</p>' +
         '<div class="chips">' +
@@ -229,7 +237,7 @@
         for (const s of list) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
         const order = Object.keys(buckets).sort(function (a, b) { return groupRank(a) - groupRank(b); });
         results.innerHTML = order.map(function (g) {
-          return '<h2 class="group-head">' + esc(g) + ' <span class="n">' + buckets[g].length + '</span></h2>' +
+          return '<h2 class="group-head"><a href="/category/' + groupSlug(g) + '/">' + esc(g) + '</a> <span class="n">' + buckets[g].length + '</span></h2>' +
             gridHtml(buckets[g].sort(byName));
         }).join("");
       } else {
