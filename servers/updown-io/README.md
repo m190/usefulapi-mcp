@@ -1,0 +1,55 @@
+# updown.io MCP by usefulapi
+
+Use [updown.io](https://updown.io) from Claude, Cursor, or any MCP client — check uptime status, downtimes and response-time metrics, and create checks, recipients and status pages.
+Hosted, no local install: connect with your own updown.io credentials.
+
+**Live endpoint:** `https://updown-io.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/updown-io
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "updown-io": {
+      "url": "https://updown-io.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **updown.io API key** (Settings > API keys; read-only key for reads, read/write key to make changes).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `updown_list_checks` | read | List checks |
+| `updown_get_check` | read | Get one check |
+| `updown_list_downtimes` | read | List a check's downtimes |
+| `updown_get_check_metrics` | read | Get a check's metrics |
+| `updown_find_problems` | read | Find checks with problems |
+| `updown_list_recipients` | read | List alert recipients |
+| `updown_list_status_pages` | read | List status pages |
+| `updown_list_nodes` | read | List monitoring nodes |
+| `updown_list_node_ips` | read | List monitoring node IPs |
+| `updown_create_check` | **write** | Create a check |
+| `updown_update_check` | **write** | Update a check |
+| `updown_add_recipient` | **write** | Add an alert recipient |
+| `updown_create_status_page` | **write** | Create a status page |
+| `updown_update_status_page` | **write** | Update a status page |
+| `updown_usage_status` | meta | Usage status (free-tier meter) |
+| `updown_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by updown.io.

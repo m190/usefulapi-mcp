@@ -1,0 +1,64 @@
+# Momence MCP by usefulapi
+
+Use [Momence](https://momence.com) from Claude, Cursor, or any MCP client — look up members, classes, rosters and memberships, and book, check in, waitlist or cancel from chat.
+Hosted, no local install: connect with your own Momence credentials.
+
+**Live endpoint:** `https://momence.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/momence
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "momence": {
+      "url": "https://momence.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Momence API client id and secret** (Apps & Integrations > Developer API) plus a **staff email and password**.
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `momence_get_current_user` | read | Get the logged-in user |
+| `momence_list_members` | read | List members |
+| `momence_get_member` | read | Get one member |
+| `momence_list_member_session_bookings` | read | List a member's class bookings |
+| `momence_list_member_appointments` | read | List a member's appointments |
+| `momence_list_member_notes` | read | List a member's notes |
+| `momence_list_member_memberships` | read | List a member's active memberships |
+| `momence_list_sessions` | read | List sessions (classes) |
+| `momence_get_session` | read | Get one session |
+| `momence_list_session_bookings` | read | List a session's bookings (roster) |
+| `momence_list_appointments` | read | List appointment reservations |
+| `momence_list_memberships` | read | List membership plans |
+| `momence_list_tags` | read | List customer tags |
+| `momence_list_customer_leads` | read | List customer leads |
+| `momence_list_lead_sources` | read | List lead sources |
+| `momence_list_lead_stages` | read | List lead stages |
+| `momence_create_member` | **write** | Add a member |
+| `momence_update_member` | **write** | Update a member's name, email or phone |
+| `momence_set_member_tag` | **write** | Tag or untag a member |
+| `momence_book_member_free` | **write** | Book a member into a session for free |
+| `momence_add_member_to_waitlist` | **write** | Add a member to a session waitlist |
+| `momence_set_booking_check_in` | **write** | Check a booking in or out |
+| `momence_cancel_session_booking` | **write** | Cancel one session booking |
+| `momence_usage_status` | meta | Usage status (free-tier meter) |
+| `momence_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Momence.

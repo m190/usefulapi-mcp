@@ -172,6 +172,52 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Housecall Pro](servers/housecall-pro/) | productivity | 27 | API token | [servers/housecall-pro/](servers/housecall-pro/) |
 | [Hostaway](servers/hostaway/) | calendar | 22 | API token | [servers/hostaway/](servers/hostaway/) |
 | [Invoice Ninja](servers/invoice-ninja/) | billing | 26 | API token | [servers/invoice-ninja/](servers/invoice-ninja/) |
+| [Atera](servers/atera/) | support | 22 | API token | [servers/atera/](servers/atera/) |
+| [Beds24](servers/beds24/) | productivity | 20 | API token | [servers/beds24/](servers/beds24/) |
+| [Booqable](servers/booqable/) | ecommerce | 23 | API token | [servers/booqable/](servers/booqable/) |
+| [Boulevard](servers/boulevard/) | productivity | 23 | API token | [servers/boulevard/](servers/boulevard/) |
+| [bunny.net](servers/bunny-net/) | dev-infra | 24 | API token | [servers/bunny-net/](servers/bunny-net/) |
+| [Civo](servers/civo/) | cloud | 24 | API token | [servers/civo/](servers/civo/) |
+| [Current RMS](servers/current-rms/) | productivity | 22 | API token | [servers/current-rms/](servers/current-rms/) |
+| [Deputy](servers/deputy/) | productivity | 23 | API token | [servers/deputy/](servers/deputy/) |
+| [Deskpro](servers/deskpro/) | support | 22 | API token | [servers/deskpro/](servers/deskpro/) |
+| [Elvanto](servers/elvanto/) | membership | 25 | API token | [servers/elvanto/](servers/elvanto/) |
+| [Follow Up Boss](servers/follow-up-boss/) | crm | 24 | API token | [servers/follow-up-boss/](servers/follow-up-boss/) |
+| [Formstack](servers/formstack/) | productivity | 22 | API token | [servers/formstack/](servers/formstack/) |
+| [TeamUp](servers/goteamup/) | membership | 22 | API token | [servers/goteamup/](servers/goteamup/) |
+| [HappyFox](servers/happyfox/) | support | 25 | API token | [servers/happyfox/](servers/happyfox/) |
+| [Hostfully](servers/hostfully/) | productivity | 22 | API token | [servers/hostfully/](servers/hostfully/) |
+| [Humanitix](servers/humanitix/) | ecommerce | 17 | API token | [servers/humanitix/](servers/humanitix/) |
+| [IntakeQ](servers/intakeq/) | healthcare | 21 | API token | [servers/intakeq/](servers/intakeq/) |
+| [JobNimbus](servers/jobnimbus/) | crm | 22 | API token | [servers/jobnimbus/](servers/jobnimbus/) |
+| [Kayako](servers/kayako/) | support | 23 | API token | [servers/kayako/](servers/kayako/) |
+| [Kickserv](servers/kickserv/) | productivity | 22 | API token | [servers/kickserv/](servers/kickserv/) |
+| [LearnWorlds](servers/learnworlds/) | membership | 22 | API token | [servers/learnworlds/](servers/learnworlds/) |
+| [Little Green Light](servers/little-green-light/) | fundraising | 22 | API token | [servers/little-green-light/](servers/little-green-light/) |
+| [Loyverse](servers/loyverse/) | ecommerce | 23 | API token | [servers/loyverse/](servers/loyverse/) |
+| [Momence](servers/momence/) | calendar | 25 | API token | [servers/momence/](servers/momence/) |
+| [Moosend](servers/moosend/) | email | 22 | API token | [servers/moosend/](servers/moosend/) |
+| [OfficeRnD](servers/officernd/) | productivity | 22 | API token | [servers/officernd/](servers/officernd/) |
+| [OptimoRoute](servers/optimoroute/) | shipping | 17 | API token | [servers/optimoroute/](servers/optimoroute/) |
+| [Paymo](servers/paymo/) | project-management | 23 | API token | [servers/paymo/](servers/paymo/) |
+| [Printful](servers/printful/) | ecommerce | 22 | API token | [servers/printful/](servers/printful/) |
+| [Recruitee](servers/recruitee/) | productivity | 24 | API token | [servers/recruitee/](servers/recruitee/) |
+| [Rewardful](servers/rewardful/) | marketing | 22 | API token | [servers/rewardful/](servers/rewardful/) |
+| [sevdesk](servers/sevdesk/) | billing | 22 | API token | [servers/sevdesk/](servers/sevdesk/) |
+| [Shopmonkey](servers/shopmonkey/) | productivity | 25 | API token | [servers/shopmonkey/](servers/shopmonkey/) |
+| [Smile.io](servers/smile-io/) | ecommerce | 16 | API token | [servers/smile-io/](servers/smile-io/) |
+| [Smoobu](servers/smoobu/) | productivity | 22 | API token | [servers/smoobu/](servers/smoobu/) |
+| [Sortly](servers/sortly/) | productivity | 22 | API token | [servers/sortly/](servers/sortly/) |
+| [StatusCake](servers/statuscake/) | observability | 23 | API token | [servers/statuscake/](servers/statuscake/) |
+| [Tito](servers/tito/) | ecommerce | 22 | API token | [servers/tito/](servers/tito/) |
+| [Trengo](servers/trengo/) | support | 26 | API token | [servers/trengo/](servers/trengo/) |
+| [Unleashed Software](servers/unleashed-software/) | ecommerce | 22 | API token | [servers/unleashed-software/](servers/unleashed-software/) |
+| [UpCloud](servers/upcloud/) | cloud | 24 | API token | [servers/upcloud/](servers/upcloud/) |
+| [updown.io](servers/updown-io/) | observability | 16 | API token | [servers/updown-io/](servers/updown-io/) |
+| [Virtuous](servers/virtuous-crm/) | fundraising | 22 | API token | [servers/virtuous-crm/](servers/virtuous-crm/) |
+| [When I Work](servers/when-i-work/) | productivity | 23 | API token | [servers/when-i-work/](servers/when-i-work/) |
+| [Wild Apricot](servers/wild-apricot/) | membership | 23 | API token | [servers/wild-apricot/](servers/wild-apricot/) |
+| [Wufoo](servers/wufoo/) | productivity | 20 | API token | [servers/wufoo/](servers/wufoo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

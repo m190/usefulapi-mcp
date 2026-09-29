@@ -1,0 +1,62 @@
+# Booqable MCP by usefulapi
+
+Use [Booqable](https://booqable.com) from Claude, Cursor, or any MCP client — browse rental orders, customers, products and availability, and create bookings.
+Hosted, no local install: connect with your own Booqable credentials.
+
+**Live endpoint:** `https://booqable.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/booqable
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "booqable": {
+      "url": "https://booqable.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Booqable company slug** (the `acme` in acme.booqable.com) and an **Access Token** (Settings → User settings → Authentication methods).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `booqable_get_company` | read | Get the company |
+| `booqable_list_orders` | read | List orders |
+| `booqable_get_order` | read | Get one order |
+| `booqable_list_customers` | read | List customers |
+| `booqable_get_customer` | read | Get one customer |
+| `booqable_list_product_groups` | read | List product groups |
+| `booqable_list_products` | read | List products |
+| `booqable_check_inventory_availability` | read | Check inventory availability |
+| `booqable_get_availability_calendar` | read | Get a product's availability calendar |
+| `booqable_list_plannings` | read | List plannings |
+| `booqable_list_documents` | read | List documents |
+| `booqable_list_payments` | read | List payments |
+| `booqable_list_locations` | read | List locations |
+| `booqable_list_notes` | read | List notes |
+| `booqable_create_customer` | **write** | Create a customer |
+| `booqable_update_customer` | **write** | Update a customer |
+| `booqable_create_order` | **write** | Create an order |
+| `booqable_update_order` | **write** | Update an order |
+| `booqable_book_product` | **write** | Book a product on an order |
+| `booqable_transition_order_status` | **write** | Change an order's status |
+| `booqable_create_note` | **write** | Add a note |
+| `booqable_usage_status` | meta | Usage status (free-tier meter) |
+| `booqable_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Booqable.

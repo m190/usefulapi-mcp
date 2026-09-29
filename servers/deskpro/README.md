@@ -1,0 +1,61 @@
+# Deskpro MCP by usefulapi
+
+Use [Deskpro](https://www.deskpro.com) from Claude, Cursor, or any MCP client — search tickets, people, organizations and knowledgebase articles, and create tickets and replies.
+Hosted, no local install: connect with your own Deskpro credentials.
+
+**Live endpoint:** `https://deskpro.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/deskpro
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "deskpro": {
+      "url": "https://deskpro.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Deskpro helpdesk URL** (subdomain or full https address) and an **API key** (Admin → Apps & Integrations → API Keys, `id:code` format).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `deskpro_get_me` | read | Get the authenticated agent |
+| `deskpro_list_tickets` | read | List tickets |
+| `deskpro_get_ticket` | read | Get one ticket |
+| `deskpro_list_ticket_messages` | read | List a ticket's messages |
+| `deskpro_list_people` | read | List people |
+| `deskpro_get_person` | read | Get one person |
+| `deskpro_list_person_tickets` | read | List a person's tickets |
+| `deskpro_list_organizations` | read | List organizations |
+| `deskpro_get_organization` | read | Get one organization |
+| `deskpro_list_organization_tickets` | read | List an organization's tickets |
+| `deskpro_list_articles` | read | List knowledgebase articles |
+| `deskpro_get_article` | read | Get one article |
+| `deskpro_list_departments` | read | List ticket departments |
+| `deskpro_list_agents` | read | List agents |
+| `deskpro_list_ticket_statuses` | read | List ticket statuses |
+| `deskpro_search` | read | Search the helpdesk |
+| `deskpro_create_ticket` | **write** | Create a ticket |
+| `deskpro_update_ticket` | **write** | Update a ticket |
+| `deskpro_add_ticket_message` | **write** | Reply to a ticket or add a note |
+| `deskpro_create_organization` | **write** | Create an organization |
+| `deskpro_usage_status` | meta | Usage status (free-tier meter) |
+| `deskpro_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Deskpro.

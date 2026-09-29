@@ -1,0 +1,62 @@
+# When I Work MCP by usefulapi
+
+Use [When I Work](https://wheniwork.com) from Claude, Cursor, or any MCP client — check schedules, shifts, clocked times, time-off requests, shift swaps and availability, and create, publish or update shifts.
+Hosted, no local install: connect with your own When I Work credentials.
+
+**Live endpoint:** `https://when-i-work.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/when-i-work
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "when-i-work": {
+      "url": "https://when-i-work.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **When I Work developer key (W-Key), email and password**, plus an optional workplace user id.
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `wheniwork_get_account` | read | Get the account |
+| `wheniwork_list_users` | read | List users |
+| `wheniwork_get_user` | read | Get one user |
+| `wheniwork_list_locations` | read | List schedules (locations) |
+| `wheniwork_list_positions` | read | List positions |
+| `wheniwork_list_shifts` | read | List shifts |
+| `wheniwork_get_shift` | read | Get one shift |
+| `wheniwork_list_eligible_users_for_shift` | read | List users eligible for an open shift |
+| `wheniwork_list_times` | read | List clocked times (timesheets) |
+| `wheniwork_list_time_off_requests` | read | List time-off requests |
+| `wheniwork_get_time_off_request` | read | Get one time-off request |
+| `wheniwork_list_time_off_types` | read | List time-off types |
+| `wheniwork_list_shift_swaps` | read | List shift swaps and drops |
+| `wheniwork_list_availability` | read | List availability |
+| `wheniwork_list_annotations` | read | List schedule annotations |
+| `wheniwork_create_shift` | **write** | Create a shift |
+| `wheniwork_update_shift` | **write** | Update a shift |
+| `wheniwork_publish_shifts` | **write** | Publish shifts |
+| `wheniwork_unpublish_shifts` | **write** | Unpublish shifts |
+| `wheniwork_create_time_off_request` | **write** | Create a time-off request |
+| `wheniwork_update_time_off_request` | **write** | Approve, deny or change a time-off request |
+| `wheniwork_usage_status` | meta | Usage status (free-tier meter) |
+| `wheniwork_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by When I Work.

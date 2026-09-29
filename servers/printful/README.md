@@ -1,0 +1,61 @@
+# Printful MCP by usefulapi
+
+Use [Printful](https://www.printful.com) from Claude, Cursor, or any MCP client — browse the catalog, orders, shipping rates and sales stats, and create draft orders, files and mockups.
+Hosted, no local install: connect with your own Printful credentials.
+
+**Live endpoint:** `https://printful.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/printful
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "printful": {
+      "url": "https://printful.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Printful Private Token** (developers.printful.com > Your tokens), plus an optional default store ID.
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `printful_list_stores` | read | List stores |
+| `printful_list_catalog_categories` | read | List catalog categories |
+| `printful_list_catalog_products` | read | List catalog products |
+| `printful_get_catalog_product` | read | Get a catalog product |
+| `printful_get_catalog_variant` | read | Get a catalog variant |
+| `printful_list_store_products` | read | List store products (Manual/API store) |
+| `printful_get_store_product` | read | Get a store product |
+| `printful_list_sync_products` | read | List synced products (integrated store) |
+| `printful_list_orders` | read | List orders |
+| `printful_get_order` | read | Get an order |
+| `printful_calculate_shipping_rates` | read | Calculate shipping rates |
+| `printful_estimate_order_costs` | read | Estimate order costs |
+| `printful_get_file` | read | Get a file |
+| `printful_get_printfiles` | read | Get printfile specs for a product |
+| `printful_get_mockup_task` | read | Get a mockup task result |
+| `printful_get_statistics` | read | Get store statistics |
+| `printful_create_draft_order` | **write** | Create a draft order |
+| `printful_update_draft_order` | **write** | Update a draft order |
+| `printful_add_file` | **write** | Add a file to the File Library |
+| `printful_create_mockup_task` | **write** | Create a mockup generation task |
+| `printful_usage_status` | meta | Usage status (free-tier meter) |
+| `printful_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Printful.

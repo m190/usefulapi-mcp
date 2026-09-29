@@ -1,0 +1,61 @@
+# Current RMS MCP by usefulapi
+
+Use [Current RMS](https://www.current-rms.com) from Claude, Cursor, or any MCP client — browse opportunities, products, stock, availability and invoices, and create members and quotes.
+Hosted, no local install: connect with your own Current RMS credentials.
+
+**Live endpoint:** `https://current-rms.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/current-rms
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "current-rms": {
+      "url": "https://current-rms.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Current RMS subdomain** (the `acme` in acme.current-rms.com) and an **API key** (System Setup → Integrations → API).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `current_rms_list_members` | read | List members |
+| `current_rms_get_member` | read | Get one member |
+| `current_rms_list_opportunities` | read | List opportunities |
+| `current_rms_get_opportunity` | read | Get one opportunity |
+| `current_rms_list_opportunity_items` | read | List an opportunity's line items |
+| `current_rms_list_products` | read | List products |
+| `current_rms_get_product` | read | Get one product |
+| `current_rms_list_product_inventories` | read | List product inventory |
+| `current_rms_check_product_availability` | read | Check a product's availability |
+| `current_rms_list_stock_levels` | read | List stock levels |
+| `current_rms_list_stores` | read | List stores |
+| `current_rms_list_invoices` | read | List invoices and credit notes |
+| `current_rms_get_invoice` | read | Get one invoice |
+| `current_rms_list_projects` | read | List projects |
+| `current_rms_list_activities` | read | List activities |
+| `current_rms_create_member` | **write** | Create a member |
+| `current_rms_update_member` | **write** | Update a member |
+| `current_rms_create_opportunity` | **write** | Create an opportunity |
+| `current_rms_update_opportunity` | **write** | Update an opportunity |
+| `current_rms_create_activity` | **write** | Log an activity |
+| `current_rms_usage_status` | meta | Usage status (free-tier meter) |
+| `current_rms_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Current RMS.

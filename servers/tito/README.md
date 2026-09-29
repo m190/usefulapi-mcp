@@ -1,0 +1,61 @@
+# Tito MCP by usefulapi
+
+Use [Tito](https://ti.to) from Claude, Cursor, or any MCP client — look up events, releases, tickets, registrations, discount codes, check-in lists and refunds, and edit tickets and codes.
+Hosted, no local install: connect with your own Tito credentials.
+
+**Live endpoint:** `https://tito.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/tito
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "tito": {
+      "url": "https://tito.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Tito Admin API token** (id.tito.io → API access), plus an optional default account slug.
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `tito_whoami` | read | Check the API token |
+| `tito_list_events` | read | List events |
+| `tito_get_event` | read | Get one event |
+| `tito_list_releases` | read | List releases (ticket types) |
+| `tito_get_release` | read | Get one release |
+| `tito_list_tickets` | read | List tickets (attendees) |
+| `tito_get_ticket` | read | Get one ticket |
+| `tito_list_registrations` | read | List registrations (orders) |
+| `tito_get_registration` | read | Get one registration |
+| `tito_list_discount_codes` | read | List discount codes |
+| `tito_get_discount_code` | read | Get one discount code |
+| `tito_list_activities` | read | List activities |
+| `tito_list_questions` | read | List questions |
+| `tito_list_answers` | read | List answers to a question |
+| `tito_list_checkin_lists` | read | List check-in lists |
+| `tito_list_refunds` | read | List refunds |
+| `tito_create_discount_code` | **write** | Create a discount code |
+| `tito_update_discount_code` | **write** | Update a discount code |
+| `tito_create_ticket` | **write** | Issue a ticket manually |
+| `tito_update_ticket` | **write** | Update a ticket's attendee details |
+| `tito_usage_status` | meta | Usage status (free-tier meter) |
+| `tito_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Tito.
