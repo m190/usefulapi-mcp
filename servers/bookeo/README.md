@@ -1,0 +1,62 @@
+# Bookeo MCP by usefulapi
+
+Use [Bookeo](https://www.bookeo.com) from Claude, Cursor, or any MCP client — check availability, create holds and bookings, update or cancel bookings, and manage customers.
+Hosted, no local install: connect with your own Bookeo credentials.
+
+**Live endpoint:** `https://bookeo.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/bookeo
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "bookeo": {
+      "url": "https://bookeo.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Bookeo API key and secret key** (a Bookeo developer app authorized for your account; paid plan).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `bookeo_get_api_key_info` | read | Get API key info |
+| `bookeo_get_business` | read | Get the business |
+| `bookeo_list_products` | read | List products |
+| `bookeo_list_people_categories` | read | List people categories |
+| `bookeo_list_resources` | read | List resources |
+| `bookeo_get_availability_slots` | read | Get availability slots |
+| `bookeo_search_matching_slots` | read | Search matching slots |
+| `bookeo_list_bookings` | read | List bookings |
+| `bookeo_get_booking` | read | Get a booking |
+| `bookeo_list_booking_payments` | read | List a booking's payments |
+| `bookeo_list_customers` | read | List customers |
+| `bookeo_get_customer` | read | Get a customer |
+| `bookeo_list_customer_bookings` | read | List a customer's bookings |
+| `bookeo_list_payments` | read | List payments |
+| `bookeo_get_payment` | read | Get a payment |
+| `bookeo_create_hold` | **write** | Hold seats (price check) |
+| `bookeo_create_booking` | **write** | Create a booking |
+| `bookeo_update_booking` | **write** | Update a booking |
+| `bookeo_cancel_booking` | **write** | Cancel a booking |
+| `bookeo_create_customer` | **write** | Create a customer |
+| `bookeo_update_customer` | **write** | Update a customer |
+| `bookeo_usage_status` | meta | Usage status (free-tier meter) |
+| `bookeo_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Bookeo.

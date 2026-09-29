@@ -155,6 +155,23 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [WHOOP](servers/whoop/) | health-data | 10 | API token | [servers/whoop/](servers/whoop/) |
 | [YouCanBook.me](servers/youcanbookme/) | calendar | 20 | API token | [servers/youcanbookme/](servers/youcanbookme/) |
 | [Zendesk](servers/zendesk/) | support | 21 | API token | [servers/zendesk/](servers/zendesk/) |
+| [Fillout](servers/fillout/) | productivity | 11 | API token | [servers/fillout/](servers/fillout/) |
+| [Checkfront](servers/checkfront/) | calendar | 22 | API token | [servers/checkfront/](servers/checkfront/) |
+| [Breeze ChMS](servers/breeze-chms/) | membership | 26 | API token | [servers/breeze-chms/](servers/breeze-chms/) |
+| [Neon CRM](servers/neon-crm/) | fundraising | 24 | API token | [servers/neon-crm/](servers/neon-crm/) |
+| [Insightly](servers/insightly/) | crm | 23 | API token | [servers/insightly/](servers/insightly/) |
+| [Bookeo](servers/bookeo/) | calendar | 23 | API token | [servers/bookeo/](servers/bookeo/) |
+| [Bloomerang](servers/bloomerang/) | fundraising | 22 | API token | [servers/bloomerang/](servers/bloomerang/) |
+| [Together AI](servers/together-ai/) | ai-infra | 25 | API token | [servers/together-ai/](servers/together-ai/) |
+| [Eventbrite](servers/eventbrite/) | ecommerce | 28 | API token | [servers/eventbrite/](servers/eventbrite/) |
+| [Less Annoying CRM](servers/less-annoying-crm/) | crm | 25 | API token | [servers/less-annoying-crm/](servers/less-annoying-crm/) |
+| [Workiz](servers/workiz/) | productivity | 21 | API token | [servers/workiz/](servers/workiz/) |
+| [Depot](servers/depot/) | devops | 24 | API token | [servers/depot/](servers/depot/) |
+| [Mindbody](servers/mindbody/) | calendar | 22 | API token | [servers/mindbody/](servers/mindbody/) |
+| [Buildium](servers/buildium/) | productivity | 25 | API token | [servers/buildium/](servers/buildium/) |
+| [Housecall Pro](servers/housecall-pro/) | productivity | 27 | API token | [servers/housecall-pro/](servers/housecall-pro/) |
+| [Hostaway](servers/hostaway/) | calendar | 22 | API token | [servers/hostaway/](servers/hostaway/) |
+| [Invoice Ninja](servers/invoice-ninja/) | billing | 26 | API token | [servers/invoice-ninja/](servers/invoice-ninja/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

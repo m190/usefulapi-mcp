@@ -1,0 +1,64 @@
+# Buildium MCP by usefulapi
+
+Use [Buildium](https://www.buildium.com) from Claude, Cursor, or any MCP client — read rental properties, units, owners, leases, tenants, balances, vendors and bills, and create or update work orders and tasks.
+Hosted, no local install: connect with your own Buildium credentials.
+
+**Live endpoint:** `https://buildium.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/buildium
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "buildium": {
+      "url": "https://buildium.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Buildium client ID and client secret** (Settings → Developer Tools; Premium plan).
+They're validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `buildium_list_rental_properties` | read | List rental properties |
+| `buildium_get_rental_property` | read | Get a rental property |
+| `buildium_list_rental_units` | read | List rental units |
+| `buildium_get_rental_unit` | read | Get a rental unit |
+| `buildium_list_rental_owners` | read | List rental owners |
+| `buildium_list_leases` | read | List leases |
+| `buildium_get_lease` | read | Get a lease |
+| `buildium_list_outstanding_balances` | read | List lease outstanding balances |
+| `buildium_list_lease_transactions` | read | List lease transactions |
+| `buildium_list_tenants` | read | List tenants |
+| `buildium_get_tenant` | read | Get a tenant |
+| `buildium_list_applicants` | read | List applicants |
+| `buildium_list_work_orders` | read | List work orders |
+| `buildium_get_work_order` | read | Get a work order |
+| `buildium_list_tasks` | read | List tasks |
+| `buildium_list_vendors` | read | List vendors |
+| `buildium_list_bills` | read | List bills |
+| `buildium_list_gl_accounts` | read | List general ledger accounts |
+| `buildium_list_associations` | read | List associations |
+| `buildium_create_work_order` | **write** | Create a work order |
+| `buildium_update_work_order` | **write** | Update a work order |
+| `buildium_create_todo_task` | **write** | Create a to-do task |
+| `buildium_update_todo_task` | **write** | Update a to-do task |
+| `buildium_usage_status` | meta | Usage status (free-tier meter) |
+| `buildium_upgrade` | meta | Upgrade to Pro (unlimited) |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Buildium.

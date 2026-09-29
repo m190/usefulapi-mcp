@@ -17813,6 +17813,2841 @@
         }
       ],
       "version": "1.0.0"
+    },
+    {
+      "slug": "fillout",
+      "name": "Fillout",
+      "category": "productivity",
+      "description": "Read Fillout forms and submissions, export responses, and create submissions and webhooks.",
+      "endpoint": "https://fillout.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "fillout_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List every form in the Fillout account — each form's name and formId. Start here to find the formId the other tools need. Fillout: GET /forms."
+        },
+        {
+          "name": "fillout_get_form",
+          "type": "read",
+          "title": "Get form questions and metadata",
+          "description": "Fetch one form's metadata: every question (id, name, type), calculations, URL parameters, scheduling and payment fields, and quiz settings. Use the question ids to read answers or to create submissions. Fillout: GET /forms/{formId}."
+        },
+        {
+          "name": "fillout_list_submissions",
+          "type": "read",
+          "title": "List submissions",
+          "description": "List one page of a form's submissions (answers to every question, calculations, URL parameters, scheduling, payments, quiz score, login email), filtered by date range, status or free-text search. Offset pagination: the response carries totalResponses and pageCount. Fillout: GET /forms/{formId}/submissions."
+        },
+        {
+          "name": "fillout_get_submission",
+          "type": "read",
+          "title": "Get one submission",
+          "description": "Fetch a single submission by id, with every answer. Fillout: GET /forms/{formId}/submissions/{submissionId}."
+        },
+        {
+          "name": "fillout_count_submissions",
+          "type": "read",
+          "title": "Count submissions",
+          "description": "Count a form's submissions matching the same filters as fillout_list_submissions (date range, status, search) without pulling the answers — e.g. 'how many responses this week?' or 'how many partial submissions?'. Reads totalResponses from GET /forms/{formId}/submissions with limit=1."
+        },
+        {
+          "name": "fillout_export_submissions",
+          "type": "read",
+          "title": "Export submissions",
+          "description": "Fetch many submissions in one call by walking the offset pagination (150 per page, paced under Fillout's 5 requests/second limit), up to max_submissions. Same filters as fillout_list_submissions. Use this for analysis across a whole response set; the result says whether it was truncated. Fillout: GET /forms/{formId}/submissions (repeated)."
+        },
+        {
+          "name": "fillout_create_submissions",
+          "type": "write",
+          "title": "Create submissions",
+          "description": "Create up to 10 new submissions on a form, as if respondents had filled it in — e.g. to import responses collected elsewhere. Each submission needs its question answers (question ids from fillout_get_form); URL parameters, scheduling, payments, login email and timestamps are optional. Creates real records that trigger the form's integrations. Fillout: POST /forms/{formId}/submissions."
+        },
+        {
+          "name": "fillout_create_webhook",
+          "type": "write",
+          "title": "Create a submission webhook",
+          "description": "Subscribe a URL to a form's new submissions: Fillout will POST each submission (same shape as a fillout_list_submissions entry) to it. Returns the webhook id — keep it, it is the only handle for removing the webhook later. Fillout: POST /webhook/create."
+        },
+        {
+          "name": "fillout_remove_webhook",
+          "type": "write",
+          "title": "Remove a submission webhook",
+          "description": "Stop a webhook from receiving submissions. Recoverable: create it again with fillout_create_webhook (it gets a new id). Fillout: POST /webhook/delete."
+        },
+        {
+          "name": "fillout_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fillout_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Fillout tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "checkfront",
+      "name": "Checkfront",
+      "category": "calendar",
+      "description": "Check Checkfront availability and rates, and manage booking sessions, bookings, customers and notes.",
+      "endpoint": "https://checkfront.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "checkfront_get_company",
+          "type": "read",
+          "title": "Get company settings",
+          "description": "Fetch the connected Checkfront account's company configuration — name, URL, plan, currency, timezone, locale and date/time formats. A cheap way to confirm the host and credentials work. Checkfront: GET /api/3.0/company."
+        },
+        {
+          "name": "checkfront_list_categories",
+          "type": "read",
+          "title": "List item categories",
+          "description": "List the inventory categories (e.g. Tours, Rentals, Accommodations) with their ids, names, display order and item counts. Checkfront: GET /api/3.0/category."
+        },
+        {
+          "name": "checkfront_list_items",
+          "type": "read",
+          "title": "List inventory items",
+          "description": "List the enabled inventory items (tours, activities, rentals, rooms). With NO dates this is the plain catalogue. Pass start_date (and end_date / param quantities) to get a RATED response: per-item availability, pricing and a SLIP token — the SLIP is what checkfront_add_to_booking_session needs to book the item. Checkfront: GET /api/3.0/item."
+        },
+        {
+          "name": "checkfront_get_item",
+          "type": "read",
+          "title": "Get an item",
+          "description": "Fetch one inventory item's details. Pass start_date / end_date and param quantities (e.g. {\"adults\": 2}) for a RATED response with availability (rate.status, rate.available), the price breakdown and the SLIP used to book it. For parent/child grouped items, rate the CHILD item. Checkfront: GET /api/3.0/item/{item_id}."
+        },
+        {
+          "name": "checkfront_get_availability_calendar",
+          "type": "read",
+          "title": "Get an availability calendar",
+          "description": "Day-by-day available inventory over a date range — for one item (item_ids with a single id), several items, or a whole category. Use it to answer 'which days next month still have space?'. Checkfront: GET /api/3.0/item/{item_id}/cal or GET /api/3.0/item/cal."
+        },
+        {
+          "name": "checkfront_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings, newest filters first — by status, customer, dates, item or partner. Each row has the booking code, status, totals (total, tax_total, paid_total), customer name/email, summary and date_desc. Paged (default 100/page); the response's request.pages tells you how many pages exist. Checkfront: GET /api/3.0/booking/index."
+        },
+        {
+          "name": "checkfront_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Fetch extended information on one booking — status, dates, customer, form fields, line items and totals. Checkfront: GET /api/3.0/booking/{booking_id}."
+        },
+        {
+          "name": "checkfront_list_booking_notes",
+          "type": "read",
+          "title": "List booking notes",
+          "description": "List the notes left on bookings across the account (default: the past 30 days), each with its booking code, author account id (0 = customer), date, body and whether it is private. Checkfront: GET /api/3.0/booking/notes."
+        },
+        {
+          "name": "checkfront_get_booking_form",
+          "type": "read",
+          "title": "Get the booking form fields",
+          "description": "Fetch the customer-details form for a booking (booking_form_ui): every field id (customer_name, customer_email, …), its label, type and whether it is required. Call this before checkfront_create_booking to know which `form` fields to send. Checkfront: GET /api/3.0/booking/form."
+        },
+        {
+          "name": "checkfront_get_booking_session",
+          "type": "read",
+          "title": "Get a booking session",
+          "description": "Read a booking session — the in-progress 'cart' — with its line items (keyed by line_id), dates, sub_total, tax, total and amount due. Checkfront: GET /api/3.0/booking/session."
+        },
+        {
+          "name": "checkfront_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Look up customers by exact email, full name or phone number (exact matches; non-unique fields such as name can return several). Results are in the `customers` object. Checkfront: GET /api/3.0/customer."
+        },
+        {
+          "name": "checkfront_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Fetch one customer's contact details and their bookings (codes with created dates). Checkfront: GET /api/3.0/customer/{customer_id}."
+        },
+        {
+          "name": "checkfront_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the date-based events that change price or availability — seasonal rates (SE), specials (SP), discounts (DC), closures (status U) — with their dates, recurrence, pricing rule and the items/categories they apply to. Checkfront: GET /api/3.0/event."
+        },
+        {
+          "name": "checkfront_list_staff_accounts",
+          "type": "read",
+          "title": "List staff accounts",
+          "description": "List the staff (and partner) accounts on the Checkfront account — ids, names, emails, login ids and whether enabled. The account_id is what CHECKFRONT_ON_BEHALF takes. Checkfront: GET /api/3.0/account."
+        },
+        {
+          "name": "checkfront_add_to_booking_session",
+          "type": "write",
+          "title": "Add items to a booking session",
+          "description": "Start or modify a booking session: add one or more SLIPs (from a rated checkfront_get_item / checkfront_list_items call), replace a line with a new SLIP (line_id + slip), or alter lines (quantity, 'remove', 'optin'/'optout' for package add-ons). Holds the inventory while the session is open; NOTHING is booked until checkfront_create_booking. Returns the session_id to reuse. Checkfront: POST /api/3.0/booking/session."
+        },
+        {
+          "name": "checkfront_end_booking_session",
+          "type": "write",
+          "title": "End or clear a booking session",
+          "description": "Abandon a booking session: 'clear' empties its items, 'end' closes it. Releases the inventory it was holding; no booking is affected. Checkfront: POST /api/3.0/booking/session/clear or /booking/session/end."
+        },
+        {
+          "name": "checkfront_create_booking",
+          "type": "write",
+          "title": "Create a booking",
+          "description": "Commit a booking: from a session_id (built with checkfront_add_to_booking_session) or directly from SLIPs, plus the customer form fields (see checkfront_get_booking_form for which are required — typically customer_name and customer_email). Creates a real reservation that consumes inventory and may notify the customer; change it later with checkfront_update_booking_status. Returns the new booking's ids and any invoice/payment URL. Checkfront: POST /api/3.0/booking/create."
+        },
+        {
+          "name": "checkfront_update_booking_status",
+          "type": "write",
+          "title": "Change a booking's status",
+          "description": "Set a booking's status — e.g. confirm a pending booking (PAID/PART), put it on HOLD or WAIT(list), or cancel it (VOID/STOP). Reversible: set it back to the previous status the same way. Does NOT record a payment. Optionally triggers the account's customer notifications. Checkfront: POST /api/3.0/booking/{booking_id}/update."
+        },
+        {
+          "name": "checkfront_add_booking_note",
+          "type": "write",
+          "title": "Add a note to a booking",
+          "description": "Add a note to a booking, logged under the staff account the API acts on behalf of. Checkfront: POST /api/3.0/booking/{booking_id}/note."
+        },
+        {
+          "name": "checkfront_check_in_booking",
+          "type": "write",
+          "title": "Check a booking in or out",
+          "description": "Mark a guest as arrived (check in) or departed (check out). Checkfront adds a note under the acting account. VOID and cancelled bookings cannot be checked in or out. Checkfront: POST /api/3.0/booking/{booking_id}/checkin or /checkout."
+        },
+        {
+          "name": "checkfront_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "checkfront_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Checkfront tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "breeze-chms",
+      "name": "Breeze ChMS",
+      "category": "membership",
+      "description": "Manage Breeze ChMS people, tags, events, check-ins, volunteers and contributions.",
+      "endpoint": "https://breeze-chms.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "breeze_get_account_summary",
+          "type": "read",
+          "title": "Get the account summary",
+          "description": "The church account this key belongs to: name, subdomain, status, timezone and country/currency. A cheap way to confirm BREEZE_SUBDOMAIN and BREEZE_API_KEY are right. Breeze: GET /api/account/summary."
+        },
+        {
+          "name": "breeze_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List people in the church database, optionally filtered (by tag, status, gender, etc.) and paginated with limit/offset. Without details you get id, first_name, last_name and photo path; with details=true every profile field is returned keyed by field_id (slower). Filter keys are profile field_ids (see breeze_list_profile_fields) or special keys, e.g. {\"tag_contains\":\"y_16681\"} for people in a tag, or {\"2000138015\":\"226-227\"} for a Status field matching options 226 or 227. Breeze: GET /api/people."
+        },
+        {
+          "name": "breeze_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "Fetch one person's profile by id, including address and — by default — every profile field keyed by field_id, plus family members. Pair with breeze_list_profile_fields to label the field ids. Breeze: GET /api/people/{person_id}."
+        },
+        {
+          "name": "breeze_list_profile_fields",
+          "type": "read",
+          "title": "List profile fields",
+          "description": "The church's profile layout: sections, each with its fields (field_id, field_type, name) and, for multiple-choice fields, their options (option_id, name). Needed to read person details, to build list_people filters, and to write fields with breeze_add_person / breeze_update_person. Breeze: GET /api/profile."
+        },
+        {
+          "name": "breeze_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags (Breeze's groups/lists) with id, name, created_on and folder_id, optionally only those in one folder. To list the people in a tag, call breeze_list_people with filter {\"tag_contains\":\"y_<tag_id>\"}. Breeze: GET /api/tags/list_tags."
+        },
+        {
+          "name": "breeze_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List event instances in a date range (default: the current month), optionally on one calendar. Each row's `id` is the INSTANCE id used by attendance, volunteer and get_event tools; `event_id` is the series. Responses are cached by Breeze and may lag up to 15 minutes. Breeze: GET /api/events."
+        },
+        {
+          "name": "breeze_get_event",
+          "type": "read",
+          "title": "Get an event instance",
+          "description": "Fetch one event instance, optionally with the other instances in its series (then the response is an array of {id, start} only). Cached by Breeze, may lag up to 15 minutes. Breeze: GET /api/events/list_event."
+        },
+        {
+          "name": "breeze_list_calendars",
+          "type": "read",
+          "title": "List calendars",
+          "description": "List the church's event calendars (id, name, color and iCal feed address). The id is the category_id for breeze_list_events and breeze_add_event. Breeze: GET /api/events/calendars/list."
+        },
+        {
+          "name": "breeze_list_attendance",
+          "type": "read",
+          "title": "List attendance",
+          "description": "Who checked in to one event instance (person_id, check-in time created_on, check_out), optionally with each person's details, or the anonymous head count instead. Breeze: GET /api/events/attendance/list."
+        },
+        {
+          "name": "breeze_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List the church's online forms (id, name, url_slug, is_archived) — active ones by default, or archived ones. Breeze: GET /api/forms/list_forms."
+        },
+        {
+          "name": "breeze_list_form_fields",
+          "type": "read",
+          "title": "List form fields",
+          "description": "The fields of one form (field_id, field_type, name, options). Form entry responses are keyed by these field_ids. Breeze: GET /api/forms/list_form_fields."
+        },
+        {
+          "name": "breeze_list_form_entries",
+          "type": "read",
+          "title": "List form entries",
+          "description": "Submissions to one form (id, created_on, person_id), and with details=true each entry's responses keyed by form field_id (see breeze_list_form_fields). Breeze: GET /api/forms/list_form_entries."
+        },
+        {
+          "name": "breeze_list_volunteers",
+          "type": "read",
+          "title": "List volunteers",
+          "description": "Volunteers scheduled for one event instance: person_id, response, comment, rsvped_on and role_ids. Breeze: GET /api/volunteers/list."
+        },
+        {
+          "name": "breeze_list_account_log",
+          "type": "read",
+          "title": "List the account log",
+          "description": "The account's audit log for one action type (e.g. person_updated, tag_assign, contribution_added), optionally within a date range or by one user. Good for 'what changed since…' and incremental sync. Breeze: GET /api/account/list_log."
+        },
+        {
+          "name": "breeze_list_funds",
+          "type": "read",
+          "title": "List funds",
+          "description": "List giving funds (id, name, tax_deductible, is_default), optionally with the total given to each. Legacy endpoint: no longer shown on Breeze's current API reference; churches whose giving runs through Tithely may get an error. Breeze: GET /api/funds/list."
+        },
+        {
+          "name": "breeze_list_contributions",
+          "type": "read",
+          "title": "List contributions",
+          "description": "List recorded contributions (gifts) given within a date range, optionally narrowed by giver (with their family), amount, payment method, fund, envelope, batch or form. Read-only: this server never adds, edits or deletes gifts. Legacy endpoint: no longer shown on Breeze's current API reference; churches whose giving runs through Tithely may get an error. Breeze: GET /api/giving/list."
+        },
+        {
+          "name": "breeze_add_person",
+          "type": "write",
+          "title": "Add a person",
+          "description": "WRITE: create a new person profile with a first and last name, and optionally set profile fields in the same call (same field shape as breeze_update_person). Check breeze_list_people first to avoid duplicates. Returns the new profile including its id. Breeze: GET /api/people/add."
+        },
+        {
+          "name": "breeze_update_person",
+          "type": "write",
+          "title": "Update a person",
+          "description": "WRITE: set profile fields on an existing person — email, phone, address, dates, multiple-choice options, family role, and custom fields. Only the fields you pass change; the previous values are overwritten (read them first with breeze_get_person if you may need to restore them). field_id and option ids come from breeze_list_profile_fields. Breeze: GET /api/people/update."
+        },
+        {
+          "name": "breeze_add_tag",
+          "type": "write",
+          "title": "Create a tag",
+          "description": "WRITE: create a new tag, at the top level or inside a folder. Returns the new tag with its id. Breeze: GET /api/tags/add_tag."
+        },
+        {
+          "name": "breeze_assign_tag",
+          "type": "write",
+          "title": "Assign a tag to a person",
+          "description": "WRITE: add a tag to one person (e.g. put them in a small group or list). Undo with breeze_unassign_tag. Breeze: GET /api/tags/assign."
+        },
+        {
+          "name": "breeze_unassign_tag",
+          "type": "write",
+          "title": "Remove a tag from a person",
+          "description": "WRITE: remove a tag from one person. The person and the tag both remain; re-assign with breeze_assign_tag. Breeze: GET /api/tags/unassign."
+        },
+        {
+          "name": "breeze_add_event",
+          "type": "write",
+          "title": "Add an event",
+          "description": "WRITE: create an event on the church calendar, optionally as another instance of an existing series. Times are Unix timestamps in seconds. This server cannot delete events, so a mistaken event must be removed in the Breeze app. Breeze: GET /api/events/add."
+        },
+        {
+          "name": "breeze_record_attendance",
+          "type": "write",
+          "title": "Check a person in or out",
+          "description": "WRITE: record attendance for one person at one event instance — check them in (default) or check them out (records when they left; checking out someone not checked in creates a record with matching in/out times). Breeze: GET /api/events/attendance/add."
+        },
+        {
+          "name": "breeze_schedule_volunteer",
+          "type": "write",
+          "title": "Schedule a volunteer",
+          "description": "WRITE: schedule one person as a volunteer for one event instance. Breeze: GET /api/volunteers/add."
+        },
+        {
+          "name": "breeze_chms_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "breeze_chms_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Breeze ChMS tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "neon-crm",
+      "name": "Neon CRM",
+      "category": "fundraising",
+      "description": "Search Neon CRM accounts, donations, memberships and events; create accounts and activities.",
+      "endpoint": "https://neon-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "neon_get_organization_profile",
+          "type": "read",
+          "title": "Get the organization profile",
+          "description": "Fetch the Neon CRM organization these credentials belong to — its name, org ID and app URL. A cheap way to confirm the org ID and API key work. Neon: GET /properties/organizationProfile."
+        },
+        {
+          "name": "neon_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List constituent accounts (individuals and companies), optionally filtered by email, first or last name, or type. Returns accountId, names, email and userType. For richer queries use neon_search. Neon: GET /accounts."
+        },
+        {
+          "name": "neon_get_account",
+          "type": "read",
+          "title": "Get one account",
+          "description": "Fetch one account in full — returned as individualAccount or companyAccount with its primary contact, addresses, consent, custom fields, current membership status and timestamps. Neon: GET /accounts/{id}."
+        },
+        {
+          "name": "neon_list_search_fields",
+          "type": "read",
+          "title": "List search or output fields",
+          "description": "Discover the field names neon_search accepts for a resource: kind=searchFields gives filterable fields with their allowed operators; kind=outputFields gives the columns you can return (standard field names plus custom fields with numeric ids). Call this before neon_search. Neon: GET /{resource}/search/searchFields or /outputFields."
+        },
+        {
+          "name": "neon_search",
+          "type": "read",
+          "title": "Search records",
+          "description": "Report-style search over accounts, donations (includes pledges and pledge payments), activities or events. Give filter criteria (field + operator + value), the output columns to return (standard field NAMES as strings, or custom-field IDS as integers — both from neon_list_search_fields), and 0-based pagination. Results come back as searchResults rows keyed by output field name, plus pagination totals. Neon allows only ONE concurrent search per endpoint. Neon: POST /{resource}/search."
+        },
+        {
+          "name": "neon_list_account_donations",
+          "type": "read",
+          "title": "List an account's donations",
+          "description": "List one account's donations (amount, date, fund, campaign, purpose, status, payments), newest first by default. Neon: GET /accounts/{id}/donations."
+        },
+        {
+          "name": "neon_list_account_memberships",
+          "type": "read",
+          "title": "List an account's memberships",
+          "description": "List one account's membership history — level, term, start and end dates, fee, status (e.g. SUCCEEDED/FAILED) and auto-renewal. Filter to active or the primary active membership. Neon: GET /accounts/{id}/memberships."
+        },
+        {
+          "name": "neon_list_account_event_registrations",
+          "type": "read",
+          "title": "List an account's event registrations",
+          "description": "List the event registrations one account has made, optionally for a single event. Neon: GET /accounts/{id}/eventRegistrations."
+        },
+        {
+          "name": "neon_get_donation",
+          "type": "read",
+          "title": "Get one donation",
+          "description": "Fetch one donation — amount, date, fund, campaign, purpose, source, tribute, soft-credit solicitor, payments and status. Neon: GET /donations/{id}."
+        },
+        {
+          "name": "neon_get_membership",
+          "type": "read",
+          "title": "Get one membership",
+          "description": "Fetch one membership — level, term, dates, fee, status, auto-renewal, sub-members and payments. Neon: GET /memberships/{membershipId}."
+        },
+        {
+          "name": "neon_list_membership_levels",
+          "type": "read",
+          "title": "List membership levels",
+          "description": "List the organization's membership levels (id, code, description, rank, type, status). Neon: GET /memberships/levels."
+        },
+        {
+          "name": "neon_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events, filterable by name, category, date window, published or archived state. Dates are YYYY-MM-DD. Only Neon's legacy events are exposed by the API. Neon: GET /events."
+        },
+        {
+          "name": "neon_get_event",
+          "type": "read",
+          "title": "Get one event",
+          "description": "Fetch one event — name, summary, dates, location, capacity, category, campaign, registration and financial settings. Neon: GET /events/{id}."
+        },
+        {
+          "name": "neon_list_event_registrations",
+          "type": "read",
+          "title": "List an event's registrations",
+          "description": "List the registrations for one event — registrant account, tickets and attendees, amount, payments. Optionally only one registrant. Neon: GET /events/{id}/eventRegistrations."
+        },
+        {
+          "name": "neon_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List fundraising campaigns (id, code, name, status). Neon: GET /campaigns."
+        },
+        {
+          "name": "neon_get_campaign",
+          "type": "read",
+          "title": "Get one campaign",
+          "description": "Fetch one campaign — dates, goal, fund, purpose, parent campaign, status, page URLs and fundraising statistics. Neon: GET /campaigns/{id}."
+        },
+        {
+          "name": "neon_get_activity",
+          "type": "read",
+          "title": "Get one activity",
+          "description": "Fetch one activity (a logged interaction or task) — subject, note, dates, linked accounts, assigned users, status and priority. Neon: GET /activities/{id}."
+        },
+        {
+          "name": "neon_list_properties",
+          "type": "read",
+          "title": "List lookup values",
+          "description": "List one of the organization's lookup lists — the ids other tools need: funds, purposes, sources, solicitation methods, activity statuses and system time zones (for neon_create_activity), system users, individual and company types, event categories, countries, states/provinces, genders, prefixes. Neon: GET /properties/{name}."
+        },
+        {
+          "name": "neon_create_account",
+          "type": "write",
+          "title": "Create an account",
+          "description": "Create a constituent account: an INDIVIDUAL (a person) or a COMPANY (with company_name, plus an optional primary contact). Neon's Account Match may merge it into an existing account with the same name and email, so check neon_list_accounts by email first. Returns the new id. Neon: POST /accounts."
+        },
+        {
+          "name": "neon_update_account",
+          "type": "write",
+          "title": "Update an account",
+          "description": "Change an account's name, email, job title, company name or do-not-solicit / email opt-out flags. Only the fields you pass are changed (PATCH). The type must match the account (see neon_get_account). Addresses are not edited here. Neon: PATCH /accounts/{id}."
+        },
+        {
+          "name": "neon_create_activity",
+          "type": "write",
+          "title": "Log an activity",
+          "description": "Create an activity — log an interaction with a constituent (call, meeting, note) or schedule a task. Needs a subject, a start date, a time zone id (neon_list_properties name=systemTimezones), a status id (name=activityStatuses) and a priority; link it to accounts and assign it to system users. Returns the new id. Neon: POST /activities."
+        },
+        {
+          "name": "neon_update_activity",
+          "type": "write",
+          "title": "Update an activity",
+          "description": "Change an activity's subject, note, status (e.g. mark it completed) or priority. Only the fields you pass are changed (PATCH). Neon: PATCH /activities/{id}."
+        },
+        {
+          "name": "neon_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "neon_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Neon CRM tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "insightly",
+      "name": "Insightly",
+      "category": "crm",
+      "description": "Read and write Insightly contacts, organisations, leads, opportunities, tasks and notes.",
+      "endpoint": "https://insightly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "insightly_get_current_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Fetch the user the API key belongs to (USER_ID, name, email, admin flag). A cheap way to confirm the key and pod are right, and to get your own id for owner fields. Insightly: GET /Users/Me."
+        },
+        {
+          "name": "insightly_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users in the Insightly instance — needed to resolve OWNER_USER_ID / RESPONSIBLE_USER_ID. Insightly: GET /Users."
+        },
+        {
+          "name": "insightly_list_records",
+          "type": "read",
+          "title": "List or search records",
+          "description": "List records of one type — Contacts, Organisations, Leads, Opportunities, Projects, Tasks, Events or Notes — optionally filtered by one field value and/or last-updated time. With field_name + field_value (both required together) or updated_after_utc this uses GET /<Object>/Search; otherwise GET /<Object>. Field names are Insightly's UPPER_SNAKE names, e.g. EMAIL_ADDRESS, LAST_NAME, ORGANISATION_NAME, OPPORTUNITY_STATE, LEAD_RATING, or a custom field such as Industry__c."
+        },
+        {
+          "name": "insightly_get_record",
+          "type": "read",
+          "title": "Get one record",
+          "description": "Fetch a single Contact, Organisation, Lead, Opportunity, Project, Task, Event or Note by id, with its custom fields, tags and links. Insightly: GET /<Object>/{id}."
+        },
+        {
+          "name": "insightly_list_record_activity",
+          "type": "read",
+          "title": "List a record's notes, tasks or events",
+          "description": "List the Notes, Tasks or Events attached to one Contact, Organisation, Lead, Opportunity or Project — the activity history of that record. Insightly: GET /<Object>/{id}/Notes | Tasks | Events."
+        },
+        {
+          "name": "insightly_search_by_tag",
+          "type": "read",
+          "title": "Find records by tag",
+          "description": "List Contacts, Organisations, Leads, Opportunities or Projects carrying a tag. Insightly: GET /<Object>/SearchByTag?tagName=."
+        },
+        {
+          "name": "insightly_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the sales and project pipelines (PIPELINE_ID, name, whether for opportunities or projects). Insightly: GET /Pipelines."
+        },
+        {
+          "name": "insightly_list_pipeline_stages",
+          "type": "read",
+          "title": "List pipeline stages",
+          "description": "List every pipeline stage (STAGE_ID, PIPELINE_ID, name, order) — map an opportunity's or project's STAGE_ID to a stage name. Insightly: GET /PipelineStages."
+        },
+        {
+          "name": "insightly_list_lead_statuses",
+          "type": "read",
+          "title": "List lead statuses",
+          "description": "List the lead statuses defined in the instance (LEAD_STATUS_ID, name, type). Insightly: GET /LeadStatuses."
+        },
+        {
+          "name": "insightly_list_lead_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "List the lead sources defined in the instance (LEAD_SOURCE_ID, name). Insightly: GET /LeadSources."
+        },
+        {
+          "name": "insightly_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a contact (first_name is required). Insightly: POST /Contacts."
+        },
+        {
+          "name": "insightly_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Update a contact. Only the fields you pass are changed (v3.1 partial update). Insightly: PUT /Contacts with CONTACT_ID."
+        },
+        {
+          "name": "insightly_create_organisation",
+          "type": "write",
+          "title": "Create an organisation",
+          "description": "Create an organisation (company). Insightly: POST /Organisations."
+        },
+        {
+          "name": "insightly_update_organisation",
+          "type": "write",
+          "title": "Update an organisation",
+          "description": "Update an organisation. Only the fields you pass are changed. Insightly: PUT /Organisations with ORGANISATION_ID."
+        },
+        {
+          "name": "insightly_create_lead",
+          "type": "write",
+          "title": "Create a lead",
+          "description": "Create a lead (last_name is required). Insightly's schema also marks lead_status_id and lead_source_id as required — get valid ids from insightly_list_lead_statuses / insightly_list_lead_sources. Insightly: POST /Leads."
+        },
+        {
+          "name": "insightly_update_lead",
+          "type": "write",
+          "title": "Update a lead",
+          "description": "Update a lead. Only the fields you pass are changed. Insightly: PUT /Leads with LEAD_ID."
+        },
+        {
+          "name": "insightly_create_opportunity",
+          "type": "write",
+          "title": "Create an opportunity",
+          "description": "Create a sales opportunity (opportunity_name is required). Insightly: POST /Opportunities."
+        },
+        {
+          "name": "insightly_update_opportunity",
+          "type": "write",
+          "title": "Update an opportunity",
+          "description": "Update an opportunity's value, probability, dates, owner or details. Only the fields you pass are changed. Insightly: PUT /Opportunities with OPPORTUNITY_ID."
+        },
+        {
+          "name": "insightly_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task (title is required). Insightly requires OWNER_USER_ID and COMPLETED on a task: if owner_user_id is omitted it is filled with the API key's own user (via GET /Users/Me), and completed defaults to false. Insightly: POST /Tasks."
+        },
+        {
+          "name": "insightly_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Update a task — mark it completed, change due date, status, assignee or details. Only the fields you pass are changed. Insightly: PUT /Tasks with TASK_ID."
+        },
+        {
+          "name": "insightly_add_note",
+          "type": "write",
+          "title": "Add a note to a record",
+          "description": "Add a note (title + body) to a Contact, Organisation, Lead, Opportunity or Project. Insightly: POST /<Object>/{id}/Notes."
+        },
+        {
+          "name": "insightly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "insightly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Insightly tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "bookeo",
+      "name": "Bookeo",
+      "category": "calendar",
+      "description": "Check Bookeo availability and manage bookings, holds and customers; read payments.",
+      "endpoint": "https://bookeo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "bookeo_get_api_key_info",
+          "type": "read",
+          "title": "Get API key info",
+          "description": "Show which Bookeo account the credentials belong to and which permissions were granted (e.g. bookings_rw_all, customers_r_all, availability_r). A cheap way to confirm the setup works. Bookeo: GET /settings/apikeyinfo."
+        },
+        {
+          "name": "bookeo_get_business",
+          "type": "read",
+          "title": "Get the business",
+          "description": "Get the business's name, contact details, address, website and description. Bookeo: GET /settings/business."
+        },
+        {
+          "name": "bookeo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the bookable products (tours, classes, courses, appointments) with their ids, type (fixed, fixedCourse, flexibleTime), duration, participant limits per people category, default rates and options. Bookeo: GET /settings/products."
+        },
+        {
+          "name": "bookeo_list_people_categories",
+          "type": "read",
+          "title": "List people categories",
+          "description": "List the participant categories the account uses (default Adults/Children/Infants plus custom ones like Students), with their ids and seats taken. Needed for peopleNumbers. Bookeo: GET /settings/peoplecategories."
+        },
+        {
+          "name": "bookeo_list_resources",
+          "type": "read",
+          "title": "List resources",
+          "description": "List resource types and their resources (guides, instructors, rooms, boats...) with ids. Bookeo: GET /settings/resources."
+        },
+        {
+          "name": "bookeo_get_availability_slots",
+          "type": "read",
+          "title": "Get availability slots",
+          "description": "List available slots (eventId, start/end, seats available) for fixed and fixedCourse products in a time window of at most 31 days. Not for flexibleTime products — use bookeo_search_matching_slots for those. Bookeo: GET /availability/slots."
+        },
+        {
+          "name": "bookeo_search_matching_slots",
+          "type": "read",
+          "title": "Search matching slots",
+          "description": "Find slots that can take a given party (participant counts per category, options, resources), with an estimated price. Works for all product types, including flexibleTime appointments. Window max 31 days. To page through results pass only pageNavigationToken (+ pageNumber). Read-only. Bookeo: POST /availability/matchingslots, GET /availability/matchingslots/{pageNavigationToken}."
+        },
+        {
+          "name": "bookeo_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings by start time (startTime+endTime) and/or by last change (lastUpdatedStartTime+lastUpdatedEndTime) — at least one pair is required, each spanning at most 31 days. Optionally filter by product, include canceled bookings, and expand customer/participant details. Bookeo: GET /bookings."
+        },
+        {
+          "name": "bookeo_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Get one booking by its booking number: product, times, participants, options, price, paid amount, status (canceled/accepted/noShow). Bookeo: GET /bookings/{bookingNumber}."
+        },
+        {
+          "name": "bookeo_list_booking_payments",
+          "type": "read",
+          "title": "List a booking's payments",
+          "description": "List the payments (and refunds, as negative amounts) received for one booking. Bookeo: GET /bookings/{bookingNumber}/payments."
+        },
+        {
+          "name": "bookeo_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List or search customers — by name, firstName, lastName or emailAddress — optionally only members/non-members or those created since a date. Bookeo: GET /customers."
+        },
+        {
+          "name": "bookeo_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer: contact details, next/previous booking, number of bookings, cancellations and no-shows, membership and store credit. Bookeo: GET /customers/{id}."
+        },
+        {
+          "name": "bookeo_list_customer_bookings",
+          "type": "read",
+          "title": "List a customer's bookings",
+          "description": "List one customer's bookings, optionally between two dates. Bookeo: GET /customers/{id}/bookings."
+        },
+        {
+          "name": "bookeo_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments received in a time period, optionally by payment method. Refunds are included with a negative amount. Bookeo: GET /payments."
+        },
+        {
+          "name": "bookeo_get_payment",
+          "type": "read",
+          "title": "Get a payment",
+          "description": "Get one payment: amount, method, reason, received time, customer and gateway transaction id. Bookeo: GET /payments/{id}."
+        },
+        {
+          "name": "bookeo_create_hold",
+          "type": "write",
+          "title": "Hold seats (price check)",
+          "description": "Temporarily reserve the seats/resources for a draft booking (default 300 s, max 600 s) and get the FINAL price, taxes and amount payable. The recommended step before bookeo_create_booking: pass the returned hold id as previousHoldId there. Holds expire automatically. Bookeo: POST /holds."
+        },
+        {
+          "name": "bookeo_create_booking",
+          "type": "write",
+          "title": "Create a booking",
+          "description": "Create a confirmed booking for an existing customer (customerId) or a new one (customer). fixed/fixedCourse products need an eventId from the availability tools; flexibleTime products take eventId or startTime. Pass previousHoldId to convert a hold. Does NOT record any payment. Reversible with bookeo_cancel_booking. Bookeo: POST /bookings."
+        },
+        {
+          "name": "bookeo_update_booking",
+          "type": "write",
+          "title": "Update a booking",
+          "description": "Change an existing booking — reschedule (eventId or startTime/endTime), change participant counts, options, resources or external reference. Fetches the current booking and sends it back with only your changes applied (Bookeo's PUT takes the full booking). Bookeo: GET then PUT /bookings/{bookingNumber}."
+        },
+        {
+          "name": "bookeo_cancel_booking",
+          "type": "write",
+          "title": "Cancel a booking",
+          "description": "Cancel a booking. It stays in the system (visible with includeCanceled) but frees its seats. The account's cancellation policy is NOT applied, so no cancellation fee is charged. Bookeo: DELETE /bookings/{bookingNumber}."
+        },
+        {
+          "name": "bookeo_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer record. Not needed before booking — bookeo_create_booking can create the customer inline. Bookeo: POST /customers."
+        },
+        {
+          "name": "bookeo_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Update a customer's contact details. Fetches the current record and sends it back with only your changes applied (Bookeo's PUT takes the full customer). Bookeo: GET then PUT /customers/{id}."
+        },
+        {
+          "name": "bookeo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bookeo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Bookeo tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "bloomerang",
+      "name": "Bloomerang",
+      "category": "fundraising",
+      "description": "Search Bloomerang constituents and donations; log interactions, notes and tasks.",
+      "endpoint": "https://bloomerang.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "bloomerang_get_current_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Fetch the Bloomerang user the API key belongs to — name, email and permission level. A cheap way to confirm the key works and see what it may do. Bloomerang: GET /user/current."
+        },
+        {
+          "name": "bloomerang_search_constituents",
+          "type": "read",
+          "title": "Search constituents",
+          "description": "Full-text search across constituents (individuals and organizations) and households by name, email, etc. Start here to find a donor's Id. Bloomerang: GET /constituents/search."
+        },
+        {
+          "name": "bloomerang_list_constituents",
+          "type": "read",
+          "title": "List constituents",
+          "description": "List constituents with filters — by Id, type, favorites, last-modified date, or a custom field value — and sorting. Good for syncing recent changes. Bloomerang: GET /constituents."
+        },
+        {
+          "name": "bloomerang_get_constituent",
+          "type": "read",
+          "title": "Get one constituent",
+          "description": "Fetch one constituent's full profile — names, primary and secondary contact details, household, communication preferences, engagement score and custom values. Bloomerang: GET /constituent/{id}."
+        },
+        {
+          "name": "bloomerang_get_constituent_timeline",
+          "type": "read",
+          "title": "Get a constituent's timeline",
+          "description": "The activity timeline for a constituent — gifts, interactions, notes, tasks and more, newest first. Pass a household Id to get the timeline of every member. Bloomerang: GET /constituent/{id}/timeline."
+        },
+        {
+          "name": "bloomerang_list_constituent_relationships",
+          "type": "read",
+          "title": "List a constituent's relationships",
+          "description": "Relationships between this constituent and others (spouse, employer, board member ...), with the role on each side. Bloomerang: GET /constituent/{id}/relationships."
+        },
+        {
+          "name": "bloomerang_get_household",
+          "type": "read",
+          "title": "Get one household",
+          "description": "Fetch a household — its names, head of household (HeadId) and member constituent Ids. A constituent's HouseholdId points here. Bloomerang: GET /household/{id}."
+        },
+        {
+          "name": "bloomerang_list_transactions",
+          "type": "read",
+          "title": "List transactions (gifts)",
+          "description": "List transactions — donations, pledges, pledge payments, recurring donations and their payments — with their designations (fund, campaign, appeal). Filter by constituent, amount range, type or last-modified date. Read only. Bloomerang: GET /transactions."
+        },
+        {
+          "name": "bloomerang_get_transaction",
+          "type": "read",
+          "title": "Get one transaction",
+          "description": "Fetch one transaction with its payment method, amounts, refund status and every designation (fund, campaign, appeal, tribute, acknowledgement status). Bloomerang: GET /transaction/{id}."
+        },
+        {
+          "name": "bloomerang_list_funds",
+          "type": "read",
+          "title": "List funds",
+          "description": "List the funds gifts can be designated to (e.g. General Operating, Scholarship). Bloomerang: GET /funds."
+        },
+        {
+          "name": "bloomerang_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List fundraising campaigns with their goals and dates. Bloomerang: GET /campaigns."
+        },
+        {
+          "name": "bloomerang_list_appeals",
+          "type": "read",
+          "title": "List appeals",
+          "description": "List appeals — the specific asks (a year-end letter, a gala invitation) that gifts are attributed to. Bloomerang: GET /appeals."
+        },
+        {
+          "name": "bloomerang_list_interactions",
+          "type": "read",
+          "title": "List interactions",
+          "description": "List logged interactions (calls, emails, meetings, letters ...) — filter by constituent, channel or purpose. Bloomerang: GET /interactions."
+        },
+        {
+          "name": "bloomerang_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes, optionally for specific constituents. Bloomerang: GET /notes."
+        },
+        {
+          "name": "bloomerang_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks (follow-ups) — filter by status, due-date range, assignee user, constituent, channel or purpose. Bloomerang: GET /tasks."
+        },
+        {
+          "name": "bloomerang_create_constituent",
+          "type": "write",
+          "title": "Create a constituent",
+          "description": "WRITE: create a new individual or organization constituent. For an individual give first_name/last_name; for an organization give full_name. Search first (bloomerang_search_constituents) to avoid creating a duplicate donor. Bloomerang: POST /constituent."
+        },
+        {
+          "name": "bloomerang_update_constituent",
+          "type": "write",
+          "title": "Update a constituent",
+          "description": "WRITE: update fields on an existing constituent's profile (names, job, status, primary address/email/phone). Only the fields you supply are sent. Bloomerang: PUT /constituent/{id}."
+        },
+        {
+          "name": "bloomerang_create_interaction",
+          "type": "write",
+          "title": "Log an interaction",
+          "description": "WRITE: log an interaction with a constituent — a call, email, meeting, letter, etc. — on their timeline. Bloomerang: POST /interaction."
+        },
+        {
+          "name": "bloomerang_create_note",
+          "type": "write",
+          "title": "Add a note",
+          "description": "WRITE: add a note to a constituent's record. Bloomerang: POST /note."
+        },
+        {
+          "name": "bloomerang_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: create a follow-up task, optionally tied to a constituent and assigned to a user (find user Ids via bloomerang_get_current_user or existing tasks). Bloomerang: POST /task."
+        },
+        {
+          "name": "bloomerang_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bloomerang_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Bloomerang tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "together-ai",
+      "name": "Together AI",
+      "category": "ai-infra",
+      "description": "Run Together AI chat, embeddings and images; manage fine-tunes, batches and endpoints.",
+      "endpoint": "https://together-ai.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "together_whoami",
+          "type": "read",
+          "title": "Who am I",
+          "description": "Identify the API key: its organization, project and project slug. The project slug forms the `<project_slug>/<endpoint_slug>` model name for dedicated-endpoint inference. A cheap way to confirm the key works. Together: GET /whoami."
+        },
+        {
+          "name": "together_list_models",
+          "type": "read",
+          "title": "List models",
+          "description": "List Together's models with type (chat, language, code, image, embedding, moderation, rerank), context length, organization, license and per-token pricing. Together: GET /models."
+        },
+        {
+          "name": "together_list_files",
+          "type": "read",
+          "title": "List files",
+          "description": "List uploaded data files (fine-tune, eval and batch-api inputs, plus job outputs) with size, type, purpose and validation status. Together: GET /files."
+        },
+        {
+          "name": "together_get_file",
+          "type": "read",
+          "title": "Get one file",
+          "description": "Fetch one file's metadata, including its processing_status and validation_report (why a fine-tune training file was rejected). Together: GET /files/{id}."
+        },
+        {
+          "name": "together_list_fine_tunes",
+          "type": "read",
+          "title": "List fine-tuning jobs",
+          "description": "List fine-tuning jobs with status, base model, output model name and training settings. Together: GET /fine-tunes."
+        },
+        {
+          "name": "together_get_fine_tune",
+          "type": "read",
+          "title": "Get one fine-tuning job",
+          "description": "Fetch one fine-tuning job: status, progress, hyperparameters, token counts, cost and the output model name. Together: GET /fine-tunes/{id}."
+        },
+        {
+          "name": "together_list_fine_tune_events",
+          "type": "read",
+          "title": "List a fine-tuning job's events",
+          "description": "List the event log of one fine-tuning job (queued, started, checkpoint saved, epoch completed, errors). The first place to look when a job failed. Together: GET /fine-tunes/{id}/events."
+        },
+        {
+          "name": "together_list_batches",
+          "type": "read",
+          "title": "List batch jobs",
+          "description": "List batch inference jobs with status, progress, model and input/output/error file ids. Together: GET /batches."
+        },
+        {
+          "name": "together_get_batch",
+          "type": "read",
+          "title": "Get one batch job",
+          "description": "Fetch one batch job: status (VALIDATING, IN_PROGRESS, COMPLETED, FAILED, EXPIRED, CANCELLED), progress, and the output_file_id / error_file_id once done. Together: GET /batches/{id}."
+        },
+        {
+          "name": "together_list_endpoints",
+          "type": "read",
+          "title": "List endpoints",
+          "description": "List endpoints with model, owner and state (PENDING, STARTING, STARTED, STOPPING, STOPPED, ERROR). Use mine=true and type=dedicated to see what is running on your account and billing by the minute. Together: GET /endpoints."
+        },
+        {
+          "name": "together_get_endpoint",
+          "type": "read",
+          "title": "Get one endpoint",
+          "description": "Fetch one dedicated endpoint: state, model, hardware, autoscaling bounds and display name. Together: GET /endpoints/{endpointId}."
+        },
+        {
+          "name": "together_list_hardware",
+          "type": "read",
+          "title": "List hardware",
+          "description": "List hardware configurations for dedicated endpoints with GPU type/count/memory and price in cents per minute. Pass a model to get only compatible configurations with live availability. Together: GET /hardware."
+        },
+        {
+          "name": "together_list_evaluations",
+          "type": "read",
+          "title": "List evaluation jobs",
+          "description": "List LLM-as-a-judge evaluation jobs (classify, score, compare) with status, parameters and results once completed. Together: GET /evaluation."
+        },
+        {
+          "name": "together_chat_completion",
+          "type": "write",
+          "title": "Chat completion",
+          "description": "Run a chat completion on a Together model (billed per token). Non-streaming. For a dedicated endpoint pass its `<project_slug>/<endpoint_slug>` as the model. Together: POST /chat/completions."
+        },
+        {
+          "name": "together_create_embeddings",
+          "type": "write",
+          "title": "Create embeddings",
+          "description": "Generate vector embeddings for one or more texts (billed per token). Together: POST /embeddings."
+        },
+        {
+          "name": "together_generate_image",
+          "type": "write",
+          "title": "Generate an image",
+          "description": "Generate images from a prompt (billed per image/megapixel). Returns image URLs by default rather than base64, to keep responses small. Together: POST /images/generations."
+        },
+        {
+          "name": "together_create_fine_tune",
+          "type": "write",
+          "title": "Create a fine-tuning job",
+          "description": "Start a fine-tuning job on an uploaded training file (billed per token processed). Stop it with together_cancel_fine_tune. Together: POST /fine-tunes."
+        },
+        {
+          "name": "together_cancel_fine_tune",
+          "type": "write",
+          "title": "Cancel a fine-tuning job",
+          "description": "Cancel a running fine-tuning job. Cannot be resumed, but a new job can continue from its last checkpoint via from_checkpoint. Together: POST /fine-tunes/{id}/cancel."
+        },
+        {
+          "name": "together_create_batch",
+          "type": "write",
+          "title": "Create a batch job",
+          "description": "Start an asynchronous batch job over an uploaded JSONL input file (purpose batch-api), at a discount to real-time inference. Together: POST /batches."
+        },
+        {
+          "name": "together_cancel_batch",
+          "type": "write",
+          "title": "Cancel a batch job",
+          "description": "Cancel a batch job that has not finished. Together: POST /batches/{id}/cancel."
+        },
+        {
+          "name": "together_create_endpoint",
+          "type": "write",
+          "title": "Create a dedicated endpoint",
+          "description": "Deploy a model on dedicated GPUs. The endpoint STARTS AUTOMATICALLY and bills per minute of uptime until stopped — set inactive_timeout to auto-stop it, and use together_list_hardware for valid hardware ids. Together: POST /endpoints."
+        },
+        {
+          "name": "together_start_endpoint",
+          "type": "write",
+          "title": "Start a dedicated endpoint",
+          "description": "Start a stopped dedicated endpoint. It bills per minute of uptime until stopped. Reversible with together_stop_endpoint. Together: PATCH /endpoints/{endpointId} with state=STARTED."
+        },
+        {
+          "name": "together_stop_endpoint",
+          "type": "write",
+          "title": "Stop a dedicated endpoint",
+          "description": "Stop a running dedicated endpoint, which stops its per-minute billing. Requests to it fail until it is started again. Together: PATCH /endpoints/{endpointId} with state=STOPPED."
+        },
+        {
+          "name": "together_ai_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "together_ai_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Together AI tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "eventbrite",
+      "name": "Eventbrite",
+      "category": "ecommerce",
+      "description": "Manage Eventbrite events, ticket classes, venues and discounts; read attendees, orders and reports.",
+      "endpoint": "https://eventbrite.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "eventbrite_get_me",
+          "type": "read",
+          "title": "Get my user",
+          "description": "Fetch the Eventbrite user the token belongs to (name, emails). A cheap way to confirm the token works. Eventbrite: GET /users/me/."
+        },
+        {
+          "name": "eventbrite_list_organizations",
+          "type": "read",
+          "title": "List my organizations",
+          "description": "List the organizations you are a member of. Almost every other tool needs an organization_id from here. Eventbrite: GET /users/me/organizations/."
+        },
+        {
+          "name": "eventbrite_list_events",
+          "type": "read",
+          "title": "List an organization's events",
+          "description": "List the events of an organization, filterable by status, name and past/upcoming. Eventbrite: GET /organizations/{organization_id}/events/."
+        },
+        {
+          "name": "eventbrite_get_event",
+          "type": "read",
+          "title": "Get an event",
+          "description": "Fetch one event: name, summary, start/end, status, capacity, venue_id, listing settings. Use expand=venue,ticket_classes for more. Eventbrite: GET /events/{event_id}/."
+        },
+        {
+          "name": "eventbrite_get_event_description",
+          "type": "read",
+          "title": "Get an event's full description",
+          "description": "Fetch the fully rendered HTML description of an event (summary plus the page modules). Eventbrite: GET /events/{event_id}/description/."
+        },
+        {
+          "name": "eventbrite_list_ticket_classes",
+          "type": "read",
+          "title": "List an event's ticket classes",
+          "description": "List the ticket types of an event with price, capacity, quantity_sold and sales window. Eventbrite: GET /events/{event_id}/ticket_classes/."
+        },
+        {
+          "name": "eventbrite_list_venues",
+          "type": "read",
+          "title": "List an organization's venues",
+          "description": "List the saved venues of an organization, with address and capacity. Eventbrite: GET /organizations/{organization_id}/venues/."
+        },
+        {
+          "name": "eventbrite_list_attendees",
+          "type": "read",
+          "title": "List attendees",
+          "description": "List attendees (one per sold ticket) of one event OR of all of an organization's events. Each attendee carries checked_in, cancelled, refunded, status, ticket_class_name, profile and barcodes (status unused/used). Pass exactly one of event_id / organization_id. Eventbrite: GET /events/{event_id}/attendees/ or GET /organizations/{organization_id}/attendees/."
+        },
+        {
+          "name": "eventbrite_get_attendee",
+          "type": "read",
+          "title": "Get an attendee",
+          "description": "Fetch one attendee of an event, including check-in state (checked_in, barcodes[].status), answers and cost breakdown. Eventbrite: GET /events/{event_id}/attendees/{attendee_id}/."
+        },
+        {
+          "name": "eventbrite_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders of one event OR of all of an organization's events: buyer name/email, status, costs. Pass exactly one of event_id / organization_id. Eventbrite: GET /events/{event_id}/orders/ or GET /organizations/{organization_id}/orders/."
+        },
+        {
+          "name": "eventbrite_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Fetch one order. Use expand=attendees,event to include its tickets and event. Eventbrite: GET /orders/{order_id}/."
+        },
+        {
+          "name": "eventbrite_list_discounts",
+          "type": "read",
+          "title": "List discounts",
+          "description": "Search an organization's discounts and access codes, with quantity_sold. scope=event needs event_id; multi_events = cross-event discounts; user = all of the organization's. Eventbrite: GET /organizations/{organization_id}/discounts/."
+        },
+        {
+          "name": "eventbrite_get_capacity",
+          "type": "read",
+          "title": "Get an event's capacity",
+          "description": "Fetch the event capacity tier: capacity_total, capacity_sold, capacity_pending, quantity_total and capacity holds. Eventbrite: GET /events/{event_id}/capacity_tier/."
+        },
+        {
+          "name": "eventbrite_list_inventory_tiers",
+          "type": "read",
+          "title": "List an event's inventory tiers",
+          "description": "List the inventory tiers of a tiered or reserved-seating event, with quantity_total, quantity_sold, quantity_pending and linked ticket_class_ids. Eventbrite: GET /events/{event_id}/inventory_tiers/."
+        },
+        {
+          "name": "eventbrite_get_sales_report",
+          "type": "read",
+          "title": "Get a sales report",
+          "description": "Sales report for one or more events: gross, net, fees, royalty and quantity per time bucket, optionally grouped (by ticket, payment method, country, ...). Eventbrite: GET /reports/sales/."
+        },
+        {
+          "name": "eventbrite_get_attendee_report",
+          "type": "read",
+          "title": "Get an attendee report",
+          "description": "Attendee report for one or more events: number of attendees and orders per time bucket, optionally grouped. Eventbrite: GET /reports/attendees/."
+        },
+        {
+          "name": "eventbrite_create_event",
+          "type": "write",
+          "title": "Create a draft event",
+          "description": "Create a new event as a DRAFT (not visible or on sale until eventbrite_publish_event). Add tickets with eventbrite_create_ticket_class before publishing. Eventbrite: POST /organizations/{organization_id}/events/."
+        },
+        {
+          "name": "eventbrite_update_event",
+          "type": "write",
+          "title": "Update an event",
+          "description": "Change fields of an existing event; only the fields you pass are sent. Changing start/end needs timezone too. Eventbrite: POST /events/{event_id}/."
+        },
+        {
+          "name": "eventbrite_copy_event",
+          "type": "write",
+          "title": "Copy an event",
+          "description": "Duplicate an event (tickets, payment options, refund policy, tax settings) into a new event with a new ID, optionally with a new name and dates. Eventbrite: POST /events/{event_id}/copy/."
+        },
+        {
+          "name": "eventbrite_publish_event",
+          "type": "write",
+          "title": "Publish an event",
+          "description": "Make a draft event live so tickets go on sale. Needs a name, organizer, at least one ticket class and valid payment options. Undo with eventbrite_unpublish_event while there are no orders. Eventbrite: POST /events/{event_id}/publish/."
+        },
+        {
+          "name": "eventbrite_unpublish_event",
+          "type": "write",
+          "title": "Unpublish an event",
+          "description": "Take a published event back to unpublished. Only allowed while it has no pending or completed orders (or, for paid events, once completed and paid out). Eventbrite: POST /events/{event_id}/unpublish/."
+        },
+        {
+          "name": "eventbrite_create_ticket_class",
+          "type": "write",
+          "title": "Create a ticket class",
+          "description": "Add a ticket type to an event. Paid: set cost like \"USD,2500\" and capacity. Free: free=true and capacity. Eventbrite: POST /events/{event_id}/ticket_classes/."
+        },
+        {
+          "name": "eventbrite_update_ticket_class",
+          "type": "write",
+          "title": "Update a ticket class",
+          "description": "Change a ticket type (name, price, capacity, sales window, visibility); only the fields you pass are sent. The price cannot change after tickets are sold. Eventbrite: POST /events/{event_id}/ticket_classes/{ticket_class_id}/."
+        },
+        {
+          "name": "eventbrite_create_venue",
+          "type": "write",
+          "title": "Create a venue",
+          "description": "Save a new venue under an organization, to use as an event's venue_id. Eventbrite: POST /organizations/{organization_id}/venues/."
+        },
+        {
+          "name": "eventbrite_create_discount",
+          "type": "write",
+          "title": "Create a discount or access code",
+          "description": "Create a promo code (type=coded), a public discount (type=public, single event) or an access code that unlocks hidden tickets (type=access). Scope: event_id (+ticket_class_ids) for one event, ticket_group_id for a group, neither for all the organization's events. Eventbrite: POST /organizations/{organization_id}/discounts/."
+        },
+        {
+          "name": "eventbrite_update_discount",
+          "type": "write",
+          "title": "Update a discount",
+          "description": "Change a discount or access code (amount, uses, dates, scope); only the fields you pass are sent. Eventbrite: POST /discounts/{discount_id}/."
+        },
+        {
+          "name": "eventbrite_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "eventbrite_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Eventbrite tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "less-annoying-crm",
+      "name": "Less Annoying CRM",
+      "category": "crm",
+      "description": "Read and write Less Annoying CRM contacts, notes, tasks, events, pipelines and groups.",
+      "endpoint": "https://less-annoying-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "lacrm_get_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Return the user who owns this API key — UserId, name, email and timezone. A cheap way to confirm the key works, and the UserId to use for AssignedTo. LACRM: GetUser."
+        },
+        {
+          "name": "lacrm_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users on the account that you can see (admins see all), with their UserIds — needed to assign contacts, tasks or filter by owner. LACRM: GetUsers."
+        },
+        {
+          "name": "lacrm_search_contacts",
+          "type": "read",
+          "title": "Search contacts and companies",
+          "description": "Search (or list) contacts and companies. With no search_terms, returns everything visible, paged. Returns { HasMoreResults, Results }. LACRM: GetContacts."
+        },
+        {
+          "name": "lacrm_get_contact",
+          "type": "read",
+          "title": "Get a contact or company",
+          "description": "Fetch one contact or company record with all its fields (emails, phones, addresses, custom fields, owner). LACRM: GetContact."
+        },
+        {
+          "name": "lacrm_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes, newest first by default — across the whole CRM, or for one contact. Filter by date range and author. LACRM: GetNotes."
+        },
+        {
+          "name": "lacrm_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks due in a date range, optionally only incomplete/complete, for given users. If contact_id is given, ALL of that contact's tasks are returned regardless of dates or status. LACRM: GetTasks."
+        },
+        {
+          "name": "lacrm_list_events",
+          "type": "read",
+          "title": "List calendar events",
+          "description": "List calendar events in a date range, filterable by user or calendar. If contact_id is given, all events attached to that contact are returned and other filters are ignored. LACRM: GetEvents."
+        },
+        {
+          "name": "lacrm_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the account's pipelines (e.g. Sales Leads) with their statuses (StatusId, Name, IsActive) and optionally their custom fields. This is the setup, not the items — use lacrm_list_pipeline_items for those. LACRM: GetPipelines."
+        },
+        {
+          "name": "lacrm_list_pipeline_items",
+          "type": "read",
+          "title": "List pipeline items",
+          "description": "List the items in one pipeline (deals, leads...), optionally only in given statuses or for given users. An empty status filter returns items in all ACTIVE statuses. LACRM: GetPipelineItems."
+        },
+        {
+          "name": "lacrm_get_contact_pipeline_items",
+          "type": "read",
+          "title": "Get a contact's pipeline items",
+          "description": "All pipeline items attached to one contact or company, grouped by pipeline. LACRM: GetPipelineItemsAttachedToContact."
+        },
+        {
+          "name": "lacrm_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List the contact groups you can see (GroupId, Name, Sharing, Color), optionally with member counts. LACRM: GetGroups."
+        },
+        {
+          "name": "lacrm_list_contacts_in_group",
+          "type": "read",
+          "title": "List contacts in a group",
+          "description": "List the contacts that are members of one group. Identify the group by group_id (preferred) or group_name — not both. LACRM: GetContactsInGroup."
+        },
+        {
+          "name": "lacrm_get_contact_groups",
+          "type": "read",
+          "title": "Get a contact's groups",
+          "description": "List the groups one contact or company belongs to. LACRM: GetGroupsAttachedToContact."
+        },
+        {
+          "name": "lacrm_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the account's field definitions (name, type, options) for contacts, companies or pipelines — use the Name values as keys in custom_fields when creating/editing contacts. LACRM: GetCustomFields."
+        },
+        {
+          "name": "lacrm_create_contact",
+          "type": "write",
+          "title": "Create a contact or company",
+          "description": "Create a new contact (person) or company record. For a person, company_name links them to that company (creating it if needed). Company names must be unique. If assigned_to is omitted, the record is assigned to the API key's own user (one extra GetUser call). Returns { ContactId }. LACRM: CreateContact."
+        },
+        {
+          "name": "lacrm_edit_contact",
+          "type": "write",
+          "title": "Edit a contact or company",
+          "description": "Update fields on an existing contact or company. Only the fields you pass change; omitted fields are left alone. Multi-value fields (email, phone, address, website) are REPLACED by the list you pass. Set is_company=true when renaming a company. LACRM: EditContact."
+        },
+        {
+          "name": "lacrm_create_note",
+          "type": "write",
+          "title": "Add a note to a contact",
+          "description": "Attach a plain-text note to a contact or company's history (newlines kept, HTML/markdown escaped). Returns { NoteId }. LACRM: CreateNote."
+        },
+        {
+          "name": "lacrm_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a to-do on a user's task list (date only, no time — use lacrm_create_event for timed things). Optionally attach it to a contact. Returns { TaskId }. LACRM: CreateTask."
+        },
+        {
+          "name": "lacrm_edit_task",
+          "type": "write",
+          "title": "Edit or complete a task",
+          "description": "Update a task — including marking it complete (is_complete=true) or re-opening it (false). Only passed fields change. LACRM: EditTask."
+        },
+        {
+          "name": "lacrm_create_event",
+          "type": "write",
+          "title": "Schedule a calendar event",
+          "description": "Create a timed (or all-day) event on your calendar, optionally with contacts/users as attendees. The timezone of start_date becomes the event's timezone. Returns { EventId }. LACRM: CreateEvent."
+        },
+        {
+          "name": "lacrm_create_pipeline_item",
+          "type": "write",
+          "title": "Add a contact to a pipeline",
+          "description": "Create a pipeline item (deal, lead...) on a contact in a given pipeline and status, with an optional note. Returns { PipelineItemId }. LACRM: CreatePipelineItem."
+        },
+        {
+          "name": "lacrm_update_pipeline_item",
+          "type": "write",
+          "title": "Move or annotate a pipeline item",
+          "description": "Move a pipeline item to another status (e.g. Prospect → Won) and/or add a note to its history. LACRM: EditPipelineItem."
+        },
+        {
+          "name": "lacrm_add_contact_to_group",
+          "type": "write",
+          "title": "Add a contact to a group",
+          "description": "Add a contact or company to a group (creates a group membership). Identify the group by group_id (preferred) or group_name — not both. LACRM: CreateGroupMembership."
+        },
+        {
+          "name": "lacrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lacrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Less Annoying CRM tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "workiz",
+      "name": "Workiz",
+      "category": "productivity",
+      "description": "Manage Workiz jobs and leads: create, update, assign team members and convert leads to jobs.",
+      "endpoint": "https://workiz.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "workiz_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs, most recently scheduled first (sorted by JobDateTime, descending). Filter by start date, open-only, and status; page with offset/records (max 100). Without start_date Workiz returns the last 14 days. Workiz: GET /job/all/."
+        },
+        {
+          "name": "workiz_get_job",
+          "type": "read",
+          "title": "Get one job",
+          "description": "Fetch one job by UUID: schedule, status, client contact and address, totals and amount due, notes, tags and assigned team. Workiz: GET /job/get/{UUID}/."
+        },
+        {
+          "name": "workiz_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads, most recent first (sorted by LeadDateTime, descending). Filter by start date, open-only, and status; page with offset/records (max 100). Workiz: GET /lead/all/."
+        },
+        {
+          "name": "workiz_get_lead",
+          "type": "read",
+          "title": "Get one lead",
+          "description": "Fetch one lead by UUID: schedule, status, client contact and address, source, notes and assigned team. Workiz: GET /lead/get/{UUID}/."
+        },
+        {
+          "name": "workiz_list_team",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the account's active team members: id, name, role, whether they are a field tech, email, service areas and skills. Use the name to assign people to jobs or leads. Workiz: GET /team/all/."
+        },
+        {
+          "name": "workiz_get_team_member",
+          "type": "read",
+          "title": "Get one team member",
+          "description": "Fetch one team member by user id: name, role, field-tech flag, email, service areas, skills and active status. Workiz: GET /team/get/{USER_ID}."
+        },
+        {
+          "name": "workiz_list_time_off",
+          "type": "read",
+          "title": "List upcoming time off",
+          "description": "List FUTURE time off (start, end, userName — 'Entire Business' for company-wide closures). Set all=true to include every user and company time off. Useful before scheduling. Workiz: GET /TimeOff/get/."
+        },
+        {
+          "name": "workiz_get_user_time_off",
+          "type": "read",
+          "title": "Get a team member's time off",
+          "description": "List one team member's FUTURE time off, by their name. Workiz: GET /TimeOff/get/{USER_NAME}."
+        },
+        {
+          "name": "workiz_create_job",
+          "type": "write",
+          "title": "Create a job",
+          "description": "WRITE: create a new job (schedule, client contact and address, type, source, notes). Returns the new job's UUID, ClientId and app link. Workiz: POST /job/create/."
+        },
+        {
+          "name": "workiz_update_job",
+          "type": "write",
+          "title": "Update a job",
+          "description": "WRITE: update fields on an existing job — status/sub-status, reschedule (JobDateTime/JobEndDateTime), contact, address, type, source, notes, tags. Only the fields you pass are sent. Workiz: POST /job/update/."
+        },
+        {
+          "name": "workiz_assign_job",
+          "type": "write",
+          "title": "Assign a team member to a job",
+          "description": "WRITE: assign a team member (by name) to a job. Reversible with workiz_unassign_job. Workiz: POST /job/assign/."
+        },
+        {
+          "name": "workiz_unassign_job",
+          "type": "write",
+          "title": "Unassign a team member from a job",
+          "description": "WRITE: remove a team member (by name) from a job. Reversible with workiz_assign_job. Workiz: POST /job/unassign/."
+        },
+        {
+          "name": "workiz_create_lead",
+          "type": "write",
+          "title": "Create a lead",
+          "description": "WRITE: create a new lead (client contact and address, requested time, job type, source, notes). Returns the new lead's UUID, ClientId and app link. Workiz: POST /lead/create/."
+        },
+        {
+          "name": "workiz_update_lead",
+          "type": "write",
+          "title": "Update a lead",
+          "description": "WRITE: update fields on an existing lead — status, schedule, contact, address, type, source, notes, tags. Only the fields you pass are sent. Workiz: POST /lead/update/."
+        },
+        {
+          "name": "workiz_assign_lead",
+          "type": "write",
+          "title": "Assign a team member to a lead",
+          "description": "WRITE: assign a team member (by name) to a lead. Reversible with workiz_unassign_lead. Workiz: POST /lead/assign/."
+        },
+        {
+          "name": "workiz_unassign_lead",
+          "type": "write",
+          "title": "Unassign a team member from a lead",
+          "description": "WRITE: remove a team member (by name) from a lead. Reversible with workiz_assign_lead. Workiz: POST /lead/unassign/."
+        },
+        {
+          "name": "workiz_convert_lead_to_job",
+          "type": "write",
+          "title": "Convert a lead to a job",
+          "description": "WRITE (no API undo): convert a lead into a job. Creates a new job from the lead and returns its UUID and link; the API cannot reverse the conversion. Workiz: POST /lead/convert/."
+        },
+        {
+          "name": "workiz_mark_lead_lost",
+          "type": "write",
+          "title": "Mark a lead as lost",
+          "description": "WRITE: mark a lead as lost. Reversible with workiz_activate_lead. Workiz: POST /lead/markLost/{UUID}/."
+        },
+        {
+          "name": "workiz_activate_lead",
+          "type": "write",
+          "title": "Reactivate a lost lead",
+          "description": "WRITE: change a lost lead back to active. Workiz: POST /lead/activate/{UUID}/."
+        },
+        {
+          "name": "workiz_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "workiz_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Workiz tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "depot",
+      "name": "Depot",
+      "category": "devops",
+      "description": "Inspect Depot builds, CI runs, job logs and Actions runners; retry or cancel CI runs.",
+      "endpoint": "https://depot.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "depot_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List the organization's Depot projects. A project is an isolated container-build cache (region, hardware, cache policy). Use the returned projectId with the build and registry tools. Depot: ProjectService/ListProjects."
+        },
+        {
+          "name": "depot_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one Depot project — name, region, hardware size, cache policy, build timeout and autoscaling. Depot: ProjectService/GetProject."
+        },
+        {
+          "name": "depot_list_builds",
+          "type": "read",
+          "title": "List builds for a project",
+          "description": "List container builds in a project, newest first: status (STATUS_RUNNING / FAILED / SUCCESS / ERROR / CANCELED), timestamps, build duration, time saved by cache, and cached vs total steps. Depot: core BuildService/ListBuilds."
+        },
+        {
+          "name": "depot_get_build",
+          "type": "read",
+          "title": "Get a build",
+          "description": "Get one container build's status, timestamps, duration, time saved and cached/total step counts. Depot: core BuildService/GetBuild."
+        },
+        {
+          "name": "depot_get_build_steps",
+          "type": "read",
+          "title": "List a build's steps",
+          "description": "List the BuildKit steps of a container build: name, digest, start/end time, cache state (CACHED / UNCACHED), any error, and whether it has logs. Find the failing step here, then pass its digest to depot_get_build_step_logs. Depot: build.v1 BuildService/GetBuildSteps."
+        },
+        {
+          "name": "depot_get_build_step_logs",
+          "type": "read",
+          "title": "Get a build step's logs",
+          "description": "Get the log lines (message + timestamp) of one container-build step, identified by its digest from depot_get_build_steps. Depot: build.v1 BuildService/GetBuildStepLogs."
+        },
+        {
+          "name": "depot_list_registry_images",
+          "type": "read",
+          "title": "List registry images",
+          "description": "List the images stored in a project's Depot Registry: tag, digest, pushedAt and sizeBytes. Depot: build.v1 RegistryService/ListImages."
+        },
+        {
+          "name": "depot_get_usage",
+          "type": "read",
+          "title": "Get organization usage",
+          "description": "Get the organization's Depot usage over a window: container builds per project (build count, minutes saved, minutes billed), GitHub Actions jobs per repo/workflow/runner (minutes elapsed and billed), storage, and agent sandboxes. Depot: UsageService/GetUsage."
+        },
+        {
+          "name": "depot_ci_list_runs",
+          "type": "read",
+          "title": "List Depot CI runs",
+          "description": "List Depot CI runs, newest first. Filter by status (default: running + queued — pass [\"failed\"] to find failures), repo, commit SHA prefix, trigger event, or pull request number (requires repo). Depot: CIService/ListRuns."
+        },
+        {
+          "name": "depot_ci_get_run_status",
+          "type": "read",
+          "title": "Get a CI run's status tree",
+          "description": "Get a Depot CI run's status with its nested workflows, jobs and attempts (ids, keys, statuses, error messages). This is how to find the workflowId / jobId / attemptId for the log, diagnosis and retry tools. Depot: CIService/GetRunStatus."
+        },
+        {
+          "name": "depot_ci_list_workflows",
+          "type": "read",
+          "title": "List Depot CI workflows",
+          "description": "List Depot CI workflows across runs, newest first, with per-status job counts. Filter by name/path text, repo, status, trigger, SHA prefix or PR number. Depot: CIService/ListWorkflows."
+        },
+        {
+          "name": "depot_ci_get_job",
+          "type": "read",
+          "title": "Get a CI job",
+          "description": "Get one Depot CI job: status, conclusion, error message, timestamps, runner config (labels, image, CPUs, memory), matrix values, parent run/workflow context, dependencies and attempt history. Depot: CIService/GetJob."
+        },
+        {
+          "name": "depot_ci_get_job_logs",
+          "type": "read",
+          "title": "Get a CI job's logs",
+          "description": "Get persisted log lines for a Depot CI job attempt, oldest first (step key/name, timestamp, line number, body). Pass job_id to read the job's latest attempt, or attempt_id for a specific one — exactly one. Pass nextPageToken back as page_token for more lines. Depot: CIService/GetJobAttemptLogs."
+        },
+        {
+          "name": "depot_ci_get_failure_diagnosis",
+          "type": "read",
+          "title": "Diagnose a CI failure",
+          "description": "Get Depot's failure diagnosis for a CI run, workflow, job or attempt. For runs and workflows, identical failures are grouped by error fingerprint; for a job or attempt it is a focused diagnosis with evidence. Empty when no failure evidence is found. The best first call when a run failed. Depot: CIService/GetFailureDiagnosis."
+        },
+        {
+          "name": "depot_gha_list_jobs",
+          "type": "read",
+          "title": "List GitHub Actions jobs on Depot runners",
+          "description": "List GitHub Actions jobs that ran on Depot-managed runners, newest first: status, conclusion, runner label, requested CPU/memory, duration, billable time and GitHub URL. Defaults to the last 30 days (max window 90 days). Depot: GithubActionsService/ListGithubActionsJobs."
+        },
+        {
+          "name": "depot_gha_search_logs",
+          "type": "read",
+          "title": "Search GitHub Actions logs",
+          "description": "Search GitHub Actions log lines from Depot runners, newest match first (job, workflow, step, timestamp, body, lineId). Defaults to the last hour (max window 30 days). Filter by repository, workflow, runner label, action or compute id. Depot: GithubActionsService/SearchGithubActionsLogs."
+        },
+        {
+          "name": "depot_gha_get_analytics",
+          "type": "read",
+          "title": "Get GitHub Actions analytics",
+          "description": "Get time-bucketed GitHub Actions analytics for Depot runners: job counts (successful/failed/cancelled), failure rate, elapsed and billable seconds, average duration — as totals plus hourly or daily buckets. Defaults to the last 30 days (max 90). Depot: GithubActionsService/GetGithubActionsAnalytics."
+        },
+        {
+          "name": "depot_gha_list_recommendations",
+          "type": "read",
+          "title": "List runner-size recommendations",
+          "description": "List Depot's runner-size recommendations from job CPU and memory metrics: SIZE_UP when average CPU or memory reaches 90%, SIZE_DOWN when both averages stay ≤30% and peaks ≤70%, with current vs suggested size and per-minute price. Defaults to the last 30 days. Depot: GithubActionsService/ListGithubActionsRecommendations."
+        },
+        {
+          "name": "depot_create_project",
+          "type": "write",
+          "title": "Create a project",
+          "description": "WRITE. Create a Depot container-build project (an isolated build cache). Idempotent by name: if an active project with the same name exists, that project is returned. Defaults: cache 50 GB / 14 days, hardware HARDWARE_16X32 on AWS builders. Depot: ProjectService/CreateProject."
+        },
+        {
+          "name": "depot_ci_retry_job",
+          "type": "write",
+          "title": "Retry a CI job",
+          "description": "WRITE — starts compute. Retry one failed or cancelled Depot CI job, plus any skipped jobs that depend on it. Fails if a dependent job already started; use depot_ci_retry_failed_jobs then. Depot: CIService/RetryJob."
+        },
+        {
+          "name": "depot_ci_retry_failed_jobs",
+          "type": "write",
+          "title": "Retry a workflow's failed jobs",
+          "description": "WRITE — starts compute. Retry only the failed and cancelled jobs in a Depot CI workflow, plus skipped jobs that depend on them. Jobs that succeeded are left alone. Depot: CIService/RetryFailedJobs."
+        },
+        {
+          "name": "depot_ci_cancel_run",
+          "type": "write",
+          "title": "Cancel a CI run",
+          "description": "WRITE — stops work in progress. Cancel a queued or running Depot CI run and all of its unfinished workflows, jobs and attempts. Cancelled jobs can be retried afterwards with depot_ci_retry_failed_jobs. Depot: CIService/CancelRun."
+        },
+        {
+          "name": "depot_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "depot_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Depot tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "mindbody",
+      "name": "Mindbody",
+      "category": "calendar",
+      "description": "Read Mindbody classes, schedules, clients, staff and sales; book clients and appointments.",
+      "endpoint": "https://mindbody.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mindbody_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List the Mindbody sites (businesses) your developer account can access, or details for specific site ids. A cheap way to confirm the API key works. Mindbody: GET /site/sites."
+        },
+        {
+          "name": "mindbody_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the business's locations (studios / branches) with address, phone and amenities. Location ids are needed to book appointments. Mindbody: GET /site/locations."
+        },
+        {
+          "name": "mindbody_list_session_types",
+          "type": "read",
+          "title": "List session types",
+          "description": "List the session types (the bookable kinds of class or appointment, e.g. '60-min massage') used at the site. Session type ids drive appointment availability and booking. Mindbody: GET /site/sessiontypes."
+        },
+        {
+          "name": "mindbody_list_classes",
+          "type": "read",
+          "title": "List scheduled classes",
+          "description": "List scheduled class occurrences in a date range — time, class description, teacher, location, capacity, booked/waitlist counts and cancellation status. Mindbody: GET /class/classes."
+        },
+        {
+          "name": "mindbody_list_class_schedules",
+          "type": "read",
+          "title": "List class schedules",
+          "description": "List recurring class schedules (the templates that generate class occurrences) — days, times, teacher, location and date span. Mindbody: GET /class/classschedules."
+        },
+        {
+          "name": "mindbody_get_class_visits",
+          "type": "read",
+          "title": "Get a class's visits (roster)",
+          "description": "Get one class with its visits — the roster of clients booked into it, with sign-in / late-cancel status. Mindbody: GET /class/classvisits."
+        },
+        {
+          "name": "mindbody_list_bookable_items",
+          "type": "read",
+          "title": "Find bookable appointment slots",
+          "description": "Find appointment availability — which staff can deliver the given session types, where, and in which time windows. Use before mindbody_add_appointment. Mindbody: GET /appointment/bookableitems."
+        },
+        {
+          "name": "mindbody_list_staff_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List booked appointments in a date range, by staff member, client or appointment id — the appointment book. Mindbody: GET /appointment/staffappointments."
+        },
+        {
+          "name": "mindbody_list_clients",
+          "type": "read",
+          "title": "Search clients",
+          "description": "Search or fetch client records by name/email text or by client ids (max 20 ids) — contact details, status, alerts, home location. Requires a staff user token. Mindbody: GET /client/clients."
+        },
+        {
+          "name": "mindbody_list_client_visits",
+          "type": "read",
+          "title": "List a client's visits",
+          "description": "List a client's past and scheduled visits (class and appointment attendance) in a date range, optionally only unpaid ones. Mindbody: GET /client/clientvisits."
+        },
+        {
+          "name": "mindbody_list_client_memberships",
+          "type": "read",
+          "title": "List a client's active memberships",
+          "description": "List a client's active memberships (auto-renewing pricing options) with remaining counts and expiry. Mindbody: GET /client/activeclientmemberships."
+        },
+        {
+          "name": "mindbody_get_client_account_balances",
+          "type": "read",
+          "title": "Get client account balances",
+          "description": "Get the account balance for one or more clients (what they owe or hold in credit), optionally as of a date. Mindbody: GET /client/clientaccountbalances."
+        },
+        {
+          "name": "mindbody_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List staff members (instructors, practitioners). Filter by role, or find who is available for a session type at a location and time (session_type_id + location_id + start_date_time together). Without a staff token only public fields return. Mindbody: GET /staff/staff."
+        },
+        {
+          "name": "mindbody_list_services",
+          "type": "read",
+          "title": "List pricing options",
+          "description": "List the pricing options (services — class packs, drop-ins, intro offers) for sale at the site, with price, online price, count and expiry. Read only. Mindbody: GET /sale/services."
+        },
+        {
+          "name": "mindbody_list_sales",
+          "type": "read",
+          "title": "List sales",
+          "description": "List completed sales at the site in a date/time range — purchased items, payments and client. Read only. Mindbody: GET /sale/sales."
+        },
+        {
+          "name": "mindbody_add_client_to_class",
+          "type": "write",
+          "title": "Book a client into a class",
+          "description": "Book a client into a class (or onto its waiting list). Does not take payment: by default no pricing option is required; set require_payment to insist the client has a usable one on account. Undo from the Mindbody front desk. Pass test: true to validate only. Mindbody: POST /class/addclienttoclass."
+        },
+        {
+          "name": "mindbody_add_appointment",
+          "type": "write",
+          "title": "Book an appointment",
+          "description": "Book an appointment for a client with a staff member at a location. Find a slot first with mindbody_list_bookable_items. No card is charged; apply_payment (Mindbody's default is true) only applies a pricing option already on the client's account. Pass test: true to validate only. Requires a staff user token. Mindbody: POST /appointment/addappointment."
+        },
+        {
+          "name": "mindbody_update_appointment",
+          "type": "write",
+          "title": "Update an appointment",
+          "description": "Reschedule or edit an appointment (start/end time, staff, session type, notes — the only fields Mindbody lets you change) and/or move it through its status: confirm, unconfirm, arrive, unarrive, complete. Cancel and late-cancel are deliberately not offered (a late cancel can charge the client). Pass test: true to validate only. Requires a staff user token. Mindbody: POST /appointment/updateappointment."
+        },
+        {
+          "name": "mindbody_add_client",
+          "type": "write",
+          "title": "Add a client",
+          "description": "Create a new client record (first and last name required; the site may require more — Mindbody reports which). No card or billing data is accepted. Pass test: true to validate only. Mindbody: POST /client/addclient."
+        },
+        {
+          "name": "mindbody_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "Update fields on an existing client record — only the fields you pass change. No card or billing data is accepted. cross_regional_update (Mindbody default: true) also updates the client's profiles at the region's other sites. Pass test: true to validate only. Mindbody: POST /client/updateclient."
+        },
+        {
+          "name": "mindbody_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mindbody_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Mindbody tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "buildium",
+      "name": "Buildium",
+      "category": "productivity",
+      "description": "Read Buildium properties, units, leases, tenants, balances and bills; manage work orders.",
+      "endpoint": "https://buildium.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "buildium_list_rental_properties",
+          "type": "read",
+          "title": "List rental properties",
+          "description": "List rental properties (buildings) with address, unit count, type/subtype and manager. Filter by location (city/state contains), type, subtype, status, rental owner or property ids. Buildium: GET /v1/rentals."
+        },
+        {
+          "name": "buildium_get_rental_property",
+          "type": "read",
+          "title": "Get a rental property",
+          "description": "Fetch one rental property by id. Buildium: GET /v1/rentals/{propertyId}."
+        },
+        {
+          "name": "buildium_list_rental_units",
+          "type": "read",
+          "title": "List rental units",
+          "description": "List rental units with unit number, bedrooms/bathrooms, size, market rent and whether each unit is listed or occupied. Filter by property. Buildium: GET /v1/rentals/units."
+        },
+        {
+          "name": "buildium_get_rental_unit",
+          "type": "read",
+          "title": "Get a rental unit",
+          "description": "Fetch one rental unit by id. Buildium: GET /v1/rentals/units/{unitId}."
+        },
+        {
+          "name": "buildium_list_rental_owners",
+          "type": "read",
+          "title": "List rental owners",
+          "description": "List rental owners (the landlords you manage for) with contact details, management-agreement dates and the property ids they own. Buildium: GET /v1/rentals/owners."
+        },
+        {
+          "name": "buildium_list_leases",
+          "type": "read",
+          "title": "List leases",
+          "description": "List leases with unit, dates, lease type/status, current tenants, rent/deposit account details and eviction flag. Filter by property, owner, unit number, tenant name, dates, lease type or status (Active/Past/Future). Buildium: GET /v1/leases."
+        },
+        {
+          "name": "buildium_get_lease",
+          "type": "read",
+          "title": "Get a lease",
+          "description": "Fetch one lease by id, including tenants, cosigners, account details and move-out data. Buildium: GET /v1/leases/{leaseId}."
+        },
+        {
+          "name": "buildium_list_outstanding_balances",
+          "type": "read",
+          "title": "List lease outstanding balances",
+          "description": "Delinquency report: leases that owe money, with aged buckets (0-30, 31-60, 61-90, 90+ days), total balance, past-due-email and eviction-pending dates. Leases with zero or credit balances are not returned. Buildium: GET /v1/leases/outstandingbalances."
+        },
+        {
+          "name": "buildium_list_lease_transactions",
+          "type": "read",
+          "title": "List lease transactions",
+          "description": "Read a lease's ledger: charges, payments, credits, refunds, deposits and other transactions with date, type, total amount and journal lines. Read-only — this server never posts to a ledger. Buildium: GET /v1/leases/{leaseId}/transactions."
+        },
+        {
+          "name": "buildium_list_tenants",
+          "type": "read",
+          "title": "List tenants",
+          "description": "List rental tenants with contact details, emergency contact, address and leases. Filter by name, email, phone, unit number, property, owner, unit ids or lease term status. Buildium: GET /v1/leases/tenants."
+        },
+        {
+          "name": "buildium_get_tenant",
+          "type": "read",
+          "title": "Get a tenant",
+          "description": "Fetch one rental tenant by id. Buildium: GET /v1/leases/tenants/{tenantId}."
+        },
+        {
+          "name": "buildium_list_applicants",
+          "type": "read",
+          "title": "List applicants",
+          "description": "List rental applicants with contact details, status and their applications. Filter by application status, unit, name, email, submission date or entity. Buildium: GET /v1/applicants."
+        },
+        {
+          "name": "buildium_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders with title, status, priority, due date, vendor, amount, line items, linked task and bill ids. Filter by entity, status, priority, task type, unit, vendor, assignee, dates, amount, billed flag or title. Buildium: GET /v1/workorders."
+        },
+        {
+          "name": "buildium_get_work_order",
+          "type": "read",
+          "title": "Get a work order",
+          "description": "Fetch one work order by id. Buildium: GET /v1/workorders/{workOrderId}."
+        },
+        {
+          "name": "buildium_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List all tasks/requests — contact requests, resident requests, rental owner requests and to-dos — with category, property, unit, requester, assignee, status, priority and due date. Buildium: GET /v1/tasks."
+        },
+        {
+          "name": "buildium_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (contractors, suppliers) with contact details, category, insurance and default expense GL account. Filter by name, email, phone, website, status or insurance expiration. Buildium: GET /v1/vendors."
+        },
+        {
+          "name": "buildium_list_bills",
+          "type": "read",
+          "title": "List bills",
+          "description": "List vendor bills (accounts payable) with dates, memo, vendor, linked work order, reference number, approval status and lines. Read-only. Buildium: GET /v1/bills."
+        },
+        {
+          "name": "buildium_list_gl_accounts",
+          "type": "read",
+          "title": "List general ledger accounts",
+          "description": "List the chart of accounts: GL accounts with number, name, type/subtype, sub-accounts and bank/credit-card flags. Useful for finding the gl_account_id for work order line items. Buildium: GET /v1/glaccounts."
+        },
+        {
+          "name": "buildium_list_associations",
+          "type": "read",
+          "title": "List associations",
+          "description": "List community/HOA associations with address, manager, reserve, fiscal year and operating bank account. Buildium: GET /v1/associations."
+        },
+        {
+          "name": "buildium_create_work_order",
+          "type": "write",
+          "title": "Create a work order",
+          "description": "Create a work order for a vendor. Attach it to an existing task (task_id) or create a new task with it (task: title, priority, status, assigned staff user, optional due date/property/unit). vendor_id and entry_allowed are required. Line items are optional (quantity x unit price, optional GL account). Buildium: POST /v1/workorders."
+        },
+        {
+          "name": "buildium_update_work_order",
+          "type": "write",
+          "title": "Update a work order",
+          "description": "Update a work order's details. Buildium's PUT replaces the whole record, so this reads the current work order first and only changes the fields you pass — everything else (including line items and entry contacts) is preserved. Passing line_items REPLACES all existing line items. Status/priority/due date live on the linked task. Buildium: GET then PUT /v1/workorders/{workOrderId}."
+        },
+        {
+          "name": "buildium_create_todo_task",
+          "type": "write",
+          "title": "Create a to-do task",
+          "description": "Create an internal to-do task assigned to a staff user, optionally tied to a property/unit and category, with a due date. Buildium: POST /v1/tasks/todorequests."
+        },
+        {
+          "name": "buildium_update_todo_task",
+          "type": "write",
+          "title": "Update a to-do task",
+          "description": "Update a to-do task — change status (e.g. mark Completed), priority, assignee, due date, title or category, optionally with an update message. Buildium's PUT replaces the whole record, so this reads the current task first and only changes the fields you pass. Buildium: GET then PUT /v1/tasks/todorequests/{toDoTaskId}."
+        },
+        {
+          "name": "buildium_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "buildium_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Buildium tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "housecall-pro",
+      "name": "Housecall Pro",
+      "category": "productivity",
+      "description": "Manage Housecall Pro customers, jobs, estimates and leads; schedule and dispatch jobs.",
+      "endpoint": "https://housecall-pro.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "housecall_get_company",
+          "type": "read",
+          "title": "Get the company",
+          "description": "Fetch the Housecall Pro company this key belongs to — name, contact details, address, time zone, service-area zip codes and (multi-location) its locations. A cheap way to confirm the key works. Housecall Pro: GET /company."
+        },
+        {
+          "name": "housecall_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List or search customers, with their phone numbers, tags and addresses. `q` searches name, email, mobile number and address. Housecall Pro: GET /customers."
+        },
+        {
+          "name": "housecall_get_customer",
+          "type": "read",
+          "title": "Get one customer",
+          "description": "Fetch a single customer by id, including their addresses (whose ids you need to create a job or estimate). Housecall Pro: GET /customers/{customer_id}."
+        },
+        {
+          "name": "housecall_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs, filterable by scheduled window, customer, assigned employees and work status. Each job carries its customer, address, notes, schedule, assigned employees and totals. Housecall Pro: GET /jobs."
+        },
+        {
+          "name": "housecall_get_job",
+          "type": "read",
+          "title": "Get one job",
+          "description": "Fetch a single job by id — customer, address, work status and timestamps, schedule, assigned employees, notes and totals. Housecall Pro: GET /jobs/{id}."
+        },
+        {
+          "name": "housecall_list_job_line_items",
+          "type": "read",
+          "title": "List a job's line items",
+          "description": "List the line items (services, materials, labor, discounts) on one job, with unit price, cost, quantity and amount in cents. Housecall Pro: GET /jobs/{job_id}/line_items."
+        },
+        {
+          "name": "housecall_list_job_invoices",
+          "type": "read",
+          "title": "List a job's invoices",
+          "description": "List the invoices raised for one job, with status, amounts, due and paid dates, items, taxes, discounts and payments. Housecall Pro: GET /jobs/{job_id}/invoices."
+        },
+        {
+          "name": "housecall_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices across the company, filterable by status, customer, and created / due / paid date ranges — e.g. everything open and overdue. Amounts are in cents. Housecall Pro: GET /invoices."
+        },
+        {
+          "name": "housecall_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates, filterable by scheduled window, customer, assigned employees and work status. Each carries its customer, address, schedule and options. Housecall Pro: GET /estimates."
+        },
+        {
+          "name": "housecall_get_estimate",
+          "type": "read",
+          "title": "Get one estimate",
+          "description": "Fetch a single estimate by id, including its options and each option's approval status. Housecall Pro: GET /estimates/{estimate_id}."
+        },
+        {
+          "name": "housecall_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the company's active employees with their role, contact details and permissions. Use their ids to assign or dispatch jobs. Housecall Pro: GET /employees."
+        },
+        {
+          "name": "housecall_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads, filterable by status (open / won / lost), customer, assigned employees, tags and lead source. Housecall Pro: GET /leads."
+        },
+        {
+          "name": "housecall_get_lead",
+          "type": "read",
+          "title": "Get one lead",
+          "description": "Fetch a single lead by id — its customer, address, lead source, tags, assigned employee, status and pipeline status. Housecall Pro: GET /leads/{id}."
+        },
+        {
+          "name": "housecall_list_job_types",
+          "type": "read",
+          "title": "List job types",
+          "description": "List the company's job types (e.g. Repair, Install, Maintenance). Use an id as job_type_id when creating a job or estimate. Housecall Pro: GET /job_fields/job_types."
+        },
+        {
+          "name": "housecall_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the tags defined in the company. Housecall Pro: GET /tags."
+        },
+        {
+          "name": "housecall_list_price_book_services",
+          "type": "read",
+          "title": "List price book services",
+          "description": "List or search the price book's services — name, task number, price and cost (cents), taxable and online-booking flags; optionally with their materials and labor rates. Housecall Pro: GET /api/price_book/services."
+        },
+        {
+          "name": "housecall_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a new customer, optionally with one or more addresses. Housecall Pro: POST /customers."
+        },
+        {
+          "name": "housecall_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Change a customer's name, contact details, tags, lead source, notes or notification setting. Only the fields you pass are sent. Housecall Pro: PUT /customers/{customer_id}."
+        },
+        {
+          "name": "housecall_create_customer_address",
+          "type": "write",
+          "title": "Add an address to a customer",
+          "description": "Add a service address to an existing customer. Returns the address id to use when creating a job or estimate. Housecall Pro: POST /customers/{customer_id}/addresses."
+        },
+        {
+          "name": "housecall_create_job",
+          "type": "write",
+          "title": "Create a job",
+          "description": "Create a job for an existing customer at one of their existing addresses, optionally scheduled, assigned, tagged and with line items (prices in cents). Get address ids from housecall_get_customer. Housecall Pro: POST /jobs."
+        },
+        {
+          "name": "housecall_update_job_schedule",
+          "type": "write",
+          "title": "Reschedule a job",
+          "description": "Set or change a job's scheduled start/end and arrival window, optionally dispatching employees and notifying the customer and/or the pro. Jobs with more than one appointment (multi-day) cannot be rescheduled here. Housecall Pro: PUT /jobs/{job_id}/schedule."
+        },
+        {
+          "name": "housecall_dispatch_job",
+          "type": "write",
+          "title": "Dispatch a job to employees",
+          "description": "Set which employees a job is dispatched to. This REPLACES the current dispatch list — pass everyone who should be on the job. Housecall Pro: PUT /jobs/{job_id}/dispatch."
+        },
+        {
+          "name": "housecall_add_job_note",
+          "type": "write",
+          "title": "Add a note to a job",
+          "description": "Add a text note to a job. Housecall Pro: POST /jobs/{job_id}/notes."
+        },
+        {
+          "name": "housecall_create_estimate",
+          "type": "write",
+          "title": "Create an estimate",
+          "description": "Create an estimate for a customer with one or more options (e.g. Good / Better / Best), each with line items priced in cents. Give an existing address_id or a new address. Housecall Pro: POST /estimates."
+        },
+        {
+          "name": "housecall_create_lead",
+          "type": "write",
+          "title": "Create a lead",
+          "description": "Create a lead, either for an existing customer (customer_id) or with a new customer inline (customer). Optionally with an address, lead source, assigned employee, tags, note and line items priced in cents. Housecall Pro: POST /leads."
+        },
+        {
+          "name": "housecall_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "housecall_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Housecall Pro tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "hostaway",
+      "name": "Hostaway",
+      "category": "calendar",
+      "description": "Manage Hostaway listings, reservations, calendar, guest messages, reviews and tasks.",
+      "endpoint": "https://hostaway.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "hostaway_list_listings",
+          "type": "read",
+          "title": "List listings",
+          "description": "List the account's properties (listings) with name, address, capacity, base price, fees and check-in times. Filter by name, city, country, property type, availability for a date range and guest count, or active/archived status. Hostaway: GET /v1/listings."
+        },
+        {
+          "name": "hostaway_get_listing",
+          "type": "read",
+          "title": "Get one listing",
+          "description": "Fetch a single listing by id — full details including description, house rules, amenities, images, fees, taxes, cancellation policy and access info (door code, wifi). Hostaway: GET /v1/listings/{listingId}."
+        },
+        {
+          "name": "hostaway_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "List reservations across all channels (Airbnb, Vrbo, Booking.com, direct…) with guest, dates, status, price and channel. Filter by listing, channel, arrival/departure window, guest name or email, unread messages, and more. Default order is newest first; for large accounts page with afterId (the id of the last reservation on the previous page). Channel ids: 2000 direct, 2018 airbnbOfficial, 2002 homeaway/Vrbo, 2005 bookingcom, 2007 expedia, 2013 bookingengine, 2019 marriott, 2020 partner, 2022 google. Hostaway: GET /v1/reservations."
+        },
+        {
+          "name": "hostaway_get_reservation",
+          "type": "read",
+          "title": "Get one reservation",
+          "description": "Fetch a single reservation by its Hostaway id — guest contact details, dates, guest counts, price breakdown, payment state, door code, notes, channel and cancellation policy. Hostaway: GET /v1/reservations/{reservationId}."
+        },
+        {
+          "name": "hostaway_get_reservation_logs",
+          "type": "read",
+          "title": "Get reservation change history",
+          "description": "The audit trail for one reservation: every field change with previous and new value, when, and by which user (most recent first). Useful for 'who changed these dates / this price?'. Hostaway: GET /v1/reservations/{reservationId}/logs."
+        },
+        {
+          "name": "hostaway_get_calendar",
+          "type": "read",
+          "title": "Get listing calendar",
+          "description": "Day-by-day availability and pricing for one listing over a date range: status (available, blocked, reserved, pending), nightly price, min/max stay, closed-to-arrival/departure and notes. Set includeResources to see the reservations occupying each day. Hostaway: GET /v1/listings/{listingId}/calendar."
+        },
+        {
+          "name": "hostaway_calculate_price",
+          "type": "read",
+          "title": "Quote a stay",
+          "description": "Calculate what a stay at a listing would cost — total price plus the component breakdown (base rate, cleaning fee, taxes, discounts). A calculation only: nothing is booked or held. Hostaway: POST /v1/listings/{listingId}/calendar/priceDetails (version 2)."
+        },
+        {
+          "name": "hostaway_list_conversations",
+          "type": "read",
+          "title": "List guest conversations",
+          "description": "List guest conversations (the unified inbox across channels), each with its latest message and linked reservation. Filter to one reservation. Hostaway: GET /v1/conversations."
+        },
+        {
+          "name": "hostaway_list_conversation_messages",
+          "type": "read",
+          "title": "Read a conversation",
+          "description": "The messages in one guest conversation — body, direction (isIncoming), channel/email/SMS type, send status and timestamps. By default only sent messages; set includeScheduledMessages to also see scheduled, paused or failed ones. Hostaway: GET /v1/conversations/{conversationId}/messages."
+        },
+        {
+          "name": "hostaway_list_reviews",
+          "type": "read",
+          "title": "List reviews",
+          "description": "List guest-to-host and host-to-guest reviews with rating (0-10), public review, private feedback and the host's reply. Filter by listings, reservation, type, status, rating range, dates, guest name, or whether the host has replied. Hostaway: GET /v1/reviews."
+        },
+        {
+          "name": "hostaway_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List operational tasks (cleaning, maintenance, check-in/out) with assignee, status, time window and cost. Filter by reservation, status, text match, channel, or start/deadline windows. Hostaway: GET /v1/tasks."
+        },
+        {
+          "name": "hostaway_list_expenses",
+          "type": "read",
+          "title": "List expenses and extras",
+          "description": "List expenses (negative amounts) and extras (positive amounts) recorded against listings and reservations, with date, concept, categories and the owner statements they appear on. Hostaway: GET /v1/expenses."
+        },
+        {
+          "name": "hostaway_list_owner_statements",
+          "type": "read",
+          "title": "List owner statements",
+          "description": "List the account's owner statements (id and name). Hostaway: GET /v1/ownerStatements."
+        },
+        {
+          "name": "hostaway_get_owner_statement",
+          "type": "read",
+          "title": "Get one owner statement",
+          "description": "Fetch one owner statement — the filter it was generated with (listings, date range), summary and per-reservation financial data, grand totals, expenses, and owner / property-manager details. Hostaway: GET /v1/ownerStatement/{ownerStatementId}."
+        },
+        {
+          "name": "hostaway_create_reservation",
+          "type": "write",
+          "title": "Create a reservation",
+          "description": "Create a new reservation on a listing (it blocks the calendar and syncs to connected channels). Only channelId 2000 (direct, the default), 2002 (homeaway) or 2020 (partner) are accepted. To price it correctly, call hostaway_calculate_price first and pass its total as totalPrice. Overbooking protection is always left on. Hostaway: POST /v1/reservations."
+        },
+        {
+          "name": "hostaway_update_reservation",
+          "type": "write",
+          "title": "Update a reservation",
+          "description": "Change fields on an existing reservation — guest details and counts, dates, check-in/out hours, door code, host note or comment. Send only the fields to change. The listing cannot be changed, and this tool never cancels or reprices a booking. Date changes on channel bookings may be overwritten by the channel. Hostaway: PUT /v1/reservations/{reservationId}."
+        },
+        {
+          "name": "hostaway_update_calendar",
+          "type": "write",
+          "title": "Update listing calendar",
+          "description": "Change availability and/or pricing for a date range on one listing, pushed to every connected channel: block (isAvailable=false) or open days, set the nightly price, min/max stay, closed-to-arrival/departure, or a note. For multi-unit listings set desiredUnitsToSell instead of isAvailable (0 blocks). Hostaway: PUT /v1/listings/{listingId}/calendar."
+        },
+        {
+          "name": "hostaway_send_message",
+          "type": "write",
+          "title": "Send a guest message",
+          "description": "Send a message to the guest in a conversation — it is delivered immediately and cannot be recalled. Delivered by email by default, or via the booking channel, SMS or WhatsApp. Attachments are not supported. Rate-limited by Hostaway to 30 messages per minute. Hostaway: POST /v1/conversations/{conversationId}/messages."
+        },
+        {
+          "name": "hostaway_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create an operational task — e.g. a cleaning after a checkout or a maintenance job — optionally tied to a listing and reservation, assigned to a user, with a time window, category and cost. Hostaway: POST /v1/tasks."
+        },
+        {
+          "name": "hostaway_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Update a task — change its status (e.g. completed), reassign it, move its window, or add a resolution note. Send only the fields to change. Hostaway: PUT /v1/tasks/{taskId}."
+        },
+        {
+          "name": "hostaway_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hostaway_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Hostaway tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "slug": "invoice-ninja",
+      "name": "Invoice Ninja",
+      "category": "billing",
+      "description": "Manage Invoice Ninja clients, invoices, quotes, expenses, tasks and projects.",
+      "endpoint": "https://invoice-ninja.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "tools": [
+        {
+          "name": "invoiceninja_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients with balances and contacts, optionally searched by name, email or number. Invoice Ninja: GET /api/v1/clients."
+        },
+        {
+          "name": "invoiceninja_get_client",
+          "type": "read",
+          "title": "Get one client",
+          "description": "Fetch one client by id, with contacts, address, balance and paid-to-date. Invoice Ninja: GET /api/v1/clients/{id}."
+        },
+        {
+          "name": "invoiceninja_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices, filterable by client and payment status (paid / unpaid / overdue). status_id on each invoice: 1 draft, 2 sent, 3 partial, 4 paid, 5 cancelled, 6 reversed. Invoice Ninja: GET /api/v1/invoices."
+        },
+        {
+          "name": "invoiceninja_get_invoice",
+          "type": "read",
+          "title": "Get one invoice",
+          "description": "Fetch one invoice by id — line items, totals, balance, dates, status and invitations. Invoice Ninja: GET /api/v1/invoices/{id}."
+        },
+        {
+          "name": "invoiceninja_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "List quotes (estimates), filterable by client and quote status. Invoice Ninja: GET /api/v1/quotes."
+        },
+        {
+          "name": "invoiceninja_get_quote",
+          "type": "read",
+          "title": "Get one quote",
+          "description": "Fetch one quote by id — line items, totals, status and the invoice it was converted to (invoice_id), if any. Invoice Ninja: GET /api/v1/quotes/{id}."
+        },
+        {
+          "name": "invoiceninja_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products / services in the catalog with price, cost and default taxes. Invoice Ninja: GET /api/v1/products."
+        },
+        {
+          "name": "invoiceninja_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments received, with amount, date, refunded/applied totals and the invoices each was applied to (paymentables). Read-only: this server never records or refunds payments. Invoice Ninja: GET /api/v1/payments."
+        },
+        {
+          "name": "invoiceninja_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expenses, filterable by client and invoicing/payment state. Invoice Ninja: GET /api/v1/expenses."
+        },
+        {
+          "name": "invoiceninja_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (suppliers) with contacts and address. Invoice Ninja: GET /api/v1/vendors."
+        },
+        {
+          "name": "invoiceninja_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks / time entries with their time_log, duration, rate and linked client, project and invoice. Invoice Ninja: GET /api/v1/tasks."
+        },
+        {
+          "name": "invoiceninja_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects with client, budgeted hours, task rate, current hours and due date. Invoice Ninja: GET /api/v1/projects."
+        },
+        {
+          "name": "invoiceninja_list_recurring_invoices",
+          "type": "read",
+          "title": "List recurring invoices",
+          "description": "List recurring invoice schedules with frequency, next send date and remaining cycles. Read-only. Invoice Ninja: GET /api/v1/recurring_invoices."
+        },
+        {
+          "name": "invoiceninja_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "Create a client, optionally with contacts. Give at least a name or one contact. Invoice Ninja: POST /api/v1/clients."
+        },
+        {
+          "name": "invoiceninja_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "Update a client's details; only the fields you pass change. Passing contacts replaces the contact list. Invoice Ninja: PUT /api/v1/clients/{id}."
+        },
+        {
+          "name": "invoiceninja_create_invoice",
+          "type": "write",
+          "title": "Create an invoice",
+          "description": "Create a DRAFT invoice for a client. It is not sent or emailed — use invoiceninja_mark_invoice_sent or invoiceninja_email_invoice afterwards. Invoice Ninja: POST /api/v1/invoices."
+        },
+        {
+          "name": "invoiceninja_update_invoice",
+          "type": "write",
+          "title": "Update an invoice",
+          "description": "Edit an invoice; only the fields you pass change, but line_items (if passed) replace every existing line. Does not send anything. Invoice Ninja: PUT /api/v1/invoices/{id}."
+        },
+        {
+          "name": "invoiceninja_mark_invoice_sent",
+          "type": "write",
+          "title": "Mark an invoice sent",
+          "description": "Mark a draft invoice as sent WITHOUT emailing it. This moves it out of draft and adds its amount to the client's balance. Invoice Ninja: GET /api/v1/invoices/{id}/mark_sent."
+        },
+        {
+          "name": "invoiceninja_email_invoice",
+          "type": "write",
+          "title": "Email an invoice to the client",
+          "description": "OUTWARD-FACING: sends a real email with the invoice to the client's invited contacts, and marks the invoice sent. Cannot be unsent — confirm with the user first. Invoice Ninja: POST /api/v1/invoices/bulk with action=email."
+        },
+        {
+          "name": "invoiceninja_create_quote",
+          "type": "write",
+          "title": "Create a quote",
+          "description": "Create a DRAFT quote (estimate) for a client. Nothing is emailed. Invoice Ninja: POST /api/v1/quotes."
+        },
+        {
+          "name": "invoiceninja_convert_quote_to_invoice",
+          "type": "write",
+          "title": "Convert a quote to an invoice",
+          "description": "Convert a quote into a new invoice (the quote is marked converted and links to it). Returns the new invoice. Invoice Ninja: GET /api/v1/quotes/{id}/convert_to_invoice."
+        },
+        {
+          "name": "invoiceninja_create_expense",
+          "type": "write",
+          "title": "Create an expense",
+          "description": "Log an expense, optionally tied to a vendor, client or project and flagged to be re-invoiced. Invoice Ninja: POST /api/v1/expenses."
+        },
+        {
+          "name": "invoiceninja_create_task",
+          "type": "write",
+          "title": "Create a task / log time",
+          "description": "Create a task, optionally with logged time entries, for a client or project. Invoice Ninja: POST /api/v1/tasks."
+        },
+        {
+          "name": "invoiceninja_create_project",
+          "type": "write",
+          "title": "Create a project",
+          "description": "Create a project for a client, with an optional hourly task rate, budget and due date. Invoice Ninja: POST /api/v1/projects."
+        },
+        {
+          "name": "invoiceninja_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "invoiceninja_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Invoice Ninja tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Read-only; does not count against the meter."
+        }
+      ],
+      "version": "1.0.0"
     }
   ]
 }
