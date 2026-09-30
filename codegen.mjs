@@ -20,12 +20,14 @@ const { registryNamespace, repository } = manifest.portal;
 // version-single-source-of-truth memory). Sync it into the manifest here so the
 // registry server.json and the portal always reflect the real released version,
 // never a stale hand-typed copy. Servers with no local repo keep their manifest value.
+// fleet/products/<slug>/package.json is the live version (fleet deploy); servers/<slug>-mcp is legacy.
 function pkgVersion(slug) {
-  try {
-    return JSON.parse(readFileSync(new URL(`../servers/${slug}-mcp/package.json`, ROOT), "utf8")).version || null;
-  } catch {
-    return null;
+  for (const path of [`../fleet/products/${slug}/package.json`, `../servers/${slug}-mcp/package.json`]) {
+    try {
+      return JSON.parse(readFileSync(new URL(path, ROOT), "utf8")).version || null;
+    } catch {}
   }
+  return null;
 }
 let versionSynced = 0;
 for (const s of manifest.servers) {

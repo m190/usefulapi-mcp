@@ -109,7 +109,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [NPPES NPI Registry](servers/nppes-npi-registry/) | health-data | 4 | API token | [servers/nppes-npi-registry/](servers/nppes-npi-registry/) |
 | [Numeral](servers/numeral/) | tax | 13 | API token | [servers/numeral/](servers/numeral/) |
 | [Nylas](servers/nylas/) | email | 17 | API token | [servers/nylas/](servers/nylas/) |
-| [Olark](servers/olark/) | chat | 10 | API token | [servers/olark/](servers/olark/) |
 | [Onfido](servers/onfido/) | fraud-detection | 14 | API token | [servers/onfido/](servers/onfido/) |
 | [openFDA](servers/openfda/) | health-data | 14 | API token | [servers/openfda/](servers/openfda/) |
 | [OpenPhone](servers/openphone/) | communications | 16 | API token | [servers/openphone/](servers/openphone/) |
