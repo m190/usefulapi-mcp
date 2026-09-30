@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026
+**Effective date:** 16 July 2026 · **Last updated:** 30 September 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -26,9 +26,11 @@ pricing. You are responsible for activity performed under your authorized creden
 
 ## 3. Plans, billing, and cancellation
 
-- **Free tier:** up to the stated monthly call limit. **Paid plans** (Pro, Team) are billed via
+- **Free tier:** up to the stated monthly call limit. **Paid plans** (Pro) are billed via
   Stripe on a recurring monthly or annual basis and **renew automatically** until cancelled.
-- You may cancel at any time; access continues through the end of the paid period. Except where
+- You may cancel at any time with the `<product>_cancel_subscription` tool of the server you
+  subscribed to (for example `gumroad_cancel_subscription`), or by email to **support@usefulapi.io**
+  from the address you paid with. Access continues through the end of the paid period. Except where
   required by law, payments are **non-refundable** and we do not provide partial-period refunds.
 - Prices are shown in **USD**; your bank may apply currency conversion. Applicable **VAT** may be
   added.
