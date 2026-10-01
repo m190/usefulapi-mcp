@@ -37,6 +37,7 @@ On first connect you'll paste your MagicBell API key (and secret). It's validate
 | `magicbell_update_user` | **write** | Update a user |
 | `magicbell_usage_status` | meta | Usage status (free-tier meter) |
 | `magicbell_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `magicbell_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -46,6 +47,8 @@ On first connect you'll paste your MagicBell API key (and secret). It's validate
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `magicbell_upgrade` (it returns a Stripe Checkout link). Cancel any time with `magicbell_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `magicbell_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

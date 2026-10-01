@@ -47,6 +47,9 @@ per-user, and scoped to you — no keys in config files.
 | `codecov_compare` | read | Compare coverage |
 | `codecov_compare_impacted_files` | read | Compare impacted files |
 | `codecov_list_test_results` | read | List test results |
+| `codecov_usage_status` | meta | Usage status (free-tier meter) |
+| `codecov_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `codecov_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -56,6 +59,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `codecov_upgrade` (it returns a Stripe Checkout link). Cancel any time with `codecov_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `codecov_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

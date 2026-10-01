@@ -42,6 +42,7 @@ On first connect you'll paste your Autumn API key. It's validated, stored per-us
 | `autumn_open_customer_portal` | **write** | Open customer portal |
 | `autumn_usage_status` | meta | Usage status (free-tier meter) |
 | `autumn_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `autumn_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -51,6 +52,8 @@ On first connect you'll paste your Autumn API key. It's validated, stored per-us
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `autumn_upgrade` (it returns a Stripe Checkout link). Cancel any time with `autumn_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `autumn_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

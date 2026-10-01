@@ -45,6 +45,9 @@ stored per-user, and scoped to you — no keys in config files.
 | `dub_create_folder` | **write** | Create a folder |
 | `dub_approve_partner_application` | **write** | Approve a partner application |
 | `dub_reject_partner_application` | **write** | Reject a partner application |
+| `dub_usage_status` | meta | Usage status (free-tier meter) |
+| `dub_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `dub_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -54,6 +57,8 @@ stored per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `dub_upgrade` (it returns a Stripe Checkout link). Cancel any time with `dub_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `dub_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

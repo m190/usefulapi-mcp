@@ -49,6 +49,7 @@ scoped to you — no keys in config files.
 | `parabol_graphql` | **write** | Run a GraphQL operation (query or mutation) |
 | `parabol_usage_status` | meta | Usage status (free-tier meter) |
 | `parabol_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `parabol_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -58,6 +59,8 @@ scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `parabol_upgrade` (it returns a Stripe Checkout link). Cancel any time with `parabol_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `parabol_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

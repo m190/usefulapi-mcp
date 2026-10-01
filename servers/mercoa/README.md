@@ -41,6 +41,7 @@ On first connect you'll paste your Mercoa API key. It's validated, stored per-us
 | `mercoa_add_invoice_comment` | **write** | Add invoice comment |
 | `mercoa_usage_status` | meta | Usage status (free-tier meter) |
 | `mercoa_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `mercoa_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -50,6 +51,8 @@ On first connect you'll paste your Mercoa API key. It's validated, stored per-us
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `mercoa_upgrade` (it returns a Stripe Checkout link). Cancel any time with `mercoa_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `mercoa_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

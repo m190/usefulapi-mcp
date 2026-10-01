@@ -50,6 +50,7 @@ On first connect you'll paste your Orb API key. It's validated, stored per-user,
 | `orb_update_customer` | **write** | Update customer |
 | `orb_usage_status` | meta | Usage status (free-tier meter) |
 | `orb_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `orb_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -59,6 +60,8 @@ On first connect you'll paste your Orb API key. It's validated, stored per-user,
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `orb_upgrade` (it returns a Stripe Checkout link). Cancel any time with `orb_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `orb_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

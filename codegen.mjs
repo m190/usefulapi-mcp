@@ -78,7 +78,15 @@ function pricingSection(s) {
   const rows = s.pricing
     .map((p) => `| **${p.plan}**${p.scope ? ` (${p.scope})` : ""} | ${priceCell(p)} | ${p.limit} |`)
     .join("\n");
-  return `## Pricing\n\n| Plan | Price | Limit |\n|------|-------|-------|\n${rows}\n`;
+  // Billing is per product: say so, and name this server's subscribe/cancel tools.
+  const meta = (suffix) => s.tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
+  const up = meta("_upgrade"), cancel = meta("_cancel_subscription");
+  const note = up && cancel
+    ? `\nPro covers this server only. Subscribe with \`${up.name}\` (it returns a Stripe Checkout link). ` +
+      `Cancel any time with \`${cancel.name}\`: Pro continues to the end of the paid period, with no refund ` +
+      `for the current period, and running \`${up.name}\` before then undoes the cancel. Or write to support@usefulapi.io.\n`
+    : "";
+  return `## Pricing\n\n| Plan | Price | Limit |\n|------|-------|-------|\n${rows}\n${note}`;
 }
 
 // Replace a "## <Heading>" section (including the blank line up to the next "## "

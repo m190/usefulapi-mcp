@@ -38,6 +38,9 @@ per-user, and scoped to you — no keys in config files.
 | `estuary_create_draft` | **write** | Create draft |
 | `estuary_upsert_draft_spec` | **write** | Upsert draft spec |
 | `estuary_publish_draft` | **write** | Publish draft |
+| `estuary_flow_usage_status` | meta | Usage status (free-tier meter) |
+| `estuary_flow_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `estuary_flow_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -47,6 +50,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `estuary_flow_upgrade` (it returns a Stripe Checkout link). Cancel any time with `estuary_flow_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `estuary_flow_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

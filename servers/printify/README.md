@@ -40,6 +40,7 @@ keys in config files.
 | `printify_publish_product` | **write** | Publish product |
 | `printify_usage_status` | meta | Usage status (free-tier meter) |
 | `printify_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `printify_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -49,6 +50,8 @@ keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `printify_upgrade` (it returns a Stripe Checkout link). Cancel any time with `printify_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `printify_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

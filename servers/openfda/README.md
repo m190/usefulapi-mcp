@@ -17,7 +17,9 @@ Search openFDA drug, device, food and adverse-event datasets. Hosted, no local i
 ```
 
 This server needs **no credential** — openFDA is a public data source. On first
-connect you approve the link, and your usage is metered to a private id.
+connect you log in with your email: we send a 6-digit code from `login@usefulapi.io`. The address
+is used only to send the code; we keep a one-way hash of it as your account id, so your free calls
+and your plan stay yours.
 
 ## Tools
 
@@ -37,6 +39,9 @@ connect you approve the link, and your usage is metered to a private id.
 | `search_food_recalls` | read | Search food recall enforcement reports |
 | `count` | read | Count/aggregate over an openFDA dataset |
 | `openfda_query` | read | Query any openFDA endpoint (generic) |
+| `openfda_usage_status` | meta | Usage status (free-tier meter) |
+| `openfda_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `openfda_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -46,6 +51,8 @@ connect you approve the link, and your usage is metered to a private id.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `openfda_upgrade` (it returns a Stripe Checkout link). Cancel any time with `openfda_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `openfda_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

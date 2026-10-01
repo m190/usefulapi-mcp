@@ -17,7 +17,9 @@ Look up drug names, RxCUIs, ingredients and interactions in RxNorm. Hosted, no l
 ```
 
 This server needs **no credential** — RxNorm is a public data source. On first
-connect you approve the link, and your usage is metered to a private id.
+connect you log in with your email: we send a 6-digit code from `login@usefulapi.io`. The address
+is used only to send the code; we keep a one-way hash of it as your account id, so your free calls
+and your plan stay yours.
 
 ## Tools
 
@@ -36,6 +38,9 @@ connect you approve the link, and your usage is metered to a private id.
 | `rxnorm_get_term_types` | read | List term types |
 | `rxnorm_get_drug_classes` | read | Get drug classes for a drug |
 | `rxnorm_get_class_members` | read | Get drug class members |
+| `rxnorm_usage_status` | meta | Usage status (free-tier meter) |
+| `rxnorm_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `rxnorm_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -45,6 +50,8 @@ connect you approve the link, and your usage is metered to a private id.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `rxnorm_upgrade` (it returns a Stripe Checkout link). Cancel any time with `rxnorm_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `rxnorm_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

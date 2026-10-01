@@ -42,6 +42,7 @@ On first connect you'll paste **two** values — your **Account ID** and **API k
 | `create_location` | **write** | Add a location |
 | `youcanbookme_usage_status` | meta | Usage status (free-tier meter) |
 | `youcanbookme_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `youcanbookme_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -51,6 +52,8 @@ On first connect you'll paste **two** values — your **Account ID** and **API k
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `youcanbookme_upgrade` (it returns a Stripe Checkout link). Cancel any time with `youcanbookme_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `youcanbookme_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

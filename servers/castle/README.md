@@ -37,6 +37,9 @@ stored per-user, and scoped to you — no keys in config files.
 | `castle_update_list_item` | **write** | Update a list item's comment |
 | `castle_archive_list_item` | **write** | Archive a list item |
 | `castle_unarchive_list_item` | **write** | Unarchive a list item |
+| `castle_usage_status` | meta | Usage status (free-tier meter) |
+| `castle_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `castle_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -46,6 +49,8 @@ stored per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `castle_upgrade` (it returns a Stripe Checkout link). Cancel any time with `castle_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `castle_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

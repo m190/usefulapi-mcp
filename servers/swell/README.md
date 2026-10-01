@@ -40,6 +40,7 @@ On first connect you'll paste your Swell store ID and secret key. It's validated
 | `swell_update_order` | **write** | Update order |
 | `swell_usage_status` | meta | Usage status (free-tier meter) |
 | `swell_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `swell_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -49,6 +50,8 @@ On first connect you'll paste your Swell store ID and secret key. It's validated
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `swell_upgrade` (it returns a Stripe Checkout link). Cancel any time with `swell_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `swell_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

@@ -158,7 +158,9 @@ function productPage(s) {
   const live = s.status === "live";
   const authStep = s.auth === "oauth"
     ? `Authorize with your <b>${esc(s.name)}</b> account`
-    : `Authenticate with <b>${esc(s.name)}</b> when prompted`;
+    : s.auth === "none"
+      ? `Log in with your email: enter the 6-digit code sent from <b>login@usefulapi.io</b> (no ${esc(s.name)} key needed)`
+      : `Authenticate with <b>${esc(s.name)}</b> when prompted`;
   const cards = live ? `<div class="grid">
 <div class="card"><h2>Claude</h2>
 <ol><li>Open <b>Settings → Connectors → Add custom connector</b></li>
@@ -189,10 +191,19 @@ function productPage(s) {
   const priceRow = (p) =>
     `<tr><td>${esc(p.plan)}${p.scope ? `<span class="scope">${esc(p.scope)}</span>` : ""}</td>` +
     `<td>${esc(priceText(p))}</td><td>${esc(p.limit)}</td></tr>`;
+  // Billing is per product: say so, and name this server's subscribe/cancel tools.
+  const metaTool = (suffix) => (s.tools || []).find((t) => t.type === "meta" && t.name.endsWith(suffix));
+  const upTool = metaTool("_upgrade"), cancelTool = metaTool("_cancel_subscription");
+  const billingNote = pt && upTool && cancelTool
+    ? `<p class="hint">Pro covers this ${esc(s.name)} server only. Subscribe with <code>${esc(upTool.name)}</code> (it returns a Stripe Checkout link). ` +
+      `Cancel any time with <code>${esc(cancelTool.name)}</code>: Pro continues to the end of the paid period, with no refund for the current period, ` +
+      `and running <code>${esc(upTool.name)}</code> before then undoes the cancel. Or write to <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>.</p>`
+    : "";
   const pricingSection = (s.pricing || []).length
     ? `<h2 class="sec">Pricing</h2>
 <table class="pricing"><thead><tr><th>Plan</th><th>Price</th><th>Limit</th></tr></thead>
-<tbody>${s.pricing.map(priceRow).join("")}</tbody></table>`
+<tbody>${s.pricing.map(priceRow).join("")}</tbody></table>
+${billingNote}`
     : "";
 
   const hint = live ? `<p class="hint">This is a Model Context Protocol endpoint — meant to be connected from an AI client, not opened in a browser. An <code>invalid_token</code> response at the URL is the auth gate working as designed; clients authenticate automatically.</p>` : "";

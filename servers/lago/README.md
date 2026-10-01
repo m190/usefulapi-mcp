@@ -48,6 +48,7 @@ On first connect you'll paste your Lago API key. It's validated, stored per-user
 | `lago_create_event` | **write** | Create event |
 | `lago_usage_status` | meta | Usage status (free-tier meter) |
 | `lago_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `lago_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -57,6 +58,8 @@ On first connect you'll paste your Lago API key. It's validated, stored per-user
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `lago_upgrade` (it returns a Stripe Checkout link). Cancel any time with `lago_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `lago_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

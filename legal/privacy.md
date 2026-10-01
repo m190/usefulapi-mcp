@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026
+**Effective date:** 16 July 2026 · **Last updated:** 1 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -20,8 +20,13 @@ credential (OAuth access/refresh token, or your API token) so the server can cal
 you. We derive a per-user identifier from it to key your usage and billing. We do **not** receive
 your third-party account password.
 
-**Usage metering.** We record counts and timestamps of tool calls per user (and, for team plans,
-per workspace) to enforce plan limits and bill you. We do not need, and do not retain, the
+**Email login (servers without a credential).** Servers for public data sources need no credential;
+you log in with your email address instead, and we send a 6-digit code from login@usefulapi.io. The
+address is used only to send that code. We do **not** store it: we keep only a one-way hash of it,
+which is your account identifier for usage and billing.
+
+**Usage metering.** We record counts and timestamps of tool calls per user and per server to
+enforce plan limits and bill you. We do not need, and do not retain, the
 *contents* of your tool calls to meter them.
 
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the

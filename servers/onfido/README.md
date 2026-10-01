@@ -37,6 +37,9 @@ per-user, and scoped to you — no keys in config files.
 | `onfido_list_live_videos` | read | List live videos |
 | `onfido_create_applicant` | **write** | Create applicant |
 | `onfido_update_applicant` | **write** | Update applicant |
+| `onfido_usage_status` | meta | Usage status (free-tier meter) |
+| `onfido_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `onfido_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -46,6 +49,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `onfido_upgrade` (it returns a Stripe Checkout link). Cancel any time with `onfido_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `onfido_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

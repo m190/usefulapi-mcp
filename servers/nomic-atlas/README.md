@@ -32,6 +32,9 @@ stored per-user, and scoped to you — no keys in config files.
 | `nomic_get_projection_schema` | read | Get a projection's schema |
 | `nomic_list_tags` | read | List a projection's tags |
 | `nomic_get_tag_status` | read | Get a tag's status |
+| `nomic_atlas_usage_status` | meta | Usage status (free-tier meter) |
+| `nomic_atlas_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `nomic_atlas_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -41,6 +44,8 @@ stored per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `nomic_atlas_upgrade` (it returns a Stripe Checkout link). Cancel any time with `nomic_atlas_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `nomic_atlas_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

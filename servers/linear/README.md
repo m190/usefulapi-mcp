@@ -35,7 +35,7 @@ scoped to you. No API keys to paste.
 | `linear_add_comment` | **write** | Add comment (WRITE — mutates Linear) |
 | `linear_usage_status` | meta | Usage status (free-tier meter) |
 | `linear_upgrade` | meta | Upgrade to Pro (unlimited) |
-| `linear_upgrade_team` | meta | Upgrade workspace to Team (unlimited for everyone) |
+| `linear_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -45,7 +45,8 @@ scoped to you. No API keys to paste.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
-| **Team** (per workspace) | **$99/mo** or **$990/yr** (2 months free) | Unlimited for all seats |
+
+Pro covers this server only. Subscribe with `linear_upgrade` (it returns a Stripe Checkout link). Cancel any time with `linear_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `linear_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

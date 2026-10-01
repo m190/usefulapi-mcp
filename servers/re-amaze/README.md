@@ -40,6 +40,9 @@ per-user, and scoped to you — no keys in config files.
 | `reamaze_update_conversation` | **write** | Update conversation |
 | `reamaze_create_contact` | **write** | Create contact |
 | `reamaze_update_contact` | **write** | Update contact |
+| `re_amaze_usage_status` | meta | Usage status (free-tier meter) |
+| `re_amaze_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `re_amaze_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -49,6 +52,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `re_amaze_upgrade` (it returns a Stripe Checkout link). Cancel any time with `re_amaze_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `re_amaze_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

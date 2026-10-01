@@ -41,6 +41,7 @@ On first connect you'll paste your Modern Treasury org ID + API key. It's valida
 | `modern_treasury_create_counterparty` | **write** | Create counterparty |
 | `modern_treasury_usage_status` | meta | Usage status (free-tier meter) |
 | `modern_treasury_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `modern_treasury_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -50,6 +51,8 @@ On first connect you'll paste your Modern Treasury org ID + API key. It's valida
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `modern_treasury_upgrade` (it returns a Stripe Checkout link). Cancel any time with `modern_treasury_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `modern_treasury_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

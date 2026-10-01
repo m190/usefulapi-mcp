@@ -41,6 +41,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `optimoroute_send_routes` | **write** | Send routes to drivers |
 | `optimoroute_usage_status` | meta | Usage status (free-tier meter) |
 | `optimoroute_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `optimoroute_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -50,6 +51,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `optimoroute_upgrade` (it returns a Stripe Checkout link). Cancel any time with `optimoroute_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `optimoroute_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

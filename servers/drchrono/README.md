@@ -38,6 +38,9 @@ per-user, and scoped to you — no keys in config files.
 | `drchrono_list_line_items` | read | List line items |
 | `drchrono_create_appointment` | **write** | Create appointment |
 | `drchrono_create_patient` | **write** | Create patient |
+| `drchrono_usage_status` | meta | Usage status (free-tier meter) |
+| `drchrono_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `drchrono_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -47,6 +50,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `drchrono_upgrade` (it returns a Stripe Checkout link). Cancel any time with `drchrono_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `drchrono_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

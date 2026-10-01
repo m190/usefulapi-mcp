@@ -43,6 +43,7 @@ validated, stored per-user, and scoped to you — no keys in config files.
 | `portkey_create_feedback` | **write** | Create feedback |
 | `portkey_usage_status` | meta | Usage status (free-tier meter) |
 | `portkey_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `portkey_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -52,6 +53,8 @@ validated, stored per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `portkey_upgrade` (it returns a Stripe Checkout link). Cancel any time with `portkey_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `portkey_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

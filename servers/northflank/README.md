@@ -41,6 +41,7 @@ On first connect you'll paste your Northflank API token. It's validated, stored 
 | `northflank_resume_service` | **write** | Resume service |
 | `northflank_usage_status` | meta | Usage status (free-tier meter) |
 | `northflank_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `northflank_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -50,6 +51,8 @@ On first connect you'll paste your Northflank API token. It's validated, stored 
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `northflank_upgrade` (it returns a Stripe Checkout link). Cancel any time with `northflank_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `northflank_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

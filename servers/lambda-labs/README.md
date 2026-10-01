@@ -39,8 +39,9 @@ keys in config files.
 | `lambda_update_instance` | **write** | Update instance |
 | `lambda_create_filesystem` | **write** | Create filesystem |
 | `lambda_delete_filesystem` | **write** | Delete filesystem |
-| `lambda_usage_status` | meta | Usage status (free-tier meter) |
-| `lambda_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `lambda_labs_usage_status` | meta | Usage status (free-tier meter) |
+| `lambda_labs_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `lambda_labs_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -50,6 +51,8 @@ keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `lambda_labs_upgrade` (it returns a Stripe Checkout link). Cancel any time with `lambda_labs_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `lambda_labs_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

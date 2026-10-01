@@ -39,6 +39,9 @@ per-user, and scoped to you — no keys in config files.
 | `openphone_get_call_recordings` | read | Get call recordings |
 | `openphone_list_webhooks` | read | List webhooks |
 | `openphone_create_contact` | **write** | Create a contact |
+| `openphone_usage_status` | meta | Usage status (free-tier meter) |
+| `openphone_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `openphone_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
 
@@ -48,6 +51,8 @@ per-user, and scoped to you — no keys in config files.
 |------|-------|-------|
 | **Free** | $0 | 100 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `openphone_upgrade` (it returns a Stripe Checkout link). Cancel any time with `openphone_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `openphone_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 
