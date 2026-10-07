@@ -1,0 +1,65 @@
+# FreeAgent MCP by usefulapi
+
+Work with your [FreeAgent](https://www.freeagent.com) books from Claude, Cursor, or any MCP client — read contacts, invoices, bills, expenses, bank accounts and transactions, projects, timeslips, the tax timeline, profit and loss and the balance sheet; create and update contacts, create draft invoices (never sent) and log timeslips. Hosted, no local
+install: connect with your FreeAgent account over OAuth.
+
+**Live endpoint:** `https://freeagent.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/freeagent
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "freeagent": {
+      "url": "https://freeagent.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll be sent to FreeAgent to sign in and approve access; no API keys to paste.
+The server can do only what your FreeAgent user is allowed to do, it never deletes anything, and you can
+revoke access any time in FreeAgent (Settings → Approved apps).
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `freeagent_get_company` | read | Get the company |
+| `freeagent_get_current_user` | read | Get the current user |
+| `freeagent_get_tax_timeline` | read | Get the tax timeline |
+| `freeagent_list_contacts` | read | List contacts |
+| `freeagent_get_contact` | read | Get one contact |
+| `freeagent_list_invoices` | read | List invoices |
+| `freeagent_get_invoice` | read | Get one invoice |
+| `freeagent_list_bills` | read | List bills |
+| `freeagent_list_expenses` | read | List expenses |
+| `freeagent_list_bank_accounts` | read | List bank accounts |
+| `freeagent_list_bank_transactions` | read | List bank transactions |
+| `freeagent_list_projects` | read | List projects |
+| `freeagent_list_tasks` | read | List tasks |
+| `freeagent_list_timeslips` | read | List timeslips |
+| `freeagent_get_profit_and_loss` | read | Get profit and loss |
+| `freeagent_get_balance_sheet` | read | Get the balance sheet |
+| `freeagent_create_contact` | **write** | Create a contact |
+| `freeagent_update_contact` | **write** | Update a contact |
+| `freeagent_create_draft_invoice` | **write** | Create a draft invoice |
+| `freeagent_create_timeslip` | **write** | Log a timeslip |
+| `freeagent_usage_status` | meta | Usage status (free-tier meter) |
+| `freeagent_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `freeagent_cancel_subscription` | meta | Cancel the Pro subscription |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `freeagent_upgrade` (it returns a Stripe Checkout link). Cancel any time with `freeagent_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `freeagent_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+
+## License
+
+MIT — see [LICENSE](../LICENSE). This repo contains documentation only; the server is hosted.
