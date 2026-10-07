@@ -217,6 +217,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [When I Work](servers/when-i-work/) | productivity | 24 | API token | [servers/when-i-work/](servers/when-i-work/) |
 | [Wild Apricot](servers/wild-apricot/) | membership | 24 | API token | [servers/wild-apricot/](servers/wild-apricot/) |
 | [Wufoo](servers/wufoo/) | productivity | 21 | API token | [servers/wufoo/](servers/wufoo/) |
+| [Lightspeed Retail (R-Series)](servers/lightspeed-r-series/) | ecommerce | 20 | OAuth | [servers/lightspeed-r-series/](servers/lightspeed-r-series/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
