@@ -219,6 +219,27 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Wufoo](servers/wufoo/) | productivity | 21 | API token | [servers/wufoo/](servers/wufoo/) |
 | [Lightspeed Retail (R-Series)](servers/lightspeed-r-series/) | ecommerce | 20 | OAuth | [servers/lightspeed-r-series/](servers/lightspeed-r-series/) |
 | [FreeAgent](servers/freeagent/) | billing | 23 | OAuth | [servers/freeagent/](servers/freeagent/) |
+| [Airbrake](servers/airbrake/) | observability | 16 | API token | [servers/airbrake/](servers/airbrake/) |
+| [ChurchSuite](servers/churchsuite/) | crm | 28 | API token | [servers/churchsuite/](servers/churchsuite/) |
+| [Cin7 Core](servers/cin7-core/) | ecommerce | 20 | API token | [servers/cin7-core/](servers/cin7-core/) |
+| [Connecteam](servers/connecteam/) | productivity | 22 | API token | [servers/connecteam/](servers/connecteam/) |
+| [Gingr](servers/gingr/) | productivity | 28 | API token | [servers/gingr/](servers/gingr/) |
+| [Kisi](servers/kisi/) | security | 23 | API token | [servers/kisi/](servers/kisi/) |
+| [Lexware Office](servers/lexware-office/) | billing | 24 | API token | [servers/lexware-office/](servers/lexware-office/) |
+| [Nookal](servers/nookal/) | healthcare | 14 | API token | [servers/nookal/](servers/nookal/) |
+| [Ordoro](servers/ordoro/) | shipping | 21 | API token | [servers/ordoro/](servers/ordoro/) |
+| [Photon Health](servers/photon-health/) | healthcare | 24 | API token | [servers/photon-health/](servers/photon-health/) |
+| [RotaCloud](servers/rotacloud/) | productivity | 29 | API token | [servers/rotacloud/](servers/rotacloud/) |
+| [Shiftbase](servers/shiftbase/) | productivity | 25 | API token | [servers/shiftbase/](servers/shiftbase/) |
+| [Shipday](servers/shipday/) | shipping | 17 | API token | [servers/shipday/](servers/shipday/) |
+| [SlickText](servers/slicktext/) | communications | 27 | API token | [servers/slicktext/](servers/slicktext/) |
+| [Spruce Health](servers/spruce-health/) | healthcare | 27 | API token | [servers/spruce-health/](servers/spruce-health/) |
+| [TalentLMS](servers/talentlms/) | productivity | 26 | API token | [servers/talentlms/](servers/talentlms/) |
+| [Teachworks](servers/teachworks/) | productivity | 27 | API token | [servers/teachworks/](servers/teachworks/) |
+| [Textline](servers/textline/) | communications | 26 | API token | [servers/textline/](servers/textline/) |
+| [Tookan](servers/tookan/) | shipping | 18 | API token | [servers/tookan/](servers/tookan/) |
+| [Track-POD](servers/track-pod/) | shipping | 19 | API token | [servers/track-pod/](servers/track-pod/) |
+| [Veeqo](servers/veeqo/) | ecommerce | 25 | API token | [servers/veeqo/](servers/veeqo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

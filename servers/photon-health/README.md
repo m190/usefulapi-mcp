@@ -1,0 +1,65 @@
+# Photon Health MCP by usefulapi
+
+Use [Photon Health](https://www.photon.health) from Claude, Cursor, or any MCP client — read Photon Health patients, prescriptions, orders, pharmacies and medications; screen interactions.
+Hosted, no local install: connect with your own Photon Health credentials.
+
+**Live endpoint:** `https://photon-health.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/photon-health
+
+## Add to Claude
+
+```json
+{
+  "mcpServers": {
+    "photon-health": {
+      "url": "https://photon-health.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+On first connect you'll provide your **Photon client ID, client secret and environment**.
+Your credentials are validated, stored per-user, and scoped to you — no keys in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `photonhealth_list_patients` | read | List patients |
+| `photonhealth_get_patient` | read | Get a patient |
+| `photonhealth_list_prescriptions` | read | List prescriptions |
+| `photonhealth_get_prescription` | read | Get a prescription |
+| `photonhealth_list_orders` | read | List orders |
+| `photonhealth_get_order` | read | Get an order |
+| `photonhealth_get_fill` | read | Get a fill |
+| `photonhealth_search_pharmacies` | read | Search pharmacies |
+| `photonhealth_get_pharmacy` | read | Get a pharmacy |
+| `photonhealth_search_medications` | read | Search medications |
+| `photonhealth_list_medication_products` | read | List medication products |
+| `photonhealth_list_medication_packages` | read | List medication packages |
+| `photonhealth_get_medication_by_ndc` | read | Look up a medication by NDC |
+| `photonhealth_search_medical_equipment` | read | Search medical equipment |
+| `photonhealth_list_catalogs` | read | List catalogs |
+| `photonhealth_get_catalog` | read | Get a catalog |
+| `photonhealth_search_allergens` | read | Search allergens |
+| `photonhealth_list_dispense_units` | read | List dispense units |
+| `photonhealth_get_organization` | read | Get the organization |
+| `photonhealth_list_users` | read | List users |
+| `photonhealth_screen_interactions` | read | Screen for drug interactions |
+| `photonhealth_usage_status` | meta | Usage status (free-tier meter) |
+| `photonhealth_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `photonhealth_cancel_subscription` | meta | Cancel the Pro subscription |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 100 tool calls / month |
+| **Pro** (per organization) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `photonhealth_upgrade` (it returns a Stripe Checkout link). Cancel any time with `photonhealth_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `photonhealth_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Photon Health.
