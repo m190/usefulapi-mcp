@@ -4,7 +4,12 @@ Score transactions for fraud risk with MaxMind minFraud from Claude, Cursor, or 
 
 **Live endpoint:** `https://maxmind-minfraud.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/maxmind-minfraud
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://maxmind-minfraud.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http maxmind-minfraud https://maxmind-minfraud.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=maxmind-minfraud&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmaxmind-minfraud.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Score transactions for fraud risk with MaxMind minFraud from Claude, Cursor, or 
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/maxmind-minfraud/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your MaxMind account ID and license key. It's validated, stored per-user, and scoped to you.
 

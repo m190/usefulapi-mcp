@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own Less Annoying CRM credentials.
 
 **Live endpoint:** `https://less-annoying-crm.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/less-annoying-crm
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://less-annoying-crm.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http less-annoying-crm https://less-annoying-crm.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=less-annoying-crm&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fless-annoying-crm.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own Less Annoying CRM credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/less-annoying-crm/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Less Annoying CRM API key** (Settings → Programmer API).
 They're validated, stored per-user, and scoped to you — no keys in config files.

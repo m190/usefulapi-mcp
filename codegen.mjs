@@ -6,6 +6,8 @@
 //   README.md (root)            — the Servers table
 // Run after editing manifest.json, then commit. build.mjs (the site) stays separate.
 import { readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 const ROOT = new URL("./", import.meta.url);
 // Per-product artifacts live under this subdir (keeps the repo root uncluttered).
@@ -35,11 +37,34 @@ for (const s of manifest.servers) {
   if (v && v !== s.version) { s.version = v; versionSynced++; }
   else if (!s.version) s.version = v || "1.0.0";
 }
-if (versionSynced) {
-  writeFileSync(new URL("manifest.json", ROOT), JSON.stringify(manifest, null, 2) + "\n");
-  console.log(`codegen: synced ${versionSynced} version(s) from package.json → manifest.json`);
+// Login data (which credentials the login asks for + where to find them) is DERIVED from each
+// product's product.ts in the fleet, via fleet/scripts/export-login.ts. The portal renders it from
+// manifest.json, because the Pages build has no fleet checkout. Without a fleet checkout, keep the old values.
+let loginSynced = 0;
+let logins = null;
+try {
+  logins = JSON.parse(execFileSync("npx", ["tsx", "scripts/export-login.ts"], {
+    cwd: fileURLToPath(new URL("../fleet/", ROOT)), encoding: "utf8", maxBuffer: 16 << 20, stdio: ["ignore", "pipe", "inherit"],
+  }));
+} catch (e) {
+  console.warn(`codegen: no fleet login export (${e.message.split("\n")[0]}); keeping manifest login data`);
 }
-const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json";
+for (const s of logins ? manifest.servers : []) {
+  const l = logins[s.slug];
+  if (l && JSON.stringify(l) !== JSON.stringify(s.login)) { s.login = l; loginSynced++; }
+}
+if (versionSynced || loginSynced) {
+  writeFileSync(new URL("manifest.json", ROOT), JSON.stringify(manifest, null, 2) + "\n");
+  console.log(`codegen: synced ${versionSynced} version(s) + ${loginSynced} login(s) from fleet → manifest.json`);
+}
+const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json";
+const SITE = manifest.portal.domain.replace(/\/$/, "");
+// The brand mark (portal/), served by the portal. Vendor logos are never used (trademarks).
+const ICONS = [
+  { src: `${SITE}/icon.svg`, mimeType: "image/svg+xml", sizes: ["any"] },
+  { src: `${SITE}/icon-256.png`, mimeType: "image/png", sizes: ["256x256"] },
+  { src: `${SITE}/icon-512.png`, mimeType: "image/png", sizes: ["512x512"] },
+];
 
 // ---- server.json ------------------------------------------------------------
 function serverJson(s) {
@@ -48,8 +73,11 @@ function serverJson(s) {
       {
         $schema: SCHEMA,
         name: `${registryNamespace}/${s.slug}`,
+        title: `${s.name} MCP by usefulapi`,
         description: s.description,
         version: s.version || "1.0.0",
+        websiteUrl: `${SITE}/${s.slug}/`,
+        icons: ICONS,
         repository: { url: repository.url, source: repository.source, subfolder: `${SUBDIR}${s.slug}` },
         remotes: [{ type: s.transport || "streamable-http", url: s.endpoint }],
       },
@@ -99,6 +127,40 @@ function replaceSection(md, heading, newBody) {
   return md.replace(re, (m, pre) => `${pre === "\n" ? "\n" : ""}${body}\n\n`);
 }
 
+// The "## Connect" section: generated client setup above the CONNECT_END marker; the product's own
+// login prose below it is kept. The first run converts the old hand-written "## Add to Claude" section
+// (its JSON block is dropped, its prose kept).
+const CONNECT_END = "<!-- connect:end (generated above, edit below) -->";
+function connectSection(s) {
+  const vscode = `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(s.slug)}&config=${encodeURIComponent(JSON.stringify({ type: "http", url: s.endpoint }))}`;
+  return [
+    "## Connect",
+    "",
+    `- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste \`${s.endpoint}\`.`,
+    `- **Claude Code:** \`claude mcp add --transport http ${s.slug} ${s.endpoint}\`, then run \`/mcp\` to log in.`,
+    `- **VS Code:** [Add to VS Code](${vscode}).`,
+    `- **Cursor and other clients:** add the URL as a remote MCP server:`,
+    "",
+    "```json",
+    JSON.stringify({ mcpServers: { [s.slug]: { url: s.endpoint } } }, null, 2),
+    "```",
+    "",
+    `Step-by-step setup, where to find your credentials, and FAQ: ${SITE}/${s.slug}/`,
+    "",
+    CONNECT_END,
+  ].join("\n");
+}
+function replaceConnect(md, s) {
+  const m = md.match(/(^|\n)## (Add to Claude|Connect)\n([\s\S]*?)\n+(?=## )/);
+  if (!m) throw new Error(`${s.slug}: no "## Add to Claude" or "## Connect" section`);
+  const body = m[3];
+  const prose = body.includes(CONNECT_END)
+    ? body.slice(body.indexOf(CONNECT_END) + CONNECT_END.length)
+    : body.replace(/```json[\s\S]*?```/, "");
+  const kept = prose.trim();
+  return md.replace(m[0], () => `${m[1]}${connectSection(s)}\n${kept ? `\n${kept}\n` : ""}\n`);
+}
+
 // ---- root README Servers table ---------------------------------------------
 function rootServersTable() {
   const head = "| Server | Category | Tools | Auth | Docs |\n|--------|----------|------:|------|------|";
@@ -115,6 +177,7 @@ for (const s of manifest.servers) {
   writeFileSync(new URL(`${SUBDIR}${s.slug}/server.json`, ROOT), serverJson(s));
   const readmePath = new URL(`${SUBDIR}${s.slug}/README.md`, ROOT);
   let md = readFileSync(readmePath, "utf8");
+  md = replaceConnect(md, s);
   md = replaceSection(md, "Tools", toolsSection(s));
   md = replaceSection(md, "Pricing", pricingSection(s));
   writeFileSync(readmePath, md);

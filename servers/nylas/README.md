@@ -4,7 +4,12 @@ Read your email, calendars, events and contacts, and send email or create events
 
 **Live endpoint:** `https://nylas.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/nylas
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://nylas.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http nylas https://nylas.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=nylas&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fnylas.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Read your email, calendars, events and contacts, and send email or create events
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/nylas/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Nylas API key. It's validated, stored per-user, and scoped to you.
 

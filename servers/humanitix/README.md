@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own Humanitix credentials.
 
 **Live endpoint:** `https://humanitix.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/humanitix
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://humanitix.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http humanitix https://humanitix.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=humanitix&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fhumanitix.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own Humanitix credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/humanitix/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Humanitix Public API key** (console → Account → Advanced → Public API key).
 They're validated, stored per-user, and scoped to you — no keys in config files.

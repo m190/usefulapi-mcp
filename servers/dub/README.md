@@ -4,7 +4,12 @@ Short links with click, lead and sale analytics, customers, tags and the partner
 
 **Live endpoint:** `https://dub.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://dub.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http dub https://dub.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=dub&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdub.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Short links with click, lead and sale analytics, customers, tags and the partner
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/dub/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Dub credentials**. They are validated,
 stored per-user, and scoped to you — no keys in config files.

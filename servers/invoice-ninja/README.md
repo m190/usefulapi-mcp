@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own Invoice Ninja credentials.
 
 **Live endpoint:** `https://invoice-ninja.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/invoice-ninja
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://invoice-ninja.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http invoice-ninja https://invoice-ninja.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=invoice-ninja&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Finvoice-ninja.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own Invoice Ninja credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/invoice-ninja/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Invoice Ninja API token** (Settings → Account Management → Integrations → API tokens), plus your instance URL if you self-host.
 They're validated, stored per-user, and scoped to you — no keys in config files.

@@ -4,7 +4,12 @@ Manage [Instatus](https://instatus.com) from Claude, Cursor, or any MCP client �
 
 **Live endpoint:** `https://instatus.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://instatus.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http instatus https://instatus.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=instatus&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Finstatus.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Manage [Instatus](https://instatus.com) from Claude, Cursor, or any MCP client �
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/instatus/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Instatus API token** (Instatus → Developers → API).
 It's validated, stored per-user, and scoped to you — no keys in config files.

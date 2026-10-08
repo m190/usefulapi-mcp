@@ -5,7 +5,12 @@ install: connect with your Lightspeed Retail account over OAuth.
 
 **Live endpoint:** `https://lightspeed-r-series.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/lightspeed-r-series
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://lightspeed-r-series.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http lightspeed-r-series https://lightspeed-r-series.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=lightspeed-r-series&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flightspeed-r-series.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ install: connect with your Lightspeed Retail account over OAuth.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/lightspeed-r-series/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll be sent to Lightspeed to sign in and approve access; no API keys to paste.
 The server can do only what the Lightspeed employee who signs in is allowed to do, and you can revoke

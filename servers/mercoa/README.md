@@ -4,7 +4,12 @@ Query and manage Mercoa AP/AR bill-pay — entities, invoices, transactions and 
 
 **Live endpoint:** `https://mercoa.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/mercoa
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://mercoa.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http mercoa https://mercoa.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=mercoa&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmercoa.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Query and manage Mercoa AP/AR bill-pay — entities, invoices, transactions and 
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/mercoa/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Mercoa API key. It's validated, stored per-user, and scoped to you.
 

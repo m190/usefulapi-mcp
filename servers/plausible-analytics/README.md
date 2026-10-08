@@ -5,7 +5,12 @@ no local install: connect with your own credentials.
 
 **Live endpoint:** `https://plausible-analytics.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://plausible-analytics.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http plausible-analytics https://plausible-analytics.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=plausible-analytics&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fplausible-analytics.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ no local install: connect with your own credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/plausible-analytics/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Plausible API key** (Account Settings → API keys). It is validated, stored per-user, and scoped to you — no
 keys in config files.

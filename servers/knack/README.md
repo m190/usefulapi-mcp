@@ -4,7 +4,12 @@ Connect Claude, Cursor, or any MCP client to your Knack no-code database — rea
 
 **Live endpoint:** `https://knack.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/knack
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://knack.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http knack https://knack.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=knack&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fknack.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Connect Claude, Cursor, or any MCP client to your Knack no-code database — rea
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/knack/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste **two** credentials — your **Application ID** and **REST API Key** (Knack Builder → Settings → API & Code). They're sent as the `X-Knack-Application-Id` and `X-Knack-REST-API-Key` headers on every request.
 

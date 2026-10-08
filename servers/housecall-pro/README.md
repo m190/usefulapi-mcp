@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own Housecall Pro credentials.
 
 **Live endpoint:** `https://housecall-pro.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/housecall-pro
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://housecall-pro.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http housecall-pro https://housecall-pro.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=housecall-pro&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fhousecall-pro.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own Housecall Pro credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/housecall-pro/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Housecall Pro API key** (My Apps → API Key Management; MAX plan).
 They're validated, stored per-user, and scoped to you — no keys in config files.

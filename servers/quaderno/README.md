@@ -4,7 +4,12 @@ Calculate tax rates and read or create your invoices, contacts and transactions 
 
 **Live endpoint:** `https://quaderno.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/quaderno
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://quaderno.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http quaderno https://quaderno.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=quaderno&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fquaderno.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Calculate tax rates and read or create your invoices, contacts and transactions 
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/quaderno/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Quaderno API key and account subdomain. It's validated, stored per-user, and scoped to you.
 

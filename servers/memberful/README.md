@@ -4,7 +4,12 @@ Manage your Memberful memberships from Claude, Cursor, or any MCP client — rea
 
 **Live endpoint:** `https://memberful.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/memberful
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://memberful.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http memberful https://memberful.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=memberful&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmemberful.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Manage your Memberful memberships from Claude, Cursor, or any MCP client — rea
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/memberful/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Memberful API key** — create one in the Memberful dashboard under Settings → Custom applications. It's sent as a Bearer token to your account's GraphQL endpoint.
 

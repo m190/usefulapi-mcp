@@ -4,7 +4,12 @@ Read your calendars, events and free/busy, and create or delete events, from Cla
 
 **Live endpoint:** `https://cronofy.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/cronofy
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://cronofy.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http cronofy https://cronofy.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=cronofy&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcronofy.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Read your calendars, events and free/busy, and create or delete events, from Cla
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/cronofy/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Cronofy access token. It's validated, stored per-user, and scoped to you.
 

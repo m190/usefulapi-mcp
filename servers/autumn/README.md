@@ -4,7 +4,12 @@ Read your Autumn customers, features, plans, balances and invoices — and creat
 
 **Live endpoint:** `https://autumn.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/autumn
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://autumn.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http autumn https://autumn.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=autumn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fautumn.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Read your Autumn customers, features, plans, balances and invoices — and creat
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/autumn/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Autumn API key. It's validated, stored per-user, and scoped to you.
 

@@ -4,7 +4,12 @@ Query your Modern Treasury payment-ops and ledger data from Claude, Cursor, or a
 
 **Live endpoint:** `https://modern-treasury.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/modern-treasury
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://modern-treasury.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http modern-treasury https://modern-treasury.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=modern-treasury&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmodern-treasury.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Query your Modern Treasury payment-ops and ledger data from Claude, Cursor, or a
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/modern-treasury/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Modern Treasury org ID + API key. It's validated, stored per-user, and scoped to you.
 

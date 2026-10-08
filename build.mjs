@@ -118,7 +118,7 @@ a{color:inherit}
 .brand .mark{width:38px;height:38px;border-radius:10px;flex:none}
 h1{font-size:32px;letter-spacing:-.02em;margin:0}
 .sub{color:var(--muted);font-size:17px;margin:0 0 28px;max-width:52ch}.sub strong{color:var(--fg)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
 .card h2{font-size:16px;margin:0 0 4px}.card b{color:var(--fg)}
 .lead{color:var(--muted);font-size:14px;margin:0}
@@ -129,12 +129,12 @@ ol{margin:8px 0 0;padding-left:18px}li{margin:7px 0}
 .copy:hover{color:var(--accent);border-color:var(--accent)}.copy.ok{color:#12873f;border-color:#12873f}
 @media (prefers-color-scheme:dark){.copy.ok{color:#5fd68a;border-color:#5fd68a}}
 .copywrap.line .copy{top:50%;transform:translateY(-50%)}.copywrap.block .copy{top:8px}
-pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto}
+pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
 .chip{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted)}
 .chip.live{color:#12873f}@media (prefers-color-scheme:dark){.chip.live{color:#5fd68a}}
 .hint{color:var(--muted);font-size:14px;margin:24px 0 0;max-width:560px}
-code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px}
+code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px;overflow-wrap:anywhere}
 h2.sec{font-size:22px;letter-spacing:-.01em;margin:44px 0 14px}
 h2.sec .n{color:var(--muted);font-weight:400;font-size:16px}
 table{width:100%;border-collapse:collapse;font-size:14px}
@@ -151,31 +151,132 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .crumbs{font-size:13px;color:var(--muted);margin:0 0 14px}.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
 .rel{display:flex;flex-wrap:wrap;gap:8px}.rel a{background:var(--chip);border-radius:999px;padding:4px 12px;font-size:13px;text-decoration:none}.rel a:hover{color:var(--accent)}
 .hint a{color:var(--accent)}a.tname{text-decoration:none}a.tname:hover{color:var(--accent)}
-@media (max-width:560px){.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+.card h2 .for{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}.lead.small{font-size:13px;margin-top:10px}
+.lead a{color:var(--accent)}.btn{display:inline-block;margin:2px 0;padding:4px 12px;border-radius:8px;background:var(--accent);color:#fff!important;text-decoration:none;font-size:13px;font-weight:600}
+.card .lead+.copywrap{margin-top:10px}.prose p{margin:0 0 10px;font-size:15px}.prose p:last-child{margin:0}.prose a{color:var(--accent)}
+.prompts{margin:0;padding:0;list-style:none;display:grid;gap:8px}.prompts li{margin:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:15px}
+.prompts li::before{content:"“";color:var(--muted)}.prompts li::after{content:"”";color:var(--muted)}
+.faq details{border-bottom:1px solid var(--border);padding:12px 0}.faq summary{cursor:pointer;font-weight:600}.faq p{margin:8px 0 0;color:var(--muted);font-size:15px}.faq a{color:var(--accent)}
+@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
+// Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
+// a 6-digit email code). From s.login (codegen syncs it from fleet product.ts), else from s.auth.
+const loginKind = (s) => s.login?.kind || (s.auth === "oauth" ? "upstream" : s.auth === "none" ? "email" : "key");
+// "your Acuity User ID and API Key" (required fields only; the labels come from the login page).
+const andList = (xs) => xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+const requiredFields = (s) => (s.login?.fields || []).filter((f) => !f.optional).map((f) => f.label);
+const optionalFields = (s) => (s.login?.fields || []).filter((f) => f.optional).map((f) => f.label.replace(/\s*[—(-]\s*optional\)?$/i, ""));
+const credentialText = (s) => {
+  const req = requiredFields(s);
+  return req.length ? `your ${andList(req.map((l) => `<b>${esc(l)}</b>`))}` : `your <b>${esc(s.name)}</b> credentials`;
+};
+function authStepFor(s) {
+  const k = loginKind(s);
+  if (k === "upstream") return `Claude opens the <b>${esc(s.name)}</b> login page: sign in and approve the access`;
+  if (k === "email") return `Claude opens the login page: enter your email and the 6-digit code from <b>login@usefulapi.io</b> (no ${esc(s.name)} key needed)`;
+  return `Claude opens the login page: enter ${credentialText(s)}`;
+}
+// "Before you connect": what the login asks for and where to find it in the vendor's app.
+function setupSection(s) {
+  const k = loginKind(s), opt = optionalFields(s);
+  let lead;
+  if (k === "upstream") lead = `<p>You sign in with your ${esc(s.name)} account and approve the access (OAuth). You do not need an API key.</p>`;
+  else if (k === "email") lead = `<p>You do not need an account or a key for ${esc(s.name)}. You log in with your email address and a 6-digit code.</p>`;
+  else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
+  const optional = opt.length ? `<p>Optional: ${andList(opt.map((l) => `<b>${esc(l)}</b>`))}.</p>` : "";
+  const help = [s.keyHelp, s.login?.hint].filter(Boolean).map((h) => `<p>${hintHtml(h)}</p>`).join("");
+  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${lead}${optional}${help}</div>`;
+}
+function examplesSection(s) {
+  if (!(s.examples || []).length) return "";
+  return `<h2 class="sec">Example prompts</h2>\n<ul class="prompts">${s.examples.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>\n` +
+    `<p class="hint">Turn on the ${esc(s.name)} connector, then ask in plain words. The AI picks the tools.</p>`;
+}
+// Generic FAQ, built only from facts in the manifest (tools, login kind, pricing). Returns [{q, a}] with `a` as HTML.
+function faqFor(s) {
+  const n = esc(s.name), k = loginKind(s);
+  const tools = s.tools || [];
+  const reads = tools.filter((t) => t.type === "read").length, writes = tools.filter((t) => t.type === "write").length;
+  const metaTool = (suffix) => tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
+  const up = metaTool("_upgrade"), cancel = metaTool("_cancel_subscription"), usage = metaTool("_usage_status");
+  const ft = freeTier(s), pt = proTier(s);
+  const faq = [];
+  faq.push({ q: `Is this an official ${n} product?`, a:
+    `No. usefulapi is an independent service. It is not affiliated with or endorsed by ${n}. ` +
+    (k === "email" ? `The server calls the public ${n} API for you.` : `The server calls the ${n} API with your own ${n} access, so it sees only the data that your account can see.`) });
+  faq.push({ q: `What do I need to connect?`, a:
+    k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
+    : k === "email" ? `Only an email address. You do not need a key for ${n}.`
+    : `The login page asks for ${credentialText(s)}. See <a href="#setup">Before you connect</a> for where to find ${requiredFields(s).length > 1 ? "them" : "it"}.` });
+  if (k !== "email") faq.push({ q: `How do you keep my ${n} credentials?`, a:
+    `The login stores them encrypted in the authorization grant of your connection. The server uses them to call the ${n} API for you and to derive a private account id for usage metering. usefulapi does not show them on any page or in any reply. ` +
+    (k === "upstream" ? `You can revoke the access in ${n} at any time.` : `To stop all access, remove the connector and change or delete these credentials in ${n}.`) });
+  faq.push({ q: `Can the AI change my ${n} data?`, a: writes
+    ? `Yes, if you approve it. ${writes} of the ${reads + writes} ${n} tools can create or change data. The other ${reads} are marked read-only. Most MCP clients ask you to approve a tool call before it runs.`
+    : `All ${reads} ${n} tools are marked read-only.` });
+  if (ft && pt) faq.push({ q: `What does it cost?`, a:
+    `The Free plan gives ${esc(ft.limit)}. Pro costs ${esc(priceText(pt).replace(" · ", " or "))}, with ${esc(pt.limit.toLowerCase())} tool calls, for this ${n} server only.` +
+    (usage ? ` Run <code>${esc(usage.name)}</code> to see how many calls you used.` : "") });
+  if (up && cancel) faq.push({ q: `How do I subscribe or cancel?`, a:
+    `Ask the AI to run <code>${esc(up.name)}</code>: it returns a Stripe Checkout link. To cancel, run <code>${esc(cancel.name)}</code>. Pro continues to the end of the paid period.` });
+  faq.push({ q: `Which AI clients can I use?`, a:
+    `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, Cursor, VS Code, Windsurf and others.` });
+  return faq;
+}
+const faqSection = (faq) => `<h2 class="sec">FAQ</h2>\n<div class="faq">${faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join("")}</div>`;
+// Hint/keyHelp markdown → HTML: everything escaped (quotes too); links only to plain https URLs.
+const SAFE_URL = /^https:\/\/[A-Za-z0-9.-]+(?:\/[A-Za-z0-9._~%\/?#=&+:,;@!-]*)?$/;
+function hintHtml(md) {
+  const parts = String(md).split(/(\[[^\]]+\]\([^)\s]+\))/);
+  return parts.map((p) => {
+    const m = p.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+    if (m && SAFE_URL.test(m[2])) return `<a href="${attr(m[2])}" rel="nofollow noopener">${esc(m[1])}</a>`;
+    return esc(p).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  }).join("");
+}
+const stripTags = (h) => h.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+
 function productPage(s) {
   const live = s.status === "live";
-  const authStep = s.auth === "oauth"
-    ? `Authorize with your <b>${esc(s.name)}</b> account`
-    : s.auth === "none"
-      ? `Log in with your email: enter the 6-digit code sent from <b>login@usefulapi.io</b> (no ${esc(s.name)} key needed)`
-      : `Authenticate with <b>${esc(s.name)}</b> when prompted`;
+  const authStep = authStepFor(s);
+  const name = esc(s.name), endpoint = esc(s.endpoint);
+  const copyLine = (text) => `<div class="copywrap line"><span class="url">${text}</span><button class="copy" type="button">Copy</button></div>`;
+  const copyBlock = (text) => `<div class="copywrap block"><pre class="code">${text}</pre><button class="copy" type="button">Copy</button></div>`;
+  // One-click install links. Cursor: base64 of the server config. VS Code: the vscode.dev redirect to vscode:mcp/install.
+  const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(s.slug)}&config=${Buffer.from(JSON.stringify({ url: s.endpoint })).toString("base64")}`;
+  const vscodeLink = `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(s.slug)}&config=${encodeURIComponent(JSON.stringify({ type: "http", url: s.endpoint }))}`;
   const cards = live ? `<div class="grid">
-<div class="card"><h2>Claude</h2>
-<ol><li>Open <b>Settings → Connectors → Add custom connector</b></li>
-<li>Paste this URL:<div class="copywrap line"><span class="url">${esc(s.endpoint)}</span><button class="copy" type="button">Copy</button></div></li>
-<li>${authStep}</li></ol></div>
-<div class="card"><h2>Cursor · VS Code · Windsurf · Cline</h2>
-<p class="lead">Add to your MCP config, then reload &amp; authorize:</p>
-<div class="copywrap block"><pre class="code">{
+<div class="card"><h2>Claude <span class="for">claude.ai · Desktop</span></h2>
+<ol><li>Open <b>Customize → Connectors</b>, then click <b>+ Add → Add custom connector</b>.</li>
+<li>Enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(endpoint)}</li>
+<li>${authStep}.</li>
+<li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
+<p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p></div>
+<div class="card"><h2>Claude Code</h2>
+<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
+${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${endpoint}`)}</div>
+<div class="card"><h2>Cursor</h2>
+<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
+${copyBlock(`{
   "mcpServers": {
     "${esc(s.slug)}": {
-      "url": "${esc(s.endpoint)}"
+      "url": "${endpoint}"
     }
   }
-}</pre><button class="copy" type="button">Copy</button></div></div>
-</div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
+}`)}</div>
+<div class="card"><h2>VS Code</h2>
+<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a> or add this to <code>.vscode/mcp.json</code>:</p>
+${copyBlock(`{
+  "servers": {
+    "${esc(s.slug)}": {
+      "type": "http",
+      "url": "${endpoint}"
+    }
+  }
+}`)}</div>
+</div>
+<p class="hint">Other MCP clients (Windsurf, Cline, Zed and more): add the URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser.</p>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
   const chips = `<div class="chips">${live ? chip("live", "live") : chip("launching soon")}${chip(`${toolCount(s)} tools`)}${ft ? chip(`Free ${esc(ft.limit)}`) : ""}${pt ? chip(`Pro ${esc(priceText(pt))}`) : ""}</div>`;
 
@@ -207,6 +308,7 @@ ${billingNote}`
     : "";
 
   const hint = live ? `<p class="hint">This is a Model Context Protocol endpoint — meant to be connected from an AI client, not opened in a browser. An <code>invalid_token</code> response at the URL is the auth gate working as designed; clients authenticate automatically.</p>` : "";
+  const faq = faqFor(s);
   const g = groupOf(s);
   const siblings = manifest.servers.filter((x) => x.slug !== s.slug && groupOf(x) === g).sort((a, b) => a.name.localeCompare(b.name));
   const related = siblings.length
@@ -219,8 +321,11 @@ ${billingNote}`
 <p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong> — connect from Claude, Cursor, or any MCP client.</p>
 ${cards}
 ${chips}
+${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
+${live ? examplesSection(s) : ""}
 ${live ? toolsSection : ""}
 ${pricingSection}
+${live ? faqSection(faq) : ""}
 ${hint}
 ${related}
 <footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
@@ -246,7 +351,11 @@ ${related}
         { "@type": "ListItem", position: 2, name: g, item: `${SITE}${categoryPath(g)}` },
         { "@type": "ListItem", position: 3, name: s.name, item: url }
       ]
-    }
+    },
+    ...(live ? [{
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({ "@type": "Question", name: stripTags(f.q), acceptedAnswer: { "@type": "Answer", text: stripTags(f.a) } }))
+    }] : [])
   ];
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -347,7 +456,7 @@ mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
 // Inject manifest.json (source of truth) into the portal, overriding its dev-fallback MANIFEST.
 let indexHtml = readFileSync(new URL("portal/index.html", ROOT), "utf8");
-indexHtml = indexHtml.replace(/const MANIFEST = [\s\S]*?\n {2}\};/, `const MANIFEST = ${JSON.stringify(manifest, null, 2)};`);
+indexHtml = indexHtml.replace(/const MANIFEST = [\s\S]*?\n {2}\};/, `const MANIFEST = ${JSON.stringify(manifest, null, 2).replace(/</g, "\\u003c")};`);
 // Make build.mjs authoritative for the browse groups: overwrite the page's inline dev-fallback
 // GROUP_ORDER/CAT_GROUP with the copies above (single source, no drift).
 indexHtml = indexHtml.replace(

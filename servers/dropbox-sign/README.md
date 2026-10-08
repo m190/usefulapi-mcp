@@ -4,7 +4,12 @@ Manage Dropbox Sign e-signatures — signature requests, templates, and signed d
 
 **Live endpoint:** `https://dropbox-sign.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/dropbox-sign
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://dropbox-sign.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http dropbox-sign https://dropbox-sign.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=dropbox-sign&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdropbox-sign.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Manage Dropbox Sign e-signatures — signature requests, templates, and signed d
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/dropbox-sign/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Dropbox Sign API key. It's validated, stored per-user, and scoped to you.
 

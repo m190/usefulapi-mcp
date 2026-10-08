@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own Tito credentials.
 
 **Live endpoint:** `https://tito.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/tito
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://tito.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http tito https://tito.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=tito&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Ftito.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own Tito credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/tito/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **Tito Admin API token** (id.tito.io → API access), plus an optional default account slug.
 They're validated, stored per-user, and scoped to you — no keys in config files.

@@ -5,7 +5,12 @@ Hosted, no local install: connect with your own updown.io credentials.
 
 **Live endpoint:** `https://updown-io.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/updown-io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://updown-io.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http updown-io https://updown-io.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=updown-io&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fupdown-io.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -16,6 +21,10 @@ Hosted, no local install: connect with your own updown.io credentials.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/updown-io/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll provide your **updown.io API key** (Settings > API keys; read-only key for reads, read/write key to make changes).
 They're validated, stored per-user, and scoped to you — no keys in config files.

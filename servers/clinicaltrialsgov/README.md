@@ -4,7 +4,12 @@ Search and read ClinicalTrials.gov studies, sites and outcomes. Hosted, no local
 
 **Live endpoint:** `https://clinicaltrialsgov.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://clinicaltrialsgov.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http clinicaltrialsgov https://clinicaltrialsgov.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=clinicaltrialsgov&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fclinicaltrialsgov.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Search and read ClinicalTrials.gov studies, sites and outcomes. Hosted, no local
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/clinicaltrialsgov/
+
+<!-- connect:end (generated above, edit below) -->
 
 This server needs **no credential** — ClinicalTrials.gov is a public data source. On first
 connect you log in with your email: we send a 6-digit code from `login@usefulapi.io`. The address

@@ -4,7 +4,12 @@ Query and manage your Chargebee subscription billing from Claude, Cursor, or any
 
 **Live endpoint:** `https://chargebee.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/chargebee
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://chargebee.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http chargebee https://chargebee.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=chargebee&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fchargebee.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Query and manage your Chargebee subscription billing from Claude, Cursor, or any
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/chargebee/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your Chargebee API key and site. It's validated, stored per-user, and scoped to you.
 

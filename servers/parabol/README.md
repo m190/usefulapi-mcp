@@ -6,7 +6,12 @@ reflections and comments. Hosted, no local install: connect with your Parabol pe
 
 **Live endpoint:** `https://parabol.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/parabol
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://parabol.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http parabol https://parabol.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=parabol&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fparabol.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -17,6 +22,10 @@ reflections and comments. Hosted, no local install: connect with your Parabol pe
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/parabol/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Parabol personal access token** (`pat_...`) — create one in
 Parabol under your profile settings → personal access tokens. It's validated, stored per-user, and

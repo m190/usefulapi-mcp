@@ -6,7 +6,12 @@ local install: connect with your Bettermode API token.
 
 **Live endpoint:** `https://bettermode.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://bettermode.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http bettermode https://bettermode.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=bettermode&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fbettermode.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -17,6 +22,10 @@ local install: connect with your Bettermode API token.
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/bettermode/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Bettermode API token** (Bettermode → Settings → API tokens).
 It's validated, stored per-user, and scoped to you — no keys in config files.

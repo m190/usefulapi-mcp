@@ -4,7 +4,12 @@ Inspect Estuary Flow captures, materializations, collections and stats. Hosted, 
 
 **Live endpoint:** `https://estuary-flow.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
 
-## Add to Claude
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://estuary-flow.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http estuary-flow https://estuary-flow.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=estuary-flow&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Festuary-flow.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
 
 ```json
 {
@@ -15,6 +20,10 @@ Inspect Estuary Flow captures, materializations, collections and stats. Hosted, 
   }
 }
 ```
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/estuary-flow/
+
+<!-- connect:end (generated above, edit below) -->
 
 On first connect you'll paste your **Estuary Flow credentials**. They are validated, stored
 per-user, and scoped to you — no keys in config files.
