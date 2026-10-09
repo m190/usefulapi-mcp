@@ -45,10 +45,11 @@ On first connect you'll paste your EasyPost API key. It's validated, stored per-
 | `easypost_buy_shipment` | **write** | Buy shipment |
 | `easypost_refund_shipment` | **write** | Refund shipment |
 | `easypost_usage_status` | meta | Usage status (free-tier meter) |
+| `easypost_request_feature` | meta | Request a missing feature |
 | `easypost_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `easypost_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

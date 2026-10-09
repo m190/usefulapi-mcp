@@ -41,10 +41,11 @@ On first connect you'll paste your Speechmatics API key. It's validated, stored 
 | `speechmatics_transcribe_url` | **write** | Transcribe url |
 | `speechmatics_delete_job` | **write** | Delete job |
 | `speechmatics_usage_status` | meta | Usage status (free-tier meter) |
+| `speechmatics_request_feature` | meta | Request a missing feature |
 | `speechmatics_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `speechmatics_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

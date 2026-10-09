@@ -47,10 +47,11 @@ On first connect you'll paste your Chargebee API key and site. It's validated, s
 | `chargebee_create_customer` | **write** | Create customer |
 | `chargebee_update_customer` | **write** | Update customer |
 | `chargebee_usage_status` | meta | Usage status (free-tier meter) |
+| `chargebee_request_feature` | meta | Request a missing feature |
 | `chargebee_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `chargebee_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

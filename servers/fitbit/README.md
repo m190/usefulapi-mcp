@@ -52,10 +52,11 @@ per-user, and scoped to you — no keys in config files.
 | `fitbit_cardio_score` | read | Cardio score |
 | `fitbit_skin_temperature` | read | Skin temperature |
 | `fitbit_usage_status` | meta | Usage status (free-tier meter) |
+| `fitbit_request_feature` | meta | Request a missing feature |
 | `fitbit_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `fitbit_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

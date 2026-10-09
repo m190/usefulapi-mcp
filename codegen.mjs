@@ -94,7 +94,7 @@ function toolsSection(s) {
   return (
     `## Tools\n\n| Tool | Type | What it does |\n|------|------|--------------|\n${rows}\n\n` +
     "`read` tools are read-only; `write` tools mutate data (clients should confirm them); " +
-    "`meta` tools report usage or manage your subscription.\n"
+    "`meta` tools report usage, manage your subscription or send a feature request.\n"
   );
 }
 function priceCell(p) {

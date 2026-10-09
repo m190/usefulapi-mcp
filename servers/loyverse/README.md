@@ -57,10 +57,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `loyverse_upsert_supplier` | **write** | Create or update a supplier |
 | `loyverse_set_inventory_levels` | **write** | Set inventory levels |
 | `loyverse_usage_status` | meta | Usage status (free-tier meter) |
+| `loyverse_request_feature` | meta | Request a missing feature |
 | `loyverse_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `loyverse_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

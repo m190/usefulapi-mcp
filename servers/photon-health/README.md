@@ -57,10 +57,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `photonhealth_list_users` | read | List users |
 | `photonhealth_screen_interactions` | read | Screen for drug interactions |
 | `photonhealth_usage_status` | meta | Usage status (free-tier meter) |
+| `photonhealth_request_feature` | meta | Request a missing feature |
 | `photonhealth_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `photonhealth_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

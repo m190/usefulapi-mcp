@@ -55,10 +55,11 @@ keys in config files.
 | `freshdesk_update_contact` | **write** | Update contact |
 | `freshdesk_create_company` | **write** | Create company |
 | `freshdesk_usage_status` | meta | Usage status (free-tier meter) |
+| `freshdesk_request_feature` | meta | Request a missing feature |
 | `freshdesk_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `freshdesk_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

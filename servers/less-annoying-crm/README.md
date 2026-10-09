@@ -59,10 +59,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `lacrm_update_pipeline_item` | **write** | Move or annotate a pipeline item |
 | `lacrm_add_contact_to_group` | **write** | Add a contact to a group |
 | `lacrm_usage_status` | meta | Usage status (free-tier meter) |
+| `lacrm_request_feature` | meta | Request a missing feature |
 | `lacrm_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `lacrm_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

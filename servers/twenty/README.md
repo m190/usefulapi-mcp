@@ -56,10 +56,11 @@ keys in config files.
 | `twenty_create_task` | **write** | Create task |
 | `twenty_update_task` | **write** | Update task |
 | `twenty_usage_status` | meta | Usage status (free-tier meter) |
+| `twenty_request_feature` | meta | Request a missing feature |
 | `twenty_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `twenty_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

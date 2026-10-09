@@ -50,10 +50,11 @@ On first connect you'll paste your Swell store ID and secret key. It's validated
 | `swell_update_product` | **write** | Update product |
 | `swell_update_order` | **write** | Update order |
 | `swell_usage_status` | meta | Usage status (free-tier meter) |
+| `swell_request_feature` | meta | Request a missing feature |
 | `swell_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `swell_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -51,10 +51,11 @@ validated, stored per-user, and scoped to you — no keys in config files.
 | `keap_create_task` | **write** | Create task |
 | `keap_apply_tag` | **write** | Apply tag to contacts |
 | `keap_usage_status` | meta | Usage status (free-tier meter) |
+| `keap_request_feature` | meta | Request a missing feature |
 | `keap_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `keap_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

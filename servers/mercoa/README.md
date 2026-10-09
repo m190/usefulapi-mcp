@@ -51,10 +51,11 @@ On first connect you'll paste your Mercoa API key. It's validated, stored per-us
 | `mercoa_update_invoice` | **write** | Update invoice |
 | `mercoa_add_invoice_comment` | **write** | Add invoice comment |
 | `mercoa_usage_status` | meta | Usage status (free-tier meter) |
+| `mercoa_request_feature` | meta | Request a missing feature |
 | `mercoa_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `mercoa_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

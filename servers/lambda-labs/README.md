@@ -51,10 +51,11 @@ keys in config files.
 | `lambda_create_filesystem` | **write** | Create filesystem |
 | `lambda_delete_filesystem` | **write** | Delete filesystem |
 | `lambda_labs_usage_status` | meta | Usage status (free-tier meter) |
+| `lambda_labs_request_feature` | meta | Request a missing feature |
 | `lambda_labs_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `lambda_labs_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

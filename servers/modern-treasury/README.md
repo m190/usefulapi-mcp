@@ -51,10 +51,11 @@ On first connect you'll paste your Modern Treasury org ID + API key. It's valida
 | `modern_treasury_list_ledger_entries` | read | List ledger entries |
 | `modern_treasury_create_counterparty` | **write** | Create counterparty |
 | `modern_treasury_usage_status` | meta | Usage status (free-tier meter) |
+| `modern_treasury_request_feature` | meta | Request a missing feature |
 | `modern_treasury_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `modern_treasury_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

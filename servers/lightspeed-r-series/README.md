@@ -54,10 +54,11 @@ access any time from your Lightspeed Retail account settings. One subscription c
 | `update_item` | **write** | Update an item |
 | `update_stock` | **write** | Set stock level |
 | `lightspeedrseries_usage_status` | meta | Usage status (free-tier meter) |
+| `lightspeedrseries_request_feature` | meta | Request a missing feature |
 | `lightspeedrseries_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `lightspeedrseries_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

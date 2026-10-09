@@ -51,10 +51,11 @@ and your plan stay yours.
 | `count` | read | Count/aggregate over an openFDA dataset |
 | `openfda_query` | read | Query any openFDA endpoint (generic) |
 | `openfda_usage_status` | meta | Usage status (free-tier meter) |
+| `openfda_request_feature` | meta | Request a missing feature |
 | `openfda_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `openfda_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

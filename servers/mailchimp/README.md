@@ -54,10 +54,11 @@ keys in config files.
 | `mailchimp_add_member_tags` | **write** | Add/remove member tags |
 | `mailchimp_archive_member` | **write** | Archive member |
 | `mailchimp_usage_status` | meta | Usage status (free-tier meter) |
+| `mailchimp_request_feature` | meta | Request a missing feature |
 | `mailchimp_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `mailchimp_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

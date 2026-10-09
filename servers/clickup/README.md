@@ -50,10 +50,11 @@ keys in config files.
 | `clickup_update_task` | **write** | Update task |
 | `clickup_create_task_comment` | **write** | Create task comment |
 | `clickup_usage_status` | meta | Usage status (free-tier meter) |
+| `clickup_request_feature` | meta | Request a missing feature |
 | `clickup_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `clickup_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

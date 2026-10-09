@@ -58,10 +58,11 @@ keys in config files.
 | `tailscale_delete_key` | **write** | Delete key |
 | `tailscale_delete_device` | **write** | Delete device |
 | `tailscale_usage_status` | meta | Usage status (free-tier meter) |
+| `tailscale_request_feature` | meta | Request a missing feature |
 | `tailscale_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `tailscale_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

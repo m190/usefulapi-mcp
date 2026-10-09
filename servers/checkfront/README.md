@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `checkfront_add_booking_note` | **write** | Add a note to a booking |
 | `checkfront_check_in_booking` | **write** | Check a booking in or out |
 | `checkfront_usage_status` | meta | Usage status (free-tier meter) |
+| `checkfront_request_feature` | meta | Request a missing feature |
 | `checkfront_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `checkfront_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

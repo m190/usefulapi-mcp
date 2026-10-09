@@ -44,10 +44,11 @@ per-user, and scoped to you — no keys in config files.
 | `codemagic_cancel_build` | **write** | Cancel build |
 | `codemagic_create_artifact_public_url` | **write** | Create artifact public URL |
 | `codemagic_usage_status` | meta | Usage status (free-tier meter) |
+| `codemagic_request_feature` | meta | Request a missing feature |
 | `codemagic_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `codemagic_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

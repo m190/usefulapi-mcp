@@ -44,10 +44,11 @@ stored per-user, and scoped to you — no keys in config files.
 | `nomic_list_tags` | read | List a projection's tags |
 | `nomic_get_tag_status` | read | Get a tag's status |
 | `nomic_atlas_usage_status` | meta | Usage status (free-tier meter) |
+| `nomic_atlas_request_feature` | meta | Request a missing feature |
 | `nomic_atlas_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `nomic_atlas_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

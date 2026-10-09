@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `sortly_return_items_from_job` | **write** | Return items from a job |
 | `sortly_create_purchase_order` | **write** | Draft a purchase order |
 | `sortly_usage_status` | meta | Usage status (free-tier meter) |
+| `sortly_request_feature` | meta | Request a missing feature |
 | `sortly_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `sortly_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

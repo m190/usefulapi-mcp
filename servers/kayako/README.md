@@ -57,10 +57,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `kayako_add_case_tags` | **write** | Add tags to a case |
 | `kayako_create_user` | **write** | Create a user |
 | `kayako_usage_status` | meta | Usage status (free-tier meter) |
+| `kayako_request_feature` | meta | Request a missing feature |
 | `kayako_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `kayako_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

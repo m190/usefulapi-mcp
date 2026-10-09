@@ -49,10 +49,11 @@ per-user, and scoped to you — no keys in config files.
 | `add_account_user` | **write** | Add an account user |
 | `update_account_user` | **write** | Update an account user |
 | `text_em_all_usage_status` | meta | Usage status (free-tier meter) |
+| `text_em_all_request_feature` | meta | Request a missing feature |
 | `text_em_all_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `text_em_all_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

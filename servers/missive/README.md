@@ -57,10 +57,11 @@ config files.
 | `missive_update_conversation` | **write** | Update conversation |
 | `missive_create_contact` | **write** | Create contact |
 | `missive_usage_status` | meta | Usage status (free-tier meter) |
+| `missive_request_feature` | meta | Request a missing feature |
 | `missive_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `missive_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

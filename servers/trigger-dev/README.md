@@ -57,10 +57,11 @@ stored per-user, and scoped to you — no keys in config files.
 | `trigger_deactivate_schedule` | **write** | Deactivate a schedule |
 | `trigger_pause_queue` | **write** | Pause or resume a queue |
 | `trigger_dev_usage_status` | meta | Usage status (free-tier meter) |
+| `trigger_dev_request_feature` | meta | Request a missing feature |
 | `trigger_dev_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `trigger_dev_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

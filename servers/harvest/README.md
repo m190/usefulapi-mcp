@@ -56,10 +56,11 @@ keys in config files.
 | `harvest_restart_time_entry` | **write** | Restart stopped time entry |
 | `harvest_delete_time_entry` | **write** | Delete time entry |
 | `harvest_usage_status` | meta | Usage status (free-tier meter) |
+| `harvest_request_feature` | meta | Request a missing feature |
 | `harvest_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `harvest_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -49,10 +49,11 @@ per-user, and scoped to you — no keys in config files.
 | `persona_get_event` | read | Get event |
 | `persona_add_account_tag` | **write** | Add account tag |
 | `persona_usage_status` | meta | Usage status (free-tier meter) |
+| `persona_request_feature` | meta | Request a missing feature |
 | `persona_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `persona_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

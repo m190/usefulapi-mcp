@@ -50,10 +50,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `updown_create_status_page` | **write** | Create a status page |
 | `updown_update_status_page` | **write** | Update a status page |
 | `updown_usage_status` | meta | Usage status (free-tier meter) |
+| `updown_request_feature` | meta | Request a missing feature |
 | `updown_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `updown_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

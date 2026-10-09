@@ -38,10 +38,11 @@ On first connect you'll paste your MaxMind account ID and license key. It's vali
 | `minfraud_factors` | read | Minfraud factors |
 | `minfraud_report_transaction` | **write** | Minfraud report transaction |
 | `maxmind_minfraud_usage_status` | meta | Usage status (free-tier meter) |
+| `maxmind_minfraud_request_feature` | meta | Request a missing feature |
 | `maxmind_minfraud_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `maxmind_minfraud_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

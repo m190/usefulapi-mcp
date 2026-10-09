@@ -60,10 +60,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `invoiceninja_create_task` | **write** | Create a task / log time |
 | `invoiceninja_create_project` | **write** | Create a project |
 | `invoiceninja_usage_status` | meta | Usage status (free-tier meter) |
+| `invoiceninja_request_feature` | meta | Request a missing feature |
 | `invoiceninja_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `invoiceninja_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

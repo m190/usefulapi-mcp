@@ -51,10 +51,11 @@ per-user, and scoped to you — no keys in config files.
 | `healthgorilla_create_patient` | **write** | Create patient |
 | `healthgorilla_start_patient360_query` | **write** | Start Patient360 query |
 | `health_gorilla_usage_status` | meta | Usage status (free-tier meter) |
+| `health_gorilla_request_feature` | meta | Request a missing feature |
 | `health_gorilla_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `health_gorilla_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

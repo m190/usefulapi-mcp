@@ -210,7 +210,7 @@ function faqFor(s) {
   const tools = s.tools || [];
   const reads = tools.filter((t) => t.type === "read").length, writes = tools.filter((t) => t.type === "write").length;
   const metaTool = (suffix) => tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
-  const up = metaTool("_upgrade"), cancel = metaTool("_cancel_subscription"), usage = metaTool("_usage_status");
+  const up = metaTool("_upgrade"), cancel = metaTool("_cancel_subscription"), usage = metaTool("_usage_status"), feature = metaTool("_request_feature");
   const ft = freeTier(s), pt = proTier(s);
   const faq = [];
   faq.push({ q: `Is this an official ${n} product?`, a:
@@ -233,6 +233,8 @@ function faqFor(s) {
     (usage ? ` Run <code>${esc(usage.name)}</code> to see how many calls you used.` : "") });
   if (up && cancel) faq.push({ q: `How do I subscribe or cancel?`, a:
     `Ask the AI to run <code>${esc(up.name)}</code>: it returns a Stripe Checkout link. To cancel, run <code>${esc(cancel.name)}</code>. Pro continues to the end of the paid period.` });
+  if (feature) faq.push({ q: `What if a ${n} tool that I need is missing?`, a:
+    `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name only, not with your account, and read every request when we plan new tools.` });
   faq.push({ q: `Which AI clients can I use?`, a:
     `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, Cursor, VS Code, Windsurf and others.` });
   return faq;

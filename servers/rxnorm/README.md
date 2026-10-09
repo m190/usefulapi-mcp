@@ -50,10 +50,11 @@ and your plan stay yours.
 | `rxnorm_get_drug_classes` | read | Get drug classes for a drug |
 | `rxnorm_get_class_members` | read | Get drug class members |
 | `rxnorm_usage_status` | meta | Usage status (free-tier meter) |
+| `rxnorm_request_feature` | meta | Request a missing feature |
 | `rxnorm_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `rxnorm_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

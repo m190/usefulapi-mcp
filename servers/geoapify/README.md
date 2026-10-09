@@ -43,10 +43,11 @@ per-user, and scoped to you — no keys in config files.
 | `geoapify_isoline` | read | Reachability isoline |
 | `geoapify_ip_geolocation` | read | IP geolocation |
 | `geoapify_usage_status` | meta | Usage status (free-tier meter) |
+| `geoapify_request_feature` | meta | Request a missing feature |
 | `geoapify_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `geoapify_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

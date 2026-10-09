@@ -61,10 +61,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `housecall_create_estimate` | **write** | Create an estimate |
 | `housecall_create_lead` | **write** | Create a lead |
 | `housecall_usage_status` | meta | Usage status (free-tier meter) |
+| `housecall_request_feature` | meta | Request a missing feature |
 | `housecall_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `housecall_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

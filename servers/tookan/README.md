@@ -51,10 +51,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `assign_agent_to_task` | **write** | Assign an agent to a task |
 | `update_task_status` | **write** | Update task status |
 | `tookan_usage_status` | meta | Usage status (free-tier meter) |
+| `tookan_request_feature` | meta | Request a missing feature |
 | `tookan_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `tookan_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

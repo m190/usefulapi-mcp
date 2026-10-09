@@ -58,10 +58,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `shiftbase_request_absence` | **write** | Request an absence |
 | `shiftbase_review_absence` | **write** | Approve or decline an absence |
 | `shiftbase_usage_status` | meta | Usage status (free-tier meter) |
+| `shiftbase_request_feature` | meta | Request a missing feature |
 | `shiftbase_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `shiftbase_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

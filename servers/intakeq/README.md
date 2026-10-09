@@ -55,10 +55,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `intakeq_cancel_appointment` | **write** | Cancel an appointment |
 | `intakeq_send_questionnaire` | **write** | Send an intake questionnaire |
 | `intakeq_usage_status` | meta | Usage status (free-tier meter) |
+| `intakeq_request_feature` | meta | Request a missing feature |
 | `intakeq_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `intakeq_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

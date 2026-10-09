@@ -50,10 +50,11 @@ On first connect you'll paste your Api2Pdf API key. It's validated, stored per-u
 | `api2pdf_generate_barcode` | **write** | Generate barcode |
 | `api2pdf_delete_file` | **write** | Delete file |
 | `api2pdf_usage_status` | meta | Usage status (free-tier meter) |
+| `api2pdf_request_feature` | meta | Request a missing feature |
 | `api2pdf_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `api2pdf_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

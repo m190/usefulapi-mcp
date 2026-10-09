@@ -49,10 +49,11 @@ On first connect you'll paste your api.video API key. It's validated, stored per
 | `apivideo_delete_video` | **write** | Delete video |
 | `apivideo_create_live_stream` | **write** | Create live stream |
 | `apivideo_usage_status` | meta | Usage status (free-tier meter) |
+| `apivideo_request_feature` | meta | Request a missing feature |
 | `apivideo_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `apivideo_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

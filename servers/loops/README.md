@@ -44,10 +44,11 @@ On first connect you'll paste your Loops API key. It's validated, stored per-use
 | `loops_send_event` | **write** | Send an event |
 | `loops_send_transactional` | **write** | Send a transactional email |
 | `loops_usage_status` | meta | Usage status (free-tier meter) |
+| `loops_request_feature` | meta | Request a missing feature |
 | `loops_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `loops_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

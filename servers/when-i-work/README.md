@@ -57,10 +57,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `wheniwork_create_time_off_request` | **write** | Create a time-off request |
 | `wheniwork_update_time_off_request` | **write** | Approve, deny or change a time-off request |
 | `wheniwork_usage_status` | meta | Usage status (free-tier meter) |
+| `wheniwork_request_feature` | meta | Request a missing feature |
 | `wheniwork_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `wheniwork_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

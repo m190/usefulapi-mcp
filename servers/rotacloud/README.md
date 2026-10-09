@@ -62,10 +62,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `rotacloud_approve_leave_request` | **write** | Approve leave request |
 | `rotacloud_deny_leave_request` | **write** | Deny leave request |
 | `rotacloud_usage_status` | meta | Usage status (free-tier meter) |
+| `rotacloud_request_feature` | meta | Request a missing feature |
 | `rotacloud_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `rotacloud_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

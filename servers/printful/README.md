@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `printful_add_file` | **write** | Add a file to the File Library |
 | `printful_create_mockup_task` | **write** | Create a mockup generation task |
 | `printful_usage_status` | meta | Usage status (free-tier meter) |
+| `printful_request_feature` | meta | Request a missing feature |
 | `printful_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `printful_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

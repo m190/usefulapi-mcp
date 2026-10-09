@@ -48,10 +48,11 @@ stored per-user, and scoped to you — no keys in config files.
 | `numeral_create_product` | **write** | Create product |
 | `numeral_create_customer` | **write** | Create customer |
 | `numeral_usage_status` | meta | Usage status (free-tier meter) |
+| `numeral_request_feature` | meta | Request a missing feature |
 | `numeral_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `numeral_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

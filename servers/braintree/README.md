@@ -41,10 +41,11 @@ On first connect you'll paste your Braintree merchant ID + keys. It's validated,
 | `braintree_refund_transaction` | **write** | Refund a transaction |
 | `braintree_void_transaction` | **write** | Void a transaction |
 | `braintree_usage_status` | meta | Usage status (free-tier meter) |
+| `braintree_request_feature` | meta | Request a missing feature |
 | `braintree_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `braintree_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

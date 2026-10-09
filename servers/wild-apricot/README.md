@@ -57,10 +57,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `wildapricot_create_event_registration` | **write** | Register a contact for an event |
 | `wildapricot_check_in_attendee` | **write** | Check an attendee in or out |
 | `wildapricot_usage_status` | meta | Usage status (free-tier meter) |
+| `wildapricot_request_feature` | meta | Request a missing feature |
 | `wildapricot_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `wildapricot_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

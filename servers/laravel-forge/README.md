@@ -51,10 +51,11 @@ On first connect you'll paste your Laravel Forge API token. It's validated, stor
 | `forge_deploy_site` | **write** | Forge deploy site |
 | `forge_run_site_command` | **write** | Forge run site command |
 | `laravel_forge_usage_status` | meta | Usage status (free-tier meter) |
+| `laravel_forge_request_feature` | meta | Request a missing feature |
 | `laravel_forge_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `laravel_forge_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `rewardful_update_affiliate_link` | **write** | Change an affiliate link's token |
 | `rewardful_create_affiliate_coupon` | **write** | Create an affiliate coupon |
 | `rewardful_usage_status` | meta | Usage status (free-tier meter) |
+| `rewardful_request_feature` | meta | Request a missing feature |
 | `rewardful_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `rewardful_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

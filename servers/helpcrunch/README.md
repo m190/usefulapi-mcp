@@ -47,10 +47,11 @@ per-user, and scoped to you — no keys in config files.
 | `helpcrunch_update_chat_status` | **write** | Update chat status |
 | `helpcrunch_assign_chat` | **write** | Assign chat |
 | `helpcrunch_usage_status` | meta | Usage status (free-tier meter) |
+| `helpcrunch_request_feature` | meta | Request a missing feature |
 | `helpcrunch_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `helpcrunch_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

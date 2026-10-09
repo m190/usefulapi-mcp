@@ -57,10 +57,11 @@ On first connect you'll paste your Quaderno API key and account subdomain. It's 
 | `create_invoice` | **write** | Create invoice |
 | `create_transaction` | **write** | Create transaction |
 | `quaderno_usage_status` | meta | Usage status (free-tier meter) |
+| `quaderno_request_feature` | meta | Request a missing feature |
 | `quaderno_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `quaderno_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -51,10 +51,11 @@ keys in config files.
 | `reclaim_log_work` | **write** | Log work on task |
 | `reclaim_delete_task` | **write** | Delete task |
 | `reclaimai_usage_status` | meta | Usage status (free-tier meter) |
+| `reclaimai_request_feature` | meta | Request a missing feature |
 | `reclaimai_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `reclaimai_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

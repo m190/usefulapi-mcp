@@ -59,10 +59,11 @@ scoped to you — no keys in config files.
 | `invite_to_team` | **write** | Invite users to a team |
 | `parabol_graphql` | **write** | Run a GraphQL operation (query or mutation) |
 | `parabol_usage_status` | meta | Usage status (free-tier meter) |
+| `parabol_request_feature` | meta | Request a missing feature |
 | `parabol_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `parabol_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

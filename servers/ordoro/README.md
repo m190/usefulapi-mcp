@@ -54,10 +54,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `ordoro_add_order_tag` | **write** | Tag an order |
 | `ordoro_remove_order_tag` | **write** | Remove a tag from an order |
 | `ordoro_usage_status` | meta | Usage status (free-tier meter) |
+| `ordoro_request_feature` | meta | Request a missing feature |
 | `ordoro_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `ordoro_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

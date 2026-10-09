@@ -44,10 +44,11 @@ On first connect you'll paste your Anvil API key. It's validated, stored per-use
 | `anvil_create_etch_packet` | **write** | Create etch packet |
 | `anvil_generate_etch_sign_url` | **write** | Generate etch sign url |
 | `anvil_usage_status` | meta | Usage status (free-tier meter) |
+| `anvil_request_feature` | meta | Request a missing feature |
 | `anvil_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `anvil_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

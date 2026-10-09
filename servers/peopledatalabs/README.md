@@ -42,10 +42,11 @@ On first connect you'll paste your People Data Labs API key. It's validated, sto
 | `pdl_autocomplete` | read | Pdl autocomplete |
 | `pdl_job_posting_search` | read | Pdl job posting search |
 | `peopledatalabs_usage_status` | meta | Usage status (free-tier meter) |
+| `peopledatalabs_request_feature` | meta | Request a missing feature |
 | `peopledatalabs_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `peopledatalabs_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

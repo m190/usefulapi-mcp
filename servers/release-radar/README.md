@@ -40,10 +40,11 @@ per-user, and scoped to you — no keys in config files.
 | `github_latest_deploy` | **write** | Latest GitHub deploy/release |
 | `sentry_recent_issues` | **write** | Recent unresolved Sentry issues |
 | `release_radar_usage_status` | meta | Usage status (free-tier meter) |
+| `release_radar_request_feature` | meta | Request a missing feature |
 | `release_radar_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `release_radar_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

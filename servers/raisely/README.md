@@ -57,10 +57,11 @@ On first connect you'll paste your Raisely campaign **Private API key** (Raisely
 | `update_profile` | **write** | Update a fundraising profile |
 | `create_post` | **write** | Create a post |
 | `raisely_usage_status` | meta | Usage status (free-tier meter) |
+| `raisely_request_feature` | meta | Request a missing feature |
 | `raisely_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `raisely_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

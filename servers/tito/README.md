@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `tito_create_ticket` | **write** | Issue a ticket manually |
 | `tito_update_ticket` | **write** | Update a ticket's attendee details |
 | `tito_usage_status` | meta | Usage status (free-tier meter) |
+| `tito_request_feature` | meta | Request a missing feature |
 | `tito_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `tito_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

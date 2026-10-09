@@ -59,10 +59,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `momence_set_booking_check_in` | **write** | Check a booking in or out |
 | `momence_cancel_session_booking` | **write** | Cancel one session booking |
 | `momence_usage_status` | meta | Usage status (free-tier meter) |
+| `momence_request_feature` | meta | Request a missing feature |
 | `momence_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `momence_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

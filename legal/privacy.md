@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 1 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 9 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -28,6 +28,15 @@ which is your account identifier for usage and billing.
 **Usage metering.** We record counts and timestamps of tool calls per user and per server to
 enforce plan limits and bill you. We do not need, and do not retain, the
 *contents* of your tool calls to meter them.
+
+**Product telemetry.** For each tool call we also record the server, the tool name, the outcome (for
+example success, or the class of a vendor error), the duration, the size of the result and the name of
+the AI client (for example "Claude-User"). This record has **no user id, no tool arguments and no
+results**. We keep it for **90 days** to find tools that fail.
+
+**Feature requests.** When your AI client uses a server's `<prefix>_request_feature` tool, we store the
+text it sends with the server name only, **not with your account**, for up to **90 days**, to plan new
+tools. Do not put personal data in such a request.
 
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to
@@ -70,6 +79,7 @@ its own privacy policy. A current list is available on request at privacy@useful
 - Billing/accounting records: retained as required by Czech accounting and tax law (**up to 10
   years** for tax/VAT documentation).
 - Operational logs: retained about **30 days**, then rotated.
+- Tool-call telemetry and feature requests: about **90 days**, then deleted.
 
 ## 6. Your rights
 

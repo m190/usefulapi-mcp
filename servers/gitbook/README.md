@@ -50,10 +50,11 @@ keys in config files.
 | `gitbook_create_change_request` | **write** | Create change request |
 | `gitbook_update_change_request` | **write** | Update change request |
 | `gitbook_usage_status` | meta | Usage status (free-tier meter) |
+| `gitbook_request_feature` | meta | Request a missing feature |
 | `gitbook_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `gitbook_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

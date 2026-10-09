@@ -61,10 +61,11 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `churchsuite_list_gatherings` | read | List attendance gatherings |
 | `churchsuite_list_attendance_records` | read | List attendance records |
 | `churchsuite_usage_status` | meta | Usage status (free-tier meter) |
+| `churchsuite_request_feature` | meta | Request a missing feature |
 | `churchsuite_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `churchsuite_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

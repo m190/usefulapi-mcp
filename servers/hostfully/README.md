@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `hostfully_send_message` | **write** | Send a message to a guest |
 | `hostfully_create_job` | **write** | Schedule a job |
 | `hostfully_usage_status` | meta | Usage status (free-tier meter) |
+| `hostfully_request_feature` | meta | Request a missing feature |
 | `hostfully_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `hostfully_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

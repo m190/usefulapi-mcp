@@ -62,10 +62,11 @@ On first connect you'll paste your Codat API key. It's validated, stored per-use
 | `codat_refresh_all_data` | **write** | Refresh all data |
 | `codat_refresh_data_type` | **write** | Refresh data type |
 | `codat_usage_status` | meta | Usage status (free-tier meter) |
+| `codat_request_feature` | meta | Request a missing feature |
 | `codat_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `codat_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

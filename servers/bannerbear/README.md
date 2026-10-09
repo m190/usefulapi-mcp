@@ -49,10 +49,11 @@ On first connect you'll paste your Bannerbear API key. It's validated, stored pe
 | `bannerbear_create_screenshot` | **write** | Create screenshot |
 | `bannerbear_create_video` | **write** | Create video |
 | `bannerbear_usage_status` | meta | Usage status (free-tier meter) |
+| `bannerbear_request_feature` | meta | Request a missing feature |
 | `bannerbear_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `bannerbear_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

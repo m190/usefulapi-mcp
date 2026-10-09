@@ -50,10 +50,11 @@ per-user, and scoped to you — no keys in config files.
 | `drchrono_create_appointment` | **write** | Create appointment |
 | `drchrono_create_patient` | **write** | Create patient |
 | `drchrono_usage_status` | meta | Usage status (free-tier meter) |
+| `drchrono_request_feature` | meta | Request a missing feature |
 | `drchrono_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `drchrono_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

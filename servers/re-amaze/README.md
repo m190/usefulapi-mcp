@@ -52,10 +52,11 @@ per-user, and scoped to you — no keys in config files.
 | `reamaze_create_contact` | **write** | Create contact |
 | `reamaze_update_contact` | **write** | Update contact |
 | `re_amaze_usage_status` | meta | Usage status (free-tier meter) |
+| `re_amaze_request_feature` | meta | Request a missing feature |
 | `re_amaze_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `re_amaze_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

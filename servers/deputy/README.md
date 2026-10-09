@@ -57,10 +57,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `deputy_update_timesheet` | **write** | Update a timesheet |
 | `deputy_approve_timesheet` | **write** | Approve a timesheet |
 | `deputy_usage_status` | meta | Usage status (free-tier meter) |
+| `deputy_request_feature` | meta | Request a missing feature |
 | `deputy_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `deputy_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

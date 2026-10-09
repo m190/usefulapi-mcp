@@ -45,10 +45,11 @@ scoped to you. No API keys to paste.
 | `linear_create_issue` | **write** | Create issue (WRITE — mutates Linear) |
 | `linear_add_comment` | **write** | Add comment (WRITE — mutates Linear) |
 | `linear_usage_status` | meta | Usage status (free-tier meter) |
+| `linear_request_feature` | meta | Request a missing feature |
 | `linear_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `linear_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -56,10 +56,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `unleashed_create_product` | **write** | Create a product |
 | `unleashed_create_sales_order` | **write** | Create a parked sales order |
 | `unleashed_usage_status` | meta | Usage status (free-tier meter) |
+| `unleashed_request_feature` | meta | Request a missing feature |
 | `unleashed_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `unleashed_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

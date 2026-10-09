@@ -49,10 +49,11 @@ per-user, and scoped to you — no keys in config files.
 | `getresponse_update_contact` | **write** | Update contact |
 | `getresponse_delete_contact` | **write** | Delete contact |
 | `getresponse_usage_status` | meta | Usage status (free-tier meter) |
+| `getresponse_request_feature` | meta | Request a missing feature |
 | `getresponse_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `getresponse_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

@@ -58,10 +58,11 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `neon_create_activity` | **write** | Log an activity |
 | `neon_update_activity` | **write** | Update an activity |
 | `neon_usage_status` | meta | Usage status (free-tier meter) |
+| `neon_request_feature` | meta | Request a missing feature |
 | `neon_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `neon_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 

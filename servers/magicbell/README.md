@@ -47,10 +47,11 @@ On first connect you'll paste your MagicBell API key (and secret). It's validate
 | `magicbell_create_user` | **write** | Create a user |
 | `magicbell_update_user` | **write** | Update a user |
 | `magicbell_usage_status` | meta | Usage status (free-tier meter) |
+| `magicbell_request_feature` | meta | Request a missing feature |
 | `magicbell_upgrade` | meta | Upgrade to Pro (unlimited) |
 | `magicbell_cancel_subscription` | meta | Cancel the Pro subscription |
 
-`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage or manage your subscription.
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
 
 ## Pricing
 
