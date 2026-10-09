@@ -5,7 +5,7 @@
 //   <outDir>/privacy/index.html    (rendered from legal/privacy.md)
 //   <outDir>/terms/index.html      (rendered from legal/terms.md)
 // Minimal md->html tuned to the legal docs. No deps.
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
 const outDir = process.argv[2] || "dist";
@@ -519,6 +519,9 @@ for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-ic
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }
 copyFileSync(new URL("manifest.json", ROOT), `${outDir}/manifest.json`); // homepage fetches this
+// _probe/<slug>.json: static discovery replies for crawler redirect tests (zone redirect rules; no Worker runs).
+mkdirSync(`${outDir}/_probe`, { recursive: true });
+for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new URL(`portal/_probe/${f}`, ROOT), `${outDir}/_probe/${f}`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
 for (const s of manifest.servers) {
