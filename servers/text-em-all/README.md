@@ -21,6 +21,8 @@ Send and track Text-Em-All broadcasts, texts and contact lists. Hosted, no local
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Text-Em-All credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/text-em-all/
 
 <!-- connect:end (generated above, edit below) -->

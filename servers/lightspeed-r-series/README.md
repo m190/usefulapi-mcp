@@ -22,6 +22,8 @@ install: connect with your Lightspeed Retail account over OAuth.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and you sign in with your Lightspeed Retail (R-Series) account.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/lightspeed-r-series/
 
 <!-- connect:end (generated above, edit below) -->

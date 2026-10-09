@@ -21,6 +21,8 @@ Inspect Fireworks AI models, deployments, datasets and fine-tuning jobs from Cla
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Fireworks AI credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/fireworks/
 
 <!-- connect:end (generated above, edit below) -->

@@ -21,6 +21,8 @@ Read and write NexHealth appointments, patients, providers and locations. Hosted
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your NexHealth credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/nexhealth/
 
 <!-- connect:end (generated above, edit below) -->

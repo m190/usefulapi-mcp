@@ -21,6 +21,8 @@ Debug background jobs — runs, traces, spans, schedules, queues and deployments
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Trigger.dev credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/trigger-dev/
 
 <!-- connect:end (generated above, edit below) -->

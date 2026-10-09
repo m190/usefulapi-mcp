@@ -21,6 +21,8 @@ Manage [EmailOctopus](https://emailoctopus.com) from Claude, Cursor, or any MCP 
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your EmailOctopus credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/emailoctopus/
 
 <!-- connect:end (generated above, edit below) -->

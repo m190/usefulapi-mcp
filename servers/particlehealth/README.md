@@ -21,6 +21,8 @@ Query Particle Health patient records across connected clinical networks. Hosted
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Particle Health credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/particlehealth/
 
 <!-- connect:end (generated above, edit below) -->

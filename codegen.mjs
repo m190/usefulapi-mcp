@@ -131,6 +131,14 @@ function replaceSection(md, heading, newBody) {
 // login prose below it is kept. The first run converts the old hand-written "## Add to Claude" section
 // (its JSON block is dropped, its prose kept).
 const CONNECT_END = "<!-- connect:end (generated above, edit below) -->";
+// Same rule as the portal: some clients send a configured Authorization header instead of the OAuth token.
+function readmeNoHeader(s) {
+  const k = s.login?.kind || (s.auth === "oauth" ? "upstream" : s.auth === "none" ? "email" : "key");
+  const how = k === "upstream" ? `you sign in with your ${s.name} account`
+    : k === "email" ? "the login page asks for your email address and a 6-digit code"
+    : `the login page asks for your ${s.name} credentials`;
+  return `Add only the URL. Do not add an \`Authorization\` header or an API key to the client config: the server signs you in with OAuth, and ${how}.`;
+}
 function connectSection(s) {
   const vscode = `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(s.slug)}&config=${encodeURIComponent(JSON.stringify({ type: "http", url: s.endpoint }))}`;
   return [
@@ -144,6 +152,8 @@ function connectSection(s) {
     "```json",
     JSON.stringify({ mcpServers: { [s.slug]: { url: s.endpoint } } }, null, 2),
     "```",
+    "",
+    readmeNoHeader(s),
     "",
     `Step-by-step setup, where to find your credentials, and FAQ: ${SITE}/${s.slug}/`,
     "",

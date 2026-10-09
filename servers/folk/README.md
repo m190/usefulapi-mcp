@@ -21,6 +21,8 @@ Read and write Folk CRM people, companies, groups and notes. Hosted, no local in
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Folk credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/folk/
 
 <!-- connect:end (generated above, edit below) -->

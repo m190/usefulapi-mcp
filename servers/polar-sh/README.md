@@ -21,6 +21,8 @@ Products, customers, orders, subscriptions, benefits, revenue metrics and refund
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Polar credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/polar-sh/
 
 <!-- connect:end (generated above, edit below) -->

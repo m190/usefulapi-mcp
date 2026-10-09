@@ -21,6 +21,8 @@ Enrich and search people and companies, resolve identities, and enrich IPs — f
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your People Data Labs credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/peopledatalabs/
 
 <!-- connect:end (generated above, edit below) -->

@@ -21,6 +21,8 @@ Manage [Instatus](https://instatus.com) from Claude, Cursor, or any MCP client â
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Instatus credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/instatus/
 
 <!-- connect:end (generated above, edit below) -->

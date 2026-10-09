@@ -21,6 +21,8 @@ Rate shipments, buy labels, track packages and verify addresses via EasyPost, fr
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your EasyPost credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/easypost/
 
 <!-- connect:end (generated above, edit below) -->

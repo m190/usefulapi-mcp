@@ -21,6 +21,8 @@ Manage your Customer.io people, segments, campaigns, and messaging from Claude, 
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Customer.io credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/customerio/
 
 <!-- connect:end (generated above, edit below) -->

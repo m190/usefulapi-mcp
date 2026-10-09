@@ -23,6 +23,8 @@ install: connect with your Linear account over OAuth.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and you sign in with your Linear account.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/linear/
 
 <!-- connect:end (generated above, edit below) -->

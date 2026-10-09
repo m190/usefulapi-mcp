@@ -21,6 +21,8 @@ Score transactions for fraud risk with MaxMind minFraud from Claude, Cursor, or 
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your MaxMind minFraud credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/maxmind-minfraud/
 
 <!-- connect:end (generated above, edit below) -->

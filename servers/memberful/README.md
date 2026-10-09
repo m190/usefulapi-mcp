@@ -21,6 +21,8 @@ Manage your Memberful memberships from Claude, Cursor, or any MCP client — rea
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Memberful credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/memberful/
 
 <!-- connect:end (generated above, edit below) -->

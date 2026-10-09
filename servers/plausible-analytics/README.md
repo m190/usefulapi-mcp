@@ -22,6 +22,8 @@ no local install: connect with your own credentials.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Plausible credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/plausible-analytics/
 
 <!-- connect:end (generated above, edit below) -->

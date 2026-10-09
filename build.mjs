@@ -177,6 +177,17 @@ function authStepFor(s) {
   if (k === "email") return `Claude opens the login page: enter your email and the 6-digit code from <b>login@usefulapi.io</b> (no ${esc(s.name)} key needed)`;
   return `Claude opens the login page: enter ${credentialText(s)}`;
 }
+// Some clients send a configured Authorization header instead of the OAuth token (every call → 401).
+function loginByOAuth(s) {
+  const k = loginKind(s);
+  if (k === "upstream") return `you sign in with your ${esc(s.name)} account`;
+  if (k === "email") return `the login page asks for your email address and a 6-digit code`;
+  return `the login page asks for ${credentialText(s)}`;
+}
+const noHeaderText = (s) =>
+  `Add only the URL. Do not add an <code>Authorization</code> header or an API key to the client config. ` +
+  `The server signs you in with OAuth: ${loginByOAuth(s)}. ` +
+  `If the config has such a header, remove it: some clients then send that header instead of the login token, and every call fails with 401.`;
 // "Before you connect": what the login asks for and where to find it in the vendor's app.
 function setupSection(s) {
   const k = loginKind(s), opt = optionalFields(s);
@@ -186,7 +197,7 @@ function setupSection(s) {
   else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
   const optional = opt.length ? `<p>Optional: ${andList(opt.map((l) => `<b>${esc(l)}</b>`))}.</p>` : "";
   const help = [s.keyHelp, s.login?.hint].filter(Boolean).map((h) => `<p>${hintHtml(h)}</p>`).join("");
-  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${lead}${optional}${help}</div>`;
+  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${lead}${optional}${help}<p>${noHeaderText(s)}</p></div>`;
 }
 function examplesSection(s) {
   if (!(s.examples || []).length) return "";
@@ -209,6 +220,8 @@ function faqFor(s) {
     k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
     : k === "email" ? `Only an email address. You do not need a key for ${n}.`
     : `The login page asks for ${credentialText(s)}. See <a href="#setup">Before you connect</a> for where to find ${requiredFields(s).length > 1 ? "them" : "it"}.` });
+  faq.push({ q: k === "key" ? `Do I put my ${n} key or an Authorization header in the client config?` : `Do I add an Authorization header to the client config?`,
+    a: `No. ${noHeaderText(s)}` });
   if (k !== "email") faq.push({ q: `How do you keep my ${n} credentials?`, a:
     `The login stores them encrypted in the authorization grant of your connection. The server uses them to call the ${n} API for you and to derive a private account id for usage metering. usefulapi does not show them on any page or in any reply. ` +
     (k === "upstream" ? `You can revoke the access in ${n} at any time.` : `To stop all access, remove the connector and change or delete these credentials in ${n}.`) });
@@ -276,7 +289,7 @@ ${copyBlock(`{
   }
 }`)}</div>
 </div>
-<p class="hint">Other MCP clients (Windsurf, Cline, Zed and more): add the URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser.</p>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
+<p class="hint">Other MCP clients (Windsurf, Cline, Zed and more): add the URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser. Do not add an <code>Authorization</code> header: see <a href="#setup">Before you connect</a>.</p>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
   const chips = `<div class="chips">${live ? chip("live", "live") : chip("launching soon")}${chip(`${toolCount(s)} tools`)}${ft ? chip(`Free ${esc(ft.limit)}`) : ""}${pt ? chip(`Pro ${esc(priceText(pt))}`) : ""}</div>`;
 

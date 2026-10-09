@@ -23,6 +23,8 @@ note incidents. Hosted, no local install: connect with your Squadcast API refres
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Squadcast credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/squadcast/
 
 <!-- connect:end (generated above, edit below) -->

@@ -21,6 +21,8 @@ Query patients, appointments, charting forms, tasks and metrics in your Healthie
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Healthie credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/healthie/
 
 <!-- connect:end (generated above, edit below) -->

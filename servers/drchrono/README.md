@@ -21,6 +21,8 @@ Read and write DrChrono patients, appointments, offices and clinical notes. Host
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your DrChrono credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/drchrono/
 
 <!-- connect:end (generated above, edit below) -->

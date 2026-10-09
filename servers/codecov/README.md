@@ -21,6 +21,8 @@ Read Codecov coverage reports, commits, pulls, flags and components. Hosted, no 
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Codecov credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/codecov/
 
 <!-- connect:end (generated above, edit below) -->

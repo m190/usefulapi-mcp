@@ -23,6 +23,8 @@ your SaaS tools. Hosted, no local install: connect with your Census API key.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Census credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/census/
 
 <!-- connect:end (generated above, edit below) -->

@@ -21,6 +21,8 @@ Look up US healthcare providers and organisations by NPI. Hosted, no local insta
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your email address and a 6-digit code.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/nppes-npi-registry/
 
 <!-- connect:end (generated above, edit below) -->

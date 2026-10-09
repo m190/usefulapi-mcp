@@ -21,6 +21,8 @@ Send and read OpenPhone messages, calls, contacts and phone numbers. Hosted, no 
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your OpenPhone credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/openphone/
 
 <!-- connect:end (generated above, edit below) -->

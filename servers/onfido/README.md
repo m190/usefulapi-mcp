@@ -21,6 +21,8 @@ Create and read Onfido applicants, documents, checks and reports. Hosted, no loc
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Onfido credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/onfido/
 
 <!-- connect:end (generated above, edit below) -->

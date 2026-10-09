@@ -22,6 +22,8 @@ Hosted, no local install: connect with your own Follow Up Boss credentials.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Follow Up Boss credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/follow-up-boss/
 
 <!-- connect:end (generated above, edit below) -->

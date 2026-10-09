@@ -21,6 +21,8 @@ Users, organizations, roles, permissions, applications and feature flags. Hosted
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Kinde credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/kinde/
 
 <!-- connect:end (generated above, edit below) -->

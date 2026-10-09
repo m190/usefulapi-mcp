@@ -22,6 +22,8 @@ Hosted, no local install: connect with your own Cin7 Core credentials.
 }
 ```
 
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Cin7 Core credentials.
+
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/cin7-core/
 
 <!-- connect:end (generated above, edit below) -->
