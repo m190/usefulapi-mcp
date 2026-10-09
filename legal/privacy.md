@@ -46,7 +46,8 @@ third-party API and returns the response to your AI client. This data is process
 complete your request** and is not stored by us beyond what is technically necessary to serve the
 response, except transient logs (see §4). Our servers process tool arguments and results in memory only, to
 complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
-server can filter, reformat or shorten a result before it reaches your AI client.
+server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
+client.
 The only exception is a feature request: we keep and read the text that you send with a
 `<prefix>_request_feature` tool.
 

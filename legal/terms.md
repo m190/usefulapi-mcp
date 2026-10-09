@@ -58,7 +58,8 @@ usefulapi server. We do not sign Business Associate Agreements (BAAs). If you pr
 about other people, you need your own lawful basis under GDPR Articles 6 and 9. Tool results also
 reach your AI client provider. Our servers process tool arguments and results in memory only, to
 complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
-server can filter, reformat or shorten a result before it reaches your AI client.
+server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
+client.
 The only exception is a feature request: we keep and read the text that you send with a
 `<prefix>_request_feature` tool. We keep request
 metadata, encrypted vendor credentials and, for about 10 seconds, a one-way hash of the arguments.
