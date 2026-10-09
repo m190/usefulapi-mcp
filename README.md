@@ -240,6 +240,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Tookan](servers/tookan/) | shipping | 19 | API token | [servers/tookan/](servers/tookan/) |
 | [Track-POD](servers/track-pod/) | shipping | 20 | API token | [servers/track-pod/](servers/track-pod/) |
 | [Veeqo](servers/veeqo/) | ecommerce | 26 | API token | [servers/veeqo/](servers/veeqo/) |
+| [Clockify](servers/clockify/) | project-management | 25 | API token | [servers/clockify/](servers/clockify/) |
+| [Gelato](servers/gelato/) | ecommerce | 23 | API token | [servers/gelato/](servers/gelato/) |
+| [Fathom Analytics](servers/fathom-analytics/) | analytics | 20 | API token | [servers/fathom-analytics/](servers/fathom-analytics/) |
+| [Paperform](servers/paperform/) | productivity | 27 | API token | [servers/paperform/](servers/paperform/) |
+| [UserVoice](servers/uservoice/) | support | 25 | API token | [servers/uservoice/](servers/uservoice/) |
+| [Breathe HR](servers/breathe-hr/) | productivity | 29 | API token | [servers/breathe-hr/](servers/breathe-hr/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -194,8 +194,14 @@ const noHeaderText = (s) =>
 const PATIENT_DATA = new Set(["drchrono", "healthie", "nexhealth", "canvas-medical", "intakeq", "metriport", "particlehealth",
   "health-gorilla", "photon-health", "spruce-health", "cliniko", "nookal", "infermedica"]);
 const PATIENT_DATA_TEXT = `Do not use this server with protected health information (PHI). We do not sign HIPAA Business Associate Agreements (BAAs).`;
-const patientDataNote = (s) => PATIENT_DATA.has(s.slug)
-  ? `<p><b>Patient data:</b> ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.</p>` : "";
+// Servers that return personal data about other people (employees, applicants): the user is the controller.
+const PERSONAL_DATA = {
+  "breathe-hr": `This server returns personal data about your employees, including sickness records. Sickness records are health data under GDPR Article 9: you need your own lawful basis to process them with an AI client. Bank details and national insurance numbers are never returned.`,
+  "jazzhr": `This server returns personal data about job applicants (contact details, resumes, notes). You need your own lawful basis to process it with an AI client. EEO answers (gender, race, veteran and disability status) are never returned.`,
+};
+const patientDataNote = (s) => (PATIENT_DATA.has(s.slug)
+  ? `<p><b>Patient data:</b> ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.</p>` : "") +
+  (PERSONAL_DATA[s.slug] ? `<p><b>Personal data:</b> ${PERSONAL_DATA[s.slug]} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.</p>` : "");
 // "Before you connect": what the login asks for and where to find it in the vendor's app.
 function setupSection(s) {
   const k = loginKind(s), opt = optionalFields(s);
@@ -224,6 +230,7 @@ function faqFor(s) {
   faq.push({ q: `Is this an official ${n} product?`, a:
     `No. usefulapi is an independent service. It is not affiliated with or endorsed by ${n}. ` +
     (k === "email" ? `The server calls the public ${n} API for you.` : `The server calls the ${n} API with your own ${n} access, so it sees only the data that your account can see.`) });
+  if (PERSONAL_DATA[s.slug]) faq.push({ q: `Does this server handle personal data?`, a: `Yes. ${PERSONAL_DATA[s.slug]} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.` });
   if (PATIENT_DATA.has(s.slug)) faq.push({ q: `Can I use this server with patient data (PHI)?`, a:
     `No. ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.` });
   faq.push({ q: `What do I need to connect?`, a:
