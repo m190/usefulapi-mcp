@@ -32,12 +32,14 @@ hash of the tool arguments for about 10 seconds.
 
 **Product telemetry.** For each tool call we also record the server, the tool name, the outcome (for
 example success, or the class of a vendor error), the duration, the size of the result and the name of
-the AI client (for example "Claude-User"). This record has **no user id, no tool arguments and no
+the type of AI client (for example Claude or Cursor). This record has **no user id, no tool arguments and no
 results**. We keep it for **90 days** to find tools that fail.
 
 **Feature requests.** When your AI client uses a server's `<prefix>_request_feature` tool, we store the
-text it sends with the server name only, **not with your account**, for up to **90 days**, to plan new
-tools. Do not put personal data in such a request.
+text it sends with the server name, the type of AI client and the name of the tool that you tried (if
+any), **not with your account**, for up to **90 days**, to plan new tools. Do not put personal data in
+such a request. To allow at most 5 requests per day, we count them per account for 24 hours; this count
+does not contain the text.
 
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to

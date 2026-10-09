@@ -244,7 +244,7 @@ function faqFor(s) {
   if (up && cancel) faq.push({ q: `How do I subscribe or cancel?`, a:
     `Ask the AI to run <code>${esc(up.name)}</code>: it returns a Stripe Checkout link. To cancel, run <code>${esc(cancel.name)}</code>. Pro continues to the end of the paid period.` });
   if (feature) faq.push({ q: `What if a ${n} tool that I need is missing?`, a:
-    `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name only, not with your account, and read every request when we plan new tools.` });
+    `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name, the type of AI client and the tool you tried, not with your account, and read every request when we plan new tools. You can send up to 5 requests per day.` });
   faq.push({ q: `Which AI clients can I use?`, a:
     `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, Cursor, VS Code, Windsurf and others.` });
   return faq;
