@@ -43,8 +43,8 @@ It's validated, stored per-user, and scoped to you — no keys in config files.
 | `list_heartbeats` | read | List heartbeats |
 | `list_on_call` | read | List on-call schedules |
 | `list_status_pages` | read | List status pages |
-| `acknowledge_incident` | read | Acknowledge an incident |
-| `resolve_incident` | read | Resolve an incident |
+| `acknowledge_incident` | **write** | Acknowledge an incident |
+| `resolve_incident` | **write** | Resolve an incident |
 | `betterstack_usage_status` | meta | Usage status (free-tier meter) |
 | `betterstack_request_feature` | meta | Request a missing feature |
 | `betterstack_upgrade` | meta | Upgrade to Pro (unlimited) |

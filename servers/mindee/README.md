@@ -36,7 +36,7 @@ On first connect you'll paste your Mindee API key. It's validated, stored per-us
 | `mindee_list_models` | read | List extraction models |
 | `mindee_get_job` | read | Get job status |
 | `mindee_get_inference` | read | Get extraction result |
-| `mindee_extract_document` | read | Extract data from a document |
+| `mindee_extract_document` | **write** | Extract data from a document |
 | `mindee_usage_status` | meta | Usage status (free-tier meter) |
 | `mindee_request_feature` | meta | Request a missing feature |
 | `mindee_upgrade` | meta | Upgrade to Pro (unlimited) |
