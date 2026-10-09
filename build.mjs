@@ -29,7 +29,9 @@ function mdToHtml(md) {
     if (/^#{1,4}\s/.test(line)) {
       flushPara(); flushList();
       const lvl = line.match(/^#+/)[0].length;
-      out.push(`<h${lvl}>${inline(line.replace(/^#+\s/, ""))}</h${lvl}>`);
+      const text = line.replace(/^#+\s/, "");
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      out.push(`<h${lvl} id="${id}">${inline(text)}</h${lvl}>`);
     } else if (/^\s*-\s+/.test(line)) {
       flushPara(); list.push(line.replace(/^\s*-\s+/, ""));
     } else if (line.trim() === "") {
@@ -188,6 +190,12 @@ const noHeaderText = (s) =>
   `Add only the URL. Do not add an <code>Authorization</code> header or an API key to the client config. ` +
   `The server signs you in with OAuth: ${loginByOAuth(s)}. ` +
   `If the config has such a header, remove it: some clients then send that header instead of the login token, and every call fails with 401.`;
+// Servers that can return patient data: no PHI, no BAA (Terms §5 "Health data", decided 2026-10-09).
+const PATIENT_DATA = new Set(["drchrono", "healthie", "nexhealth", "canvas-medical", "intakeq", "metriport", "particlehealth",
+  "health-gorilla", "photon-health", "spruce-health", "cliniko", "nookal", "infermedica"]);
+const PATIENT_DATA_TEXT = `Do not use this server with protected health information (PHI). We do not sign HIPAA Business Associate Agreements (BAAs).`;
+const patientDataNote = (s) => PATIENT_DATA.has(s.slug)
+  ? `<p><b>Patient data:</b> ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.</p>` : "";
 // "Before you connect": what the login asks for and where to find it in the vendor's app.
 function setupSection(s) {
   const k = loginKind(s), opt = optionalFields(s);
@@ -197,7 +205,7 @@ function setupSection(s) {
   else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
   const optional = opt.length ? `<p>Optional: ${andList(opt.map((l) => `<b>${esc(l)}</b>`))}.</p>` : "";
   const help = [s.keyHelp, s.login?.hint].filter(Boolean).map((h) => `<p>${hintHtml(h)}</p>`).join("");
-  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${lead}${optional}${help}<p>${noHeaderText(s)}</p></div>`;
+  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${patientDataNote(s)}${lead}${optional}${help}<p>${noHeaderText(s)}</p></div>`;
 }
 function examplesSection(s) {
   if (!(s.examples || []).length) return "";
@@ -216,6 +224,8 @@ function faqFor(s) {
   faq.push({ q: `Is this an official ${n} product?`, a:
     `No. usefulapi is an independent service. It is not affiliated with or endorsed by ${n}. ` +
     (k === "email" ? `The server calls the public ${n} API for you.` : `The server calls the ${n} API with your own ${n} access, so it sees only the data that your account can see.`) });
+  if (PATIENT_DATA.has(s.slug)) faq.push({ q: `Can I use this server with patient data (PHI)?`, a:
+    `No. ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.` });
   faq.push({ q: `What do I need to connect?`, a:
     k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
     : k === "email" ? `Only an email address. You do not need a key for ${n}.`

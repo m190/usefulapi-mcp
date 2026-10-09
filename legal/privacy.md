@@ -27,7 +27,8 @@ which is your account identifier for usage and billing.
 
 **Usage metering.** We record counts and timestamps of tool calls per user and per server to
 enforce plan limits and bill you. We do not need, and do not retain, the
-*contents* of your tool calls to meter them.
+*contents* of your tool calls to meter them. To avoid counting a repeated call twice, we keep a one-way
+hash of the tool arguments for about 10 seconds.
 
 **Product telemetry.** For each tool call we also record the server, the tool name, the outcome (for
 example success, or the class of a vendor error), the duration, the size of the result and the name of
@@ -41,7 +42,10 @@ tools. Do not put personal data in such a request.
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to
 complete your request** and is not stored by us beyond what is technically necessary to serve the
-response, except transient logs (see §4).
+response, except transient logs (see §4). Our servers process tool arguments and results in memory only, to
+complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
+server can filter, reformat or shorten a result before it reaches your AI client. (A feature request
+is the exception described above: it is text you choose to send for storage.)
 
 **Billing.** Payments are handled by **Stripe**. We do not receive or store full card numbers;
 Stripe does. We store your Stripe customer/subscription identifiers and plan status.

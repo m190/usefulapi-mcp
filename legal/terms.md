@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 1 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 9 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -52,6 +52,15 @@ You will not: (a) use the Service unlawfully or to infringe others' rights; (b) 
 other users' data or credentials; (c) probe, overload, or circumvent limits, metering, or security;
 (d) resell the Service without authorization; or (e) use it in violation of a connected provider's
 terms.
+
+**Health data.** Do not send or retrieve protected health information (PHI) under HIPAA through any
+usefulapi server. We do not sign Business Associate Agreements (BAAs). If you process health data
+about other people, you need your own lawful basis under GDPR Articles 6 and 9. Tool results also
+reach your AI client provider. Our servers process tool arguments and results in memory only, to
+complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
+server can filter, reformat or shorten a result before it reaches your AI client. We keep request
+metadata, encrypted vendor credentials and, for about 10 seconds, a one-way hash of the arguments.
+The Privacy Policy describes what we keep.
 
 ## 6. Availability and beta status
 
