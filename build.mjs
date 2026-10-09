@@ -529,6 +529,8 @@ copyFileSync(new URL("manifest.json", ROOT), `${outDir}/manifest.json`); // home
 // _probe/<slug>.json: static discovery replies for crawler redirect tests (zone redirect rules; no Worker runs).
 mkdirSync(`${outDir}/_probe`, { recursive: true });
 for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new URL(`portal/_probe/${f}`, ROOT), `${outDir}/_probe/${f}`);
+// Pages headers: probe files are machine replies, not pages (keep them out of search indexes; short cache).
+writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=300\n`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
 for (const s of manifest.servers) {

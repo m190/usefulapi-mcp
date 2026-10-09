@@ -4,8 +4,9 @@
 //   servers/<slug>/server.json  — spec-valid MCP Registry record (io.usefulapi/<slug>)
 //   servers/<slug>/README.md    — the ## Tools and ## Pricing sections
 //   README.md (root)            — the Servers table
+//   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
 // Run after editing manifest.json, then commit. build.mjs (the site) stays separate.
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -200,3 +201,23 @@ root = root.replace(/\| Server \|[\s\S]*?\n(?=\n|_|##)/, rootServersTable() + "\
 writeFileSync(new URL("README.md", ROOT), root);
 
 console.log(`codegen: wrote ${n} server.json + ${n} README section pairs + root README table`);
+
+// portal/_probe/<slug>.json: the Worker's token-less discovery reply as one static JSON-RPC message (id 1; the
+// initialize result merged with tools/list, resources/list and prompts/list), from fleet/products/<slug>/discovery.json.
+// The zone redirect rule for unrequested crawlers (mcpbeat) sends their /mcp to it, so no Worker runs. Without a fleet
+// checkout, the files stay as they are. Files of servers no longer in the manifest are removed.
+const probeDir = new URL("portal/_probe/", ROOT);
+if (existsSync(new URL("../fleet/products/", ROOT))) {
+  mkdirSync(probeDir, { recursive: true });
+  const keep = new Set();
+  for (const s of manifest.servers) {
+    const src = new URL(`../fleet/products/${s.slug}/discovery.json`, ROOT);
+    if (!existsSync(src)) { console.warn(`codegen: no discovery.json for ${s.slug}; no probe file`); continue; }
+    const d = JSON.parse(readFileSync(src, "utf8"));
+    const result = { ...d.initialize, tools: d.tools, resources: [], prompts: [] };
+    writeFileSync(new URL(`${s.slug}.json`, probeDir), JSON.stringify({ jsonrpc: "2.0", id: 1, result }));
+    keep.add(`${s.slug}.json`);
+  }
+  for (const f of readdirSync(probeDir)) if (f.endsWith(".json") && !keep.has(f)) unlinkSync(new URL(f, probeDir));
+  console.log(`codegen: wrote ${keep.size} probe file(s) → portal/_probe/`);
+}
