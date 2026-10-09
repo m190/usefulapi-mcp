@@ -46,7 +46,7 @@ keys in config files.
 | `gumroad_get_variant_category` | read | Get variant category |
 | `gumroad_list_custom_fields` | read | List custom fields |
 | `gumroad_list_resource_subscriptions` | read | List resource subscriptions |
-| `gumroad_verify_license` | read | Verify license |
+| `gumroad_verify_license` | **write** | Verify license |
 | `gumroad_enable_product` | **write** | Enable product |
 | `gumroad_disable_product` | **write** | Disable product |
 | `gumroad_create_offer_code` | **write** | Create offer code |
