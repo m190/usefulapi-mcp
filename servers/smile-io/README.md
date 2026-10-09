@@ -39,10 +39,10 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `smile_get_customer` | read | Get a customer |
 | `smile_list_points_transactions` | read | List points transactions |
 | `smile_get_points_transaction` | read | Get a points transaction |
-| `smile_list_points_products` | read | List points products |
+| `smile_list_points_products` | read | List points products (ways to redeem) |
 | `smile_get_points_product` | read | Get a points product |
 | `smile_list_reward_fulfillments` | read | List reward fulfillments |
-| `smile_list_earning_rules` | read | List earning rules |
+| `smile_list_earning_rules` | read | List earning rules (ways to earn) |
 | `smile_list_vip_tiers` | read | List VIP tiers |
 | `smile_get_points_settings` | read | Get points settings |
 | `smile_get_referral_settings` | read | Get referral settings |

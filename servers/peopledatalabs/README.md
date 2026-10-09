@@ -33,14 +33,14 @@ On first connect you'll paste your People Data Labs API key. It's validated, sto
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `pdl_person_enrich` | read | Pdl person enrich |
-| `pdl_person_identify` | read | Pdl person identify |
-| `pdl_person_search` | read | Pdl person search |
-| `pdl_company_enrich` | read | Pdl company enrich |
-| `pdl_company_search` | read | Pdl company search |
-| `pdl_ip_enrich` | read | Pdl ip enrich |
-| `pdl_autocomplete` | read | Pdl autocomplete |
-| `pdl_job_posting_search` | read | Pdl job posting search |
+| `pdl_person_enrich` | read | Enrich a person |
+| `pdl_person_identify` | read | Identify a person |
+| `pdl_person_search` | read | Search people |
+| `pdl_company_enrich` | read | Enrich a company |
+| `pdl_company_search` | read | Search companies |
+| `pdl_ip_enrich` | read | Enrich an IP address |
+| `pdl_autocomplete` | read | Autocomplete search values |
+| `pdl_job_posting_search` | read | Search job postings |
 | `peopledatalabs_usage_status` | meta | Usage status (free-tier meter) |
 | `peopledatalabs_request_feature` | meta | Request a missing feature |
 | `peopledatalabs_upgrade` | meta | Upgrade to Pro (unlimited) |

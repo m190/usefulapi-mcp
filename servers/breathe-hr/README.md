@@ -43,7 +43,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `breathehr_list_other_leave_reasons` | read | List other leave reasons |
 | `breathehr_list_employees` | read | List employees |
 | `breathehr_get_employee` | read | Get employee |
-| `breathehr_get_holiday_years` | read | Get holiday years |
+| `breathehr_get_holiday_years` | read | Get holiday years (allowance balance) |
 | `breathehr_list_absences` | read | List absences |
 | `breathehr_list_leave_requests` | read | List leave requests |
 | `breathehr_get_leave_request` | read | Get leave request |

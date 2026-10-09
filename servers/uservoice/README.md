@@ -44,7 +44,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `uservoice_list_comments` | read | List comments |
 | `uservoice_list_notes` | read | List internal notes |
 | `uservoice_list_status_updates` | read | List status updates |
-| `uservoice_list_supporters` | read | List supporters |
+| `uservoice_list_supporters` | read | List supporters (votes) |
 | `uservoice_list_feedback_records` | read | List feedback records |
 | `uservoice_list_features` | read | List features |
 | `uservoice_list_users` | read | List users |

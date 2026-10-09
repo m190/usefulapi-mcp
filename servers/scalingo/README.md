@@ -34,26 +34,26 @@ On first connect you'll paste your Scalingo API token. It's validated, stored pe
 | Tool | Type | What it does |
 |------|------|--------------|
 | `list_apps` | read | List apps |
-| `get_app` | read | Get app |
-| `list_containers` | read | List containers |
-| `get_app_stats` | read | Get app stats |
+| `get_app` | read | Get an app |
+| `list_containers` | read | List containers (formation) |
+| `get_app_stats` | read | Get container stats |
 | `list_deployments` | read | List deployments |
-| `get_deployment` | read | Get deployment |
-| `get_app_logs` | read | Get app logs |
-| `list_variables` | read | List variables |
+| `get_deployment` | read | Get a deployment |
+| `get_app_logs` | read | Get recent app logs |
+| `list_variables` | read | List environment variables |
 | `list_collaborators` | read | List collaborators |
 | `list_domains` | read | List domains |
 | `list_addons` | read | List addons |
 | `list_addon_providers` | read | List addon providers |
 | `list_app_events` | read | List app events |
-| `get_operation` | read | Get operation |
+| `get_operation` | read | Get an operation |
 | `list_regions` | read | List regions |
-| `get_account` | read | Get account |
-| `scalingo_request` | read | Request |
+| `get_account` | read | Get current account |
+| `scalingo_request` | read | Raw read request |
 | `restart_app` | **write** | Restart app |
 | `scale_app` | **write** | Scale app |
-| `set_variables` | **write** | Set variables |
-| `trigger_deployment` | **write** | Trigger deployment |
+| `set_variables` | **write** | Set environment variables (bulk) |
+| `trigger_deployment` | **write** | Trigger a deployment |
 | `scalingo_usage_status` | meta | Usage status (free-tier meter) |
 | `scalingo_request_feature` | meta | Request a missing feature |
 | `scalingo_upgrade` | meta | Upgrade to Pro (unlimited) |

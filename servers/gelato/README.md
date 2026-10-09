@@ -45,7 +45,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `gelato_search_orders` | read | Search orders |
 | `gelato_get_order` | read | Get order |
 | `gelato_quote_order` | read | Quote order |
-| `gelato_create_order` | **write** | Create order |
+| `gelato_create_order` | **write** | Create order (draft by default) |
 | `gelato_submit_draft_order` | **write** | Submit draft order |
 | `gelato_cancel_order` | **write** | Cancel order |
 | `gelato_delete_draft_order` | **write** | Delete draft order |

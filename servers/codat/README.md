@@ -33,17 +33,17 @@ On first connect you'll paste your Codat API key. It's validated, stored per-use
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `codat_get_profile` | read | Get profile |
+| `codat_get_profile` | read | Get account profile |
 | `codat_list_companies` | read | List companies |
-| `codat_get_company` | read | Get company |
-| `codat_list_connections` | read | List connections |
-| `codat_get_connection` | read | Get connection |
+| `codat_get_company` | read | Get a company |
+| `codat_list_connections` | read | List data connections |
+| `codat_get_connection` | read | Get a data connection |
 | `codat_get_data_status` | read | Get data status |
-| `codat_get_data_info` | read | Get data info |
+| `codat_get_data_info` | read | Get accounting metadata |
 | `codat_list_integrations` | read | List integrations |
-| `codat_list_accounts` | read | List accounts |
+| `codat_list_accounts` | read | List chart of accounts |
 | `codat_list_invoices` | read | List invoices |
-| `codat_get_invoice` | read | Get invoice |
+| `codat_get_invoice` | read | Get an invoice |
 | `codat_list_bills` | read | List bills |
 | `codat_list_bill_payments` | read | List bill payments |
 | `codat_list_credit_notes` | read | List credit notes |
@@ -52,15 +52,15 @@ On first connect you'll paste your Codat API key. It's validated, stored per-use
 | `codat_list_payments` | read | List payments |
 | `codat_list_journal_entries` | read | List journal entries |
 | `codat_get_balance_sheet` | read | Get balance sheet |
-| `codat_get_profit_and_loss` | read | Get profit and loss |
+| `codat_get_profit_and_loss` | read | Get profit & loss |
 | `codat_get_cash_flow_statement` | read | Get cash flow statement |
 | `codat_list_direct_costs` | read | List direct costs |
 | `codat_list_account_transactions` | read | List account transactions |
-| `codat_request` | read | Request |
-| `codat_create_company` | **write** | Create company |
-| `codat_create_connection` | **write** | Create connection |
-| `codat_refresh_all_data` | **write** | Refresh all data |
-| `codat_refresh_data_type` | **write** | Refresh data type |
+| `codat_request` | read | Raw read request |
+| `codat_create_company` | **write** | Create a company |
+| `codat_create_connection` | **write** | Create a data connection |
+| `codat_refresh_all_data` | **write** | Queue a full data refresh |
+| `codat_refresh_data_type` | **write** | Queue a single dataset refresh |
 | `codat_usage_status` | meta | Usage status (free-tier meter) |
 | `codat_request_feature` | meta | Request a missing feature |
 | `codat_upgrade` | meta | Upgrade to Pro (unlimited) |

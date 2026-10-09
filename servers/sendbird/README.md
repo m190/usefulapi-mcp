@@ -34,19 +34,19 @@ On first connect you'll paste your Sendbird App ID and API token. It's validated
 | Tool | Type | What it does |
 |------|------|--------------|
 | `sendbird_list_users` | read | List users |
-| `sendbird_get_user` | read | Get user |
+| `sendbird_get_user` | read | Get a user |
 | `sendbird_list_group_channels` | read | List group channels |
-| `sendbird_get_group_channel` | read | Get group channel |
+| `sendbird_get_group_channel` | read | Get a group channel |
 | `sendbird_list_group_channel_members` | read | List group channel members |
-| `sendbird_list_group_channels_by_user` | read | List group channels by user |
+| `sendbird_list_group_channels_by_user` | read | List a user's group channels |
 | `sendbird_list_open_channels` | read | List open channels |
-| `sendbird_get_open_channel` | read | Get open channel |
+| `sendbird_get_open_channel` | read | Get an open channel |
 | `sendbird_list_messages` | read | List messages |
-| `sendbird_request` | read | Request |
-| `sendbird_send_message` | **write** | Send message |
-| `sendbird_create_user` | **write** | Create user |
-| `sendbird_update_user` | **write** | Update user |
-| `sendbird_create_group_channel` | **write** | Create group channel |
+| `sendbird_request` | read | Raw GET request |
+| `sendbird_send_message` | **write** | Send a message |
+| `sendbird_create_user` | **write** | Create a user |
+| `sendbird_update_user` | **write** | Update a user |
+| `sendbird_create_group_channel` | **write** | Create a group channel |
 | `sendbird_usage_status` | meta | Usage status (free-tier meter) |
 | `sendbird_request_feature` | meta | Request a missing feature |
 | `sendbird_upgrade` | meta | Upgrade to Pro (unlimited) |

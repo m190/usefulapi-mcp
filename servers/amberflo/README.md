@@ -34,9 +34,9 @@ On first connect you'll paste your Amberflo API key. It's validated, stored per-
 | Tool | Type | What it does |
 |------|------|--------------|
 | `amberflo_list_customers` | read | List customers |
-| `amberflo_get_customer` | read | Get customer |
+| `amberflo_get_customer` | read | Get a customer |
 | `amberflo_list_meters` | read | List meters |
-| `amberflo_get_usage` | read | Get usage |
+| `amberflo_get_usage` | read | Query usage for a meter |
 | `amberflo_get_all_usage` | read | Get all usage |
 | `amberflo_explain_usage` | read | Explain usage |
 | `amberflo_get_customer_plan` | read | Get customer plan |
@@ -46,7 +46,7 @@ On first connect you'll paste your Amberflo API key. It's validated, stored per-
 | `amberflo_list_prepaid_orders` | read | List prepaid orders |
 | `amberflo_create_customer` | **write** | Create customer |
 | `amberflo_assign_customer_plan` | **write** | Assign customer plan |
-| `amberflo_ingest_usage` | **write** | Ingest usage |
+| `amberflo_ingest_usage` | **write** | Ingest usage event |
 | `amberflo_usage_status` | meta | Usage status (free-tier meter) |
 | `amberflo_request_feature` | meta | Request a missing feature |
 | `amberflo_upgrade` | meta | Upgrade to Pro (unlimited) |

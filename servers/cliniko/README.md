@@ -33,23 +33,23 @@ On first connect you'll paste your Cliniko API key. It's validated, stored per-u
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `cliniko_get_account` | read | Get account |
+| `cliniko_get_account` | read | Get account details |
 | `cliniko_list_patients` | read | List patients |
-| `cliniko_get_patient` | read | Get patient |
+| `cliniko_get_patient` | read | Get a patient |
 | `cliniko_list_appointments` | read | List appointments |
-| `cliniko_get_appointment` | read | Get appointment |
+| `cliniko_get_appointment` | read | Get an appointment |
 | `cliniko_list_practitioners` | read | List practitioners |
 | `cliniko_list_businesses` | read | List businesses |
 | `cliniko_list_appointment_types` | read | List appointment types |
 | `cliniko_list_products` | read | List products |
 | `cliniko_list_invoices` | read | List invoices |
-| `cliniko_get_invoice` | read | Get invoice |
+| `cliniko_get_invoice` | read | Get an invoice |
 | `cliniko_list_treatment_notes` | read | List treatment notes |
-| `cliniko_get_treatment_note` | read | Get treatment note |
+| `cliniko_get_treatment_note` | read | Get a treatment note |
 | `cliniko_list_available_times` | read | List available times |
 | `cliniko_next_available_time` | read | Next available time |
-| `cliniko_create_patient` | **write** | Create patient |
-| `cliniko_create_appointment` | **write** | Create appointment |
+| `cliniko_create_patient` | **write** | Create a patient |
+| `cliniko_create_appointment` | **write** | Create an appointment |
 | `cliniko_usage_status` | meta | Usage status (free-tier meter) |
 | `cliniko_request_feature` | meta | Request a missing feature |
 | `cliniko_upgrade` | meta | Upgrade to Pro (unlimited) |

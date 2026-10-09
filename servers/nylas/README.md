@@ -33,21 +33,21 @@ On first connect you'll paste your Nylas API key. It's validated, stored per-use
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `nylas_list_grants` | read | List grants |
-| `nylas_get_grant` | read | Get grant |
+| `nylas_list_grants` | read | List grants (connected accounts) |
+| `nylas_get_grant` | read | Get a grant |
 | `nylas_list_messages` | read | List messages |
-| `nylas_get_message` | read | Get message |
+| `nylas_get_message` | read | Get a message |
 | `nylas_list_folders` | read | List folders |
 | `nylas_list_calendars` | read | List calendars |
-| `nylas_get_calendar` | read | Get calendar |
+| `nylas_get_calendar` | read | Get a calendar |
 | `nylas_list_events` | read | List events |
-| `nylas_get_event` | read | Get event |
+| `nylas_get_event` | read | Get an event |
 | `nylas_list_contacts` | read | List contacts |
-| `nylas_get_contact` | read | Get contact |
+| `nylas_get_contact` | read | Get a contact |
 | `nylas_list_drafts` | read | List drafts |
-| `nylas_send_message` | **write** | Send message |
-| `nylas_create_event` | **write** | Create event |
-| `nylas_create_draft` | **write** | Create draft |
+| `nylas_send_message` | **write** | Send an email |
+| `nylas_create_event` | **write** | Create a calendar event |
+| `nylas_create_draft` | **write** | Create a draft email |
 | `nylas_usage_status` | meta | Usage status (free-tier meter) |
 | `nylas_request_feature` | meta | Request a missing feature |
 | `nylas_upgrade` | meta | Upgrade to Pro (unlimited) |

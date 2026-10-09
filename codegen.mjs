@@ -1,63 +1,66 @@
 #!/usr/bin/env node
-// codegen.mjs — regenerate the COMMITTED artifacts from manifest.json (the single
-// source of truth), so they can never drift from it:
+// codegen.mjs [--check] — regenerate the COMMITTED artifacts, so they can never drift from their sources:
+//   manifest.json               — version, login and tools[] of each listed server, DERIVED from the fleet
+//                                 (fleet/products/<slug>/package.json, scripts/export-login.ts, scripts/export-catalog.ts).
+//                                 Listing data (name, category, description, pricing, status) stays hand-edited here.
 //   servers/<slug>/server.json  — spec-valid MCP Registry record (io.usefulapi/<slug>)
-//   servers/<slug>/README.md    — the ## Tools and ## Pricing sections
+//   servers/<slug>/README.md    — the ## Connect, ## Tools and ## Pricing sections
 //   README.md (root)            — the Servers table
 //   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
-// Run after editing manifest.json, then commit. build.mjs (the site) stays separate.
+// Needs the fleet checkout next to this repo (../fleet); a missing fleet input is an error.
+// --check: write nothing; list the files that would change and exit 1 if any (use it before a push or in a check).
+// Run after editing manifest.json or after a fleet release, then commit. build.mjs (the site) stays separate.
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = new URL("./", import.meta.url);
+const CHECK = process.argv.includes("--check");
+const FLEET = new URL("../fleet/", ROOT);
+const die = (msg) => { console.error(`codegen: ${msg}`); process.exit(2); };
+if (!existsSync(new URL("products/", FLEET))) die("no fleet checkout at ../fleet (the tools, logins and versions come from it)");
 // Per-product artifacts live under this subdir (keeps the repo root uncluttered).
 // This value is also the registry `repository.subfolder` prefix, so it must match
 // where the folders actually sit in the repo.
 const SUBDIR = "servers/";
-const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
+const manifestText = readFileSync(new URL("manifest.json", ROOT), "utf8");
+const manifest = JSON.parse(manifestText);
 const { registryNamespace, repository } = manifest.portal;
+const slugs = manifest.servers.map((s) => s.slug);
 
-// Version is DERIVED from each server's package.json — the single source of truth
-// (release.sh bumps it via `npm version`, atomically == the git tag; see the
-// version-single-source-of-truth memory). Sync it into the manifest here so the
-// registry server.json and the portal always reflect the real released version,
-// never a stale hand-typed copy. Servers with no local repo keep their manifest value.
-// fleet/products/<slug>/package.json is the live version (fleet deploy); servers/<slug>-mcp is legacy.
-function pkgVersion(slug) {
-  for (const path of [`../fleet/products/${slug}/package.json`, `../servers/${slug}-mcp/package.json`]) {
-    try {
-      return JSON.parse(readFileSync(new URL(path, ROOT), "utf8")).version || null;
-    } catch {}
-  }
-  return null;
-}
-let versionSynced = 0;
+// Every output goes through `out` (path → content) and `remove`, written (or compared) at the end.
+const out = new Map();
+const remove = new Set();
+const emit = (path, content) => out.set(path, content);
+
+// Version: fleet/products/<slug>/package.json is the live version (fleet deploy).
 for (const s of manifest.servers) {
-  const v = pkgVersion(s.slug);
-  if (v && v !== s.version) { s.version = v; versionSynced++; }
-  else if (!s.version) s.version = v || "1.0.0";
+  const pkg = new URL(`products/${s.slug}/package.json`, FLEET);
+  if (!existsSync(pkg)) die(`${s.slug}: listed in manifest.json but no fleet/products/${s.slug}/package.json`);
+  s.version = JSON.parse(readFileSync(pkg, "utf8")).version;
+  if (!s.version) die(`${s.slug}: no version in package.json`);
 }
-// Login data (which credentials the login asks for + where to find them) is DERIVED from each
-// product's product.ts in the fleet, via fleet/scripts/export-login.ts. The portal renders it from
-// manifest.json, because the Pages build has no fleet checkout. Without a fleet checkout, keep the old values.
-let loginSynced = 0;
-let logins = null;
-try {
-  logins = JSON.parse(execFileSync("npx", ["tsx", "scripts/export-login.ts"], {
-    cwd: fileURLToPath(new URL("../fleet/", ROOT)), encoding: "utf8", maxBuffer: 16 << 20, stdio: ["ignore", "pipe", "inherit"],
-  }));
-} catch (e) {
-  console.warn(`codegen: no fleet login export (${e.message.split("\n")[0]}); keeping manifest login data`);
+// Login data (which credentials the login asks for + where to find them) and the tool catalog (product tools from
+// discovery.json + the runtime's own tools) come from the fleet's product.ts files, via two export scripts.
+// Only the listed slugs are exported, so an unfinished unlisted product cannot break the run.
+const fleetJson = (script) => {
+  try {
+    return JSON.parse(execFileSync("npx", ["tsx", `scripts/${script}`, ...slugs], {
+      cwd: fileURLToPath(FLEET), encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "inherit"],
+    }));
+  } catch (e) {
+    die(`fleet ${script} failed: ${e.message.split("\n")[0]}`);
+  }
+};
+const logins = fleetJson("export-login.ts");
+const catalog = fleetJson("export-catalog.ts");
+for (const s of manifest.servers) {
+  if (!logins[s.slug]) die(`${s.slug}: no login export`);
+  if (!catalog[s.slug]?.tools?.length) die(`${s.slug}: no tool catalog`);
+  s.login = logins[s.slug];
+  s.tools = catalog[s.slug].tools;
 }
-for (const s of logins ? manifest.servers : []) {
-  const l = logins[s.slug];
-  if (l && JSON.stringify(l) !== JSON.stringify(s.login)) { s.login = l; loginSynced++; }
-}
-if (versionSynced || loginSynced) {
-  writeFileSync(new URL("manifest.json", ROOT), JSON.stringify(manifest, null, 2) + "\n");
-  console.log(`codegen: synced ${versionSynced} version(s) + ${loginSynced} login(s) from fleet → manifest.json`);
-}
+emit("manifest.json", JSON.stringify(manifest, null, 2) + "\n");
 const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json";
 const SITE = manifest.portal.domain.replace(/\/$/, "");
 // The brand mark (portal/), served by the portal. Vendor logos are never used (trademarks).
@@ -182,42 +185,54 @@ function rootServersTable() {
   return `${head}\n${rows.join("\n")}`;
 }
 
-// ---- write ------------------------------------------------------------------
-let n = 0;
+// ---- generate ---------------------------------------------------------------
 for (const s of manifest.servers) {
-  writeFileSync(new URL(`${SUBDIR}${s.slug}/server.json`, ROOT), serverJson(s));
-  const readmePath = new URL(`${SUBDIR}${s.slug}/README.md`, ROOT);
-  let md = readFileSync(readmePath, "utf8");
+  emit(`${SUBDIR}${s.slug}/server.json`, serverJson(s));
+  const readmePath = `${SUBDIR}${s.slug}/README.md`;
+  if (!existsSync(new URL(readmePath, ROOT))) die(`${s.slug}: no ${readmePath} (scaffold it first, see distribute-mcp)`);
+  let md = readFileSync(new URL(readmePath, ROOT), "utf8");
   md = replaceConnect(md, s);
   md = replaceSection(md, "Tools", toolsSection(s));
   md = replaceSection(md, "Pricing", pricingSection(s));
-  writeFileSync(readmePath, md);
-  n++;
+  emit(readmePath, md);
 }
 
 // root README: swap the markdown table between "## Servers" and the next "_"/"##".
 let root = readFileSync(new URL("README.md", ROOT), "utf8");
 root = root.replace(/\| Server \|[\s\S]*?\n(?=\n|_|##)/, rootServersTable() + "\n");
-writeFileSync(new URL("README.md", ROOT), root);
-
-console.log(`codegen: wrote ${n} server.json + ${n} README section pairs + root README table`);
+emit("README.md", root);
 
 // portal/_probe/<slug>.json: the Worker's token-less discovery reply as one static JSON-RPC message (id 1; the
 // initialize result merged with tools/list, resources/list and prompts/list), from fleet/products/<slug>/discovery.json.
-// The zone redirect rule for unrequested crawlers (mcpbeat) sends their /mcp to it, so no Worker runs. Without a fleet
-// checkout, the files stay as they are. Files of servers no longer in the manifest are removed.
-const probeDir = new URL("portal/_probe/", ROOT);
-if (existsSync(new URL("../fleet/products/", ROOT))) {
-  mkdirSync(probeDir, { recursive: true });
-  const keep = new Set();
-  for (const s of manifest.servers) {
-    const src = new URL(`../fleet/products/${s.slug}/discovery.json`, ROOT);
-    if (!existsSync(src)) { console.warn(`codegen: no discovery.json for ${s.slug}; no probe file`); continue; }
-    const d = JSON.parse(readFileSync(src, "utf8"));
-    const result = { ...d.initialize, tools: d.tools, resources: [], prompts: [] };
-    writeFileSync(new URL(`${s.slug}.json`, probeDir), JSON.stringify({ jsonrpc: "2.0", id: 1, result }));
-    keep.add(`${s.slug}.json`);
-  }
-  for (const f of readdirSync(probeDir)) if (f.endsWith(".json") && !keep.has(f)) unlinkSync(new URL(f, probeDir));
-  console.log(`codegen: wrote ${keep.size} probe file(s) → portal/_probe/`);
+// The zone redirect rule for unrequested crawlers (mcpbeat) sends their /mcp to it, so no Worker runs.
+// Files of servers no longer in the manifest are removed.
+const probes = new Set();
+for (const s of manifest.servers) {
+  const src = new URL(`products/${s.slug}/discovery.json`, FLEET);
+  if (!existsSync(src)) die(`${s.slug}: no fleet discovery.json`);
+  const d = JSON.parse(readFileSync(src, "utf8"));
+  const result = { ...d.initialize, tools: d.tools, resources: [], prompts: [] };
+  emit(`portal/_probe/${s.slug}.json`, JSON.stringify({ jsonrpc: "2.0", id: 1, result }));
+  probes.add(`${s.slug}.json`);
 }
+const probeDir = new URL("portal/_probe/", ROOT);
+if (existsSync(probeDir)) for (const f of readdirSync(probeDir)) if (f.endsWith(".json") && !probes.has(f)) remove.add(`portal/_probe/${f}`);
+
+// ---- write or check -----------------------------------------------------------
+const changed = [...out].filter(([path, content]) => {
+  const url = new URL(path, ROOT);
+  return !existsSync(url) || readFileSync(url, "utf8") !== content;
+}).map(([path]) => path);
+const removed = [...remove];
+if (CHECK) {
+  for (const p of changed) console.log(`would change: ${p}`);
+  for (const p of removed) console.log(`would remove: ${p}`);
+  console.log(`codegen --check: ${changed.length + removed.length} file(s) out of date (${manifest.servers.length} servers)`);
+  process.exit(changed.length + removed.length ? 1 : 0);
+}
+for (const p of changed) {
+  mkdirSync(new URL(".", new URL(p, ROOT)), { recursive: true });
+  writeFileSync(new URL(p, ROOT), out.get(p));
+}
+for (const p of removed) unlinkSync(new URL(p, ROOT));
+console.log(`codegen: ${manifest.servers.length} servers; wrote ${changed.length} changed file(s), removed ${removed.length}`);

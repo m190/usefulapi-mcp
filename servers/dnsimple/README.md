@@ -33,18 +33,18 @@ On first connect you'll paste your DNSimple API token. It's validated, stored pe
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `dnsimple_whoami` | read | Whoami |
+| `dnsimple_whoami` | read | Who am I |
 | `dnsimple_list_domains` | read | List domains |
-| `dnsimple_get_domain` | read | Get domain |
-| `dnsimple_list_zones` | read | List zones |
+| `dnsimple_get_domain` | read | Get a domain |
 | `dnsimple_list_zone_records` | read | List zone records |
-| `dnsimple_get_zone_record` | read | Get zone record |
-| `dnsimple_check_domain` | read | Check domain |
+| `dnsimple_get_zone_record` | read | Get a zone record |
+| `dnsimple_check_domain` | read | Check domain availability |
 | `dnsimple_get_domain_prices` | read | Get domain prices |
+| `dnsimple_list_zones` | read | List zones |
 | `dnsimple_list_contacts` | read | List contacts |
-| `dnsimple_create_zone_record` | **write** | Create zone record |
-| `dnsimple_update_zone_record` | **write** | Update zone record |
-| `dnsimple_delete_zone_record` | **write** | Delete zone record |
+| `dnsimple_create_zone_record` | **write** | Create a zone record |
+| `dnsimple_update_zone_record` | **write** | Update a zone record |
+| `dnsimple_delete_zone_record` | **write** | Delete a zone record |
 | `dnsimple_usage_status` | meta | Usage status (free-tier meter) |
 | `dnsimple_request_feature` | meta | Request a missing feature |
 | `dnsimple_upgrade` | meta | Upgrade to Pro (unlimited) |

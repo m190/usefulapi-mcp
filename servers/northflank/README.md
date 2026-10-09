@@ -45,11 +45,11 @@ On first connect you'll paste your Northflank API token. It's validated, stored 
 | `northflank_get_service_metrics` | read | Get service metrics |
 | `northflank_list_secret_groups` | read | List secret groups |
 | `northflank_list_domains` | read | List domains |
-| `northflank_trigger_service_build` | **write** | Trigger service build |
-| `northflank_restart_service` | **write** | Restart service |
-| `northflank_scale_service` | **write** | Scale service |
-| `northflank_pause_service` | **write** | Pause service |
-| `northflank_resume_service` | **write** | Resume service |
+| `northflank_trigger_service_build` | **write** | Trigger service build (mutates infra) |
+| `northflank_restart_service` | **write** | Restart service (mutates infra) |
+| `northflank_scale_service` | **write** | Scale service (mutates infra) |
+| `northflank_pause_service` | **write** | Pause service (mutates infra) |
+| `northflank_resume_service` | **write** | Resume service (mutates infra) |
 | `northflank_usage_status` | meta | Usage status (free-tier meter) |
 | `northflank_request_feature` | meta | Request a missing feature |
 | `northflank_upgrade` | meta | Upgrade to Pro (unlimited) |

@@ -33,19 +33,19 @@ On first connect you'll paste your Stream API key and secret. It's validated, st
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `stream_get_app` | read | Get app |
+| `stream_get_app` | read | Get app settings |
 | `stream_query_channels` | read | Query channels |
-| `stream_get_channel` | read | Get channel |
+| `stream_get_channel` | read | Get channel state + recent messages |
 | `stream_search_messages` | read | Search messages |
-| `stream_get_message` | read | Get message |
-| `stream_get_replies` | read | Get replies |
-| `stream_get_reactions` | read | Get reactions |
-| `stream_query_members` | read | Query members |
+| `stream_get_message` | read | Get a message |
+| `stream_get_replies` | read | Get thread replies |
+| `stream_get_reactions` | read | Get message reactions |
+| `stream_query_members` | read | Query channel members |
 | `stream_query_users` | read | Query users |
 | `stream_query_threads` | read | Query threads |
-| `stream_get_unread_counts` | read | Get unread counts |
-| `stream_send_message` | **write** | Send message |
-| `stream_send_reaction` | **write** | Send reaction |
+| `stream_get_unread_counts` | read | Get unread counts for a user |
+| `stream_send_message` | **write** | Send a message (WRITE — posts to Stream) |
+| `stream_send_reaction` | **write** | Send a reaction (WRITE — posts to Stream) |
 | `stream_usage_status` | meta | Usage status (free-tier meter) |
 | `stream_request_feature` | meta | Request a missing feature |
 | `stream_upgrade` | meta | Upgrade to Pro (unlimited) |

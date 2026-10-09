@@ -34,16 +34,16 @@ On first connect you'll paste your EasyPost API key. It's validated, stored per-
 | Tool | Type | What it does |
 |------|------|--------------|
 | `easypost_list_shipments` | read | List shipments |
-| `easypost_get_shipment` | read | Get shipment |
+| `easypost_get_shipment` | read | Get a shipment |
 | `easypost_list_trackers` | read | List trackers |
-| `easypost_get_tracker` | read | Get tracker |
+| `easypost_get_tracker` | read | Get a tracker |
 | `easypost_list_addresses` | read | List addresses |
-| `easypost_get_address` | read | Get address |
-| `easypost_verify_address` | **write** | Verify address |
-| `easypost_create_shipment` | **write** | Create shipment |
-| `easypost_create_tracker` | **write** | Create tracker |
-| `easypost_buy_shipment` | **write** | Buy shipment |
-| `easypost_refund_shipment` | **write** | Refund shipment |
+| `easypost_get_address` | read | Get an address |
+| `easypost_verify_address` | **write** | Verify an address |
+| `easypost_create_shipment` | **write** | Create a shipment (get rates) |
+| `easypost_create_tracker` | **write** | Create a tracker |
+| `easypost_buy_shipment` | **write** | Buy a shipping label |
+| `easypost_refund_shipment` | **write** | Refund / void a label |
 | `easypost_usage_status` | meta | Usage status (free-tier meter) |
 | `easypost_request_feature` | meta | Request a missing feature |
 | `easypost_upgrade` | meta | Upgrade to Pro (unlimited) |

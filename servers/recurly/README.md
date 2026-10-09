@@ -39,7 +39,7 @@ On first connect you'll paste your Recurly API key. It's validated, stored per-u
 | `recurly_get_subscription` | read | Get subscription |
 | `recurly_list_invoices` | read | List invoices |
 | `recurly_list_plans` | read | List plans |
-| `recurly_cancel_subscription` | **write** | Cancel subscription (WRITE — changes billing) |
+| `recurly_cancel_customer_subscription` | **write** | Cancel subscription (WRITE — changes billing) |
 | `recurly_pause_subscription` | **write** | Pause subscription (WRITE — changes billing) |
 | `recurly_usage_status` | meta | Usage status (free-tier meter) |
 | `recurly_request_feature` | meta | Request a missing feature |

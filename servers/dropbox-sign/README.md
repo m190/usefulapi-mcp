@@ -37,10 +37,10 @@ On first connect you'll paste your Dropbox Sign API key. It's validated, stored 
 | `dropbox_sign_get_team` | read | Get team |
 | `dropbox_sign_list_signature_requests` | read | List signature requests |
 | `dropbox_sign_get_signature_request` | read | Get signature request |
-| `dropbox_sign_get_signed_files_url` | read | Get signed files url |
+| `dropbox_sign_get_signed_files_url` | read | Get signed files URL |
 | `dropbox_sign_list_templates` | read | List templates |
 | `dropbox_sign_get_template` | read | Get template |
-| `dropbox_sign_send_with_template` | **write** | Send with template |
+| `dropbox_sign_send_with_template` | **write** | Send signature request from template |
 | `dropbox_sign_cancel_signature_request` | **write** | Cancel signature request |
 | `dropbox_sign_remind_signature_request` | **write** | Remind signature request |
 | `dropbox_sign_usage_status` | meta | Usage status (free-tier meter) |

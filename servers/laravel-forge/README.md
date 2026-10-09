@@ -33,23 +33,23 @@ On first connect you'll paste your Laravel Forge API token. It's validated, stor
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `forge_list_organizations` | read | Forge list organizations |
-| `forge_get_current_user` | read | Forge get current user |
-| `forge_list_servers` | read | Forge list servers |
-| `forge_get_server` | read | Forge get server |
-| `forge_list_server_events` | read | Forge list server events |
-| `forge_list_sites` | read | Forge list sites |
-| `forge_get_site` | read | Forge get site |
-| `forge_list_deployments` | read | Forge list deployments |
-| `forge_get_deployment` | read | Forge get deployment |
-| `forge_get_deployment_log` | read | Forge get deployment log |
-| `forge_get_deployment_status` | read | Forge get deployment status |
-| `forge_list_databases` | read | Forge list databases |
-| `forge_list_scheduled_jobs` | read | Forge list scheduled jobs |
-| `forge_list_monitors` | read | Forge list monitors |
-| `forge_get_site_env` | read | Forge get site env |
-| `forge_deploy_site` | **write** | Forge deploy site |
-| `forge_run_site_command` | **write** | Forge run site command |
+| `forge_list_organizations` | read | List organizations |
+| `forge_get_current_user` | read | Get current user |
+| `forge_list_servers` | read | List servers |
+| `forge_get_server` | read | Get server |
+| `forge_list_server_events` | read | List server events |
+| `forge_list_sites` | read | List sites |
+| `forge_get_site` | read | Get site |
+| `forge_list_deployments` | read | List deployments |
+| `forge_get_deployment` | read | Get deployment |
+| `forge_get_deployment_log` | read | Get deployment log |
+| `forge_get_deployment_status` | read | Get deployment status |
+| `forge_list_databases` | read | List databases |
+| `forge_list_scheduled_jobs` | read | List scheduled jobs |
+| `forge_list_monitors` | read | List monitors |
+| `forge_get_site_env` | read | Get site environment (.env) |
+| `forge_deploy_site` | **write** | Deploy site |
+| `forge_run_site_command` | **write** | Run site command |
 | `laravel_forge_usage_status` | meta | Usage status (free-tier meter) |
 | `laravel_forge_request_feature` | meta | Request a missing feature |
 | `laravel_forge_upgrade` | meta | Upgrade to Pro (unlimited) |

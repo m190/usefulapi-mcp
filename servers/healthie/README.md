@@ -33,22 +33,22 @@ On first connect you'll paste your Healthie API key. It's validated, stored per-
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `healthie_current_user` | read | Current user |
+| `healthie_current_user` | read | Current user / account |
 | `healthie_get_organization` | read | Get organization |
-| `healthie_list_patients` | read | List patients |
-| `healthie_get_user` | read | Get user |
+| `healthie_list_patients` | read | List patients / clients |
+| `healthie_get_user` | read | Get a user / patient |
 | `healthie_list_appointments` | read | List appointments |
-| `healthie_get_appointment` | read | Get appointment |
+| `healthie_get_appointment` | read | Get an appointment |
 | `healthie_list_appointment_types` | read | List appointment types |
-| `healthie_list_forms` | read | List forms |
-| `healthie_list_form_answer_groups` | read | List form answer groups |
+| `healthie_list_forms` | read | List charting / intake form templates |
+| `healthie_list_form_answer_groups` | read | List completed forms / charting notes |
 | `healthie_list_documents` | read | List documents |
 | `healthie_list_tasks` | read | List tasks |
 | `healthie_list_goals` | read | List goals |
 | `healthie_list_metric_entries` | read | List metric entries |
 | `healthie_list_conversations` | read | List conversations |
-| `healthie_create_task` | **write** | Create task |
-| `healthie_create_note` | **write** | Create note |
+| `healthie_create_task` | **write** | Create a task (WRITE — creates a record) |
+| `healthie_create_note` | **write** | Create a note / chat entry (WRITE — creates a record) |
 | `healthie_usage_status` | meta | Usage status (free-tier meter) |
 | `healthie_request_feature` | meta | Request a missing feature |
 | `healthie_upgrade` | meta | Upgrade to Pro (unlimited) |

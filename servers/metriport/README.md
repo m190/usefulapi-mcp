@@ -39,7 +39,7 @@ On first connect you'll paste your Metriport API key. It's validated, stored per
 | `metriport_get_patient` | read | Get patient |
 | `metriport_list_documents` | read | List documents |
 | `metriport_get_document_query_status` | read | Get document query status |
-| `metriport_get_document_url` | read | Get document url |
+| `metriport_get_document_url` | read | Get document download URL |
 | `metriport_list_consolidated_queries` | read | List consolidated queries |
 | `metriport_get_medical_record_summary` | read | Get medical record summary |
 | `metriport_create_patient` | **write** | Create patient |

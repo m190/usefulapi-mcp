@@ -33,21 +33,21 @@ On first connect you'll paste your Ably API key. It's validated, stored per-user
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `ably_get_channel_history` | read | Get channel history |
-| `ably_get_presence` | read | Get presence |
-| `ably_get_presence_history` | read | Get presence history |
-| `ably_get_channel_details` | read | Get channel details |
-| `ably_list_channels` | read | List channels |
-| `ably_get_stats` | read | Get stats |
-| `ably_get_service_time` | read | Get service time |
-| `ably_whoami` | read | Whoami |
-| `ably_list_apps` | read | List apps |
-| `ably_list_keys` | read | List keys |
-| `ably_list_namespaces` | read | List namespaces |
-| `ably_list_queues` | read | List queues |
-| `ably_list_rules` | read | List rules |
-| `ably_get_account_stats` | read | Get account stats |
-| `ably_publish_message` | **write** | Publish message |
+| `ably_get_channel_history` | read | Get channel message history |
+| `ably_get_presence` | read | Get channel presence set |
+| `ably_get_presence_history` | read | Get channel presence history |
+| `ably_get_channel_details` | read | Get channel details / occupancy |
+| `ably_list_channels` | read | List active channels |
+| `ably_get_stats` | read | Get app statistics |
+| `ably_get_service_time` | read | Get Ably service time |
+| `ably_publish_message` | **write** | Publish a message to a channel |
+| `ably_whoami` | read | Get control token / account info |
+| `ably_list_apps` | read | List Ably apps |
+| `ably_list_keys` | read | List an app's API keys |
+| `ably_list_namespaces` | read | List an app's channel namespaces |
+| `ably_list_queues` | read | List an app's queues |
+| `ably_list_rules` | read | List an app's integration rules |
+| `ably_get_account_stats` | read | Get account-level statistics |
 | `ably_usage_status` | meta | Usage status (free-tier meter) |
 | `ably_request_feature` | meta | Request a missing feature |
 | `ably_upgrade` | meta | Upgrade to Pro (unlimited) |

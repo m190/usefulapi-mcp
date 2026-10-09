@@ -33,11 +33,11 @@ On first connect you'll paste your Hypertune API token. It's validated, stored p
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `hypertune_evaluate` | read | Evaluate |
-| `hypertune_get_logic` | read | Get logic |
-| `hypertune_list_flags` | read | List flags |
-| `hypertune_introspect` | read | Introspect |
-| `hypertune_query` | read | Query |
+| `hypertune_evaluate` | read | Evaluate feature flags |
+| `hypertune_get_logic` | read | Get flag logic (unreduced) |
+| `hypertune_query` | read | Run a raw GraphQL query |
+| `hypertune_introspect` | read | Introspect the GraphQL schema |
+| `hypertune_list_flags` | read | List feature flags |
 | `hypertune_usage_status` | meta | Usage status (free-tier meter) |
 | `hypertune_request_feature` | meta | Request a missing feature |
 | `hypertune_upgrade` | meta | Upgrade to Pro (unlimited) |

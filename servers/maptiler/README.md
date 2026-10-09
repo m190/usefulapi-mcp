@@ -33,14 +33,14 @@ On first connect you'll paste your MapTiler API key. It's validated, stored per-
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `maptiler_geocode` | read | Geocode |
-| `maptiler_reverse_geocode` | read | Reverse geocode |
-| `maptiler_batch_geocode` | read | Batch geocode |
-| `maptiler_geolocate_ip` | read | Geolocate ip |
-| `maptiler_get_elevation` | read | Get elevation |
-| `maptiler_transform_coordinates` | read | Transform coordinates |
-| `maptiler_search_coordinate_systems` | read | Search coordinate systems |
-| `maptiler_get_data_features` | read | Get data features |
+| `maptiler_geocode` | read | Forward geocode (search place by name) |
+| `maptiler_reverse_geocode` | read | Reverse geocode (place at coordinates) |
+| `maptiler_batch_geocode` | read | Batch forward geocode |
+| `maptiler_geolocate_ip` | read | Geolocate IP address |
+| `maptiler_get_elevation` | read | Get elevation at coordinates |
+| `maptiler_transform_coordinates` | read | Transform coordinates between CRS |
+| `maptiler_search_coordinate_systems` | read | Search coordinate reference systems |
+| `maptiler_get_data_features` | read | Get dataset features (GeoJSON) |
 | `maptiler_usage_status` | meta | Usage status (free-tier meter) |
 | `maptiler_request_feature` | meta | Request a missing feature |
 | `maptiler_upgrade` | meta | Upgrade to Pro (unlimited) |

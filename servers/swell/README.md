@@ -34,21 +34,21 @@ On first connect you'll paste your Swell store ID and secret key. It's validated
 | Tool | Type | What it does |
 |------|------|--------------|
 | `swell_list_products` | read | List products |
-| `swell_get_product` | read | Get product |
+| `swell_get_product` | read | Get a product |
 | `swell_list_categories` | read | List categories |
 | `swell_list_orders` | read | List orders |
-| `swell_get_order` | read | Get order |
+| `swell_get_order` | read | Get an order |
 | `swell_list_customers` | read | List customers |
-| `swell_get_customer` | read | Get customer |
+| `swell_get_customer` | read | Get a customer |
 | `swell_list_carts` | read | List carts |
 | `swell_list_subscriptions` | read | List subscriptions |
-| `swell_get_subscription` | read | Get subscription |
+| `swell_get_subscription` | read | Get a subscription |
 | `swell_list_invoices` | read | List invoices |
 | `swell_list_coupons` | read | List coupons |
-| `swell_query` | read | Query |
-| `swell_create_product` | **write** | Create product |
-| `swell_update_product` | **write** | Update product |
-| `swell_update_order` | **write** | Update order |
+| `swell_query` | read | Query any collection (read-only) |
+| `swell_create_product` | **write** | Create a product |
+| `swell_update_product` | **write** | Update a product |
+| `swell_update_order` | **write** | Update an order |
 | `swell_usage_status` | meta | Usage status (free-tier meter) |
 | `swell_request_feature` | meta | Request a missing feature |
 | `swell_upgrade` | meta | Upgrade to Pro (unlimited) |

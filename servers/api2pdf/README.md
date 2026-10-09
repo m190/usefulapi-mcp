@@ -33,22 +33,22 @@ On first connect you'll paste your Api2Pdf API key. It's validated, stored per-u
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `api2pdf_get_balance` | read | Get balance |
-| `api2pdf_get_status` | read | Get status |
-| `api2pdf_html_to_pdf` | **write** | Html to pdf |
-| `api2pdf_url_to_pdf` | **write** | Url to pdf |
-| `api2pdf_markdown_to_pdf` | **write** | Markdown to pdf |
-| `api2pdf_html_to_image` | **write** | Html to image |
-| `api2pdf_url_to_image` | **write** | Url to image |
-| `api2pdf_wkhtml_to_pdf` | **write** | Wkhtml to pdf |
-| `api2pdf_office_to_pdf` | **write** | Office to pdf |
-| `api2pdf_merge_pdfs` | **write** | Merge pdfs |
-| `api2pdf_compress_pdf` | **write** | Compress pdf |
-| `api2pdf_extract_pages` | **write** | Extract pages |
-| `api2pdf_add_password` | **write** | Add password |
-| `api2pdf_convert_to_markdown` | **write** | Convert to markdown |
-| `api2pdf_generate_barcode` | **write** | Generate barcode |
-| `api2pdf_delete_file` | **write** | Delete file |
+| `api2pdf_html_to_pdf` | **write** | HTML to PDF (Chrome) |
+| `api2pdf_url_to_pdf` | **write** | URL to PDF (Chrome) |
+| `api2pdf_markdown_to_pdf` | **write** | Markdown to PDF (Chrome) |
+| `api2pdf_html_to_image` | **write** | HTML to image (Chrome) |
+| `api2pdf_url_to_image` | **write** | URL to image / screenshot (Chrome) |
+| `api2pdf_wkhtml_to_pdf` | **write** | HTML to PDF (wkhtmltopdf) |
+| `api2pdf_office_to_pdf` | **write** | Office document to PDF (LibreOffice) |
+| `api2pdf_merge_pdfs` | **write** | Merge PDFs (PDFSharp) |
+| `api2pdf_compress_pdf` | **write** | Compress PDF (PDFSharp) |
+| `api2pdf_extract_pages` | **write** | Extract PDF pages (PDFSharp) |
+| `api2pdf_add_password` | **write** | Password-protect PDF (PDFSharp) |
+| `api2pdf_convert_to_markdown` | **write** | Convert document to Markdown (MarkItDown) |
+| `api2pdf_generate_barcode` | **write** | Generate barcode / QR code (Zebra) |
+| `api2pdf_get_balance` | read | Get account balance |
+| `api2pdf_get_status` | read | Get service status |
+| `api2pdf_delete_file` | **write** | Delete a generated file |
 | `api2pdf_usage_status` | meta | Usage status (free-tier meter) |
 | `api2pdf_request_feature` | meta | Request a missing feature |
 | `api2pdf_upgrade` | meta | Upgrade to Pro (unlimited) |

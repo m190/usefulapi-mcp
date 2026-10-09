@@ -33,16 +33,16 @@ On first connect you'll paste your Anvil API key. It's validated, stored per-use
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `anvil_current_user` | read | Current user |
+| `anvil_current_user` | read | Current Anvil user |
 | `anvil_get_organization` | read | Get organization |
-| `anvil_get_cast` | read | Get cast |
-| `anvil_get_etch_packet` | read | Get etch packet |
-| `anvil_get_weld` | read | Get weld |
-| `anvil_get_weld_data` | read | Get weld data |
-| `anvil_fill_pdf` | **write** | Fill pdf |
-| `anvil_generate_pdf` | **write** | Generate pdf |
-| `anvil_create_etch_packet` | **write** | Create etch packet |
-| `anvil_generate_etch_sign_url` | **write** | Generate etch sign url |
+| `anvil_get_cast` | read | Get cast (PDF template) |
+| `anvil_get_etch_packet` | read | Get Etch e-signature packet |
+| `anvil_get_weld` | read | Get weld (workflow) |
+| `anvil_get_weld_data` | read | Get weld data (workflow submission) |
+| `anvil_fill_pdf` | **write** | Fill a PDF template |
+| `anvil_generate_pdf` | **write** | Generate a PDF from HTML or Markdown |
+| `anvil_create_etch_packet` | **write** | Create Etch e-signature packet |
+| `anvil_generate_etch_sign_url` | **write** | Generate Etch signing URL |
 | `anvil_usage_status` | meta | Usage status (free-tier meter) |
 | `anvil_request_feature` | meta | Request a missing feature |
 | `anvil_upgrade` | meta | Upgrade to Pro (unlimited) |

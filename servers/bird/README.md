@@ -34,21 +34,21 @@ On first connect you'll paste your Bird API key. It's validated, stored per-user
 | Tool | Type | What it does |
 |------|------|--------------|
 | `bird_list_contacts` | read | List contacts |
-| `bird_get_contact` | read | Get contact |
+| `bird_get_contact` | read | Get a contact |
 | `bird_list_contact_properties` | read | List contact properties |
 | `bird_list_audiences` | read | List audiences |
-| `bird_get_audience` | read | Get audience |
-| `bird_list_audience_contacts` | read | List audience contacts |
-| `bird_list_sms_messages` | read | List sms messages |
-| `bird_get_sms_message` | read | Get sms message |
-| `bird_list_sms_templates` | read | List sms templates |
-| `bird_list_whatsapp_messages` | read | List whatsapp messages |
-| `bird_get_whatsapp_message` | read | Get whatsapp message |
-| `bird_list_whatsapp_templates` | read | List whatsapp templates |
+| `bird_get_audience` | read | Get an audience |
+| `bird_list_audience_contacts` | read | List an audience's contacts |
+| `bird_list_sms_messages` | read | List SMS messages |
+| `bird_get_sms_message` | read | Get an SMS message |
+| `bird_list_sms_templates` | read | List SMS templates |
+| `bird_list_whatsapp_messages` | read | List WhatsApp messages |
+| `bird_get_whatsapp_message` | read | Get a WhatsApp message |
+| `bird_list_whatsapp_templates` | read | List WhatsApp templates |
 | `bird_list_email_messages` | read | List email messages |
-| `bird_get_email_message` | read | Get email message |
-| `bird_create_contact` | **write** | Create contact |
-| `bird_create_audience` | **write** | Create audience |
+| `bird_get_email_message` | read | Get an email message |
+| `bird_create_contact` | **write** | Create a contact |
+| `bird_create_audience` | **write** | Create an audience |
 | `bird_usage_status` | meta | Usage status (free-tier meter) |
 | `bird_request_feature` | meta | Request a missing feature |
 | `bird_upgrade` | meta | Upgrade to Pro (unlimited) |

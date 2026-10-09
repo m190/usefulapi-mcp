@@ -38,7 +38,7 @@ On first connect you'll paste your Lago API key. It's validated, stored per-user
 | `lago_get_customer_current_usage` | read | Get customer current usage |
 | `lago_get_customer_past_usage` | read | Get customer past usage |
 | `lago_list_customer_subscriptions` | read | List customer subscriptions |
-| `lago_get_customer_portal_url` | read | Get customer portal url |
+| `lago_get_customer_portal_url` | read | Get customer portal URL |
 | `lago_list_subscriptions` | read | List subscriptions |
 | `lago_get_subscription` | read | Get subscription |
 | `lago_list_plans` | read | List plans |
@@ -48,15 +48,15 @@ On first connect you'll paste your Lago API key. It's validated, stored per-user
 | `lago_list_billable_metrics` | read | List billable metrics |
 | `lago_get_billable_metric` | read | Get billable metric |
 | `lago_list_coupons` | read | List coupons |
-| `lago_list_add_ons` | read | List add ons |
+| `lago_list_add_ons` | read | List add-ons |
 | `lago_list_wallets` | read | List wallets |
 | `lago_list_credit_notes` | read | List credit notes |
 | `lago_get_credit_note` | read | Get credit note |
 | `lago_list_fees` | read | List fees |
-| `lago_analytics_gross_revenue` | read | Analytics gross revenue |
-| `lago_analytics_mrr` | read | Analytics mrr |
+| `lago_analytics_gross_revenue` | read | Analytics: gross revenue |
+| `lago_analytics_mrr` | read | Analytics: MRR |
 | `lago_create_customer` | **write** | Create customer |
-| `lago_create_event` | **write** | Create event |
+| `lago_create_event` | **write** | Create usage event |
 | `lago_usage_status` | meta | Usage status (free-tier meter) |
 | `lago_request_feature` | meta | Request a missing feature |
 | `lago_upgrade` | meta | Upgrade to Pro (unlimited) |

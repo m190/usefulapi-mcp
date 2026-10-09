@@ -33,10 +33,10 @@ On first connect you'll paste your MaxMind account ID and license key. It's vali
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `minfraud_score` | read | Minfraud score |
-| `minfraud_insights` | read | Minfraud insights |
-| `minfraud_factors` | read | Minfraud factors |
-| `minfraud_report_transaction` | **write** | Minfraud report transaction |
+| `minfraud_score` | read | minFraud risk score |
+| `minfraud_insights` | read | minFraud Insights (detailed risk) |
+| `minfraud_factors` | read | minFraud Factors (risk reasons + subscores) |
+| `minfraud_report_transaction` | **write** | Report a transaction outcome |
 | `maxmind_minfraud_usage_status` | meta | Usage status (free-tier meter) |
 | `maxmind_minfraud_request_feature` | meta | Request a missing feature |
 | `maxmind_minfraud_upgrade` | meta | Upgrade to Pro (unlimited) |

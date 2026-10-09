@@ -33,29 +33,29 @@ On first connect you'll paste your Quaderno API key and account subdomain. It's 
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `ping` | read | Ping |
-| `calculate_tax` | read | Calculate tax |
+| `ping` | read | Ping (verify auth) |
+| `calculate_tax` | read | Calculate tax rate |
 | `list_invoices` | read | List invoices |
-| `get_invoice` | read | Get invoice |
+| `get_invoice` | read | Get an invoice |
 | `list_contacts` | read | List contacts |
-| `get_contact` | read | Get contact |
-| `list_items` | read | List items |
-| `get_item` | read | Get item |
+| `get_contact` | read | Get a contact |
+| `list_items` | read | List products (items) |
+| `get_item` | read | Get a product (item) |
 | `list_credit_notes` | read | List credit notes |
-| `get_credit_note` | read | Get credit note |
+| `get_credit_note` | read | Get a credit note |
 | `list_receipts` | read | List receipts |
-| `get_receipt` | read | Get receipt |
+| `get_receipt` | read | Get a receipt |
 | `list_expenses` | read | List expenses |
-| `get_expense` | read | Get expense |
+| `get_expense` | read | Get an expense |
 | `list_tax_codes` | read | List tax codes |
-| `list_jurisdictions` | read | List jurisdictions |
+| `list_jurisdictions` | read | List tax jurisdictions |
 | `list_webhooks` | read | List webhooks |
-| `quaderno_request` | read | Request |
-| `create_contact` | **write** | Create contact |
-| `update_contact` | **write** | Update contact |
-| `create_item` | **write** | Create item |
-| `create_invoice` | **write** | Create invoice |
-| `create_transaction` | **write** | Create transaction |
+| `quaderno_request` | read | Raw read request |
+| `create_contact` | **write** | Create a contact |
+| `update_contact` | **write** | Update a contact |
+| `create_item` | **write** | Create a product (item) |
+| `create_invoice` | **write** | Create an invoice |
+| `create_transaction` | **write** | Create a transaction |
 | `quaderno_usage_status` | meta | Usage status (free-tier meter) |
 | `quaderno_request_feature` | meta | Request a missing feature |
 | `quaderno_upgrade` | meta | Upgrade to Pro (unlimited) |

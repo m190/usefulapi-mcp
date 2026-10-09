@@ -37,19 +37,19 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 |------|------|--------------|
 | `checkfront_get_company` | read | Get company settings |
 | `checkfront_list_categories` | read | List item categories |
-| `checkfront_list_items` | read | List inventory items |
-| `checkfront_get_item` | read | Get an item |
+| `checkfront_list_items` | read | List inventory items (optionally with availability and rates) |
+| `checkfront_get_item` | read | Get an item (optionally with availability and rates) |
 | `checkfront_get_availability_calendar` | read | Get an availability calendar |
 | `checkfront_list_bookings` | read | List bookings |
 | `checkfront_get_booking` | read | Get a booking |
 | `checkfront_list_booking_notes` | read | List booking notes |
 | `checkfront_get_booking_form` | read | Get the booking form fields |
-| `checkfront_get_booking_session` | read | Get a booking session |
+| `checkfront_get_booking_session` | read | Get a booking session (cart) |
 | `checkfront_search_customers` | read | Search customers |
 | `checkfront_get_customer` | read | Get a customer |
-| `checkfront_list_events` | read | List events |
+| `checkfront_list_events` | read | List events (seasons, specials, closures, discounts) |
 | `checkfront_list_staff_accounts` | read | List staff accounts |
-| `checkfront_add_to_booking_session` | **write** | Add items to a booking session |
+| `checkfront_add_to_booking_session` | **write** | Add items to a booking session (cart) |
 | `checkfront_end_booking_session` | **write** | End or clear a booking session |
 | `checkfront_create_booking` | **write** | Create a booking |
 | `checkfront_update_booking_status` | **write** | Change a booking's status |

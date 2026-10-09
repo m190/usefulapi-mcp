@@ -45,7 +45,7 @@ It's validated, stored per-user, and scoped to you — no keys in config files.
 | `recharge_list_products` | read | List products |
 | `recharge_list_addresses` | read | List addresses |
 | `recharge_skip_charge` | **write** | Skip charge |
-| `recharge_cancel_subscription` | **write** | Cancel subscription |
+| `recharge_cancel_customer_subscription` | **write** | Cancel subscription |
 | `recharge_activate_subscription` | **write** | Activate subscription |
 | `recharge_usage_status` | meta | Usage status (free-tier meter) |
 | `recharge_request_feature` | meta | Request a missing feature |

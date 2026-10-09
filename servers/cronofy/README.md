@@ -38,8 +38,8 @@ On first connect you'll paste your Cronofy access token. It's validated, stored 
 | `cronofy_list_calendars` | read | List calendars |
 | `cronofy_list_profiles` | read | List profiles |
 | `cronofy_read_events` | read | Read events |
-| `cronofy_get_free_busy` | read | Get free busy |
-| `cronofy_upsert_event` | **write** | Upsert event |
+| `cronofy_get_free_busy` | read | Get free/busy |
+| `cronofy_upsert_event` | **write** | Create or update event |
 | `cronofy_delete_event` | **write** | Delete event |
 | `cronofy_usage_status` | meta | Usage status (free-tier meter) |
 | `cronofy_request_feature` | meta | Request a missing feature |

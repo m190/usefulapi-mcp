@@ -35,18 +35,18 @@ On first connect you'll paste your Vital API key. It's validated, stored per-use
 |------|------|--------------|
 | `vital_list_users` | read | List users |
 | `vital_get_user` | read | Get user |
-| `vital_resolve_user` | read | Resolve user |
-| `vital_get_user_connected_providers` | read | Get user connected providers |
-| `vital_get_user_latest_info` | read | Get user latest info |
-| `vital_list_providers` | read | List providers |
-| `vital_get_sleep` | read | Get sleep |
-| `vital_get_activity` | read | Get activity |
-| `vital_get_workouts` | read | Get workouts |
-| `vital_get_body` | read | Get body |
-| `vital_get_meal` | read | Get meal |
-| `vital_get_menstrual_cycle` | read | Get menstrual cycle |
-| `vital_get_profile` | read | Get profile |
-| `vital_get_timeseries` | read | Get timeseries |
+| `vital_resolve_user` | read | Resolve user by client_user_id |
+| `vital_get_user_connected_providers` | read | Get user's connected providers |
+| `vital_get_user_latest_info` | read | Get user's latest info |
+| `vital_list_providers` | read | List supported providers |
+| `vital_get_sleep` | read | Sleep |
+| `vital_get_activity` | read | Activity |
+| `vital_get_workouts` | read | Workouts |
+| `vital_get_body` | read | Body |
+| `vital_get_meal` | read | Meal |
+| `vital_get_menstrual_cycle` | read | Menstrual cycle |
+| `vital_get_profile` | read | Profile |
+| `vital_get_timeseries` | read | Get timeseries data |
 | `vital_list_lab_tests` | read | List lab tests |
 | `vital_get_lab_test` | read | Get lab test |
 | `vital_list_orders` | read | List orders |

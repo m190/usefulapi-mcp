@@ -42,12 +42,12 @@ On first connect you'll paste your api.video API key. It's validated, stored per
 | `apivideo_list_chapters` | read | List chapters |
 | `apivideo_list_players` | read | List players |
 | `apivideo_list_webhooks` | read | List webhooks |
-| `apivideo_get_video_analytics` | read | Get video analytics |
-| `apivideo_get_live_stream_analytics` | read | Get live stream analytics |
-| `apivideo_create_video` | **write** | Create video |
-| `apivideo_update_video` | **write** | Update video |
-| `apivideo_delete_video` | **write** | Delete video |
-| `apivideo_create_live_stream` | **write** | Create live stream |
+| `apivideo_get_video_analytics` | read | Video analytics (plays) |
+| `apivideo_get_live_stream_analytics` | read | Live stream analytics (plays) |
+| `apivideo_create_video` | **write** | Create video (write) |
+| `apivideo_update_video` | **write** | Update video (write) |
+| `apivideo_delete_video` | **write** | Delete video (write) |
+| `apivideo_create_live_stream` | **write** | Create live stream (write) |
 | `apivideo_usage_status` | meta | Usage status (free-tier meter) |
 | `apivideo_request_feature` | meta | Request a missing feature |
 | `apivideo_upgrade` | meta | Upgrade to Pro (unlimited) |

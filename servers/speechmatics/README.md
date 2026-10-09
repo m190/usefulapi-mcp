@@ -38,7 +38,7 @@ On first connect you'll paste your Speechmatics API key. It's validated, stored 
 | `speechmatics_get_transcript` | read | Get transcript |
 | `speechmatics_get_job_log` | read | Get job log |
 | `speechmatics_get_usage` | read | Get usage |
-| `speechmatics_transcribe_url` | **write** | Transcribe url |
+| `speechmatics_transcribe_url` | **write** | Transcribe audio/video from URL |
 | `speechmatics_delete_job` | **write** | Delete job |
 | `speechmatics_usage_status` | meta | Usage status (free-tier meter) |
 | `speechmatics_request_feature` | meta | Request a missing feature |
