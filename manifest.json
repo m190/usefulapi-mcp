@@ -38529,6 +38529,2234 @@
         ],
         "hint": "In Breathe, an account administrator enables the API and copies the key from **Configure → Settings → API setup**. Production keys start with `prod`; a `sandbox-` key connects to the Breathe sandbox instead. Your key is used only to call the Breathe HR API on your behalf; it is never shown to anyone."
       }
+    },
+    {
+      "slug": "rev-ai",
+      "name": "Rev.ai",
+      "category": "speech-to-text",
+      "description": "Transcribe audio with Rev.ai: submit jobs by URL, read transcripts, summaries and captions.",
+      "endpoint": "https://rev-ai.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Rev.ai access token"
+          }
+        ],
+        "hint": "Create one at **rev.ai → Access Token → Generate New Access Token** (an account can hold 2 tokens). Rev.ai shows a token only once, so copy it right away. Your token is used only to call the Rev.ai API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "revai_get_account",
+          "type": "read",
+          "title": "Get account and balance",
+          "description": "The Rev.ai account behind the token: email, free, purchased, total and invoiced balance (USD) and whether HIPAA is on. GET /account."
+        },
+        {
+          "name": "revai_list_jobs",
+          "type": "read",
+          "title": "List transcription jobs",
+          "description": "List transcription jobs from the last 30 days, newest first: id, status (in_progress, transcribed, failed), name, duration, language, failure reason. Page with starting_after = the previous reply's next_starting_after. GET /jobs."
+        },
+        {
+          "name": "revai_get_job",
+          "type": "read",
+          "title": "Get job status",
+          "description": "One transcription job by id: status (in_progress, transcribed, failed), timestamps, duration, language, failure reason. Poll this until status is transcribed. GET /jobs/{id}."
+        },
+        {
+          "name": "revai_submit_job",
+          "type": "write",
+          "title": "Submit transcription job",
+          "description": "WRITE: start an asynchronous machine transcription job for an audio or video file at a public URL. It uses Rev.ai credit (free credit first). Returns the job with status in_progress; then poll revai_get_job and read the result with revai_get_transcript. Human transcription is not offered. POST /jobs."
+        },
+        {
+          "name": "revai_delete_job",
+          "type": "write",
+          "title": "Delete job",
+          "description": "WRITE: permanently delete a finished (transcribed or failed) job with its media and transcript. This cannot be undone. A job still in progress cannot be deleted. DELETE /jobs/{id}."
+        },
+        {
+          "name": "revai_get_transcript",
+          "type": "read",
+          "title": "Get transcript",
+          "description": "The transcript of a transcribed job. format=text (default) is plain text with speaker labels and timestamps; format=segments is a list of {speaker, start, end, text} per speaker turn (seconds). Long transcripts are paged: repeat with next_offset until it is null. GET /jobs/{id}/transcript."
+        },
+        {
+          "name": "revai_get_summary",
+          "type": "read",
+          "title": "Get transcript summary",
+          "description": "The summary of a transcribed job. It exists only if the job was submitted with summarization_type. Paged by character like revai_get_transcript. GET /jobs/{id}/transcript/summary."
+        },
+        {
+          "name": "revai_get_captions",
+          "type": "read",
+          "title": "Get captions",
+          "description": "Captions for a transcribed job as SRT (default) or WebVTT. Long files are paged by character: repeat with next_offset until it is null. For multichannel jobs pass speaker_channel. GET /jobs/{id}/captions."
+        },
+        {
+          "name": "revai_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "revai_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Rev.ai tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "revai_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Rev.ai tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "revai_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Rev.ai Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run revai_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "enchant",
+      "name": "Enchant",
+      "category": "support",
+      "description": "Work with Enchant help desk tickets: list, read, reply, add notes and labels, manage customers.",
+      "endpoint": "https://enchant.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Help desk identifier"
+          },
+          {
+            "label": "API access token"
+          }
+        ],
+        "hint": "The identifier is the first part of your help desk address: **acme** for acme.enchant.com. For the token, install the **API** app in your help desk **Settings → Apps** and copy its access token. The API is available on paid Enchant plans. The token is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "enchant_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List and filter tickets (newest first by default). Enchant REST: GET /tickets. Use user_ids [\"null\"] for unassigned tickets. Each result has a short summary; use enchant_get_ticket for messages."
+        },
+        {
+          "name": "enchant_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "Get one ticket by id. Embed related data with `embed`: messages (the conversation: replies and notes), customer, user, inbox, labels. Each embedded type costs 1 extra rate-limit credit. Enchant REST: GET /tickets/{id}."
+        },
+        {
+          "name": "enchant_list_users",
+          "type": "read",
+          "title": "List users (agents)",
+          "description": "List the help desk users (agents): id, name, email. Use the ids to assign tickets and to author replies and notes. Enchant REST: GET /users."
+        },
+        {
+          "name": "enchant_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, or find one by contact: set contact_type and contact_value (for example email + an address). Enchant REST: GET /customers."
+        },
+        {
+          "name": "enchant_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Get one customer by id, with the contacts (emails, phones, Twitter names). Enchant REST: GET /customers/{id}."
+        },
+        {
+          "name": "enchant_get_attachment",
+          "type": "read",
+          "title": "Get attachment",
+          "description": "Get the metadata of an attachment (name, size, MIME type) by id; attachment ids appear in ticket messages. Enchant REST: GET /attachments/{id}."
+        },
+        {
+          "name": "enchant_create_ticket",
+          "type": "write",
+          "title": "Create ticket",
+          "description": "WRITE: create an email ticket. Give customer_id, or a customer (matched by contact email, created if new). Optionally add the customer's first message with body (needs the customer's email). Enchant REST: POST /tickets."
+        },
+        {
+          "name": "enchant_update_ticket",
+          "type": "write",
+          "title": "Update ticket",
+          "description": "WRITE: change a ticket: state (open, hold, closed), assignee, inbox, subject, spam or trash (not both true). label_ids REPLACES all labels (empty array clears them); use enchant_add_ticket_labels to keep existing ones. Enchant REST: PATCH /tickets/{id}."
+        },
+        {
+          "name": "enchant_add_ticket_labels",
+          "type": "write",
+          "title": "Add labels to ticket",
+          "description": "WRITE: add one or more labels to a ticket without changing its other labels. Enchant REST: PUT /tickets/{id}/labels/{label_ids}."
+        },
+        {
+          "name": "enchant_remove_ticket_labels",
+          "type": "write",
+          "title": "Remove labels from ticket",
+          "description": "WRITE: remove one or more labels from a ticket; its other labels stay. Enchant REST: DELETE /tickets/{id}/labels/{label_ids}."
+        },
+        {
+          "name": "enchant_reply_to_ticket",
+          "type": "write",
+          "title": "Reply to customer",
+          "description": "WRITE: send an outbound reply on a ticket. This SENDS A REAL EMAIL to the customer address in `to`. Use enchant_add_note for an internal note. Enchant REST: POST /tickets/{id}/messages (type reply, direction out)."
+        },
+        {
+          "name": "enchant_add_note",
+          "type": "write",
+          "title": "Add internal note",
+          "description": "WRITE: add an internal note to a ticket (not sent to the customer). Enchant REST: POST /tickets/{id}/messages (type note)."
+        },
+        {
+          "name": "enchant_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer with optional contacts (email, twitter, phone). Enchant REST: POST /customers."
+        },
+        {
+          "name": "enchant_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: update a customer's name or summary. If `contacts` is given, it REPLACES the contact list; use enchant_add_customer_contact to add one. Enchant REST: PATCH /customers/{id}."
+        },
+        {
+          "name": "enchant_add_customer_contact",
+          "type": "write",
+          "title": "Add customer contact",
+          "description": "WRITE: add one contact (email, twitter or phone) to a customer. Enchant REST: POST /customers/{id}/contacts."
+        },
+        {
+          "name": "enchant_delete_customer_contact",
+          "type": "write",
+          "title": "Delete customer contact",
+          "description": "WRITE, DELETES DATA: remove one contact from a customer. Enchant REST: DELETE /customers/{id}/contacts/{contact_id}."
+        },
+        {
+          "name": "enchant_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "enchant_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Enchant tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "enchant_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Enchant tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "enchant_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Enchant Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run enchant_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "pirsch",
+      "name": "Pirsch Analytics",
+      "category": "analytics",
+      "description": "Read Pirsch web analytics: visitors, pages, referrers, UTM, events, funnels and sessions.",
+      "endpoint": "https://pirsch.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Pirsch client ID"
+          },
+          {
+            "label": "Pirsch client secret"
+          }
+        ],
+        "hint": "In Pirsch open **Integration Settings** (one dashboard) or **Account Settings** (all dashboards), click **Add Client**, choose the type **oAuth** and turn off every write scope. The secret is shown once. Access keys (pa_...) cannot read statistics. Your credentials are used only to call the Pirsch API on your behalf; they are never shown to anyone. The Pirsch API needs a paid Pirsch plan."
+      },
+      "tools": [
+        {
+          "name": "pirsch_list_domains",
+          "type": "read",
+          "title": "List domains (dashboards)",
+          "description": "List the Pirsch dashboards (domains) the OAuth client can read: id, hostname, display name, time zone and role. Use the id as domain_id in every other tool. A dashboard-level client sees one domain; an account-level client sees all. GET /api/v1/domain."
+        },
+        {
+          "name": "pirsch_get_domain",
+          "type": "read",
+          "title": "Get domain",
+          "description": "One Pirsch dashboard (domain) by id, with its time zone, hostname, role and subscription state. GET /api/v1/domain?id=."
+        },
+        {
+          "name": "pirsch_get_overview",
+          "type": "read",
+          "title": "Get overview",
+          "description": "Quick overview of a dashboard: visitors, views, growth compared with the previous period, a visitors time series and the number of team members. Cached by Pirsch; takes no date range or filters. GET /api/v1/statistics/overview."
+        },
+        {
+          "name": "pirsch_get_totals",
+          "type": "read",
+          "title": "Get total visitors",
+          "description": "Totals for a period: visitors, views, sessions, bounces, bounce rate and conversion rate. Not grouped by day, so returning visitors are counted once. GET /api/v1/statistics/total."
+        },
+        {
+          "name": "pirsch_get_visitors_time_series",
+          "type": "read",
+          "title": "Get visitors time series",
+          "description": "Visitors, views, sessions, bounces and bounce rate per day, week, month or year (see scale). Use it for traffic charts and trends. GET /api/v1/statistics/visitor."
+        },
+        {
+          "name": "pirsch_get_growth",
+          "type": "read",
+          "title": "Get growth rates",
+          "description": "Growth of visitors, views, sessions, bounces, time spent and conversion rate compared with the previous period of the same length. GET /api/v1/statistics/growth."
+        },
+        {
+          "name": "pirsch_get_active_visitors",
+          "type": "read",
+          "title": "Get active visitors",
+          "description": "Visitors on the site right now (or in the past n seconds), with the pages they are on and their countries. GET /api/v1/statistics/active."
+        },
+        {
+          "name": "pirsch_get_time_distribution",
+          "type": "read",
+          "title": "Get visitors by time",
+          "description": "Visitors by hour of the day, by minute (only when from and to are the same day), or by weekday and hour (Monday is 0). Shows when traffic peaks. GET /api/v1/statistics/hours, /minutes or /weekdays."
+        },
+        {
+          "name": "pirsch_get_duration",
+          "type": "read",
+          "title": "Get time spent",
+          "description": "Average session duration over time, or average time on page over time, in seconds. GET /api/v1/statistics/duration/session or /duration/page."
+        },
+        {
+          "name": "pirsch_list_pages",
+          "type": "read",
+          "title": "List pages",
+          "description": "Top pages with visitors, views, sessions, bounces, bounce rate and average time on page. type=entry lists landing pages, type=exit lists exit pages. Filters narrow the data (for example country=de, path=~blog). Results are rows with visitors, views, sessions, bounces and relative shares. GET /api/v1/statistics/page, /page/entry or /page/exit."
+        },
+        {
+          "name": "pirsch_list_hostnames",
+          "type": "read",
+          "title": "List hostnames",
+          "description": "Traffic per hostname. Mostly useful for rollup views that combine several hostnames. GET /api/v1/statistics/hostname."
+        },
+        {
+          "name": "pirsch_list_referrers",
+          "type": "read",
+          "title": "List referrers",
+          "description": "Where visitors come from: referrers (by=referrer) or traffic channels such as Organic Search and Paid Search (by=channel). Filters narrow the data (for example country=de, path=~blog). Results are rows with visitors, views, sessions, bounces and relative shares. GET /api/v1/statistics/referrer or /channel."
+        },
+        {
+          "name": "pirsch_list_utm",
+          "type": "read",
+          "title": "List UTM parameters",
+          "description": "Visitors per UTM source, medium, campaign, content or term. Filters narrow the data (for example country=de, path=~blog). Results are rows with visitors, views, sessions, bounces and relative shares. GET /api/v1/statistics/utm/{dimension}."
+        },
+        {
+          "name": "pirsch_list_geography",
+          "type": "read",
+          "title": "List countries, regions, cities and languages",
+          "description": "Visitors per country, region, city or language. Filters narrow the data (for example country=de, path=~blog). Results are rows with visitors, views, sessions, bounces and relative shares. GET /api/v1/statistics/country, /region, /city or /language."
+        },
+        {
+          "name": "pirsch_list_devices",
+          "type": "read",
+          "title": "List browsers, operating systems and screens",
+          "description": "Visitors per browser, browser version, operating system or screen class (XXL to S). Filters narrow the data (for example country=de, path=~blog). Results are rows with visitors, views, sessions, bounces and relative shares. GET /api/v1/statistics/browser, /browser/version, /os or /screen."
+        },
+        {
+          "name": "pirsch_get_platforms",
+          "type": "read",
+          "title": "Get platform split",
+          "description": "Visitors on desktop, mobile and unknown platforms, as counts and shares. GET /api/v1/statistics/platform."
+        },
+        {
+          "name": "pirsch_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "Custom events with count, visitors, views, conversion rate, average duration and their metadata keys. Use pirsch_get_event_breakdown for the values of one metadata key. GET /api/v1/statistics/events."
+        },
+        {
+          "name": "pirsch_get_event_breakdown",
+          "type": "read",
+          "title": "Get event metadata breakdown",
+          "description": "The values of one metadata key of one event, with count, visitors and conversion rate. Both event and event_meta_key are required. GET /api/v1/statistics/event/meta."
+        },
+        {
+          "name": "pirsch_list_event_pages",
+          "type": "read",
+          "title": "List pages of an event",
+          "description": "The pages on which an event was triggered, with visitors and views. The event name is required. GET /api/v1/statistics/event/page."
+        },
+        {
+          "name": "pirsch_list_goals",
+          "type": "read",
+          "title": "List conversion goals",
+          "description": "Conversion goals with their definition (page pattern, event, targets) and the visitors, views and conversion rate for the period. GET /api/v1/statistics/goals."
+        },
+        {
+          "name": "pirsch_list_funnels",
+          "type": "read",
+          "title": "List funnels",
+          "description": "The funnels defined for a dashboard, with their steps and step filters. Use a funnel id in pirsch_get_funnel. GET /api/v1/funnel."
+        },
+        {
+          "name": "pirsch_get_funnel",
+          "type": "read",
+          "title": "Get funnel statistics",
+          "description": "Visitors per funnel step for a period: visitors, share of the first step, drop-off between steps. The filter applies to the first step. GET /api/v1/statistics/funnel."
+        },
+        {
+          "name": "pirsch_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "Tag keys with views and share. Use pirsch_get_tag_breakdown to see the values of one key. GET /api/v1/statistics/tags."
+        },
+        {
+          "name": "pirsch_get_tag_breakdown",
+          "type": "read",
+          "title": "Get tag breakdown",
+          "description": "The values of one tag key with views and share. The tag filter (the key) is required. GET /api/v1/statistics/tag/details."
+        },
+        {
+          "name": "pirsch_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "Individual visitor sessions: start, duration, entry and exit page, page views, bounce, country, city, referrer, browser, OS and UTM data. visitor_id is a string (a 64-bit number). Use pirsch_get_session for one session's page views and events. GET /api/v1/statistics/session/list."
+        },
+        {
+          "name": "pirsch_get_session",
+          "type": "read",
+          "title": "Get session details",
+          "description": "All page views and events of one session in time order. Both ids come from pirsch_list_sessions. GET /api/v1/statistics/session/details."
+        },
+        {
+          "name": "pirsch_list_filter_values",
+          "type": "read",
+          "title": "List filter values",
+          "description": "The values that exist for a filter in a period, such as all page paths, referrers, countries, browsers or event names. Use it to find valid values before filtering. GET /api/v1/statistics/options/{dimension}."
+        },
+        {
+          "name": "pirsch_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pirsch_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Pirsch Analytics tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pirsch_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Pirsch Analytics tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pirsch_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Pirsch Analytics Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run pirsch_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "exoscale",
+      "name": "Exoscale",
+      "category": "cloud",
+      "description": "Inspect Exoscale: instances, volumes, SKS, DNS, IPs, quotas and usage; start, stop, reboot VMs.",
+      "endpoint": "https://exoscale.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API key"
+          },
+          {
+            "label": "API secret"
+          },
+          {
+            "label": "Default zone"
+          }
+        ],
+        "hint": "In the Exoscale portal open **IAM → API Keys** and create a key. A role limited to read access (it must allow reading the organization) is enough for every tool except start, stop and reboot of instances. The secret is shown only once. Pick the zone where most of your resources live; every tool can still ask for another zone. Your key and secret are used only to sign requests to the Exoscale API on your behalf; the secret is never sent and never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "exoscale_list_zones",
+          "type": "read",
+          "title": "List zones",
+          "description": "List the Exoscale zones (data centers) with their API and object-storage endpoints. Compute, storage and network resources live in one zone each. GET /zone."
+        },
+        {
+          "name": "exoscale_get_organization",
+          "type": "read",
+          "title": "Get organization",
+          "description": "The Exoscale organization of the API key: id, name, address, country, account balance and currency. GET /organization."
+        },
+        {
+          "name": "exoscale_list_quotas",
+          "type": "read",
+          "title": "List quotas",
+          "description": "Resource quotas of the organization: for each resource its current usage and limit (instances, volumes, elastic IPs, and so on). GET /quota."
+        },
+        {
+          "name": "exoscale_get_quota",
+          "type": "read",
+          "title": "Get quota",
+          "description": "Usage and limit of one quota entity, for example 'instance'. Use exoscale_list_quotas for the names. GET /quota/{entity}."
+        },
+        {
+          "name": "exoscale_get_usage_report",
+          "type": "read",
+          "title": "Get usage report",
+          "description": "Aggregated usage of the organization for one month: product, variable, quantity and unit per line. GET /usage-report."
+        },
+        {
+          "name": "exoscale_list_instances",
+          "type": "read",
+          "title": "List compute instances",
+          "description": "List the compute instances of one zone: id, name, state, instance type, template, IP addresses and security groups. Call once per zone for a full inventory. GET /instance."
+        },
+        {
+          "name": "exoscale_get_instance",
+          "type": "read",
+          "title": "Get compute instance",
+          "description": "Details of one compute instance: state, type, template, disk size, networks, security groups, elastic IPs, snapshots. The cloud-init user-data is never returned. GET /instance/{id}."
+        },
+        {
+          "name": "exoscale_start_instance",
+          "type": "write",
+          "title": "Start compute instance",
+          "description": "WRITE: start a stopped compute instance (normal boot, no rescue profile). Billing for the instance resumes. Returns an operation; poll it with exoscale_get_operation. PUT /instance/{id}:start."
+        },
+        {
+          "name": "exoscale_stop_instance",
+          "type": "write",
+          "title": "Stop compute instance",
+          "description": "WRITE: stop a running compute instance. Running services go down and the public IP may change unless it is an elastic IP. Returns an operation; poll it with exoscale_get_operation. PUT /instance/{id}:stop."
+        },
+        {
+          "name": "exoscale_reboot_instance",
+          "type": "write",
+          "title": "Reboot compute instance",
+          "description": "WRITE: reboot a running compute instance. Running services restart and unsaved data in memory is lost. Returns an operation; poll it with exoscale_get_operation. PUT /instance/{id}:reboot."
+        },
+        {
+          "name": "exoscale_get_operation",
+          "type": "read",
+          "title": "Get operation",
+          "description": "State of an asynchronous operation (pending, success, failure, timeout), for example the reply of a start, stop or reboot. Use the same zone as the call that created it. GET /operation/{id}."
+        },
+        {
+          "name": "exoscale_list_instance_types",
+          "type": "read",
+          "title": "List instance types",
+          "description": "List the compute instance types: family, size, CPUs, GPUs, memory and the zones that offer them. GET /instance-type."
+        },
+        {
+          "name": "exoscale_get_instance_type",
+          "type": "read",
+          "title": "Get instance type",
+          "description": "Details of one instance type: family, size, CPUs, GPUs, memory, zones. GET /instance-type/{id}."
+        },
+        {
+          "name": "exoscale_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the compute templates (OS images) of a zone: name, family, version, default user, size, visibility. The public list is long: filter by family or page with limit/offset. GET /template."
+        },
+        {
+          "name": "exoscale_get_template",
+          "type": "read",
+          "title": "Get template",
+          "description": "Details of one template: name, family, version, default user, size, boot mode, checksum, zones. GET /template/{id}."
+        },
+        {
+          "name": "exoscale_list_security_groups",
+          "type": "read",
+          "title": "List security groups",
+          "description": "List the security groups of a zone: id, name, description and external sources (firewall), with the rules when the API includes them. GET /security-group."
+        },
+        {
+          "name": "exoscale_get_security_group",
+          "type": "read",
+          "title": "Get security group",
+          "description": "Details of one security group: description and external sources, with the rules (protocol, ports, network, direction) when the API includes them. GET /security-group/{id}."
+        },
+        {
+          "name": "exoscale_list_elastic_ips",
+          "type": "read",
+          "title": "List elastic IPs",
+          "description": "List the elastic IP addresses of a zone with description, address family, health-check settings and labels. GET /elastic-ip."
+        },
+        {
+          "name": "exoscale_get_elastic_ip",
+          "type": "read",
+          "title": "Get elastic IP",
+          "description": "Details of one elastic IP: address, CIDR, family, description, health check and labels. GET /elastic-ip/{id}."
+        },
+        {
+          "name": "exoscale_list_block_storage_volumes",
+          "type": "read",
+          "title": "List block storage volumes",
+          "description": "List the block storage volumes of a zone: name, size, state, the instance each is attached to, encryption and snapshots. GET /block-storage."
+        },
+        {
+          "name": "exoscale_get_block_storage_volume",
+          "type": "read",
+          "title": "Get block storage volume",
+          "description": "Details of one block storage volume: size, block size, state, attached instance, encryption, labels and snapshots. GET /block-storage/{id}."
+        },
+        {
+          "name": "exoscale_list_sks_clusters",
+          "type": "read",
+          "title": "List SKS clusters",
+          "description": "List the Scalable Kubernetes Service (SKS) clusters of a zone: name, version, state, level, CNI, endpoint and node pools. GET /sks-cluster."
+        },
+        {
+          "name": "exoscale_get_sks_cluster",
+          "type": "read",
+          "title": "Get SKS cluster",
+          "description": "Details of one SKS cluster: version, state, level, CNI, add-ons, OIDC settings (no secrets), endpoint and node pools. GET /sks-cluster/{id}."
+        },
+        {
+          "name": "exoscale_list_dns_domains",
+          "type": "read",
+          "title": "List DNS domains",
+          "description": "List the DNS domains (zones) hosted at Exoscale: id, unicode name, creation date. DNS is the same in every zone. GET /dns-domain."
+        },
+        {
+          "name": "exoscale_get_dns_domain",
+          "type": "read",
+          "title": "Get DNS domain",
+          "description": "Details of one DNS domain. GET /dns-domain/{id}."
+        },
+        {
+          "name": "exoscale_list_dns_records",
+          "type": "read",
+          "title": "List DNS records",
+          "description": "List the records of one DNS domain: name, type, content, TTL, priority. Use exoscale_list_dns_domains for the domain id. GET /dns-domain/{domain-id}/record."
+        },
+        {
+          "name": "exoscale_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "exoscale_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Exoscale tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "exoscale_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Exoscale tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "exoscale_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Exoscale Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run exoscale_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "pipeline-crm",
+      "name": "Pipeline CRM",
+      "category": "crm",
+      "description": "Manage Pipeline CRM deals, people, companies, notes and calendar entries.",
+      "endpoint": "https://pipeline-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API token (or legacy api_key)"
+          },
+          {
+            "label": "App key — only with a legacy api_key",
+            "optional": true
+          }
+        ],
+        "hint": "Create the token in Pipeline CRM under your **profile → API tokens** (an account admin may first need to grant you access). Choose Read only if you only need reports. With an older **api_key** (Admin → API Keys), also enter the **app key** from Admin → API Integrations; with an API token, leave the app key empty. Your credentials are used only to call the Pipeline CRM API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "pipelinecrm_get_profile",
+          "type": "read",
+          "title": "Get my profile",
+          "description": "The Pipeline CRM user this credential acts as: id, name and whether they are an account admin. The user's api_key is never returned. GET /profile."
+        },
+        {
+          "name": "pipelinecrm_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the Pipeline CRM account (id, name, email, team, admin flag). Use the ids as owners of deals, people and companies. api_key values are never returned. GET /users."
+        },
+        {
+          "name": "pipelinecrm_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user of the account by id. The user's api_key is never returned. GET /users/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_deals",
+          "type": "read",
+          "title": "List deals",
+          "description": "List or search deals with stage, owner, company, primary contact, value, probability and expected close date. Filter by name, stage, pipeline, status, owner, company, contact, archived flag, value range and created, expected-close, closed or modified dates. Money values come back as decimal strings. GET /deals."
+        },
+        {
+          "name": "pipelinecrm_get_deal",
+          "type": "read",
+          "title": "Get deal",
+          "description": "One deal by id with owner, company, people, stage, status, loss/won reasons, tags, custom fields and the next task. GET /deals/{id}."
+        },
+        {
+          "name": "pipelinecrm_deal_totals_by_stage",
+          "type": "read",
+          "title": "Deal totals by stage",
+          "description": "Count and total value of the deals visible to the user in every deal stage: the pipeline summary. GET /deals/totals_by_stage."
+        },
+        {
+          "name": "pipelinecrm_list_deal_notes",
+          "type": "read",
+          "title": "List notes on a deal",
+          "description": "List the notes (activities) logged on one deal, with author, category and content. GET /deals/{id}/notes."
+        },
+        {
+          "name": "pipelinecrm_create_deal",
+          "type": "write",
+          "title": "Create deal",
+          "description": "WRITE: create a deal. Give the owner (user id), stage id, value, expected close date and company or primary contact when known; a new company is created from company_name if no company_id is given. No email is sent to the owner. POST /deals."
+        },
+        {
+          "name": "pipelinecrm_update_deal",
+          "type": "write",
+          "title": "Update deal",
+          "description": "WRITE: change fields of a deal; only the fields you pass change. Move it to another stage with stage_id. Setting probability to 100 or 0 closes the deal as won or lost; give won/loss reason ids when you do. Archive with archived: true. No email is sent to a new owner. PUT /deals/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_people",
+          "type": "read",
+          "title": "List people (leads and contacts)",
+          "description": "List or search people (leads and contacts) with email, phones, position, company, owner, lead status and tags. Use search for a quick match on name, email or company name, or filter precisely. GET /people."
+        },
+        {
+          "name": "pipelinecrm_get_person",
+          "type": "read",
+          "title": "Get person",
+          "description": "One person (lead or contact) by id with all contact details, company, owner, tags and custom fields. GET /people/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_person_deals",
+          "type": "read",
+          "title": "List deals of a person",
+          "description": "List the deals one person is associated with. GET /people/{id}/deals."
+        },
+        {
+          "name": "pipelinecrm_list_person_notes",
+          "type": "read",
+          "title": "List notes on a person",
+          "description": "List the notes (activities) logged on one person. GET /people/{id}/notes."
+        },
+        {
+          "name": "pipelinecrm_create_person",
+          "type": "write",
+          "title": "Create person",
+          "description": "WRITE: create a lead or contact. Pass at least a first or last name or an email. No email is sent to the owner. POST /people."
+        },
+        {
+          "name": "pipelinecrm_update_person",
+          "type": "write",
+          "title": "Update person",
+          "description": "WRITE: change fields of a person; only the fields you pass change. Pass type Contact to convert a lead. PUT /people/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List or search companies with address, website, phones, owner, tags and pipeline totals. GET /companies."
+        },
+        {
+          "name": "pipelinecrm_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "One company by id with address, phones, website, owner, tags and custom fields. GET /companies/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_company_people",
+          "type": "read",
+          "title": "List people at a company",
+          "description": "List the people (leads and contacts) who work at one company. GET /companies/{id}/people."
+        },
+        {
+          "name": "pipelinecrm_create_company",
+          "type": "write",
+          "title": "Create company",
+          "description": "WRITE: create a company. POST /companies."
+        },
+        {
+          "name": "pipelinecrm_update_company",
+          "type": "write",
+          "title": "Update company",
+          "description": "WRITE: change fields of a company; only the fields you pass change. PUT /companies/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes (called activities in the Pipeline CRM app) attached to a deal, person or company. Pass at least one of deal_id, person_id, company_id. Filter by text, category, author and created date. GET /notes."
+        },
+        {
+          "name": "pipelinecrm_get_note",
+          "type": "read",
+          "title": "Get note",
+          "description": "One note (activity) by id with its content, author, category, associations and comments. GET /notes/{id}."
+        },
+        {
+          "name": "pipelinecrm_add_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: log a note (activity) on a deal, person or company. Pass at least one of deal_id, person_id, company_id. POST /notes."
+        },
+        {
+          "name": "pipelinecrm_list_calendar_entries",
+          "type": "read",
+          "title": "List tasks and events",
+          "description": "List calendar entries: tasks (a due date) and events (a start and end time) tied to deals, people or companies. Filter by kind, owner, a date range, and completed, incomplete or late. GET /calendar_entries."
+        },
+        {
+          "name": "pipelinecrm_get_calendar_entry",
+          "type": "read",
+          "title": "Get task or event",
+          "description": "One calendar entry (task or event) by id. GET /calendar_entries/{id}."
+        },
+        {
+          "name": "pipelinecrm_create_calendar_entry",
+          "type": "write",
+          "title": "Create task or event",
+          "description": "WRITE: create a task (CalendarTask, optional due date) or an event (CalendarEvent, start_time and end_time required), optionally tied to a deal, person or company. POST /calendar_entries."
+        },
+        {
+          "name": "pipelinecrm_update_calendar_entry",
+          "type": "write",
+          "title": "Update task or event",
+          "description": "WRITE: change a task or event; only the fields you pass change. Pass complete: true to mark a task done. PUT /calendar_entries/{id}."
+        },
+        {
+          "name": "pipelinecrm_list_deal_stages",
+          "type": "read",
+          "title": "List deal stages",
+          "description": "List the deal stages with id, name, default win probability and the pipeline each belongs to. Use the ids to filter or move deals. GET /admin/deal_stages."
+        },
+        {
+          "name": "pipelinecrm_list_deal_pipelines",
+          "type": "read",
+          "title": "List deal pipelines",
+          "description": "List the deal pipelines (each has its own stages) with id, name and which one is the default. GET /admin/deal_pipelines."
+        },
+        {
+          "name": "pipelinecrm_list_lookup",
+          "type": "read",
+          "title": "List lookup values",
+          "description": "List one set of account lookup values to get ids for filters and writes. kind: deal_statuses, deal_loss_reasons, deal_won_reasons, deal_tags, lead_statuses, lead_sources, contact_tags, company_tags, note_categories, event_categories, task_priorities, task_statuses, teams. GET /admin/<kind>."
+        },
+        {
+          "name": "pipelinecrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pipelinecrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Pipeline CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pipelinecrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Pipeline CRM tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pipelinecrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Pipeline CRM Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run pipelinecrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "teamgate",
+      "name": "Teamgate",
+      "category": "crm",
+      "description": "Manage Teamgate CRM leads, people, companies, deals, activities and notes.",
+      "endpoint": "https://teamgate.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Application key"
+          },
+          {
+            "label": "User token"
+          }
+        ],
+        "hint": "In Teamgate, the token is under **My profile → Integrations → API access**. The application key comes from **Settings → Additional features → External apps → New API key request**. The token acts with that user's permissions, and the API needs a Teamgate plan that includes it. Your credentials are used only to call the Teamgate API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "teamgate_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the Teamgate users of the account with id, name and username. Use the ids as owner_id filters and values. GET /users."
+        },
+        {
+          "name": "teamgate_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One Teamgate user by id. GET /users/{id}."
+        },
+        {
+          "name": "teamgate_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List or search leads (unqualified prospects) with owner, status, source, industry and contact details. Filter by name, email, phone, status, owner, source, star or creation date. GET /leads."
+        },
+        {
+          "name": "teamgate_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id with all its details. GET /leads/{id}."
+        },
+        {
+          "name": "teamgate_list_lead_statuses",
+          "type": "read",
+          "title": "List lead statuses",
+          "description": "List the lead statuses of the account (use the names as the status filter or value on leads). GET /leadsStatuses."
+        },
+        {
+          "name": "teamgate_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List or search people (contacts) with job title, company, owner, source and contact details. Filter by name, email, phone, owner, customer status or creation date. GET /people."
+        },
+        {
+          "name": "teamgate_get_person",
+          "type": "read",
+          "title": "Get person",
+          "description": "One person by id with all their details. GET /people/{id}."
+        },
+        {
+          "name": "teamgate_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List or search companies with owner, industry, source, customer and prospect status and contact details. Filter by name, email, phone, owner, VAT code or creation date. GET /companies."
+        },
+        {
+          "name": "teamgate_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "One company by id with all its details. GET /companies/{id}."
+        },
+        {
+          "name": "teamgate_list_company_people",
+          "type": "read",
+          "title": "List people of a company",
+          "description": "List the people who work at one company. GET /companies/{id}/people."
+        },
+        {
+          "name": "teamgate_list_deals",
+          "type": "read",
+          "title": "List deals",
+          "description": "List or search deals (sales opportunities) with value, stage, status, owner and expected closing date. Filter by name, status, stage, owner, source or creation date. GET /deals."
+        },
+        {
+          "name": "teamgate_get_deal",
+          "type": "read",
+          "title": "Get deal",
+          "description": "One deal by id with value, stage, status, owner, buyer and dates. GET /deals/{id}."
+        },
+        {
+          "name": "teamgate_list_deal_stages",
+          "type": "read",
+          "title": "List stages of a deal",
+          "description": "List the pipeline stages that one deal can be in (id, name, win probability; the deal's current stage is marked selected). GET /deals/{id}/stages."
+        },
+        {
+          "name": "teamgate_list_contact_deals",
+          "type": "read",
+          "title": "List deals of a person or company",
+          "description": "List the deals that belong to one person or one company. GET /people/{id}/deals or /companies/{id}/deals."
+        },
+        {
+          "name": "teamgate_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the sales pipelines (id and name). Use teamgate_get_pipeline for the stages of one. GET /pipelines."
+        },
+        {
+          "name": "teamgate_get_pipeline",
+          "type": "read",
+          "title": "Get pipeline",
+          "description": "One sales pipeline by id, with its stages. GET /pipelines/{id}."
+        },
+        {
+          "name": "teamgate_list_activities",
+          "type": "read",
+          "title": "List activities",
+          "description": "List activities (tasks, calls, appointments and notes) across the account. GET /events."
+        },
+        {
+          "name": "teamgate_list_record_activities",
+          "type": "read",
+          "title": "List activities of a record",
+          "description": "List the activities (tasks, calls, appointments, notes) linked to one lead, person, company or deal. GET /{leads|people|companies|deals}/{id}/events."
+        },
+        {
+          "name": "teamgate_get_activity",
+          "type": "read",
+          "title": "Get activity",
+          "description": "One activity (task, call, appointment or note) by id. GET /events/{id}."
+        },
+        {
+          "name": "teamgate_search",
+          "type": "read",
+          "title": "Search records",
+          "description": "Search leads, people, companies and deals by name in one request. GET /global."
+        },
+        {
+          "name": "teamgate_list_sources",
+          "type": "read",
+          "title": "List sources",
+          "description": "List the lead/deal sources of the account (where records come from). GET /sources."
+        },
+        {
+          "name": "teamgate_list_industries",
+          "type": "read",
+          "title": "List industries",
+          "description": "List the industries of the account. GET /industries."
+        },
+        {
+          "name": "teamgate_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products of the catalogue (id, name, price). GET /products."
+        },
+        {
+          "name": "teamgate_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom field definitions of the account (id, name, type, module). GET /customFields."
+        },
+        {
+          "name": "teamgate_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: create a lead. Give a person's name, or a company_name for a company lead. Teamgate may start workflows or notifications for new leads. POST /leads."
+        },
+        {
+          "name": "teamgate_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "WRITE: change fields of one lead. Only the fields you pass are sent; this overwrites their current values. PUT /leads/{id}."
+        },
+        {
+          "name": "teamgate_create_person",
+          "type": "write",
+          "title": "Create person",
+          "description": "WRITE: create a person (contact). Optionally link them to a company with their job title. POST /people."
+        },
+        {
+          "name": "teamgate_update_person",
+          "type": "write",
+          "title": "Update person",
+          "description": "WRITE: change fields of one person. Only the fields you pass are sent; this overwrites their current values. PUT /people/{id}."
+        },
+        {
+          "name": "teamgate_create_company",
+          "type": "write",
+          "title": "Create company",
+          "description": "WRITE: create a company. POST /companies."
+        },
+        {
+          "name": "teamgate_update_company",
+          "type": "write",
+          "title": "Update company",
+          "description": "WRITE: change fields of one company. Only the fields you pass are sent; this overwrites their current values. PUT /companies/{id}."
+        },
+        {
+          "name": "teamgate_create_deal",
+          "type": "write",
+          "title": "Create deal",
+          "description": "WRITE: create a deal for a buyer (a person or company). POST /deals."
+        },
+        {
+          "name": "teamgate_update_deal",
+          "type": "write",
+          "title": "Update deal",
+          "description": "WRITE: change fields of one deal, for example move it to another stage or mark it won or lost. Only the fields you pass are sent; this overwrites their current values. PUT /deals/{id}."
+        },
+        {
+          "name": "teamgate_create_activity",
+          "type": "write",
+          "title": "Create activity",
+          "description": "WRITE: create a task, call or appointment, optionally linked to leads, companies or deals. Teamgate may send reminders to the owner. POST /events."
+        },
+        {
+          "name": "teamgate_add_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: add a note to one or more leads, companies or deals. The note cannot be edited or removed with these tools. POST /events."
+        },
+        {
+          "name": "teamgate_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "teamgate_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Teamgate tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "teamgate_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Teamgate tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "teamgate_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Teamgate Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run teamgate_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "homebase",
+      "name": "Homebase",
+      "category": "productivity",
+      "description": "Read Homebase locations, employees, shifts, timecards, labor costs and time clock status.",
+      "endpoint": "https://homebase.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Homebase API key"
+          }
+        ],
+        "hint": "Request a key in Homebase → **Settings → API** (app.joinhomebase.com/settings/api). Homebase must approve the request before the key shows on that page. The key is read only. Your key is used only to call the Homebase API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "homebase_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "The Homebase company this API key belongs to: name, owner (id, name, email, phone) and created/updated times. GET /company."
+        },
+        {
+          "name": "homebase_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the locations (stores or sites) of the account with uuid, name, address, phone, website and time zone. The uuid is the id every other Homebase tool needs. GET /locations."
+        },
+        {
+          "name": "homebase_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by uuid: name, address, phone, website, time zone and POS merchant id. GET /locations/{location_uuid}."
+        },
+        {
+          "name": "homebase_get_location_plan",
+          "type": "read",
+          "title": "Get location plan",
+          "description": "The Homebase subscription plan of a location: plan number, price, last update and trial state. GET /locations/{location_uuid}/plan."
+        },
+        {
+          "name": "homebase_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees of a location with contact details and their job: level, default role, additional roles, wage type and rate, payroll id and archive date. The time-clock PIN is never returned. GET /locations/{location_uuid}/employees."
+        },
+        {
+          "name": "homebase_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "One employee of a location by user id, with contact details and job (role, wage type and rate, payroll id). The id is the job's user id from homebase_list_employees. GET /locations/{location_uuid}/employees/{id}."
+        },
+        {
+          "name": "homebase_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List the scheduled shifts of a location in a date range: employee, role, department, start and end, published/open state, wage rate and scheduled labor hours (regular, overtime). Filter open shifts only. GET /locations/{location_uuid}/shifts."
+        },
+        {
+          "name": "homebase_get_shift",
+          "type": "read",
+          "title": "Get shift",
+          "description": "One shift of a location by id, with its labor data and optional note. GET /locations/{location_uuid}/shifts/{id}."
+        },
+        {
+          "name": "homebase_list_deleted_shifts",
+          "type": "read",
+          "title": "List deleted shifts",
+          "description": "The ids of shifts deleted in a date range at a location, with their start, end and deletion time. Use it to keep a copy of the schedule in sync. GET /locations/{location_uuid}/shifts/deleted."
+        },
+        {
+          "name": "homebase_list_timecards",
+          "type": "read",
+          "title": "List timecards",
+          "description": "List the timecards (worked time) of a location in a date range: employee, role, clock in and out, breaks, hours, labor cost, tips and approval state. Time-off hours are always 0 on timecards; use homebase_get_labor_by_employee for totals with time off. GET /locations/{location_uuid}/timecards."
+        },
+        {
+          "name": "homebase_get_timecard",
+          "type": "read",
+          "title": "Get timecard",
+          "description": "One timecard of a location by id: clock in and out, breaks, labor hours and cost, tips, approval state. GET /locations/{location_uuid}/timecards/{id}."
+        },
+        {
+          "name": "homebase_list_deleted_timecards",
+          "type": "read",
+          "title": "List deleted timecards",
+          "description": "The ids of timecards deleted in a date range at a location, with clock in, clock out and deletion time. Use it to keep a copy of the timecards in sync. GET /locations/{location_uuid}/timecards/deleted."
+        },
+        {
+          "name": "homebase_get_labor",
+          "type": "read",
+          "title": "Get labor report",
+          "description": "Aggregate labor for a location in a date range, grouped by day or by hour: regular, overtime and paid hours, labor cost, tips, breaks and time off. GET /locations/{location_uuid}/labor."
+        },
+        {
+          "name": "homebase_get_labor_by_role",
+          "type": "read",
+          "title": "Get labor report by role",
+          "description": "Aggregate labor (hours, cost, tips, overtime) for a location in a date range, grouped by role. GET /locations/{location_uuid}/labor/by_role."
+        },
+        {
+          "name": "homebase_get_labor_by_employee",
+          "type": "read",
+          "title": "Get labor report by employee",
+          "description": "Aggregate labor (hours, cost, wage rate, tips, overtime, time off) for a location in a date range, grouped by employee. Use it for payroll totals. GET /locations/{location_uuid}/labor/by_employee."
+        },
+        {
+          "name": "homebase_get_timeclock_status",
+          "type": "read",
+          "title": "Get time clock status",
+          "description": "The current time-clock state of one job (employee at a location): clocked_in, on_break or clocked_out, the current shift, the shifts that can be clocked into and the breaks that can be started. The job id is the `job.id` of an employee from homebase_list_employees. GET /timeclock/status."
+        },
+        {
+          "name": "homebase_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "homebase_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Homebase tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "homebase_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Homebase tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "homebase_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Homebase Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run homebase_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "benchmark-email",
+      "name": "Benchmark Email",
+      "category": "email",
+      "description": "Manage Benchmark Email lists and contacts, and read campaign reports: opens, clicks, bounces.",
+      "endpoint": "https://benchmark-email.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Benchmark Email API token"
+          }
+        ],
+        "hint": "Find it in Benchmark Email under **Integrations** ([ui.benchmarkemail.com/Integrate](https://ui.benchmarkemail.com/Integrate#AP)) in the **API** tab. Any account type, including the free plan, has an API token. The token acts as the account owner; it is used only to call the Benchmark Email API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "benchmark_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Benchmark Email account this token belongs to: client id, name, company, email, status, plan products, contact count and emails sent. GET /Client/ProfileDetails."
+        },
+        {
+          "name": "benchmark_get_plan",
+          "type": "read",
+          "title": "Get plan and usage",
+          "description": "The account's email plan, add-ons and contact usage (active, account and total contacts, percent used). GET /Client/Plan."
+        },
+        {
+          "name": "benchmark_get_settings",
+          "type": "read",
+          "title": "Get account settings",
+          "description": "Default sender settings: from name and email, signature, footer, time zone, language and company address. The API token in the reply is removed. GET /Client/Setting."
+        },
+        {
+          "name": "benchmark_list_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List contact lists with id, name, description, contact count and dates. Use the ids with the contact tools. GET /Contact/."
+        },
+        {
+          "name": "benchmark_get_list",
+          "type": "read",
+          "title": "Get contact list",
+          "description": "One contact list: name, description, active contact count and its custom field names (Field1Name ...). GET /Contact/{list_id}."
+        },
+        {
+          "name": "benchmark_get_list_fields",
+          "type": "read",
+          "title": "Get contact list fields",
+          "description": "The column names of a contact list (email, firstname, lastname and the custom fields). GET /Contact/{list_id}/Fields."
+        },
+        {
+          "name": "benchmark_create_list",
+          "type": "write",
+          "title": "Create contact list",
+          "description": "WRITE: create an empty contact list. POST /Contact/."
+        },
+        {
+          "name": "benchmark_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List the saved segments (filtered subsets of lists) with id and name. GET /Contact/Segments."
+        },
+        {
+          "name": "benchmark_list_contacts",
+          "type": "read",
+          "title": "List contacts in a list",
+          "description": "List the contacts of one list with email, name, dates and id. Filter by status (subscribed, unsubscribed, hard_bounced) or search a column. GET /Contact/{list_id}/ContactDetails."
+        },
+        {
+          "name": "benchmark_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact of a list with all its fields (Field1 ... Field24 hold the custom columns). GET /Contact/{list_id}/ContactDetails/{contact_id}."
+        },
+        {
+          "name": "benchmark_search_contacts",
+          "type": "read",
+          "title": "Search contacts by email",
+          "description": "Find an email address across all lists: one row per list it is on, with the list name, contact id and master-unsubscribe flag. GET /Contact/ContactDetails."
+        },
+        {
+          "name": "benchmark_add_contact",
+          "type": "write",
+          "title": "Add contact to a list",
+          "description": "WRITE: add one contact to a list (or update it if the email is already there, as the vendor decides). It does not send any email. Only add people who agreed to get email. POST /Contact/{list_id}/ContactDetails."
+        },
+        {
+          "name": "benchmark_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of one contact in one list. Only the fields you pass are sent. PATCH /Contact/{list_id}/ContactDetails/{contact_id}."
+        },
+        {
+          "name": "benchmark_unsubscribe_contact",
+          "type": "write",
+          "title": "Unsubscribe contact",
+          "description": "WRITE: move a contact to the Do Not Contact (master unsubscribe) list, so no campaign reaches it again. The API has no undo for this. DELETE /Contact/{list_id}/MoveToDNC/{contact_id}."
+        },
+        {
+          "name": "benchmark_list_emails",
+          "type": "read",
+          "title": "List emails (campaigns)",
+          "description": "List email campaigns with id, name, subject, type, status, dates and target lists. GET /Emails/."
+        },
+        {
+          "name": "benchmark_get_email",
+          "type": "read",
+          "title": "Get email (campaign)",
+          "description": "One email campaign: subject, sender, target and excluded lists, dates and settings. GET /Emails/{email_id}."
+        },
+        {
+          "name": "benchmark_list_email_reports",
+          "type": "read",
+          "title": "List email report summaries",
+          "description": "Report summaries of sent emails: sends, opens, clicks, bounces, unsubscribes and complaints per campaign. GET /Emails/Report."
+        },
+        {
+          "name": "benchmark_get_email_report",
+          "type": "read",
+          "title": "Get email report",
+          "description": "The report summary of one email: recipients, opens, clicks, bounces, unsubscribes, forwards, complaints and rates. GET /Emails/{email_id}/Report."
+        },
+        {
+          "name": "benchmark_get_email_opens",
+          "type": "read",
+          "title": "Get email opens",
+          "description": "Who opened an email: contact, email address, time and device. GET /Emails/{email_id}/Report/Opens."
+        },
+        {
+          "name": "benchmark_get_email_clicks",
+          "type": "read",
+          "title": "Get email clicks",
+          "description": "Who clicked a link in an email: contact, email address and time. GET /Emails/{email_id}/Report/Clicks."
+        },
+        {
+          "name": "benchmark_get_email_bounces",
+          "type": "read",
+          "title": "Get email bounces",
+          "description": "Which addresses bounced for an email: contact, email address, time and bounce type. GET /Emails/{email_id}/Report/Bounces."
+        },
+        {
+          "name": "benchmark_get_email_unsubscribes",
+          "type": "read",
+          "title": "Get email unsubscribes",
+          "description": "Who unsubscribed after an email: contact, email address, time and reason, with a count per reason. GET /Emails/{email_id}/Report/Unsubscribes."
+        },
+        {
+          "name": "benchmark_list_signup_forms",
+          "type": "read",
+          "title": "List signup forms",
+          "description": "List signup forms with id, name, date and the lists they feed. GET /SignupForm/."
+        },
+        {
+          "name": "benchmark_get_signup_form",
+          "type": "read",
+          "title": "Get signup form",
+          "description": "One signup form with its settings and target lists. GET /SignupForm/{form_id}."
+        },
+        {
+          "name": "benchmark_get_signup_form_link",
+          "type": "read",
+          "title": "Get signup form link",
+          "description": "The public link of a signup form. GET /SignupForm/{form_id}/Link."
+        },
+        {
+          "name": "benchmark_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "benchmark_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Benchmark Email tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "benchmark_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Benchmark Email tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "benchmark_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Benchmark Email Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run benchmark_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "edesk",
+      "name": "eDesk",
+      "category": "support",
+      "description": "Work with eDesk support tickets, replies, internal notes, contacts and sales orders.",
+      "endpoint": "https://edesk.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "eDesk API token"
+          }
+        ],
+        "hint": "Create it at **dashboard.edesk.com/api-token**. The eDesk API is part of the Enterprise plan. The token acts with the permissions of the user who created it. Your token is used only to call the eDesk API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "edesk_whoami",
+          "type": "read",
+          "title": "Who am I",
+          "description": "The eDesk user the API token belongs to: id, name, email, username, role and active flag. GET /whoami."
+        },
+        {
+          "name": "edesk_list_users",
+          "type": "read",
+          "title": "List users (agents)",
+          "description": "List the eDesk users (support agents) with id, name, email, username, role and active flag. Use the ids as ticket owners. GET /users."
+        },
+        {
+          "name": "edesk_list_channels",
+          "type": "read",
+          "title": "List channels",
+          "description": "List the sales channels connected to eDesk (Amazon, eBay, Shopify, email, ...) with id, type, name, country and currency. Use the ids to filter tickets and orders. GET /channels."
+        },
+        {
+          "name": "edesk_list_tag_groups",
+          "type": "read",
+          "title": "List tag groups",
+          "description": "List the tag groups that organize ticket tags. GET /tag-groups."
+        },
+        {
+          "name": "edesk_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List ticket tags with id, name, color, active flag and tag group id. Use the ids in edesk_update_ticket (tag_ids). GET /tags."
+        },
+        {
+          "name": "edesk_list_templates",
+          "type": "read",
+          "title": "List reply templates",
+          "description": "List saved reply templates (id, name, subject, body text, channels, usage). GET /templates."
+        },
+        {
+          "name": "edesk_get_template",
+          "type": "read",
+          "title": "Get reply template",
+          "description": "One reply template by id. GET /templates/{id}."
+        },
+        {
+          "name": "edesk_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List support tickets from all channels with subject, type, status, channel, owner, contact, linked sales order id, tag ids, message ids, reply count and AI classification. Filter by status, type, channel, contact, owner, sales order, seller (marketplace) order id and last-updated date. GET /tickets."
+        },
+        {
+          "name": "edesk_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "One ticket by id with its status, owner, tags, custom fields, linked sales order and the ids of its messages (read each with edesk_get_message). GET /tickets/{id}."
+        },
+        {
+          "name": "edesk_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One ticket message or internal note by id (from a ticket's message ids): body, direction, type (Message or Note), author and attachments. GET /messages/{id}."
+        },
+        {
+          "name": "edesk_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Search the contacts (customers) of the helpdesk by free text, email, name, phone number or consumer id. Returns id, channel, full name, email and phone. GET /contacts."
+        },
+        {
+          "name": "edesk_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List the marketplace/store orders that eDesk holds, with status, items, amounts, addresses, tracking codes and the linked ticket id. Filter by status, channel, contact, marketplace order id, id range and created/updated dates. GET /sales-orders."
+        },
+        {
+          "name": "edesk_get_sales_order",
+          "type": "read",
+          "title": "Get sales order",
+          "description": "One sales order by id with items, amounts, ship-to and bill-to addresses, tracking codes, delivery dates, the linked ticket id and order note ids. GET /sales-orders/{id}."
+        },
+        {
+          "name": "edesk_list_order_notes",
+          "type": "read",
+          "title": "List order notes",
+          "description": "List the internal notes attached to sales orders (id, sales order id, author, text, attachments). GET /order-notes."
+        },
+        {
+          "name": "edesk_update_ticket",
+          "type": "write",
+          "title": "Update ticket",
+          "description": "WRITE: change a ticket's status, owner (assignee), tags or subject. Only the fields you pass are sent. tag_ids is sent as given: read the ticket first (tags_ids) and include the tags to keep. Nothing is sent to the customer. PUT /tickets/{id}."
+        },
+        {
+          "name": "edesk_add_ticket_note",
+          "type": "write",
+          "title": "Add internal ticket note",
+          "description": "WRITE: add an internal note to a ticket. The note is for the team only and is never sent to the customer. POST /messages with type Note."
+        },
+        {
+          "name": "edesk_reply_to_ticket",
+          "type": "write",
+          "title": "Reply to customer",
+          "description": "WRITE, CUSTOMER-VISIBLE: send a reply on a ticket. eDesk queues it for delivery to the marketplace or email channel, so it cannot be recalled once queued. The audience is the channel's default: on a Mirakl channel it is the channel's \"Default messages recipients\" setting (customer, operator or both), and this API cannot choose recipients (use the eDesk reply box when they matter). Only call this when the user has approved the exact text and audience. If the call fails in transit, the reply may still be queued: check the ticket before retrying. Use edesk_add_ticket_note for an internal note. POST /messages with type Message."
+        },
+        {
+          "name": "edesk_add_order_note",
+          "type": "write",
+          "title": "Add order note",
+          "description": "WRITE: add an internal note to a sales order (never sent to the customer). POST /order-notes."
+        },
+        {
+          "name": "edesk_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "edesk_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the eDesk tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "edesk_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED eDesk tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "edesk_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's eDesk Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run edesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "encharge",
+      "name": "Encharge",
+      "category": "email",
+      "description": "Manage Encharge people, tags, segments and fields, and track events for email automation.",
+      "endpoint": "https://encharge.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Encharge API key"
+          },
+          {
+            "label": "Write key (optional, for tracking events)",
+            "optional": true
+          }
+        ],
+        "hint": "Find the API key and the write key in Encharge → **Account → Account info**. The API key needs a plan with API access. The write key is optional: only the event tracking tool uses it. Your keys are used only to call the Encharge API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "encharge_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Encharge account behind the API key: account id, name, site, status, timezone, people count and active services. GET /accounts/info."
+        },
+        {
+          "name": "encharge_get_people",
+          "type": "read",
+          "title": "Get people",
+          "description": "Look up people (contacts) by email, userId or Encharge id. Pass up to 20 people, each with at least one identifier. Returns each person with all fields, tags and segment data; a person that does not exist is left out. GET /people."
+        },
+        {
+          "name": "encharge_list_segment_people",
+          "type": "read",
+          "title": "List people in a segment",
+          "description": "People in one dynamic segment, with paging (limit/offset), optional sort and a choice of person fields (attributes). Use encharge_list_segments for segment ids and encharge_list_fields for field names. GET /segments/{segmentId}/people."
+        },
+        {
+          "name": "encharge_upsert_person",
+          "type": "write",
+          "title": "Create or update a person",
+          "description": "WRITE: create a person, or update the one that already has this email, userId or Encharge id. Only the fields you pass are set. Use encharge_add_tags for tags. POST /people."
+        },
+        {
+          "name": "encharge_unsubscribe_person",
+          "type": "write",
+          "title": "Unsubscribe a person",
+          "description": "WRITE: unsubscribe one person so Encharge sends them no more email. The person stays in Encharge. Identify them by email, userId or Encharge id. POST /people/unsubscribe."
+        },
+        {
+          "name": "encharge_add_tags",
+          "type": "write",
+          "title": "Add tags to a person",
+          "description": "WRITE: add one or more tags to an existing person. Tags that do not exist yet are created. POST /tags."
+        },
+        {
+          "name": "encharge_remove_tags",
+          "type": "write",
+          "title": "Remove tags from a person",
+          "description": "WRITE: remove one or more tags from an existing person. The tags themselves are not deleted. DELETE /tags."
+        },
+        {
+          "name": "encharge_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List the dynamic segments of the account with id, name and conditions. Use the ids with encharge_list_segment_people. GET /segments."
+        },
+        {
+          "name": "encharge_list_fields",
+          "type": "read",
+          "title": "List person fields",
+          "description": "List all person fields (built-in and custom) with name, title, type and whether the field is read-only. Use the names in encharge_upsert_person. GET /fields."
+        },
+        {
+          "name": "encharge_track_event",
+          "type": "write",
+          "title": "Track an event",
+          "description": "WRITE: record an event for a person through the Ingest API, for example \"Registered user\" or \"Created Page\". The person is created or updated from `user`. Use the event name \"identify\" to only create or update a person. Needs the account write key. POST https://ingest.encharge.io/v1/."
+        },
+        {
+          "name": "encharge_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "encharge_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Encharge tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "encharge_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Encharge tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "encharge_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Encharge Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run encharge_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "sendlane",
+      "name": "Sendlane",
+      "category": "email",
+      "description": "Manage Sendlane lists, contacts, tags and custom fields; read campaign and SMS reports.",
+      "endpoint": "https://sendlane.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Sendlane API v2 token"
+          }
+        ],
+        "hint": "In Sendlane open the **API** section, choose **Generate a v2 access token** and copy it (it is shown once). Your token is used only to call the Sendlane API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sendlane_list_lists",
+          "type": "read",
+          "title": "List lists",
+          "description": "List the audience lists of the account: id, name, description, status, created date. GET /lists."
+        },
+        {
+          "name": "sendlane_get_list",
+          "type": "read",
+          "title": "Get list",
+          "description": "One audience list by id. GET /lists/{listId}."
+        },
+        {
+          "name": "sendlane_list_list_contacts",
+          "type": "read",
+          "title": "List contacts of a list",
+          "description": "Contacts on one list: email, name, phone, subscribed/suppressed state, tags, custom fields, lifetime value. GET /lists/{listId}/contacts."
+        },
+        {
+          "name": "sendlane_list_list_unsubscribed",
+          "type": "read",
+          "title": "List unsubscribed contacts of a list",
+          "description": "Contacts that unsubscribed from one list. GET /lists/{listId}/unsubscribed."
+        },
+        {
+          "name": "sendlane_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "All contacts of the account: email, name, phone, lists, tags, custom fields, subscribed/suppressed state. Filter by creation time with from/to. GET /contacts."
+        },
+        {
+          "name": "sendlane_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id, with lists, tags, custom fields, consent, lifetime value and subscribed/suppressed state. GET /contacts/{contactId}."
+        },
+        {
+          "name": "sendlane_list_unsubscribed_contacts",
+          "type": "read",
+          "title": "List unsubscribed contacts",
+          "description": "Contacts that unsubscribed from the account. GET /contacts/unsubscribed."
+        },
+        {
+          "name": "sendlane_get_contact_subscriptions",
+          "type": "read",
+          "title": "Get contact subscriptions",
+          "description": "The list subscriptions of one contact: list, subscribed/suppressed state, who added it and when. GET /contacts/{contactId}/subscriptions."
+        },
+        {
+          "name": "sendlane_get_contact_tags",
+          "type": "read",
+          "title": "Get contact tags",
+          "description": "The tags on one contact. GET /contacts/{contactId}/tags."
+        },
+        {
+          "name": "sendlane_get_contact_custom_fields",
+          "type": "read",
+          "title": "Get contact custom fields",
+          "description": "The custom field values of one contact. GET /contacts/{contactId}/custom-fields."
+        },
+        {
+          "name": "sendlane_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "The contact tags of the account: id, name, audience count. GET /tags."
+        },
+        {
+          "name": "sendlane_get_tag",
+          "type": "read",
+          "title": "Get tag",
+          "description": "One tag by id. GET /tags/{tagId}."
+        },
+        {
+          "name": "sendlane_list_tag_contacts",
+          "type": "read",
+          "title": "List contacts with a tag",
+          "description": "Contacts that carry one tag. GET /tags/{tagId}/contacts."
+        },
+        {
+          "name": "sendlane_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "The custom contact fields of the account: id, name, type. Use the ids when setting field values. GET /custom-fields."
+        },
+        {
+          "name": "sendlane_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "The segments of the account: id, name, list, match rule, last count. GET /segments."
+        },
+        {
+          "name": "sendlane_list_segment_contacts",
+          "type": "read",
+          "title": "List contacts of a segment",
+          "description": "Contacts in one segment: id, email, name, phone. GET /segments/{segmentId}/contacts."
+        },
+        {
+          "name": "sendlane_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "Email campaigns: id, name, status, scheduled and sent time, automation. GET /campaigns."
+        },
+        {
+          "name": "sendlane_get_campaign",
+          "type": "read",
+          "title": "Get campaign",
+          "description": "One email campaign by id. GET /campaigns/{campaignId}."
+        },
+        {
+          "name": "sendlane_get_campaign_report",
+          "type": "read",
+          "title": "Get campaign report",
+          "description": "Statistics of one email campaign: sent, opens, clicks (unique too), bounced, suppressed, unsubscribed, spam, revenue. from/to limit the period. GET /campaigns/{campaignId}/report."
+        },
+        {
+          "name": "sendlane_list_sms_messages",
+          "type": "read",
+          "title": "List SMS messages",
+          "description": "SMS messages (campaign and automation): id, name, campaign status, automation. GET /sms-messages."
+        },
+        {
+          "name": "sendlane_get_sms_report",
+          "type": "read",
+          "title": "Get SMS report",
+          "description": "Statistics of one SMS message: sent, delivered, clicks, failed, replies, unsubscribed, credits, revenue. from/to limit the period. GET /sms-messages/{messageId}/report."
+        },
+        {
+          "name": "sendlane_list_sender_profiles",
+          "type": "read",
+          "title": "List sender profiles",
+          "description": "The sender profiles (from name, from/reply email, postal address, default flag). GET /senders."
+        },
+        {
+          "name": "sendlane_create_list",
+          "type": "write",
+          "title": "Create list",
+          "description": "WRITE: create an audience list. Not idempotent: calling it twice makes two lists. POST /lists."
+        },
+        {
+          "name": "sendlane_update_list",
+          "type": "write",
+          "title": "Update list",
+          "description": "WRITE: rename a list and/or change its description (a full update: name is required, an omitted description may be cleared). PUT /lists/{listId}."
+        },
+        {
+          "name": "sendlane_add_contacts_to_list",
+          "type": "write",
+          "title": "Add contacts to a list",
+          "description": "WRITE: add one or more contacts (up to 100) to a list; a contact that does not exist is created. Each needs an email or a phone. Sendlane accepts the request for processing (HTTP 202). Only add people who agreed to receive marketing. POST /lists/{listId}/contacts."
+        },
+        {
+          "name": "sendlane_remove_contact_from_list",
+          "type": "write",
+          "title": "Remove a contact from a list",
+          "description": "WRITE: remove one contact from one list (the contact stays in the account). DELETE /lists/{listId}/contacts/{contactId}."
+        },
+        {
+          "name": "sendlane_unsubscribe_contact",
+          "type": "write",
+          "title": "Unsubscribe a contact",
+          "description": "WRITE: unsubscribe one contact from email marketing. The contact stops receiving campaigns. POST /contacts/{contactId}/unsubscribe."
+        },
+        {
+          "name": "sendlane_create_tag",
+          "type": "write",
+          "title": "Create tag",
+          "description": "WRITE: create a contact tag. POST /tags."
+        },
+        {
+          "name": "sendlane_add_contact_tags",
+          "type": "write",
+          "title": "Tag a contact",
+          "description": "WRITE: put one or more existing tags on a contact. POST /contacts/{contactId}/tags."
+        },
+        {
+          "name": "sendlane_remove_contact_tag",
+          "type": "write",
+          "title": "Untag a contact",
+          "description": "WRITE: remove one tag from a contact (the tag itself is kept). DELETE /contacts/{contactId}/tags/{tagId}."
+        },
+        {
+          "name": "sendlane_set_contact_custom_fields",
+          "type": "write",
+          "title": "Set contact custom fields",
+          "description": "WRITE: add custom field values to a contact. Field ids come from sendlane_list_custom_fields. POST /contacts/{contactId}/custom-fields."
+        },
+        {
+          "name": "sendlane_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sendlane_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sendlane tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sendlane_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Sendlane tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sendlane_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sendlane Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run sendlane_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "simple-analytics",
+      "name": "Simple Analytics",
+      "category": "analytics",
+      "description": "Read Simple Analytics stats: pageviews, visitors, pages, referrers, events and data exports.",
+      "endpoint": "https://simple-analytics.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Simple Analytics API key"
+          },
+          {
+            "label": "Simple Analytics user id"
+          }
+        ],
+        "hint": "Find both in Simple Analytics → **Account settings**: the key starts with `sa_api_key_`, the user id with `sa_user_id_`. They are used only to call the Simple Analytics API on your behalf; they are never shown to anyone. Your plan must include API access."
+      },
+      "tools": [
+        {
+          "name": "simpleanalytics_list_websites",
+          "type": "read",
+          "title": "List websites",
+          "description": "List the websites of the Simple Analytics account (hostnames to use in the other tools). Good first call. Admin API: GET /api/websites."
+        },
+        {
+          "name": "simpleanalytics_get_stats",
+          "type": "read",
+          "title": "Get traffic summary",
+          "description": "Aggregated traffic for one website and date range: total pageviews, unique visitors and the median seconds on page. Optional filters narrow it to a page, country, referrer, UTM value, browser, OS, device or metadata value. Stats API: GET /<hostname>.json."
+        },
+        {
+          "name": "simpleanalytics_get_timeseries",
+          "type": "read",
+          "title": "Get traffic over time",
+          "description": "Pageviews and visitors per hour, day, week, month or year for one website and date range (time series for charts and trends). Optional filters as in simpleanalytics_get_stats. Stats API: GET /<hostname>.json?fields=histogram."
+        },
+        {
+          "name": "simpleanalytics_get_breakdown",
+          "type": "read",
+          "title": "Get top pages, referrers, countries or devices",
+          "description": "Top values of one dimension for one website and date range, each with pageviews and visitors: pages, countries, referrers, UTM sources/mediums/campaigns/contents/terms, browsers, operating systems or device types. Optional filters as in simpleanalytics_get_stats. Stats API: GET /<hostname>.json?fields=<dimension>."
+        },
+        {
+          "name": "simpleanalytics_get_events",
+          "type": "read",
+          "title": "Get event counts",
+          "description": "How often custom events happened on one website in a date range. Pass event names, or leave names out for all events (up to 1000). Stats API: GET /<hostname>.json?events=..."
+        },
+        {
+          "name": "simpleanalytics_export_datapoints",
+          "type": "read",
+          "title": "Export raw data points",
+          "description": "Raw, unsampled page views or events of one website for a date range, as rows with only the fields asked for. The reply is capped at max_rows (default 100, max 1000) rows and 2 MB; \"truncated\" says more exist, so narrow the range. Rows are cut to about 40 000 characters of JSON. Dates: YYYY-MM-DD, or YYYY-MM-DDTHH for one hour (start and end the same day). Robots are left out unless asked. Needs the user id too. Export API: GET /api/export/datapoints."
+        },
+        {
+          "name": "simpleanalytics_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "simpleanalytics_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Simple Analytics tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "simpleanalytics_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Simple Analytics tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "simpleanalytics_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Simple Analytics Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run simpleanalytics_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

@@ -246,6 +246,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Paperform](servers/paperform/) | productivity | 27 | API token | [servers/paperform/](servers/paperform/) |
 | [UserVoice](servers/uservoice/) | support | 25 | API token | [servers/uservoice/](servers/uservoice/) |
 | [Breathe HR](servers/breathe-hr/) | productivity | 29 | API token | [servers/breathe-hr/](servers/breathe-hr/) |
+| [Rev.ai](servers/rev-ai/) | speech-to-text | 12 | API token | [servers/rev-ai/](servers/rev-ai/) |
+| [Enchant](servers/enchant/) | support | 20 | API token | [servers/enchant/](servers/enchant/) |
+| [Pirsch Analytics](servers/pirsch/) | analytics | 31 | API token | [servers/pirsch/](servers/pirsch/) |
+| [Exoscale](servers/exoscale/) | cloud | 30 | API token | [servers/exoscale/](servers/exoscale/) |
+| [Pipeline CRM](servers/pipeline-crm/) | crm | 34 | API token | [servers/pipeline-crm/](servers/pipeline-crm/) |
+| [Teamgate](servers/teamgate/) | crm | 38 | API token | [servers/teamgate/](servers/teamgate/) |
+| [Homebase](servers/homebase/) | productivity | 20 | API token | [servers/homebase/](servers/homebase/) |
+| [Benchmark Email](servers/benchmark-email/) | email | 29 | API token | [servers/benchmark-email/](servers/benchmark-email/) |
+| [eDesk](servers/edesk/) | support | 22 | API token | [servers/edesk/](servers/edesk/) |
+| [Encharge](servers/encharge/) | email | 14 | API token | [servers/encharge/](servers/encharge/) |
+| [Sendlane](servers/sendlane/) | email | 35 | API token | [servers/sendlane/](servers/sendlane/) |
+| [Simple Analytics](servers/simple-analytics/) | analytics | 10 | API token | [servers/simple-analytics/](servers/simple-analytics/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
