@@ -42652,6 +42652,759 @@
           "description": "Cancel the caller's NodePing Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run nodeping_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "mailbluster",
+      "name": "MailBluster",
+      "category": "email",
+      "description": "Manage MailBluster leads, custom fields, products and orders: look up, add and update records.",
+      "endpoint": "https://mailbluster.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MailBluster API key"
+          }
+        ],
+        "hint": "In MailBluster open your brand, go to **Settings -> API keys** and click **Create new**. The key works for that one brand; API keys need a plan that includes API access. Your key is used only to call the MailBluster API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "mailbluster_list_fields",
+          "type": "read",
+          "title": "List custom lead fields",
+          "description": "List the brand's custom lead fields: id, label and merge tag. Use the merge tags as keys of `fields` when creating or updating leads. GET /fields."
+        },
+        {
+          "name": "mailbluster_create_field",
+          "type": "write",
+          "title": "Create custom lead field",
+          "description": "WRITE: create a custom lead field. The merge tag is the key used in lead `fields` and in email templates. Creating a field changes the brand's data model but sends nothing. POST /fields."
+        },
+        {
+          "name": "mailbluster_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "Get one lead by email address (the server computes the MD5 id MailBluster uses): name, custom fields, timezone, subscribed and opt-in status, tags, created/updated dates. MailBluster has no list-leads endpoint. GET /leads/{md5(email)}."
+        },
+        {
+          "name": "mailbluster_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: add a lead (contact) to the brand. `subscribed` defaults to FALSE: the lead is stored but is not subscribed to email. Only set subscribed=true when the person has given consent to receive email from this brand (the user is responsible for lawful consent); this server never subscribes anyone on its own. No email is sent by this tool (double opt-in is not offered). If the lead already exists the call fails unless overwrite_existing=true, which replaces the stored data (then `subscribed` must be given explicitly). POST /leads."
+        },
+        {
+          "name": "mailbluster_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "WRITE: change an existing lead's name, custom fields, email, timezone, IP address, subscription flag or tags (send only what should change). `subscribed` is left alone unless you pass it; false unsubscribes the lead, true re-subscribes. Only set subscribed=true when the person has given consent to receive email from this brand (the user is responsible for lawful consent); this server never subscribes anyone on its own. PUT /leads/{md5(email)}."
+        },
+        {
+          "name": "mailbluster_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List product records (id, name, dates) the brand has registered for e-commerce tracking. Paged: the reply's meta has total and nextPageNo (null on the last page). GET /products."
+        },
+        {
+          "name": "mailbluster_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Get one product record by the id you registered it under. GET /products/{product_id}."
+        },
+        {
+          "name": "mailbluster_create_product",
+          "type": "write",
+          "title": "Create product",
+          "description": "WRITE: register a product record (your own id plus a name) so orders can reference it. Sends nothing to anyone and charges nothing. POST /products."
+        },
+        {
+          "name": "mailbluster_update_product",
+          "type": "write",
+          "title": "Update product",
+          "description": "WRITE: rename a product record. PUT /products/{product_id}."
+        },
+        {
+          "name": "mailbluster_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List order records (id, currency, total price, customer lead, campaign, line items). These are records kept in MailBluster for tracking; no payment is involved. Paged: see meta.nextPageNo. GET /orders."
+        },
+        {
+          "name": "mailbluster_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "Get one order record by the id it was created with. GET /orders/{order_id}."
+        },
+        {
+          "name": "mailbluster_create_order",
+          "type": "write",
+          "title": "Create order record",
+          "description": "WRITE: record an order (a tracking record: it does not take payment, charge a card or send email). The customer's email becomes a lead if none exists, and the lead's tags are merged. `customer.subscribed` is REQUIRED because MailBluster would otherwise default it to true: pass false unless the customer has consented to email. For a customer who already exists, the value may replace their stored subscription state. Only set subscribed=true when the person has given consent to receive email from this brand (the user is responsible for lawful consent); this server never subscribes anyone on its own. POST /orders."
+        },
+        {
+          "name": "mailbluster_update_order",
+          "type": "write",
+          "title": "Update order record",
+          "description": "WRITE: change an order record's campaign, currency, total or items (send only what should change; `items`, when given, REPLACES all previous items). The customer cannot be changed here. No payment or email is involved. PUT /orders/{order_id}."
+        },
+        {
+          "name": "mailbluster_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mailbluster_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MailBluster tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mailbluster_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED MailBluster tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mailbluster_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MailBluster Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run mailbluster_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "gift-up",
+      "name": "Gift Up!",
+      "category": "ecommerce",
+      "description": "Read Gift Up! gift cards, orders, items, promotions and transactions (read-only, codes masked).",
+      "endpoint": "https://gift-up.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Gift Up API key"
+          }
+        ],
+        "hint": "Create it in Gift Up → **Settings → Integrations → API keys**. A Gift Up key has broad privileges, but this server only reads: it never redeems, tops up, voids or issues gift cards. Your key is used only to call the Gift Up API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "giftup_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "The Gift Up account this API key belongs to: id, name, currency, whether onboarding is complete and whether the checkout is live. GET /company."
+        },
+        {
+          "name": "giftup_list_gift_cards",
+          "type": "read",
+          "title": "List gift cards",
+          "description": "List gift cards with balance, status flags (canBeRedeemed, hasExpired, notYetValid, isVoided), title, recipient, expiry and the order they came from. Codes are MASKED (at least 6 characters stay hidden); to see one card in full (code and ledger) use giftup_get_gift_card with its code. Filter by state, creation/update time, order, SKU, recipient/purchaser email or payment transaction id. GET /gift-cards."
+        },
+        {
+          "name": "giftup_get_gift_card",
+          "type": "read",
+          "title": "Get gift card",
+          "description": "One gift card by its code: balance (remainingValue / remainingUnits), status flags, expiry, recipient, order, fulfilment and the full ledger of events (created, redeemed, topped up, voided). Returns the code in full because you asked for this card by code; do not repeat it elsewhere. Read-only: it never redeems or changes the card. GET /gift-cards/{code}."
+        },
+        {
+          "name": "giftup_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders (the purchases that created gift cards), newest first: order number, purchaser, revenue, tip, fees, discount, applied promotions, source, notes, metadata and payment provider. Filter by creation time, purchaser email or source. GET /orders."
+        },
+        {
+          "name": "giftup_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id: totals, purchaser, promotions, custom fields, sales taxes, notes, metadata and payment provider. GET /orders/{id}."
+        },
+        {
+          "name": "giftup_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List the gift card products on sale (items): name, price, value, price type, availability window, group, stock level, per-order limit, SKU and terms. Pre-generated codes are reduced to a count and masked tails. Optionally only one group. GET /items."
+        },
+        {
+          "name": "giftup_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One item (gift card product) by id. Pre-generated codes are reduced to a count and masked tails. GET /items/{id}."
+        },
+        {
+          "name": "giftup_list_item_groups",
+          "type": "read",
+          "title": "List item groups",
+          "description": "List item groups (the sections that organize items in the checkout): id, name, description, sort order, auto-expand. GET /groups."
+        },
+        {
+          "name": "giftup_get_item_group",
+          "type": "read",
+          "title": "Get item group",
+          "description": "One item group by id. GET /groups/{id}."
+        },
+        {
+          "name": "giftup_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the locations (stores) of the account; their ids filter and label report transactions. GET /locations."
+        },
+        {
+          "name": "giftup_list_promotions",
+          "type": "read",
+          "title": "List promotions",
+          "description": "List promotions (checkout discounts and bonus credit): name, published/stopped dates, benefits (percentage and fixed discounts, extra credit), usage counts and revenue, limitations and triggers (items, groups, spend and quantity thresholds, promo code). Read-only. GET /promotions."
+        },
+        {
+          "name": "giftup_list_transactions",
+          "type": "read",
+          "title": "List report transactions",
+          "description": "The immutable financial transaction log: OrderPlaced (income, fees, tip), GiftCardCreated, CreditAdded, Redeemed, Expired, Unexpired, Voided, Reactivated, with who, where, reason, Gift Up fee and the value change. Gift card codes are MASKED (at least 6 characters stay hidden). Filter by time range, event type, user email, location id or one gift card code. GET /reports/transactions."
+        },
+        {
+          "name": "giftup_get_transaction",
+          "type": "read",
+          "title": "Get report transaction",
+          "description": "One report transaction by id. The gift card code inside is MASKED (at least 6 characters stay hidden). GET /reports/transactions/{id}."
+        },
+        {
+          "name": "giftup_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "giftup_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Gift Up tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "giftup_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Gift Up tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "giftup_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Gift Up Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run giftup_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "firetext",
+      "name": "FireText",
+      "category": "communications",
+      "description": "Read FireText credit, messages and reports; send an SMS to up to 10 numbers; manage opt-outs.",
+      "endpoint": "https://firetext.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FireText API key"
+          }
+        ],
+        "hint": "Log in to FireText and open **Settings > API** to view or generate a key ([API docs](https://www.firetext.co.uk/docs)). Your key is used only to call the FireText API on your behalf; it is never shown to anyone. You can revoke it by generating a new one."
+      },
+      "tools": [
+        {
+          "name": "firetext_get_credit",
+          "type": "read",
+          "title": "Get SMS credit",
+          "description": "Number of SMS credits (messages) remaining on the FireText account or a sub-account. FireText: /credit."
+        },
+        {
+          "name": "firetext_list_received_messages",
+          "type": "read",
+          "title": "List received messages",
+          "description": "Inbound SMS received on the account's FireText numbers/keywords (messageID, sentTo, keyword, receivedFrom, receivedOn, message). Dates YYYY-MM-DD; from=\"last\" returns only what is new since the last call. FireText: /receivedmessages."
+        },
+        {
+          "name": "firetext_list_sent_messages",
+          "type": "read",
+          "title": "List sent messages",
+          "description": "Messages (campaigns) sent from the account: messageID, sentOn, sentTo (group), recipientCount, message. The messageID is what the delivery and click reports need. Dates YYYY-MM-DD. FireText: /sentmessages."
+        },
+        {
+          "name": "firetext_get_sent_summary",
+          "type": "read",
+          "title": "Get sent summary",
+          "description": "Totals for a date range: number of campaigns, recipients and credits used. FireText: /sentreport."
+        },
+        {
+          "name": "firetext_list_scheduled_messages",
+          "type": "read",
+          "title": "List scheduled messages",
+          "description": "Messages queued for later sending (messageID, queuedOn, scheduledFor, recipientCount, sourceAddress, sendTo, message). FireText: /scheduledmessages."
+        },
+        {
+          "name": "firetext_get_delivery_report",
+          "type": "read",
+          "title": "Get delivery report",
+          "description": "Per-recipient delivery status of one sent message (mobile, names, messageSent, messageUpdate, status: Delivered / Declined / Buffered / Pending with Network / Rejected / Unconfirmed). Give the FireText message id OR the custom reference used when sending. FireText: /deliveryreport."
+        },
+        {
+          "name": "firetext_get_click_report",
+          "type": "read",
+          "title": "Get click report",
+          "description": "Link clicks for one sent message (mobile, names, clicked, userAgent). Only for messages that used FireText's Trackable SMS feature (otherwise the vendor answers URL error). FireText: /clickreport."
+        },
+        {
+          "name": "firetext_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Stored details of one contact by mobile number (firstname, lastname, mobile, customField1-3). FireText: /contactinfo."
+        },
+        {
+          "name": "firetext_list_unsubscribed",
+          "type": "read",
+          "title": "List unsubscribed contacts",
+          "description": "Contacts that opted out (names, mobile, custom fields, addedOn, unsubscribedOn, reason). Optional date range and group API id. FireText: /unsubscribed."
+        },
+        {
+          "name": "firetext_list_keywords",
+          "type": "read",
+          "title": "List keywords",
+          "description": "SMS keywords on the account (keywordID, number, keyword, reference). FireText: /keywords."
+        },
+        {
+          "name": "firetext_send_sms",
+          "type": "write",
+          "title": "Send SMS",
+          "description": "WRITE, SPENDS MONEY: sends a REAL SMS to real phones and uses the account's SMS credits (one credit per 160 GSM characters per recipient; long and unicode messages cost more). Cannot be undone. At most 10 recipients per call; no groups, templates, scheduling or repeats. Only call after the user confirmed the exact text, sender and numbers. FireText: /sendsms."
+        },
+        {
+          "name": "firetext_subscribe_contact",
+          "type": "write",
+          "title": "Add or update contact",
+          "description": "WRITE: adds a contact (by mobile number) to the FireText account, optionally into a group, or with update=true refreshes the names/custom fields of an existing contact. Does not send any SMS. A contact that opted out cannot be re-added this way (they must rejoin by SMS). FireText: /subscribe."
+        },
+        {
+          "name": "firetext_unsubscribe_contact",
+          "type": "write",
+          "title": "Unsubscribe contact",
+          "description": "WRITE: opts a contact out of the FireText account (all groups by default), so it no longer receives group messages. The contact can only rejoin by SMS. Does not send any SMS. FireText: /unsubscribe."
+        },
+        {
+          "name": "firetext_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "firetext_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FireText tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "firetext_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED FireText tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "firetext_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FireText Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run firetext_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "megaventory",
+      "name": "Megaventory",
+      "category": "ecommerce",
+      "description": "Read Megaventory products, stock, orders and partners; create clients, sales and purchase orders.",
+      "endpoint": "https://megaventory.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Megaventory API key"
+          }
+        ],
+        "hint": "Find it in Megaventory: click your **profile icon → My Profile**, then the **key icon** to generate a key, and choose **Update**. The API is part of the paid Megaventory plans. The key acts with that user's permissions (a dedicated user makes its activity easy to track). It is used only to call the Megaventory API on your behalf, sent in the request body, and never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "megaventory_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Megaventory user this API key belongs to (user name and whether they are an administrator). The key itself and the mobile PIN are never returned. POST /User/UserGet."
+        },
+        {
+          "name": "megaventory_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "Search the product catalog: SKU, description, category, prices (selling, purchase, unit cost), dimensions, main supplier, sellable/purchasable flags and more. Filter by id, exact SKU, category, main supplier or words in the description. Empty text fields are omitted. POST /Product/ProductGet."
+        },
+        {
+          "name": "megaventory_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List product categories (id, name, description). Use the ids to filter products. POST /ProductCategory/ProductCategoryGet."
+        },
+        {
+          "name": "megaventory_get_product_bom",
+          "type": "read",
+          "title": "Get product bill of materials",
+          "description": "The bill of materials (BOM) of a manufactured product: its raw materials (id, SKU, description, quantity per unit). POST /ProductBOM/ProductBOMGet."
+        },
+        {
+          "name": "megaventory_list_product_bundles",
+          "type": "read",
+          "title": "List product bundles",
+          "description": "List product bundles (a bundle sells several products together). Filter by bundle id or SKU, or by a product the bundle includes. POST /Product/ProductBundleGetAll."
+        },
+        {
+          "name": "megaventory_get_stock",
+          "type": "read",
+          "title": "Get stock levels",
+          "description": "Stock per product per inventory location: physical stock, on hand, on hold, not yet shipped (open sales orders), not yet received (open purchase orders / work orders) and the alert level. Filter by product ids, SKU, category, location or supplier, or show only products below their alert level. POST /InventoryLocationStock/InventoryLocationStockGet."
+        },
+        {
+          "name": "megaventory_list_inventory_locations",
+          "type": "read",
+          "title": "List inventory locations",
+          "description": "List inventory locations (warehouses, shops, transit): id, abbreviation, name, address. Use the ids for stock filters and order locations. POST /InventoryLocation/InventoryLocationGet."
+        },
+        {
+          "name": "megaventory_list_clients_suppliers",
+          "type": "read",
+          "title": "List clients and suppliers",
+          "description": "List clients and suppliers (one record type in Megaventory): id, type, name, addresses, phone, email, tax id, currency, payment terms and contacts. Filter by type or words in the name. POST /SupplierClient/SupplierClientGet."
+        },
+        {
+          "name": "megaventory_list_product_suppliers",
+          "type": "read",
+          "title": "List product supplier prices",
+          "description": "Which suppliers sell which products: supplier SKU, description and purchase price per product-supplier pair. POST /ProductSupplier/ProductSupplierGet."
+        },
+        {
+          "name": "megaventory_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders with client, dates, totals (subtotal, tax, discount, grand total), status and the order rows (SKU, quantity, shipped/invoiced quantity, unit price). Filter by order number or status. POST /SalesOrder/SalesOrderGet."
+        },
+        {
+          "name": "megaventory_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders with supplier, dates, totals, status and the order rows (SKU, quantity, received/invoiced quantity, unit price). Filter by order number, status or supplier. POST /PurchaseOrder/PurchaseOrderGet."
+        },
+        {
+          "name": "megaventory_list_sales_quotes",
+          "type": "read",
+          "title": "List sales quotes",
+          "description": "List sales quotes with client, totals, status and rows. Filter by quote number or status. POST /SalesQuote/SalesQuoteGet."
+        },
+        {
+          "name": "megaventory_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work (production) orders: finished product, quantity, location, status, priority and the materials allocated. Filter by work order number or status. POST /WorkOrder/WorkOrderGet."
+        },
+        {
+          "name": "megaventory_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List transaction documents of any type: shipments, invoices, receipts, credit notes, returns, adjustments and so on, with totals and status. Narrow by document type ids (megaventory_list_document_types), document number or status. POST /Document/DocumentGet."
+        },
+        {
+          "name": "megaventory_list_document_types",
+          "type": "read",
+          "title": "List document types",
+          "description": "List the document types of the account (sales order, purchase order, shipment, invoice and so on) with their ids and abbreviations. POST /DocumentType/DocumentTypeGet."
+        },
+        {
+          "name": "megaventory_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the tax rates defined in the account (id, name, rate). POST /Tax/TaxGet."
+        },
+        {
+          "name": "megaventory_list_currencies",
+          "type": "read",
+          "title": "List currencies",
+          "description": "List the currencies of the account (code, description, exchange rate to the default currency, default flag). POST /Currency/CurrencyGet."
+        },
+        {
+          "name": "megaventory_create_client_or_supplier",
+          "type": "write",
+          "title": "Create client or supplier",
+          "description": "WRITE: create a NEW client, supplier or both in Megaventory (Insert only: an existing record is never updated, nothing is deleted). Creating the same name twice creates two records, so search with megaventory_list_clients_suppliers first. POST /SupplierClient/SupplierClientUpdate."
+        },
+        {
+          "name": "megaventory_create_sales_order",
+          "type": "write",
+          "title": "Create pending sales order",
+          "description": "WRITE: create a NEW sales order for an existing client in the PENDING status. A pending order is only a draft document: it is not verified, nothing is shipped, invoiced or paid, and stock is not touched. Verifying, shipping and invoicing happen in Megaventory, not through this server. POST /SalesOrder/SalesOrderUpdate."
+        },
+        {
+          "name": "megaventory_create_purchase_order",
+          "type": "write",
+          "title": "Create pending purchase order",
+          "description": "WRITE: create a NEW purchase order to an existing supplier in the PENDING status. A pending order is only a draft document: it is not verified or sent, nothing is received, invoiced or paid, and stock is not touched. Verifying and receiving happen in Megaventory, not through this server. POST /PurchaseOrder/PurchaseOrderUpdate."
+        },
+        {
+          "name": "megaventory_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "megaventory_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Megaventory tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "megaventory_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Megaventory tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "megaventory_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Megaventory Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run megaventory_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "reviews-io",
+      "name": "REVIEWS.io",
+      "category": "ecommerce",
+      "description": "Read REVIEWS.io product and company reviews, ratings, UGC, surveys; tag reviews; invite one buyer.",
+      "endpoint": "https://reviews-io.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per store"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store id"
+          },
+          {
+            "label": "REVIEWS.io API key"
+          }
+        ],
+        "hint": "Both are in the REVIEWS.io dashboard ([dash.reviews.io](https://dash.reviews.io)) under **Integrations > API**. The API is available on the **Plus** package. Your key is used only to call the REVIEWS.io API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "reviewsio_list_reviews",
+          "type": "read",
+          "title": "List reviews and questions",
+          "description": "The recommended way to read reviews: company (store) reviews, product reviews, third-party reviews and product questions in one filterable timeline, with the account's private data (reviewer e-mail, order). Filter by type, SKU/MPN/GTIN, tag, branch, keyword, date range, minimum rating, photos/videos; sort newest-first by default. Pages are 1-based; next_page is set when more results remain. GET /reviews."
+        },
+        {
+          "name": "reviewsio_list_company_reviews",
+          "type": "read",
+          "title": "List company reviews",
+          "description": "Company (store) reviews with private data (order number, reviewer details, tags) and optionally the replies. Filter by rating range, dates, order number, branch, invitation id; order by date or rating. Pages are 0-based; next_page is set when more remain. GET /merchant/reviews."
+        },
+        {
+          "name": "reviewsio_get_review_stats",
+          "type": "read",
+          "title": "Get review statistics",
+          "description": "Basic review statistics: average rating and review count for product reviews, company reviews and third-party reviews. GET /stats/all."
+        },
+        {
+          "name": "reviewsio_get_product_ratings",
+          "type": "read",
+          "title": "Get product ratings",
+          "description": "Average rating and review count for one or more products by SKU (batch). GET /product/rating-batch."
+        },
+        {
+          "name": "reviewsio_get_review_nuggets",
+          "type": "read",
+          "title": "Get review nuggets",
+          "description": "Short, highlight-worthy review snippets (nuggets) of company and/or product reviews, for marketing. Filter by SKU, tags, branch, minimum rating. GET /review-nuggets/data."
+        },
+        {
+          "name": "reviewsio_list_ugc",
+          "type": "read",
+          "title": "List user generated content",
+          "description": "Customer photos/videos (UGC) collected through REVIEWS.io, filterable by SKU, tag, category or videos only. GET /ugc."
+        },
+        {
+          "name": "reviewsio_list_surveys",
+          "type": "read",
+          "title": "List surveys",
+          "description": "The store's surveys (campaigns) with their ids; use an id with reviewsio_list_survey_responses. GET /widget/surveys."
+        },
+        {
+          "name": "reviewsio_list_survey_responses",
+          "type": "read",
+          "title": "List survey responses",
+          "description": "The responses submitted to one survey. Get the survey id from reviewsio_list_surveys. GET /widget/survey-responses."
+        },
+        {
+          "name": "reviewsio_list_product_invitations",
+          "type": "read",
+          "title": "List product invitations",
+          "description": "Product review invitations that are queued or sent (customer, order, send date, status); filter by SKU, order id or sent state, and page through with page/limit. GET /product/invitation."
+        },
+        {
+          "name": "reviewsio_list_company_invitations",
+          "type": "read",
+          "title": "List company invitations",
+          "description": "Company review invitations that are queued or sent (customer, order, send date, status); filter by order id or sent state, and page through with page/limit. GET /merchant/invitations."
+        },
+        {
+          "name": "reviewsio_list_unsubscribed_users",
+          "type": "read",
+          "title": "List unsubscribed users",
+          "description": "E-mail addresses that unsubscribed from (or were unsubscribed from) REVIEWS.io invitation e-mails. GET /unsubscribe/list."
+        },
+        {
+          "name": "reviewsio_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "The review-submitted webhooks registered for the store (read-only; this server never adds or removes webhooks). GET /webhook/list."
+        },
+        {
+          "name": "reviewsio_tag_company_review",
+          "type": "write",
+          "title": "Tag a company review",
+          "description": "WRITE: adds a tag to one company review (visible in your REVIEWS.io dashboard and usable as a filter). Adding the same tag twice changes nothing. Nothing is sent to the customer. POST /review/tag/{id}."
+        },
+        {
+          "name": "reviewsio_tag_product_review",
+          "type": "write",
+          "title": "Tag a product review",
+          "description": "WRITE: adds a tag to one product review (visible in your REVIEWS.io dashboard and usable as a filter). Adding the same tag twice changes nothing. Nothing is sent to the customer. POST /product-review/tag/{id}."
+        },
+        {
+          "name": "reviewsio_unsubscribe_user",
+          "type": "write",
+          "title": "Unsubscribe a user from invitation e-mails",
+          "description": "WRITE: stops REVIEWS.io sending review invitation e-mails to one e-mail address. Use it for a customer who asked not to be contacted. This server has no tool to re-subscribe an address; it can only be undone in the REVIEWS.io dashboard. Nothing is sent to the customer. POST /unsubscribe/email."
+        },
+        {
+          "name": "reviewsio_queue_company_invitation",
+          "type": "write",
+          "title": "Queue one company review invitation (e-mails a customer)",
+          "description": "WRITE - SENDS A MESSAGE TO A REAL CUSTOMER: queues ONE company review invitation e-mail to the given customer address; REVIEWS.io then e-mails that person (when and with which template follows your Flow Sequence / template_id, usually within hours or days). It cannot be recalled from this server. Only call it when the user has explicitly asked to invite this exact customer, and pass confirm_send_email: true. There is no bulk or SMS invitation tool. POST /merchant/invitation."
+        },
+        {
+          "name": "reviewsio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "reviewsio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the REVIEWS.io tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "reviewsio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED REVIEWS.io tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "reviewsio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's REVIEWS.io Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run reviewsio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

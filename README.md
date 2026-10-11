@@ -269,6 +269,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ChargeOver](servers/chargeover/) | billing | 29 | API token | [servers/chargeover/](servers/chargeover/) |
 | [TrackingMore](servers/trackingmore/) | shipping | 11 | API token | [servers/trackingmore/](servers/trackingmore/) |
 | [NodePing](servers/nodeping/) | observability | 32 | API token | [servers/nodeping/](servers/nodeping/) |
+| [MailBluster](servers/mailbluster/) | email | 17 | API token | [servers/mailbluster/](servers/mailbluster/) |
+| [Gift Up!](servers/gift-up/) | ecommerce | 17 | API token | [servers/gift-up/](servers/gift-up/) |
+| [FireText](servers/firetext/) | communications | 17 | API token | [servers/firetext/](servers/firetext/) |
+| [Megaventory](servers/megaventory/) | ecommerce | 24 | API token | [servers/megaventory/](servers/megaventory/) |
+| [REVIEWS.io](servers/reviews-io/) | ecommerce | 20 | API token | [servers/reviews-io/](servers/reviews-io/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
