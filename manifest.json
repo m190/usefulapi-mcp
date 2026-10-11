@@ -48599,6 +48599,387 @@
           "description": "Cancel the caller's Fleetio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run fleetio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "desec",
+      "name": "deSEC",
+      "category": "dns",
+      "description": "Read deSEC domains, DNSSEC keys, zone files and RRsets; create or replace one DNS record set.",
+      "endpoint": "https://desec.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "deSEC API token"
+          }
+        ],
+        "hint": "Create it in the deSEC console under **Token Management** and copy the secret value (shown only once). Leave the allowed subnets open to all addresses. Changing records needs a token that may write DNS, and DNS changes go live immediately. For a safer setup create a dedicated token with a scoping policy limited to the domains you want to manage. deSEC limits each account to 2000 requests a day. Your token is used only to call the deSEC API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "desec_list_domains",
+          "type": "read",
+          "title": "List domains",
+          "description": "List the DNS domains (zones) in this deSEC account, newest first, with creation and last-published times and minimum TTL. DNSSEC keys are omitted here (see desec_get_domain). Use owns_qname to find which of your domains is responsible for a DNS name (for example before adding a record for www.dev.example.net). Up to 500 per page. GET /domains/."
+        },
+        {
+          "name": "desec_get_domain",
+          "type": "read",
+          "title": "Get domain",
+          "description": "One domain with its DNSSEC key material: the DNSKEY and the DS records to publish at the registrar for the chain of trust, plus minimum TTL and publication times. GET /domains/{name}/."
+        },
+        {
+          "name": "desec_export_zonefile",
+          "type": "read",
+          "title": "Export zonefile",
+          "description": "The whole zone as a plain-text BIND-format zonefile (all RRsets except DNSSEC types). Handy as a backup before changing records. Counts as an expensive deSEC operation (300/min). GET /domains/{name}/zonefile/."
+        },
+        {
+          "name": "desec_list_rrsets",
+          "type": "read",
+          "title": "List RRsets",
+          "description": "List the DNS records of a domain as RRsets (all records of one name and type, sharing one TTL), newest first. Filter by type and/or subname. Up to 500 per page. GET /domains/{name}/rrsets/."
+        },
+        {
+          "name": "desec_get_rrset",
+          "type": "read",
+          "title": "Get RRset",
+          "description": "One RRset by subname and type, e.g. the A records of \"www\" or the MX records of the apex. GET /domains/{name}/rrsets/{subname}/{type}/."
+        },
+        {
+          "name": "desec_create_rrset",
+          "type": "write",
+          "title": "Create RRset",
+          "description": "WRITE: create ONE new RRset (a set of DNS records of one type at one name) in a domain. It goes live in DNS immediately and a wrong record can take a site or mail offline. Fails if an RRset with this subname and type already exists (use desec_replace_rrset for that) or if a CNAME would conflict with other records. Never touches the apex NS or DNSSEC records and cannot delete anything. Subject to deSEC's write limits (15/min, 300/day per domain). POST /domains/{name}/rrsets/."
+        },
+        {
+          "name": "desec_replace_rrset",
+          "type": "write",
+          "title": "Replace RRset",
+          "description": "WRITE (overwrites): set ONE RRset to exactly the given TTL and records, creating it if it does not exist and REPLACING all its current records if it does. It goes live in DNS immediately; a wrong value can take a site or mail offline. The previous RRset is read first and returned as `previous` so the change can be undone with another call. An empty record list is refused (this tool never deletes), and the apex NS and DNSSEC records cannot be changed. Subject to deSEC's write limits (15/min, 300/day per domain). PUT /domains/{name}/rrsets/ with a one-element array."
+        },
+        {
+          "name": "desec_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "desec_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the deSEC tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "desec_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED deSEC tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "desec_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's deSEC Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run desec_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "messente",
+      "name": "Messente",
+      "category": "communications",
+      "description": "Read Messente balance, prices, delivery status and statistics; send SMS to up to 10 numbers.",
+      "endpoint": "https://messente.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API username"
+          },
+          {
+            "label": "API password"
+          }
+        ],
+        "hint": "Find both under [Messente dashboard → API settings](https://dashboard.messente.com/api-settings). They are different from your account login. If you restrict API access by IP there, allow **0.0.0.0/0** so this server can connect. Your credentials are used only to call the Messente API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "messente_get_balance",
+          "type": "read",
+          "title": "Get account balance",
+          "description": "Get the Messente account's remaining SMS credit balance (in EUR). Messente legacy API: GET /get_balance (api2.messente.com)."
+        },
+        {
+          "name": "messente_get_prices",
+          "type": "read",
+          "title": "Get SMS prices for a country",
+          "description": "Get this account's price per SMS part for one country, per mobile network (use it to estimate what messente_send_sms will cost). Messente legacy API: GET /prices."
+        },
+        {
+          "name": "messente_get_delivery_status",
+          "type": "read",
+          "title": "Get delivery status of a message",
+          "description": "Get the delivery report of a sent message by its omnimessage id (returned by messente_send_sms): per-message status (DELIVRD, UNDELIV, FAILED, ...), error and the price charged. Messente asks not to poll this for every message at scale. Messente: GET /omnimessage/{omnimessage_id}/status."
+        },
+        {
+          "name": "messente_list_blacklist",
+          "type": "read",
+          "title": "List blacklisted numbers",
+          "description": "List the phone numbers on the account's blacklist (numbers Messente will not send to). Returns the total count and at most `limit` numbers. Messente: GET /phonebook/blacklist."
+        },
+        {
+          "name": "messente_check_blacklist",
+          "type": "read",
+          "title": "Check if a number is blacklisted",
+          "description": "Check whether one phone number is on the account's blacklist. Messente: GET /phonebook/blacklist/{phone} (found = blacklisted, 404 = not)."
+        },
+        {
+          "name": "messente_get_statistics",
+          "type": "read",
+          "title": "Get message statistics",
+          "description": "Get total messages and total price per country for a date range, optionally for some message types. Messente: POST /statistics/reports (a read-only report)."
+        },
+        {
+          "name": "messente_lookup_numbers",
+          "type": "write",
+          "title": "Look up phone numbers (HLR)",
+          "description": "Number lookup (HLR): is each number valid, ported, roaming, and which network it is on. COSTS CREDITS: Messente charges per number looked up (EUR 0.002 per number in its docs) and the Number Lookup service must be enabled on the account (a fixed monthly fee applies per Messente's docs). Up to 10 numbers per call. Messente: POST /hlr/sync."
+        },
+        {
+          "name": "messente_add_to_blacklist",
+          "type": "write",
+          "title": "Add a number to the blacklist",
+          "description": "WRITE: add one phone number to the account's blacklist, so Messente will no longer send messages to it. Adding a number already listed is harmless. Messente: POST /phonebook/blacklist."
+        },
+        {
+          "name": "messente_send_sms",
+          "type": "write",
+          "title": "Send an SMS",
+          "description": "WRITE: SENDS REAL SMS TEXT MESSAGES to real people and SPENDS the account's Messente credit (each recipient is charged per SMS part, longer texts use several parts; use messente_get_prices to estimate). SMS only, at most 10 recipients per call, one message per recipient, never to a list. Send only to people who asked to receive it (Messente forbids unsolicited messages). Not undoable. Messente: POST /omnimessage with channel sms, once per recipient."
+        },
+        {
+          "name": "messente_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "messente_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Messente tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "messente_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Messente tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "messente_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Messente Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run messente_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "localazy",
+      "name": "Localazy",
+      "category": "localization",
+      "description": "Read Localazy projects, files, keys and glossary; submit translations, import keys, AI suggestions.",
+      "endpoint": "https://localazy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per organization"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Localazy project token"
+          }
+        ],
+        "hint": "Create it at **localazy.com/developer/tokens** (project owners only). A project token reaches that one project with read and write access, so the translation, glossary and import tools act as that project. Your token is used only to call the Localazy API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "localazy_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List the Localazy projects the token can reach (a project token reaches one project): id, slug, name, source language, your role and visibility. Optionally add owning-organization limits (keys used/available, feature flags) and per-language progress counts (active, review, current, translated, sourceChanged, needImprovement). GET /projects."
+        },
+        {
+          "name": "localazy_list_import_formats",
+          "type": "read",
+          "title": "List import file types",
+          "description": "List the file types Localazy can store strings as (type id, name, support for plurals/arrays/structured keys). The `json` type is what localazy_import_keys uses. GET /import/formats."
+        },
+        {
+          "name": "localazy_list_files",
+          "type": "read",
+          "title": "List files",
+          "description": "List the files in a project (id, name, type, optional path). Use a file id with localazy_get_file_keys to read its strings. GET /projects/{projectId}/files."
+        },
+        {
+          "name": "localazy_get_file_keys",
+          "type": "read",
+          "title": "Get file keys and translations",
+          "description": "Read the strings of one file in one language: key id, key path, current translation (a string, an array or a plural object keyed @one/@other). Pages of up to 1000 keys; pass `next` for the following page. Set extra_info for hidden/limit/deprecated/comment, no_content to list keys without text. Counts against the project's daily fetch cap. GET /projects/{projectId}/files/{fileId}/keys/{lang}."
+        },
+        {
+          "name": "localazy_list_key_links",
+          "type": "read",
+          "title": "List key links (duplicities)",
+          "description": "List links between duplicate source keys (key id, linked project id, linked key id), paged. Needs the Reviewer role. GET /projects/{projectId}/links."
+        },
+        {
+          "name": "localazy_list_cdn_metadata",
+          "type": "read",
+          "title": "List CDN metadata files",
+          "description": "List the Localazy CDN release tags of a project and the URL of each tag's metadata file (languages, plural rules). Needs the Manager role. GET /projects/{projectId}/cdn."
+        },
+        {
+          "name": "localazy_get_import_progress",
+          "type": "read",
+          "title": "Get import progress",
+          "description": "Progress of an import batch started with localazy_import_keys (pass its `import_batch`). The endpoint is used by Localazy's own API client but is not in the public docs yet, so the reply is returned as Localazy sends it. GET /projects/{projectId}/import/{importBatch}."
+        },
+        {
+          "name": "localazy_get_tm_suggestions",
+          "type": "read",
+          "title": "Get translation memory suggestions",
+          "description": "Translation Memory suggestions for one source key into a target language: earlier translations of the same text, with the project they came from. Free; no Localazy credits. GET /projects/{projectId}/keys/{keyId}/suggestions/tm."
+        },
+        {
+          "name": "localazy_get_mt_suggestions",
+          "type": "read",
+          "title": "Get machine translation suggestions",
+          "description": "Machine Translation suggestions (one per engine) for one source key into a target language. Free: it does not consume Localazy credits (Localazy AI does; see localazy_translate_with_ai). The first request for a key can be slower. Nothing is saved. GET /projects/{projectId}/keys/{keyId}/suggestions/mt."
+        },
+        {
+          "name": "localazy_list_glossary",
+          "type": "read",
+          "title": "List glossary terms",
+          "description": "All glossary terms of a project: id, description, translate/case-sensitive/exact-match flags and the term in each language. GET /projects/{projectId}/glossary."
+        },
+        {
+          "name": "localazy_get_glossary_term",
+          "type": "read",
+          "title": "Get glossary term",
+          "description": "One glossary term by id. GET /projects/{projectId}/glossary/{id}."
+        },
+        {
+          "name": "localazy_create_glossary_term",
+          "type": "write",
+          "title": "Create glossary term",
+          "description": "WRITE: add one term to a project's glossary (max 1,000 terms per project). Needs the Reviewer role. The term guides translators and Localazy AI from now on. POST /projects/{projectId}/glossary."
+        },
+        {
+          "name": "localazy_update_glossary_term",
+          "type": "write",
+          "title": "Update glossary term",
+          "description": "WRITE: replace the content of one glossary term (the term list and any flags you pass overwrite the old values). Needs the Reviewer role. Read the term first with localazy_get_glossary_term. PUT /projects/{projectId}/glossary/{id}."
+        },
+        {
+          "name": "localazy_submit_translation",
+          "type": "write",
+          "title": "Submit a translation",
+          "description": "WRITE: set the translation of ONE source key in ONE target language. Reviewers, managers, owners and trusted translators set it as the current version (it overwrites the existing translation and goes live in the next download/CDN release); a translator's value is stored as a candidate for review. Values are stored as-is, with no placeholder, plural or length check, and the source language cannot be written. Check the reply's `stored`. POST /projects/{projectId}/keys/{keyId}/translations/{lang}."
+        },
+        {
+          "name": "localazy_import_keys",
+          "type": "write",
+          "title": "Import a few keys",
+          "description": "WRITE: add or update up to 50 string keys in ONE file, in ONE language (flat key -> text; use a key like \"home.title\" for the key name). Needs the Owner role. Nothing is deleted or deprecated, and Localazy does not overwrite existing current translations by default (translations identical to the source are skipped). By default the language is the project's source language, so this adds new source keys or changes the source text of existing ones (which marks their translations as changed); pass a different language to import translations, optionally through review with import_as_new. Imports count against the project's daily import cap (Free plan: 100/day). Returns an import_batch id for localazy_get_import_progress. POST /projects/{projectId}/import."
+        },
+        {
+          "name": "localazy_update_key_properties",
+          "type": "write",
+          "title": "Update key comment/limit/visibility",
+          "description": "WRITE: change a source key's translator comment, maximum translation length, or hidden flag (fields you omit stay as they are). Needs the Manager role. It does not change texts and cannot deprecate or delete the key. PUT /projects/{projectId}/keys/{keyId}."
+        },
+        {
+          "name": "localazy_translate_with_ai",
+          "type": "write",
+          "title": "Translate texts with Localazy AI (spends credits)",
+          "description": "COSTS CREDITS: translate up to 10 texts with Localazy AI. Every call consumes Localazy credits from the account balance, by the number of translated words (see localazy.com/pricing); nothing is stored in the project, the translations are only returned. Limits: 10 requests/minute, 32 items and 16,384 characters per request. Beta. Needs the Owner role. POST /projects/{projectId}/ai."
+        },
+        {
+          "name": "localazy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "localazy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Localazy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "localazy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Localazy tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "localazy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Localazy Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run localazy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

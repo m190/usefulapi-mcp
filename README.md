@@ -302,6 +302,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [RunCloud](servers/runcloud/) | devops | 40 | API token | [servers/runcloud/](servers/runcloud/) |
 | [Status.io](servers/status-io/) | observability | 24 | API token | [servers/status-io/](servers/status-io/) |
 | [Fleetio](servers/fleetio/) | productivity | 48 | API token | [servers/fleetio/](servers/fleetio/) |
+| [deSEC](servers/desec/) | dns | 11 | API token | [servers/desec/](servers/desec/) |
+| [Messente](servers/messente/) | communications | 13 | API token | [servers/messente/](servers/messente/) |
+| [Localazy](servers/localazy/) | localization | 21 | API token | [servers/localazy/](servers/localazy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
