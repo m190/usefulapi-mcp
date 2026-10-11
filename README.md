@@ -291,6 +291,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Helpwise](servers/helpwise/) | support | 25 | API token | [servers/helpwise/](servers/helpwise/) |
 | [Qgiv](servers/qgiv/) | fundraising | 25 | API token | [servers/qgiv/](servers/qgiv/) |
 | [Starshipit](servers/starshipit/) | shipping | 23 | API token | [servers/starshipit/](servers/starshipit/) |
+| [Buttondown](servers/buttondown/) | email | 29 | API token | [servers/buttondown/](servers/buttondown/) |
+| [SuperFaktura](servers/superfaktura/) | billing | 29 | API token | [servers/superfaktura/](servers/superfaktura/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
