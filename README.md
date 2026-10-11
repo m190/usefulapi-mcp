@@ -262,6 +262,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Elation Health](servers/elation-health/) | healthcare | 18 | API token | [servers/elation-health/](servers/elation-health/) |
 | [Akute Health](servers/akute-health/) | healthcare | 19 | API token | [servers/akute-health/](servers/akute-health/) |
 | [Practice Better](servers/practice-better/) | healthcare | 19 | API token | [servers/practice-better/](servers/practice-better/) |
+| [Docparser](servers/docparser/) | document-ai | 13 | API token | [servers/docparser/](servers/docparser/) |
+| [Vyfakturuj](servers/vyfakturuj/) | billing | 14 | API token | [servers/vyfakturuj/](servers/vyfakturuj/) |
+| [Invoiced](servers/invoiced/) | billing | 31 | API token | [servers/invoiced/](servers/invoiced/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
