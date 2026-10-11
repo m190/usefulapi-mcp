@@ -47027,6 +47027,483 @@
           "description": "Cancel the caller's Wincher Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run wincher_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "waitwhile",
+      "name": "Waitwhile",
+      "category": "calendar",
+      "description": "Read Waitwhile visits, bookings, customers, services and analytics; add, update and cancel visits.",
+      "endpoint": "https://waitwhile.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Waitwhile API key"
+          }
+        ],
+        "hint": "Create it in Waitwhile → **Settings → Developers → API & Webhooks** → Create API key (the API needs the Business plan or higher). Your key is used only to call the Waitwhile API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "waitwhile_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the account's locations (businesses/sites): id, name, short name, address, time zone, opening hours and waitlist/booking settings. Use the ids to filter visits, services and resources. GET /locations."
+        },
+        {
+          "name": "waitwhile_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id or short name (the part of its public Waitwhile URL). GET /locations/{shortNameOrId}."
+        },
+        {
+          "name": "waitwhile_list_location_status",
+          "type": "read",
+          "title": "List location status (live waitlist)",
+          "description": "Live status of every location: open/closed, number of people waiting and being served, current estimated wait time, and booking counters. GET /location-status."
+        },
+        {
+          "name": "waitwhile_get_location_status",
+          "type": "read",
+          "title": "Get location status (live waitlist)",
+          "description": "Live status of one location: open/closed, waiting and serving counts, estimated wait. GET /location-status/{locationId}."
+        },
+        {
+          "name": "waitwhile_list_visits",
+          "type": "read",
+          "title": "List visits (waitlist entries and bookings)",
+          "description": "List visits: waitlist entries (people in line) and bookings (appointments), with customer, state (PENDING, DRAFT, BOOKED, WAITING, SERVING, COMPLETE), tags (e.g. NO-SHOW, CANCELLED, ARRIVED), services, resources, party size, position and timestamps. Filter by location, state, tag, customer, service, resource, booking date (local time) or created/updated date. Cursor-paged. Contains customer contact details. GET /visits."
+        },
+        {
+          "name": "waitwhile_search_visits",
+          "type": "read",
+          "title": "Search visits",
+          "description": "Search visits by a prefix match on customer name, phone, e-mail or customer id, optionally filtered by location, state, tag and excluded tags. Page-numbered. Contains customer contact details. GET /visits/search."
+        },
+        {
+          "name": "waitwhile_get_visit",
+          "type": "read",
+          "title": "Get visit",
+          "description": "One visit (waitlist entry or booking) by id: customer, state, tags, services, resources, party size, position, estimated wait and all timestamps. GET /visits/{visitId}."
+        },
+        {
+          "name": "waitwhile_list_booking_slots",
+          "type": "read",
+          "title": "List booking slots",
+          "description": "Booking slots of a location for a date range with the free spots per resource and service, so you can see when an appointment can be booked. Dates are local to the location, YYYY-MM-DDThh:mm. GET /visits/availability."
+        },
+        {
+          "name": "waitwhile_first_available_slots",
+          "type": "read",
+          "title": "First available booking slots",
+          "description": "The first available booking slots of a location (optionally for a party size, services and resources) from a date. Use it to propose appointment times. GET /visits/first-available-slots."
+        },
+        {
+          "name": "waitwhile_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (name, phone, e-mail, tags, last visit per location, created/updated). Cursor-paged, 20 per page by default; filter by location, external id or created/updated date. Contains personal data. GET /customers."
+        },
+        {
+          "name": "waitwhile_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers by a prefix match on name, phone, e-mail or customer id; optionally narrowed by location, visit state or tag. Page-numbered. Contains personal data. GET /customers/search."
+        },
+        {
+          "name": "waitwhile_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id: contact details, tags, per-location state and last visit. Contains personal data. GET /customers/{customerId}."
+        },
+        {
+          "name": "waitwhile_list_customer_notes",
+          "type": "read",
+          "title": "List customer notes",
+          "description": "The staff notes recorded on a customer (content, author, visit and location, timestamps). GET /customers/{customerId}/notes."
+        },
+        {
+          "name": "waitwhile_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List services (what customers book or queue for): name, duration, price, locations, resources and category structure. GET /services."
+        },
+        {
+          "name": "waitwhile_get_service",
+          "type": "read",
+          "title": "Get service",
+          "description": "One service by id. GET /services/{serviceId}."
+        },
+        {
+          "name": "waitwhile_list_resources",
+          "type": "read",
+          "title": "List resources (staff, rooms, tables)",
+          "description": "List resources — the people, rooms, tables or equipment that serve customers: name, locations, services, availability flag and category structure. GET /resources."
+        },
+        {
+          "name": "waitwhile_get_resource",
+          "type": "read",
+          "title": "Get resource",
+          "description": "One resource by id. GET /resources/{resourceId}."
+        },
+        {
+          "name": "waitwhile_resources_availability",
+          "type": "read",
+          "title": "Resource availability",
+          "description": "Working hours/availability of a location's resources on a date (e.g. who is working today). GET /resources/availability."
+        },
+        {
+          "name": "waitwhile_list_data_fields",
+          "type": "read",
+          "title": "List data fields (intake form fields)",
+          "description": "List the custom data fields (intake/booking form questions) with type, options and where they apply. Use the ids to read answers on visits. GET /data-fields."
+        },
+        {
+          "name": "waitwhile_get_data_field",
+          "type": "read",
+          "title": "Get data field",
+          "description": "One data field by id. GET /data-fields/{dataFieldId}."
+        },
+        {
+          "name": "waitwhile_list_users",
+          "type": "read",
+          "title": "List users (staff)",
+          "description": "List the staff users of the account: name, e-mail, roles, locations. Password data and tokens are never returned. GET /users."
+        },
+        {
+          "name": "waitwhile_list_messages",
+          "type": "read",
+          "title": "List messages",
+          "description": "List the SMS/e-mail messages Waitwhile sent to and received from customers: channel, recipient, body, delivery state (PENDING, BLOCKED, FAILED, DELIVERED, UNCONFIRMED, RECEIVED) and error. Filter by location, visit, customer, state or date. Contains personal data. This only reads; it cannot send. GET /messages."
+        },
+        {
+          "name": "waitwhile_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One message by id. Contains personal data. GET /messages/{messageId}."
+        },
+        {
+          "name": "waitwhile_visit_analytics",
+          "type": "read",
+          "title": "Visit analytics",
+          "description": "Aggregated visit statistics for a period: visits, waitlisted, bookings, served, no-shows, cancellations, wait and serve duration quantiles, and breakdowns by location, resource, service, party size, user, day of week and hour of day. GET /analytics/visits (JSON)."
+        },
+        {
+          "name": "waitwhile_list_audit_entries",
+          "type": "read",
+          "title": "List audit entries",
+          "description": "The account's audit log: who changed what and when (visits, customers, locations, services, resources, users, messages). Filter by type, event, entity, location or date. GET /audit-entries."
+        },
+        {
+          "name": "waitwhile_create_visit",
+          "type": "write",
+          "title": "Add a customer to the waitlist or create a booking",
+          "description": "WRITE: create ONE visit at a location. Without a date it adds the customer to the waitlist; with a local date-time (YYYY-MM-DDThh:mm) it creates a booking. Needs a location and at least a name, phone or e-mail. Not idempotent: calling it twice creates two visits. Visit notes are not supported here (the field is deprecated): use waitwhile_add_customer_note. By default the request asks Waitwhile to suppress the customer message; this may only stop the immediate confirmation, and scheduled reminders/follow-ups can still go out per the location's settings. With send_notifications=true Waitwhile may text/e-mail this ONE customer. POST /visits."
+        },
+        {
+          "name": "waitwhile_update_visit",
+          "type": "write",
+          "title": "Update a visit (state, tags, time, party)",
+          "description": "WRITE: change ONE visit — its state (e.g. WAITING to SERVING to COMPLETE, or BOOKED), add/remove tags (e.g. ARRIVED, CONFIRMED, NO-SHOW), booking date/duration or party size. Only the fields you pass change. By default the request asks Waitwhile to suppress the customer message; this may only stop the immediate status message, and scheduled reminders/follow-ups can still go out per the location's settings. With send_notifications=true Waitwhile may text/e-mail this ONE customer. Use waitwhile_cancel_visit to cancel. POST /visits/{visitId}."
+        },
+        {
+          "name": "waitwhile_cancel_visit",
+          "type": "write",
+          "title": "Cancel a visit",
+          "description": "WRITE: cancel ONE visit (a waitlist entry or booking). Waitwhile sets its state to COMPLETE and adds the CANCELLED tag; the visit is kept, not deleted. By default the request asks Waitwhile to suppress the customer message; this may only stop the immediate cancellation notice, and scheduled reminders/follow-ups can still go out per the location's settings. With send_notifications=true Waitwhile may text/e-mail this ONE customer. POST /visits/{visitId}/cancel."
+        },
+        {
+          "name": "waitwhile_add_customer_note",
+          "type": "write",
+          "title": "Add a customer note",
+          "description": "WRITE: add one staff note to a customer's record (optionally tied to a visit and location). Adds only; nothing is edited or sent to the customer. POST /customers/{customerId}/notes."
+        },
+        {
+          "name": "waitwhile_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "waitwhile_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Waitwhile tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "waitwhile_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Waitwhile tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "waitwhile_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Waitwhile Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run waitwhile_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "klippa-dochorizon",
+      "name": "Doxis AI.dp (Klippa DocHorizon)",
+      "category": "document-ai",
+      "description": "Capture invoices, receipts, IDs and bank statements with Doxis AI.dp; split, render, convert files.",
+      "endpoint": "https://klippa-dochorizon.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per project"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Doxis AI.dp API key"
+          },
+          {
+            "label": "Hosting region"
+          }
+        ],
+        "hint": "Find the key in the Doxis AI.dp platform (dochorizon.klippa.com) under **Settings → Project → API → Credentials**. A new account gets EUR 25 of free credit. Keys belong to one project; if you restricted the credential to certain IP addresses, remove that restriction (this server calls from shared Cloudflare addresses). Choose **Germany** only if your project was created in the Germany region. Identity, bank statement and salary slip captures return personal data to your AI client; documents are processed by Doxis AI.dp under your project's data-retention settings. Your key is used only to call the Doxis AI.dp API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "dochorizon_get_key_info",
+          "type": "read",
+          "title": "Get API key info",
+          "description": "Check the connected Doxis AI.dp (Klippa DocHorizon) API key: organization, project, credential id, and the services enabled for it. Does not process a document and costs nothing. GET /auth/v1/info."
+        },
+        {
+          "name": "dochorizon_list_models",
+          "type": "read",
+          "title": "List enabled capturing models",
+          "description": "List the document capturing models enabled for this project (financial, identity, bank statement, salary slip, generic, e-invoice, ...). Does not process a document; normally not billed. GET /document_capturing/v1/enabled_models."
+        },
+        {
+          "name": "dochorizon_list_configurations",
+          "type": "read",
+          "title": "List capturing configurations",
+          "description": "List the capturing configurations of a model (name, slug and the enabled components). Pass a slug as configuration_slug to a capture tool to choose which fields are extracted. Does not process a document; normally not billed. GET /document_capturing/v1/{model}/configurations."
+        },
+        {
+          "name": "dochorizon_get_model_schema",
+          "type": "read",
+          "title": "Get a model's JSON schema",
+          "description": "The JSON schema of what a capturing model returns (every field it can extract), optionally for one configuration. Does not process a document; normally not billed. GET /document_capturing/v1/{model}/schema or /{model}/configurations/{slug}/schema."
+        },
+        {
+          "name": "dochorizon_list_prompt_configurations",
+          "type": "read",
+          "title": "List Prompt Builder configurations",
+          "description": "List the Prompt Builder (LLM extraction) configurations of the project: name and slug. Does not process a document; normally not billed. GET /document_capturing/v1/prompt_builder/configurations."
+        },
+        {
+          "name": "dochorizon_get_prompt_schema",
+          "type": "read",
+          "title": "Get a Prompt Builder JSON schema",
+          "description": "The JSON schema of the output of one Prompt Builder configuration. Does not process a document; normally not billed. GET /document_capturing/v1/prompt_builder/configurations/{slug}/schema."
+        },
+        {
+          "name": "dochorizon_capture_financial",
+          "type": "write",
+          "title": "Capture an invoice or receipt",
+          "description": "SPENDS CREDITS: extract structured data from an invoice, receipt or other financial document with the Financial model: merchant and customer, dates, totals, VAT, line items, payment details, currency, and more (as the chosen configuration enables). Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). Synchronous; for long documents use dochorizon_submit_async_capture. POST /document_capturing/v1/financial."
+        },
+        {
+          "name": "dochorizon_capture_identity",
+          "type": "write",
+          "title": "Capture an identity document",
+          "description": "SPENDS CREDITS: read an identity document (passport, ID card, driver's licence, visa) with the Identity model: name, date of birth, nationality, document number, expiry, MRZ, validity and fraud checks. WARNING: the result contains personal data of the people on the document; handle it accordingly. It is returned to you only; this server never stores or logs it. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). Images up to 4096 px per side. POST /document_capturing/v1/identity."
+        },
+        {
+          "name": "dochorizon_capture_bank_statement",
+          "type": "write",
+          "title": "Capture a bank statement",
+          "description": "SPENDS CREDITS: extract a bank statement: bank, account holder, period, opening and closing balance and every transaction. WARNING: the result contains personal data of the people on the document; handle it accordingly. It is returned to you only; this server never stores or logs it. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/bank_statement."
+        },
+        {
+          "name": "dochorizon_capture_salary_slip",
+          "type": "write",
+          "title": "Capture a salary slip",
+          "description": "SPENDS CREDITS: extract a salary slip (payslip): employer, employee, period, gross and net pay, deductions. WARNING: the result contains personal data of the people on the document; handle it accordingly. It is returned to you only; this server never stores or logs it. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/salary_slip."
+        },
+        {
+          "name": "dochorizon_capture_generic",
+          "type": "write",
+          "title": "Capture any document as key-values and tables",
+          "description": "SPENDS CREDITS: turn any document into generic structured data: key-value pairs and tables, as JSON. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/generic."
+        },
+        {
+          "name": "dochorizon_capture_einvoice",
+          "type": "write",
+          "title": "Capture a document as an e-invoice",
+          "description": "SPENDS CREDITS: read an invoice with the financial model and return it in the Universal Invoice structure used for e-invoicing (parties, lines, tax subtotals, totals, payment means). Does not send anything to a network. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/einvoice."
+        },
+        {
+          "name": "dochorizon_capture_with_prompt",
+          "type": "write",
+          "title": "Capture with a Prompt Builder configuration",
+          "description": "SPENDS CREDITS: extract data from a document with a Prompt Builder configuration (an LLM extraction prompt you defined in the platform). Output follows that configuration's schema (see dochorizon_get_prompt_schema). The result may contain whatever personal data the document holds. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/prompt_builder/configurations/{slug}."
+        },
+        {
+          "name": "dochorizon_submit_async_capture",
+          "type": "write",
+          "title": "Submit a document for asynchronous capture",
+          "description": "SPENDS CREDITS: queue one document for capturing and return a job_id right away; poll dochorizon_get_async_job, then read dochorizon_get_async_job_result. Use it for long documents and bursts (async jobs are not subject to the concurrent-request limit). No webhook or human review is configured. For identity, salary_slip and bank_statement the result holds personal data. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_capturing/v1/{model}/async."
+        },
+        {
+          "name": "dochorizon_list_async_jobs",
+          "type": "read",
+          "title": "List asynchronous capture jobs",
+          "description": "List the project's async capture jobs (newest first as returned): job_id, status, created time, with paging. Does not process a document; normally not billed. GET /document_capturing/v1/async."
+        },
+        {
+          "name": "dochorizon_get_async_job",
+          "type": "read",
+          "title": "Get asynchronous job status",
+          "description": "The status of one async capture job (in_queue, processing, hitl, done, error, closed, rejected). Does not process a document; normally not billed. GET /document_capturing/v1/async/{job_id}."
+        },
+        {
+          "name": "dochorizon_get_async_job_result",
+          "type": "read",
+          "title": "Get asynchronous job result",
+          "description": "The captured data of a finished async job (status done). The result may contain personal data (identity, salary slip, bank statement). Does not process a document; normally not billed. GET /document_capturing/v1/async/{job_id}/result."
+        },
+        {
+          "name": "dochorizon_get_async_job_logs",
+          "type": "read",
+          "title": "Get asynchronous job logs",
+          "description": "Status changes and error messages of an async job, to debug a failed one. Does not process a document; normally not billed. GET /document_capturing/v1/async/{job_id}/logs."
+        },
+        {
+          "name": "dochorizon_delete_async_job",
+          "type": "write",
+          "title": "Delete an asynchronous job",
+          "description": "WRITE: permanently delete an async job, its result and the stored documents from Doxis AI.dp's servers; a job still waiting in the queue is cancelled. Use it to remove personal data you no longer need. Cannot be undone. DELETE /document_capturing/v1/async/{job_id}."
+        },
+        {
+          "name": "dochorizon_document_info",
+          "type": "write",
+          "title": "Get document info",
+          "description": "SPENDS CREDITS: page count, page sizes, content type, metadata and permissions of a PDF or TIFF. Useful to check the page count before capturing. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_toolkit/v1/info."
+        },
+        {
+          "name": "dochorizon_document_split",
+          "type": "write",
+          "title": "Split a PDF",
+          "description": "SPENDS CREDITS: split a PDF into several PDFs by page ranges (one output file per range, for example ['1-3','4-6']). Output files are stored in Doxis AI.dp storage and returned as file ids you can pass to any other tool as file_id. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_toolkit/v1/split."
+        },
+        {
+          "name": "dochorizon_document_render",
+          "type": "write",
+          "title": "Render PDF pages as images",
+          "description": "SPENDS CREDITS: render pages of a PDF as images, optionally limited in width/height. Each render config gives page_ranges and optional width and height in pixels. Images are stored in Doxis AI.dp storage and returned as file ids (use dochorizon_download_file for small ones). Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Give the document as exactly one of url (public https), data_base64 (small files) or file_id (a stored file). POST /document_toolkit/v1/render."
+        },
+        {
+          "name": "dochorizon_document_merge",
+          "type": "write",
+          "title": "Merge PDFs",
+          "description": "SPENDS CREDITS: merge two or more PDFs into one, in the order given, optionally taking only some pages of each. The merged file is stored in Doxis AI.dp storage and returned as a file id. Uses your own Doxis AI.dp (Klippa) credits: billed per request or per page depending on the service (extra components in a configuration can add cost), at your project's price (Billing → Pricing in the platform); a new account starts with EUR 25 of free credit. Each document is one of url (public https), data_base64 or file_id. POST /document_toolkit/v1/merge."
+        },
+        {
+          "name": "dochorizon_upload_file",
+          "type": "write",
+          "title": "Upload a file to Doxis AI.dp storage",
+          "description": "WRITE: store a file in your Doxis AI.dp storage and get a file_id to reuse in other tools (capture the same file several times without sending it again). Give a public https url or small base64 data. The file stays in your project's storage until it expires per your data-retention setting. May use credits per your pricing. POST /storage/v1/files."
+        },
+        {
+          "name": "dochorizon_download_file",
+          "type": "read",
+          "title": "Download a stored file (small files only)",
+          "description": "Fetch a stored file by file_id and return it as base64. Only files up to 30 KB are returned inline; for larger files use the file_id in other tools instead. Does not process a document; normally not billed. GET /storage/v1/files/{file_id}."
+        },
+        {
+          "name": "dochorizon_validate_einvoice",
+          "type": "write",
+          "title": "Validate an e-invoice",
+          "description": "Validate an e-invoice (XML or hybrid PDF) against its standard (EN 16931, XRechnung, Peppol BIS, ...): returns the detected type, valid yes/no, a summary and each broken rule with its XPath location. Nothing is sent to anyone. May use credits per your pricing. POST /einvoicing/v1/tools/validate."
+        },
+        {
+          "name": "dochorizon_convert_einvoice",
+          "type": "write",
+          "title": "Convert an e-invoice to Universal Invoice JSON",
+          "description": "Convert an e-invoice (XML or hybrid PDF) to the Universal Invoice JSON structure (parties, lines, taxes, totals). Nothing is sent to anyone. May use credits per your pricing. POST /einvoicing/v1/tools/convert/einvoice."
+        },
+        {
+          "name": "dochorizon_list_einvoice_types",
+          "type": "read",
+          "title": "List e-invoice types",
+          "description": "The e-invoice types Doxis AI.dp understands (ids to pass as einvoice_type). Does not process a document; normally not billed. GET /einvoicing/v1/tools/einvoice-types."
+        },
+        {
+          "name": "dochorizon_search_peppol_directory",
+          "type": "read",
+          "title": "Search the Peppol directory",
+          "description": "Search the public Peppol business directory by company name, identifier or other text: participant identifiers, countries, contacts, websites and the document types each can receive. Public business data; costs nothing. GET /einvoicing/v1/peppol/environments/{environment}/directory."
+        },
+        {
+          "name": "dochorizon_lookup_peppol_participant",
+          "type": "read",
+          "title": "Look up a Peppol participant",
+          "description": "Look up one Peppol participant by identifier (for example iso6523-actorid-upis::0106:64111512) in the Peppol network (SML): the document types it can receive. Does not process a document; normally not billed. GET /einvoicing/v1/peppol/environments/{environment}/participants/{participant_identifier}."
+        },
+        {
+          "name": "dochorizon_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "dochorizon_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Doxis AI.dp (Klippa DocHorizon) tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "dochorizon_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Doxis AI.dp (Klippa DocHorizon) tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "dochorizon_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Doxis AI.dp (Klippa DocHorizon) Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run dochorizon_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
