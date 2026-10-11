@@ -300,6 +300,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TinyURL](servers/tinyurl/) | marketing | 12 | API token | [servers/tinyurl/](servers/tinyurl/) |
 | [Spoke Dispatch](servers/spoke-dispatch/) | shipping | 27 | API token | [servers/spoke-dispatch/](servers/spoke-dispatch/) |
 | [RunCloud](servers/runcloud/) | devops | 40 | API token | [servers/runcloud/](servers/runcloud/) |
+| [Status.io](servers/status-io/) | observability | 24 | API token | [servers/status-io/](servers/status-io/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

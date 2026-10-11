@@ -48086,6 +48086,192 @@
           "description": "Cancel the caller's RunCloud Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run runcloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "status-io",
+      "name": "Status.io",
+      "category": "observability",
+      "description": "Read Status.io components, incidents, maintenance; post incidents, schedule maintenance, set status.",
+      "endpoint": "https://status-io.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API ID"
+          },
+          {
+            "label": "API key"
+          },
+          {
+            "label": "Status page id"
+          }
+        ],
+        "hint": "Find the API ID and API key in your Status.io **Dashboard → API** tab; the status page id is on the same tab. Each team member has their own pair, and the pair acts with that member's permissions. They are used only to call the Status.io API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "statusio_get_status_summary",
+          "type": "read",
+          "title": "Get status summary",
+          "description": "The current state of the status page in one call: overall status, every component and container with its status code and last update, open incidents and active/upcoming maintenance. Start here. GET /status/summary/{statuspage_id}."
+        },
+        {
+          "name": "statusio_list_components",
+          "type": "read",
+          "title": "List components",
+          "description": "List the components of the status page and the containers (data centers / locations) attached to each, with ids. Component and container ids are needed to update a status or to say what an incident affects ('<component_id>-<container_id>'). GET /component/list/{statuspage_id}."
+        },
+        {
+          "name": "statusio_list_incidents",
+          "type": "read",
+          "title": "List incident ids",
+          "description": "The ids of all active and resolved incidents (ids only, no details): a quick way to see which incidents exist. Fetch one with statusio_get_incident. GET /incidents/{statuspage_id}."
+        },
+        {
+          "name": "statusio_list_active_incidents",
+          "type": "read",
+          "title": "List active incidents",
+          "description": "Active (unresolved) incidents with their messages and affected components. GET /incident/list/active/{statuspage_id}."
+        },
+        {
+          "name": "statusio_list_resolved_incidents",
+          "type": "read",
+          "title": "List resolved incidents",
+          "description": "Resolved incidents (history) with their messages and affected components. GET /incident/list/resolved/{statuspage_id}."
+        },
+        {
+          "name": "statusio_get_incident",
+          "type": "read",
+          "title": "Get incident",
+          "description": "One incident in full: components, containers, infrastructure affected and all its messages. GET /incident/{statuspage_id}/{incident_id}."
+        },
+        {
+          "name": "statusio_get_incident_message",
+          "type": "read",
+          "title": "Get incident message",
+          "description": "One message (update) of an incident: text, state, status, time and the user who posted it. GET /incident/message/{statuspage_id}/{message_id}."
+        },
+        {
+          "name": "statusio_list_maintenance_ids",
+          "type": "read",
+          "title": "List maintenance ids",
+          "description": "The ids of all active, closed and upcoming maintenance events (ids only). Fetch one with statusio_get_maintenance. GET /maintenances/{statuspage_id}."
+        },
+        {
+          "name": "statusio_list_maintenance",
+          "type": "read",
+          "title": "List maintenance",
+          "description": "Maintenance events in one state, with messages and affected components: pending (scheduled, not started), active (in progress) or closed (finished). GET /maintenance/list/{pending|active|closed}/{statuspage_id}."
+        },
+        {
+          "name": "statusio_get_maintenance",
+          "type": "read",
+          "title": "Get maintenance",
+          "description": "One maintenance event in full, with all messages and the infrastructure affected. GET /maintenance/{statuspage_id}/{maintenance_id}."
+        },
+        {
+          "name": "statusio_get_maintenance_message",
+          "type": "read",
+          "title": "Get maintenance message",
+          "description": "One message of a maintenance event. GET /maintenance/message/{statuspage_id}/{message_id}."
+        },
+        {
+          "name": "statusio_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List the people and endpoints subscribed to the status page (email addresses, phone numbers, webhook hosts) with ids and their granular preferences. This is personal data of your subscribers. Webhook URLs are shortened to their host, because they can carry secrets. GET /subscriber/list/{statuspage_id}."
+        },
+        {
+          "name": "statusio_update_component_status",
+          "type": "write",
+          "title": "Update component status",
+          "description": "WRITE: change the PUBLIC status of one component/container pair (for example to degraded_performance) without creating an incident. It changes what visitors of your status page see right away. Set it back to operational when done. Ids from statusio_list_components. POST /component/status/update."
+        },
+        {
+          "name": "statusio_create_incident",
+          "type": "write",
+          "title": "Create incident",
+          "description": "WRITE: open a new incident on the PUBLIC status page. It is visible to every visitor immediately and sets the status of the affected components. No subscriber, Slack, Teams, IRC or Twitter notification is sent unless you switch it on (notify_*). Returns the new incident id. Say what is affected with all_infrastructure_affected or infrastructure_affected pairs. POST /incident/create."
+        },
+        {
+          "name": "statusio_update_incident",
+          "type": "write",
+          "title": "Update incident",
+          "description": "WRITE: post a new update message on an existing incident and set its state and component status. The message is public at once. No subscriber or channel notification is sent unless you switch it on (notify_*). To close an incident use statusio_resolve_incident. POST /incident/update."
+        },
+        {
+          "name": "statusio_resolve_incident",
+          "type": "write",
+          "title": "Resolve incident",
+          "description": "WRITE: resolve an incident with a closing message. The affected components return to operational and the incident moves to history. No notification is sent unless you switch it on (notify_*). POST /incident/resolve."
+        },
+        {
+          "name": "statusio_schedule_maintenance",
+          "type": "write",
+          "title": "Schedule maintenance",
+          "description": "WRITE: schedule a planned maintenance on the PUBLIC status page. It is visible to visitors as upcoming maintenance. Subscribers are told only if you switch on notify_now / notify_72_hr / notify_24_hr / notify_1_hr (all default off). With automation true Status.io starts and ends it by itself at the planned times. Returns the maintenance id. POST /maintenance/schedule."
+        },
+        {
+          "name": "statusio_start_maintenance",
+          "type": "write",
+          "title": "Start maintenance",
+          "description": "WRITE: start a scheduled maintenance now; it moves from pending to active and the affected components show planned maintenance. The message is public at once. No notification is sent unless you switch it on (notify_*). POST /maintenance/start."
+        },
+        {
+          "name": "statusio_update_maintenance",
+          "type": "write",
+          "title": "Update maintenance",
+          "description": "WRITE: post a new status message on an active maintenance event. The message is public at once. No notification is sent unless you switch it on (notify_*). POST /maintenance/update."
+        },
+        {
+          "name": "statusio_finish_maintenance",
+          "type": "write",
+          "title": "Finish maintenance",
+          "description": "WRITE: finish an active maintenance event; it moves to history and the affected components return to operational. The message is public at once. No notification is sent unless you switch it on (notify_*). POST /maintenance/finish."
+        },
+        {
+          "name": "statusio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "statusio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Status.io tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "statusio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Status.io tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "statusio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Status.io Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run statusio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
