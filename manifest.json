@@ -43405,6 +43405,969 @@
           "description": "Cancel the caller's REVIEWS.io Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run reviewsio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "voodoo-sms",
+      "name": "Voodoo SMS",
+      "category": "communications",
+      "description": "Read Voodoo SMS credits, reports, inbox and lists; send one SMS; manage the opt-out blacklist.",
+      "endpoint": "https://voodoo-sms.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Voodoo SMS API key"
+          }
+        ],
+        "hint": "Create it in the Voodoo SMS portal under **Send SMS → API SMS → RESTful API → Create New API Key** and copy it when it is shown (it is shown only once). Choose **Read-only** if you only want reports and lists, or **Read-write** to let the AI send SMS (which uses your credits). Do not lock the key to an IP address. Your key is used only to call the Voodoo SMS API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "voodoosms_get_credits",
+          "type": "read",
+          "title": "Get credit balance",
+          "description": "Get the SMS credit balance of the account. One credit pays for one 160-character SMS part (153 characters per part in a long message). Voodoo SMS REST: GET /credits."
+        },
+        {
+          "name": "voodoosms_list_delivery_reports",
+          "type": "read",
+          "title": "List delivery reports",
+          "description": "List delivery reports of sent messages (message_id, sender_id, to, sent_at, delivered_at, price, status), optionally filtered. Use it to check whether a message was delivered. Dates accept a UNIX timestamp, ISO 8601 (2026-10-01T09:00:00+00:00) or plain English ('yesterday', '2 weeks'). Voodoo SMS REST: GET /report."
+        },
+        {
+          "name": "voodoosms_list_scheduled_messages",
+          "type": "read",
+          "title": "List scheduled messages",
+          "description": "List SMS that were scheduled through the send API and are still waiting to go out (messages scheduled in the portal's Web SMS are not shown). Voodoo SMS REST: GET /schedule."
+        },
+        {
+          "name": "voodoosms_list_inbox",
+          "type": "read",
+          "title": "List received SMS",
+          "description": "List SMS received on the account's Virtual Mobile Numbers (replies and keyword messages). Needs a purchased number; an empty inbox returns an empty result. Dates accept a UNIX timestamp, ISO 8601 or plain English. Voodoo SMS REST: GET /inbox."
+        },
+        {
+          "name": "voodoosms_list_numbers",
+          "type": "read",
+          "title": "List virtual mobile numbers",
+          "description": "List the Virtual Mobile Numbers (VMNs) the account has purchased, used to receive SMS. Returns an empty result if there are none. Voodoo SMS REST: GET /numbers."
+        },
+        {
+          "name": "voodoosms_list_contact_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List the account's contact lists (id, name, status, size, created/updated times) without their contacts. Returns an empty result if there are none. Voodoo SMS REST: GET /contacts."
+        },
+        {
+          "name": "voodoosms_get_contact_list",
+          "type": "read",
+          "title": "Get contacts in a list",
+          "description": "Get one contact list including its contacts (id, number, status, dynamic_data, created_at). Voodoo SMS REST: GET /contacts?contact_list_id=."
+        },
+        {
+          "name": "voodoosms_list_blacklist",
+          "type": "read",
+          "title": "List blacklisted numbers",
+          "description": "List the numbers on the account's opt-out blacklist (no SMS is ever sent to them), or look up one number (`{empty: true}` means it is not on the list). Returns an empty result when the blacklist is empty. Voodoo SMS REST: GET /blacklist."
+        },
+        {
+          "name": "voodoosms_send_sms",
+          "type": "write",
+          "title": "Send an SMS to one recipient",
+          "description": "WRITE: SENDS A REAL SMS to ONE recipient and USES THE ACCOUNT'S CREDITS (1 credit per message part, charged whether or not it is delivered; it cannot be undone). `sandbox` is required: true validates and prices the message without sending or charging, false sends it for real. Optional `schedule` queues it for later (cancel with cancel_scheduled_message). Do not retry after an error or timeout without checking list_delivery_reports / list_scheduled_messages, or the recipient may get it twice. One recipient per call; there is no bulk or list send. Voodoo SMS REST: POST /sendsms."
+        },
+        {
+          "name": "voodoosms_cancel_scheduled_message",
+          "type": "write",
+          "title": "Cancel a scheduled SMS",
+          "description": "WRITE: cancels one SMS that was scheduled through the send API, so it will not be sent. A message that has already gone out cannot be cancelled. Whether credits are refunded for a cancelled message is not documented by the vendor. Voodoo SMS REST: DELETE /schedule/{id}."
+        },
+        {
+          "name": "voodoosms_add_to_blacklist",
+          "type": "write",
+          "title": "Add a number to the blacklist",
+          "description": "WRITE: adds one number to the account's opt-out blacklist; from then on no SMS is sent to it (sends to it fail with error 20). Use it for a recipient who asked to stop. This tool cannot remove a number again. Voodoo SMS REST: POST /blacklist."
+        },
+        {
+          "name": "voodoosms_create_contact_list",
+          "type": "write",
+          "title": "Create a contact list",
+          "description": "WRITE: creates a new contact list with up to 500 contacts (the list name must be unique, at most 32 characters). It does not send anything. Voodoo SMS REST: POST /contacts."
+        },
+        {
+          "name": "voodoosms_update_contact_list",
+          "type": "write",
+          "title": "Rename a contact list or add contacts",
+          "description": "WRITE: renames a contact list and/or adds up to 500 contacts to it (existing contacts are not removed). Adding dynamic data needs a list created as dynamic. It does not send anything. Voodoo SMS REST: PUT /contacts/{contact_list_id}."
+        },
+        {
+          "name": "voodoosms_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "voodoosms_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Voodoo SMS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "voodoosms_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Voodoo SMS tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "voodoosms_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Voodoo SMS Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run voodoosms_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "eventzilla",
+      "name": "Eventzilla",
+      "category": "productivity",
+      "description": "Read Eventzilla events, tickets, orders, attendees and users; open or close ticket sales.",
+      "endpoint": "https://eventzilla.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Eventzilla API key"
+          }
+        ],
+        "hint": "Create it in Eventzilla under **Settings → Developers → API Credentials**. Your key is used only to call the Eventzilla API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "eventzilla_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events in the Eventzilla account: id, title, dates and times, venue, status, tickets sold and total, categories and the public URL. Use the id (and dateid) in the other tools. Filter by status and category name. GET /events."
+        },
+        {
+          "name": "eventzilla_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id: title, description, dates, time zone, venue, status, tickets sold/total, URL, categories. GET /events/{eventid}."
+        },
+        {
+          "name": "eventzilla_list_event_transactions",
+          "type": "read",
+          "title": "List event transactions",
+          "description": "List the orders (transactions) of one event: order reference, checkout id, date, amount, number of tickets and status. Read-only. GET /events/{eventid}/transactions."
+        },
+        {
+          "name": "eventzilla_list_event_attendees",
+          "type": "read",
+          "title": "List event attendees",
+          "description": "List the attendees (registrations) of one event: name, ticket type, barcode, check-in status, order reference and answers to registration questions. The API returns the whole list in one reply (no paging). GET /events/{eventid}/attendees."
+        },
+        {
+          "name": "eventzilla_list_ticket_types",
+          "type": "read",
+          "title": "List ticket types",
+          "description": "List the ticket types of one event: id, title, price, quantity, sales window and limits, plus its donation ticket options (donation_options). GET /events/{eventid}/tickets."
+        },
+        {
+          "name": "eventzilla_list_categories",
+          "type": "read",
+          "title": "List event categories",
+          "description": "List the event categories (names to use as the category filter in eventzilla_list_events). GET /categories."
+        },
+        {
+          "name": "eventzilla_get_attendee",
+          "type": "read",
+          "title": "Get attendee",
+          "description": "One attendee by id: name, ticket type, barcode, check-in status, order reference, registration answers. GET /attendees/{attendeeid}."
+        },
+        {
+          "name": "eventzilla_get_transaction",
+          "type": "read",
+          "title": "Get transaction",
+          "description": "One transaction (order) by checkout id or order reference number: amount, ticket count, status, event date. Read-only. GET /transactions/{identifier}."
+        },
+        {
+          "name": "eventzilla_list_users",
+          "type": "read",
+          "title": "List organizers",
+          "description": "List the account's organizer and sub-organizer users: name, company, contact details, time zone, user type. GET /users."
+        },
+        {
+          "name": "eventzilla_get_user",
+          "type": "read",
+          "title": "Get organizer",
+          "description": "One organizer or sub-organizer by user id. GET /users/{userid}."
+        },
+        {
+          "name": "eventzilla_toggle_event_sales",
+          "type": "write",
+          "title": "Turn ticket sales on or off",
+          "description": "WRITE: publish (status true) or unpublish (status false) ticket sales of one event. Unpublishing stops attendees from buying tickets on the event page; publishing starts public sales again. Existing orders are not touched and no money moves through this tool. Idempotent. POST /events/togglesales."
+        },
+        {
+          "name": "eventzilla_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "eventzilla_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Eventzilla tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "eventzilla_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Eventzilla tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "eventzilla_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Eventzilla Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run eventzilla_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "finale-inventory",
+      "name": "Finale Inventory",
+      "category": "ecommerce",
+      "description": "Read Finale Inventory products, stock, orders and shipments; create draft purchase orders.",
+      "endpoint": "https://finale-inventory.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Finale account"
+          },
+          {
+            "label": "API key"
+          },
+          {
+            "label": "API secret"
+          }
+        ],
+        "hint": "The account is the part after `app.finaleinventory.com/` in your Finale address. Create the key in Finale: gear icon → **Application settings → Users → API keys** (you need the Manage users and permissions permission) and copy the secret right away, it is shown only once. Finale keys have full access to the account, and direct API use depends on your Finale subscription tier. Your key is used only to call the Finale API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "finale_list_facilities",
+          "type": "read",
+          "title": "List locations (facilities)",
+          "description": "List Finale locations and sublocations: facilityName, facilityUrl (use it in other tools), parentFacilityUrl (set for sublocations), status. GET /{account}/api/facility/."
+        },
+        {
+          "name": "finale_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (SKUs): productId, internalName, status, productUrl, manufacturer, UPC, packing. Optional exact filters on productId and status. Collections come back ordered by lastUpdatedDate; for large catalogs narrow with updated_since or page with next_updated_since. GET /{account}/api/product/."
+        },
+        {
+          "name": "finale_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "One product in full: ids, description, UPC/ASIN, dimensions and weight, cost, supplier list, reorder guidelines, price list, custom fields. GET /{account}/api/product/{id} (falls back to a productId filter when the resource URL differs)."
+        },
+        {
+          "name": "finale_list_orders",
+          "type": "read",
+          "title": "List orders (sales and purchase)",
+          "description": "List orders without their line items: orderId, type (SALES_ORDER or PURCHASE_ORDER), status (ORDER_CREATED, ORDER_LOCKED = committed, ORDER_COMPLETED, ORDER_CANCELLED), dates, origin/destination facility, reference number, total. Get the items with finale_get_order. For a large order history always pass updated_since (Finale cuts unfiltered collections at 120,000 rows before applying other filters). GET /{account}/api/order/."
+        },
+        {
+          "name": "finale_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order in full: header, line items (productUrl, quantity, unitPrice), roles (customer or supplier), adjustments, shipment and invoice URLs, notes. GET /{account}/api/order/{orderId}."
+        },
+        {
+          "name": "finale_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments (sales shipments, purchase receipts, transfers): shipmentId, type, status (for example SHIPMENT_INPUT, SHIPMENT_PACKED, SHIPMENT_SHIPPED), order, origin/destination, dates, tracking code. GET /{account}/api/shipment/."
+        },
+        {
+          "name": "finale_get_shipment",
+          "type": "read",
+          "title": "Get a shipment",
+          "description": "One shipment in full, including its shipment items (product, facility, quantity), packages and transfers. GET /{account}/api/shipment/{shipmentId}."
+        },
+        {
+          "name": "finale_list_parties",
+          "type": "read",
+          "title": "List customers and suppliers",
+          "description": "List party groups (customers, suppliers, carriers): partyId (derived from partyUrl; use it as supplier_party_id when drafting a purchase order), name (description), type, roles, status. GET /{account}/api/partygroup/."
+        },
+        {
+          "name": "finale_list_inventory_items",
+          "type": "read",
+          "title": "List stock entries",
+          "description": "Current stock as Finale stores it: one entry per product, location, lot and order with quantityOnHand, quantityOnOrder (committed purchase orders) and quantityReserved (committed sales orders). The inventoryitem collection has no server-side filter, so the WHOLE collection is downloaded (one collection read of the 300 per hour; can be large on big accounts, up to the 50,000 character result cap) and filtered here: pass product_id or facility_url. For per-product totals use finale_get_product_stock. GET /{account}/api/inventoryitem/."
+        },
+        {
+          "name": "finale_get_product_stock",
+          "type": "read",
+          "title": "Get stock levels of a product",
+          "description": "Stock of one product summed over Finale's stock entries: totals for quantityOnHand, quantityOnOrder and quantityReserved, and the same per location/sublocation. Downloads the WHOLE inventoryitem collection (Finale offers no filter; large on big accounts), so it counts as one collection read of the 300 per hour: avoid calling it in a loop. GET /{account}/api/inventoryitem/."
+        },
+        {
+          "name": "finale_list_inventory_transfers",
+          "type": "read",
+          "title": "List stock transfers",
+          "description": "List stock transfers between locations: product, from/to facility, quantity, lot, send and receive dates. GET /{account}/api/inventorytransfer/."
+        },
+        {
+          "name": "finale_list_stock_changes",
+          "type": "read",
+          "title": "List stock changes (inventory variances)",
+          "description": "List stock changes (physical counts and adjustments already recorded in Finale): id, type, date, status, location, comments. Read-only history. GET /{account}/api/inventoryvariance/."
+        },
+        {
+          "name": "finale_create_draft_purchase_order",
+          "type": "write",
+          "title": "Create a draft purchase order (WRITE)",
+          "description": "WRITE. Creates a purchase order for a supplier in status ORDER_CREATED, i.e. an editable draft. It is NOT locked (committed), received, completed or emailed, no stock changes and no money moves: review and commit it in Finale. Products are looked up first (one single read each; products whose resource URL differs from the SKU cost collection reads, bounded to 3 or one full product-list read), then ONE POST creates the order; the call is never retried, so check finale_list_orders before repeating it after an error. POST /{account}/api/order/."
+        },
+        {
+          "name": "finale_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "finale_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Finale Inventory tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "finale_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Finale Inventory tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "finale_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Finale Inventory Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run finale_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "classmarker",
+      "name": "ClassMarker",
+      "category": "productivity",
+      "description": "Read ClassMarker groups, links, exams and recent results; manage question bank and access codes.",
+      "endpoint": "https://classmarker.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ClassMarker API key"
+          },
+          {
+            "label": "ClassMarker API secret"
+          }
+        ],
+        "hint": "Create a key in ClassMarker under **My Account → Webhooks / API Keys** (see the [API docs](https://www.classmarker.com/online-testing/docs/api/)); give it access to the groups and links you want to use. API access needs an upgraded ClassMarker account. ClassMarker allows **30 requests per hour per key**, so connecting uses one of them. Results contain test-taker names and emails; your key and secret are used only to call the ClassMarker API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "classmarker_list_groups_links_exams",
+          "type": "read",
+          "title": "List groups, links and exams",
+          "description": "List the groups, links and exams (tests) this API key can access, with the ids the other tools need (group_id, link_id, link_url_id, test_id, and access_list_id for links with an access-code list). Good first call. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1.json."
+        },
+        {
+          "name": "classmarker_recent_group_results",
+          "type": "read",
+          "title": "Recent results across all groups",
+          "description": "Recent finished test results taken in the key's groups (all groups, all exams), oldest first, PAGED by finish time: test-taker name, email, score, percentage, pass/fail, timing, certificate. Contains personal data: use small pages. Max look-back 3 months. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/groups/recent_results.json."
+        },
+        {
+          "name": "classmarker_recent_link_results",
+          "type": "read",
+          "title": "Recent results across all links",
+          "description": "Recent finished test results taken through the key's links (all links, all exams), oldest first, PAGED by finish time: test-taker name, email, score, pass/fail, timing, access code, extra tracking fields, IP address, certificate. Contains personal data: use small pages. Max look-back 3 months. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/links/recent_results.json."
+        },
+        {
+          "name": "classmarker_recent_group_exam_results",
+          "type": "read",
+          "title": "Recent results for one group exam",
+          "description": "Recent finished results for ONE exam in ONE group (ids from classmarker_list_groups_links_exams), oldest first, PAGED by finish time. Contains personal data: use small pages. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/groups/{group_id}/tests/{test_id}/recent_results.json."
+        },
+        {
+          "name": "classmarker_recent_link_exam_results",
+          "type": "read",
+          "title": "Recent results for one link exam",
+          "description": "Recent finished results for the exam of ONE link (ids from classmarker_list_groups_links_exams), oldest first, PAGED by finish time. Contains personal data: use small pages. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/links/{link_id}/tests/{test_id}/recent_results.json."
+        },
+        {
+          "name": "classmarker_list_categories",
+          "type": "read",
+          "title": "List question categories",
+          "description": "List the question-bank categories with their parent categories and ids (needed for creating and updating questions). Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/categories.json."
+        },
+        {
+          "name": "classmarker_list_questions",
+          "type": "read",
+          "title": "List question-bank questions",
+          "description": "List the questions of the question bank, 200 per page (page 1, 2, ...): question text, type, category, points, options, correct options, status. A full page means more may follow, so ask for the next page. Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/questions.json?page=N."
+        },
+        {
+          "name": "classmarker_get_question",
+          "type": "read",
+          "title": "Get a question",
+          "description": "Get one question-bank question by id (ids from classmarker_list_questions). Counts as one of ClassMarker's 30 requests per hour per API key. API: GET /v1/questions/{question_id}.json."
+        },
+        {
+          "name": "classmarker_add_access_codes",
+          "type": "write",
+          "title": "Add access codes to a list",
+          "description": "WRITE: add access codes (1-100 per call, up to 255 characters each; a list holds at most 20,000) to a link's access-code list, so those people can start the exam. The access_list_id comes from classmarker_list_groups_links_exams (links[].access_list_id). Only adds; removing codes is not offered. Does not count against the 30 requests per hour limit. API: POST /v1/accesslists/{access_list_id}.json."
+        },
+        {
+          "name": "classmarker_create_parent_category",
+          "type": "write",
+          "title": "Create a parent category",
+          "description": "WRITE: create a new top-level question category. Returns its parent_category_id. Counts as one of ClassMarker's 30 requests per hour per API key. API: POST /v1/categories/parent_category.json."
+        },
+        {
+          "name": "classmarker_update_parent_category",
+          "type": "write",
+          "title": "Rename a parent category",
+          "description": "WRITE: rename an existing parent category (overwrites its name). Counts as one of ClassMarker's 30 requests per hour per API key. API: PUT /v1/categories/parent_category/{parent_category_id}.json."
+        },
+        {
+          "name": "classmarker_create_category",
+          "type": "write",
+          "title": "Create a category",
+          "description": "WRITE: create a question category under a parent category. Returns its category_id. Counts as one of ClassMarker's 30 requests per hour per API key. API: POST /v1/categories/category.json."
+        },
+        {
+          "name": "classmarker_update_category",
+          "type": "write",
+          "title": "Update a category",
+          "description": "WRITE: rename a category and/or move it to another parent (overwrites both fields: send the name and parent_category_id you want it to have). Counts as one of ClassMarker's 30 requests per hour per API key. API: PUT /v1/categories/category/{category_id}.json."
+        },
+        {
+          "name": "classmarker_create_question",
+          "type": "write",
+          "title": "Create a question",
+          "description": "WRITE: add a new question to the question bank. Only multiplechoice, multipleresponse, truefalse and essay can be created. Returns the new question_id. For truefalse, give only correct_options [\"A\"] (True) or [\"B\"] (False). Counts as one of ClassMarker's 30 requests per hour per API key. API: POST /v1/questions.json."
+        },
+        {
+          "name": "classmarker_update_question",
+          "type": "write",
+          "title": "Update a question",
+          "description": "WRITE (overwrites): replace an existing question-bank question. Send the COMPLETE question (type, text, options, correct options, points, feedback), not only the changed fields; read it first with classmarker_get_question. Only multiplechoice, multipleresponse, truefalse and essay questions can be updated. Counts as one of ClassMarker's 30 requests per hour per API key. API: PUT /v1/questions/{question_id}.json."
+        },
+        {
+          "name": "classmarker_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "classmarker_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ClassMarker tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "classmarker_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED ClassMarker tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "classmarker_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ClassMarker Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run classmarker_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "supportbee",
+      "name": "SupportBee",
+      "category": "support",
+      "description": "Read SupportBee tickets, replies and reports; reply, comment, label, assign and archive tickets.",
+      "endpoint": "https://supportbee.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SupportBee company"
+          },
+          {
+            "label": "SupportBee API token"
+          }
+        ],
+        "hint": "The company is the first part of your desk address (`acme` for acme.supportbee.com). Find the API token in SupportBee under your **profile menu → API Token**; it acts with that user's permissions, so a dedicated agent makes its activity easy to track. A reply you send through this server is e-mailed to the customer. Your token is used only to call the SupportBee API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "supportbee_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List tickets of the shared inbox, newest activity first, with filters (assignee, team, label, requester, dates, spam/trash/archived). By default archived, spam and trashed tickets are left out. Each ticket has id, subject, labels, requester, assignee, replies_count, comments_count, unanswered, archived and the first message text (cut). With total_only=true only the number of matching tickets comes back. GET /tickets."
+        },
+        {
+          "name": "supportbee_search_tickets",
+          "type": "read",
+          "title": "Search tickets",
+          "description": "Full-text search over tickets (subject, body, requester) with SupportBee's search syntax, newest activity first. Spam and trash are excluded unless asked. GET /tickets/search."
+        },
+        {
+          "name": "supportbee_get_ticket",
+          "type": "read",
+          "title": "Get a ticket",
+          "description": "One ticket with subject, requester, labels, assignees, state and the first message text. Replies and comments are separate calls. GET /tickets/{id}."
+        },
+        {
+          "name": "supportbee_list_replies",
+          "type": "read",
+          "title": "List the replies of a ticket",
+          "description": "The public replies (the conversation with the customer) of a ticket, oldest first, as text. GET /tickets/{id}/replies."
+        },
+        {
+          "name": "supportbee_get_reply",
+          "type": "read",
+          "title": "Get one reply of a ticket",
+          "description": "One reply of a ticket (text, replier, cc/bcc). GET /tickets/{ticket_id}/replies/{id}."
+        },
+        {
+          "name": "supportbee_list_comments",
+          "type": "read",
+          "title": "List the internal comments of a ticket",
+          "description": "The internal comments (visible to agents only, never e-mailed) of a ticket, oldest first, as text. GET /tickets/{id}/comments."
+        },
+        {
+          "name": "supportbee_get_ticket_audit",
+          "type": "read",
+          "title": "Get the audit trail of a ticket",
+          "description": "What happened to a ticket and who did it (assignments, label changes, replies, archiving) with timestamps. GET /tickets/{id}/audit."
+        },
+        {
+          "name": "supportbee_list_labels",
+          "type": "read",
+          "title": "List labels",
+          "description": "All custom labels of the company (name and color). Use a label name with supportbee_add_label or the label filter. GET /labels."
+        },
+        {
+          "name": "supportbee_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "The teams of the company (id, name), optionally only those that have users in them, or only the token user's teams. GET /teams."
+        },
+        {
+          "name": "supportbee_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The agents, admins and collaborators of the desk (id, name, e-mail, role, teams), or customer groups. Use the id as assigned_user or user_id. GET /users."
+        },
+        {
+          "name": "supportbee_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "One user or customer with role, teams, ticket counts and a few of their recent tickets. GET /users/{id}."
+        },
+        {
+          "name": "supportbee_list_snippets",
+          "type": "read",
+          "title": "List snippets",
+          "description": "The canned replies (snippets) of the company: name, tags and text, to reuse in a reply. GET /snippets."
+        },
+        {
+          "name": "supportbee_list_forwarding_addresses",
+          "type": "read",
+          "title": "List forwarding addresses",
+          "description": "The support e-mail addresses (forwarding addresses) of the desk: id, name, the address tickets arrive at and the from address. GET /emails."
+        },
+        {
+          "name": "supportbee_get_report",
+          "type": "read",
+          "title": "Get a report",
+          "description": "A report as time-series data points (value, timestamp): tickets_count, replies_count or avg_first_response_time, optionally for one agent, team or label. Needs an admin token. GET /reports/{report}."
+        },
+        {
+          "name": "supportbee_reply_to_ticket",
+          "type": "write",
+          "title": "Reply to a ticket (sends an e-mail)",
+          "description": "WRITE: SENDS AN E-MAIL to the customer. Posts a public reply on ONE ticket; SupportBee e-mails it to the ticket's requester and to the cc/bcc addresses you list (at most 10 addresses in total). It cannot be recalled. The reply comes from the token's user. For a note only your team sees, use supportbee_add_comment. POST /tickets/{id}/replies."
+        },
+        {
+          "name": "supportbee_add_comment",
+          "type": "write",
+          "title": "Add an internal comment to a ticket",
+          "description": "WRITE: adds an internal comment to a ticket. Comments are visible to your agents only and are never e-mailed to the customer. POST /tickets/{id}/comments."
+        },
+        {
+          "name": "supportbee_add_label",
+          "type": "write",
+          "title": "Add a label to a ticket",
+          "description": "WRITE: adds an existing label to a ticket (404 if the label does not exist; names come from supportbee_list_labels). Safe to repeat. POST /tickets/{id}/labels/{label}."
+        },
+        {
+          "name": "supportbee_remove_label",
+          "type": "write",
+          "title": "Remove a label from a ticket",
+          "description": "WRITE: removes a label from a ticket (the label itself stays; 404 if the ticket does not have it). DELETE /tickets/{id}/labels/{label}."
+        },
+        {
+          "name": "supportbee_assign_ticket",
+          "type": "write",
+          "title": "Assign a ticket to a user or a team",
+          "description": "WRITE: assigns a ticket to ONE agent (user_id) or ONE team (team_id), not both. A ticket that belongs to a team can only go to a member of that team; assigning to another team removes the user assignee. The customer is not e-mailed (SupportBee may notify the assigned agent). POST /tickets/{id}/user_assignment or /team_assignment."
+        },
+        {
+          "name": "supportbee_unassign_ticket",
+          "type": "write",
+          "title": "Remove the user or team assignment of a ticket",
+          "description": "WRITE: clears the user assignee or the team assignee of a ticket. DELETE /tickets/{id}/user_assignment or /team_assignment."
+        },
+        {
+          "name": "supportbee_set_ticket_archived",
+          "type": "write",
+          "title": "Archive or un-archive a ticket",
+          "description": "WRITE: archives a ticket (archived=true, it leaves the open inbox) or moves it back (archived=false). Nothing is deleted or sent. POST/DELETE /tickets/{id}/archive."
+        },
+        {
+          "name": "supportbee_set_ticket_answered",
+          "type": "write",
+          "title": "Mark a ticket answered or unanswered",
+          "description": "WRITE: marks a ticket as answered (answered=true) or unanswered (answered=false) without sending anything. POST/DELETE /tickets/{id}/answered."
+        },
+        {
+          "name": "supportbee_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "supportbee_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SupportBee tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "supportbee_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED SupportBee tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "supportbee_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SupportBee Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run supportbee_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "tokeet",
+      "name": "Tokeet",
+      "category": "productivity",
+      "description": "Read Tokeet rentals, rates, guests, tasks and expenses; add guests, notes and tasks.",
+      "endpoint": "https://tokeet.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Tokeet API key"
+          },
+          {
+            "label": "Tokeet account id"
+          }
+        ],
+        "hint": "In Tokeet open **Settings → Account Info**. The API key (click **Generate Key** if there is none; a new key disables the old one) and the account id are shown at the top of the first table. They are used only to call the Tokeet API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tokeet_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Tokeet user the API key belongs to (name, email, role). Login data is never returned. GET /user/me."
+        },
+        {
+          "name": "tokeet_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the team members (users) of the Tokeet account. GET /user."
+        },
+        {
+          "name": "tokeet_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One team member by id. GET /user/{user_pkey}."
+        },
+        {
+          "name": "tokeet_list_rentals",
+          "type": "read",
+          "title": "List rentals",
+          "description": "List the rental properties in the account, sorted by name. GET /rental."
+        },
+        {
+          "name": "tokeet_get_rental",
+          "type": "read",
+          "title": "Get rental",
+          "description": "One rental property by id (its pkey from tokeet_list_rentals). GET /rental/{rental_pkey}."
+        },
+        {
+          "name": "tokeet_list_rentals_by_owner",
+          "type": "read",
+          "title": "List rentals by owner",
+          "description": "List the rentals assigned to one owner. GET /rental/owner/{owner_pkey} (Tokeet documents no paging for it: all of the owner's rentals come back)."
+        },
+        {
+          "name": "tokeet_get_rental_availability",
+          "type": "read",
+          "title": "Get rental availability",
+          "description": "The open and blocked dates of one rental over the next two years. GET /rental/{rental_pkey}/availability."
+        },
+        {
+          "name": "tokeet_list_rates",
+          "type": "read",
+          "title": "List rental rates",
+          "description": "All standard, dynamic and promotional rates of one rental. Read-only: rates cannot be changed with this server. GET /rate/{rental_pkey}."
+        },
+        {
+          "name": "tokeet_list_guests",
+          "type": "read",
+          "title": "List guests",
+          "description": "List guests (personal data: name, emails, phones, address, notes, interactions), one page at a time. Filter by partial name, booking source/channel, and whether they have bookings. GET /guest."
+        },
+        {
+          "name": "tokeet_get_guest",
+          "type": "read",
+          "title": "Get guest",
+          "description": "One guest by id: contact details, notes, interactions and preferences. GET /guest/{pkey}."
+        },
+        {
+          "name": "tokeet_get_guest_by_email",
+          "type": "read",
+          "title": "Get guest by email",
+          "description": "The guest whose primary email is exactly this address. GET /guest/email/{email}."
+        },
+        {
+          "name": "tokeet_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List the tasks (to-dos, e.g. cleanings and check-ins) in the account, sorted by task name. GET /task."
+        },
+        {
+          "name": "tokeet_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id. GET /task/{task_pkey}."
+        },
+        {
+          "name": "tokeet_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List the expenses recorded in the account (date, rental, category, amount, paid/unpaid status), by creation date. Read-only. GET /expense."
+        },
+        {
+          "name": "tokeet_get_expense",
+          "type": "read",
+          "title": "Get expense",
+          "description": "One expense by id. GET /expense/{expense_pkey}."
+        },
+        {
+          "name": "tokeet_list_templates",
+          "type": "read",
+          "title": "List message templates",
+          "description": "List the message/email templates in the account, optionally of one type. GET /template."
+        },
+        {
+          "name": "tokeet_get_template",
+          "type": "read",
+          "title": "Get message template",
+          "description": "One message template by id. GET /template/{template_pkey}."
+        },
+        {
+          "name": "tokeet_list_triggers",
+          "type": "read",
+          "title": "List automation triggers",
+          "description": "List the automation triggers (event, rental, template, delay) in the account. Read-only: triggers cannot be changed with this server. GET /trigger."
+        },
+        {
+          "name": "tokeet_create_guest",
+          "type": "write",
+          "title": "Create guest",
+          "description": "WRITE: create a guest record (name and email required, the rest optional). Nothing is sent to the guest. Tokeet cannot recover deleted data and this server cannot delete guests. POST /guest."
+        },
+        {
+          "name": "tokeet_update_guest",
+          "type": "write",
+          "title": "Update guest",
+          "description": "WRITE: change fields of a guest (name, address, birthday, spouse, kids, drink, hobby, sport). Only the fields you pass are sent, and each one OVERWRITES the stored value (an address object replaces the whole address). Emails and phones have their own endpoints and are not changed here. PUT /guest/{guest_pkey}."
+        },
+        {
+          "name": "tokeet_add_guest_note",
+          "type": "write",
+          "title": "Add guest note",
+          "description": "WRITE: add an internal note to a guest record (not visible to or sent to the guest). POST /guest/{guest_pkey}/note."
+        },
+        {
+          "name": "tokeet_record_guest_interaction",
+          "type": "write",
+          "title": "Record guest interaction",
+          "description": "WRITE: log an interaction you had with a guest (phone call, meeting or comment) in the guest's history. Nothing is sent to the guest. `date` is an epoch timestamp: use the same unit as the dates you see on existing interactions from tokeet_get_guest. POST /guest/{guest_pkey}/interaction."
+        },
+        {
+          "name": "tokeet_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: create a task (to-do) in the account, optionally linked to an inquiry and assigned to a user. `due` is an epoch timestamp: use the same unit as the `due` of existing tasks from tokeet_list_tasks. No message is sent to anyone by this call. POST /task."
+        },
+        {
+          "name": "tokeet_update_task",
+          "type": "write",
+          "title": "Update task",
+          "description": "WRITE: change a task: rename, move to another list, reschedule, edit notes, reassign, or mark it completed (status 2) or active (1). Only the fields you pass are sent and each OVERWRITES the stored value. PUT /task/{task_pkey}."
+        },
+        {
+          "name": "tokeet_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tokeet_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tokeet tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tokeet_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Tokeet tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tokeet_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tokeet Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tokeet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

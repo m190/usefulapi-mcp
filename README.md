@@ -274,6 +274,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FireText](servers/firetext/) | communications | 17 | API token | [servers/firetext/](servers/firetext/) |
 | [Megaventory](servers/megaventory/) | ecommerce | 24 | API token | [servers/megaventory/](servers/megaventory/) |
 | [REVIEWS.io](servers/reviews-io/) | ecommerce | 20 | API token | [servers/reviews-io/](servers/reviews-io/) |
+| [Voodoo SMS](servers/voodoo-sms/) | communications | 17 | API token | [servers/voodoo-sms/](servers/voodoo-sms/) |
+| [Eventzilla](servers/eventzilla/) | productivity | 15 | API token | [servers/eventzilla/](servers/eventzilla/) |
+| [Finale Inventory](servers/finale-inventory/) | ecommerce | 17 | API token | [servers/finale-inventory/](servers/finale-inventory/) |
+| [ClassMarker](servers/classmarker/) | productivity | 19 | API token | [servers/classmarker/](servers/classmarker/) |
+| [SupportBee](servers/supportbee/) | support | 26 | API token | [servers/supportbee/](servers/supportbee/) |
+| [Tokeet](servers/tokeet/) | productivity | 28 | API token | [servers/tokeet/](servers/tokeet/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
