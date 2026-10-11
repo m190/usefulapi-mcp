@@ -47504,6 +47504,114 @@
           "description": "Cancel the caller's Doxis AI.dp (Klippa DocHorizon) Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run dochorizon_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "tinyurl",
+      "name": "TinyURL",
+      "category": "marketing",
+      "description": "Create and manage TinyURL short links: aliases, destinations, tags, archive, click analytics.",
+      "endpoint": "https://tinyurl.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TinyURL API token"
+          }
+        ],
+        "hint": "Create a token in TinyURL under **Settings → API** ([tinyurl.com/app/settings/api](https://tinyurl.com/app/settings/api)). Your token is used only to call the TinyURL API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tinyurl_get_link",
+          "type": "read",
+          "title": "Get a short link",
+          "description": "Details of one short link: destination URL, tiny_url, tags, created/expires dates, archived/deleted flags, analytics settings, total hits and owner. GET /alias/{domain}/{alias}."
+        },
+        {
+          "name": "tinyurl_list_links",
+          "type": "read",
+          "title": "List short links",
+          "description": "List the account's short links (type available = active, archived = archived), optionally created within a date range or filtered by alias or tag. The TinyURL API does not page this list: at most `limit` items (default 50, max 200) are returned together with the total, so narrow with from/to/search when truncated is true. GET /urls/{type}."
+        },
+        {
+          "name": "tinyurl_count_links",
+          "type": "read",
+          "title": "Count short links",
+          "description": "How many short links the account has (active or archived), optionally within a creation date range or filtered by alias or tag. GET /urls/{type}/count."
+        },
+        {
+          "name": "tinyurl_get_analytics",
+          "type": "read",
+          "title": "Get click analytics",
+          "description": "Aggregated click analytics for the account, or for one link (alias) or one tag, from a start date. report: timeline (clicks over time; interval minute/hour/day/week/month), general (browsers, operating systems, devices), weekday and hour (popularity), top_sources (referrers), top_languages, location (countries, or the regions of one country via region = ISO 3166 alpha-2 code). Which reports are available depends on the account's TinyURL plan. Visitor-level raw logs are not exposed. GET /analytics/*."
+        },
+        {
+          "name": "tinyurl_create_link",
+          "type": "write",
+          "title": "Create a short link",
+          "description": "WRITE: create ONE new short link for an http(s) destination URL. Optional custom alias (5-30 characters on tinyurl.com), domain (tinyurl.com or a branded domain), tags, expiry and description. Not idempotent: calling it again without an alias creates another link. Returns the new tiny_url. POST /create."
+        },
+        {
+          "name": "tinyurl_update_link",
+          "type": "write",
+          "title": "Update a short link's alias, tags or settings",
+          "description": "WRITE: change an existing short link's alias, tags, expiry, description or click-analytics switch. At least one new_* field is required. DESTRUCTIVE for what it replaces: new_tags REPLACES all existing tags, and renaming the alias (new_alias) makes the old short URL stop working. The destination URL is changed with tinyurl_change_destination. PATCH /update."
+        },
+        {
+          "name": "tinyurl_change_destination",
+          "type": "write",
+          "title": "Change a short link's destination URL",
+          "description": "WRITE: point an existing short link at a new destination. DESTRUCTIVE: everyone who opens the short link is sent to the new URL from now on and the old destination is overwritten. The new URL must be http(s). PATCH /change."
+        },
+        {
+          "name": "tinyurl_set_link_archived",
+          "type": "write",
+          "title": "Archive or unarchive a short link",
+          "description": "WRITE: archive an active short link (archived = true) or restore an archived one (archived = false). Archiving moves the link to the archived list; nothing is deleted and it can be restored. The API's archive endpoint is a toggle, so the link's current state is read first and nothing is changed when it already matches, and the state afterwards is checked. Do not run two archive calls for the same link at once. GET /alias/{domain}/{alias}, then PATCH /archive."
+        },
+        {
+          "name": "tinyurl_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tinyurl_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TinyURL tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tinyurl_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED TinyURL tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tinyurl_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TinyURL Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tinyurl_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
