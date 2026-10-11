@@ -45355,6 +45355,879 @@
           "description": "Cancel the caller's Dead Man's Snitch Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run deadmanssnitch_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "whatconverts",
+      "name": "WhatConverts",
+      "category": "marketing",
+      "description": "Read WhatConverts leads, calls, forms, accounts and profiles; add leads and update lead value.",
+      "endpoint": "https://whatconverts.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API token"
+          },
+          {
+            "label": "API secret"
+          }
+        ],
+        "hint": "In WhatConverts open **Tracking → Integrations → API Keys** inside a profile and click Generate API Key (a profile key sees that profile). Agency plans can use **Integrations → API Keys** in the agency dashboard for a master key that also reaches accounts, profiles and users. Your key is used only to call the WhatConverts API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "whatconverts_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List tracked leads (phone calls, web forms, chats, texts, emails, events, transactions) with source/medium/campaign/keyword attribution, contact details, quote and sales values, call duration and transcripts. start_date is REQUIRED because WhatConverts otherwise returns only today's leads; a range is at most 400 days. A Profile key sees its own profile; an Agency key can narrow by account_id/profile_id. GET /leads."
+        },
+        {
+          "name": "whatconverts_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id with every field: type, status, attribution (source, medium, campaign, keyword, landing page), contact details, location, device, quote/sales value, call details, transcripts, form/message content, and custom fields. GET /leads/{lead_id}."
+        },
+        {
+          "name": "whatconverts_get_call_recording_info",
+          "type": "read",
+          "title": "Get call recording info",
+          "description": "Recording and voicemail facts for a phone-call lead: the recording and voicemail links, call duration, answer status, tracking/caller numbers and the call/voicemail transcripts. Returns links and text only, never audio. Taken from GET /leads/{lead_id} (the audio endpoint GET /recording returns raw MP3 and is not used)."
+        },
+        {
+          "name": "whatconverts_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "WRITE: update a lead's sales data in WhatConverts: quotable state, quote value, sales value, the URL where the lead occurred, and/or custom/additional field values. Only the fields you pass change; it overwrites the previous values of those fields. Sends no notifications. At least one field is required. POST /leads/{lead_id}."
+        },
+        {
+          "name": "whatconverts_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: add a lead to WhatConverts, for example an offline phone call, a form submission from another system or a sale you want attributed. It appears in reports and counts toward lead totals; send_notification is always off, so no emails go out. Not idempotent: calling twice creates two leads. A Profile key adds to its own profile; an Agency key must pass profile_id. POST /leads."
+        },
+        {
+          "name": "whatconverts_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "Agency key only: list the accounts (clients) of the agency with their profiles (id, name, date created). Use the ids to filter leads. start_date/end_date filter by creation date (WhatConverts defaults start_date to today, so pass an early start_date to see all). GET /accounts."
+        },
+        {
+          "name": "whatconverts_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Agency key only: one account by id with its profiles. GET /accounts/{account_id}."
+        },
+        {
+          "name": "whatconverts_list_profiles",
+          "type": "read",
+          "title": "List profiles",
+          "description": "Agency key only: list the profiles (websites/campaign sets) of one account. start_date/end_date filter by creation date (WhatConverts defaults start_date to today, so pass an early start_date to see all). GET /accounts/{account_id}/profiles."
+        },
+        {
+          "name": "whatconverts_get_profile",
+          "type": "read",
+          "title": "Get profile",
+          "description": "Agency key only: one profile by id (name, date created). GET /accounts/{account_id}/profiles/{profile_id}."
+        },
+        {
+          "name": "whatconverts_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "Agency key only: list WhatConverts users (email, role, whether activation is pending) of the master account or of client accounts. start_date/end_date filter by creation date (WhatConverts defaults start_date to today, so pass an early start_date to see all). GET /users."
+        },
+        {
+          "name": "whatconverts_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Agency key only: one user by id with role, notification settings and (for account users) the accounts they can access. GET /users/{user_id}."
+        },
+        {
+          "name": "whatconverts_list_roles",
+          "type": "read",
+          "title": "List roles",
+          "description": "Agency key only: list user roles (id, name, master-account or account type). GET /roles."
+        },
+        {
+          "name": "whatconverts_get_role",
+          "type": "read",
+          "title": "Get role",
+          "description": "Agency key only: one role with its permission levels (none/view/edit) per area. GET /roles/{role_id}."
+        },
+        {
+          "name": "whatconverts_list_phone_numbers",
+          "type": "read",
+          "title": "List tracking phone numbers",
+          "description": "List the call-tracking numbers: tracking and destination number, call flow, trigger (source/medium), call recording and messaging flags, last used. A Profile key lists its own profile; an Agency key may filter by account_id/profile_id. GET /tracking/numbers."
+        },
+        {
+          "name": "whatconverts_list_web_forms",
+          "type": "read",
+          "title": "List tracked web forms",
+          "description": "List the web forms WhatConverts tracks (id, name, how the form and its submit are matched on the page). A Profile key lists its own profile; an Agency key may filter by account_id/profile_id. GET /tracking/forms."
+        },
+        {
+          "name": "whatconverts_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "whatconverts_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the WhatConverts tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "whatconverts_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED WhatConverts tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "whatconverts_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's WhatConverts Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run whatconverts_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "addevent",
+      "name": "AddEvent",
+      "category": "calendar",
+      "description": "Read AddEvent calendars, events, RSVPs and subscribers; create and update calendars and events.",
+      "endpoint": "https://addevent.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AddEvent API key"
+          }
+        ],
+        "hint": "Find it in the AddEvent dashboard under **Account settings**. API access needs a paid AddEvent plan. The key gives full access to your account's calendars and events; it is used only to call the AddEvent API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "addevent_list_calendars",
+          "type": "read",
+          "title": "List calendars",
+          "description": "List the account's calendars (newest first by default) with id, title, timezone, whether it is the default calendar, landing-page links and counts of events and subscribers. GET /calendars."
+        },
+        {
+          "name": "addevent_get_calendar",
+          "type": "read",
+          "title": "Get calendar",
+          "description": "One calendar by id: title, timezone, week start, template ids, subscriber and event counts, links, custom data. GET /calendars/{id}."
+        },
+        {
+          "name": "addevent_create_calendar",
+          "type": "write",
+          "title": "Create calendar",
+          "description": "WRITE: creates a new calendar in the AddEvent account (a new, empty calendar; nothing existing is changed and nobody is notified). Needs a title. POST /calendars."
+        },
+        {
+          "name": "addevent_update_calendar",
+          "type": "write",
+          "title": "Update calendar",
+          "description": "WRITE: changes fields of an existing calendar (only the fields you pass; the rest stay). Title, description and timezone changes show on its landing page and can reach people who subscribe to the calendar feed. Not reversible by this server (no previous values are kept), so read the calendar first. PATCH /calendars/{id}."
+        },
+        {
+          "name": "addevent_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "Search the account's events (newest created first; by start time when a date filter is used): title, start/end, timezone, location, RSVP settings and stats, landing-page links. Filter by calendar, event ids, text, date window or a custom_data pair. GET /events."
+        },
+        {
+          "name": "addevent_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id (evt-...): all fields incl. description, organizer, reminder, recurring rule, RSVP settings and stats, custom data and share links. GET /events/{id}."
+        },
+        {
+          "name": "addevent_create_event",
+          "type": "write",
+          "title": "Create event",
+          "description": "WRITE: creates a new event on a calendar (the account's default calendar if calendar_id is omitted). Creates a public event landing page and share links; it does not e-mail anyone, though people subscribed to that calendar's feed will see the event on their next sync. Needs title and datetime_start. POST /events."
+        },
+        {
+          "name": "addevent_update_event",
+          "type": "write",
+          "title": "Update event",
+          "description": "WRITE: changes fields of an existing event (only the fields you pass; the rest stay). The change goes live on its landing page and share links, and people who subscribed to the calendar or added the event with a live link are updated on their next calendar sync, so a time or location change can notify real people. No previous values are kept: read the event first. PATCH /events/{id}."
+        },
+        {
+          "name": "addevent_list_rsvp_attendees",
+          "type": "read",
+          "title": "List RSVP attendees",
+          "description": "List RSVP attendees (personal data: e-mail addresses and the answers they gave on the RSVP form). Filter by calendar, event or response (going/maybe/not-going). Paged, 20 at most per page: read only what the task needs. IP address and coordinates are removed from the reply. GET /rsvps."
+        },
+        {
+          "name": "addevent_get_rsvp_attendee",
+          "type": "read",
+          "title": "Get RSVP attendee",
+          "description": "One RSVP attendee by id (personal data: e-mail and form answers; IP address and coordinates removed). GET /rsvps/{id}."
+        },
+        {
+          "name": "addevent_create_rsvp_attendee",
+          "type": "write",
+          "title": "Create RSVP attendee",
+          "description": "WRITE: adds ONE RSVP attendee (one e-mail address, personal data) to an event. This server never asks AddEvent to send the confirmation or organizer notification e-mails, but the event's own reminder and follow-up e-mails (if the event has them) will later go to this address, so only add someone who really RSVP'd. The e-mail must be unique per event. POST /events/{id}/rsvps."
+        },
+        {
+          "name": "addevent_update_rsvp_attendee",
+          "type": "write",
+          "title": "Update RSVP attendee",
+          "description": "WRITE: changes ONE RSVP attendee (email, response or form answers; only the fields you pass). The event's reminder and update e-mails go to the e-mail address stored here, so changing it redirects those e-mails to that person. This server never triggers the confirmation or organizer notification e-mails. PATCH /rsvps/{id}."
+        },
+        {
+          "name": "addevent_list_calendar_subscribers",
+          "type": "read",
+          "title": "List calendar subscribers",
+          "description": "List people subscribed to the account's calendars (personal data: the form answers they gave, such as name and e-mail; calendar app type, sync status). Paged, 20 at most per page. IP address and coordinates are removed. GET /subscribers."
+        },
+        {
+          "name": "addevent_get_calendar_subscriber",
+          "type": "read",
+          "title": "Get calendar subscriber",
+          "description": "One calendar subscriber by id (personal data; IP address and coordinates removed). GET /subscribers/{id}."
+        },
+        {
+          "name": "addevent_list_rsvp_forms",
+          "type": "read",
+          "title": "List RSVP forms",
+          "description": "The account's RSVP forms (id, name), newest first. Use the id as rsvp_form_id on an event. GET /events/rsvp-forms."
+        },
+        {
+          "name": "addevent_list_event_templates",
+          "type": "read",
+          "title": "List event landing page templates",
+          "description": "The account's event landing page templates (id, name), newest first. Use the id as landing_page_template_id on an event. GET /events/templates."
+        },
+        {
+          "name": "addevent_list_calendar_templates",
+          "type": "read",
+          "title": "List calendar templates",
+          "description": "The account's calendar landing page templates or embeddable calendar templates (id, name), newest first. Use the id as landing_page_template_id / embeddable_calendar_template_id on a calendar. GET /calendars/templates."
+        },
+        {
+          "name": "addevent_list_timezones",
+          "type": "read",
+          "title": "List timezones",
+          "description": "Timezone names AddEvent supports (use them as the timezone of events and calendars), with current UTC offset. Optional text filter on the name. GET /timezones."
+        },
+        {
+          "name": "addevent_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "addevent_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AddEvent tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "addevent_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED AddEvent tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "addevent_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AddEvent Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run addevent_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "helpwise",
+      "name": "Helpwise",
+      "category": "support",
+      "description": "Read Helpwise conversations, contacts, tags and reports; note, tag, assign, close; send one email.",
+      "endpoint": "https://helpwise.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Helpwise API key"
+          },
+          {
+            "label": "Helpwise API secret"
+          }
+        ],
+        "hint": "Find both in Helpwise under **Settings → Integrations → API** (the API needs a plan that includes API access, Premium and up). Your key and secret are used only to call the Helpwise API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "helpwise_list_conversations",
+          "type": "read",
+          "title": "List conversations",
+          "description": "List conversations (threads) of one or more inboxes, newest first, with subject, snippet, tags, assignee, read/starred/closed flags and contact. Pick the folder with `folder` (default: all). Page with `next_page_token`. Inbox ids come from helpwise_list_inboxes. GET /conversations."
+        },
+        {
+          "name": "helpwise_get_conversation",
+          "type": "read",
+          "title": "Get conversation",
+          "description": "One conversation with its messages, notes, drafts, assignment and contacts. Page long conversations with `page_token` from the previous reply. GET /inboxes/{inbox_id}/conversations/{conversation_id}."
+        },
+        {
+          "name": "helpwise_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (name, company, job title, emails, phones, id). Page with limit and offset. GET /contacts."
+        },
+        {
+          "name": "helpwise_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search contacts by a name, email or phone term. Page with limit and offset. GET /contacts/search."
+        },
+        {
+          "name": "helpwise_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact with emails, phones, company, custom fields and recent conversations. GET /contacts/{id}."
+        },
+        {
+          "name": "helpwise_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "All tags (id, name, colour, parent, inbox). Use the ids with helpwise_apply_tags. GET /tags."
+        },
+        {
+          "name": "helpwise_get_tag",
+          "type": "read",
+          "title": "Get tag",
+          "description": "One tag by id. GET /tags/{id}."
+        },
+        {
+          "name": "helpwise_get_report",
+          "type": "read",
+          "title": "Overall report",
+          "description": "Overall and team-performance report for a date range: new/closed/assigned conversations (with change vs the previous period), inbound/outbound messages per day, busiest hour/day, average first response, response and resolution time, CSAT and per-agent performance. Optional inbox and tag filters. GET /reports."
+        },
+        {
+          "name": "helpwise_get_tags_report",
+          "type": "read",
+          "title": "Tags report",
+          "description": "Per-tag report for one inbox and a date range: conversations per tag (and share), open conversations, average response, first-response and resolution time. GET /inboxes/{inbox_id}/reports/tags."
+        },
+        {
+          "name": "helpwise_list_inboxes",
+          "type": "read",
+          "title": "List inboxes",
+          "description": "List the account's inboxes (mailboxes) with id, name, address and type. Use the ids in the other tools. POST /mailboxes/list (V0)."
+        },
+        {
+          "name": "helpwise_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the team members (agents) with access to an inbox: id, name, email. Use the ids with helpwise_assign_conversation. POST /users/list (V0)."
+        },
+        {
+          "name": "helpwise_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Helpwise user the API key belongs to (name, email, id). POST /users/me (V0)."
+        },
+        {
+          "name": "helpwise_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a new contact in Helpwise (name, company, job title, emails, phones, custom fields). Nothing is sent to the person. Creating the same email twice may create a duplicate. POST /contacts."
+        },
+        {
+          "name": "helpwise_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change a contact's name, company, job title, emails, phones or custom fields. Helpwise updates with PUT, so this tool first reads the contact and sends the current values together with your changes; a list you pass (emails, phones, custom_fields) REPLACES the old list. Nothing is sent to the person. PUT /contacts/{id}."
+        },
+        {
+          "name": "helpwise_add_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: add an internal note to a conversation. Visible to your Helpwise team only; it is not sent to the customer. Notes cannot be deleted through this API. POST /notes/add (V0)."
+        },
+        {
+          "name": "helpwise_assign_conversation",
+          "type": "write",
+          "title": "Assign conversation",
+          "description": "WRITE: assign a conversation to a team member (user id from helpwise_list_users), or pass assigned_to 0 to unassign it. The assignee may be notified by Helpwise. POST /threads/assign (V0)."
+        },
+        {
+          "name": "helpwise_close_conversations",
+          "type": "write",
+          "title": "Close conversations",
+          "description": "WRITE: close up to 25 conversations (mark them done). They can be reopened with helpwise_reopen_conversations. Nothing is sent to customers. PUT /conversations/action/close."
+        },
+        {
+          "name": "helpwise_reopen_conversations",
+          "type": "write",
+          "title": "Reopen conversations",
+          "description": "WRITE: move up to 25 conversations back to the inbox (reopen closed ones). Nothing is sent to customers. PUT /conversations/action/moveToInbox."
+        },
+        {
+          "name": "helpwise_apply_tags",
+          "type": "write",
+          "title": "Apply tags",
+          "description": "WRITE: apply existing tags (ids from helpwise_list_tags) to up to 25 conversations. Tags can drive Helpwise automations. Applying a tag already present changes nothing. POST /tags/apply."
+        },
+        {
+          "name": "helpwise_remove_tags",
+          "type": "write",
+          "title": "Remove tags from conversations",
+          "description": "WRITE: take tags off up to 25 conversations. The tags themselves are not deleted. POST /tags/remove."
+        },
+        {
+          "name": "helpwise_send_email",
+          "type": "write",
+          "title": "Send email",
+          "description": "WRITE: SEND A REAL EMAIL from a Helpwise inbox to the given customer address(es). Irreversible; once sent it cannot be recalled. At most 10 recipients in total (to + cc), one message per call; never use it for lists or campaigns. This starts a new message (it is not a reply on an existing conversation). The body is plain text (blank line = new paragraph); it is sent as HTML. POST /emails/send_mail (V0)."
+        },
+        {
+          "name": "helpwise_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "helpwise_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Helpwise tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "helpwise_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Helpwise tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "helpwise_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Helpwise Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run helpwise_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "qgiv",
+      "name": "Qgiv",
+      "category": "fundraising",
+      "description": "Read Qgiv (Bloomerang Fundraising) donations, refunds, recurring gifts, P2P registrations, events.",
+      "endpoint": "https://qgiv.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Qgiv API token"
+          }
+        ],
+        "hint": "In Qgiv open **Data Tools > API Access > Create API Token** and select the forms it may read. The token is used only to call the Qgiv API on your behalf; it is never shown to anyone. Donor contact details are returned only when you ask for them."
+      },
+      "tools": [
+        {
+          "name": "qgiv_list_recent_transactions",
+          "type": "read",
+          "title": "List recent transactions",
+          "description": "The most recent donations/transactions (newest first as Qgiv returns them): id, status, date, amount, fee, net, donor name and id, form, recurring link, payment type and last four card digits, fund. Donor contact details are left out unless include_contact is set; full card numbers are never returned. POST /reporting/transactions/last/{limit}."
+        },
+        {
+          "name": "qgiv_list_transactions_by_date",
+          "type": "read",
+          "title": "List transactions by date range",
+          "description": "Transactions between two dates (inclusive), at most 31 days per call, paged with offset/limit. Same fields as qgiv_list_recent_transactions. Qgiv has no server-side paging, so a busy range is fetched whole and sliced; use a shorter range if it is too large. POST /reporting/transactions/dates/{begin}:{end}."
+        },
+        {
+          "name": "qgiv_list_transactions_after_id",
+          "type": "read",
+          "title": "List transactions after an id",
+          "description": "Transactions with an id greater than the given one, sorted by id ascending and paged with limit; next_after_id is the cursor for the next call (use it as after_id). Handy for syncing new gifts. POST /reporting/transactions/after/{id}."
+        },
+        {
+          "name": "qgiv_get_transaction",
+          "type": "read",
+          "title": "Get transaction",
+          "description": "One transaction in full: donation lines, fund/restriction, dedication, custom-field answers, event packages, registrations, refunds. Contact details only with include_contact; card data is reduced to the last four digits. POST /reporting/transactions/{id}."
+        },
+        {
+          "name": "qgiv_list_recent_refunds",
+          "type": "read",
+          "title": "List recent refunds",
+          "description": "The most recent refunds (read-only): id, original transaction, refund and settle dates, amount, payment type, last four digits, fund. POST /reporting/refunds/last/{limit}."
+        },
+        {
+          "name": "qgiv_list_refunds_by_date",
+          "type": "read",
+          "title": "List refunds by date range",
+          "description": "Refunds between two dates (inclusive), at most 31 days per call, paged with offset/limit. POST /reporting/refunds/dates/{begin}:{end}."
+        },
+        {
+          "name": "qgiv_get_refund",
+          "type": "read",
+          "title": "Get refund",
+          "description": "One refund in full by id (read-only; this server never issues refunds). POST /reporting/refunds/{id}."
+        },
+        {
+          "name": "qgiv_list_recurring_schedules",
+          "type": "read",
+          "title": "List recurring gift schedules",
+          "description": "Recurring donation schedules (read-only): id, start/end date, next billing date, frequency, amount, state, donor name and id, plus Qgiv's 12-month forecast. Filter by status active, paused, expired or deleted. Paged with offset/limit. POST /reporting/recurring/list or /reporting/recurring/{status}."
+        },
+        {
+          "name": "qgiv_get_recurring_schedule",
+          "type": "read",
+          "title": "Get recurring gift schedule",
+          "description": "One recurring donation schedule by id (read-only; schedules cannot be changed here). POST /reporting/recurring/{id}."
+        },
+        {
+          "name": "qgiv_list_statements",
+          "type": "read",
+          "title": "List statements",
+          "description": "Monthly fee/payout statements: id, date, amount contributed, fees, refunded, debited, credited and the summary totals (without the per-transaction rows; use qgiv_get_statement for those). Paged with offset/limit. POST /reporting/statements/list."
+        },
+        {
+          "name": "qgiv_get_latest_statements",
+          "type": "read",
+          "title": "Get latest statements",
+          "description": "The latest statement(s) for the organization or form, with summary totals (per-transaction rows left out). POST /reporting/statements/latest."
+        },
+        {
+          "name": "qgiv_get_statement",
+          "type": "read",
+          "title": "Get statement",
+          "description": "One statement by id with its transaction rows (first 100 shown; donor names only). POST /reporting/statements/{id}."
+        },
+        {
+          "name": "qgiv_list_recent_registrations",
+          "type": "read",
+          "title": "List recent P2P registrations",
+          "description": "The most recent peer-to-peer (Hobnob) event registrations: id, category, registrant name, team, fundraising goal and amount raised. Contact details only with include_contact. POST /reporting/registrations/last/{limit}."
+        },
+        {
+          "name": "qgiv_list_registrations_by_date",
+          "type": "read",
+          "title": "List P2P registrations by date range",
+          "description": "Peer-to-peer registrations between two dates (inclusive), at most 31 days per call, paged with offset/limit. POST /reporting/registrations/dates/{begin}:{end}."
+        },
+        {
+          "name": "qgiv_get_registration",
+          "type": "read",
+          "title": "Get P2P registration",
+          "description": "One peer-to-peer registration in full (purchase history, team, totals, child registrations). Contact details only with include_contact. POST /reporting/registrations/{id}."
+        },
+        {
+          "name": "qgiv_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "Events (ticketed/auction events) on the forms the token covers: id, dates and the top-level settings. Set include_details for packages, questions and promo codes. Notification e-mail addresses are never returned. POST /events/list."
+        },
+        {
+          "name": "qgiv_list_pledges",
+          "type": "read",
+          "title": "List pledge options",
+          "description": "Pledge options configured on the form(s) (title, value, frequency, begin date, iterations, state), not donors' pledge records. POST /pledges/list."
+        },
+        {
+          "name": "qgiv_get_pledge",
+          "type": "read",
+          "title": "Get pledge option",
+          "description": "One pledge option by id. POST /pledges/{id} (no package is sent, so nothing is changed)."
+        },
+        {
+          "name": "qgiv_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "Custom (additional-question) fields configured on the form(s): id, reference, title, input type, required flags, display flags. POST /customFields/list."
+        },
+        {
+          "name": "qgiv_list_report_mappings",
+          "type": "read",
+          "title": "List report mappings",
+          "description": "Report mappings (accounting export mappings) on the form(s): id, identifier, mapping data, export service, type. POST /reporting/mappings/list."
+        },
+        {
+          "name": "qgiv_get_report_mapping",
+          "type": "read",
+          "title": "Get report mapping",
+          "description": "One report mapping by id. POST /reporting/mappings/{id}."
+        },
+        {
+          "name": "qgiv_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "qgiv_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Qgiv tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "qgiv_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Qgiv tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "qgiv_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Qgiv Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run qgiv_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "starshipit",
+      "name": "Starshipit",
+      "category": "shipping",
+      "description": "Read Starshipit orders, tracking, rates and manifests; create and update unshipped orders.",
+      "endpoint": "https://starshipit.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Starshipit API key"
+          },
+          {
+            "label": "Starshipit subscription key"
+          }
+        ],
+        "hint": "Find both in Starshipit under **Settings → API** (the API key is the StarShipIT-Api-Key, the subscription key is the Ocp-Apim-Subscription-Key; generate them there if they are empty). The keys are used only to call the Starshipit API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "starshipit_list_unshipped_orders",
+          "type": "read",
+          "title": "List unshipped orders",
+          "description": "List unshipped (new, not yet printed) orders with full details: addresses, items, packages, carrier. By default only orders updated in the last 24 hours; use since_order_date / since_last_updated to look further back. ids_only=true returns just the order ids. GET /api/orders/unshipped."
+        },
+        {
+          "name": "starshipit_list_shipped_orders",
+          "type": "read",
+          "title": "List shipped orders",
+          "description": "List shipped orders (label printed) with tracking number, tracking status, carrier, manifest and shipped date. By default only orders updated in the last 24 hours; use since_last_updated to look further back. Label files are not returned. GET /api/orders/shipped."
+        },
+        {
+          "name": "starshipit_list_printed_orders",
+          "type": "read",
+          "title": "List printed or unmanifested orders",
+          "description": "List orders whose label was recently printed, or printed but not yet manifested, with tracking numbers. GET /api/orders/shipments."
+        },
+        {
+          "name": "starshipit_list_delivered_orders",
+          "type": "read",
+          "title": "List delivered orders by reference",
+          "description": "List delivered orders that carry a given order reference (the customer reference), with full order details. GET /api/orders/delivered."
+        },
+        {
+          "name": "starshipit_orders_summary",
+          "type": "read",
+          "title": "Orders summary by status",
+          "description": "A compact list of orders in one status (new, printed, shipped, archived) with contact, country, carrier, weight, manifest and dates, plus account-wide counts (unprinted, printed, shipped, archived, invalid addresses, returns). Supports filters and sorting. GET /api/orders/summary."
+        },
+        {
+          "name": "starshipit_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search orders by order number, tracking number, customer reference or recipient name (phrase), optionally limited to unshipped or shipped orders. Returns id, number, date, name, carrier, tracking number and country. GET /api/orders/search."
+        },
+        {
+          "name": "starshipit_get_order",
+          "type": "read",
+          "title": "Get one order",
+          "description": "One order by Starshipit order_id or by the order_number from the source platform. Use include to add sections (Items, Packages, Events, Metadatas, Shipping_Price, ...). Status defaults to Unshipped in Starshipit, so pass status=Shipped or Printed for orders already printed. Label files are not returned. GET /api/orders?order_id= or ?order_number=."
+        },
+        {
+          "name": "starshipit_list_orders",
+          "type": "read",
+          "title": "List orders with filters",
+          "description": "List full order details for one status (Unshipped by default, or Shipped / Printed), narrowed by a filter such as `Order:::1419,Country:::Australia` and sorted. Heavier than the summary: use starshipit_orders_summary for overviews. Label files are not returned. GET /api/orders (no id)."
+        },
+        {
+          "name": "starshipit_track_shipment",
+          "type": "read",
+          "title": "Track a shipment",
+          "description": "Tracking details for a shipped order, by tracking number or by order number: status, carrier, tracking URL, shipment date and the carrier's tracking events. GET /api/track."
+        },
+        {
+          "name": "starshipit_get_rates",
+          "type": "read",
+          "title": "Quote shipping rates",
+          "description": "QUOTE ONLY: shipping rates (service name, code, price) for a destination and parcels from the couriers enabled in the account. Nothing is purchased, created or printed. The sender defaults to the account's pickup address. Needs at least one enabled courier. POST /api/rates."
+        },
+        {
+          "name": "starshipit_list_delivery_services",
+          "type": "read",
+          "title": "List delivery services",
+          "description": "QUOTE ONLY: the carrier delivery services available for a shipment (carrier, service name and code) and, with include_pricing, their prices and service options. Nothing is purchased, created or printed. POST /api/deliveryservices."
+        },
+        {
+          "name": "starshipit_list_address_book",
+          "type": "read",
+          "title": "List address book",
+          "description": "List contacts in the account's address book (name, company, address, phone, email), sorted by a column. GET /api/addressbook/filtered."
+        },
+        {
+          "name": "starshipit_list_manifests",
+          "type": "read",
+          "title": "List manifests",
+          "description": "List manifests already submitted to carriers (newest first): number, date, carrier, package and consignment counts. Read only; manifesting is not available here. GET /api/manifests."
+        },
+        {
+          "name": "starshipit_list_products",
+          "type": "read",
+          "title": "List product catalogue",
+          "description": "List Product Catalogue records (SKU, title, weight, dimensions, HS code, bin location, price), optionally searching by SKU or title. GET /api/products."
+        },
+        {
+          "name": "starshipit_list_tags",
+          "type": "read",
+          "title": "List order tags",
+          "description": "List the account's user-defined order tags, optionally filtered by tag name. GET /api/tags."
+        },
+        {
+          "name": "starshipit_list_pickups",
+          "type": "read",
+          "title": "List booked pickups",
+          "description": "List courier pickups already booked for the account. Read only; booking a pickup is not available here. GET /api/pickup."
+        },
+        {
+          "name": "starshipit_create_order",
+          "type": "write",
+          "title": "Create an unshipped order",
+          "description": "WRITE: create ONE new UNSHIPPED order in Starshipit (order number, destination, optional items, parcels, sender). No label is printed, no shipment is booked and no postage is bought; staff still print the label in Starshipit. Not idempotent: creating the same order_number twice may create a duplicate, so check with starshipit_search_orders first. Starshipit rules configured in the account (carrier selection, validation) may run on the new order. POST /api/orders."
+        },
+        {
+          "name": "starshipit_update_order",
+          "type": "write",
+          "title": "Update an order's details",
+          "description": "WRITE: change details of ONE UNSHIPPED order by order_id (the order is read first and refused if it is already printed or shipped): addresses, shipping method/carrier/service, items, packages, reference or an internal note. This tool never sends status or manifest flags. It does not print a label or buy postage. Items/packages: include item_id / package_id (from starshipit_get_order with include=Items,Packages) to modify an existing line; a line without an id may be added. Nothing is deleted. Send only the fields you want to change. PUT /api/orders."
+        },
+        {
+          "name": "starshipit_add_order_tags",
+          "type": "write",
+          "title": "Add tags to an order",
+          "description": "WRITE: add up to 10 tags to ONE UNSHIPPED order (read first; refused if printed or shipped) (a tag that does not exist yet is created). Tags are used for filtering and can drive the account's automation rules. Adding a tag the order already has changes nothing. Tags are not removed. POST /api/tags/order."
+        },
+        {
+          "name": "starshipit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "starshipit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Starshipit tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "starshipit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Starshipit tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "starshipit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Starshipit Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run starshipit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
