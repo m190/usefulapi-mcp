@@ -293,6 +293,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Starshipit](servers/starshipit/) | shipping | 23 | API token | [servers/starshipit/](servers/starshipit/) |
 | [Buttondown](servers/buttondown/) | email | 29 | API token | [servers/buttondown/](servers/buttondown/) |
 | [SuperFaktura](servers/superfaktura/) | billing | 29 | API token | [servers/superfaktura/](servers/superfaktura/) |
+| [Accredible](servers/accredible/) | productivity | 23 | API token | [servers/accredible/](servers/accredible/) |
+| [Wincher](servers/wincher/) | marketing | 26 | API token | [servers/wincher/](servers/wincher/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -46658,6 +46658,375 @@
           "description": "Cancel the caller's SuperFaktura Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run superfaktura_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "accredible",
+      "name": "Accredible",
+      "category": "productivity",
+      "description": "Read Accredible credentials, groups, designs, analytics, skills; issue one credential as a draft.",
+      "endpoint": "https://accredible.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Accredible API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "Create or copy a key in the Accredible Dashboard ([dashboard.accredible.com](https://dashboard.accredible.com), API keys). An account-wide key sees every department; a department key only its own. Choose the environment your key belongs to: US and EU production accounts use different hosts, and sandbox accounts (Connect and Growth plans) use their own keys. Your key is used only to call the Accredible API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "accredible_get_issuer",
+          "type": "read",
+          "title": "Get the issuer (account)",
+          "description": "The Accredible issuer (organization) behind the API key: id, name, e-mail, remaining credential credits (certificate_left), language and URL. Good first call. GET /v1/issuer/details."
+        },
+        {
+          "name": "accredible_search_credentials",
+          "type": "read",
+          "title": "Search credentials",
+          "description": "Search issued credentials (badges and certificates) with filters that combine with AND, newest first by default. Returns id, uuid, encoded_id, recipient name/e-mail, group, issued_on, expired_on, published state (approve), whether the recipient opened or engaged, and meta. Paging: size + offset (first 10 000 results) OR cursor: when the reply has next_cursor pass it as cursor for the next page (cursor and offset cannot be combined). POST /v2/credentials/search (a read-only search)."
+        },
+        {
+          "name": "accredible_get_credential",
+          "type": "read",
+          "title": "Get a credential",
+          "description": "One credential in full: recipient, group, issue and expiry dates, published state, public URL, evidence items, references, custom attributes and skills. The id is the numeric credential id or the custom id your organization set. GET /v1/credentials/{id}."
+        },
+        {
+          "name": "accredible_get_credential_analytics",
+          "type": "read",
+          "title": "Get a credential's analytics events",
+          "description": "The analytics events of one credential (recipient views, shares, privacy changes, verification and so on) with timestamps. Read-only despite being a POST. POST /v1/credentials/analytics/{id}."
+        },
+        {
+          "name": "accredible_list_analytics",
+          "type": "read",
+          "title": "List credential analytics events",
+          "description": "Account-wide credential analytics events (views, shares, downloads and similar), optionally for a date range, group or department. Paged (default 100 per page). GET /v1/analytics."
+        },
+        {
+          "name": "accredible_search_groups",
+          "type": "read",
+          "title": "Search groups",
+          "description": "Search groups (an achievement such as a course or qualification that credentials belong to). Filters combine with AND; name and course_name match partially. Returns id, name, course name and description, design ids, language and dates. Paged: pass meta.next_page as page. POST /v1/issuer/groups/search (a read-only search)."
+        },
+        {
+          "name": "accredible_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "One group in full: name, course name and description, learning outcomes, design ids, language, skills and dates. GET /v1/issuer/groups/{group_id}."
+        },
+        {
+          "name": "accredible_search_designs",
+          "type": "read",
+          "title": "Search designs",
+          "description": "List badge and certificate designs, optionally by kind or meta_data. POST /v1/designs/search (a read-only search)."
+        },
+        {
+          "name": "accredible_get_design",
+          "type": "read",
+          "title": "Get a design",
+          "description": "One badge or certificate design with its settings. GET /v1/designs/{design_id}."
+        },
+        {
+          "name": "accredible_search_departments",
+          "type": "read",
+          "title": "Search departments",
+          "description": "List departments (independent organization units with their own designs, groups and branding). An account-wide key sees all, a department key only its own. Paged: pass meta.next_page as page. POST /v1/departments/search (a read-only search)."
+        },
+        {
+          "name": "accredible_get_department",
+          "type": "read",
+          "title": "Get a department",
+          "description": "One department: name, description, URL, branding and meta_data. GET /v1/departments/{department_id}."
+        },
+        {
+          "name": "accredible_search_collections",
+          "type": "read",
+          "title": "Search collections",
+          "description": "List collections (sets of groups shown together). Filters: ids, name (substring), public. Paged: pass meta.next_page as page. POST /v1/collections/search (a read-only search)."
+        },
+        {
+          "name": "accredible_search_attribute_keys",
+          "type": "read",
+          "title": "Search custom attribute keys",
+          "description": "List the custom attribute keys (placeholders such as a grade or date that credential designs and e-mails merge in); useful to know which custom_attributes a credential can carry. Paged: pass meta.next_page as page. POST /v1/attribute_keys/search (a read-only search)."
+        },
+        {
+          "name": "accredible_list_skill_frameworks",
+          "type": "read",
+          "title": "List skill frameworks",
+          "description": "The skills frameworks (O*NET, ESCO, NACE or your own) enabled for a department, each with its published versions. Needs a plan that includes skills frameworks (otherwise HTTP 403 plan_not_entitled). Paged, max 10 per page. GET /v1/skill_frameworks."
+        },
+        {
+          "name": "accredible_search_skills",
+          "type": "read",
+          "title": "Search skills in a framework version",
+          "description": "Search the skills of one published skills-framework version by name or the publisher's identifier (partial, case-insensitive, at least 2 characters). Paged, max 50 per page. GET /v1/skill_frameworks/{id}/versions/{version_id}/skills."
+        },
+        {
+          "name": "accredible_list_data_exports",
+          "type": "read",
+          "title": "List data exports",
+          "description": "Data exports of the departments the key can access: department, status (scheduled, processing, completed, errored) and download links of completed files. Exports are created in the Accredible Dashboard. GET /v1/data_exports."
+        },
+        {
+          "name": "accredible_get_data_export",
+          "type": "read",
+          "title": "Get a data export",
+          "description": "One data export: department, status and, once completed, the download links of its files. GET /v1/data_exports/{id}."
+        },
+        {
+          "name": "accredible_get_team_member",
+          "type": "read",
+          "title": "Get a team member",
+          "description": "One team member of the account: name, e-mail and permissions per department. Which members are visible depends on the key (an account-wide key sees all, a department key its own department). GET /v1/team_members/{id}."
+        },
+        {
+          "name": "accredible_issue_credential",
+          "type": "write",
+          "title": "Issue a credential to ONE recipient",
+          "description": "WRITE: creates ONE credential (badge or certificate) for ONE recipient in an existing group. By default it is created UNPUBLISHED (a draft: no e-mail is sent and no credit is used); publish it later in the Accredible Dashboard. With publish=true the credential is published immediately: Accredible then SENDS AN E-MAIL to the recipient (as configured in the group's e-mail settings) and uses one credential credit of the account; an account without credits keeps it unpublished. A sandbox-mode setting in the Dashboard overrides publish. Not idempotent: calling twice creates two credentials (set credential_id to your own unique id to be able to find it again). No evidence, references, bulk issuing, edits or deletes. POST /v1/credentials."
+        },
+        {
+          "name": "accredible_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "accredible_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Accredible tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "accredible_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Accredible tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "accredible_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Accredible Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run accredible_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "wincher",
+      "name": "Wincher",
+      "category": "marketing",
+      "description": "Read Wincher keyword rankings, SERPs, competitors and history; add keywords, groups and notes.",
+      "endpoint": "https://wincher.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Wincher Personal Access Token"
+          }
+        ],
+        "hint": "Create it in Wincher → **Account → Personal Access Tokens**. The Wincher API is part of the higher paid plans. The token acts with your user's permissions and is used only to call the Wincher API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "wincher_get_account",
+          "type": "read",
+          "title": "Get account and plan limits",
+          "description": "The Wincher account behind the token: id, timezone and the plan limits with current usage (websites, users, keywords, keyword lookups, map-tracking credits, history days). Check keyword usage here before adding keywords. GET /account."
+        },
+        {
+          "name": "wincher_get_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Wincher user the token belongs to: id, role, state, project access and profile (name, email, language). GET /user."
+        },
+        {
+          "name": "wincher_list_search_engines",
+          "type": "read",
+          "title": "List search engines",
+          "description": "The search engines Wincher can track (id, domain such as google.com, country, languages, default location). GET /search-engines."
+        },
+        {
+          "name": "wincher_search_locations",
+          "type": "read",
+          "title": "Search tracking locations",
+          "description": "Search the locations Wincher can track rankings for (code, name, country), most popular first, at most 100. Both are required by the API: an ISO country code and a free-text search (at least 3 characters). GET /locations."
+        },
+        {
+          "name": "wincher_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects (folders that group websites): id, name, website_ids, user_ids, and optionally the ranking summary for a period. GET /projects."
+        },
+        {
+          "name": "wincher_list_websites",
+          "type": "read",
+          "title": "List tracked websites",
+          "description": "List the websites tracked in Wincher: id, domain, display name, search engine, location, language, mobile flag, keyword/group/competitor counts, competitors and brand keywords. Optionally with the ranking summary for a period. GET /websites."
+        },
+        {
+          "name": "wincher_get_website",
+          "type": "read",
+          "title": "Get website",
+          "description": "One tracked website with its settings, competitors, brand keywords, counts and (for the period) ranking summary. GET /websites/{website_id}."
+        },
+        {
+          "name": "wincher_list_keywords",
+          "type": "read",
+          "title": "List keywords",
+          "description": "List the keywords tracked for a website with groups, volume, CPC, difficulty, competition, search intents and, with include_ranking, the latest position, traffic, ranking pages, SERP features and best position in the period. Positions are tracked down to the top 30. GET /websites/{website_id}/keywords."
+        },
+        {
+          "name": "wincher_get_keyword",
+          "type": "read",
+          "title": "Get keyword",
+          "description": "One tracked keyword with its groups, volume, CPC, difficulty and (default) ranking for the period. GET /websites/{website_id}/keywords/{keyword_id}."
+        },
+        {
+          "name": "wincher_get_keyword_serps",
+          "type": "read",
+          "title": "Get keyword SERPs",
+          "description": "The most recent search result pages Wincher stored for a keyword (up to 30): date, search volume, SERP features and the ranking results (position, URL, domain, traffic). GET /websites/{website_id}/keywords/{keyword_id}/serps."
+        },
+        {
+          "name": "wincher_get_keyword_ranking_history",
+          "type": "read",
+          "title": "Get keyword ranking history",
+          "description": "Historical position (or estimated traffic) for ONE keyword as time series, optionally split per ranking page or per competitor. GET /websites/{website_id}/keyword/{keyword_id}/ranking-history."
+        },
+        {
+          "name": "wincher_get_ranking_history_bulk",
+          "type": "read",
+          "title": "Get ranking history for several keywords",
+          "description": "Historical positions for up to 50 keywords at once (one time series per keyword). This is a read: it uses POST only because the keyword id list goes in the body. POST /websites/{website_id}/ranking-history."
+        },
+        {
+          "name": "wincher_list_groups",
+          "type": "read",
+          "title": "List keyword groups",
+          "description": "List the keyword groups of a website: id, name, keyword_ids, average difficulty, search-intent counts and optionally ranking summaries. GET /websites/{website_id}/groups."
+        },
+        {
+          "name": "wincher_get_group",
+          "type": "read",
+          "title": "Get keyword group",
+          "description": "One keyword group with its keyword ids and (optionally) ranking summary for the period. GET /websites/{website_id}/groups/{group_id}."
+        },
+        {
+          "name": "wincher_list_competitors",
+          "type": "read",
+          "title": "List competitors",
+          "description": "The competitor domains tracked for a website (id, domain, created_at). GET /websites/{website_id}/competitors."
+        },
+        {
+          "name": "wincher_list_competitor_ranking_summaries",
+          "type": "read",
+          "title": "Competitor ranking summaries",
+          "description": "Ranking summaries (average position, share of voice, traffic, position distribution, volume) for the website's competitors over a period, for comparison with your own. GET /websites/{website_id}/competitors/ranking-summaries."
+        },
+        {
+          "name": "wincher_list_competitor_keyword_positions",
+          "type": "read",
+          "title": "Competitor keyword positions",
+          "description": "For each tracked keyword, the position of your site and of each competitor in the period. GET /websites/{website_id}/competitors/keyword-positions."
+        },
+        {
+          "name": "wincher_list_annotations",
+          "type": "read",
+          "title": "List annotations",
+          "description": "The annotations (notes on the ranking graphs: automatic, alert and user-written) for a website, optionally within a period. GET /websites/{website_id}/annotations."
+        },
+        {
+          "name": "wincher_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "The saved segments (keyword filters) usable as segment_id in other tools. By default also temporary ones; only_named limits to saved ones. GET /segments."
+        },
+        {
+          "name": "wincher_add_keywords",
+          "type": "write",
+          "title": "Add keywords to track",
+          "description": "WRITE: start tracking up to 50 new keywords on ONE website. EACH keyword uses one keyword slot of the plan's keyword quota (see wincher_get_account), and it is tracked and updated from then on; this tool cannot remove keywords again. Each keyword may name a preferred_url (the landing page expected to rank). Invalid or already-tracked keywords are ignored by Wincher (not created). 'groups' are keyword group NAMES to put every keyword in (may be empty; use names from wincher_list_groups, an unknown name may create a new group). POST /websites/{website_id}/keywords/bulk."
+        },
+        {
+          "name": "wincher_create_group",
+          "type": "write",
+          "title": "Create keyword group",
+          "description": "WRITE: create a keyword group on a website, optionally containing existing keywords (ids from wincher_list_keywords). Uses no keyword quota. POST /websites/{website_id}/groups."
+        },
+        {
+          "name": "wincher_create_annotation",
+          "type": "write",
+          "title": "Create annotation",
+          "description": "WRITE: add a user annotation (a note shown on the ranking graphs, e.g. 'Launched new landing page') for a date, optionally tied to specific keywords; without keyword_ids it is a global note for the website. Visible to everyone with access to the website. Uses no keyword quota. POST /websites/{website_id}/annotations."
+        },
+        {
+          "name": "wincher_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "wincher_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Wincher tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "wincher_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Wincher tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "wincher_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Wincher Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run wincher_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
