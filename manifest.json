@@ -47612,6 +47612,480 @@
           "description": "Cancel the caller's TinyURL Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tinyurl_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "spoke-dispatch",
+      "name": "Spoke Dispatch",
+      "category": "shipping",
+      "description": "Read Spoke Dispatch plans, stops, routes and drivers; create and optimize plans; send routes.",
+      "endpoint": "https://spoke-dispatch.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per team"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Spoke Dispatch API key"
+          }
+        ],
+        "hint": "Create a key in Spoke Dispatch under **Settings → Integrations → API**. The key acts for your whole team; keep it secret. Your key is used only to call the Spoke Dispatch API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "spoke_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List route plans (a plan = one day's delivery job: date, depot, drivers, routes), newest first, in pages of up to 20. Filter with e.g. {\"title\":\"Monday run\"} or {\"startsGte\":\"2026-10-01\"}. GET /plans."
+        },
+        {
+          "name": "spoke_get_plan",
+          "type": "read",
+          "title": "Get plan",
+          "description": "One plan: title, start date, depot, driver ids, route ids, whether it is distributed/writable, optimization state and route overrides. GET /plans/{planId}."
+        },
+        {
+          "name": "spoke_list_plan_stops",
+          "type": "read",
+          "title": "List plan stops",
+          "description": "List the stops of a plan, in pages of up to 10. Stops include recipient names, phones, e-mails and addresses (personal data): page only as far as needed. GET /plans/{planId}/stops."
+        },
+        {
+          "name": "spoke_get_stop",
+          "type": "read",
+          "title": "Get stop",
+          "description": "One stop of a plan with address, recipient, timing, ETA, route and delivery outcome (attempted, succeeded, notes, photo/signature links). Contains personal data. GET /plans/{planId}/stops/{stopId}."
+        },
+        {
+          "name": "spoke_search_stops",
+          "type": "read",
+          "title": "Search stops",
+          "description": "Search all stops of the team (planned, unassigned, past) by keyword and/or Spoke's filter language, up to 20 per page. Example filter: address.countryCode = \"DE\" and deliveryInfo.attempted = false. Filterable: planId, routeId, type, activity, notes, address.*, createdAt, recipient.name/email/phone/externalId, deliveryInfo.state/attempted/succeeded, orderInfo.*. Results include personal data. The search index lags real time by a short while. GET /stops:search."
+        },
+        {
+          "name": "spoke_list_unassigned_stops",
+          "type": "read",
+          "title": "List unassigned stops",
+          "description": "List stops that are not on any plan yet (the inbox of imported orders), in pages of up to 20 (default 20). Contains personal data. GET /unassignedStops."
+        },
+        {
+          "name": "spoke_get_unassigned_stop",
+          "type": "read",
+          "title": "Get unassigned stop",
+          "description": "One unassigned stop by id. Contains personal data. GET /unassignedStops/{id}."
+        },
+        {
+          "name": "spoke_list_drivers",
+          "type": "read",
+          "title": "List drivers",
+          "description": "List the team's drivers (name, e-mail/phone, active flag, depots, route overrides), up to 50 per page. Contains personal data. GET /drivers."
+        },
+        {
+          "name": "spoke_get_driver",
+          "type": "read",
+          "title": "Get driver",
+          "description": "One driver by id. Contains personal data. GET /drivers/{driverId}."
+        },
+        {
+          "name": "spoke_list_depots",
+          "type": "read",
+          "title": "List depots",
+          "description": "List depots (start/end addresses, working hours, vehicle type, max stops), up to 20 per page. Use the ids when creating plans. GET /depots."
+        },
+        {
+          "name": "spoke_get_depot",
+          "type": "read",
+          "title": "Get depot",
+          "description": "One depot by id. GET /depots/{depotId}."
+        },
+        {
+          "name": "spoke_list_routes",
+          "type": "read",
+          "title": "List routes",
+          "description": "List routes (one driver's run of a plan: stop count, driver, distributed/started/completed state), up to 20 per page. GET /routes."
+        },
+        {
+          "name": "spoke_get_route",
+          "type": "read",
+          "title": "Get route",
+          "description": "One route: title, driver, stop count and state (distributed, started, completed, recipients notified). GET /routes/{routeId}."
+        },
+        {
+          "name": "spoke_list_route_stops",
+          "type": "read",
+          "title": "List route stops",
+          "description": "List the stops of one route in driving order, in pages of up to 10. Contains personal data: page only as far as needed. GET /routes/{routeId}/stops."
+        },
+        {
+          "name": "spoke_list_operations",
+          "type": "read",
+          "title": "List operations",
+          "description": "List long-running operations (plan optimizations): type, done flag, who started it, result (optimized and skipped stops), up to 20 per page. GET /operations."
+        },
+        {
+          "name": "spoke_get_operation",
+          "type": "read",
+          "title": "Get operation",
+          "description": "One operation, e.g. the optimization started by spoke_optimize_plan: poll until done is true. GET /operations/{operationId}."
+        },
+        {
+          "name": "spoke_list_custom_stop_properties",
+          "type": "read",
+          "title": "List custom stop properties",
+          "description": "The team's custom stop property definitions (ids and names). Their ids are the keys of customProperties on stops. Needs a subscription that includes custom properties (HTTP 403 otherwise). GET /team/customStopProperties."
+        },
+        {
+          "name": "spoke_create_plan",
+          "type": "write",
+          "title": "Create plan",
+          "description": "WRITE: create a new route plan for a date (no stops yet, nothing is sent to drivers). Optionally assign drivers (up to 50, they must be active and share the plan's depot) and a depot (default: the team's main depot). Does not optimize or distribute. POST /plans."
+        },
+        {
+          "name": "spoke_update_plan",
+          "type": "write",
+          "title": "Update plan",
+          "description": "WRITE: change a plan's title, date, drivers and/or depot. Only the fields you pass change, but driver_ids REPLACES the plan's whole driver list. Fails if the plan is not writable (already distributed). Nothing is sent to drivers. PATCH /plans/{planId}."
+        },
+        {
+          "name": "spoke_create_stop",
+          "type": "write",
+          "title": "Create stop",
+          "description": "WRITE: add one stop to a writable (not yet distributed) plan. Needs an address (text fields or latitude+longitude). The recipient's phone/e-mail are stored on the stop and Spoke may contact the recipient later when the route runs; nothing is sent now. For many stops use spoke_import_stops. POST /plans/{planId}/stops."
+        },
+        {
+          "name": "spoke_import_stops",
+          "type": "write",
+          "title": "Import stops",
+          "description": "WRITE: add up to 100 stops to a writable (not yet distributed) plan in one request (better geocoding than one at a time; Spoke limits imports to 30 requests a minute). Returns the created stop ids and any failures. Recipient contact data is stored on the stops; nothing is sent now. POST /plans/{planId}/stops:import."
+        },
+        {
+          "name": "spoke_optimize_plan",
+          "type": "write",
+          "title": "Optimize plan",
+          "description": "WRITE: start the route optimization of a plan (orders and assigns its stops to its drivers). Rewrites the plan's routes if it was optimized before, and uses Spoke's optimization quota (30 per minute, 100 per 10 minutes). Does NOT send anything to drivers. Returns an operation: poll spoke_get_operation until done. Needs at least one driver and one stop. POST /plans/{planId}:optimize."
+        },
+        {
+          "name": "spoke_distribute_plan",
+          "type": "write",
+          "title": "Distribute plan to drivers",
+          "description": "WRITE (SENDS TO REAL PEOPLE): distribute an optimized plan, which immediately sends each driver of the plan their route on their phone (push notification / message) and locks the plan for edits. Cannot be undone. Only for a plan with 1-10 drivers, and only after the user has explicitly said to send the routes: set confirm_send_to_drivers to true. POST /plans/{planId}:distribute."
+        },
+        {
+          "name": "spoke_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spoke_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Spoke Dispatch tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "spoke_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Spoke Dispatch tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "spoke_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Spoke Dispatch Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run spoke_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "runcloud",
+      "name": "RunCloud",
+      "category": "devops",
+      "description": "Read RunCloud servers, web apps, databases and logs; deploy, restart services, renew SSL.",
+      "endpoint": "https://runcloud.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "RunCloud API key"
+          }
+        ],
+        "hint": "Create it in RunCloud under **Workspace → Settings → API Management** (the API is available on the Business and Enterprise plans). Leave the key's **IP restriction empty**: requests come from Cloudflare addresses, so a key limited to your own IP would be refused. The key has the access of your workspace; revoke it there at any time. Your key is used only to call the RunCloud API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "runcloud_ping",
+          "type": "read",
+          "title": "Check API connection",
+          "description": "Check that the API key works: RunCloud answers with a message ('pong'). GET /ping."
+        },
+        {
+          "name": "runcloud_list_servers",
+          "type": "read",
+          "title": "List servers",
+          "description": "List the servers connected to the workspace: id, name, provider, IP address, OS, stack, online/connected state, agent and PHP CLI version, auto-update settings and tags. GET /servers."
+        },
+        {
+          "name": "runcloud_get_server",
+          "type": "read",
+          "title": "Get server",
+          "description": "One server by id: provider, IP, OS and version, stack, online state, agent version, update settings, tags. GET /servers/{id}."
+        },
+        {
+          "name": "runcloud_get_server_stats",
+          "type": "read",
+          "title": "Get server counts",
+          "description": "How many web applications, databases, cron jobs and supervisor jobs a server has, and its country. GET /servers/{id}/stats."
+        },
+        {
+          "name": "runcloud_get_server_hardware",
+          "type": "read",
+          "title": "Get server hardware info",
+          "description": "Kernel version, CPU model and cores, memory and disk totals/free, load average and uptime of a server. GET /servers/{id}/hardwareinfo."
+        },
+        {
+          "name": "runcloud_get_server_health",
+          "type": "read",
+          "title": "Get latest server health",
+          "description": "The latest health sample of a server: total/available/used memory and disk space (MB) and load average. GET /servers/{id}/health/latest."
+        },
+        {
+          "name": "runcloud_list_server_logs",
+          "type": "read",
+          "title": "List server activity logs",
+          "description": "The server's activity log (what was changed in RunCloud and when), newest first. GET /servers/{id}/logs."
+        },
+        {
+          "name": "runcloud_list_services",
+          "type": "read",
+          "title": "List server services",
+          "description": "The services on a server (nginx, php-fpm, mariadb, redis, supervisor...) with real name, running state, CPU, memory and version. The realName is what runcloud_control_service needs. GET /servers/{id}/services."
+        },
+        {
+          "name": "runcloud_list_system_users",
+          "type": "read",
+          "title": "List system users",
+          "description": "The system (Linux) users on a server: id, username, whether deletable. Deployment keys and passwords are never returned. GET /servers/{id}/users."
+        },
+        {
+          "name": "runcloud_list_webapps",
+          "type": "read",
+          "title": "List web applications",
+          "description": "List the web applications on a server: id, name, root/public path, PHP version, stack, type (wordpress, custom...), default flag, alias. Deployment webhook keys are not returned. GET /servers/{id}/webapps."
+        },
+        {
+          "name": "runcloud_get_webapp",
+          "type": "read",
+          "title": "Get web application",
+          "description": "One web application by id (path, PHP version, stack, type, default flag). GET /servers/{id}/webapps/{webapp}."
+        },
+        {
+          "name": "runcloud_get_webapp_settings",
+          "type": "read",
+          "title": "Get web application settings",
+          "description": "PHP and FPM/Nginx settings of a web application (disabled functions, timezone, memory and upload limits, process manager...). GET /servers/{id}/webapps/{webapp}/settings."
+        },
+        {
+          "name": "runcloud_list_webapp_logs",
+          "type": "read",
+          "title": "List web application activity logs",
+          "description": "The activity log of a web application (settings changes, PHP version changes, deployments), newest first. GET /servers/{id}/webapps/{webapp}/log."
+        },
+        {
+          "name": "runcloud_list_domains",
+          "type": "read",
+          "title": "List domain names",
+          "description": "The domain names of a web application: id, name, type (primary/alias), www, redirection, wildcard, DNS integration, status. GET /servers/{id}/webapps/{webapp}/domains."
+        },
+        {
+          "name": "runcloud_get_domain_dns",
+          "type": "read",
+          "title": "Get domain DNS setup instructions",
+          "description": "The DNS records (A, CNAME...) a domain name needs to point at the server. GET /servers/{id}/webapps/{webapp}/domains/{domain}/dns."
+        },
+        {
+          "name": "runcloud_get_webapp_ssl",
+          "type": "read",
+          "title": "Get web application SSL",
+          "description": "The web application's SSL certificate (basic / web-app-level SSL): provider, validity, HTTPS settings. Private keys are never returned. GET /servers/{id}/webapps/{webapp}/ssl."
+        },
+        {
+          "name": "runcloud_get_ssl_method",
+          "type": "read",
+          "title": "Check SSL method and AutoSSL status",
+          "description": "Whether the web application uses basic (one certificate for the app) or advanced (one per domain) SSL, and its AutoSSL status. Advanced SSL is a Business/Enterprise feature. GET /servers/{id}/webapps/{webapp}/ssl/advanced."
+        },
+        {
+          "name": "runcloud_get_git_deployment",
+          "type": "read",
+          "title": "Get Git deployment",
+          "description": "The Git deployment configured on a web application: provider, branch, repository URL, auto-deploy flag, deployment script and whether it is an atomic deployment. The deployment webhook keys are not returned. The id of the result is the git_id for runcloud_deploy_git. GET /servers/{id}/webapps/{webapp}/git."
+        },
+        {
+          "name": "runcloud_list_databases",
+          "type": "read",
+          "title": "List databases",
+          "description": "The databases on a server: id, name, collation. No credentials. GET /servers/{id}/databases."
+        },
+        {
+          "name": "runcloud_list_database_users",
+          "type": "read",
+          "title": "List database users",
+          "description": "The database users on a server (id, username). Passwords are never returned. GET /servers/{id}/databaseusers."
+        },
+        {
+          "name": "runcloud_list_cronjobs",
+          "type": "read",
+          "title": "List cron jobs",
+          "description": "The cron jobs of a server: id, label, user, schedule, command, enabled flag. The id is what runcloud_run_cronjob needs. GET /servers/{id}/cronjobs."
+        },
+        {
+          "name": "runcloud_list_supervisors",
+          "type": "read",
+          "title": "List supervisor jobs",
+          "description": "The supervisor (background worker) jobs of a server: id, label, user, process count, auto start/restart, directory, command. GET /servers/{id}/supervisors."
+        },
+        {
+          "name": "runcloud_get_supervisor_status",
+          "type": "read",
+          "title": "Get supervisor job status",
+          "description": "The live status (RUNNING, FATAL, BACKOFF...), pid and uptime of every supervisor process, by job label. GET /servers/{id}/supervisors/status."
+        },
+        {
+          "name": "runcloud_list_firewall_rules",
+          "type": "read",
+          "title": "List firewall rules",
+          "description": "The firewall rules of a server: type (global/rich), port, protocol, IP address, action. GET /servers/{id}/security/firewalls."
+        },
+        {
+          "name": "runcloud_list_blocked_ips",
+          "type": "read",
+          "title": "List Fail2Ban blocked IPs",
+          "description": "The IP addresses Fail2Ban currently blocks on a server. GET /servers/{id}/security/fail2ban/blockedip."
+        },
+        {
+          "name": "runcloud_list_backups",
+          "type": "read",
+          "title": "List backups",
+          "description": "The backup instances of the workspace: label, what they cover (web app / database), storage, type, frequency, size, status. Filter by server, storage, status or name. GET /backups."
+        },
+        {
+          "name": "runcloud_list_backup_snapshots",
+          "type": "read",
+          "title": "List backup snapshots",
+          "description": "The snapshots of one backup instance: run date, status, type and size. GET /backups/{id}/snapshots."
+        },
+        {
+          "name": "runcloud_list_atomic_projects",
+          "type": "read",
+          "title": "List atomic deployment projects",
+          "description": "The atomic Git deployment projects of the workspace: name, provider, repository, branch, auto-deploy, success/failure counts and the latest deployment. Webhook keys are not returned. GET /atomic."
+        },
+        {
+          "name": "runcloud_list_atomic_deployments",
+          "type": "read",
+          "title": "List atomic deployments",
+          "description": "The deployments of an atomic project: commit hash, branch, message, committer, release name, status (DEPLOYING, COMPLETED, FAILED), start and end time. GET /atomic/{project}/deployments."
+        },
+        {
+          "name": "runcloud_control_service",
+          "type": "write",
+          "title": "Start, restart or reload a service",
+          "description": "WRITE: run systemctl start, restart or reload on one service of a server (for example nginx-rc or php81rc-fpm). A restart briefly interrupts that service and the sites behind it. 'stop' is deliberately not offered. Get the realName from runcloud_list_services. PATCH /servers/{id}/services."
+        },
+        {
+          "name": "runcloud_deploy_git",
+          "type": "write",
+          "title": "Force a Git deployment",
+          "description": "WRITE: force a Git deployment of a web application now: RunCloud pulls the configured branch and runs the deployment script, which changes the live site's files. Get git_id from runcloud_get_git_deployment (its id). PUT /servers/{id}/webapps/{webapp}/git/{git}/script."
+        },
+        {
+          "name": "runcloud_force_deploy_atomic",
+          "type": "write",
+          "title": "Force an atomic deployment",
+          "description": "WRITE: start an atomic deployment of a project now (builds a new release and switches the live symlink when it succeeds). PUT /atomic/{project}/forcedeploy."
+        },
+        {
+          "name": "runcloud_run_cronjob",
+          "type": "write",
+          "title": "Run a cron job now",
+          "description": "WRITE: force-run one cron job of a server once, right now, outside its schedule. The job's command runs on the server with its configured user. Get the id from runcloud_list_cronjobs. POST /servers/{id}/cronjobs/{job}/run."
+        },
+        {
+          "name": "runcloud_reload_supervisor",
+          "type": "write",
+          "title": "Reload a supervisor job",
+          "description": "WRITE: reload one supervisor job so its worker processes restart (running processes are interrupted). Get the id from runcloud_list_supervisors. POST /servers/{id}/supervisors/{job}/reload."
+        },
+        {
+          "name": "runcloud_renew_ssl",
+          "type": "write",
+          "title": "Renew a Let's Encrypt certificate",
+          "description": "WRITE: redeploy (renew) the Let's Encrypt certificate of a web application, which re-issues it and reloads the web server. Let's Encrypt certificates only. For basic SSL pass the ssl_id from runcloud_get_webapp_ssl; for advanced (per-domain) SSL, which requires advanced SSL mode (check runcloud_get_ssl_method), also pass domain_id. PUT /servers/{id}/webapps/{webapp}/ssl/{ssl} or /domains/{domain}/ssl/{ssl}."
+        },
+        {
+          "name": "runcloud_install_letsencrypt_ssl",
+          "type": "write",
+          "title": "Issue a Let's Encrypt certificate",
+          "description": "WRITE: issue and install a free Let's Encrypt certificate for a web application (basic SSL) or for one domain of it (advanced SSL, pass domain_id; this requires advanced SSL mode, see runcloud_get_ssl_method). The web server is reloaded; the domain's DNS must already point at the server. Custom certificates are not supported here. POST /servers/{id}/webapps/{webapp}/ssl or /domains/{domain}/ssl."
+        },
+        {
+          "name": "runcloud_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "runcloud_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the RunCloud tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "runcloud_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED RunCloud tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "runcloud_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's RunCloud Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run runcloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

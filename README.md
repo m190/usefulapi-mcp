@@ -298,6 +298,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Waitwhile](servers/waitwhile/) | calendar | 33 | API token | [servers/waitwhile/](servers/waitwhile/) |
 | [Doxis AI.dp (Klippa DocHorizon)](servers/klippa-dochorizon/) | document-ai | 34 | API token | [servers/klippa-dochorizon/](servers/klippa-dochorizon/) |
 | [TinyURL](servers/tinyurl/) | marketing | 12 | API token | [servers/tinyurl/](servers/tinyurl/) |
+| [Spoke Dispatch](servers/spoke-dispatch/) | shipping | 27 | API token | [servers/spoke-dispatch/](servers/spoke-dispatch/) |
+| [RunCloud](servers/runcloud/) | devops | 40 | API token | [servers/runcloud/](servers/runcloud/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
