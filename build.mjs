@@ -192,7 +192,8 @@ const noHeaderText = (s) =>
   `If the config has such a header, remove it: some clients then send that header instead of the login token, and every call fails with 401.`;
 // Servers that can return patient data: no PHI, no BAA (Terms §5 "Health data", decided 2026-10-09).
 const PATIENT_DATA = new Set(["drchrono", "healthie", "nexhealth", "canvas-medical", "intakeq", "metriport", "particlehealth",
-  "health-gorilla", "photon-health", "spruce-health", "cliniko", "nookal", "infermedica"]);
+  "health-gorilla", "photon-health", "spruce-health", "cliniko", "nookal", "infermedica",
+  "hint-health", "elation-health", "akute-health", "practice-better"]);
 const PATIENT_DATA_TEXT = `Do not use this server with protected health information (PHI). We do not sign HIPAA Business Associate Agreements (BAAs).`;
 // Servers that return personal data about other people (employees, applicants): the user is the controller.
 const PERSONAL_DATA = {

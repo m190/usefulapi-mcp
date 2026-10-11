@@ -258,6 +258,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Encharge](servers/encharge/) | email | 14 | API token | [servers/encharge/](servers/encharge/) |
 | [Sendlane](servers/sendlane/) | email | 35 | API token | [servers/sendlane/](servers/sendlane/) |
 | [Simple Analytics](servers/simple-analytics/) | analytics | 10 | API token | [servers/simple-analytics/](servers/simple-analytics/) |
+| [Hint Health](servers/hint-health/) | healthcare | 21 | API token | [servers/hint-health/](servers/hint-health/) |
+| [Elation Health](servers/elation-health/) | healthcare | 18 | API token | [servers/elation-health/](servers/elation-health/) |
+| [Akute Health](servers/akute-health/) | healthcare | 19 | API token | [servers/akute-health/](servers/akute-health/) |
+| [Practice Better](servers/practice-better/) | healthcare | 19 | API token | [servers/practice-better/](servers/practice-better/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

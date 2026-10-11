@@ -40757,6 +40757,626 @@
           "description": "Cancel the caller's Simple Analytics Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run simpleanalytics_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "hint-health",
+      "name": "Hint Health",
+      "category": "healthcare",
+      "description": "Read Hint Health patients, memberships, plans, invoices and payments for direct primary care.",
+      "endpoint": "https://hint-health.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per practice"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hint practice API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "In Hint go to **Admin → Developers → API Keys** and create a key (live keys stay locked until your practice signs Hint's API Access Agreement; the sandbox panel on the same page creates sandbox keys). A key works only in the environment where it was created: pick **Production** for your live practice and **Sandbox** for a key from the sandbox panel. Your key is used only to call the Hint API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hinthealth_get_practice",
+          "type": "read",
+          "title": "Get practice",
+          "description": "The practice this API key belongs to: id, name, address, email, phones, website and logo. GET /provider/practice."
+        },
+        {
+          "name": "hinthealth_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the practice's locations with address, phone, virtual flag and location group. Optionally search near a postal code. GET /provider/locations."
+        },
+        {
+          "name": "hinthealth_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id (for example loc-ab12C345DeF6). GET /provider/locations/{id}."
+        },
+        {
+          "name": "hinthealth_list_practitioners",
+          "type": "read",
+          "title": "List practitioners",
+          "description": "List the practice's practitioners with bio, NPI, specialties, panel size and limit, enrollment settings and locations. Optionally search near a postal code. GET /provider/practitioners."
+        },
+        {
+          "name": "hinthealth_get_practitioner",
+          "type": "read",
+          "title": "Get practitioner",
+          "description": "One practitioner by id. GET /provider/practitioners/{id}."
+        },
+        {
+          "name": "hinthealth_list_patients",
+          "type": "read",
+          "title": "List patients",
+          "description": "List patients (protected health information) one page at a time: name, date of birth, contact, address, membership status, autopay, past-due balance, practitioner and location. Archived patients are left out unless archived is true. The Social Security number is never returned. There is no bulk export: page with limit and offset. GET /provider/patients."
+        },
+        {
+          "name": "hinthealth_get_patient",
+          "type": "read",
+          "title": "Get patient",
+          "description": "One patient by id (for example pat-ab12C345DeF6), protected health information: identity, contact, address, insurance, consents, memberships, sponsorships, emergency contact. The Social Security number is never returned. GET /provider/patients/{id}."
+        },
+        {
+          "name": "hinthealth_match_patients",
+          "type": "read",
+          "title": "Find patients by name",
+          "description": "Find existing patients that match a first and last name, optionally narrowed by email, date of birth or middle name. Reads only: nothing is created. Use it to look a patient up by name. POST /provider/patients/matching."
+        },
+        {
+          "name": "hinthealth_list_patient_credits",
+          "type": "read",
+          "title": "List patient credits",
+          "description": "List a patient's account credits: amount, remaining balance, category and reason. GET /provider/patients/{patient_id}/credits."
+        },
+        {
+          "name": "hinthealth_list_memberships",
+          "type": "read",
+          "title": "List memberships",
+          "description": "List memberships: status, enrollment status, dates, rates in cents, plan, coupon, owner, member patients and upcoming bills. Filter by created or updated time (ISO 8601). GET /provider/memberships."
+        },
+        {
+          "name": "hinthealth_get_membership",
+          "type": "read",
+          "title": "Get membership",
+          "description": "One membership by id: plan, rates, dates, owner, member patients, cancellation and upcoming bills. GET /provider/memberships/{id}."
+        },
+        {
+          "name": "hinthealth_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List the practice's membership plans (id, name, type: company, retail or sponsor_fixed_fee). GET /provider/plans."
+        },
+        {
+          "name": "hinthealth_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List membership coupons: code, discount (cents or percent), duration, redeemable window and archive state. GET /provider/coupons."
+        },
+        {
+          "name": "hinthealth_list_charge_items",
+          "type": "read",
+          "title": "List charge items",
+          "description": "List the practice's charge item catalog (the services and products a charge is made of): code, name, price in cents, category, stock. GET /provider/charge_items."
+        },
+        {
+          "name": "hinthealth_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List customer invoices (what patients are billed) with number, date, status, amounts in cents (total, due, paid), charges, location and owner. Filter by owner patient, location, status or created/updated time. GET /provider/customer_invoices."
+        },
+        {
+          "name": "hinthealth_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One customer invoice by id with its charges, location, owner, amounts in cents and payment status. GET /provider/customer_invoices/{id}."
+        },
+        {
+          "name": "hinthealth_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments made on one customer invoice: amount in cents, date, status, error message, memo, source and whether it was recorded outside Hint. GET /provider/customer_invoices/{id}/payments."
+        },
+        {
+          "name": "hinthealth_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hinthealth_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hint Health tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hinthealth_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Hint Health tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hinthealth_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hint Health Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run hinthealth_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "elation-health",
+      "name": "Elation Health",
+      "category": "healthcare",
+      "description": "Read Elation Health patients, appointments, problems, allergies, medications, notes and vitals.",
+      "endpoint": "https://elation-health.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per practice"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "A practice admin creates the key pair in Elation → **Settings → API Access** (choose **Elation APIv2**, not FHIR) and can narrow its scopes to read-only. Sandbox keys only work with Sandbox, production keys only with Production. Your credentials are used only to call the Elation API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "elationhealth_list_patients",
+          "type": "read",
+          "title": "List patients",
+          "description": "Search the practice's patient charts (PHI): id, name, date of birth, sex, contact details, address, status. First and last name match exactly (case-insensitive, no partial names). The SSN is redacted. Elation: GET /patients/."
+        },
+        {
+          "name": "elationhealth_get_patient",
+          "type": "read",
+          "title": "Get a patient",
+          "description": "Get one patient chart header by id (PHI): demographics, contact details, address, insurance, emergency contact, primary physician, tags. The SSN is redacted. Elation: GET /patients/{id}/."
+        },
+        {
+          "name": "elationhealth_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments and calendar time slots, filterable by date range, patient, physician and practice. Each has the scheduled date, duration, status, reason, patient, physician and service location. Elation: GET /appointments/."
+        },
+        {
+          "name": "elationhealth_get_appointment",
+          "type": "read",
+          "title": "Get an appointment",
+          "description": "Get one appointment by id: scheduled date, duration, status, reason, instructions, patient, physician, practice, service location, telehealth and billing details. Elation: GET /appointments/{id}/."
+        },
+        {
+          "name": "elationhealth_list_appointment_types",
+          "type": "read",
+          "title": "List appointment types",
+          "description": "List the appointment types (visit reasons with default duration) a practice offers. Elation: GET /appointment_types/."
+        },
+        {
+          "name": "elationhealth_list_practices",
+          "type": "read",
+          "title": "List practices",
+          "description": "List the practices this API key can access: id, name, address, status, time zone, physicians and service locations. Elation: GET /practices/."
+        },
+        {
+          "name": "elationhealth_list_physicians",
+          "type": "read",
+          "title": "List physicians",
+          "description": "List the practice's physicians (providers): id, name, NPI, specialty, credentials, license, practice, user id. Elation: GET /physicians/."
+        },
+        {
+          "name": "elationhealth_list_problems",
+          "type": "read",
+          "title": "List a patient's problems",
+          "description": "List one patient's problem list (PHI): description, ICD-9/ICD-10/SNOMED codes, status (Active, Controlled, Resolved), start and resolved dates, synopsis. Elation: GET /problems/?patient=."
+        },
+        {
+          "name": "elationhealth_list_allergies",
+          "type": "read",
+          "title": "List a patient's allergies",
+          "description": "List one patient's allergies (PHI): allergen name, reaction, severity, status, start date. Elation: GET /allergies/?patient=."
+        },
+        {
+          "name": "elationhealth_list_medications",
+          "type": "read",
+          "title": "List a patient's medications",
+          "description": "List one patient's medication documents (PHI): drug name, strength, directions, quantity, authorized refills, prescribing physician, start date, and the discontinue order if any. Current and discontinued entries both appear unless you filter. Elation: GET /medications/?patient=."
+        },
+        {
+          "name": "elationhealth_list_visit_notes",
+          "type": "read",
+          "title": "List a patient's visit notes",
+          "description": "List one patient's visit notes (PHI): visit date, type, physician, signed state and the note body (bullets by category such as Subjective, Objective, Assessment, Plan). Filter by signed date or last change. Elation: GET /visit_notes/?patient=."
+        },
+        {
+          "name": "elationhealth_get_visit_note",
+          "type": "read",
+          "title": "Get a visit note",
+          "description": "Get one visit note by id (PHI): visit date, type, physician, signed state and the full note body. Elation: GET /visit_notes/{id}/."
+        },
+        {
+          "name": "elationhealth_list_non_visit_notes",
+          "type": "read",
+          "title": "List a patient's non-visit notes",
+          "description": "List one patient's non-visit notes (PHI): free-text chart notes outside a visit, such as phone calls and administrative notes. Elation: GET /non_visit_notes/?patient=."
+        },
+        {
+          "name": "elationhealth_list_vitals",
+          "type": "read",
+          "title": "List a patient's vitals",
+          "description": "List one patient's vital signs (PHI): height, weight, BMI, blood pressure, heart rate, respiratory rate, temperature, oxygen saturation, pain, with chart dates. Elation: GET /vitals/?patient=."
+        },
+        {
+          "name": "elationhealth_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "elationhealth_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Elation Health tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "elationhealth_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Elation Health tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "elationhealth_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Elation Health Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run elationhealth_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "akute-health",
+      "name": "Akute Health",
+      "category": "healthcare",
+      "description": "Read Akute Health patients, appointments, tasks, notes, medications, allergies and observations.",
+      "endpoint": "https://akute-health.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Akute Health API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "In Akute go to **Settings → Developer** and create or copy an API key (the API is on paid plans; ask Akute support if the page is missing). Choose **Production** for your live practice or **Sandbox** for the Akute staging environment. Your key is used only to call the Akute API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "akutehealth_search_patients",
+          "type": "read",
+          "title": "Search patients",
+          "description": "Search patients by name, email, phone (with phone_type), date of birth or external id, optionally narrowed by sex and status. At least one identifying filter is required (no bulk listing); pages are capped at 25 and paging stops at offset 500. Returns demographics, address, status, provider and membership billing state. Government and insurance identifiers are never returned. GET /patients."
+        },
+        {
+          "name": "akutehealth_get_patient",
+          "type": "read",
+          "title": "Get patient",
+          "description": "One patient by id: demographics, address, status, provider, custom properties and membership billing state. GET /patients/{id}."
+        },
+        {
+          "name": "akutehealth_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "Appointments by patient and/or date range, practitioner and status. Give a patient_id, or both start_range and end_range (at most 31 days apart). At most 100 are returned; narrow the dates if truncated. Room links are not returned. GET /appointments."
+        },
+        {
+          "name": "akutehealth_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "One appointment by id: times, status, patient, practitioner and appointment type. GET /appointments/{id}."
+        },
+        {
+          "name": "akutehealth_list_appointment_types",
+          "type": "read",
+          "title": "List appointment types",
+          "description": "The practice's appointment types (beta in Akute): name, duration, video flag, who can book, practitioners. GET /appointment_types."
+        },
+        {
+          "name": "akutehealth_get_availability",
+          "type": "read",
+          "title": "Get practitioner availability",
+          "description": "Open appointment slots of one practitioner between two date-times. GET /availability."
+        },
+        {
+          "name": "akutehealth_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "Tasks filtered by patient, status, owner, priority, tag, due date or archive state; at least one filter except archived is required. Pages are capped at 25. GET /tasks."
+        },
+        {
+          "name": "akutehealth_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id: title, description, due date, priority, status, tags, comments and activity. GET /tasks/{id}."
+        },
+        {
+          "name": "akutehealth_list_notes",
+          "type": "read",
+          "title": "List clinical notes",
+          "description": "Clinical notes (encounters) of ONE patient, newest first as Akute returns them: type, service date, status, authors and section text. A patient_id is required and pages are capped at 10. 'entered-in-error' notes appear only when asked for. GET /notes."
+        },
+        {
+          "name": "akutehealth_get_note",
+          "type": "read",
+          "title": "Get clinical note",
+          "description": "One clinical note by id with all its sections (subjective, objective, assessment, plan ...). GET /notes/{id}."
+        },
+        {
+          "name": "akutehealth_list_medications",
+          "type": "read",
+          "title": "List patient medications",
+          "description": "A patient's medications: name, strength, directions, quantity, refills, status, diagnoses and prescriber. Optional date window on the start date. At most 100 are returned. GET /medications."
+        },
+        {
+          "name": "akutehealth_list_allergies",
+          "type": "read",
+          "title": "List patient allergies",
+          "description": "A patient's allergies and intolerances: substance, reaction, type, clinical status, onset date. GET /allergies."
+        },
+        {
+          "name": "akutehealth_list_observations",
+          "type": "read",
+          "title": "List patient observations",
+          "description": "A patient's vital signs (default) or laboratory results: name, value, unit, date, LOINC code. At most 100 are returned. GET /observations."
+        },
+        {
+          "name": "akutehealth_list_practitioners",
+          "type": "read",
+          "title": "List practitioners",
+          "description": "The practice's users: id, name, NPI and roles (Practitioner, Prescriber, Staff, Admin ...). Date of birth, DEA number, email and licences are not returned. GET /users."
+        },
+        {
+          "name": "akutehealth_get_practitioner",
+          "type": "read",
+          "title": "Get practitioner",
+          "description": "One user by id: name, NPI and roles. GET /users/{id}."
+        },
+        {
+          "name": "akutehealth_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "akutehealth_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Akute Health tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "akutehealth_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Akute Health tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "akutehealth_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Akute Health Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run akutehealth_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "practice-better",
+      "name": "Practice Better",
+      "category": "healthcare",
+      "description": "Read Practice Better clients, sessions, availability, services, packages, invoices and forms.",
+      "endpoint": "https://practice-better.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per practice"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "Create them in Practice Better under the **API Access** settings. The **API Access (Beta)** add-on must be on your plan. Your client ID and secret are used only to sign in to the Practice Better API on your behalf; they are never shown to anyone. Practice Better holds health information: only connect it if you are allowed to use an AI assistant with your client data."
+      },
+      "tools": [
+        {
+          "name": "practice_better_get_account",
+          "type": "read",
+          "title": "Get my account",
+          "description": "The practitioner (API user) behind this connection: id, name, title, timezone, default currency, role flags and the practice (company) id and name. Settings, integrations and the bio are not returned. GET /consultant/profile."
+        },
+        {
+          "name": "practice_better_list_practitioners",
+          "type": "read",
+          "title": "List practitioners",
+          "description": "List the practitioners and admin users of the practice, with id, name, role flags and activation status. Use the ids to filter sessions and invoices. GET /company/administration/members."
+        },
+        {
+          "name": "practice_better_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List client records, newest first: id, status, name, email, phone, timezone and activity dates. Date of birth, address, insurance and notes are not returned. A page holds at most 100 records. To look up one person by name or email use practice_better_find_clients. GET /consultant/records."
+        },
+        {
+          "name": "practice_better_find_clients",
+          "type": "read",
+          "title": "Find clients by name or email",
+          "description": "Search client records by name, preferred name or email (case-insensitive text match). Practice Better has no search endpoint, so this reads the 500 most recent records (5 pages of 100) and filters them; `complete` says whether every record was checked. Returns at most `max_results` matches with the same fields as practice_better_list_clients. GET /consultant/records."
+        },
+        {
+          "name": "practice_better_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One client record by id: status, name, preferred name, pronouns, email, phones, timezone, activity dates and tag ids. Date of birth, address, insurance, emergency contacts, notes and health history are not returned. GET /consultant/records/{recordId}."
+        },
+        {
+          "name": "practice_better_list_sessions",
+          "type": "read",
+          "title": "List sessions (appointments)",
+          "description": "List sessions (appointments), newest first: date, duration, service, practitioner, client (id and name), status and payment status. Booking notes and session notes are not returned. Filter by date range, practitioner, client record, service or group/1-1. GET /consultant/sessions."
+        },
+        {
+          "name": "practice_better_get_session",
+          "type": "read",
+          "title": "Get session",
+          "description": "One session (appointment) by id: date, duration, service, practitioner, client (id and name), location and status. Booking notes and session notes are not returned. For a group session pass record_id to see one client's view. GET /consultant/sessions/{sessionId}."
+        },
+        {
+          "name": "practice_better_get_availability",
+          "type": "read",
+          "title": "Get available time slots",
+          "description": "Open booking slots of one practitioner for one service, starting on the given day: start, end and duration of each slot. It follows the practitioner's booking settings. Needs a practitioner id and a service id. GET /consultant/availability/slots."
+        },
+        {
+          "name": "practice_better_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services (appointment types) the practice offers: id, name, duration, group or 1-1, session types and SKU. GET /consultant/services."
+        },
+        {
+          "name": "practice_better_list_packages",
+          "type": "read",
+          "title": "List packages",
+          "description": "List the package definitions (bundles of sessions or programs) the practice sells: id, name and SKU. GET /consultant/packages."
+        },
+        {
+          "name": "practice_better_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the tags the practice uses to organize clients: id and name. A client record carries tag ids. GET /tags."
+        },
+        {
+          "name": "practice_better_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List client invoices, newest first: number, date, totals, amount due and paid, payment status, client (id and name) and practitioner. Payment history and line items are not in the list; use practice_better_get_invoice. GET /consultant/payments/invoices."
+        },
+        {
+          "name": "practice_better_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice by id with its line items (date, quantity, amount, tax) and totals. Descriptions, payment history and billing contact are not returned. GET /consultant/payments/invoices/{invoiceId}."
+        },
+        {
+          "name": "practice_better_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List the form templates of the practice (intake forms, questionnaires, consent forms): id and name only. GET /consultant/forms."
+        },
+        {
+          "name": "practice_better_list_form_requests",
+          "type": "read",
+          "title": "List form requests",
+          "description": "List forms sent to clients, newest first: which form, which client (id), practitioner, and whether it was started or completed, with dates. The answers are never returned. GET /consultant/formrequests."
+        },
+        {
+          "name": "practice_better_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "practice_better_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Practice Better tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "practice_better_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Practice Better tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "practice_better_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Practice Better Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run practice_better_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
