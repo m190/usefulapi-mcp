@@ -48272,6 +48272,333 @@
           "description": "Cancel the caller's Status.io Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run statusio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "fleetio",
+      "name": "Fleetio",
+      "category": "productivity",
+      "description": "Read Fleetio vehicles, work orders, service, issues, inspections, fuel, parts; log issues, meters.",
+      "endpoint": "https://fleetio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Fleetio API key"
+          },
+          {
+            "label": "Fleetio Account-Token"
+          }
+        ],
+        "hint": "Create a key at [secure.fleetio.com/api_keys](https://secure.fleetio.com/api_keys) (Account menu → **Manage API Keys**); the Account-Token is shown at the bottom of that page. API access needs the **Professional or Premium** plan. The key acts with the permissions of the user who created it, so a dedicated user is a good idea. Your credentials are used only to call the Fleetio API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fleetio_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "The Fleetio account(s) this API key belongs to: id, name, address, plan, units and the key's user type. The Account-Token and permission flags are never returned. GET /accounts."
+        },
+        {
+          "name": "fleetio_list_vehicles",
+          "type": "read",
+          "title": "List vehicles",
+          "description": "List vehicles (not archived) with status, type, group, meter readings, VIN and license plate. Filter by name, VIN, plate, group, status or type; ids for the filters come from the lookup tools (fleetio_list_vehicle_statuses, fleetio_list_vehicle_types, fleetio_list_groups). GET /vehicles. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_meter_entries",
+          "type": "read",
+          "title": "List a vehicle's meter entries",
+          "description": "List the odometer / engine-hour meter readings of ONE vehicle, newest first by default. GET /vehicles/{id}/meter_entries. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_meter_entries",
+          "type": "read",
+          "title": "List meter entries",
+          "description": "List meter readings across the account. Filter by vehicle and by date. GET /meter_entries. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_assignments",
+          "type": "read",
+          "title": "List vehicle assignments",
+          "description": "List which driver (contact) was assigned to which vehicle and when; filter by vehicle or contact. GET /vehicle_assignments. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_equipment",
+          "type": "read",
+          "title": "List equipment",
+          "description": "List equipment (non-vehicle assets such as trailers and tools). GET /equipment. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders (shop jobs) with status, vehicle, vendor and technician. Filter by vehicle, vendor, technician, number or status name (for example Open). A finished work order produces a service entry. GET /work_orders. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_service_entries",
+          "type": "read",
+          "title": "List service entries",
+          "description": "List service entries (completed maintenance records) with vehicle, vendor, dates and notes. Filter by reference or completion date. GET /service_entries. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_service_entries",
+          "type": "read",
+          "title": "List a vehicle's service entries",
+          "description": "List the service entries of ONE vehicle. GET /vehicles/{id}/service_entries. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_service_reminders",
+          "type": "read",
+          "title": "List service reminders",
+          "description": "List preventive-maintenance service reminders with next-due dates and meter values. Filter by status (ok, due_soon, overdue, snoozed), vehicle or service task. GET /service_reminders. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_issues",
+          "type": "read",
+          "title": "List issues",
+          "description": "List issues (defects and problems reported against vehicles and equipment) with state, priority, assignees and due date. Filter by state, vehicle, equipment or reporter. GET /issues. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_faults",
+          "type": "read",
+          "title": "List faults",
+          "description": "List diagnostic trouble codes (faults) reported by telematics devices, with vehicle, code and last occurrence. GET /faults. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_inspection_forms",
+          "type": "read",
+          "title": "List inspection forms",
+          "description": "List the inspection form templates (for example a daily DVIR) defined in the account. GET /inspection_forms. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_submitted_inspections",
+          "type": "read",
+          "title": "List submitted inspections",
+          "description": "List submitted inspections (filled-in forms) with the vehicle, the driver, the number of failed items and the submit time. GET /submitted_inspection_forms. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_fuel_entries",
+          "type": "read",
+          "title": "List fuel entries",
+          "description": "List fuel purchases/fill-ups with vehicle, volume, price, total cost and efficiency. Filter by vehicle, vendor or date. Fuel-card data is never returned. GET /fuel_entries. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_parts",
+          "type": "read",
+          "title": "List parts",
+          "description": "List parts (inventory catalog) with part number, manufacturer number, category and unit cost. Filter by part number, manufacturer part number or UPC. GET /parts. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_part_stock",
+          "type": "read",
+          "title": "List part stock by location",
+          "description": "List on-hand inventory of parts per part location (quantity by location). Filter by part or part location. GET /part_location_details. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (drivers, technicians, employees) with name, email, phones, job title and group. Birth dates and driver-licence data are never returned. Filter by email, last name or group. GET /contacts. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (repair shops, fuel stations, parts suppliers) with address and contact details. GET /vendors. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_renewal_reminders",
+          "type": "read",
+          "title": "List vehicle renewal reminders",
+          "description": "List vehicle renewal reminders (registration, insurance, inspections due) with next-due dates. Filter by vehicle or status. GET /vehicle_renewal_reminders. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_comments",
+          "type": "read",
+          "title": "List comments",
+          "description": "List comments left on records. Filter by the record: commentable_type (Issue, WorkOrder, ServiceEntry, Vehicle, ...) + commentable_id. GET /comments. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_statuses",
+          "type": "read",
+          "title": "List vehicle statuses",
+          "description": "Lookup: the vehicle statuses (Active, In Shop, Out of Service, ...) and their ids for filtering vehicles. GET /vehicle_statuses. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_vehicle_types",
+          "type": "read",
+          "title": "List vehicle types",
+          "description": "Lookup: the vehicle types (Car, Truck, Van, ...) and their ids. GET /vehicle_types. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_work_order_statuses",
+          "type": "read",
+          "title": "List work order statuses",
+          "description": "Lookup: the work order statuses (Open, In Progress, Completed, ...). GET /work_order_statuses. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_issue_priorities",
+          "type": "read",
+          "title": "List issue priorities",
+          "description": "Lookup: the issue priorities and their ids (needed to create an issue with a priority). GET /issue_priorities. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "Lookup: the groups (locations/departments) and their ids. GET /groups. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_labels",
+          "type": "read",
+          "title": "List labels",
+          "description": "Lookup: the labels (tags) used on vehicles, issues, work orders and service entries. GET /labels. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_service_tasks",
+          "type": "read",
+          "title": "List service tasks",
+          "description": "Lookup: the service tasks (Oil Change, Tire Rotation, ...) and their ids. GET /service_tasks. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_list_places",
+          "type": "read",
+          "title": "List places",
+          "description": "List places (geofences/locations) with address, coordinates and radius. GET /places. Returns one page (keyset paging: pass next_cursor as start_cursor)."
+        },
+        {
+          "name": "fleetio_get_vehicle",
+          "type": "read",
+          "title": "Get vehicle",
+          "description": "One vehicle with full detail: status, type, group, meters, VIN, make/model/year, license plate, dates. GET /vehicles/{id}."
+        },
+        {
+          "name": "fleetio_get_equipment",
+          "type": "read",
+          "title": "Get equipment",
+          "description": "One equipment record with full detail. GET /equipment/{id}."
+        },
+        {
+          "name": "fleetio_get_work_order",
+          "type": "read",
+          "title": "Get work order",
+          "description": "One work order with full detail (status, vendor, technician, dates, totals). GET /work_orders/{id}."
+        },
+        {
+          "name": "fleetio_get_service_entry",
+          "type": "read",
+          "title": "Get service entry",
+          "description": "One service entry with full detail (vehicle, vendor, notes, meter readings, totals). GET /service_entries/{id}."
+        },
+        {
+          "name": "fleetio_get_part",
+          "type": "read",
+          "title": "Get part",
+          "description": "One part with full detail (number, manufacturer, category, costs). GET /parts/{id}."
+        },
+        {
+          "name": "fleetio_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact (driver/technician/employee). Birth date and driver-licence data are never returned. GET /contacts/{id}."
+        },
+        {
+          "name": "fleetio_get_vendor",
+          "type": "read",
+          "title": "Get vendor",
+          "description": "One vendor with full detail. GET /vendors/{id}."
+        },
+        {
+          "name": "fleetio_get_submitted_inspection",
+          "type": "read",
+          "title": "Get submitted inspection",
+          "description": "One submitted inspection with every item's result (pass/fail/remarks), the vehicle, driver and any resulting work order. GET /submitted_inspection_forms/{id}."
+        },
+        {
+          "name": "fleetio_get_inspection_form",
+          "type": "read",
+          "title": "Get inspection form",
+          "description": "One inspection form template with its items. GET /inspection_forms/{id}."
+        },
+        {
+          "name": "fleetio_get_issue",
+          "type": "read",
+          "title": "Get issue",
+          "description": "One issue with full detail (state, priority, asset, reporter, due date, resolution). Optionally include comments, labels, the asset, custom fields, documents or images. GET /issues/{id}."
+        },
+        {
+          "name": "fleetio_list_work_order_line_items",
+          "type": "read",
+          "title": "List work order line items",
+          "description": "The line items (labor, parts, fees) of ONE work order. GET /work_orders/{id}/work_order_line_items."
+        },
+        {
+          "name": "fleetio_list_service_entry_line_items",
+          "type": "read",
+          "title": "List service entry line items",
+          "description": "The line items (tasks, parts, labor) of ONE service entry. GET /service_entries/{id}/service_entry_line_items."
+        },
+        {
+          "name": "fleetio_create_issue",
+          "type": "write",
+          "title": "Create issue",
+          "description": "WRITE: create a new issue (a reported defect) on a vehicle or equipment. Fleetio may notify the people who watch or are assigned to it. Needs the asset id (fleetio_list_vehicles) and a summary; the report time defaults to now. Does not close, resolve or delete anything. POST /issues."
+        },
+        {
+          "name": "fleetio_create_meter_entry",
+          "type": "write",
+          "title": "Add meter entry",
+          "description": "WRITE: record an odometer / engine-hour meter reading for a vehicle (primary meter, or the secondary meter with secondary=true). Fleetio rejects a value that breaks the sequence (a reading must not be lower than an earlier one by date); it cannot be deleted from here. The date defaults to now. A new reading can make service reminders due or overdue, and Fleetio may notify their watchers. POST /meter_entries."
+        },
+        {
+          "name": "fleetio_add_comment",
+          "type": "write",
+          "title": "Add comment",
+          "description": "WRITE: add a comment to an issue, work order, service entry, service reminder, vehicle or part. Fleetio notifies the watchers of that record (and anyone @mentioned in the text). Comments added here cannot be edited or deleted by this server. POST /comments."
+        },
+        {
+          "name": "fleetio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fleetio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Fleetio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fleetio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Fleetio tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fleetio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Fleetio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run fleetio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
