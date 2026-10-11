@@ -8,6 +8,9 @@
 //   README.md (root)            — the Servers table
 //   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
 // Needs the fleet checkout next to this repo (../fleet); a missing fleet input is an error.
+// Only DEPLOYED fleet data is published: a listed product whose fleet inputs differ from the commit its live Worker
+// was deployed from (fleet/scripts/changes.mjs: refs/deployed/<slug>, else the tag "deployed"; uncommitted files
+// count) is HELD — it keeps its current version, login, tools and probe file until a deploy catches up.
 // --check: write nothing; list the files that would change and exit 1 if any (use it before a push or in a check).
 // Run after editing manifest.json or after a fleet release, then commit. build.mjs (the site) stays separate.
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
@@ -33,8 +36,33 @@ const out = new Map();
 const remove = new Set();
 const emit = (path, content) => out.set(path, content);
 
-// Version: fleet/products/<slug>/package.json is the live version (fleet deploy).
+// The guard: products whose fleet inputs are not deployed yet (changed since their deployed commit, or not launched).
+// A stale local ref or tag only holds MORE products, never publishes undeployed data; a missing tag stops the run.
+const fleetChanges = await import(new URL("scripts/changes.mjs", FLEET));
+const held = new Map();
+try {
+  const { products, bases, fleetWide } = await fleetChanges.changedProducts();
+  const launched = new Set(fleetChanges.launchedProducts());
+  for (const slug of slugs) {
+    if (!launched.has(slug)) held.set(slug, "not launched");
+    else if (products.includes(slug)) {
+      const live = await fleetChanges.versionAt(bases[slug], slug);
+      held.set(slug, fleetWide ? "fleet-wide" : `main ${fleetChanges.pkgVersion(slug)}, live ${live ?? "?"}`);
+    }
+  }
+  const wide = [...held].filter(([, why]) => why === "fleet-wide").length;
+  if (wide) console.log(`held: ${wide} products (fleet-wide change not deployed to them: ${fleetWide})`);
+} catch (e) {
+  die(`cannot tell what is deployed: ${e.message.split("\n")[0]}`);
+}
+for (const [slug, why] of held) if (why !== "fleet-wide") console.log(`held: ${slug} (${why})`);
+const fresh = manifest.servers.filter((s) => !held.has(s.slug));
 for (const s of manifest.servers) {
+  if (held.has(s.slug) && !(s.version && s.login && s.tools?.length)) die(`${s.slug}: not deployed yet and no data in manifest.json`);
+}
+
+// Version: fleet/products/<slug>/package.json is the live version (fleet deploy).
+for (const s of fresh) {
   const pkg = new URL(`products/${s.slug}/package.json`, FLEET);
   if (!existsSync(pkg)) die(`${s.slug}: listed in manifest.json but no fleet/products/${s.slug}/package.json`);
   s.version = JSON.parse(readFileSync(pkg, "utf8")).version;
@@ -42,10 +70,11 @@ for (const s of manifest.servers) {
 }
 // Login data (which credentials the login asks for + where to find them) and the tool catalog (product tools from
 // discovery.json + the runtime's own tools) come from the fleet's product.ts files, via two export scripts.
-// Only the listed slugs are exported, so an unfinished unlisted product cannot break the run.
+// Only the listed, deployed slugs are exported, so an unfinished or undeployed product cannot break the run.
 const fleetJson = (script) => {
+  if (!fresh.length) return {};
   try {
-    return JSON.parse(execFileSync("npx", ["tsx", `scripts/${script}`, ...slugs], {
+    return JSON.parse(execFileSync("npx", ["tsx", `scripts/${script}`, ...fresh.map((s) => s.slug)], {
       cwd: fileURLToPath(FLEET), encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "inherit"],
     }));
   } catch (e) {
@@ -54,7 +83,7 @@ const fleetJson = (script) => {
 };
 const logins = fleetJson("export-login.ts");
 const catalog = fleetJson("export-catalog.ts");
-for (const s of manifest.servers) {
+for (const s of fresh) {
   if (!logins[s.slug]) die(`${s.slug}: no login export`);
   if (!catalog[s.slug]?.tools?.length) die(`${s.slug}: no tool catalog`);
   s.login = logins[s.slug];
@@ -205,9 +234,14 @@ emit("README.md", root);
 // portal/_probe/<slug>.json: the Worker's token-less discovery reply as one static JSON-RPC message (id 1; the
 // initialize result merged with tools/list, resources/list and prompts/list), from fleet/products/<slug>/discovery.json.
 // The zone redirect rule for unrequested crawlers (mcpbeat) sends their /mcp to it, so no Worker runs.
-// Files of servers no longer in the manifest are removed.
+// Files of servers no longer in the manifest are removed; a held server keeps its current file.
 const probes = new Set();
 for (const s of manifest.servers) {
+  if (held.has(s.slug)) {
+    if (!existsSync(new URL(`portal/_probe/${s.slug}.json`, ROOT))) die(`${s.slug}: not deployed yet and no portal/_probe/${s.slug}.json`);
+    probes.add(`${s.slug}.json`);
+    continue;
+  }
   const src = new URL(`products/${s.slug}/discovery.json`, FLEET);
   if (!existsSync(src)) die(`${s.slug}: no fleet discovery.json`);
   const d = JSON.parse(readFileSync(src, "utf8"));
@@ -227,7 +261,7 @@ const removed = [...remove];
 if (CHECK) {
   for (const p of changed) console.log(`would change: ${p}`);
   for (const p of removed) console.log(`would remove: ${p}`);
-  console.log(`codegen --check: ${changed.length + removed.length} file(s) out of date (${manifest.servers.length} servers)`);
+  console.log(`codegen --check: ${changed.length + removed.length} file(s) out of date (${manifest.servers.length} servers, ${held.size} held)`);
   process.exit(changed.length + removed.length ? 1 : 0);
 }
 for (const p of changed) {
@@ -235,4 +269,4 @@ for (const p of changed) {
   writeFileSync(new URL(p, ROOT), out.get(p));
 }
 for (const p of removed) unlinkSync(new URL(p, ROOT));
-console.log(`codegen: ${manifest.servers.length} servers; wrote ${changed.length} changed file(s), removed ${removed.length}`);
+console.log(`codegen: ${manifest.servers.length} servers (${held.size} held); wrote ${changed.length} changed file(s), removed ${removed.length}`);
