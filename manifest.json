@@ -41839,6 +41839,819 @@
           "description": "Cancel the caller's Invoiced Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run invoiced_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "billomat",
+      "name": "Billomat",
+      "category": "billing",
+      "description": "Read Billomat clients, invoices, offers, credit notes, reminders; create clients and draft invoices.",
+      "endpoint": "https://billomat.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Billomat id"
+          },
+          {
+            "label": "Billomat API key"
+          }
+        ],
+        "hint": "The Billomat id is the first part of your Billomat address (`https://**yourcompany**.billomat.net`). Create the key in Billomat → **Einstellungen → Mitarbeiter** → your user (enable API access, then generate the API key). The key acts with that user's rights; a dedicated user makes its activity easy to track. Your key is used only to call the Billomat API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "billomat_get_current_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Show the Billomat user the API key belongs to (name, email, role and rights). Use it to check which rights the key has."
+        },
+        {
+          "name": "billomat_get_company",
+          "type": "read",
+          "title": "Get the own company data",
+          "description": "Show the own company data of the Billomat account (name, address, bank details, tax numbers, currency)."
+        },
+        {
+          "name": "billomat_list_clients",
+          "type": "read",
+          "title": "List or search clients",
+          "description": "List the clients (customers) of the account, filtered by name, number, email, contact person, country, note or tags. Paged."
+        },
+        {
+          "name": "billomat_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client with address, contact person, bank details, payment terms and revenue."
+        },
+        {
+          "name": "billomat_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List the articles (products and services) with prices, units and tax. Paged."
+        },
+        {
+          "name": "billomat_get_article",
+          "type": "read",
+          "title": "Get an article",
+          "description": "Get one article with its prices, unit, tax and supplier."
+        },
+        {
+          "name": "billomat_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List the suppliers of the account, filtered by name, email, contact person, country, note or tags. Paged."
+        },
+        {
+          "name": "billomat_get_supplier",
+          "type": "read",
+          "title": "Get a supplier",
+          "description": "Get one supplier with address and bank details."
+        },
+        {
+          "name": "billomat_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices (Rechnungen), filtered by client, status (DRAFT, OPEN, PAID, OVERDUE, CANCELED), number, date range, text or tags. Paged; each invoice carries totals and the open amount."
+        },
+        {
+          "name": "billomat_invoice_totals",
+          "type": "read",
+          "title": "Invoice totals by group",
+          "description": "Invoice totals grouped by client, status, day, week, month or year (for example group_by=client,year). Takes the same filters as billomat_list_invoices. Read-only."
+        },
+        {
+          "name": "billomat_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice (status, totals, dates, client, payment terms). Its line items come from billomat_list_invoice_items."
+        },
+        {
+          "name": "billomat_list_invoice_items",
+          "type": "read",
+          "title": "List the items of an invoice",
+          "description": "List the line items (positions) of one invoice."
+        },
+        {
+          "name": "billomat_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments that were recorded on invoices (read-only), optionally for one invoice, a date range or payment types."
+        },
+        {
+          "name": "billomat_list_recurring_invoices",
+          "type": "read",
+          "title": "List recurring invoices",
+          "description": "List recurring invoices (Abo-Rechnungen): name, cycle (DAILY, WEEKLY, MONTHLY, YEARLY), client and next run. Paged."
+        },
+        {
+          "name": "billomat_list_offers",
+          "type": "read",
+          "title": "List offers",
+          "description": "List offers (Angebote), filtered by client, status (DRAFT, OPEN, WON, LOST, CANCELED, CLEARED), number, date range or text. Paged."
+        },
+        {
+          "name": "billomat_get_offer",
+          "type": "read",
+          "title": "Get an offer",
+          "description": "Get one offer (status, totals, validity, client)."
+        },
+        {
+          "name": "billomat_list_confirmations",
+          "type": "read",
+          "title": "List order confirmations",
+          "description": "List order confirmations (Auftragsbestaetigungen), filtered by client, status (DRAFT, COMPLETED, CANCELED, CLEARED), number, date range or text. Paged."
+        },
+        {
+          "name": "billomat_get_confirmation",
+          "type": "read",
+          "title": "Get an order confirmation",
+          "description": "Get one order confirmation."
+        },
+        {
+          "name": "billomat_list_delivery_notes",
+          "type": "read",
+          "title": "List delivery notes",
+          "description": "List delivery notes (Lieferscheine), filtered by client, status (DRAFT, CREATED), number, date range or text. Paged."
+        },
+        {
+          "name": "billomat_get_delivery_note",
+          "type": "read",
+          "title": "Get a delivery note",
+          "description": "Get one delivery note."
+        },
+        {
+          "name": "billomat_list_credit_notes",
+          "type": "read",
+          "title": "List credit notes",
+          "description": "List credit notes (Gutschriften), filtered by client, status (DRAFT, OPEN, PAID), date range or text. Paged."
+        },
+        {
+          "name": "billomat_get_credit_note",
+          "type": "read",
+          "title": "Get a credit note",
+          "description": "Get one credit note."
+        },
+        {
+          "name": "billomat_list_reminders",
+          "type": "read",
+          "title": "List reminders",
+          "description": "List payment reminders (Mahnungen), filtered by client, status (DRAFT, OPEN, OVERDUE, PAID, CANCELED), invoice number, date range or text. Paged."
+        },
+        {
+          "name": "billomat_get_reminder",
+          "type": "read",
+          "title": "Get a reminder",
+          "description": "Get one payment reminder."
+        },
+        {
+          "name": "billomat_list_incoming_invoices",
+          "type": "read",
+          "title": "List incoming invoices",
+          "description": "List incoming invoices (Eingangsrechnungen, from suppliers), filtered by supplier, status (OPEN, PAID, OVERDUE), number, date range, note or tags. Paged."
+        },
+        {
+          "name": "billomat_get_incoming_invoice",
+          "type": "read",
+          "title": "Get an incoming invoice",
+          "description": "Get one incoming invoice with amounts and open amount."
+        },
+        {
+          "name": "billomat_list_taxes",
+          "type": "read",
+          "title": "List tax rates",
+          "description": "List the tax rates (Steuersaetze) of the account, with the default one."
+        },
+        {
+          "name": "billomat_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List the units (Einheiten) used for article and item quantities, optionally filtered by name."
+        },
+        {
+          "name": "billomat_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "WRITE: create a new client (customer) in Billomat. Billomat assigns the client number. Nothing is sent to the client. Check billomat_list_clients first to avoid duplicates."
+        },
+        {
+          "name": "billomat_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "WRITE: change fields of an existing client (only the fields you pass are changed; everything else stays). Read the client first with billomat_get_client. Nothing is sent to the client."
+        },
+        {
+          "name": "billomat_create_article",
+          "type": "write",
+          "title": "Create an article",
+          "description": "WRITE: create a new article (product or service) with a price. Billomat assigns the article number."
+        },
+        {
+          "name": "billomat_create_draft_invoice",
+          "type": "write",
+          "title": "Create a draft invoice",
+          "description": "WRITE: create an invoice as a DRAFT (Entwurf) for a client, with optional line items. The invoice is NOT completed, has no number yet and is NOT sent; review and complete it in Billomat. Nothing is charged."
+        },
+        {
+          "name": "billomat_add_invoice_item",
+          "type": "write",
+          "title": "Add an item to a draft invoice",
+          "description": "WRITE: add one line item to an invoice that is still a DRAFT (Billomat refuses it for any other status). Does not complete or send the invoice."
+        },
+        {
+          "name": "billomat_create_draft_offer",
+          "type": "write",
+          "title": "Create a draft offer",
+          "description": "WRITE: create an offer (Angebot) as a DRAFT for a client, with optional line items. The offer is NOT completed, has no number yet and is NOT sent; review and complete it in Billomat."
+        },
+        {
+          "name": "billomat_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "billomat_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Billomat tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "billomat_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Billomat tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "billomat_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Billomat Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run billomat_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "chargeover",
+      "name": "ChargeOver",
+      "category": "billing",
+      "description": "Read ChargeOver customers, invoices, transactions, subscriptions, reports; create customers, quotes.",
+      "endpoint": "https://chargeover.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ChargeOver app subdomain"
+          },
+          {
+            "label": "REST API username"
+          },
+          {
+            "label": "REST API password"
+          }
+        ],
+        "hint": "In ChargeOver open **Settings (gear) → Developer → REST API**, enable the API and copy the **username** and **password** shown there. They are API credentials, not your ChargeOver login. The subdomain is the part before **.chargeover.com** in your address. Your credentials are used only to call the ChargeOver API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "chargeover_list_customers",
+          "type": "read",
+          "title": "List or search customers",
+          "description": "List customers (companies that are billed). Filterable fields: customer_id, parent_customer_id, bill_state, ship_state, bill_country, ship_country, external_key, token, company, superuser_id, superuser_email, customer_status_state (a = active, i = inactive), customer_status_str (active-current, active-overdue, inactive-manual, inactive-activity), custom_1..custom_50, write_datetime, mod_datetime. Paged: pass next_offset as offset. GET /customer."
+        },
+        {
+          "name": "chargeover_list_contacts",
+          "type": "read",
+          "title": "List or search contacts",
+          "description": "List contacts (the people at customers; the API calls them users). Filterable fields: user_id, external_key, first_name, last_name, email, phone, user_type_id, username, customers.customer_id (contacts of one customer). Paged: pass next_offset as offset. GET /user."
+        },
+        {
+          "name": "chargeover_list_invoices",
+          "type": "read",
+          "title": "List or search invoices",
+          "description": "List invoices with status, totals, credits, payments and balance. Filterable fields: invoice_id, refnumber, customer_id, invoice_status_str (open-unpaid, open-overdue, open-collections, closed-void, closed-paid), invoice_status_state (o = open, c = closed), package_id, package_token, date, currency_id, total, balance, subtotal, token, bill_state, bill_country, line_items.item_id, write_datetime, mod_datetime. Paged: pass next_offset as offset. GET /invoice."
+        },
+        {
+          "name": "chargeover_list_transactions",
+          "type": "read",
+          "title": "List or search transactions (read only)",
+          "description": "List transactions (payments, refunds and credits that already happened; this tool only reads them). Filterable fields: transaction_id, customer_id, gateway_id, currency_id, creditcard_id, ach_id, tokenized_id, token, external_key, gateway_status, gateway_transid, amount, fee, transaction_type, transaction_method, transaction_detail, transaction_datetime, transaction_status.state, transaction_status.str, applied_to.invoice_id, applied_to.package_id. Paged: pass next_offset as offset. GET /transaction."
+        },
+        {
+          "name": "chargeover_list_quotes",
+          "type": "read",
+          "title": "List or search quotes",
+          "description": "List quotes (proposals for a customer or lead; the list has no line items, get one quote for those). Filterable fields: quote_id, customer_id, brand_id, currency_id, refnumber, token, external_key, date, bill_state, bill_country, quote_status_str (open-new, open-sent, closed-won, closed-lost), quote_status_state (o = open, c = closed). Paged: pass next_offset as offset. GET /quote."
+        },
+        {
+          "name": "chargeover_list_subscriptions",
+          "type": "read",
+          "title": "List or search subscriptions",
+          "description": "List subscriptions (the API calls them packages): recurring billing plans of customers. Filterable fields: package_id, customer_id, token, brand_id, paymethod, paycycle (mon, qtr, yrl...), nickname, package_status_state (a active, c cancelled, e expired, s suspended), package_status_str (active-trial, active-current, active-overdue, canceled-nonpayment, canceled-manual, expired-expired, expired-trial, suspended-suspended), external_key, write_datetime, mod_datetime, cancel_datetime, line_items.item_id, customer.superuser_email, customer.users.email. Paged: pass next_offset as offset. GET /package."
+        },
+        {
+          "name": "chargeover_list_items",
+          "type": "read",
+          "title": "List or search items (products and discounts)",
+          "description": "List items: the products, services and discounts that go on invoices, quotes and subscriptions, with their pricing tiers. Filterable fields: item_id, name, external_key, accounting_sku, item_type (service or discount), custom_1, custom_2, custom_3. Paged: pass next_offset as offset. GET /item."
+        },
+        {
+          "name": "chargeover_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes attached to customers, subscriptions, invoices, contacts, quotes and items. Filterable fields: context_str (customer, billing_package, invoice, user, quote, item), context_id. Paged: pass next_offset as offset. GET /note."
+        },
+        {
+          "name": "chargeover_list_usage",
+          "type": "read",
+          "title": "List usage (metered) data",
+          "description": "List usage (metered billing) data points recorded against subscription line items. Filterable fields: line_item_id, external_key, from (date), to (date). Paged: pass next_offset as offset. GET /usage."
+        },
+        {
+          "name": "chargeover_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List coupons (code, description, type, enabled, linked discount item). Filterable fields: none documented; the list is small. Paged: pass next_offset as offset. GET /coupon."
+        },
+        {
+          "name": "chargeover_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by customer_id: company, status, addresses, primary contact, terms, balance fields, custom fields. GET /customer/{customer_id}."
+        },
+        {
+          "name": "chargeover_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact (user) by user_id: name, email, phone, username, the customers they belong to. GET /user/{user_id}."
+        },
+        {
+          "name": "chargeover_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice by invoice_id: status, line items, totals, balance, payments and credits applied, billing address. GET /invoice/{invoice_id}."
+        },
+        {
+          "name": "chargeover_get_transaction",
+          "type": "read",
+          "title": "Get a transaction (read only)",
+          "description": "Get one transaction (payment, refund or credit that already happened) by transaction_id: amount, method, status, the invoices it was applied to, related refunds. GET /transaction/{transaction_id}."
+        },
+        {
+          "name": "chargeover_get_quote",
+          "type": "read",
+          "title": "Get a quote",
+          "description": "Get one quote by quote_id: status, line items, totals, memo, links to the invoice or subscription it became. GET /quote/{quote_id}."
+        },
+        {
+          "name": "chargeover_get_subscription",
+          "type": "read",
+          "title": "Get a subscription",
+          "description": "Get one subscription (package) by package_id: status, payment cycle, pay method, next invoice date, line items. GET /package/{package_id}."
+        },
+        {
+          "name": "chargeover_get_item",
+          "type": "read",
+          "title": "Get an item",
+          "description": "Get one item (product, service or discount) by item_id: name, type, SKU, pricing tiers per currency. GET /item/{item_id}."
+        },
+        {
+          "name": "chargeover_list_reports",
+          "type": "read",
+          "title": "List reports",
+          "description": "List the account's saved reports (report_id and name). Run one with chargeover_run_report. GET /_report."
+        },
+        {
+          "name": "chargeover_get_report",
+          "type": "read",
+          "title": "Get a report's definition",
+          "description": "A report's name, its available_filters (field names and allowed operators), available_columns and default_columns. Read this before chargeover_run_report to know which filters and columns to use. GET /_report/{report_id}."
+        },
+        {
+          "name": "chargeover_run_report",
+          "type": "read",
+          "title": "Run a report",
+          "description": "Run a saved report and return its rows (read only; nothing is changed). Filters use the report's own field names from chargeover_get_report, for example [{field:'transaction_transaction_date',op:'GTE',value:'2026-01-01'}]. Operators vary by field (dates GTE/LTE/EQUALS, ids EQUALS, strings CONTAINS/DOES_NOT_CONTAIN). To page (offset > 0) an order is required. Max 1000 rows per page. POST /_report/{report_id}/_action/reportData."
+        },
+        {
+          "name": "chargeover_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "WRITE: create a new customer (no charge, no invoice, no email is sent by this call). Returns the new customer_id. Add a primary contact with the superuser_* fields. Use chargeover_list_customers first to avoid a duplicate (external_key is unique). POST /customer."
+        },
+        {
+          "name": "chargeover_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "WRITE: change fields of an existing customer; send only the fields to change. Cannot touch payment methods, balances or status. Replaces the previous values of the fields you send. PUT /customer/{customer_id}."
+        },
+        {
+          "name": "chargeover_create_contact",
+          "type": "write",
+          "title": "Add a contact to a customer",
+          "description": "WRITE: add a contact (person) to an existing customer. No email is sent by this call. Returns the new user_id. POST /user."
+        },
+        {
+          "name": "chargeover_create_note",
+          "type": "write",
+          "title": "Add a note",
+          "description": "WRITE: add a note to a customer, subscription, invoice, contact, quote or item (shown in the ChargeOver UI to the team; never sent to the customer). Returns the note id. POST /note."
+        },
+        {
+          "name": "chargeover_create_quote",
+          "type": "write",
+          "title": "Create a quote",
+          "description": "WRITE: create a quote (a proposal) for an existing customer. Nothing is billed and no email is sent: the quote stays open until someone sends or accepts it in ChargeOver. Each line refers to an existing item (chargeover_list_items). paycycle: one = one-time invoice, mon = monthly, 2mn = every 2 months, qtr = quarterly, six = every 6 months, yrl = yearly, 2yr, 3yr, 1wk = weekly, 2wk. Returns the new quote_id. POST /quote."
+        },
+        {
+          "name": "chargeover_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "chargeover_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ChargeOver tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "chargeover_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED ChargeOver tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "chargeover_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ChargeOver Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run chargeover_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "trackingmore",
+      "name": "TrackingMore",
+      "category": "shipping",
+      "description": "Track parcels with TrackingMore: detect couriers, create and read trackings, delivery status.",
+      "endpoint": "https://trackingmore.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TrackingMore API key"
+          }
+        ],
+        "hint": "Find it in the TrackingMore dashboard under **Settings → API** (the Tracking API needs a Basic or Pro plan; a 14-day trial is available). The key lets this server register, update and delete trackings in your account; it is used only to call the TrackingMore API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "trackingmore_list_couriers",
+          "type": "read",
+          "title": "List supported couriers",
+          "description": "List the carriers TrackingMore supports with their courier_code, name, country, website, phone and the extra fields some of them need. The full list is long (1,000+), so filter with `search` (matches name or code) and/or `country`; replies hold at most `limit` couriers. GET /couriers/all."
+        },
+        {
+          "name": "trackingmore_detect_courier",
+          "type": "read",
+          "title": "Detect courier from a tracking number",
+          "description": "Find which couriers a tracking number most likely belongs to (returns matching courier codes and names). Use the code with trackingmore_create_tracking. Does not create anything. POST /couriers/detect."
+        },
+        {
+          "name": "trackingmore_list_trackings",
+          "type": "read",
+          "title": "List trackings",
+          "description": "List the shipments already registered in the TrackingMore account, newest first as the API returns them: id, tracking number, courier, delivery_status (pending, notfound, transit, pickup, delivered, undelivered, exception, expired, inforeceived), latest event and milestone dates. Checkpoint lists are left out (use trackingmore_get_tracking for one shipment's full history). Filters: tracking numbers, courier, delivery status, created/updated date range. GET /trackings/get."
+        },
+        {
+          "name": "trackingmore_get_tracking",
+          "type": "read",
+          "title": "Get a shipment's tracking",
+          "description": "The full tracking record of one shipment already registered in the account, including every checkpoint (origin_info / destination_info trackinfo with date, status, details and location). Look it up by tracking number; add courier_code if the number is used by several couriers. A number that was never registered is not found: register it with trackingmore_create_tracking first. GET /trackings/get?tracking_numbers=."
+        },
+        {
+          "name": "trackingmore_create_tracking",
+          "type": "write",
+          "title": "Register a shipment for tracking",
+          "description": "WRITE: register ONE shipment so TrackingMore starts tracking it. This uses one credit of the account's plan (credits beyond the plan are billed by TrackingMore as overage): confirm with the user before creating, and never create trackings in bulk. Fails with 'Tracking No. already exists' if it is already registered. Needs the tracking number and the courier code (use trackingmore_detect_courier if unknown). Some couriers need extra fields (postal code, ship date, key). Returns the new tracking with its id. POST /trackings/create."
+        },
+        {
+          "name": "trackingmore_update_tracking",
+          "type": "write",
+          "title": "Update a tracking's details",
+          "description": "WRITE: change the descriptive fields of a registered tracking (order number, customer name/email, title, note, label, language, postal code, ship date ...). Only the fields you pass change; the tracking number and courier cannot be changed here. PUT /trackings/update/{id}."
+        },
+        {
+          "name": "trackingmore_delete_tracking",
+          "type": "write",
+          "title": "Delete a tracking",
+          "description": "WRITE (destructive): permanently remove one tracking from the TrackingMore account by id. Its checkpoint history is lost; registering the shipment again later uses another credit. Confirm with the user first. DELETE /trackings/delete/{id}."
+        },
+        {
+          "name": "trackingmore_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "trackingmore_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TrackingMore tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "trackingmore_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED TrackingMore tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "trackingmore_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TrackingMore Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run trackingmore_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "nodeping",
+      "name": "NodePing",
+      "category": "observability",
+      "description": "Read NodePing checks, uptime, results and events; mute checks, manage maintenance and schedules.",
+      "endpoint": "https://nodeping.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "NodePing API token"
+          }
+        ],
+        "hint": "Find it in NodePing → **Account Settings** (API token). API access needs a plan that includes it; SubAccounts have no token. Your token is used only to call the NodePing API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "nodeping_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The NodePing account the token belongs to (name, status, timezone, next billing date, default probe locations), or a SubAccount with customer_id. GET /accounts."
+        },
+        {
+          "name": "nodeping_list_checks",
+          "type": "read",
+          "title": "List checks",
+          "description": "List monitoring checks with label, type, target, interval, enabled state and pass/fail (state 1 = passing, 0 = failing; firstdown = when the current outage began). Filter client-side by status, type or label text. Compact by default; set detail=true for the full (scrubbed) check objects. GET /checks."
+        },
+        {
+          "name": "nodeping_get_check",
+          "type": "read",
+          "title": "Get check",
+          "description": "One check by id with its full (scrubbed) configuration. Optionally include its latest result and uptime. GET /checks/{id}."
+        },
+        {
+          "name": "nodeping_get_check_results",
+          "type": "read",
+          "title": "Get check results",
+          "description": "Raw results of a check, newest first by default: pass/fail (su), run time (rt, ms), message (m), status text (sc), start (s) and the probe location (l). Use span (hours) or start/end (ms epoch, ISO 8601 or RFC 2822; GMT unless a zone is given) to bound it. GET /results/{id}."
+        },
+        {
+          "name": "nodeping_get_check_uptime",
+          "type": "read",
+          "title": "Get check uptime",
+          "description": "Uptime percentage of a check per day or month (enabled and down milliseconds plus uptime %), with a total. GET /results/uptime/{id}."
+        },
+        {
+          "name": "nodeping_get_check_events",
+          "type": "read",
+          "title": "Get check events",
+          "description": "Down and disabled events of a check (start, end, message, open) newest first: an incident history. limit=1 returns the most recent event. GET /results/events/{id}."
+        },
+        {
+          "name": "nodeping_get_current_events",
+          "type": "read",
+          "title": "Get current events",
+          "description": "Everything that is down or disabled right now across the account (type, label, since when). The quickest 'what is broken' view. GET /results/current."
+        },
+        {
+          "name": "nodeping_get_check_summary",
+          "type": "read",
+          "title": "Get check hourly summary",
+          "description": "Hourly summary of a check's results: count, min, max and average run time per UTC hour. GET /results/summary/{id}."
+        },
+        {
+          "name": "nodeping_list_notifications",
+          "type": "read",
+          "title": "List notifications sent",
+          "description": "The alert notifications NodePing sent (who, when, what), for one check or for the whole account, newest first. Contact addresses that are webhook URLs or keys are masked. GET /notifications[/{check_id}]."
+        },
+        {
+          "name": "nodeping_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "All notification contacts with their addresses (email, SMS, webhook, Slack, ...). Webhook/Slack/PagerDuty/Pushover addresses are masked. Address ids are what contact groups and checks reference. GET /contacts."
+        },
+        {
+          "name": "nodeping_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id with its addresses (secret-like addresses masked). GET /contacts?id={id}."
+        },
+        {
+          "name": "nodeping_list_contact_groups",
+          "type": "read",
+          "title": "List contact groups",
+          "description": "Contact groups (name and member address ids), keyed by group id. GET /contactgroups."
+        },
+        {
+          "name": "nodeping_list_schedules",
+          "type": "read",
+          "title": "List notification schedules",
+          "description": "Notification schedules (per-weekday time windows a contact is alerted in). GET /schedules."
+        },
+        {
+          "name": "nodeping_get_schedule",
+          "type": "read",
+          "title": "Get notification schedule",
+          "description": "One notification schedule by name (for example Days or All) with its seven weekday entries. GET /schedules/{name}."
+        },
+        {
+          "name": "nodeping_list_notification_profiles",
+          "type": "read",
+          "title": "List notification profiles",
+          "description": "Notification profiles: named sets of contacts/groups with delay and schedule, reusable across checks. GET /notificationprofiles."
+        },
+        {
+          "name": "nodeping_list_maintenance",
+          "type": "read",
+          "title": "List maintenance windows",
+          "description": "Scheduled and ad-hoc maintenance entries (checks they disable, cron, duration, next run, last runs). GET /maintenance."
+        },
+        {
+          "name": "nodeping_get_maintenance",
+          "type": "read",
+          "title": "Get maintenance window",
+          "description": "One maintenance entry by id. GET /maintenance/{id}."
+        },
+        {
+          "name": "nodeping_get_probe_info",
+          "type": "read",
+          "title": "Get probe locations",
+          "description": "NodePing's probe servers (two-letter codes) or regions (nam, lam, eur, eao, wlw): the values a check's run locations use. GET /info/probe[/{code}] or /info/location[/{code}]."
+        },
+        {
+          "name": "nodeping_update_check",
+          "type": "write",
+          "title": "Update check settings",
+          "description": "WRITE: change a check's label, description, tags, target, timeout (threshold seconds) or re-checks before alert (sens). Only the fields you pass change. It does not enable the check, create checks or touch billing. PUT /checks/{id}."
+        },
+        {
+          "name": "nodeping_mute_check",
+          "type": "write",
+          "title": "Mute or unmute check",
+          "description": "WRITE: mute a check's notifications (the check keeps running and recording) until a time or indefinitely, or unmute it. mute_until is a future time in ms since the epoch; omit it with mute=true to mute until unmuted. PUT /checks/{id}."
+        },
+        {
+          "name": "nodeping_disable_check",
+          "type": "write",
+          "title": "Disable check",
+          "description": "WRITE: stop a check from running (enabled=false); its history is kept. Re-enabling is done in the NodePing app (it changes the number of billed checks). PUT /checks/{id}."
+        },
+        {
+          "name": "nodeping_create_adhoc_maintenance",
+          "type": "write",
+          "title": "Create ad-hoc maintenance",
+          "description": "WRITE: create a one-off maintenance window that disables the listed checks for duration_minutes and re-enables them afterwards (no alerts meanwhile). Created inactive unless start_now=true, which starts it immediately. POST /maintenance/ad-hoc."
+        },
+        {
+          "name": "nodeping_delete_maintenance",
+          "type": "write",
+          "title": "Delete maintenance entry",
+          "description": "WRITE (destructive): remove a maintenance entry. DELETE /maintenance/{id}."
+        },
+        {
+          "name": "nodeping_create_contact_group",
+          "type": "write",
+          "title": "Create contact group",
+          "description": "WRITE: create a contact group from existing contact address ids. POST /contactgroups."
+        },
+        {
+          "name": "nodeping_update_contact_group",
+          "type": "write",
+          "title": "Update contact group",
+          "description": "WRITE: rename a contact group and/or replace its member list (send the FULL list; omitted members are removed). PUT /contactgroups/{id}."
+        },
+        {
+          "name": "nodeping_delete_contact_group",
+          "type": "write",
+          "title": "Delete contact group",
+          "description": "WRITE (destructive): delete a contact group. Checks that notify the group lose that notification target. DELETE /contactgroups/{id}."
+        },
+        {
+          "name": "nodeping_put_schedule",
+          "type": "write",
+          "title": "Create or update notification schedule",
+          "description": "WRITE: create or update a notification schedule. NodePing stores all seven weekdays at once, so for an existing schedule the weekdays you pass are merged into its current ones; a new schedule needs all seven. Per weekday: time1/time2 window (24h), exclude to invert it, disabled for no alerts, allday for always. GET then PUT /schedules/{name}."
+        },
+        {
+          "name": "nodeping_delete_schedule",
+          "type": "write",
+          "title": "Delete notification schedule",
+          "description": "WRITE (destructive): delete a notification schedule by name. DELETE /schedules/{name}."
+        },
+        {
+          "name": "nodeping_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "nodeping_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the NodePing tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "nodeping_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED NodePing tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "nodeping_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's NodePing Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run nodeping_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
