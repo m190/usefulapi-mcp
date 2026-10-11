@@ -284,6 +284,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Tick](servers/tick/) | productivity | 18 | API token | [servers/tick/](servers/tick/) |
 | [SIGNL4](servers/signl4/) | observability | 22 | API token | [servers/signl4/](servers/signl4/) |
 | [SpinupWP](servers/spinupwp/) | devops | 23 | API token | [servers/spinupwp/](servers/spinupwp/) |
+| [Synchroteam](servers/synchroteam/) | productivity | 37 | API token | [servers/synchroteam/](servers/synchroteam/) |
+| [Dead Man's Snitch](servers/dead-mans-snitch/) | observability | 12 | API token | [servers/dead-mans-snitch/](servers/dead-mans-snitch/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
