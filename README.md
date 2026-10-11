@@ -280,6 +280,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ClassMarker](servers/classmarker/) | productivity | 19 | API token | [servers/classmarker/](servers/classmarker/) |
 | [SupportBee](servers/supportbee/) | support | 26 | API token | [servers/supportbee/](servers/supportbee/) |
 | [Tokeet](servers/tokeet/) | productivity | 28 | API token | [servers/tokeet/](servers/tokeet/) |
+| [Inventory Planner](servers/inventory-planner/) | ecommerce | 15 | API token | [servers/inventory-planner/](servers/inventory-planner/) |
+| [Tick](servers/tick/) | productivity | 18 | API token | [servers/tick/](servers/tick/) |
+| [SIGNL4](servers/signl4/) | observability | 22 | API token | [servers/signl4/](servers/signl4/) |
+| [SpinupWP](servers/spinupwp/) | devops | 23 | API token | [servers/spinupwp/](servers/spinupwp/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

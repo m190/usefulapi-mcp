@@ -44368,6 +44368,624 @@
           "description": "Cancel the caller's Tokeet Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tokeet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "inventory-planner",
+      "name": "Inventory Planner",
+      "category": "ecommerce",
+      "description": "Read Inventory Planner forecasts, replenishment and purchase orders; create draft purchase orders.",
+      "endpoint": "https://inventory-planner.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Account id"
+          },
+          {
+            "label": "Inventory Planner API key"
+          }
+        ],
+        "hint": "In Inventory Planner open **Account → Settings → API** and click **Generate key** (the key works only for a user with full access to the account); the account id is shown on the same page. Your key is used only to call the Inventory Planner API on your behalf; it is never shown to anyone. This server can create draft purchase orders but never sends an order to a vendor."
+      },
+      "tools": [
+        {
+          "name": "inventoryplanner_list_variants",
+          "type": "read",
+          "title": "List variants (forecast and replenishment)",
+          "description": "List product variants with Inventory Planner's computed metrics (forecast, replenishment, days to sell out, lost revenue, lead time, review period and ~200 more). Always pass `fields` to pick the metrics you need (default: id,sku,lead_time,review_period,replenishment,oos,under_value; oos = forecasted days to sell out, under_value = forecasted lost revenue, replenishment = recommended order quantity). Use `filters` and `sort` for questions like \"which SKUs need reordering\". Removed variants are excluded unless include_removed. GET /api/v1/variants."
+        },
+        {
+          "name": "inventoryplanner_get_variant",
+          "type": "read",
+          "title": "Get variant",
+          "description": "One variant by its Inventory Planner id, with the metrics named in `fields` (default: id,sku,lead_time,review_period,replenishment,oos,under_value). GET /api/v1/variants/{id}."
+        },
+        {
+          "name": "inventoryplanner_list_variant_vendors",
+          "type": "read",
+          "title": "List a variant's vendors",
+          "description": "The vendors a variant can be ordered from, with cost_price, landing_cost_price, vendor_reference (vendor SKU), vendor_name, vendor_packaging (MOQ) and uom_ordering. GET /api/v1/variants/{id}/vendors."
+        },
+        {
+          "name": "inventoryplanner_get_variant_vendor",
+          "type": "read",
+          "title": "Get a variant's vendor terms",
+          "description": "One vendor's terms for a variant: cost_price, landing_cost_price, vendor_reference, vendor_name, vendor_packaging (MOQ), uom_ordering. vendor_id is the vendor name in lowercase. GET /api/v1/variants/{id}/vendors/{vendor_id}."
+        },
+        {
+          "name": "inventoryplanner_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders (and transfers, assembly orders)",
+          "description": "List stock orders: purchase orders, transfers and assembly orders (the `type` field is \"po\"/empty, \"transfer\" or \"assembly\"). Filter with `filters`, e.g. {\"status\": \"OPEN\", \"vendor\": \"Acme\", \"expected_date_lt\": \"2026-11-01\"}. Default fields: id,reference,status,type,vendor,warehouse,source,created_date,expected_date,received_date,currency,total,total_ordered,total_received. GET /api/v1/purchase-orders."
+        },
+        {
+          "name": "inventoryplanner_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "One purchase order, transfer or assembly order by id, with its header fields (reference, status, vendor, warehouse, dates, addresses, totals, notes) and line items. GET /api/v1/purchase-orders/{id}."
+        },
+        {
+          "name": "inventoryplanner_list_purchase_order_items",
+          "type": "read",
+          "title": "List purchase order line items",
+          "description": "The line items of a purchase order: variant id, sku, title, ordered quantity (replenishment), received quantity and received_history, cost price, tax, discount and stock snapshots. GET /api/v1/purchase-orders/{id}/items."
+        },
+        {
+          "name": "inventoryplanner_get_purchase_order_connections",
+          "type": "read",
+          "title": "Get purchase order connection status",
+          "description": "Whether and how a purchase order was saved to connected systems (ERP, accounting): per connection the status (success, error, run, queued), save_po flag and the PO's id and reference there. Read-only. GET /api/v1/purchase-orders/{id}/connections."
+        },
+        {
+          "name": "inventoryplanner_get_purchase_order_stock_update",
+          "type": "read",
+          "title": "Get purchase order stock update (preview)",
+          "description": "The stock updates a purchase order has computed: per warehouse (wh) the items with stock_before, delta and error. for_destination false reads the source warehouse of a transfer. Read-only: nothing is pushed. GET /api/v1/purchase-orders/{id}/stock-update."
+        },
+        {
+          "name": "inventoryplanner_create_draft_purchase_order",
+          "type": "write",
+          "title": "Create a draft purchase order",
+          "description": "WRITE: create a purchase order with status \"draft\" in Inventory Planner (POST /api/v1/purchase-orders). A draft is only a plan inside Inventory Planner: it is NOT sent to the vendor, NOT saved to any connected system and moves no stock or money. Purchase orders only (no transfers or assembly orders). Each line item is a variant id plus the quantity to order (replenishment)."
+        },
+        {
+          "name": "inventoryplanner_update_draft_purchase_order",
+          "type": "write",
+          "title": "Edit a draft purchase order",
+          "description": "WRITE: change the reference, expected date or notes of a purchase order that is still a draft (PATCH /api/v1/purchase-orders/{id}). The order is read first and refused unless its status is \"draft\". It never changes the status, sends the order, or touches line items or received quantities."
+        },
+        {
+          "name": "inventoryplanner_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "inventoryplanner_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Inventory Planner tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "inventoryplanner_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Inventory Planner tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "inventoryplanner_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Inventory Planner Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run inventoryplanner_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "tick",
+      "name": "Tick",
+      "category": "productivity",
+      "description": "Read Tick clients, projects, tasks, users and time entries; log and edit time entries.",
+      "endpoint": "https://tick.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Tick subscription id"
+          },
+          {
+            "label": "Tick API token"
+          }
+        ],
+        "hint": "Both values are in Tick under **My Profile** (the subscription id is also the number in your Tick address, `https://www.tickspot.com/**12345**/...`). The token belongs to one user and one subscription and acts with that user's rights. Your token is used only to call the Tick API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tick_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List Tick clients. By default only clients that have open projects; set include_all=true for every client (also archived or without projects). 100 per page. GET /clients.json or /clients/all.json."
+        },
+        {
+          "name": "tick_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One client by id, with a summary of its projects (count and URL). GET /clients/{id}.json."
+        },
+        {
+          "name": "tick_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List Tick projects with budget (hours or money), billable flag, client_id and owner_id. Open projects by default; status=closed for closed ones. 100 per page. GET /projects.json or /projects/closed.json."
+        },
+        {
+          "name": "tick_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project by id, with total_hours entered, a summary of its tasks (count and URL) and its client. GET /projects/{id}.json."
+        },
+        {
+          "name": "tick_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List Tick tasks (the budget lines that time entries are logged against). Across all projects, or for one project when project_id is given. Open tasks by default; status=closed for closed ones. You need a task id to log time. 100 per page. GET /tasks.json, /tasks/closed.json, /projects/{id}/tasks.json or /projects/{id}/tasks/closed.json."
+        },
+        {
+          "name": "tick_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id, with total_hours entered, a summary of its entries (count and URL) and its project. GET /tasks/{id}.json."
+        },
+        {
+          "name": "tick_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the Tick subscription (id, name, e-mail, timezone). A non-administrator sees only themself. Use deleted=true for removed users who still have time entries (administrators only). GET /users.json or /users/deleted.json."
+        },
+        {
+          "name": "tick_list_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List time entries. Tick requires EITHER start_date AND end_date (entries dated in that range) OR updated_at (entries created or changed after that time). Optional filters: project_id, task_id, user_id, billable, billed. Each entry has date, hours, notes, task_id, user_id. 100 per page. GET /entries.json."
+        },
+        {
+          "name": "tick_get_entry",
+          "type": "read",
+          "title": "Get time entry",
+          "description": "One time entry by id, with its task. GET /entries/{id}.json."
+        },
+        {
+          "name": "tick_create_entry",
+          "type": "write",
+          "title": "Log time entry",
+          "description": "WRITE: log a new time entry on a task (POST /entries.json). Needs the task id (see tick_list_tasks). hours is a decimal (1.5 = 1h30m). user_id is only honored for administrators (otherwise the entry is yours). Creates a new entry every call; nothing is sent to anyone."
+        },
+        {
+          "name": "tick_update_entry",
+          "type": "write",
+          "title": "Update time entry",
+          "description": "WRITE: change an existing time entry (PUT /entries/{id}.json): hours, notes, date, task, or mark it billed. Only the fields you pass change; the previous values are overwritten."
+        },
+        {
+          "name": "tick_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: create a new client (POST /clients.json). Tick administrators only (403 otherwise). Creates a new client every call."
+        },
+        {
+          "name": "tick_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "WRITE: create a new project (POST /projects.json). Tick administrators only. The project has no tasks: create at least one with tick_create_task before time can be logged. Creates a new project every call."
+        },
+        {
+          "name": "tick_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: create a new task on a project (POST /tasks.json). Tick administrators only. Creates a new task every call."
+        },
+        {
+          "name": "tick_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tick_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tick tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tick_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Tick tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tick_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tick Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tick_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "signl4",
+      "name": "SIGNL4",
+      "category": "observability",
+      "description": "Read SIGNL4 alerts, teams, users and duty schedules; raise, acknowledge, close and annotate alerts.",
+      "endpoint": "https://signl4.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SIGNL4 API key"
+          }
+        ],
+        "hint": "Create it in the SIGNL4 web portal under **Integrations → API Keys**. The key is used only to call the SIGNL4 API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "signl4_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the SIGNL4 teams the API key can access: id, name, description, time zone and member ids. Team ids are needed to raise alerts and to look up categories and duties. GET /v3/teams."
+        },
+        {
+          "name": "signl4_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "One SIGNL4 team: name, description, time zone, member ids. GET /v3/teams/{teamId}."
+        },
+        {
+          "name": "signl4_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the SIGNL4 users the key can access with name, e-mail, contact addresses, activation state and duty status per team (dutyMode, onDutyTime). User ids are needed to acknowledge/close/annotate alerts. GET /v3/users."
+        },
+        {
+          "name": "signl4_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One SIGNL4 user: name, e-mail, contact addresses, time zone and duty status per team. GET /v3/users/{userId}."
+        },
+        {
+          "name": "signl4_list_team_users",
+          "type": "read",
+          "title": "List users of teams",
+          "description": "List the users of the given teams (all accessible teams by default) with duty status. Teams that cannot be read are reported under `errors`. GET /v3/teams/users."
+        },
+        {
+          "name": "signl4_list_categories",
+          "type": "read",
+          "title": "List alert categories",
+          "description": "List the alert categories of a team (name, color, keywords used to auto-classify alerts). The category name can be passed to signl4_raise_alert. GET /v3/categories/{teamId}."
+        },
+        {
+          "name": "signl4_list_alerts",
+          "type": "read",
+          "title": "List alerts",
+          "description": "Search SIGNL4 alerts (signls), newest first, with status, severity, category and history (created, acknowledged, closed). Filter by team, status, creation time, text or external id. Up to 100 per page; pass the returned continuation_token to get the next page. POST /v3/signls/paged (a read)."
+        },
+        {
+          "name": "signl4_get_alert",
+          "type": "read",
+          "title": "Get alert",
+          "description": "Full detail of one alert: title, text, severity, category, status and delivery status, history (who acknowledged/closed it and when), parameters, attachments and escalations with per-user delivery. GET /v3/signls/{signlId}/details."
+        },
+        {
+          "name": "signl4_get_alert_timeline",
+          "type": "read",
+          "title": "Get alert timeline",
+          "description": "The ordered timeline of an alert: creation, notifications, acknowledgements, annotations, escalations and remote actions. GET /v3/signls/{signlId}/timeline."
+        },
+        {
+          "name": "signl4_get_alert_report",
+          "type": "read",
+          "title": "Get alert report",
+          "description": "Alert volume and response statistics per team over several time periods: acknowledged, closed and unhandled counts, overall and per category (optionally for one user). Teams that cannot be read are reported under `errors`. GET /v3/signls/report."
+        },
+        {
+          "name": "signl4_raise_alert",
+          "type": "write",
+          "title": "Raise alert",
+          "description": "WRITE: raise a new alert in a SIGNL4 team. THIS NOTIFIES REAL PEOPLE: every team member currently on duty is paged (push, SMS and/or voice call according to their settings) and the alert escalates if nobody acknowledges it. Only use it when the user clearly asked to alert the team; never for tests unless they said so. Not idempotent: a second call pages the team again. Returns the new alert incl. its id. POST /v3/signls."
+        },
+        {
+          "name": "signl4_acknowledge_alert",
+          "type": "write",
+          "title": "Acknowledge alert",
+          "description": "WRITE: acknowledge an alert on behalf of a SIGNL4 user (recorded in its history under that user). Stops escalation to further tiers for that alert. POST /v3/signls/{signlId}/acknowledge."
+        },
+        {
+          "name": "signl4_close_alert",
+          "type": "write",
+          "title": "Close alert",
+          "description": "WRITE: close (resolve) an alert on behalf of a SIGNL4 user; it leaves the open list and stops all further notifications. POST /v3/signls/{signlId}/close."
+        },
+        {
+          "name": "signl4_annotate_alert",
+          "type": "write",
+          "title": "Annotate alert",
+          "description": "WRITE: add a text note to an alert's timeline on behalf of a SIGNL4 user. The note is visible to the team in the app. It does not page anyone by itself. POST /v3/signls/{signlId}/annotate."
+        },
+        {
+          "name": "signl4_list_duty_schedules",
+          "type": "read",
+          "title": "List duty schedules",
+          "description": "Planned on-call duty schedules (who is on duty when): start/end, team, user, tier, stand-in and shift info. Filter by team, user and time window. POST /v3/schedules (a read)."
+        },
+        {
+          "name": "signl4_get_duty_status",
+          "type": "read",
+          "title": "Get user duty status",
+          "description": "Whether a user is currently on or off duty in each of their teams (dutyMode, onDutyTime, tier). GET /v3/users/{userId}/dutyStatus."
+        },
+        {
+          "name": "signl4_get_duty_summary",
+          "type": "read",
+          "title": "Get duty summary",
+          "description": "Duty assistant info per team: whether it is enabled and the last two (or all) duty periods. GET /v3/duties/summary."
+        },
+        {
+          "name": "signl4_list_audit_logs",
+          "type": "read",
+          "title": "List audit logs",
+          "description": "Audit log of changes and events in the SIGNL4 subscription (who changed what, when). Filter by team, time window and message text; pass the returned continuation_token for the next page. GET /v3/audits."
+        },
+        {
+          "name": "signl4_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "signl4_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SIGNL4 tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "signl4_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED SIGNL4 tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "signl4_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SIGNL4 Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run signl4_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "spinupwp",
+      "name": "SpinupWP",
+      "category": "devops",
+      "description": "Read SpinupWP servers, sites and events; purge caches, restart services, run git deploys.",
+      "endpoint": "https://spinupwp.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SpinupWP API token"
+          }
+        ],
+        "hint": "Create a token in SpinupWP under **My Account → API Tokens** (or **Team Settings → API Tokens** for team owners and admins) at [spinupwp.app](https://spinupwp.app). The API needs an active SpinupWP plan. This connection cannot create or delete servers or sites. Your token is used only to call the SpinupWP API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "spinupwp_list_servers",
+          "type": "read",
+          "title": "List servers",
+          "description": "List the servers in your SpinupWP team: name, provider, region, size, IP, Ubuntu version, disk space, connection status and whether a reboot or upgrade is required. GET /servers."
+        },
+        {
+          "name": "spinupwp_get_server",
+          "type": "read",
+          "title": "Get server",
+          "description": "One server by id: provider, size, disk usage, database server, connection status, reboot/upgrade-required flags and install notes. GET /servers/{id}."
+        },
+        {
+          "name": "spinupwp_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List sites across your servers (or one server): domain, PHP version, WordPress flag, HTTPS, page cache, backups, pending WordPress core/theme/plugin updates, git deploy settings and status. Deploy-trigger URLs are hidden. GET /sites."
+        },
+        {
+          "name": "spinupwp_get_site",
+          "type": "read",
+          "title": "Get site",
+          "description": "One site by id with its full settings: domains, PHP version, page cache, HTTPS, nginx options, database reference, backup schedule and storage, WordPress update counts, git repo/branch/deploy script, basic-auth username, cron and SpinupWP subdomain. The git deploy-trigger URL is hidden. GET /sites/{id}."
+        },
+        {
+          "name": "spinupwp_list_site_domains",
+          "type": "read",
+          "title": "List site domains",
+          "description": "The additional domains of a site, with their redirect settings (enabled, type, destination). GET /sites/{id}/domains."
+        },
+        {
+          "name": "spinupwp_list_site_path_redirects",
+          "type": "read",
+          "title": "List site path redirects",
+          "description": "The path redirects configured on a site (from, to, type permanent/redirect). GET /sites/{id}/path-redirects."
+        },
+        {
+          "name": "spinupwp_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List recent events (the activity log: provisioning, restarts, deploys, cache purges) with who started them, status (queued, creating, updating, deleting, deployed, failed) and timestamps. Long command output is shortened; read one event for its full output. GET /events."
+        },
+        {
+          "name": "spinupwp_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id, with status and command output. Use it to see whether a purge, restart or deploy (which reply with an event_id) has finished or failed. GET /events/{id}."
+        },
+        {
+          "name": "spinupwp_list_storage_providers",
+          "type": "read",
+          "title": "List backup storage providers",
+          "description": "The backup storage providers connected to the team (id, service, name). GET /storage-providers."
+        },
+        {
+          "name": "spinupwp_list_team_ssh_keys",
+          "type": "read",
+          "title": "List team SSH keys",
+          "description": "The team's saved SSH public keys (id, name, fingerprint, public key). Public keys only; read-only. GET /ssh-keys."
+        },
+        {
+          "name": "spinupwp_purge_page_cache",
+          "type": "write",
+          "title": "Purge page cache",
+          "description": "WRITE: purge the nginx page cache of one site. Pages are rebuilt on the next visit, so the site may be slower for a moment; nothing is lost. Asynchronous: returns an event_id. POST /sites/{id}/page-cache/purge."
+        },
+        {
+          "name": "spinupwp_purge_object_cache",
+          "type": "write",
+          "title": "Purge object cache",
+          "description": "WRITE: flush the Redis object cache of one site (the site must have object caching). The cache refills on demand. Asynchronous: returns an event_id. POST /sites/{id}/object-cache/purge."
+        },
+        {
+          "name": "spinupwp_correct_file_permissions",
+          "type": "write",
+          "title": "Correct file permissions",
+          "description": "WRITE: reset a site's files and folders to the permissions and ownership SpinupWP recommends (usually after a manual upload as the wrong user). Can take a while on big sites. Asynchronous: returns an event_id. POST /sites/{id}/file-permissions/correct."
+        },
+        {
+          "name": "spinupwp_deploy_site_git",
+          "type": "write",
+          "title": "Run site git deploy",
+          "description": "WRITE: pull the latest commit of the site's connected git branch and run its deploy script on the server. This changes the live site's files (and may run build/migration commands); it fails if git is not connected. Asynchronous: returns an event_id. POST /sites/{id}/git/deploy."
+        },
+        {
+          "name": "spinupwp_restart_nginx",
+          "type": "write",
+          "title": "Restart nginx",
+          "description": "WRITE: restart nginx (web server) on one server. Visitors may see a brief interruption. Asynchronous: returns an event_id. POST /servers/{id}/services/nginx/restart."
+        },
+        {
+          "name": "spinupwp_restart_php",
+          "type": "write",
+          "title": "Restart php",
+          "description": "WRITE: restart PHP-FPM (every PHP version) on one server. Running PHP requests can fail or be cut off while it restarts. Asynchronous: returns an event_id. POST /servers/{id}/services/php/restart."
+        },
+        {
+          "name": "spinupwp_restart_mysql",
+          "type": "write",
+          "title": "Restart mysql",
+          "description": "WRITE: restart MySQL (database) on one server. All sites on the server lose database access for a short time; running queries are interrupted. Asynchronous: returns an event_id. POST /servers/{id}/services/mysql/restart."
+        },
+        {
+          "name": "spinupwp_restart_redis",
+          "type": "write",
+          "title": "Restart redis",
+          "description": "WRITE: restart Redis (object cache) on one server. Cached objects are lost and rebuilt on demand. Asynchronous: returns an event_id. POST /servers/{id}/services/redis/restart."
+        },
+        {
+          "name": "spinupwp_reboot_server",
+          "type": "write",
+          "title": "Reboot server",
+          "description": "WRITE: reboot a whole server. Every site on it is offline for the duration (typically a minute or two). Use it when spinupwp_get_server shows reboot_required. Asynchronous: returns an event_id. POST /servers/{id}/reboot."
+        },
+        {
+          "name": "spinupwp_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spinupwp_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SpinupWP tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "spinupwp_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED SpinupWP tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "spinupwp_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SpinupWP Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run spinupwp_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
