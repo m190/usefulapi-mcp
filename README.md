@@ -335,6 +335,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [CashCtrl](servers/cashctrl/) | billing | 32 | API token | [servers/cashctrl/](servers/cashctrl/) |
 | [Zenserp](servers/zenserp/) | analytics | 23 | API token | [servers/zenserp/](servers/zenserp/) |
 | [Bill4Time](servers/bill4time/) | billing | 12 | API token | [servers/bill4time/](servers/bill4time/) |
+| [Notifyre](servers/notifyre/) | communications | 25 | API token | [servers/notifyre/](servers/notifyre/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
