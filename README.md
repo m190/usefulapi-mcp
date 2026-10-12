@@ -305,6 +305,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [deSEC](servers/desec/) | dns | 11 | API token | [servers/desec/](servers/desec/) |
 | [Messente](servers/messente/) | communications | 13 | API token | [servers/messente/](servers/messente/) |
 | [Localazy](servers/localazy/) | localization | 21 | API token | [servers/localazy/](servers/localazy/) |
+| [Adafruit IO](servers/adafruit-io/) | productivity | 21 | API token | [servers/adafruit-io/](servers/adafruit-io/) |
+| [NS1](servers/ns1/) | dns | 22 | API token | [servers/ns1/](servers/ns1/) |
+| [BulkSMS](servers/bulksms/) | communications | 12 | API token | [servers/bulksms/](servers/bulksms/) |
+| [Taggun](servers/taggun/) | document-ai | 10 | API token | [servers/taggun/](servers/taggun/) |
+| [D7 Networks](servers/d7-networks/) | communications | 10 | API token | [servers/d7-networks/](servers/d7-networks/) |
+| [CraftMyPDF](servers/craftmypdf/) | document-ai | 15 | API token | [servers/craftmypdf/](servers/craftmypdf/) |
+| [Billy](servers/billy/) | billing | 19 | API token | [servers/billy/](servers/billy/) |
+| [APITemplate.io](servers/apitemplate/) | document-ai | 14 | API token | [servers/apitemplate/](servers/apitemplate/) |
+| [ApiFlash](servers/apiflash/) | devops | 7 | API token | [servers/apiflash/](servers/apiflash/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
