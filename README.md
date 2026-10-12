@@ -320,6 +320,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Kinsta](servers/kinsta/) | devops | 27 | API token | [servers/kinsta/](servers/kinsta/) |
 | [rapidmail](servers/rapidmail/) | email | 20 | API token | [servers/rapidmail/](servers/rapidmail/) |
 | [smsmode](servers/smsmode/) | communications | 17 | API token | [servers/smsmode/](servers/smsmode/) |
+| [Zammad](servers/zammad/) | support | 23 | API token | [servers/zammad/](servers/zammad/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

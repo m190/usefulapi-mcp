@@ -51041,6 +51041,183 @@
           "description": "Cancel the caller's smsmode Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run smsmode_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "zammad",
+      "name": "Zammad",
+      "category": "support",
+      "description": "Search and read Zammad tickets, customers and organizations; add notes, replies and ticket updates.",
+      "endpoint": "https://zammad.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Zammad address"
+          },
+          {
+            "label": "Zammad access token"
+          }
+        ],
+        "hint": "**Zammad address:** for Zammad Cloud just the name (`acme` for acme.zammad.com); for a self-hosted Zammad its public `https://` address (`https://support.example.com`). **Access token:** in Zammad open your **Profile → Token Access → Create** and tick the permissions you want (ticket.agent for agents; admin.group only if you want the group list). The token acts with your user's permissions, so a dedicated agent user makes its activity easy to track. It is used only to call your Zammad on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zammad_get_me",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Zammad user this access token belongs to: id, name, e-mail, roles and groups. Use it to confirm the connection and the token's permissions. GET /api/v1/users/me."
+        },
+        {
+          "name": "zammad_search_tickets",
+          "type": "read",
+          "title": "Search tickets",
+          "description": "Search tickets with Zammad's query syntax. With Elasticsearch on the instance you can use fields, e.g. `state.name:open AND group.name:Sales`, `customer.email:\"a@b.com\"`, `title:invoice`, `number:20001`; a plain word searches ticket text. Replies carry ids plus names (group, state, priority, owner, customer). GET /api/v1/tickets/search?expand=true."
+        },
+        {
+          "name": "zammad_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List the tickets the token's user can see (an agent sees the tickets of their groups; a customer only their own). For anything targeted use zammad_search_tickets. GET /api/v1/tickets?expand=true."
+        },
+        {
+          "name": "zammad_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "One ticket by its numeric id (not the ticket number): title, group, state, priority, owner, customer, organization, dates, escalation and article count. GET /api/v1/tickets/{id}?expand=true."
+        },
+        {
+          "name": "zammad_list_ticket_articles",
+          "type": "read",
+          "title": "List ticket articles",
+          "description": "All articles (messages, internal notes, e-mails, phone notes) of one ticket in order, with sender, type, internal flag, from/to/cc, subject, body and attachment names (attachments are not downloaded). Long bodies are cut at 6000 characters; use zammad_get_ticket_article for the full text. GET /api/v1/ticket_articles/by_ticket/{ticket_id}."
+        },
+        {
+          "name": "zammad_get_ticket_article",
+          "type": "read",
+          "title": "Get ticket article",
+          "description": "One article by its id with its full body, headers and attachment names. GET /api/v1/ticket_articles/{id}."
+        },
+        {
+          "name": "zammad_list_ticket_tags",
+          "type": "read",
+          "title": "List ticket tags",
+          "description": "The tags on one ticket. GET /api/v1/tags?object=Ticket&o_id={ticket_id}. Needs an agent token."
+        },
+        {
+          "name": "zammad_list_ticket_states",
+          "type": "read",
+          "title": "List ticket states",
+          "description": "The ticket states of the instance (new, open, pending reminder, pending close, closed, ...) with ids and whether they are active. Use the names in zammad_update_ticket. GET /api/v1/ticket_states."
+        },
+        {
+          "name": "zammad_list_ticket_priorities",
+          "type": "read",
+          "title": "List ticket priorities",
+          "description": "The ticket priorities of the instance (e.g. '1 low', '2 normal', '3 high') with ids. Use the names in zammad_update_ticket. GET /api/v1/ticket_priorities."
+        },
+        {
+          "name": "zammad_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "The ticket groups (queues) of the instance, with ids, names and agent ids. Zammad requires the admin.group permission for this list; with an agent-only token it returns an authorization error. GET /api/v1/groups."
+        },
+        {
+          "name": "zammad_search_users",
+          "type": "read",
+          "title": "Search users",
+          "description": "Search customers and agents by name, e-mail, login, phone or organization. Returns profile fields (no credentials). Needs an agent token. GET /api/v1/users/search?expand=true."
+        },
+        {
+          "name": "zammad_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user (customer or agent) by id: name, e-mail, phone, organization, roles, VIP flag and notes. No credentials. GET /api/v1/users/{id}?expand=true."
+        },
+        {
+          "name": "zammad_search_organizations",
+          "type": "read",
+          "title": "Search organizations",
+          "description": "Search customer organizations by name or domain. Needs an agent token. GET /api/v1/organizations/search."
+        },
+        {
+          "name": "zammad_list_organizations",
+          "type": "read",
+          "title": "List organizations",
+          "description": "List customer organizations with domain, VIP flag and member ids. Needs an agent token. GET /api/v1/organizations."
+        },
+        {
+          "name": "zammad_get_organization",
+          "type": "read",
+          "title": "Get organization",
+          "description": "One organization by id: name, domain, notes, VIP flag, member ids. GET /api/v1/organizations/{id}."
+        },
+        {
+          "name": "zammad_add_internal_note",
+          "type": "write",
+          "title": "Add internal note",
+          "description": "WRITE: add an INTERNAL note (visible to agents only, never e-mailed to the customer) to ONE ticket. Needs an agent's token (a customer's token is refused, because Zammad would make the note public). The ticket's other data is not changed. POST /api/v1/ticket_articles with type=note, internal=true."
+        },
+        {
+          "name": "zammad_reply_to_ticket",
+          "type": "write",
+          "title": "Reply to ticket (e-mails the customer)",
+          "description": "WRITE: send a customer-visible reply on ONE ticket. THIS E-MAILS A REAL PERSON: the reply is delivered by e-mail to exactly ONE recipient and cannot be recalled. By default the recipient is the ticket's customer (looked up from the ticket); `to` may name one other single address. No cc, no bulk, no attachments. Needs an agent's token (a customer's token is refused). For an internal remark use zammad_add_internal_note. GET /api/v1/tickets/{id}, then POST /api/v1/ticket_articles with type=email, internal=false."
+        },
+        {
+          "name": "zammad_update_ticket",
+          "type": "write",
+          "title": "Update ticket",
+          "description": "WRITE: change fields of ONE ticket: state, priority, owner (agent), group and/or title. Use names from zammad_list_ticket_states / zammad_list_ticket_priorities / zammad_list_groups. Pending states need `pending_time`. Never deletes, removes or merges (those states are refused). The instance's own triggers still run, so closing or reassigning a ticket can send the customer or agent a notification e-mail. PUT /api/v1/tickets/{id}."
+        },
+        {
+          "name": "zammad_create_ticket",
+          "type": "write",
+          "title": "Create ticket",
+          "description": "WRITE: create ONE new ticket for an EXISTING customer (by e-mail address or user id) in a group, with a first article recorded as written by the customer (type note or phone). It does not send an e-mail by itself, but the instance's triggers may (for example an automatic confirmation to the customer). It never creates new users. POST /api/v1/tickets."
+        },
+        {
+          "name": "zammad_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zammad_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zammad tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zammad_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Zammad tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zammad_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zammad Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run zammad_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
