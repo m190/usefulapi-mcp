@@ -333,6 +333,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Teamup Calendar](servers/teamup-calendar/) | calendar | 19 | API token | [servers/teamup-calendar/](servers/teamup-calendar/) |
 | [Fieldwire](servers/fieldwire/) | project-management | 26 | API token | [servers/fieldwire/](servers/fieldwire/) |
 | [CashCtrl](servers/cashctrl/) | billing | 32 | API token | [servers/cashctrl/](servers/cashctrl/) |
+| [Zenserp](servers/zenserp/) | analytics | 23 | API token | [servers/zenserp/](servers/zenserp/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
