@@ -52600,6 +52600,159 @@
           "description": "Cancel the caller's Emailable Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run emailable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "teamup-calendar",
+      "name": "Teamup Calendar",
+      "category": "calendar",
+      "description": "Read and search Teamup Calendar events and sub-calendars; create, update, delete and undo events.",
+      "endpoint": "https://teamup-calendar.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per calendar"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Teamup API key"
+          },
+          {
+            "label": "Calendar key or link"
+          }
+        ],
+        "hint": "The **API key** is free and personal: request your own at [teamup.com/api-keys/request](https://teamup.com/api-keys/request) (Teamup uses it to know who runs an app, it gives no access to a calendar). The **calendar key** is the last part of a calendar link: open the calendar, go to **Settings → Sharing**, create a link with the permission you want the AI to have (read-only, add only, modify or admin), and paste the link or its key (it starts with `ks`). Both are used only to call the Teamup API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "teamup_get_calendar",
+          "type": "read",
+          "title": "Get calendar",
+          "description": "The calendar this connection points at: title, timezone and date settings, custom event fields, sub-calendars, the permission of the calendar key in use and the plan's features. Call this first to learn the sub-calendar ids and the timezone. The calendar key itself is never returned. GET /{calendarKey}/configuration."
+        },
+        {
+          "name": "teamup_list_subcalendars",
+          "type": "read",
+          "title": "List sub-calendars",
+          "description": "List the sub-calendars (the colored lanes that events belong to, such as people, rooms or resources). A key with admin permission also sees inactive ones. GET /{calendarKey}/subcalendars."
+        },
+        {
+          "name": "teamup_get_subcalendar",
+          "type": "read",
+          "title": "Get sub-calendar",
+          "description": "One sub-calendar by id: name, color, overlap rule, active state and which links may use it. GET /{calendarKey}/subcalendars/{id}."
+        },
+        {
+          "name": "teamup_list_access_keys",
+          "type": "read",
+          "title": "List access keys",
+          "description": "List the calendar's access keys (sharing links and user accesses) with name, role, active state and per-sub-calendar permission. Needs a key with admin permission. The secret key values are never returned (they are secrets); use the id and name to tell links apart. GET /{calendarKey}/keys."
+        },
+        {
+          "name": "teamup_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events in a date range, optionally only on some sub-calendars. Recurring events are expanded: every occurrence in the range is returned with its own id (series id + -rid- + start). Notes come as markdown. Times use the calendar's timezone unless tz is set. GET /{calendarKey}/events."
+        },
+        {
+          "name": "teamup_search_events",
+          "type": "read",
+          "title": "Search events",
+          "description": "Search events by keyword (2-100 characters) within a date range (default: today only, so always pass the range you mean). Recurring events are expanded. Paged with limit and offset. GET /{calendarKey}/events?query=."
+        },
+        {
+          "name": "teamup_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id: title, times, sub-calendars, location, who, notes (markdown), recurrence rule, custom fields, signups, comments, attachments (metadata), version, change history and reminders. Use the occurrence id (123-rid-<unix start>) for one occurrence of a recurring event. GET /{calendarKey}/events/{id}."
+        },
+        {
+          "name": "teamup_list_changed_events",
+          "type": "read",
+          "title": "List changed events",
+          "description": "Events created, changed or deleted since a Unix timestamp (at most 30 days back), for syncing. A recurring event comes back once, as its series, not as occurrences. Deleted events carry delete_dt. Pass the reply's timestamp as since_timestamp next time so nothing is missed. GET /{calendarKey}/events?modifiedSince=."
+        },
+        {
+          "name": "teamup_list_event_signups",
+          "type": "read",
+          "title": "List event signups",
+          "description": "The people signed up for an event (name, email, id). Signups must be enabled on the event. GET /{calendarKey}/events/{id}/signups."
+        },
+        {
+          "name": "teamup_create_event",
+          "type": "write",
+          "title": "Create event",
+          "description": "WRITE: create an event. Needs a calendar key with add or modify permission. Give at least subcalendar_ids, start and end. Not idempotent: a repeated call creates a second event. The reply holds the new event and an undo_id; teamup_undo_event_action removes the event again within one hour. POST /{calendarKey}/events."
+        },
+        {
+          "name": "teamup_update_event",
+          "type": "write",
+          "title": "Update event",
+          "description": "WRITE: change fields of an event; fields you leave out keep their value (the event is read first and sent back with its version, so a concurrent edit is refused instead of overwritten; an event without a version is not changed). Needs modify permission. For a recurring event pass redit; use the occurrence id (123-rid-<unix start>) with single or future. Attachments are not touched. The reply holds the event and an undo_id for one hour (teamup_undo_event_action). PUT /{calendarKey}/events/{id}."
+        },
+        {
+          "name": "teamup_delete_event",
+          "type": "write",
+          "title": "Delete event",
+          "description": "WRITE, DESTRUCTIVE: delete an event, or for a recurring event the chosen occurrences. Needs modify permission. Not retried. The reply holds an undo_id; teamup_undo_event_action restores the event within one hour, after that the deletion is permanent. For one occurrence use the occurrence id (123-rid-<unix start>) and redit single (the default); redit all deletes the whole series. DELETE /{calendarKey}/events/{id}."
+        },
+        {
+          "name": "teamup_undo_event_action",
+          "type": "write",
+          "title": "Undo event change",
+          "description": "WRITE: undo a recent event creation, update or deletion with the undo_id from that call. Works for one hour only and is refused if someone else changed the event since. PUT /{calendarKey}/events/undo/{undo_id}."
+        },
+        {
+          "name": "teamup_create_subcalendar",
+          "type": "write",
+          "title": "Create sub-calendar",
+          "description": "WRITE: create a sub-calendar. Needs a calendar key with admin permission, and the plan may limit how many exist. Not idempotent: a repeated call creates a second one. POST /{calendarKey}/subcalendars."
+        },
+        {
+          "name": "teamup_update_subcalendar",
+          "type": "write",
+          "title": "Update sub-calendar",
+          "description": "WRITE: change a sub-calendar's name, color, overlap rule or active state; fields you leave out keep their value. Needs admin permission. Making a sub-calendar inactive hides it from users without admin rights. PATCH /{calendarKey}/subcalendars/{id}."
+        },
+        {
+          "name": "teamup_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "teamup_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Teamup Calendar tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "teamup_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Teamup Calendar tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "teamup_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Teamup Calendar Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run teamup_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
