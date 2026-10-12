@@ -331,6 +331,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Beacon CRM](servers/beacon-crm/) | fundraising | 15 | API token | [servers/beacon-crm/](servers/beacon-crm/) |
 | [Emailable](servers/emailable/) | email | 8 | API token | [servers/emailable/](servers/emailable/) |
 | [Teamup Calendar](servers/teamup-calendar/) | calendar | 19 | API token | [servers/teamup-calendar/](servers/teamup-calendar/) |
+| [Fieldwire](servers/fieldwire/) | project-management | 26 | API token | [servers/fieldwire/](servers/fieldwire/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
