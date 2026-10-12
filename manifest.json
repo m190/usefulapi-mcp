@@ -51915,6 +51915,214 @@
           "description": "Cancel the caller's Weblate Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run weblate_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "smartbill",
+      "name": "SmartBill",
+      "category": "billing",
+      "description": "Read SmartBill series, taxes, stock, clients and products; draft and issue invoices and estimates.",
+      "endpoint": "https://smartbill.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SmartBill account email"
+          },
+          {
+            "label": "API token (V1)"
+          },
+          {
+            "label": "Company CIF"
+          },
+          {
+            "label": "API V3 token (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Find the **Email**, **Token** and **CIF** in SmartBill Cloud under **Integrari → API** ([cloud.smartbill.ro/core/integrari](https://cloud.smartbill.ro/core/integrari/)). The optional **API V3 token** from the same page unlocks the client, supplier, product and warehouse lists. The API is part of selected SmartBill plans. Your credentials are used only to call the SmartBill API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "smartbill_list_series",
+          "type": "read",
+          "title": "List document series",
+          "description": "List the document series configured in SmartBill Cloud with their next number. Invoice and proforma tools need a series name from here. type: f = invoice series, p = proforma, c = receipt (chitanta); omit for all. GET /series."
+        },
+        {
+          "name": "smartbill_list_taxes",
+          "type": "read",
+          "title": "List VAT rates (V1)",
+          "description": "List the VAT rates configured in the account (name and percentage). Use the name as tax_name and the percentage as tax_percentage on document lines. Works without a V3 token. GET /tax."
+        },
+        {
+          "name": "smartbill_get_stock",
+          "type": "read",
+          "title": "Get stock levels",
+          "description": "Stock quantities per warehouse as of a date (needs the SmartBill stock module). Optional filters: warehouse_name (case-sensitive), product_name, product_code. No filters = all products in all warehouses. GET /stocks."
+        },
+        {
+          "name": "smartbill_get_invoice_payment_status",
+          "type": "read",
+          "title": "Get invoice payment status",
+          "description": "Whether an invoice is paid and how much remains: invoiceTotalAmount, paidAmount, unpaidAmount and the paid flag. GET /invoice/paymentstatus."
+        },
+        {
+          "name": "smartbill_get_estimate_invoices",
+          "type": "read",
+          "title": "Get invoices of a proforma",
+          "description": "Whether a proforma was invoiced and the invoices (series, number) made from it. A draft invoice shows with an empty number. GET /estimate/invoices."
+        },
+        {
+          "name": "smartbill_list_clients",
+          "type": "read",
+          "title": "List or search clients",
+          "description": "List clients from the SmartBill client list, optionally filtered by name (partial, case-insensitive), internal code (exact) or CIF (exact). Needs the API V3 token. Cursor paged: pass the reply's next_args as the next call's arguments. GET /v3/companies/{cif}/clients."
+        },
+        {
+          "name": "smartbill_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "One client by V3 id (cus_...): name, CIF, address, bank, contact, VAT-payer flag and delivery addresses. Needs the API V3 token. GET /v3/companies/{cif}/clients/{id}."
+        },
+        {
+          "name": "smartbill_list_suppliers",
+          "type": "read",
+          "title": "List or search suppliers",
+          "description": "List suppliers, optionally filtered by name (partial), internal code (exact) or CIF (exact). Needs the API V3 token. Cursor paged: pass the reply's next_args as the next call's arguments. GET /v3/companies/{cif}/suppliers."
+        },
+        {
+          "name": "smartbill_get_supplier",
+          "type": "read",
+          "title": "Get a supplier",
+          "description": "One supplier by V3 id (sup_...). Needs the API V3 token. GET /v3/companies/{cif}/suppliers/{id}."
+        },
+        {
+          "name": "smartbill_list_products",
+          "type": "read",
+          "title": "List or search products and services",
+          "description": "List the product and service catalog (price, unit, VAT rate, currency), optionally filtered by name (whole-word match) or internal code (exact). Needs the API V3 token. Cursor paged: pass the reply's next_args as the next call's arguments. GET /v3/companies/{cif}/products."
+        },
+        {
+          "name": "smartbill_get_product",
+          "type": "read",
+          "title": "Get a product or service",
+          "description": "One product or service by V3 id (prod_...). Needs the API V3 token. GET /v3/companies/{cif}/products/{id}."
+        },
+        {
+          "name": "smartbill_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List warehouses (name, type en gros / en detail, keeper, address). Needs the API V3 token. Cursor paged: pass the reply's next_args as the next call's arguments. GET /v3/companies/{cif}/warehouses."
+        },
+        {
+          "name": "smartbill_list_vat_rates",
+          "type": "read",
+          "title": "List VAT rates (V3)",
+          "description": "List VAT rates with ids, name, percentage and reverse-charge flag. Filter by name (partial) or percentage (exact). Needs the API V3 token (smartbill_list_taxes does the same without it). Cursor paged: pass the reply's next_args as the next call's arguments. GET /v3/companies/{cif}/vat-rates."
+        },
+        {
+          "name": "smartbill_create_invoice",
+          "type": "write",
+          "title": "Create an invoice",
+          "description": "Create an invoice for a client with product/service lines. By default it is saved as a DRAFT (no number) for review in SmartBill Cloud. With draft=false the invoice is ISSUED: it takes the next number of the series, cannot be deleted or edited through this server, can only be cancelled or reversed (storno), and, depending on the account's e-Factura setup, may be transmitted to ANAF. Confirm every field with the user before draft=false. Returns series, number, documentId, documentUrl (needs login) and documentViewUrl (public PDF link). POST /invoice/v2."
+        },
+        {
+          "name": "smartbill_create_invoice_from_estimate",
+          "type": "write",
+          "title": "Create an invoice from a proforma",
+          "description": "Create an invoice from an existing proforma (client and lines are copied from it). Default is a DRAFT; with draft=false the invoice is ISSUED with the next number of the series and may be transmitted to e-Factura / ANAF. Stock is not discharged. POST /invoice/v2 (useEstimateDetails)."
+        },
+        {
+          "name": "smartbill_create_estimate",
+          "type": "write",
+          "title": "Create a proforma",
+          "description": "Create a proforma (estimate) for a client with product/service lines. Default is a DRAFT (no number); with draft=false it takes the next number of the proforma series. A proforma is not a fiscal invoice. Returns series, number, documentId and links. POST /estimate/v2."
+        },
+        {
+          "name": "smartbill_reverse_invoice",
+          "type": "write",
+          "title": "Reverse an invoice (storno)",
+          "description": "ISSUE a storno (credit) invoice that reverses an issued invoice. It takes the next number, an invoice can be reversed only once, and the storno cannot be undone; it may be transmitted to e-Factura / ANAF. Confirm the exact series and number with the user first. POST /invoice/reverse."
+        },
+        {
+          "name": "smartbill_cancel_invoice",
+          "type": "write",
+          "title": "Cancel an invoice",
+          "description": "Cancel an existing invoice (it stays in the books as cancelled; smartbill_restore_invoice undoes it). Changes the document's fiscal status, so confirm with the user. PUT /invoice/cancel."
+        },
+        {
+          "name": "smartbill_restore_invoice",
+          "type": "write",
+          "title": "Restore a cancelled invoice",
+          "description": "Restore an invoice that was cancelled, making it active again. PUT /invoice/restore."
+        },
+        {
+          "name": "smartbill_cancel_estimate",
+          "type": "write",
+          "title": "Cancel a proforma",
+          "description": "Cancel an existing proforma (smartbill_restore_estimate undoes it). PUT /estimate/cancel."
+        },
+        {
+          "name": "smartbill_restore_estimate",
+          "type": "write",
+          "title": "Restore a cancelled proforma",
+          "description": "Restore a proforma that was cancelled. PUT /estimate/restore."
+        },
+        {
+          "name": "smartbill_record_invoice_payment",
+          "type": "write",
+          "title": "Record a payment against invoices",
+          "description": "Record a collection (incasare) against one or more issued invoices; client and amount are taken from the invoices. With value (single invoice only) a partial payment is recorded. type Chitanta issues a numbered RECEIPT on receipt_series (cannot be undone from this server); the other types (Card, Ordin plata, ...) record the payment without a document. It changes the invoice's paid status in the books: confirm with the user. Fiscal receipts (Bon) are not supported. POST /payment."
+        },
+        {
+          "name": "smartbill_send_document",
+          "type": "write",
+          "title": "Email an invoice or proforma",
+          "description": "Send an issued invoice or proforma by email from SmartBill. This EMAILS A THIRD PARTY and cannot be recalled. Without `to` it goes to the client's email on the document; without subject/body_text the account's email template is used. Confirm the recipient with the user first. POST /document/send."
+        },
+        {
+          "name": "smartbill_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "smartbill_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SmartBill tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "smartbill_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED SmartBill tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "smartbill_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SmartBill Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run smartbill_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
