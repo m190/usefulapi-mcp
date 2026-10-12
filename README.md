@@ -327,6 +327,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Weblate](servers/weblate/) | localization | 27 | API token | [servers/weblate/](servers/weblate/) |
 | [SmartBill](servers/smartbill/) | billing | 27 | API token | [servers/smartbill/](servers/smartbill/) |
 | [packagecloud](servers/packagecloud/) | devops | 22 | API token | [servers/packagecloud/](servers/packagecloud/) |
+| [Cuttly](servers/cuttly/) | marketing | 10 | API token | [servers/cuttly/](servers/cuttly/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
