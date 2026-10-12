@@ -52387,6 +52387,135 @@
           "description": "Cancel the caller's Cuttly Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run cuttly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "beacon-crm",
+      "name": "Beacon CRM",
+      "category": "fundraising",
+      "description": "Read and filter Beacon CRM records of any type; create, update, upsert, delete records; run exports.",
+      "endpoint": "https://beacon-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Beacon account id"
+          },
+          {
+            "label": "Beacon API key"
+          }
+        ],
+        "hint": "Create the key in Beacon → **Settings → API keys → Create API key** (admins only; the API needs the Standard, Premium or Ultimate plan). The key is shown once. The account id is the number in the Beacon address bar after you log in. The key acts with your account's access, so changes it makes are real changes to your database. Your key is used only to call the Beacon API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "beaconcrm_list_record_types",
+          "type": "read",
+          "title": "List record types and fields",
+          "description": "List the record types of this Beacon account (people, organisations, payments, custom types, ...) with their fields (keys, types, options). Call this first: the keys are what the other tools take as `entity` and as field names. GET /entity_types."
+        },
+        {
+          "name": "beaconcrm_list_users",
+          "type": "read",
+          "title": "List account users",
+          "description": "List the users of the Beacon account (id, role, name, email). Use the inner user.id for 'link to a user' fields. GET /users."
+        },
+        {
+          "name": "beaconcrm_list_records",
+          "type": "read",
+          "title": "List records",
+          "description": "List records of one type (for example person, organization, payment), one page at a time. Use beaconcrm_filter_records to search by field values. GET /entities/{entity}."
+        },
+        {
+          "name": "beaconcrm_get_record",
+          "type": "read",
+          "title": "Get record",
+          "description": "One record by type and id, with all its fields. GET /entity/{entity}/{id}."
+        },
+        {
+          "name": "beaconcrm_filter_records",
+          "type": "read",
+          "title": "Filter records",
+          "description": "Search records of one type with Beacon filter conditions (read-only; it uses POST because the filter is a body). Each condition is {\"field\", \"operator\", \"value\"}. Operators by field type: text == != starts_with ends_with contains not_contains null not_null; select (value is an array) contains not_contains in not_in null not_null; number == != > < null not_null; date date_on date_after date_before date_between (value e.g. \"2026-01-01\", \"last_month\", or [\"2026-01-01\",\"2026-06-01\"]); checkbox == true; point-to-record (value is an array of ids) contains not_contains. Location parts: address.city etc.; emails: emails.email. Conditions can nest as {\"filter_conditions\": [...], \"filter_strictness\": \"all\"|\"any\"}. Example: [{\"field\":\"emails.email\",\"operator\":\"==\",\"value\":\"a@b.org\"}]. POST /entities/{entity}/filter."
+        },
+        {
+          "name": "beaconcrm_create_record",
+          "type": "write",
+          "title": "Create record",
+          "description": "WRITE: create ONE new record of the given type in the live Beacon database. Not idempotent: calling it twice creates two records (use beaconcrm_upsert_record to avoid duplicates). Beacon workflows may run as a result. Invalid field values are rejected with the rule that failed. POST /entity/{entity}."
+        },
+        {
+          "name": "beaconcrm_update_record",
+          "type": "write",
+          "title": "Update record",
+          "description": "WRITE: change fields of ONE existing record. Only the fields you pass are changed; a select or reference field passed as an empty array [] is CLEARED, removing its existing values. The previous values are not kept by this tool. Beacon workflows may run as a result. PATCH /entity/{entity}/{id}."
+        },
+        {
+          "name": "beaconcrm_upsert_record",
+          "type": "write",
+          "title": "Create or update record by key field",
+          "description": "WRITE: create a record, or update the existing one whose key field matches. `primary_field_key` names the field used to find the match (for example \"emails\" for a person, or \"external_id\"); `fields` must contain a value for it. If a record matches it is UPDATED with the given fields (an empty array leaves an existing value untouched on upsert); otherwise a new record is created. Beacon workflows may run as a result. PUT /entity/{entity}/upsert."
+        },
+        {
+          "name": "beaconcrm_delete_record",
+          "type": "write",
+          "title": "Delete record",
+          "description": "WRITE, DESTRUCTIVE: delete ONE record. Beacon keeps deleted records as 'archived' (listable with archived=true), but this server has no restore tool, so treat the deletion as irreversible. Related data that depends on the record may be affected. It is sent once and never retried. DELETE /entity/{entity}/{id}."
+        },
+        {
+          "name": "beaconcrm_trigger_export",
+          "type": "write",
+          "title": "Start an export",
+          "description": "WRITE: start an export job from an existing export template (created in Beacon). Returns the new export's id with status in_progress; then poll beaconcrm_list_exports with that id until progress is 100 and it carries a download url. Each call starts another job. POST /entity_export/trigger."
+        },
+        {
+          "name": "beaconcrm_list_exports",
+          "type": "read",
+          "title": "List exports",
+          "description": "List recent export jobs with status, progress (100 = complete) and, when complete, a signed download url. Pass entity_export_id to check one job started by beaconcrm_trigger_export. GET /entity_exports."
+        },
+        {
+          "name": "beaconcrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "beaconcrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Beacon CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "beaconcrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Beacon CRM tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "beaconcrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Beacon CRM Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run beaconcrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

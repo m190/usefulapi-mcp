@@ -328,6 +328,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SmartBill](servers/smartbill/) | billing | 27 | API token | [servers/smartbill/](servers/smartbill/) |
 | [packagecloud](servers/packagecloud/) | devops | 22 | API token | [servers/packagecloud/](servers/packagecloud/) |
 | [Cuttly](servers/cuttly/) | marketing | 10 | API token | [servers/cuttly/](servers/cuttly/) |
+| [Beacon CRM](servers/beacon-crm/) | fundraising | 15 | API token | [servers/beacon-crm/](servers/beacon-crm/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
