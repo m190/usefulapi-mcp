@@ -54235,6 +54235,177 @@
           "description": "Cancel the caller's Oblio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run oblio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "smartaccounts",
+      "name": "SmartAccounts",
+      "category": "billing",
+      "description": "Read SmartAccounts clients, vendors, invoices, payments, ledger, accounts; create and book records.",
+      "endpoint": "https://smartaccounts.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SmartAccounts public key"
+          },
+          {
+            "label": "SmartAccounts secret key"
+          }
+        ],
+        "hint": "Generate both keys in SmartAccounts under **Settings → Connected services → API**. The API user group has access to every function by default: narrow it under **Settings → User groups** to what you need. Your keys are used only to sign and send SmartAccounts API requests on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "smartaccounts_list_clients",
+          "type": "read",
+          "title": "List or search clients",
+          "description": "Customers of the company (purchasesales/clients:get): id, name, regCode, vatNumber, bank account, due days, discount, VAT code. Filter by name or registry code, by id, or by modification time. Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_get_client_balance",
+          "type": "read",
+          "title": "Get a client's outstanding balance",
+          "description": "The outstanding balance of one client (purchasesales/clients:getbalance), optionally on a past date and with the open documents. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_vendors",
+          "type": "read",
+          "title": "List or search vendors",
+          "description": "Suppliers of the company (purchasesales/vendors:get): id, name, regCode, vatNumber, bank account, VAT code. Filter by name or registry code, by id, or by modification time. Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_get_vendor_balance",
+          "type": "read",
+          "title": "Get a vendor's outstanding balance",
+          "description": "The outstanding balance owed to one vendor (purchasesales/vendors:getbalance), optionally on a past date and with the open documents. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_articles",
+          "type": "read",
+          "title": "List or search articles",
+          "description": "Products, services and warehouse items (purchasesales/articles:get): code, description, type, unit, VAT code, sales and purchase prices, accounts. Search by code or name, or by modification time. Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_sales_invoices",
+          "type": "read",
+          "title": "List sales invoices",
+          "description": "Sales (client) invoices (purchasesales/clientinvoices:get): number, client, dates, amounts, VAT, outstanding amount, optionally the rows. Filter by date, client, number or payment status (unpaid, overdue). Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_purchase_invoices",
+          "type": "read",
+          "title": "List purchase invoices",
+          "description": "Purchase (vendor) invoices (purchasesales/vendorinvoices:get): number, vendor, dates, amounts, VAT, outstanding amount, optionally the rows. Filter by date, vendor, number or payment status (unpaid, overdue). Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "Bank and cash payments from clients and to vendors (purchasesales/payments:get): date, partner, account, currency, amount, optionally the rows (which invoices were paid). Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_ledger_entries",
+          "type": "read",
+          "title": "List general ledger entries",
+          "description": "General ledger entries of every type (general/entries:get): manual entries, invoices, payments, VAT returns, depreciation. Filter by date, type, text or payment status. Paged (100 per page). The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_accounts",
+          "type": "read",
+          "title": "List the chart of accounts",
+          "description": "The chart of accounts: code, type (ASSET, LIABILITY, INCOME, EXPENSE), Estonian and English description. Use the codes in ledger entries. (settings/accounts:get). Not paged. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_vat_rates",
+          "type": "read",
+          "title": "List VAT rates",
+          "description": "VAT codes: vatPc code, percentage, descriptions, whether active for sales or purchases, accounts. Use vatPc in client and invoice rows. (settings/vatpcs:get). Not paged. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The company's bank accounts: name (used as accountName in payments), ledger account, currency, IBAN, SWIFT. (settings/bankaccounts:get). Not paged. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_cash_accounts",
+          "type": "read",
+          "title": "List cash accounts",
+          "description": "The company's cash registers: name (used as accountName in payments), ledger account, currency. (settings/cashaccounts:get). Not paged. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "Payment methods: name, ledger account, whether cash. (settings/paymentmethods:get). Not paged. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "Add a new client (purchasesales/clients:add). Search first with smartaccounts_list_clients so a client is not created twice. Returns clientId and the generated referenceNumber. This creates a real accounting record in the company's books. This server cannot edit or delete it; correct it in SmartAccounts. It never retries: if a reply is unclear, look in SmartAccounts before calling again. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_create_sales_invoice",
+          "type": "write",
+          "title": "Create a sales invoice",
+          "description": "Post a new sales (client) invoice (purchasesales/clientinvoices:add). The invoice number is generated by SmartAccounts, totals and VAT are calculated from the rows, and the invoice is booked to the ledger at once (it is not a draft). The client must exist (smartaccounts_list_clients); each row's code must be an article code (smartaccounts_list_articles) and vat_pc a VAT code (smartaccounts_list_vat_rates). Fails if the period is locked. Returns invoiceId, number and the totals. This creates a real accounting record in the company's books. This server cannot edit or delete it; correct it in SmartAccounts. It never retries: if a reply is unclear, look in SmartAccounts before calling again. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_create_payment",
+          "type": "write",
+          "title": "Create a payment",
+          "description": "Record a bank or cash payment against one or more invoices (purchasesales/payments:add): a client paying a sales invoice, or a payment to a vendor for a purchase invoice. Use smartaccounts_list_bank_accounts or _list_cash_accounts for account_name, and the invoice ids from the invoice lists. The currency must match the account's currency. Returns paymentId, number and amount. This creates a real accounting record in the company's books. This server cannot edit or delete it; correct it in SmartAccounts. It never retries: if a reply is unclear, look in SmartAccounts before calling again. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_create_ledger_entry",
+          "type": "write",
+          "title": "Create a manual ledger entry",
+          "description": "Post a manual general ledger entry (journal entry, general/entries:add) in EUR. Debits must equal credits. Account codes come from smartaccounts_list_accounts. Fails if the period is locked. Returns id, number and amount. This creates a real accounting record in the company's books. This server cannot edit or delete it; correct it in SmartAccounts. It never retries: if a reply is unclear, look in SmartAccounts before calling again. The vendor limit is 60 requests per minute and 1000 per 24 hours; every call here is one request."
+        },
+        {
+          "name": "smartaccounts_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "smartaccounts_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SmartAccounts tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "smartaccounts_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED SmartAccounts tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "smartaccounts_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SmartAccounts Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run smartaccounts_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

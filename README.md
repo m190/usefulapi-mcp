@@ -340,6 +340,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Számlázz.hu](servers/szamlazz-hu/) | billing | 15 | API token | [servers/szamlazz-hu/](servers/szamlazz-hu/) |
 | [Abstract API](servers/abstract-api/) | analytics | 18 | API token | [servers/abstract-api/](servers/abstract-api/) |
 | [Oblio](servers/oblio/) | billing | 22 | API token | [servers/oblio/](servers/oblio/) |
+| [SmartAccounts](servers/smartaccounts/) | billing | 22 | API token | [servers/smartaccounts/](servers/smartaccounts/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
