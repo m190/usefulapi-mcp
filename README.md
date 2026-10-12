@@ -314,6 +314,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Billy](servers/billy/) | billing | 19 | API token | [servers/billy/](servers/billy/) |
 | [APITemplate.io](servers/apitemplate/) | document-ai | 14 | API token | [servers/apitemplate/](servers/apitemplate/) |
 | [ApiFlash](servers/apiflash/) | devops | 7 | API token | [servers/apiflash/](servers/apiflash/) |
+| [Merit Aktiva](servers/merit-aktiva/) | billing | 30 | API token | [servers/merit-aktiva/](servers/merit-aktiva/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

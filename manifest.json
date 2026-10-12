@@ -50096,6 +50096,228 @@
           "description": "Cancel the caller's ApiFlash Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run apiflash_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "merit-aktiva",
+      "name": "Merit Aktiva",
+      "category": "billing",
+      "description": "Read Merit Aktiva invoices, customers, vendors, items, payments and reports; create a customer.",
+      "endpoint": "https://merit-aktiva.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API ID"
+          },
+          {
+            "label": "API key"
+          },
+          {
+            "label": "Country"
+          }
+        ],
+        "hint": "An admin creates the pair in Merit Aktiva under **Settings → API Settings**. The API needs the **Pro or Premium** licence. Pick the country your company is hosted in. Requests are signed with your key (HMAC-SHA256), so the key itself is never sent to Merit; it is stored only to sign your requests and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "merit_list_sales_invoices",
+          "type": "read",
+          "title": "List sales invoices",
+          "description": "List sales invoices (header level: number, customer, dates, totals, paid flag) of a period. The period may span at most 3 months (Merit limit); for longer spans make several calls. Use merit_get_sales_invoice for the lines. POST /api/v2/getinvoices."
+        },
+        {
+          "name": "merit_search_sales_invoices",
+          "type": "read",
+          "title": "Find sales invoices by number or customer",
+          "description": "Find sales invoices by invoice number, customer name or customer id (give at least one). POST /api/v2/getinvoices2."
+        },
+        {
+          "name": "merit_get_sales_invoice",
+          "type": "read",
+          "title": "Get a sales invoice",
+          "description": "One sales invoice in full: header, lines (items, quantities, VAT, accounts), payments and dimension allocations. The PDF attachment is never requested. POST /api/v2/getinvoice."
+        },
+        {
+          "name": "merit_list_purchase_invoices",
+          "type": "read",
+          "title": "List purchase invoices",
+          "description": "List purchase invoices (vendor bills) of a period: bill number, vendor, dates, totals, paid flag. The period may span at most 3 months (Merit limit); for longer spans make several calls. POST /api/v2/getpurchorders."
+        },
+        {
+          "name": "merit_get_purchase_invoice",
+          "type": "read",
+          "title": "Get a purchase invoice",
+          "description": "One purchase invoice in full: header, lines, payments. The attachment is never requested. POST /api/v2/getpurchorder."
+        },
+        {
+          "name": "merit_list_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers by name (partial match), registry number or VAT number (exact), id, or changed since a date. At least one filter is required: Merit cannot return the whole customer list in one reply. POST /api/v1/getcustomers."
+        },
+        {
+          "name": "merit_list_vendors",
+          "type": "read",
+          "title": "Search vendors",
+          "description": "Search vendors (suppliers) by name (partial match), registry number or VAT number (exact), id, or changed since a date. At least one filter is required: Merit cannot return the whole vendor list in one reply. POST /api/v1/getvendors."
+        },
+        {
+          "name": "merit_list_items",
+          "type": "read",
+          "title": "List items (articles)",
+          "description": "List items, services and stock articles with price, unit, VAT and accounts. Optional filters: code or description (partial), type, id. With location_code the reply adds stock quantity and cost of that warehouse. POST /api/v1/getitems."
+        },
+        {
+          "name": "merit_list_accounts",
+          "type": "read",
+          "title": "List the chart of accounts",
+          "description": "The general ledger chart of accounts (code, names, VAT, parent flag, active flag). GET /api/v2/accounts."
+        },
+        {
+          "name": "merit_list_taxes",
+          "type": "read",
+          "title": "List VAT rates",
+          "description": "All VAT rates of the company (TaxId, code, name, percent, active flag). The TaxId is what invoice rows refer to. GET /api/v2/taxes."
+        },
+        {
+          "name": "merit_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "Departments (code, name, active flag). GET /api/v2/departments."
+        },
+        {
+          "name": "merit_list_banks",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The company's bank and cash accounts (BankId, name, IBAN, currency, ledger account). BankId feeds the payment tools. GET /api/v2/banks."
+        },
+        {
+          "name": "merit_list_financial_years",
+          "type": "read",
+          "title": "List financial years",
+          "description": "Accounting periods (financial years) with start, end and active flag. POST /api/v2/getaccperiods."
+        },
+        {
+          "name": "merit_list_dimensions",
+          "type": "read",
+          "title": "List dimensions",
+          "description": "Accounting dimensions and their values (DimId, name, value code, expiry). all_values = true also lists expired values. POST /api/v2/getdimensions."
+        },
+        {
+          "name": "merit_list_payment_types",
+          "type": "read",
+          "title": "List payment types",
+          "description": "Payment methods and sources (cash, banks, reporting entities, ledger accounts) usable for purchases, expense reports or sales. POST /api/v2/getpaymenttypes."
+        },
+        {
+          "name": "merit_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments (customer and vendor receipts and payouts) of a period, with the documents they paid. The period may span at most 3 months (Merit limit); for longer spans make several calls. POST /api/v2/getpayments."
+        },
+        {
+          "name": "merit_list_bank_payments",
+          "type": "read",
+          "title": "List income or expense payments of a bank account",
+          "description": "List the income payments (money received) or expense payments (money paid out) booked on one bank account for a document-date period, with the documents each paid. The period may span at most 3 months (Merit limit); for longer spans make several calls. GET /api/v2/Banks/{bankId}/IncomePayments or /ExpensePayments."
+        },
+        {
+          "name": "merit_list_gl_batches",
+          "type": "read",
+          "title": "List general ledger transactions",
+          "description": "List general ledger batches (journal entries, also those created from invoices and payments) of a period: batch code, number, date, total. The period may span at most 3 months (Merit limit); for longer spans make several calls. POST /api/v1/getglbatches."
+        },
+        {
+          "name": "merit_get_gl_batch",
+          "type": "read",
+          "title": "Get a general ledger transaction",
+          "description": "One general ledger batch with all its debit and credit lines (account, memo, department, tax, amounts). The attachment is never requested. POST /api/v1/getglbatch."
+        },
+        {
+          "name": "merit_customer_debts_report",
+          "type": "read",
+          "title": "Customer debts report",
+          "description": "Open customer receivables: for each unpaid document the customer, date, due date, total, paid and unpaid amount. Give a customer name (empty string = all customers) or a customer id; over_due_days keeps only documents overdue by at least that many days. POST /api/v1/getcustdebtrep."
+        },
+        {
+          "name": "merit_customer_payments_report",
+          "type": "read",
+          "title": "Customer payments report",
+          "description": "Customer invoices with their unpaid amount and overdue flag for a period, for one customer (name or id). Only the FIRST page is returned: if has_more is true, narrow the period or the customer (the continuation endpoint is not supported). POST /api/v2/getcustpaymrep."
+        },
+        {
+          "name": "merit_income_statement",
+          "type": "read",
+          "title": "Income statement (profit and loss)",
+          "description": "The profit and loss report: one row per report line, with balances for per_count months counting back from end_date (newest first). Optional department filter. POST /api/v1/getprofitrep."
+        },
+        {
+          "name": "merit_balance_sheet",
+          "type": "read",
+          "title": "Balance sheet",
+          "description": "The balance sheet: one row per report line (assets, liabilities, equity) with balances for per_count months counting back from end_date. POST /api/v1/getbalancerep."
+        },
+        {
+          "name": "merit_sales_report",
+          "type": "read",
+          "title": "Sales report",
+          "description": "Sales totals for a period, grouped by invoice, customer, item or country. POST /api/v2/getsalesrep."
+        },
+        {
+          "name": "merit_purchase_report",
+          "type": "read",
+          "title": "Purchase report",
+          "description": "Purchase totals for a period, grouped by invoice, vendor, item or fixed asset. POST /api/v2/getpurchrep."
+        },
+        {
+          "name": "merit_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "WRITE: creates ONE new customer record in the Merit company (name must be unique; an existing customer is never overwritten, Merit answers with an error). Nothing is invoiced, sent or paid. In Estonia not_td_customer must be true for private persons and foreign companies; city is required in Estonia for a non-EE country. Returns the new customer id. POST /api/v2/sendcustomer."
+        },
+        {
+          "name": "merit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "merit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Merit Aktiva tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "merit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Merit Aktiva tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "merit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Merit Aktiva Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run merit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
