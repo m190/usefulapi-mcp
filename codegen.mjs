@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // codegen.mjs [--check] — regenerate the COMMITTED artifacts, so they can never drift from their sources:
-//   manifest.json               — version, login and tools[] of each listed server, DERIVED from the fleet
+//   manifest.json               — version, login, tools[] and examples[] of each listed server, DERIVED from the fleet
 //                                 (fleet/products/<slug>/package.json, scripts/export-login.ts, scripts/export-catalog.ts).
 //                                 Listing data (name, category, description, pricing, status) stays hand-edited here.
 //   servers/<slug>/server.json  — spec-valid MCP Registry record (io.usefulapi/<slug>)
@@ -88,6 +88,8 @@ for (const s of fresh) {
   if (!catalog[s.slug]?.tools?.length) die(`${s.slug}: no tool catalog`);
   s.login = logins[s.slug];
   s.tools = catalog[s.slug].tools;
+  if (!catalog[s.slug].examples?.length) die(`${s.slug}: no examples in the fleet product.ts (every listed product needs them)`);
+  s.examples = catalog[s.slug].examples; // the fleet is the only source
 }
 emit("manifest.json", JSON.stringify(manifest, null, 2) + "\n");
 const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json";
@@ -245,7 +247,7 @@ for (const s of manifest.servers) {
   const src = new URL(`products/${s.slug}/discovery.json`, FLEET);
   if (!existsSync(src)) die(`${s.slug}: no fleet discovery.json`);
   const d = JSON.parse(readFileSync(src, "utf8"));
-  const result = { ...d.initialize, tools: d.tools, resources: [], prompts: [] };
+  const result = { ...d.initialize, tools: d.tools, resources: [], prompts: d.prompts ?? [] };
   emit(`portal/_probe/${s.slug}.json`, JSON.stringify({ jsonrpc: "2.0", id: 1, result }));
   probes.add(`${s.slug}.json`);
 }
