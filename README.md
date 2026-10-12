@@ -323,6 +323,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zammad](servers/zammad/) | support | 23 | API token | [servers/zammad/](servers/zammad/) |
 | [TinyPNG](servers/tinypng/) | image-cdn | 8 | API token | [servers/tinypng/](servers/tinypng/) |
 | [WakaTime](servers/wakatime/) | devtools | 27 | API token | [servers/wakatime/](servers/wakatime/) |
+| [e-Boekhouden](servers/e-boekhouden/) | billing | 29 | API token | [servers/e-boekhouden/](servers/e-boekhouden/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
