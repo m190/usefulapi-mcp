@@ -51713,6 +51713,208 @@
           "description": "Cancel the caller's e-Boekhouden Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run eboekhouden_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "weblate",
+      "name": "Weblate",
+      "category": "localization",
+      "description": "Read Weblate projects, strings, stats and changes; translate, suggest, comment and autotranslate.",
+      "endpoint": "https://weblate.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API token"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Weblate API token"
+          },
+          {
+            "label": "Instance address (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Create a token in Weblate: your **profile (user menu) → Settings → API access**; it starts with `wlu_` (a project token, `wlp_`, limits the connection to one project). The token acts with your permissions, so a dedicated user makes its activity easy to track. The instance must be a public `https://` address without a path. Your token is used only to call the Weblate API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "weblate_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List the projects visible to this token: name, slug, website and settings (review workflow, access control). GET /api/projects/."
+        },
+        {
+          "name": "weblate_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project by slug: name, website, settings, instructions and links. GET /api/projects/{project}/."
+        },
+        {
+          "name": "weblate_list_components",
+          "type": "read",
+          "title": "List components",
+          "description": "List translation components (one translatable file set in a repository), with repository, file mask, source language and status flags. Give a project to list only its components. Repository URLs have embedded credentials removed. GET /api/components/ or /api/projects/{project}/components/."
+        },
+        {
+          "name": "weblate_get_component",
+          "type": "read",
+          "title": "Get component",
+          "description": "One component: repository, branch, file mask, template, source language, commit and merge settings, lock state. GET /api/components/{project}/{component}/."
+        },
+        {
+          "name": "weblate_list_translations",
+          "type": "read",
+          "title": "List translations",
+          "description": "List the translations (one language each) of a component with their statistics: total, translated, fuzzy, percent, last change. GET /api/components/{project}/{component}/translations/."
+        },
+        {
+          "name": "weblate_get_translation",
+          "type": "read",
+          "title": "Get translation",
+          "description": "One translation (a component in one language): statistics, language, file name, revision and links. GET /api/translations/{project}/{component}/{language}/."
+        },
+        {
+          "name": "weblate_get_statistics",
+          "type": "read",
+          "title": "Get translation statistics",
+          "description": "Translation progress: strings and words total, translated, needing edit, with percentages and checks. Scope by project; add a component for per-language statistics of a component, add a language too for one translation. GET /api/projects/{project}/statistics/, /api/components/{project}/{component}/statistics/ or /api/translations/{project}/{component}/{language}/statistics/."
+        },
+        {
+          "name": "weblate_list_project_languages",
+          "type": "read",
+          "title": "List project languages",
+          "description": "Per-language translation statistics for a whole project (code, total, translated, percentages). GET /api/projects/{project}/languages/."
+        },
+        {
+          "name": "weblate_list_languages",
+          "type": "read",
+          "title": "List languages",
+          "description": "List the languages known to this Weblate instance: code, name, text direction, plural forms. GET /api/languages/."
+        },
+        {
+          "name": "weblate_list_units",
+          "type": "read",
+          "title": "List strings (units)",
+          "description": "List or search translation strings (units): source, target, state (0 untranslated, 10 needs editing, 20 translated, 30 approved, 100 read-only), context, location, failing checks. Search with Weblate's query syntax, for example state:<translated or has:suggestion. Give project + component + language to read one translation; without them all visible strings are searched. GET /api/translations/{project}/{component}/{language}/units/ or /api/units/."
+        },
+        {
+          "name": "weblate_get_unit",
+          "type": "read",
+          "title": "Get string (unit)",
+          "description": "One string by id: source and target forms, state, context, location, flags, labels, explanation, suggestions/comments flags, web link. GET /api/units/{id}/."
+        },
+        {
+          "name": "weblate_list_unit_comments",
+          "type": "read",
+          "title": "List string comments",
+          "description": "Comments on one string (Weblate 5.15+). GET /api/units/{id}/comments/."
+        },
+        {
+          "name": "weblate_list_suggestions",
+          "type": "read",
+          "title": "List suggestions",
+          "description": "List suggestions (proposed translations waiting for review), newest first (Weblate 2026.8+). Give a unit id for one string's suggestions. GET /api/suggestions/ or /api/units/{id}/suggestions/."
+        },
+        {
+          "name": "weblate_list_changes",
+          "type": "read",
+          "title": "List changes",
+          "description": "The activity log: who changed or translated what, when, with the action name and the changed text. Scope by project, component or translation (language), or filter by user, action id and time range. GET /api/changes/ or the project/component/translation changes endpoint."
+        },
+        {
+          "name": "weblate_search_memory",
+          "type": "read",
+          "title": "Search translation memory",
+          "description": "Browse the translation memory entries visible to the token, filtered by source text (substring), languages or project. GET /api/memory/."
+        },
+        {
+          "name": "weblate_lookup_memory",
+          "type": "read",
+          "title": "Look up translation memory",
+          "description": "Find translation memory matches (exact or fuzzy) for up to 20 source strings in one language pair. Read-only: nothing is stored. POST /api/memory/lookup/."
+        },
+        {
+          "name": "weblate_get_repository_status",
+          "type": "read",
+          "title": "Get repository status",
+          "description": "Version-control status: pending changes to commit, upstream changes to merge, changes to push, remote commit, merge failure. For a project (summary of all its repositories) or one component. GET /api/projects/{project}/repository/ or /api/components/{project}/{component}/repository/."
+        },
+        {
+          "name": "weblate_update_translation",
+          "type": "write",
+          "title": "Update a translation",
+          "description": "WRITE: set the translation of one string (replaces the current target). `target` is the list of plural forms. `state` is required (Weblate rejects a partial update without both): 0 untranslated with an empty target, 10 needs editing, 20 translated or 30 approved (approval needs the review workflow and permission). The number of plural forms must match the language. Changes are committed to the repository by Weblate's normal schedule. PATCH /api/units/{id}/."
+        },
+        {
+          "name": "weblate_add_suggestion",
+          "type": "write",
+          "title": "Add a suggestion",
+          "description": "WRITE: propose a translation for one string; normally a reviewer accepts it later, but the author's automatic upvote (or an existing identical suggestion) can reach the project's auto-accept threshold and apply it at once. Needs the Add suggestion permission and suggestions enabled (Weblate 2026.8+). POST /api/units/{id}/suggestions/."
+        },
+        {
+          "name": "weblate_accept_suggestion",
+          "type": "write",
+          "title": "Accept a suggestion",
+          "description": "WRITE: apply a suggestion to its string (replaces the current translation). `approve` also marks it approved (review workflow and permission needed). Weblate 2026.8+. POST /api/suggestions/{id}/accept/."
+        },
+        {
+          "name": "weblate_add_unit_comment",
+          "type": "write",
+          "title": "Add a string comment",
+          "description": "WRITE: add a comment to one string (Markdown, @username mentions notify users). `scope` is global (all languages), translation (this language) or report (a source-string issue report; needs the review workflow). Weblate 5.12+. POST /api/units/{id}/comments/."
+        },
+        {
+          "name": "weblate_repository_operation",
+          "type": "write",
+          "title": "Run a repository operation",
+          "description": "WRITE: commit (write pending translations into the local repository), pull (merge upstream changes) or push (publish committed changes to the remote repository) for a project or one component. Push changes the remote repository. reset and cleanup are not offered. POST /api/projects/{project}/repository/ or /api/components/{project}/{component}/repository/."
+        },
+        {
+          "name": "weblate_autotranslate",
+          "type": "write",
+          "title": "Run automatic translation",
+          "description": "WRITE: fill a translation automatically from other components (auto_source others, default) or from machine translation (mt, needs engines). `mode` suggest only adds suggestions (default), translate writes translations, fuzzy marks them needing edit. `q` limits it to strings matching a search (default state:<translated, the strings that are not translated yet); threshold is the minimum match score (default 80). Use background to schedule a task instead of waiting. POST /api/translations/{project}/{component}/{language}/autotranslate/."
+        },
+        {
+          "name": "weblate_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "weblate_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Weblate tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "weblate_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Weblate tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "weblate_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Weblate Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run weblate_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }

@@ -324,6 +324,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TinyPNG](servers/tinypng/) | image-cdn | 8 | API token | [servers/tinypng/](servers/tinypng/) |
 | [WakaTime](servers/wakatime/) | devtools | 27 | API token | [servers/wakatime/](servers/wakatime/) |
 | [e-Boekhouden](servers/e-boekhouden/) | billing | 29 | API token | [servers/e-boekhouden/](servers/e-boekhouden/) |
+| [Weblate](servers/weblate/) | localization | 27 | API token | [servers/weblate/](servers/weblate/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
