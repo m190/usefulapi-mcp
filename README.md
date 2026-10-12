@@ -316,6 +316,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ApiFlash](servers/apiflash/) | devops | 7 | API token | [servers/apiflash/](servers/apiflash/) |
 | [Merit Aktiva](servers/merit-aktiva/) | billing | 30 | API token | [servers/merit-aktiva/](servers/merit-aktiva/) |
 | [Homerun](servers/homerun/) | productivity | 13 | API token | [servers/homerun/](servers/homerun/) |
+| [17TRACK](servers/17track/) | shipping | 13 | API token | [servers/17track/](servers/17track/) |
+| [Kinsta](servers/kinsta/) | devops | 27 | API token | [servers/kinsta/](servers/kinsta/) |
+| [rapidmail](servers/rapidmail/) | email | 20 | API token | [servers/rapidmail/](servers/rapidmail/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

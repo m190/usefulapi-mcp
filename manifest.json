@@ -50432,6 +50432,477 @@
           "description": "Cancel the caller's Homerun Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run homerun_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "17track",
+      "name": "17TRACK",
+      "category": "shipping",
+      "description": "Track parcels across 3000+ carriers with 17TRACK: register numbers, read tracking events and quota.",
+      "endpoint": "https://17track.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "17TRACK Security Key"
+          }
+        ],
+        "hint": "Find it in the 17TRACK API dashboard under **Settings → Security Key**. Registering a number uses your own tracking quota. Do not enable an IP whitelist for this key: this hosted server has no fixed IP address. Your key is used only to call the 17TRACK API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "track17_get_quota",
+          "type": "read",
+          "title": "Get tracking quota",
+          "description": "The account's tracking quota: total, used, remaining, used today, the daily registration limit (0 = no limit) and the free e-mail quota. Each registered tracking number uses 1 quota. POST /getquota."
+        },
+        {
+          "name": "track17_list_tracking_numbers",
+          "type": "read",
+          "title": "List registered tracking numbers",
+          "description": "Search the tracking numbers registered on this account (40 per page) with their carrier, status, registration and last-update times, and latest event. Filter by number(s), carrier, tracking state, package status or registration date. Free: it does not use quota. POST /gettracklist."
+        },
+        {
+          "name": "track17_get_tracking",
+          "type": "read",
+          "title": "Get tracking details",
+          "description": "Full tracking details (status, sub-status, milestones, every carrier event with time and location, estimated delivery) for up to 10 numbers that are ALREADY registered on this account. Free: it does not use quota. A number that is not registered comes back in `rejected` — register it first with track17_register_numbers, or use track17_realtime_lookup. POST /gettrackinfo."
+        },
+        {
+          "name": "track17_realtime_lookup",
+          "type": "write",
+          "title": "Real-time lookup of one number",
+          "description": "WRITE (uses quota): look up ONE tracking number directly at the carrier right now, without registering it. Costs 1 quota per call (standard: carrier data up to 3 hours old). If the number is already registered, a changed result is also pushed to the account. Not supported for USPS, Royal Mail, Australia Post, Direct Freight Express, DHL eCommerce US and DHL Global Forwarding; some accounts are not enabled for real-time lookups. POST /getRealTimeTrackInfo."
+        },
+        {
+          "name": "track17_register_numbers",
+          "type": "write",
+          "title": "Register tracking numbers",
+          "description": "WRITE (uses quota): start tracking up to 10 tracking numbers per call. Each ACCEPTED number costs 1 quota from this account (see track17_get_quota); rejected numbers cost nothing. Deleting and re-registering a number costs again. 17TRACK then updates the status itself every 6-12 hours; read it with track17_get_tracking. The carrier is detected automatically unless a carrier code is given. No e-mail notifications are enabled. POST /register."
+        },
+        {
+          "name": "track17_change_carrier",
+          "type": "write",
+          "title": "Change the carrier of a number",
+          "description": "WRITE: assign a different carrier to registered tracking numbers (up to 10 per call), for example when auto-detection picked the wrong one. A number can change carrier at most 5 times, and a successful change can be charged as one shipment (see track17_get_quota). POST /changecarrier."
+        },
+        {
+          "name": "track17_change_tag",
+          "type": "write",
+          "title": "Change the tag of a number",
+          "description": "WRITE: set the tag (your own label, max 100 characters) of a registered tracking number. It replaces the old tag. Free. POST /changeinfo."
+        },
+        {
+          "name": "track17_stop_tracking",
+          "type": "write",
+          "title": "Stop tracking numbers",
+          "description": "WRITE: stop tracking registered numbers (up to 10 per call). The numbers stay in the account for 90 days with their history and can be restarted ONCE each with track17_retrack. Stopping does not refund quota. POST /stoptrack."
+        },
+        {
+          "name": "track17_retrack",
+          "type": "write",
+          "title": "Restart tracking of stopped numbers",
+          "description": "WRITE: restart tracking of stopped numbers (up to 10 per call). Each number can be restarted only ONCE in its lifetime, so a second restart is rejected. POST /retrack."
+        },
+        {
+          "name": "track17_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "track17_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the 17TRACK tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "track17_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED 17TRACK tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "track17_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's 17TRACK Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run track17_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "kinsta",
+      "name": "Kinsta",
+      "category": "devops",
+      "description": "Read Kinsta sites, environments, backups, logs and analytics; clear caches, restart PHP, back up.",
+      "endpoint": "https://kinsta.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Kinsta API key"
+          }
+        ],
+        "hint": "Create one in MyKinsta → your user name → **Company settings → API Keys → Create API Key** (company owners, administrators and developers can). The key is shown only once. It acts with the permissions of the role of the person who created it. Your key is used only to call the Kinsta API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "kinsta_get_api_key_info",
+          "type": "read",
+          "title": "Get API key info",
+          "description": "Details of the Kinsta API key in use: its name, status, expiry and the company id it belongs to. The key itself is never shown. GET /validate."
+        },
+        {
+          "name": "kinsta_list_available_regions",
+          "type": "read",
+          "title": "List data center regions",
+          "description": "The data center regions (name and region code) the company can host sites in. GET /company/{id}/available-regions."
+        },
+        {
+          "name": "kinsta_list_activity_logs",
+          "type": "read",
+          "title": "List activity logs",
+          "description": "The company's activity log (who did what: site actions, DNS, migrations, billing, notifications, user management), newest first, with type, status, time, initiator and a description. Page with limit and offset (the reply's total tells how many exist). GET /company/{id}/activity-logs."
+        },
+        {
+          "name": "kinsta_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List the company's WordPress sites (id, name, display name, status, labels). With include_environments the live/staging environment ids, primary domain, PHP version, WordPress version and SSH host/port come too: use those environment ids for the other tools. GET /sites."
+        },
+        {
+          "name": "kinsta_get_site",
+          "type": "read",
+          "title": "Get site",
+          "description": "One site by id, with its status and environments. GET /sites/{site_id}."
+        },
+        {
+          "name": "kinsta_list_site_environments",
+          "type": "read",
+          "title": "List site environments",
+          "description": "The environments (live, staging, ...) of one site: id, name, PHP engine version, WordPress version, primary domain, edge cache and CDN ids. GET /sites/{site_id}/environments."
+        },
+        {
+          "name": "kinsta_get_site_usage",
+          "type": "read",
+          "title": "Get site usage this month",
+          "description": "A site's usage for the current billing month: visits, bandwidth or CDN bandwidth. GET /sites/{site_id}/usage/{metric}/this-month."
+        },
+        {
+          "name": "kinsta_list_environment_domains",
+          "type": "read",
+          "title": "List environment domains",
+          "description": "The domains attached to one environment (id, name, whether Kinsta DNS/Cloudflare is used). GET /sites/environments/{env_id}/domains."
+        },
+        {
+          "name": "kinsta_list_company_domains",
+          "type": "read",
+          "title": "List company domains",
+          "description": "All domains the company has in Kinsta DNS / hosting, across sites. GET /domains."
+        },
+        {
+          "name": "kinsta_list_backups",
+          "type": "read",
+          "title": "List backups",
+          "description": "The backups of one environment (manual, scheduled and system): id, name, note, type and creation time (epoch ms). Backups cannot be restored or deleted from here. GET /sites/environments/{env_id}/backups."
+        },
+        {
+          "name": "kinsta_list_plugins",
+          "type": "read",
+          "title": "List WordPress plugins",
+          "description": "The plugins of one environment: name, title, status (active/inactive), version, available update version, vulnerability flags and the auto-update type. GET /sites/environments/{env_id}/wp-plugins."
+        },
+        {
+          "name": "kinsta_list_themes",
+          "type": "read",
+          "title": "List WordPress themes",
+          "description": "The themes of one environment: name, title, status, version, available update version and vulnerability flags. GET /sites/environments/{env_id}/wp-themes."
+        },
+        {
+          "name": "kinsta_get_logs",
+          "type": "read",
+          "title": "Get environment logs",
+          "description": "Recent lines of an environment's error log, access log or Kinsta cache performance log, optionally within a time range and filtered by a search text. Returns the log as text (the newest lines the API gives). Access logs contain visitor IP addresses. GET /sites/environments/{env_id}/logs."
+        },
+        {
+          "name": "kinsta_get_analytics",
+          "type": "read",
+          "title": "Get environment analytics",
+          "description": "Traffic and resource analytics for one environment: visits, bandwidth, CDN bandwidth, disk space, response codes, visit dispersion, or the top countries, cities, browsers, hosts, referrers, user agents or ASNs. Choose a time_span or a from/to date range (yyyy-mm-dd). The company id is filled in automatically. GET /sites/environments/{env_id}/analytics/{metric}."
+        },
+        {
+          "name": "kinsta_get_force_https_status",
+          "type": "read",
+          "title": "Get force-HTTPS status",
+          "description": "Whether the environment forces HTTPS (ENABLED_FOR_ALL, ENABLED_REDIRECT_TO_PRIMARY or DISABLED). GET /sites/environments/{env_id}/force-https-status."
+        },
+        {
+          "name": "kinsta_list_redirect_rules",
+          "type": "read",
+          "title": "List redirect rules",
+          "description": "The environment's redirect rules (from, to, type, domain, optional country/city targeting), paged. GET /sites/environments/{env_id}/redirect-rules."
+        },
+        {
+          "name": "kinsta_list_denied_ips",
+          "type": "read",
+          "title": "List denied IPs",
+          "description": "The IP addresses and ranges blocked from the environment. GET /sites/tools/denied-ips."
+        },
+        {
+          "name": "kinsta_get_operation_status",
+          "type": "read",
+          "title": "Get operation status",
+          "description": "The status of an asynchronous operation (cache clear, PHP restart, manual backup, ...) by the operation_id the write tool returned. status 200 = finished, 202 = still running, other = failed. GET /operations/{operation_id}."
+        },
+        {
+          "name": "kinsta_clear_site_cache",
+          "type": "write",
+          "title": "Clear site cache",
+          "description": "WRITE: clear the page cache of one environment (the site is briefly slower while the cache warms up; nothing is lost). Returns an operation_id: check it with kinsta_get_operation_status. POST /sites/tools/clear-cache."
+        },
+        {
+          "name": "kinsta_clear_edge_cache",
+          "type": "write",
+          "title": "Clear edge cache",
+          "description": "WRITE: clear Kinsta's edge cache for one environment, optionally only for one URL (and its subdirectories). Nothing is lost; pages are cached again on the next visits. Returns an operation_id. POST /sites/edge-caching/clear."
+        },
+        {
+          "name": "kinsta_clear_cdn_cache",
+          "type": "write",
+          "title": "Clear CDN cache",
+          "description": "WRITE: clear the CDN cache of one environment (nothing is lost; files are fetched from the origin again). Needs the environment's cdn_cache_id from kinsta_list_sites. Returns an operation_id. POST /sites/cdn/clear-cache."
+        },
+        {
+          "name": "kinsta_restart_php",
+          "type": "write",
+          "title": "Restart PHP engine",
+          "description": "WRITE: restart the PHP engine of one environment. Requests in flight fail and the site may be unavailable for a few seconds. Returns an operation_id. POST /sites/tools/restart-php."
+        },
+        {
+          "name": "kinsta_create_manual_backup",
+          "type": "write",
+          "title": "Create manual backup",
+          "description": "WRITE: start a manual backup of one environment, with an optional note. Kinsta limits the number of manual backups per environment; when the limit is reached the request fails and nothing is deleted. Returns an operation_id. POST /sites/environments/{env_id}/manual-backups."
+        },
+        {
+          "name": "kinsta_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kinsta_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Kinsta tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kinsta_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Kinsta tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kinsta_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Kinsta Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run kinsta_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "rapidmail",
+      "name": "rapidmail",
+      "category": "email",
+      "description": "Read rapidmail lists, recipients, mailings and stats; add, update or unsubscribe one recipient.",
+      "endpoint": "https://rapidmail.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API user"
+          },
+          {
+            "label": "API password"
+          }
+        ],
+        "hint": "Create them in rapidmail under **Settings &rsaquo; API** (my.rapidmail.de) with **Create new API access**. These are separate API credentials, not your rapidmail login e-mail and password. They are used only to call the rapidmail API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "rapidmail_list_recipientlists",
+          "type": "read",
+          "title": "List recipient lists",
+          "description": "List the recipient lists (newsletter audiences) of the rapidmail account with id, name, description, whether unsubscribed recipients are blacklisted, and which is the default. Use the ids for recipients and mailing filters. GET /recipientlists."
+        },
+        {
+          "name": "rapidmail_get_recipientlist",
+          "type": "read",
+          "title": "Get recipient list",
+          "description": "One recipient list by id. GET /recipientlists/{id}."
+        },
+        {
+          "name": "rapidmail_get_recipientlist_activity_stats",
+          "type": "read",
+          "title": "Get recipient list activity stats",
+          "description": "Subscription activity of one recipient list between two dates (for example new subscriptions and unsubscriptions). The range may be at most one year, must not start before the list was created and must not lie in the future. GET /recipientlists/{id}/stats/activity."
+        },
+        {
+          "name": "rapidmail_list_recipients",
+          "type": "read",
+          "title": "List recipients",
+          "description": "List the recipients (subscribers) of ONE recipient list, optionally filtered by e-mail address, external id or status. recipientlist_id is required. The long text fields (extrabig1-10) are only returned with include_extrabig. GET /recipients."
+        },
+        {
+          "name": "rapidmail_get_recipient",
+          "type": "read",
+          "title": "Get recipient",
+          "description": "One recipient by id: e-mail, name, status, custom fields and timestamps. GET /recipients/{id}."
+        },
+        {
+          "name": "rapidmail_create_recipient",
+          "type": "write",
+          "title": "Add recipient",
+          "description": "WRITE: add ONE recipient (subscriber) to a recipient list. By default double opt-in is used: the recipient is created with status 'new' and rapidmail sends ONE confirmation e-mail to that address; they only receive newsletters after confirming. Set double_opt_in=false only if you hold the person's documented consent: the recipient is then stored as 'active' and no e-mail is sent (refused if the address was unsubscribed before). If a deleted recipient with the same address exists it is re-activated; an existing address returns a conflict error. Never use for bulk imports. POST /recipients."
+        },
+        {
+          "name": "rapidmail_update_recipient",
+          "type": "write",
+          "title": "Update recipient",
+          "description": "WRITE: partially update ONE recipient (only the fields you pass change): e-mail, name, custom fields. The status and the recipient list cannot be changed here, and no e-mail is sent. An e-mail address that already exists in the list returns a conflict error. PATCH /recipients/{id}."
+        },
+        {
+          "name": "rapidmail_unsubscribe_recipient",
+          "type": "write",
+          "title": "Unsubscribe recipient",
+          "description": "WRITE: remove ONE recipient from their list. rapidmail only soft-deletes the record (status 'deleted', as if the person had unsubscribed) and the statistics count it as an unsubscription. No goodbye e-mail is sent. Single recipient only. DELETE /recipients/{id}."
+        },
+        {
+          "name": "rapidmail_list_mailings",
+          "type": "read",
+          "title": "List mailings",
+          "description": "List newsletters (mailings) with status, subject, sender, send time, recipient count and recipient lists. Filter by status, recipient list, created / updated / sent date. Read only: mailings are never created, sent or scheduled by this server. GET /mailings."
+        },
+        {
+          "name": "rapidmail_get_mailing",
+          "type": "read",
+          "title": "Get mailing",
+          "description": "One mailing by id: status, subject, sender, destinations (recipient lists), send time, size and attachments. GET /mailings/{id}."
+        },
+        {
+          "name": "rapidmail_get_mailing_stats",
+          "type": "read",
+          "title": "Get mailing statistics",
+          "description": "Statistics of one sent mailing (opens, clicks, bounces, unsubscriptions and similar totals). GET /mailings/{id}/stats."
+        },
+        {
+          "name": "rapidmail_list_mailing_activity",
+          "type": "read",
+          "title": "List mailing recipient activity",
+          "description": "The recipients a mailing went to and what each did (delivered, opened, clicked, bounced). Detailed event information is only available if the respective plugin is enabled in the rapidmail account. GET /mailings/{id}/stats/activity."
+        },
+        {
+          "name": "rapidmail_get_mailing_recipient_activity",
+          "type": "read",
+          "title": "Get one recipient's activity in a mailing",
+          "description": "Delivery and engagement details of one recipient of one mailing. GET /mailings/{id}/stats/activity/{mailingrecipient_id}."
+        },
+        {
+          "name": "rapidmail_list_mailing_folders",
+          "type": "read",
+          "title": "List mailing folders",
+          "description": "The folders used to organise mailings, with id and name. GET /mailings/folders."
+        },
+        {
+          "name": "rapidmail_list_blacklist",
+          "type": "read",
+          "title": "List blacklist entries",
+          "description": "The account's blacklist: e-mail addresses, domains and patterns that never receive mailings, with their type, source and dates. GET /blacklist."
+        },
+        {
+          "name": "rapidmail_list_transactional_emails",
+          "type": "read",
+          "title": "List transactional e-mails",
+          "description": "Transactional (SMTP) e-mails sent through the rapidmail account: sender, recipient, subject, status (queued, delivered, bounced...), delivery diagnostics and open/click counts. Metadata only, no message bodies. Filter by date, status, project or address. GET /trx/emails."
+        },
+        {
+          "name": "rapidmail_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "rapidmail_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the rapidmail tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "rapidmail_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED rapidmail tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "rapidmail_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's rapidmail Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run rapidmail_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
