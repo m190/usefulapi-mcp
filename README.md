@@ -337,6 +337,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Bill4Time](servers/bill4time/) | billing | 12 | API token | [servers/bill4time/](servers/bill4time/) |
 | [Notifyre](servers/notifyre/) | communications | 25 | API token | [servers/notifyre/](servers/notifyre/) |
 | [Lessonspace](servers/lessonspace/) | productivity | 13 | API token | [servers/lessonspace/](servers/lessonspace/) |
+| [Számlázz.hu](servers/szamlazz-hu/) | billing | 15 | API token | [servers/szamlazz-hu/](servers/szamlazz-hu/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

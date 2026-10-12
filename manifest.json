@@ -53761,6 +53761,132 @@
           "description": "Cancel the caller's Lessonspace Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run lessonspace_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "szamlazz-hu",
+      "name": "Számlázz.hu",
+      "category": "billing",
+      "description": "Read Számlázz.hu invoices, PDFs, receipts, taxpayers; issue, reverse and pay invoices and receipts.",
+      "endpoint": "https://szamlazz-hu.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Agent key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Számla Agent key"
+          }
+        ],
+        "hint": "Create the key in Számlázz.hu as the account owner or an administrator: **Vezérlőpult** (dashboard) → scroll down to **Számla Agent kulcsok** → click the key icon. The key has full rights on that account, never expires, and can be deleted there at any time. Számla Agent is a paid add-on of Számlázz.hu (billed monthly by the number of documents issued through the API); to try the tools without real documents, switch the account to test mode first. Your key is used only to call the Számlázz.hu API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "szamlazz_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Read the data of one issued invoice (seller, buyer, lines, totals, VAT breakdown, payments) by invoice number, order number or your external id (give exactly one; for an order number with several invoices the last one is returned). Only invoices issued in this Számlázz.hu account. Also use it to check whether an invoice exists before issuing again. Számla Agent action-szamla_agent_xml."
+        },
+        {
+          "name": "szamlazz_get_invoice_pdf",
+          "type": "read",
+          "title": "Get the PDF of an invoice",
+          "description": "Download the PDF of one issued document (invoice, pro forma, ...) by invoice number, order number or your external id (give exactly one). Returns the totals and the PDF as an embedded resource. Számla Agent action-szamla_agent_pdf."
+        },
+        {
+          "name": "szamlazz_check_taxpayer",
+          "type": "read",
+          "title": "Check a Hungarian taxpayer",
+          "description": "Look up a Hungarian taxpayer in the NAV register by the first 8 digits of the tax number (the törzsszám): whether the number is valid, the taxpayer's name, VAT status and addresses. Számla Agent action-szamla_agent_taxpayer (data from the NAV Online Invoice platform)."
+        },
+        {
+          "name": "szamlazz_get_receipt",
+          "type": "read",
+          "title": "Get a receipt",
+          "description": "Read one issued receipt (nyugta) by receipt number: lines, payments, totals, whether it was reversed. Optionally the PDF. Számla Agent action-szamla_agent_nyugta_get."
+        },
+        {
+          "name": "szamlazz_create_invoice",
+          "type": "write",
+          "title": "Issue an invoice (fiscal, cannot be undone)",
+          "description": "ISSUES a real invoice in Számlázz.hu. A final invoice is reported to NAV (Online Számla) and can only be cancelled by a reversal (szamlazz_reverse_invoice), never deleted. kind: invoice (default), proforma (díjbekérő; not fiscal, can be deleted with szamlazz_delete_proforma), prepayment (előlegszámla). The tool computes net, VAT and gross of every line from net_unit_price and vat_rate. preview true builds the PDF only and creates NO document (check the reply: a returned invoice_number means a document WAS created). This call is NEVER retried: if the result is unclear, look the invoice up (szamlazz_get_invoice by order_number or external_id) before issuing again; always send external_id or order_number so that you can. Setting send_email_to_buyer e-mails the PDF to the buyer. Számla Agent action-xmlagentxmlfile."
+        },
+        {
+          "name": "szamlazz_reverse_invoice",
+          "type": "write",
+          "title": "Reverse (storno) an invoice (fiscal, cannot be undone)",
+          "description": "ISSUES a reversal (storno) invoice that cancels one issued invoice. Fiscal: it is reported to NAV and cannot be undone; the original stays in the books. A reversal needs the invoice number of a real invoice. NEVER retried: if the result is unclear, check with szamlazz_get_invoice before trying again. Számla Agent action-szamla_agent_st."
+        },
+        {
+          "name": "szamlazz_delete_proforma",
+          "type": "write",
+          "title": "Delete a pro forma invoice",
+          "description": "DELETES one pro forma invoice (díjbekérő) by its number or by its order number (give exactly one). Only pro forma invoices can be deleted; a real invoice is never touched (use szamlazz_reverse_invoice). Cannot be undone. Számla Agent action-szamla_agent_dijbekero_torlese."
+        },
+        {
+          "name": "szamlazz_register_payment",
+          "type": "write",
+          "title": "Register payments on an invoice",
+          "description": "Records 1-5 payments (kifizetés) on one of your own issued invoices or pro forma invoices, which updates its paid amount and outstanding balance. By default the payments are ADDED to the existing ones; replace_existing true REPLACES all earlier payment entries of the invoice. Not fiscal. Számla Agent action-szamla_agent_kifiz."
+        },
+        {
+          "name": "szamlazz_create_receipt",
+          "type": "write",
+          "title": "Issue a receipt (fiscal, cannot be undone)",
+          "description": "ISSUES a real HUF receipt (nyugta). Receipts are fiscal (NAV reporting) and can only be cancelled by szamlazz_reverse_receipt, never deleted. Give each line's whole-forint gross_total and vat_rate: the tool derives net, VAT and unit price (net + VAT equals gross exactly, as the vendor demands). The receipt prefix must be a receipt-only prefix (capital letters and digits, e.g. NYGTA), not an invoice prefix. call_id is required: the vendor refuses a second receipt with the same call_id (error 338), which protects against a duplicate. NEVER retried automatically: if the result is unclear, ask the user, then repeat the call with the SAME call_id (error 338 means the receipt already exists; find it in Számlázz.hu). Számla Agent action-szamla_agent_nyugta_create."
+        },
+        {
+          "name": "szamlazz_reverse_receipt",
+          "type": "write",
+          "title": "Reverse (storno) a receipt (fiscal, cannot be undone)",
+          "description": "ISSUES a reversal (storno) receipt that cancels one issued receipt. Fiscal and irreversible; a receipt can be reversed once, and a reversal receipt cannot be reversed. NEVER retried: if the result is unclear, check with szamlazz_get_receipt before trying again. Számla Agent action-szamla_agent_nyugta_storno."
+        },
+        {
+          "name": "szamlazz_send_receipt",
+          "type": "write",
+          "title": "E-mail a receipt",
+          "description": "E-MAILS an already issued receipt (PDF) to a customer. Without the e-mail fields, the vendor re-sends the receipt with the settings of the earlier e-mail. The e-mail cannot be recalled. Számla Agent action-szamla_agent_nyugta_send."
+        },
+        {
+          "name": "szamlazz_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "szamlazz_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Számlázz.hu tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "szamlazz_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Számlázz.hu tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "szamlazz_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Számlázz.hu Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run szamlazz_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
