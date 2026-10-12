@@ -53647,6 +53647,120 @@
           "description": "Cancel the caller's Notifyre Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run notifyre_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "lessonspace",
+      "name": "Lessonspace",
+      "category": "productivity",
+      "description": "Read Lessonspace sessions, recordings, transcripts, spaces and users; launch spaces, edit sessions.",
+      "endpoint": "https://lessonspace.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Lessonspace organisation API key"
+          }
+        ],
+        "hint": "Create it in Lessonspace → **Settings → Developer** (owner or Developer role, two-factor sign-in required). Lessonspace shows the key once, so copy it right away. The key acts for your whole organisation, so use a key made for this connection and delete it in Lessonspace to disconnect. Your key is used only to call the Lessonspace API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "lessonspace_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "List the organisation's sessions (a session is one meeting held in a space): name, uuid, start/end time, space, participants (name, email, role), guests, billable seconds, tags, summary and recording state. Filter by time, duration, participant, space, launch id or tags. Newest first as Lessonspace orders them. Each session's playback_url is an access link to its recording, and participant emails are personal data: treat both as sensitive and share them only with someone entitled to see them. GET /organisations/sessions/."
+        },
+        {
+          "name": "lessonspace_get_session",
+          "type": "read",
+          "title": "Get session",
+          "description": "One session by uuid, with its space, participants, guests, tags, summary and recording state. GET /organisations/sessions/{session}/."
+        },
+        {
+          "name": "lessonspace_get_session_recording",
+          "type": "read",
+          "title": "Get session recording URL",
+          "description": "The playback URL of a session's recording. status 'ready' = the URL works now; 'preparing' = Lessonspace is still creating it (ask again in a minute); 'no_recording' = recording was disabled, so none exists. The URL is an access link: give it only to someone entitled to watch the recording. GET /organisations/sessions/{session}/playback/."
+        },
+        {
+          "name": "lessonspace_get_session_transcript",
+          "type": "read",
+          "title": "Get session transcript URL",
+          "description": "A signed download URL for a session's transcript. Only works if transcription was switched on for the session (launch with transcribe=true). The URL is an access link: give it only to someone entitled to read the transcript. GET /organisations/sessions/{session}/transcript/."
+        },
+        {
+          "name": "lessonspace_update_session",
+          "type": "write",
+          "title": "Rename session / set recording access",
+          "description": "WRITE: rename a session and optionally set who may watch its recording (a list of participant, admin, teacher, student; an empty list falls back to the organisation policy). The name is always sent (Lessonspace requires it). PATCH /organisations/sessions/{session}/."
+        },
+        {
+          "name": "lessonspace_list_spaces",
+          "type": "read",
+          "title": "List spaces",
+          "description": "List the organisation's spaces (persistent rooms): id, name, slug, alias, url, tags, lock state, region and recording/transcription settings. The url of a space is a way in; treat it as sensitive. GET /organisations/spaces/."
+        },
+        {
+          "name": "lessonspace_list_space_sessions",
+          "type": "read",
+          "title": "List sessions of a space",
+          "description": "Sessions held in one space, with the join/leave log (who joined, left or went idle, and when) and the users connected now. Same filters as lessonspace_list_sessions. GET /spaces/{space}/sessions/."
+        },
+        {
+          "name": "lessonspace_launch_space",
+          "type": "write",
+          "title": "Launch a space (create a join link)",
+          "description": "WRITE: create a space, or reuse the one with the same `id`, and get a join link (client_url) for one participant. The link is a live credential for a real person: share it only with that person and never post it elsewhere. Calling again with the same id reuses the space but issues a new link; it is not safe to repeat blindly. Lessonspace's own `secret` is never returned. POST /spaces/launch/."
+        },
+        {
+          "name": "lessonspace_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the organisation's users: Lessonspace user id, name, email, role (teacher, student, admin), active state and external id. Names and emails are personal data. GET /organisations/users/."
+        },
+        {
+          "name": "lessonspace_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lessonspace_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Lessonspace tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "lessonspace_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Lessonspace tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "lessonspace_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Lessonspace Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run lessonspace_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
