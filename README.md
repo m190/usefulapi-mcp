@@ -326,6 +326,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [e-Boekhouden](servers/e-boekhouden/) | billing | 29 | API token | [servers/e-boekhouden/](servers/e-boekhouden/) |
 | [Weblate](servers/weblate/) | localization | 27 | API token | [servers/weblate/](servers/weblate/) |
 | [SmartBill](servers/smartbill/) | billing | 27 | API token | [servers/smartbill/](servers/smartbill/) |
+| [packagecloud](servers/packagecloud/) | devops | 22 | API token | [servers/packagecloud/](servers/packagecloud/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

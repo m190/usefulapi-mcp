@@ -52123,6 +52123,174 @@
           "description": "Cancel the caller's SmartBill Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run smartbill_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "packagecloud",
+      "name": "packagecloud",
+      "category": "devops",
+      "description": "Read packagecloud repos, packages, versions and download stats; create repos, promote and delete.",
+      "endpoint": "https://packagecloud.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "packagecloud API token"
+          }
+        ],
+        "hint": "Log in at packagecloud.io and copy the token from [packagecloud.io/api_token](https://packagecloud.io/api_token). The token acts as your whole account, so keep it private. Your token is used only to call the packagecloud API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "packagecloud_list_repositories",
+          "type": "read",
+          "title": "List repositories",
+          "description": "List the package repositories of this account: name, fqname (user/repo, used by every other tool), privacy, package count and last push. include_collaborations adds repositories you collaborate on. GET /repos."
+        },
+        {
+          "name": "packagecloud_get_repository",
+          "type": "read",
+          "title": "Get repository",
+          "description": "One repository: name, fqname, url, privacy, package count and last push. GET /repos/{user}/{repo}."
+        },
+        {
+          "name": "packagecloud_create_repository",
+          "type": "write",
+          "title": "Create repository",
+          "description": "WRITE: create a new, empty package repository in this account (the plan limits how many private ones). Returns the URL of the new repository. POST /repos."
+        },
+        {
+          "name": "packagecloud_list_distributions",
+          "type": "read",
+          "title": "List distributions",
+          "description": "The Linux distributions and versions packagecloud supports for deb, dsc and rpm packages, with their index_name (for example ubuntu / jammy) and numeric version ids. GET /distributions."
+        },
+        {
+          "name": "packagecloud_list_packages",
+          "type": "read",
+          "title": "List all packages",
+          "description": "List every package file in a repository (not grouped), newest data first as the server orders it. Each item carries ready-made URLs: package_url, versions_url, downloads_*_url, promote_url, destroy_url and download_url; pass those to the other package tools. Paged. GET /repos/{user}/{repo}/packages.json."
+        },
+        {
+          "name": "packagecloud_search_packages",
+          "type": "read",
+          "title": "Search packages",
+          "description": "Search a repository by package file name. An empty q returns every package. filter limits by type (rpms, debs, dscs, gem, python, node); dist (for example ubuntu or el/6) overrides filter; arch applies to Alpine/RPM/Debian only. Items carry the same ready-made URLs as list_packages. Paged. GET /repos/{user}/{repo}/search.json."
+        },
+        {
+          "name": "packagecloud_list_package_groups",
+          "type": "read",
+          "title": "List package names by type",
+          "description": "List the packages of one type, grouped by name with a versions_count and a versions_url (pass that to packagecloud_list_package_versions). Narrow by distro, then version, then arch (each needs the previous one; '*' matches any). Examples: type rpm; type deb + distro ubuntu + version jammy + arch amd64; type gem. GET /repos/{user}/{repo}/packages/{type}[/{distro}[/{version}[/{arch}]]].json."
+        },
+        {
+          "name": "packagecloud_get_package",
+          "type": "read",
+          "title": "Get package",
+          "description": "Details of one package file (size, checksums, dependencies, licenses, download counts and its other URLs). Pass the package_url of an item from list_packages, search_packages or list_package_versions. GET {package_url}."
+        },
+        {
+          "name": "packagecloud_list_package_versions",
+          "type": "read",
+          "title": "List package versions",
+          "description": "All versions of one package name (for deb/rpm: per distro, version and architecture). Pass the versions_url of an item from list_package_groups, or derive it from a package object. Paged. GET {versions_url}."
+        },
+        {
+          "name": "packagecloud_get_package_downloads",
+          "type": "read",
+          "title": "Get package download stats",
+          "description": "Download statistics of one package version: a count, a time series, or (repository owners only) the detail of each download. Default range is the last 7 days; pass start_date=19700101Z for all time. Pass the package_url of the package; Java and generic files have no download stats. GET {package_url minus .json}/stats/downloads/{count|detail|series/<interval>}.json."
+        },
+        {
+          "name": "packagecloud_get_repository_installs",
+          "type": "read",
+          "title": "Get repository install stats",
+          "description": "How often a repository was installed (set up on a machine): a count, a time series, or (owners only) the detail of each install, optionally for one distro or distro+version. Default range is the last 7 days; pass start_date=19700101Z for all time. GET /repos/{user}/{repo}/stats/installs[/{distro}[/{version}]]/{count|detail|series/<interval>}.json."
+        },
+        {
+          "name": "packagecloud_list_gpg_keys",
+          "type": "read",
+          "title": "List GPG keys",
+          "description": "The GPG keys of a repository (repository signing keys and package signing keys): name, fingerprint, type and the public key download URL. GET /repos/{user}/{repo}/gpg_keys.json."
+        },
+        {
+          "name": "packagecloud_get_gpg_key",
+          "type": "read",
+          "title": "Get GPG key",
+          "description": "One GPG key of a repository by its key name (as returned by list_gpg_keys, for example user-repo-85D7FBF915DFCBC6.pub.gpg). GET /repos/{user}/{repo}/gpg_keys/{keyname}.json."
+        },
+        {
+          "name": "packagecloud_get_readme",
+          "type": "read",
+          "title": "Get repository README",
+          "description": "The Markdown README of a repository. GET /repos/{user}/{repo}/readme.json."
+        },
+        {
+          "name": "packagecloud_create_readme",
+          "type": "write",
+          "title": "Create repository README",
+          "description": "WRITE: create the Markdown README of a repository. Use append_readme to add to an existing one. POST /repos/{user}/{repo}/readme.json."
+        },
+        {
+          "name": "packagecloud_append_readme",
+          "type": "write",
+          "title": "Append to repository README",
+          "description": "WRITE: append Markdown to the existing README of a repository (existing text is kept). Not idempotent: calling it twice appends twice. PATCH /repos/{user}/{repo}/readme.json."
+        },
+        {
+          "name": "packagecloud_promote_package",
+          "type": "write",
+          "title": "Promote (move) package",
+          "description": "WRITE, DESTRUCTIVE: MOVE a package file to another repository (for example staging -> production). It no longer exists in the source repository afterwards, and its download statistics are cleared. Pass the promote_url of the package object and the destination as user/repo. POST {promote_url}."
+        },
+        {
+          "name": "packagecloud_delete_package",
+          "type": "write",
+          "title": "Delete (yank) package",
+          "description": "WRITE, DESTRUCTIVE AND IRREVERSIBLE: delete one package file from its repository (a gem is yanked). Clients that depend on it will break. Pass the destroy_url of the package object and repeat its file name (the last path segment, for example jake-1.0-2.el6.x86_64.rpm) as confirm_filename. DELETE {destroy_url}."
+        },
+        {
+          "name": "packagecloud_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "packagecloud_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the packagecloud tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "packagecloud_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED packagecloud tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "packagecloud_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's packagecloud Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run packagecloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
