@@ -53887,6 +53887,183 @@
           "description": "Cancel the caller's Számlázz.hu Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run szamlazz_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "abstract-api",
+      "name": "Abstract API",
+      "category": "analytics",
+      "description": "Validate emails, phones, IBAN, VAT; look up IPs and companies; rates, holidays, time via Abstract.",
+      "endpoint": "https://abstract-api.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Email Reputation API key",
+            "optional": true
+          },
+          {
+            "label": "Phone Intelligence API key",
+            "optional": true
+          },
+          {
+            "label": "IP Intelligence API key",
+            "optional": true
+          },
+          {
+            "label": "Company Enrichment API key",
+            "optional": true
+          },
+          {
+            "label": "IBAN Validation API key",
+            "optional": true
+          },
+          {
+            "label": "VAT Validation API key",
+            "optional": true
+          },
+          {
+            "label": "Exchange Rates API key",
+            "optional": true
+          },
+          {
+            "label": "Public Holidays API key",
+            "optional": true
+          },
+          {
+            "label": "Timezone API key",
+            "optional": true
+          }
+        ],
+        "hint": "Every Abstract API has its **own key** (an Email Reputation key does not work for IP Intelligence). Open the API in your Abstract dashboard (app.abstractapi.com) and copy its key. **Credits:** connecting makes one test request per key, and every tool call spends one credit of that API's plan (free plans have a monthly quota and 1 request per second). A tool for an API whose key you left empty answers with a clear message; connect again to add it. Your keys are used only to call Abstract on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "abstractapi_validate_email",
+          "type": "read",
+          "title": "Validate email",
+          "description": "Check one email address: deliverability (format, MX, SMTP), quality score, free/disposable/role/catch-all flags, sender details and known data breaches. Email Reputation API. Spends 1 credit of your Email Reputation plan per request (a failed request counts too); needs the Email Reputation API key."
+        },
+        {
+          "name": "abstractapi_lookup_phone",
+          "type": "read",
+          "title": "Look up phone number",
+          "description": "Validate and enrich one phone number: format, carrier, line type (mobile, landline, VoIP), location, line status, risk and known breaches. Phone Intelligence API. Spends 1 credit of your Phone Intelligence plan per request (a failed request counts too); needs the Phone Intelligence API key."
+        },
+        {
+          "name": "abstractapi_lookup_ip",
+          "type": "read",
+          "title": "Look up IP address",
+          "description": "Geolocation and security intelligence for one IPv4 or IPv6 address: VPN/proxy/Tor/hosting/abuse flags, ASN, company, location, timezone, flag and currency. IP Intelligence API. An explicit ip_address is required (without one Abstract would look up the caller's own address, which here is this server's). Spends 1 credit of your IP Intelligence plan per request (a failed request counts too); needs the IP Intelligence API key."
+        },
+        {
+          "name": "abstractapi_enrich_company",
+          "type": "read",
+          "title": "Enrich company",
+          "description": "Firmographic data for a company web domain: name, description, logo, address, industry (SIC/NAICS), employee and revenue ranges, contacts, social profiles, technologies. Company Enrichment API. Spends 1 credit of your Company Enrichment plan per request (a failed request counts too); needs the Company Enrichment API key."
+        },
+        {
+          "name": "abstractapi_validate_iban",
+          "type": "read",
+          "title": "Validate IBAN",
+          "description": "Check the structure and check digits of one International Bank Account Number. It does not prove that the account exists. IBAN Validation API. Spends 1 credit of your IBAN Validation plan per request (a failed request counts too); needs the IBAN Validation API key."
+        },
+        {
+          "name": "abstractapi_validate_vat",
+          "type": "read",
+          "title": "Validate VAT number",
+          "description": "Check whether a VAT number is valid and, if it is, return the registered company name and address. VAT Validation API. Spends 1 credit of your VAT Validation plan per request (a failed request counts too); needs the VAT Validation API key."
+        },
+        {
+          "name": "abstractapi_calculate_vat",
+          "type": "read",
+          "title": "Calculate VAT",
+          "description": "Work out the VAT-compliant price for an amount in a country: the amounts without and with VAT, the VAT amount and the rate. Set is_vat_incl to true for the reverse calculation (the amount already contains VAT). VAT Validation API. Spends 1 credit of your VAT Validation plan per request (a failed request counts too); needs the VAT Validation API key."
+        },
+        {
+          "name": "abstractapi_list_vat_rates",
+          "type": "read",
+          "title": "List VAT rates",
+          "description": "The latest VAT rates of one country: the standard rate and each reduced-rate category with its description. VAT Validation API. Abstract answers this endpoint without checking the key and may not count it as a credit; this tool still needs the VAT API key."
+        },
+        {
+          "name": "abstractapi_get_exchange_rates",
+          "type": "read",
+          "title": "Get exchange rates",
+          "description": "Latest foreign-exchange and cryptocurrency rates for a base currency against one or more targets (all supported currencies if none is given). Exchange Rates API. Spends 1 credit of your Exchange Rates plan per request (a failed request counts too); needs the Exchange Rates API key."
+        },
+        {
+          "name": "abstractapi_convert_currency",
+          "type": "read",
+          "title": "Convert currency",
+          "description": "Convert an amount from a base currency to one target currency, at the latest rate or at the rate of a past date. Exchange Rates API. Spends 1 credit of your Exchange Rates plan per request (a failed request counts too); needs the Exchange Rates API key."
+        },
+        {
+          "name": "abstractapi_get_historical_rates",
+          "type": "read",
+          "title": "Get historical exchange rates",
+          "description": "Exchange rates of a base currency on a past date. Abstract lists this endpoint as closed beta: a key may be refused (HTTP 401/403) until Abstract enables it. Exchange Rates API. Spends 1 credit of your Exchange Rates plan per request (a failed request counts too); needs the Exchange Rates API key."
+        },
+        {
+          "name": "abstractapi_get_holidays",
+          "type": "read",
+          "title": "Get public holidays",
+          "description": "Public, local and religious holidays of a country for a date, a month or a year. Free Abstract plans require year, month and day together; paid plans default missing values to today. Public Holidays API. Spends 1 credit of your Public Holidays plan per request (a failed request counts too); needs the Public Holidays API key."
+        },
+        {
+          "name": "abstractapi_get_current_time",
+          "type": "read",
+          "title": "Get current time",
+          "description": "The current local date, time and timezone (name, abbreviation, GMT offset, daylight saving) of a place, coordinates or IP address. Timezone API. Spends 1 credit of your Timezone plan per request (a failed request counts too); needs the Timezone API key."
+        },
+        {
+          "name": "abstractapi_convert_time",
+          "type": "read",
+          "title": "Convert time between locations",
+          "description": "Convert a date and time from one location to another (places, coordinates or IP addresses). Without base_datetime the current time is converted. Timezone API. Spends 1 credit of your Timezone plan per request (a failed request counts too); needs the Timezone API key."
+        },
+        {
+          "name": "abstractapi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "abstractapi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Abstract API tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "abstractapi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Abstract API tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "abstractapi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Abstract API Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run abstractapi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
