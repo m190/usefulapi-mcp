@@ -322,6 +322,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [smsmode](servers/smsmode/) | communications | 17 | API token | [servers/smsmode/](servers/smsmode/) |
 | [Zammad](servers/zammad/) | support | 23 | API token | [servers/zammad/](servers/zammad/) |
 | [TinyPNG](servers/tinypng/) | image-cdn | 8 | API token | [servers/tinypng/](servers/tinypng/) |
+| [WakaTime](servers/wakatime/) | devtools | 27 | API token | [servers/wakatime/](servers/wakatime/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
