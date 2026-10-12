@@ -52948,6 +52948,237 @@
           "description": "Cancel the caller's Fieldwire Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run fieldwire_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "cashctrl",
+      "name": "CashCtrl",
+      "category": "billing",
+      "description": "Read CashCtrl accounts, journal, orders, people, articles, salaries and reports; book and create.",
+      "endpoint": "https://cashctrl.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per organization"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "CashCtrl organization"
+          },
+          {
+            "label": "CashCtrl API key"
+          }
+        ],
+        "hint": "Create the key in CashCtrl under **Settings → Users & Roles → Add → Add API user** (the API needs a PRO account; one API user per organization). The role of the API user decides what this server can read and change, so a read-only role makes it read-only. The organization is the \"myorg\" part of myorg.cashctrl.com. Your key is used only to call the CashCtrl API of that organization on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "cashctrl_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "The chart of accounts: number, name, category and the balance for the fiscal period. Not paged. GET /account/list.json."
+        },
+        {
+          "name": "cashctrl_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "One account of the chart of accounts by id. GET /account/read.json."
+        },
+        {
+          "name": "cashctrl_get_account_balance",
+          "type": "read",
+          "title": "Get an account balance",
+          "description": "The balance of one account at the end of a day (default: the last day of the current fiscal period). GET /account/balance."
+        },
+        {
+          "name": "cashctrl_list_account_categories",
+          "type": "read",
+          "title": "List account categories",
+          "description": "The categories of the chart of accounts (assets, liabilities, expenses, revenue and their sub-categories). GET /account/category/list.json."
+        },
+        {
+          "name": "cashctrl_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The bank accounts set up in CashCtrl (name, IBAN, linked ledger account). GET /account/bank/list.json."
+        },
+        {
+          "name": "cashctrl_list_journal",
+          "type": "read",
+          "title": "List journal entries",
+          "description": "Book entries of the journal (date, title, debit and credit account, amount, reference), newest first, for the current fiscal period unless fiscal_period_id is set. GET /journal/list.json."
+        },
+        {
+          "name": "cashctrl_get_journal_entry",
+          "type": "read",
+          "title": "Get a journal entry",
+          "description": "One book entry by id, with its items for a collective entry. GET /journal/read.json."
+        },
+        {
+          "name": "cashctrl_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "Sales or purchase documents (quotes, order confirmations, invoices, delivery notes, credit notes, vendor bills) with number, date, customer, status and total. Newest first. GET /order/list.json."
+        },
+        {
+          "name": "cashctrl_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order (invoice, quote, purchase document) by id, with its items, totals and status. GET /order/read.json."
+        },
+        {
+          "name": "cashctrl_list_order_categories",
+          "type": "read",
+          "title": "List order categories",
+          "description": "The order categories (Quote, Invoice, Credit note, Purchase invoice and so on) with their statuses (Draft, Open, Paid) and the default accounts and sequence numbers. Use it to find category_id and status_id (type PURCHASE for purchase documents). GET /order/category/list.json."
+        },
+        {
+          "name": "cashctrl_list_persons",
+          "type": "read",
+          "title": "List people",
+          "description": "Customers, vendors, employees and other contacts (name, company, number, roles, addresses). GET /person/list.json."
+        },
+        {
+          "name": "cashctrl_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "One person or company by id, with addresses, contact data and bank accounts. GET /person/read.json."
+        },
+        {
+          "name": "cashctrl_list_articles",
+          "type": "read",
+          "title": "List inventory articles",
+          "description": "Inventory articles (products and services) with number, name, price, stock and accounts. GET /inventory/article/list.json."
+        },
+        {
+          "name": "cashctrl_get_article",
+          "type": "read",
+          "title": "Get an inventory article",
+          "description": "One inventory article by id. GET /inventory/article/read.json."
+        },
+        {
+          "name": "cashctrl_list_salary_statements",
+          "type": "read",
+          "title": "List salary statements",
+          "description": "Payroll statements (employee, date, status, gross and net amounts), newest first. Sensitive personal data. GET /salary/statement/list.json."
+        },
+        {
+          "name": "cashctrl_get_salary_statement",
+          "type": "read",
+          "title": "Get a salary statement",
+          "description": "One payroll statement by id, with its salary items. Sensitive personal data. GET /salary/statement/read.json."
+        },
+        {
+          "name": "cashctrl_list_fiscal_periods",
+          "type": "read",
+          "title": "List fiscal periods",
+          "description": "All fiscal periods (id, name, start, end, current flag). The id is the fiscal_period_id of the other tools. GET /fiscalperiod/list.json."
+        },
+        {
+          "name": "cashctrl_list_tax_codes",
+          "type": "read",
+          "title": "List tax codes",
+          "description": "The VAT tax codes (id, code, name, rates). The id is the tax_id of the write tools. GET /tax/list.json."
+        },
+        {
+          "name": "cashctrl_list_sequence_numbers",
+          "type": "read",
+          "title": "List sequence numbers",
+          "description": "The number sequences (for journal references, order numbers, customer numbers). The id is the sequence_number_id of the write tools. GET /sequencenumber/list.json."
+        },
+        {
+          "name": "cashctrl_list_currencies",
+          "type": "read",
+          "title": "List currencies",
+          "description": "The currencies set up in CashCtrl with their exchange rates. GET /currency/list.json."
+        },
+        {
+          "name": "cashctrl_get_report_tree",
+          "type": "read",
+          "title": "Get the report tree",
+          "description": "The reports set up in CashCtrl (balance sheet, income statement, and so on) as a tree of collections and elements. The element id is the input of cashctrl_get_report_data. GET /report/tree.json."
+        },
+        {
+          "name": "cashctrl_get_report_data",
+          "type": "read",
+          "title": "Get report data",
+          "description": "The data of one report element (for example the balance sheet or the income statement) for a fiscal period or a date range. GET /report/element/data.json."
+        },
+        {
+          "name": "cashctrl_create_journal_entry",
+          "type": "write",
+          "title": "Create a journal entry",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. Creates a manual book entry in the journal. Either a simple entry (debit_account_id, credit_account_id, amount) or a collective entry (items, whose debit and credit sums must match). POST /journal/create.json."
+        },
+        {
+          "name": "cashctrl_delete_journal_entries",
+          "type": "write",
+          "title": "Delete journal entries",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. DELETES manual journal entries by id (entries created by orders or salary statements cannot be deleted this way). Deleted entries are gone from the books; confirm the ids with the user first. POST /journal/delete.json."
+        },
+        {
+          "name": "cashctrl_create_order",
+          "type": "write",
+          "title": "Create an order",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. Creates ONE order document for ONE customer or vendor: a quote, invoice, credit note, purchase bill and so on, depending on category_id. Without status_id the first status of the category is used; a booking status (for example Open) also creates journal entries, so use a draft status unless the user asks otherwise. No e-mail is sent. POST /order/create.json."
+        },
+        {
+          "name": "cashctrl_update_order_status",
+          "type": "write",
+          "title": "Change the status of orders",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. Sets the status of 1-20 orders (for example Draft to Open, or Open to Paid). A status can book journal entries or move stock, so the books change. POST /order/update_status.json."
+        },
+        {
+          "name": "cashctrl_delete_orders",
+          "type": "write",
+          "title": "Delete orders",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. DELETES orders (invoices, quotes, purchase documents) by id, with the journal entries they created. Deleted documents are gone; confirm the ids with the user first. POST /order/delete.json."
+        },
+        {
+          "name": "cashctrl_create_person",
+          "type": "write",
+          "title": "Create a person or company",
+          "description": "WRITE: changes the accounting records. Makes one request that is never repeated; check the result before trying again. Creates a customer, vendor or other contact. Give company, first_name or last_name (at least one). Search first with cashctrl_list_persons so no duplicate is created. POST /person/create.json."
+        },
+        {
+          "name": "cashctrl_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cashctrl_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the CashCtrl tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cashctrl_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED CashCtrl tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cashctrl_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's CashCtrl Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run cashctrl_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
