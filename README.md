@@ -319,6 +319,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [17TRACK](servers/17track/) | shipping | 13 | API token | [servers/17track/](servers/17track/) |
 | [Kinsta](servers/kinsta/) | devops | 27 | API token | [servers/kinsta/](servers/kinsta/) |
 | [rapidmail](servers/rapidmail/) | email | 20 | API token | [servers/rapidmail/](servers/rapidmail/) |
+| [smsmode](servers/smsmode/) | communications | 17 | API token | [servers/smsmode/](servers/smsmode/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
