@@ -50318,6 +50318,120 @@
           "description": "Cancel the caller's Merit Aktiva Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run merit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "homerun",
+      "name": "Homerun",
+      "category": "productivity",
+      "description": "Read Homerun vacancies, applications, notes and tags; move an application to a stage or add a note.",
+      "endpoint": "https://homerun.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "100 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Homerun API key"
+          }
+        ],
+        "hint": "Create it in Homerun → **Settings → Integrations** (the Public API needs a plan that includes it). Give the key only the scopes you need: vacancies:read, job-applications:read, job-application-notes:read, tags:read and job-application-tags:read for reading; add job-applications:write and job-application-notes:write only if you want to move candidates between stages or add notes. Your key is used only to call the Homerun API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "homerun_list_vacancies",
+          "type": "read",
+          "title": "List vacancies",
+          "description": "List job vacancies (draft, private, public, ...) with title, status, type, location type and expiry. Optionally include location, department, hiring stages (their ids are what homerun_move_application_to_stage needs), salary indication and the candidate count. GET /vacancies (scope vacancies:read)."
+        },
+        {
+          "name": "homerun_get_vacancy",
+          "type": "read",
+          "title": "Get vacancy",
+          "description": "One vacancy by id with description, location, department, hiring stages (id + name), salary indication, candidate count and the public job and application-form URLs. GET /vacancies/{vacancy_id} (scope vacancies:read)."
+        },
+        {
+          "name": "homerun_list_applications",
+          "type": "read",
+          "title": "List applications (candidates)",
+          "description": "List job applications, newest page first as the API orders them. Each item has name, e-mail, vacancy id, current stage (id + name), rating, created/hired dates and disqualified flag. Personal data: no phone number, date of birth, photo or files are returned here; ask for one application with homerun_get_application. Filter by vacancy, stage name or disqualified state and page through; do not use it to export all candidates. GET /job-applications (scope job-applications:read)."
+        },
+        {
+          "name": "homerun_get_application",
+          "type": "read",
+          "title": "Get application (candidate)",
+          "description": "One job application in full: contact details (name, e-mail, phone, city, country), links, experience/education, current stage, rating, sources and file names (notes: use homerun_list_notes). Date of birth, photo URL and file download links are never returned. Optionally include the answers to the application-form questions. Personal data: fetch only the candidate you need. GET /job-applications/{job_application_id} (scope job-applications:read)."
+        },
+        {
+          "name": "homerun_list_notes",
+          "type": "read",
+          "title": "List application notes",
+          "description": "List the notes on one application: id, author display name, text, sensitive flag and timestamps. GET /job-applications/{job_application_id}/notes (scope job-application-notes:read)."
+        },
+        {
+          "name": "homerun_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the company's candidate tags (id + name). GET /tags (scope tags:read)."
+        },
+        {
+          "name": "homerun_list_application_tags",
+          "type": "read",
+          "title": "List an application's tags",
+          "description": "The tags attached to one application. GET /job-applications/{job_application_id}/tags (scope job-application-tags:read)."
+        },
+        {
+          "name": "homerun_move_application_to_stage",
+          "type": "write",
+          "title": "Move application to a stage",
+          "description": "WRITE: move ONE application to another hiring stage of its vacancy (PATCH with only the stage id; nothing else on the application changes). Get stage ids from homerun_get_vacancy. Homerun's own automations for that stage may run (for example automatic e-mails configured in Homerun); this tool sends no e-mail itself and does not reject or delete anyone. PATCH /job-applications/{job_application_id} (scope job-applications:write)."
+        },
+        {
+          "name": "homerun_add_note",
+          "type": "write",
+          "title": "Add a note to an application",
+          "description": "WRITE: add ONE note (1-2000 characters) to one application. It becomes visible to the hiring team in Homerun and cannot be removed with this server. display_name is free text shown as the author. Nothing is sent to the candidate. POST /job-applications/{job_application_id}/notes (scope job-application-notes:write)."
+        },
+        {
+          "name": "homerun_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "homerun_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Homerun tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "homerun_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Homerun tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "homerun_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Homerun Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run homerun_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
