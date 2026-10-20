@@ -254,7 +254,7 @@ function faqFor(s) {
   if (feature) faq.push({ q: `What if a ${n} tool that I need is missing?`, a:
     `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name, the type of AI client and the tool you tried, not with your account, and read every request when we plan new tools. You can send up to 5 requests per day.` });
   faq.push({ q: `Which AI clients can I use?`, a:
-    `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, ChatGPT (paid plans), Cursor, VS Code, Windsurf and others.` });
+    `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, ChatGPT, Codex, Cursor, VS Code, Windsurf and others.` });
   return faq;
 }
 const faqSection = (faq) => `<h2 class="sec">FAQ</h2>\n<div class="faq">${faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join("")}</div>`;
@@ -270,7 +270,7 @@ function hintHtml(md) {
 }
 const stripTags = (h) => h.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
 
-// OpenAI's own article: its click path changes often, so the ChatGPT card links to it instead of copying it.
+// OpenAI's own article, for accounts whose Plugins page has no "Add custom MCP server" (path checked 2026-10-09).
 const OPENAI_MCP_GUIDE = "https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt";
 
 function productPage(s) {
@@ -311,11 +311,16 @@ ${copyBlock(`{
     }
   }
 }`)}</div>
-<div class="card"><h2>ChatGPT <span class="for">web</span></h2>
-<ol><li>In ChatGPT settings, add a custom MCP connector. The menu names and the <b>Developer mode</b> switch differ by plan: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</li>
-<li>Enter the name <b>${name}</b> and this URL, and choose <b>OAuth</b> as the authentication:${copyLine(endpoint)}</li>
-<li>${authStepFor(s, "ChatGPT")}.</li></ol>
-<p class="lead small">Custom connectors need a paid ChatGPT plan. On Business, Enterprise and Edu, an admin may have to allow them first.</p></div>
+<div class="card"><h2>ChatGPT <span class="for">chatgpt.com</span></h2>
+<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
+<li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(endpoint)}</li>
+<li>${authStepFor(s, "ChatGPT")}.</li>
+<li>In Plugins, install <b>${name}</b>, then choose it in a chat.</li></ol>
+<p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p></div>
+<div class="card"><h2>Codex</h2>
+<p class="lead">Run these commands. The second one opens the login page:</p>
+${copyLine(`codex mcp add ${esc(s.slug)} --url ${endpoint}`)}
+${copyLine(`codex mcp login ${esc(s.slug)}`)}</div>
 </div>
 <p class="hint">Other MCP clients (Windsurf, Cline, Zed and more): add the URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser. Do not add an <code>Authorization</code> header: see <a href="#setup">Before you connect</a>.</p>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
@@ -571,7 +576,7 @@ writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${bas
 const ft0 = freeTier(manifest.servers[0]), pt0 = proTier(manifest.servers[0]);
 writeFileSync(`${outDir}/llms.txt`,
   `# usefulapi.io\n\n` +
-  `> ${manifest.servers.length} hosted MCP servers that connect AI assistants (Claude, ChatGPT, Cursor and other MCP clients) to business APIs. ` +
+  `> ${manifest.servers.length} hosted MCP servers that connect AI assistants (Claude, ChatGPT, Codex, Cursor and other MCP clients) to business APIs. ` +
   `Each server is a remote MCP endpoint with an OAuth login: add its URL to the client as a custom connector, then sign in ` +
   `with your vendor account or API key (a few public-data servers ask only for an email code). ` +
   (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls; each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
