@@ -41,8 +41,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `printful_get_catalog_product` | read | Get a catalog product |
 | `printful_get_catalog_variant` | read | Get a catalog variant |
 | `printful_list_store_products` | read | List store products (Manual/API store) |
-| `printful_get_store_product` | read | Get a store product |
+| `printful_get_store_product` | read | Get a store product (Manual/API store) |
 | `printful_list_sync_products` | read | List synced products (integrated store) |
+| `printful_get_sync_product` | read | Get a synced product (integrated store) |
 | `printful_list_orders` | read | List orders |
 | `printful_get_order` | read | Get an order |
 | `printful_calculate_shipping_rates` | read | Calculate shipping rates |
