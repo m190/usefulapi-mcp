@@ -448,7 +448,7 @@ ${jsonLd(ld)}
 // statically pre-render the tiles so the server list is crawlable without JavaScript. ----
 const GROUP_ORDER = [
   "Payments & Billing", "Fintech", "Commerce & Memberships",
-  "Messaging & Communication", "CRM & Sales", "Customer Support", "Scheduling",
+  "Messaging & Communication", "CRM & Sales", "Real Estate", "Customer Support", "Scheduling",
   "Developer Tools & Infrastructure", "Observability", "Project Management",
   "Documents & Delivery", "Business Operations", "AI", "Healthcare", "Data & Analytics", "Media"
 ];
@@ -465,7 +465,7 @@ const CAT_GROUP = {
   maps: "Developer Tools & Infrastructure", "no-code-database": "Developer Tools & Infrastructure",
   devtools: "Developer Tools & Infrastructure", "dev-infra": "Developer Tools & Infrastructure",
   cloud: "Developer Tools & Infrastructure", security: "Developer Tools & Infrastructure",
-  crm: "CRM & Sales", support: "Customer Support", productivity: "Business Operations",
+  crm: "CRM & Sales", "real-estate": "Real Estate", support: "Customer Support", productivity: "Business Operations",
   observability: "Observability",
   "project-management": "Project Management",
   documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
