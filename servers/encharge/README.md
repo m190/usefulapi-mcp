@@ -53,7 +53,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `encharge_upgrade` (it returns a Stripe Checkout link). Cancel any time with `encharge_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `encharge_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

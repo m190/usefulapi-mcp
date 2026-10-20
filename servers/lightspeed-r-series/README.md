@@ -64,7 +64,7 @@ access any time from your Lightspeed Retail account settings. One subscription c
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** (per store account) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `lightspeedrseries_upgrade` (it returns a Stripe Checkout link). Cancel any time with `lightspeedrseries_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `lightspeedrseries_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

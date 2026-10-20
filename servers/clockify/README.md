@@ -66,7 +66,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `clockify_upgrade` (it returns a Stripe Checkout link). Cancel any time with `clockify_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `clockify_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

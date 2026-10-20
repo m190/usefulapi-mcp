@@ -60,7 +60,7 @@ keys in config files.
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `clickup_upgrade` (it returns a Stripe Checkout link). Cancel any time with `clickup_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `clickup_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

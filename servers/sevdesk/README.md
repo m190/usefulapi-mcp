@@ -66,7 +66,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `sevdesk_upgrade` (it returns a Stripe Checkout link). Cancel any time with `sevdesk_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `sevdesk_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

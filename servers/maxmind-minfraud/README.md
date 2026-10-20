@@ -48,7 +48,7 @@ On first connect you'll paste your MaxMind account ID and license key. It's vali
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `maxmind_minfraud_upgrade` (it returns a Stripe Checkout link). Cancel any time with `maxmind_minfraud_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `maxmind_minfraud_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.

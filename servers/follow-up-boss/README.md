@@ -49,6 +49,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `fub_list_stages` | read | List contact stages |
 | `fub_list_users` | read | List users (agents) |
 | `fub_list_custom_fields` | read | List custom fields |
+| `fub_lead_source_report` | read | Lead source report by agent |
 | `fub_send_lead_event` | **write** | Send in a lead / lead event |
 | `fub_update_person` | **write** | Update a person |
 | `fub_add_note` | **write** | Add a note |
@@ -68,7 +69,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 
 | Plan | Price | Limit |
 |------|-------|-------|
-| **Free** | $0 | 100 tool calls / month |
+| **Free** | $0 | 50 tool calls / month |
 | **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
 
 Pro covers this server only. Subscribe with `fub_upgrade` (it returns a Stripe Checkout link). Cancel any time with `fub_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `fub_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
