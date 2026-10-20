@@ -342,6 +342,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Oblio](servers/oblio/) | billing | 22 | API token | [servers/oblio/](servers/oblio/) |
 | [SmartAccounts](servers/smartaccounts/) | billing | 22 | API token | [servers/smartaccounts/](servers/smartaccounts/) |
 | [Propstack](servers/propstack/) | crm | 22 | API token | [servers/propstack/](servers/propstack/) |
+| [Trumpia](servers/trumpia/) | communications | 26 | API token | [servers/trumpia/](servers/trumpia/) |
+| [Order Desk](servers/order-desk/) | ecommerce | 19 | API token | [servers/order-desk/](servers/order-desk/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
