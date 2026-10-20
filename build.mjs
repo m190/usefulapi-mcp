@@ -234,6 +234,9 @@ function faqFor(s) {
   if (PERSONAL_DATA[s.slug]) faq.push({ q: `Does this server handle personal data?`, a: `Yes. ${PERSONAL_DATA[s.slug]} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.` });
   if (PATIENT_DATA.has(s.slug)) faq.push({ q: `Can I use this server with patient data (PHI)?`, a:
     `No. ${PATIENT_DATA_TEXT} See <a href="/terms/#5-acceptable-use">Terms, Health data</a>.` });
+  faq.push({ q: `Can I connect ${n} to Claude or ChatGPT?`, a:
+    `Yes. In Claude, add this server's URL as a custom connector. In ChatGPT, add it as a custom MCP server in Plugins. ` +
+    `Then log in once. Cursor, VS Code, Claude Code and Codex work too. See <a href="#connect">the setup steps</a>.` });
   faq.push({ q: `What do I need to connect?`, a:
     k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
     : k === "email" ? `Only an email address. You do not need a key for ${n}.`
@@ -364,8 +367,8 @@ ${billingNote}`
     : "";
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="${categoryPath(g)}">${esc(g)}</a></nav>
 <div class="brand">${MARK}<h1>${esc(s.name)} MCP server</h1></div>
-<p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong> — connect from Claude, Cursor, or any MCP client.</p>
-${cards}
+<p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong> — connect from Claude, ChatGPT, Cursor, or any MCP client.</p>
+<div id="connect">${cards}</div>
 ${chips}
 ${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
 ${live ? examplesSection(s) : ""}
@@ -377,8 +380,9 @@ ${related}
 <footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
   const url = `${SITE}${pagePath(s)}`;
   const n = toolCount(s);
-  const title = `${s.name} MCP Server — hosted, ${n} tools | usefulapi`;
-  const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server for Claude, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
+  // Worded like the question a user asks an AI assistant ("connect Acuity to ChatGPT"): answer engines bring most users.
+  const title = `${s.name} MCP server for Claude & ChatGPT | usefulapi`;
+  const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server for Claude, ChatGPT, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
   const offers = (s.pricing || []).map((p) => ({
     "@type": "Offer", name: p.plan, priceCurrency: "USD",
     price: String(p.monthly || "$0").replace(/[^0-9.]/g, "") || "0", description: p.limit
