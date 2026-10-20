@@ -558,6 +558,19 @@ writeFileSync(`${outDir}/sitemap.xml`,
   urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
 writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
+// llms.txt (llmstxt.org): the catalog in plain Markdown for AI answer engines, which are how most users
+// find a server. One line per server: the page, what it does, and the URL to add to an MCP client.
+const ft0 = freeTier(manifest.servers[0]), pt0 = proTier(manifest.servers[0]);
+writeFileSync(`${outDir}/llms.txt`,
+  `# usefulapi.io\n\n` +
+  `> ${manifest.servers.length} hosted MCP servers that connect AI assistants (Claude, ChatGPT, Cursor and other MCP clients) to business APIs. ` +
+  `Each server is a remote MCP endpoint with an OAuth login: add its URL to the client as a custom connector, then sign in ` +
+  `with your vendor account or API key (a few public-data servers ask only for an email code). ` +
+  (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls; each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
+  groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
+    .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
+  `\n\n## Optional\n\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n`);
+
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
 // endpoints with nothing to index — the indexable surface is this portal's /<slug>/ page.
 // A Cloudflare Single Redirect maps <slug>.usefulapi.io/robots.txt here, because the worker
@@ -568,4 +581,4 @@ writeFileSync(`${outDir}/mcp-robots.txt`,
   `# These hosts are JSON-RPC API endpoints; the human-readable pages live on ${base}.\n` +
   `User-agent: *\nDisallow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
-console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, mcp-robots.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
+console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, mcp-robots.txt, llms.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
