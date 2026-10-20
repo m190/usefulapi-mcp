@@ -306,7 +306,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Messente](servers/messente/) | communications | 13 | API token | [servers/messente/](servers/messente/) |
 | [Localazy](servers/localazy/) | localization | 21 | API token | [servers/localazy/](servers/localazy/) |
 | [Adafruit IO](servers/adafruit-io/) | productivity | 21 | API token | [servers/adafruit-io/](servers/adafruit-io/) |
-| [NS1](servers/ns1/) | dns | 22 | API token | [servers/ns1/](servers/ns1/) |
+| [NS1 Connect](servers/ns1/) | dns | 22 | API token | [servers/ns1/](servers/ns1/) |
 | [BulkSMS](servers/bulksms/) | communications | 12 | API token | [servers/bulksms/](servers/bulksms/) |
 | [Taggun](servers/taggun/) | document-ai | 10 | API token | [servers/taggun/](servers/taggun/) |
 | [D7 Networks](servers/d7-networks/) | communications | 10 | API token | [servers/d7-networks/](servers/d7-networks/) |
