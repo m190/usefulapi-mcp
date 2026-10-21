@@ -349,6 +349,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zenbooker](servers/zenbooker/) | productivity | 25 | API token | [servers/zenbooker/](servers/zenbooker/) |
 | [Linnworks](servers/linnworks/) | ecommerce | 21 | API token | [servers/linnworks/](servers/linnworks/) |
 | [Employment Hero Payroll](servers/keypay/) | productivity | 30 | API token | [servers/keypay/](servers/keypay/) |
+| [Cratejoy](servers/cratejoy/) | ecommerce | 22 | API token | [servers/cratejoy/](servers/cratejoy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

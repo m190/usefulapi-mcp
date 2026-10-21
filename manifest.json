@@ -57754,6 +57754,183 @@
           "description": "Cancel the caller's Employment Hero Payroll (KeyPay) Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run keypay_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "cratejoy",
+      "name": "Cratejoy",
+      "category": "ecommerce",
+      "description": "Read Cratejoy subscriptions, customers, orders and shipments; skip or cancel subscriptions.",
+      "endpoint": "https://cratejoy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per store"
+        }
+      ],
+      "examples": [
+        "How many active subscriptions do I have, and which ones are past due?",
+        "Show last week's orders and their payment status.",
+        "Which shipments are still unshipped?",
+        "Skip the next renewal of subscription 12345678."
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Cratejoy Client ID"
+          },
+          {
+            "label": "Cratejoy Client Secret Key"
+          }
+        ],
+        "hint": "A store admin creates them in the Cratejoy Seller Portal under **Settings → API → Generate a new Key**; the secret is shown only once, so copy both values. They are used only to call the Cratejoy API on your behalf and are never shown to anyone. You can revoke the key in Cratejoy at any time."
+      },
+      "tools": [
+        {
+          "name": "cratejoy_get_store_metadata",
+          "type": "read",
+          "title": "Get store metadata",
+          "description": "The store-level metadata record (id, store_id, created_at, updated_at, data: free-form JSON attached to the store). GET /v1/metadata/."
+        },
+        {
+          "name": "cratejoy_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (id, name, email, country, location, num_orders, num_subscriptions, subscription_status, total_revenue). Filter by email or name, or with `filters` (e.g. { 'addresses.city': 'Austin' }). Relationships: addresses, logs, carts, notes, orders, shipments, subscriptions. GET /v1/customers/."
+        },
+        {
+          "name": "cratejoy_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id, optionally with relationships (addresses, subscriptions, orders, shipments, notes...). GET /v1/customers/{customer_id}/."
+        },
+        {
+          "name": "cratejoy_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List subscriptions (id, status, autorenew, billing_name, start_date, end_date, skipped_date, is_test, product_billing_id). Filter by status and end-date range, or with `filters` (e.g. { 'customer.email__like': '%@example.com' }). Relationships: customer, billing, term, product, address, orders, shipments, logs. GET /v1/subscriptions/."
+        },
+        {
+          "name": "cratejoy_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "One subscription by id, optionally with relationships (customer, billing, term, product, address, orders, shipments, logs). GET /v1/subscriptions/{sub_id}/."
+        },
+        {
+          "name": "cratejoy_list_subscription_coupons",
+          "type": "read",
+          "title": "List subscription coupons",
+          "description": "Coupons applied to a subscription's next renewal (coupon_id, code_used, enabled, num_renewals). GET /v1/subscriptions/{sub_id}/coupons/."
+        },
+        {
+          "name": "cratejoy_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders (id, customer_id, placed_at, status, financial_status, fulfillment_status, is_renewal, is_gift, sub_total, total, total_shipping, total_tax). Amounts are in cents. Filter by payment status and placed-at range, or with `filters`. Relationships: customer, products, coupons, bill_address, ship_address, fulfillments, transactions, subscriptions. GET /v1/orders/."
+        },
+        {
+          "name": "cratejoy_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id, optionally with relationships (customer, products, coupons, addresses, fulfillments, transactions). GET /v1/orders/{order_id}/."
+        },
+        {
+          "name": "cratejoy_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments (id, customer_id, status, created_at, target_at, shipped_at, tracking_number, is_gift). Filter by status and creation range, or with `filters`. Relationships: customer, fulfillments, labels, ship_address, subscriptions. GET /v1/shipments/."
+        },
+        {
+          "name": "cratejoy_get_shipment",
+          "type": "read",
+          "title": "Get shipment",
+          "description": "One shipment by id, optionally with relationships (customer, fulfillments, labels, ship_address, subscriptions). GET /v1/shipments/{ship_id}/."
+        },
+        {
+          "name": "cratejoy_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (id, name, sku, slug, description, visible, listed, giftable, ship_option, ship_weight, has_subscribers). Filter by type or with `filters` (e.g. { 'visible': true }). Relationships: billing, instances, variants, subscription_types. GET /v1/products/."
+        },
+        {
+          "name": "cratejoy_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id, optionally with relationships. GET /v1/products/{prod_id}/."
+        },
+        {
+          "name": "cratejoy_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List payment transactions (id, created_at, result: authorized/captured/failed/refunded, total in cents, is_test, order). Filter by result and creation range, or with `filters`. GET /v1/transactions/."
+        },
+        {
+          "name": "cratejoy_get_transaction",
+          "type": "read",
+          "title": "Get transaction",
+          "description": "One payment transaction by id. GET /v1/transactions/{trans_id}/."
+        },
+        {
+          "name": "cratejoy_skip_subscription_renewal",
+          "type": "write",
+          "title": "Skip or unskip next renewal",
+          "description": "WRITE: skip a subscriber's next renewal (action 'skip') or undo the skip (action 'unskip'). Requires confirm=true. Repeating the same action changes nothing more. This changes a merchant customer's subscription in Cratejoy; it is not this server's own billing. PUT /v1/subscriptions/{sub_id}/skip/."
+        },
+        {
+          "name": "cratejoy_cancel_customer_subscription",
+          "type": "write",
+          "title": "Cancel a customer's subscription",
+          "description": "WRITE: cancel a subscriber's subscription in Cratejoy (the customer stops receiving boxes and renewals). This cancels the merchant's customer subscription, NOT this server's Pro plan (use the *_cancel_subscription tool for that). Requires confirm=true. A cancelled subscription can be restored with cratejoy_reactivate_subscription. PUT /v1/subscriptions/{sub_id}/cancel/."
+        },
+        {
+          "name": "cratejoy_reactivate_subscription",
+          "type": "write",
+          "title": "Reactivate a customer's subscription",
+          "description": "WRITE: reactivate a cancelled subscription so it renews and charges the customer again. Requires confirm=true. Reactivating an active subscription changes nothing more. PUT /v1/subscriptions/{sub_id}/reactivate/."
+        },
+        {
+          "name": "cratejoy_retry_subscription_renewal",
+          "type": "write",
+          "title": "Retry a failed renewal",
+          "description": "WRITE: retry the renewal of a PAST-DUE subscription whose renewal failed within the last 30 days. This charges the customer's saved payment method. Requires confirm=true. PUT /v1/subscriptions/{sub_id}/renew/."
+        },
+        {
+          "name": "cratejoy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cratejoy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Cratejoy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cratejoy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Cratejoy tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cratejoy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Cratejoy Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run cratejoy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
