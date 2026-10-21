@@ -348,6 +348,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Hello Club](servers/hello-club/) | membership | 18 | API token | [servers/hello-club/](servers/hello-club/) |
 | [Zenbooker](servers/zenbooker/) | productivity | 25 | API token | [servers/zenbooker/](servers/zenbooker/) |
 | [Linnworks](servers/linnworks/) | ecommerce | 21 | API token | [servers/linnworks/](servers/linnworks/) |
+| [Employment Hero Payroll](servers/keypay/) | productivity | 30 | API token | [servers/keypay/](servers/keypay/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

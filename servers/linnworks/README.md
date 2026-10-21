@@ -28,10 +28,6 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 
 <!-- connect:end (generated above, edit below) -->
 
-Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Linnworks application credentials.
-
-Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/linnworks/
-
 ## Tools
 
 | Tool | Type | What it does |
