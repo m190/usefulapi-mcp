@@ -57013,6 +57013,156 @@
         "Give me market statistics for listings in zip code 77096.",
         "Show the full details of the listing with SimplyRETS id 1005192."
       ]
+    },
+    {
+      "slug": "hello-club",
+      "name": "Hello Club",
+      "category": "membership",
+      "description": "Read Hello Club members, events, bookings and transactions; add members and charges.",
+      "endpoint": "https://hello-club.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per club"
+        }
+      ],
+      "examples": [
+        "Which members have an unpaid balance, and how much do they owe in total?",
+        "Whose membership ends in the next week?",
+        "Show next week's classes that still have spaces left.",
+        "Who checked in to the club today?"
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hello Club API key"
+          }
+        ],
+        "hint": "Create it in Hello Club under **Integrations → API keys** (the card at the bottom of the page; API access needs the Business plan). A key has full access to your club's data, so use a key made just for this connection and switch it off in Hello Club to revoke it. Your key is used only to call the Hello Club API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hello_club_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List or search the club's members (people and staff) with contact details, roles, memberships (subscriptions), account credit and amount owing. Filter by free text, gender, role, staff, money owing, account credit, current subscription state, ending subscriptions or a membership type. GET /member."
+        },
+        {
+          "name": "hello_club_get_member",
+          "type": "read",
+          "title": "Get member",
+          "description": "One member by id: profile, contact details, roles, subscriptions, account credit, amount owing, custom fields. Password hashes and payment-provider data are not returned. GET /member/{id}."
+        },
+        {
+          "name": "hello_club_list_membership_types",
+          "type": "read",
+          "title": "List membership types",
+          "description": "The membership types (plans) the club sells: name, fee, term, age limits, renewal rules and access. GET /membership."
+        },
+        {
+          "name": "hello_club_get_membership_type",
+          "type": "read",
+          "title": "Get membership type",
+          "description": "One membership type by id. GET /membership/{id}."
+        },
+        {
+          "name": "hello_club_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List or search events and classes (sessions, courses, tournaments) with dates, activity, area, organiser, capacity and attendance rules. Filter by date range, recurring, hidden, public, has attendees, has spaces left, rule type, activity, area or organiser. GET /event."
+        },
+        {
+          "name": "hello_club_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id: dates, recurrence, activity, area, organiser, capacity, attendance rules, questions. GET /event/{id}."
+        },
+        {
+          "name": "hello_club_list_event_attendees",
+          "type": "read",
+          "title": "List event attendees",
+          "description": "List who is signed up to events: member or guest, event, sign-up date, paid state, whether they attended. Filter by event, member or guest. GET /eventAttendee."
+        },
+        {
+          "name": "hello_club_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List resource bookings (courts, rooms, lanes): owner, activity, area, start/end, paid state, recurrence. Filter by date range, member, activity, mode, area, recurring, paid or removed. GET /booking."
+        },
+        {
+          "name": "hello_club_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List the club's financial transactions (invoices, charges, credits): member, type, amount, tax, due and payment dates, paid state. Filter by member, type, paid, credit or a date range on date / dueDate / paymentDate. GET /transaction."
+        },
+        {
+          "name": "hello_club_get_transaction",
+          "type": "read",
+          "title": "Get transaction",
+          "description": "One transaction by id: member, type, amount, tax, details, dates, paid state. GET /transaction/{id}."
+        },
+        {
+          "name": "hello_club_list_check_ins",
+          "type": "read",
+          "title": "List check-ins",
+          "description": "List check-in logs (members arriving at the club): who, when, how (type). Filter by member or type, or only unknown people. GET /checkInLog."
+        },
+        {
+          "name": "hello_club_list_access_logs",
+          "type": "read",
+          "title": "List door access logs",
+          "description": "List door / access-control logs in a date range: member, door, event, whether it was an override or an unknown person. GET /accessLog."
+        },
+        {
+          "name": "hello_club_create_member",
+          "type": "write",
+          "title": "Create member",
+          "description": "WRITE: create a new member in the club (first and last name required; email, mobile, phone and gender optional). Creates a real member record in the club's database; it does not assign a membership or send an invoice. Not idempotent: calling twice creates two members, so search with hello_club_list_members first. POST /member."
+        },
+        {
+          "name": "hello_club_create_transaction",
+          "type": "write",
+          "title": "Create transaction",
+          "description": "WRITE: create a financial transaction for a member (a charge, or a credit when is_credit is true), e.g. an invoice line or a manual adjustment. This changes the member's amount owing / account credit in the club's books and, with notify_by_email, emails the member. Not idempotent: calling twice creates two transactions. Confirm member, amount and type with the user first. POST /transaction."
+        },
+        {
+          "name": "hello_club_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hello_club_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hello Club tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hello_club_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Hello Club tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hello_club_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hello Club Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run hello_club_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
