@@ -346,6 +346,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Order Desk](servers/order-desk/) | ecommerce | 19 | API token | [servers/order-desk/](servers/order-desk/) |
 | [SimplyRETS](servers/simplyrets/) | real-estate | 14 | API token | [servers/simplyrets/](servers/simplyrets/) |
 | [Hello Club](servers/hello-club/) | membership | 18 | API token | [servers/hello-club/](servers/hello-club/) |
+| [Zenbooker](servers/zenbooker/) | productivity | 25 | API token | [servers/zenbooker/](servers/zenbooker/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
