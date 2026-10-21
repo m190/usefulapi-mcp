@@ -57355,6 +57355,180 @@
           "description": "Cancel the caller's Zenbooker Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run zenbooker_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "linnworks",
+      "name": "Linnworks",
+      "category": "ecommerce",
+      "description": "Read Linnworks inventory, stock and orders; set stock levels and add order notes.",
+      "endpoint": "https://linnworks.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Linnworks app installation"
+        }
+      ],
+      "examples": [
+        "Which open orders came in today and which are still waiting to be despatched?",
+        "What is the stock level of SKU ABC-123 in each warehouse?",
+        "Find the order with eBay reference 12-34567-89012 and show its tracking number.",
+        "Add an internal note to order 150234: customer asked for a gift receipt."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Application Id"
+          },
+          {
+            "label": "Application Secret"
+          },
+          {
+            "label": "Installation token"
+          }
+        ],
+        "hint": "Create the application yourself, for free, in the **Linnworks Developer Portal** (developer.linnworks.com, sign in with your Linnworks account-holder email): **Create application → System Integration**. The Application Id and Secret are on its General page. Open the Installation URL shown there while logged in to your Linnworks account and install it: the page then shows the token. Give the application only the permissions you want an AI assistant to have. These values are used only to call the Linnworks API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "linnworks_list_stock_locations",
+          "type": "read",
+          "title": "List stock locations",
+          "description": "List the stock locations (warehouses, fulfilment centres) of the Linnworks account: id, name, address, whether it is a fulfilment centre. Use the ids as location_id in other tools. GET /api/Inventory/GetStockLocations."
+        },
+        {
+          "name": "linnworks_search_inventory",
+          "type": "read",
+          "title": "Search inventory",
+          "description": "Search the product catalogue by SKU, title or barcode and return the items with their stock levels per location (and optionally pricing, suppliers, images, extended properties). An empty keyword lists items. POST /api/Stock/GetStockItemsFull."
+        },
+        {
+          "name": "linnworks_get_inventory_item",
+          "type": "read",
+          "title": "Get inventory item",
+          "description": "One product by its stock item id: SKU (ItemNumber), title, barcode, quantities (in stock, in orders, due, available), prices, tax rate, category, dimensions and weight. GET /api/Inventory/GetInventoryItemById."
+        },
+        {
+          "name": "linnworks_get_stock_levels",
+          "type": "read",
+          "title": "Get stock levels",
+          "description": "The stock level of one product at every location: in stock, in open orders, due on purchase orders, available, minimum level, unit cost and when it last changed. GET /api/Stock/GetStockLevel."
+        },
+        {
+          "name": "linnworks_get_stock_history",
+          "type": "read",
+          "title": "Get stock change history",
+          "description": "The stock-level change history of one product (date, new level, change quantity, value, note), newest data first as Linnworks returns it; optionally for a single location, otherwise combined. GET /api/Stock/GetItemChangesHistory."
+        },
+        {
+          "name": "linnworks_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List the product categories (id and name). GET /api/Inventory/GetCategories."
+        },
+        {
+          "name": "linnworks_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List the suppliers: id, name, contact, address, email, web page and currency. GET /api/Inventory/GetSuppliers."
+        },
+        {
+          "name": "linnworks_list_open_orders",
+          "type": "read",
+          "title": "List open orders",
+          "description": "Page through the open (not yet processed) orders of a fulfilment location, with general info (status, reference, source, received date), shipping, customer, totals and items. Narrow with text filters (reference, customer, SKU ...) and a received-date range. POST /api/Orders/GetOpenOrders."
+        },
+        {
+          "name": "linnworks_get_open_orders_details",
+          "type": "read",
+          "title": "Get open order details",
+          "description": "Full details of open orders by their ids (up to 50): general info, shipping, customer, totals, items, folders, notes, identifiers, extended properties and bin racks. Pass include to load only some of the optional parts. Only works for open orders. POST /api/OpenOrders/GetOpenOrdersDetails."
+        },
+        {
+          "name": "linnworks_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order, open or processed, by its order id (a GUID): general info, shipping, customer, totals, items, notes. GET /api/Orders/GetOrderById."
+        },
+        {
+          "name": "linnworks_find_order_by_number",
+          "type": "read",
+          "title": "Find order by order number",
+          "description": "Find one order, open or processed, by its Linnworks order number (the integer shown in the order book). Returns an empty order when none matches. GET /api/Orders/GetOrderDetailsByNumOrderId."
+        },
+        {
+          "name": "linnworks_find_orders_by_reference",
+          "type": "read",
+          "title": "Find orders by channel reference",
+          "description": "Find orders by their channel reference number (for example an Amazon or eBay order number) or secondary reference. Returns at most 50 orders. GET /api/Orders/GetOrderDetailsByReferenceId."
+        },
+        {
+          "name": "linnworks_search_processed_orders",
+          "type": "read",
+          "title": "Search processed orders",
+          "description": "Search processed (despatched) orders. Search by order number, tracking number, channel reference, customer name, email, postcode, address, SKU, source or sub-source, optionally within a date range (at most 3 months; a non-exact search covers only the last 3 months). POST /api/ProcessedOrders/SearchProcessedOrdersPaged."
+        },
+        {
+          "name": "linnworks_get_order_notes",
+          "type": "read",
+          "title": "Get order notes",
+          "description": "The notes on an order (text, internal or external, who wrote them and when). GET /api/Orders/GetOrderNotes."
+        },
+        {
+          "name": "linnworks_list_postal_services",
+          "type": "read",
+          "title": "List postal services",
+          "description": "List the postal (shipping) services with their courier vendor, tracking and weight requirements and linked channels. GET /api/PostalServices/GetPostalServices."
+        },
+        {
+          "name": "linnworks_set_stock_level",
+          "type": "write",
+          "title": "Set stock level",
+          "description": "WRITE: set the stock level of one product (by SKU) at one location to an absolute quantity. This overwrites the current level and flows to the sales channels the item is listed on. Check the current level with linnworks_get_stock_levels first. POST /api/Stock/SetStockLevel."
+        },
+        {
+          "name": "linnworks_add_order_note",
+          "type": "write",
+          "title": "Add order note",
+          "description": "WRITE: add a note to an order (open or processed). Internal notes are visible only inside Linnworks; external notes may be passed to the sales channel. Adds a new note each call (not idempotent). POST /api/Orders/AddOrdersNote."
+        },
+        {
+          "name": "linnworks_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "linnworks_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Linnworks tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "linnworks_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Linnworks tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a Stripe Checkout link to open in your browser; after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "linnworks_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Linnworks Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run linnworks_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
