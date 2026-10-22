@@ -35,29 +35,29 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_portal_statistics` | read | Get portal statistics |
-| `get_timeline` | read | Get timeline |
-| `list_users` | read | List users |
-| `get_user` | read | Get a user |
-| `list_user_courses` | read | List a user's courses |
-| `list_user_groups` | read | List a user's groups |
-| `list_user_branches` | read | List a user's branches |
-| `list_user_certificates` | read | List a user's certificates |
-| `get_course_progress` | read | Get a user's progress in a course |
-| `list_courses` | read | List courses |
-| `get_course` | read | Get a course |
-| `list_course_users` | read | List a course's users |
-| `list_categories` | read | List course categories |
-| `list_learning_paths` | read | List learning paths |
-| `list_groups` | read | List groups |
-| `get_group` | read | Get a group |
-| `list_group_users` | read | List a group's users |
-| `list_branches` | read | List branches |
-| `get_branch` | read | Get a branch |
-| `list_branch_users` | read | List a branch's users |
-| `create_user` | **write** | Create a learner |
-| `enroll_user_in_course` | **write** | Enroll a user in a course |
-| `add_user_to_group` | **write** | Add a user to a group |
+| `talentlms_get_portal_statistics` | read | Get portal statistics |
+| `talentlms_get_timeline` | read | Get timeline |
+| `talentlms_list_users` | read | List users |
+| `talentlms_get_user` | read | Get a user |
+| `talentlms_list_user_courses` | read | List a user's courses |
+| `talentlms_list_user_groups` | read | List a user's groups |
+| `talentlms_list_user_branches` | read | List a user's branches |
+| `talentlms_list_user_certificates` | read | List a user's certificates |
+| `talentlms_get_course_progress` | read | Get a user's progress in a course |
+| `talentlms_list_courses` | read | List courses |
+| `talentlms_get_course` | read | Get a course |
+| `talentlms_list_course_users` | read | List a course's users |
+| `talentlms_list_categories` | read | List course categories |
+| `talentlms_list_learning_paths` | read | List learning paths |
+| `talentlms_list_groups` | read | List groups |
+| `talentlms_get_group` | read | Get a group |
+| `talentlms_list_group_users` | read | List a group's users |
+| `talentlms_list_branches` | read | List branches |
+| `talentlms_get_branch` | read | Get a branch |
+| `talentlms_list_branch_users` | read | List a branch's users |
+| `talentlms_create_user` | **write** | Create a learner |
+| `talentlms_enroll_user_in_course` | **write** | Enroll a user in a course |
+| `talentlms_add_user_to_group` | **write** | Add a user to a group |
 | `talentlms_usage_status` | meta | Usage status (free-tier meter) |
 | `talentlms_request_feature` | meta | Request a missing feature |
 | `talentlms_upgrade` | meta | Upgrade to Pro (unlimited) |

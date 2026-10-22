@@ -36,23 +36,23 @@ access any time from your Lightspeed Retail account settings. One subscription c
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_account` | read | Get account |
-| `list_shops` | read | List shops |
-| `list_items` | read | List items |
-| `get_item` | read | Get an item |
-| `list_inventory` | read | List inventory levels |
-| `list_categories` | read | List categories |
-| `list_sales` | read | List sales |
-| `get_sale` | read | Get a sale |
-| `list_customers` | read | List customers |
-| `get_customer` | read | Get a customer |
-| `list_vendors` | read | List vendors |
-| `list_purchase_orders` | read | List purchase orders |
-| `get_purchase_order` | read | Get a purchase order |
-| `list_employees` | read | List employees |
-| `create_customer` | **write** | Create a customer |
-| `update_item` | **write** | Update an item |
-| `update_stock` | **write** | Set stock level |
+| `lightspeedrseries_get_account` | read | Get account |
+| `lightspeedrseries_list_shops` | read | List shops |
+| `lightspeedrseries_list_items` | read | List items |
+| `lightspeedrseries_get_item` | read | Get an item |
+| `lightspeedrseries_list_inventory` | read | List inventory levels |
+| `lightspeedrseries_list_categories` | read | List categories |
+| `lightspeedrseries_list_sales` | read | List sales |
+| `lightspeedrseries_get_sale` | read | Get a sale |
+| `lightspeedrseries_list_customers` | read | List customers |
+| `lightspeedrseries_get_customer` | read | Get a customer |
+| `lightspeedrseries_list_vendors` | read | List vendors |
+| `lightspeedrseries_list_purchase_orders` | read | List purchase orders |
+| `lightspeedrseries_get_purchase_order` | read | Get a purchase order |
+| `lightspeedrseries_list_employees` | read | List employees |
+| `lightspeedrseries_create_customer` | **write** | Create a customer |
+| `lightspeedrseries_update_item` | **write** | Update an item |
+| `lightspeedrseries_update_stock` | **write** | Set stock level |
 | `lightspeedrseries_usage_status` | meta | Usage status (free-tier meter) |
 | `lightspeedrseries_request_feature` | meta | Request a missing feature |
 | `lightspeedrseries_upgrade` | meta | Upgrade to Pro (unlimited) |

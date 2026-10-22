@@ -34,20 +34,20 @@ per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_account` | read | Get account settings |
-| `list_broadcasts` | read | List broadcasts |
-| `get_broadcast` | read | Get a broadcast |
-| `get_broadcast_details` | read | Get broadcast delivery details |
-| `list_text_numbers` | read | List text numbers |
-| `list_lists` | read | List contact lists |
-| `get_authorization_token` | read | Get a user authorization token |
-| `get_conversations_sso_url` | read | Get a single-sign-on conversations URL |
-| `textemall_request` | read | Raw read request |
-| `create_broadcast` | **write** | Send a broadcast |
-| `send_text_message` | **write** | Send a conversation text |
-| `create_draft_broadcast` | **write** | Create a draft broadcast |
-| `add_account_user` | **write** | Add an account user |
-| `update_account_user` | **write** | Update an account user |
+| `text_em_all_get_account` | read | Get account settings |
+| `text_em_all_list_broadcasts` | read | List broadcasts |
+| `text_em_all_get_broadcast` | read | Get a broadcast |
+| `text_em_all_get_broadcast_details` | read | Get broadcast delivery details |
+| `text_em_all_list_text_numbers` | read | List text numbers |
+| `text_em_all_list_lists` | read | List contact lists |
+| `text_em_all_get_authorization_token` | read | Get a user authorization token |
+| `text_em_all_get_conversations_sso_url` | read | Get a single-sign-on conversations URL |
+| `text_em_all_request` | read | Raw read request |
+| `text_em_all_create_broadcast` | **write** | Send a broadcast |
+| `text_em_all_send_text_message` | **write** | Send a conversation text |
+| `text_em_all_create_draft_broadcast` | **write** | Create a draft broadcast |
+| `text_em_all_add_account_user` | **write** | Add an account user |
+| `text_em_all_update_account_user` | **write** | Update an account user |
 | `text_em_all_usage_status` | meta | Usage status (free-tier meter) |
 | `text_em_all_request_feature` | meta | Request a missing feature |
 | `text_em_all_upgrade` | meta | Upgrade to Pro (unlimited) |

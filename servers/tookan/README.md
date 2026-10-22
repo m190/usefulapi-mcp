@@ -35,21 +35,21 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_account` | read | Get account |
-| `list_tasks` | read | List tasks |
-| `get_tasks` | read | Get task details |
-| `get_tasks_by_order_id` | read | Get tasks by order id |
-| `get_task_stats` | read | Task statistics |
-| `list_agents` | read | List agents |
-| `get_agent` | read | Get agent profile |
-| `get_agent_location` | read | Get agent location |
-| `list_teams` | read | List teams |
-| `list_customers` | read | List customers |
-| `find_customer_by_phone` | read | Find customer by phone |
-| `get_customer` | read | Get customer profile |
-| `create_delivery_task` | **write** | Create a delivery task |
-| `assign_agent_to_task` | **write** | Assign an agent to a task |
-| `update_task_status` | **write** | Update task status |
+| `tookan_get_account` | read | Get account |
+| `tookan_list_tasks` | read | List tasks |
+| `tookan_get_tasks` | read | Get task details |
+| `tookan_get_tasks_by_order_id` | read | Get tasks by order id |
+| `tookan_get_task_stats` | read | Task statistics |
+| `tookan_list_agents` | read | List agents |
+| `tookan_get_agent` | read | Get agent profile |
+| `tookan_get_agent_location` | read | Get agent location |
+| `tookan_list_teams` | read | List teams |
+| `tookan_list_customers` | read | List customers |
+| `tookan_find_customer_by_phone` | read | Find customer by phone |
+| `tookan_get_customer` | read | Get customer profile |
+| `tookan_create_delivery_task` | **write** | Create a delivery task |
+| `tookan_assign_agent_to_task` | **write** | Assign an agent to a task |
+| `tookan_update_task_status` | **write** | Update task status |
 | `tookan_usage_status` | meta | Usage status (free-tier meter) |
 | `tookan_request_feature` | meta | Request a missing feature |
 | `tookan_upgrade` | meta | Upgrade to Pro (unlimited) |

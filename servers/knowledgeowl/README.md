@@ -33,30 +33,30 @@ On first connect you'll paste your **KnowledgeOwl API key** — create one under
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `list_articles` | read | List articles |
-| `get_article` | read | Get an article |
-| `list_categories` | read | List categories |
-| `get_category` | read | Get a category |
-| `list_tags` | read | List tags |
-| `list_snippets` | read | List snippets |
-| `list_glossary_terms` | read | List glossary terms |
-| `list_comments` | read | List comments |
-| `list_readers` | read | List readers |
-| `get_reader` | read | Get a reader |
-| `list_files` | read | List files |
-| `list_article_versions` | read | List article versions |
-| `list_article_revisions` | read | List article revisions |
-| `list_suggestions` | read | List search suggestions |
-| `list_synonyms` | read | List synonyms |
-| `list_webhooks` | read | List webhooks |
-| `list_authors` | read | List authors |
+| `knowledgeowl_list_articles` | read | List articles |
+| `knowledgeowl_get_article` | read | Get an article |
+| `knowledgeowl_list_categories` | read | List categories |
+| `knowledgeowl_get_category` | read | Get a category |
+| `knowledgeowl_list_tags` | read | List tags |
+| `knowledgeowl_list_snippets` | read | List snippets |
+| `knowledgeowl_list_glossary_terms` | read | List glossary terms |
+| `knowledgeowl_list_comments` | read | List comments |
+| `knowledgeowl_list_readers` | read | List readers |
+| `knowledgeowl_get_reader` | read | Get a reader |
+| `knowledgeowl_list_files` | read | List files |
+| `knowledgeowl_list_article_versions` | read | List article versions |
+| `knowledgeowl_list_article_revisions` | read | List article revisions |
+| `knowledgeowl_list_suggestions` | read | List search suggestions |
+| `knowledgeowl_list_synonyms` | read | List synonyms |
+| `knowledgeowl_list_webhooks` | read | List webhooks |
+| `knowledgeowl_list_authors` | read | List authors |
 | `knowledgeowl_request` | read | Raw read request |
-| `create_article` | **write** | Create an article |
-| `update_article` | **write** | Update an article |
-| `create_category` | **write** | Create a category |
-| `update_category` | **write** | Update a category |
-| `create_snippet` | **write** | Create a snippet |
-| `create_glossary_term` | **write** | Create a glossary term |
+| `knowledgeowl_create_article` | **write** | Create an article |
+| `knowledgeowl_update_article` | **write** | Update an article |
+| `knowledgeowl_create_category` | **write** | Create a category |
+| `knowledgeowl_update_category` | **write** | Update a category |
+| `knowledgeowl_create_snippet` | **write** | Create a snippet |
+| `knowledgeowl_create_glossary_term` | **write** | Create a glossary term |
 | `knowledgeowl_usage_status` | meta | Usage status (free-tier meter) |
 | `knowledgeowl_request_feature` | meta | Request a missing feature |
 | `knowledgeowl_upgrade` | meta | Upgrade to Pro (unlimited) |

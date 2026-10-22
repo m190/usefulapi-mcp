@@ -34,31 +34,31 @@ per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_me` | read | Get current user |
-| `list_properties` | read | List properties |
-| `get_property` | read | Get a property |
-| `list_bookings` | read | List bookings |
-| `get_booking` | read | Get a booking |
-| `list_guests` | read | List guests |
-| `get_guest` | read | Get a guest |
-| `list_quotes` | read | List quotes |
-| `get_quote` | read | Get a quote |
-| `list_listings` | read | List listings |
-| `get_listing` | read | Get a listing |
-| `list_listing_sites` | read | List listing sites |
-| `list_owners` | read | List owners |
-| `list_inquiries` | read | List inquiries |
-| `list_messages` | read | List messages |
-| `list_payments` | read | List payments |
-| `get_payment` | read | Get a payment |
-| `list_field_definitions` | read | List custom-field definitions |
+| `ownerrez_get_me` | read | Get current user |
+| `ownerrez_list_properties` | read | List properties |
+| `ownerrez_get_property` | read | Get a property |
+| `ownerrez_list_bookings` | read | List bookings |
+| `ownerrez_get_booking` | read | Get a booking |
+| `ownerrez_list_guests` | read | List guests |
+| `ownerrez_get_guest` | read | Get a guest |
+| `ownerrez_list_quotes` | read | List quotes |
+| `ownerrez_get_quote` | read | Get a quote |
+| `ownerrez_list_listings` | read | List listings |
+| `ownerrez_get_listing` | read | Get a listing |
+| `ownerrez_list_listing_sites` | read | List listing sites |
+| `ownerrez_list_owners` | read | List owners |
+| `ownerrez_list_inquiries` | read | List inquiries |
+| `ownerrez_list_messages` | read | List messages |
+| `ownerrez_list_payments` | read | List payments |
+| `ownerrez_get_payment` | read | Get a payment |
+| `ownerrez_list_field_definitions` | read | List custom-field definitions |
 | `ownerrez_request` | read | Raw read request |
-| `create_guest` | **write** | Create a guest |
-| `update_guest` | **write** | Update a guest |
-| `create_booking` | **write** | Create a booking |
-| `update_booking` | **write** | Update a booking |
-| `create_quote` | **write** | Create a quote |
-| `create_message` | **write** | Create a message |
+| `ownerrez_create_guest` | **write** | Create a guest |
+| `ownerrez_update_guest` | **write** | Update a guest |
+| `ownerrez_create_booking` | **write** | Create a booking |
+| `ownerrez_update_booking` | **write** | Update a booking |
+| `ownerrez_create_quote` | **write** | Create a quote |
+| `ownerrez_create_message` | **write** | Create a message |
 | `ownerrez_usage_status` | meta | Usage status (free-tier meter) |
 | `ownerrez_request_feature` | meta | Request a missing feature |
 | `ownerrez_upgrade` | meta | Upgrade to Pro (unlimited) |

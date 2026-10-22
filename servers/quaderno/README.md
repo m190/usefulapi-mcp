@@ -33,29 +33,29 @@ On first connect you'll paste your Quaderno API key and account subdomain. It's 
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `ping` | read | Ping (verify auth) |
-| `calculate_tax` | read | Calculate tax rate |
-| `list_invoices` | read | List invoices |
-| `get_invoice` | read | Get an invoice |
-| `list_contacts` | read | List contacts |
-| `get_contact` | read | Get a contact |
-| `list_items` | read | List products (items) |
-| `get_item` | read | Get a product (item) |
-| `list_credit_notes` | read | List credit notes |
-| `get_credit_note` | read | Get a credit note |
-| `list_receipts` | read | List receipts |
-| `get_receipt` | read | Get a receipt |
-| `list_expenses` | read | List expenses |
-| `get_expense` | read | Get an expense |
-| `list_tax_codes` | read | List tax codes |
-| `list_jurisdictions` | read | List tax jurisdictions |
-| `list_webhooks` | read | List webhooks |
+| `quaderno_ping` | read | Ping (verify auth) |
+| `quaderno_calculate_tax` | read | Calculate tax rate |
+| `quaderno_list_invoices` | read | List invoices |
+| `quaderno_get_invoice` | read | Get an invoice |
+| `quaderno_list_contacts` | read | List contacts |
+| `quaderno_get_contact` | read | Get a contact |
+| `quaderno_list_items` | read | List products (items) |
+| `quaderno_get_item` | read | Get a product (item) |
+| `quaderno_list_credit_notes` | read | List credit notes |
+| `quaderno_get_credit_note` | read | Get a credit note |
+| `quaderno_list_receipts` | read | List receipts |
+| `quaderno_get_receipt` | read | Get a receipt |
+| `quaderno_list_expenses` | read | List expenses |
+| `quaderno_get_expense` | read | Get an expense |
+| `quaderno_list_tax_codes` | read | List tax codes |
+| `quaderno_list_jurisdictions` | read | List tax jurisdictions |
+| `quaderno_list_webhooks` | read | List webhooks |
 | `quaderno_request` | read | Raw read request |
-| `create_contact` | **write** | Create a contact |
-| `update_contact` | **write** | Update a contact |
-| `create_item` | **write** | Create a product (item) |
-| `create_invoice` | **write** | Create an invoice |
-| `create_transaction` | **write** | Create a transaction |
+| `quaderno_create_contact` | **write** | Create a contact |
+| `quaderno_update_contact` | **write** | Update a contact |
+| `quaderno_create_item` | **write** | Create a product (item) |
+| `quaderno_create_invoice` | **write** | Create an invoice |
+| `quaderno_create_transaction` | **write** | Create a transaction |
 | `quaderno_usage_status` | meta | Usage status (free-tier meter) |
 | `quaderno_request_feature` | meta | Request a missing feature |
 | `quaderno_upgrade` | meta | Upgrade to Pro (unlimited) |

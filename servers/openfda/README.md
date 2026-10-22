@@ -36,19 +36,19 @@ and your plan stay yours.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `search_drug_events` | read | Search drug adverse-event reports (FAERS) |
-| `search_drug_labels` | read | Search drug product labels (SPL) |
-| `search_drug_ndc` | read | Search the National Drug Code directory |
-| `search_drug_recalls` | read | Search drug recall enforcement reports |
-| `search_drugsfda` | read | Search Drugs@FDA approved products |
-| `search_drug_shortages` | read | Search drug shortages |
-| `search_device_events` | read | Search device adverse-event reports (MAUDE) |
-| `search_device_510k` | read | Search 510(k) premarket clearances |
-| `search_device_recalls` | read | Search device recalls |
-| `search_device_classification` | read | Search device classification |
-| `search_food_events` | read | Search food/supplement/cosmetic adverse events (CAERS) |
-| `search_food_recalls` | read | Search food recall enforcement reports |
-| `count` | read | Count/aggregate over an openFDA dataset |
+| `openfda_search_drug_events` | read | Search drug adverse-event reports (FAERS) |
+| `openfda_search_drug_labels` | read | Search drug product labels (SPL) |
+| `openfda_search_drug_ndc` | read | Search the National Drug Code directory |
+| `openfda_search_drug_recalls` | read | Search drug recall enforcement reports |
+| `openfda_search_drugsfda` | read | Search Drugs@FDA approved products |
+| `openfda_search_drug_shortages` | read | Search drug shortages |
+| `openfda_search_device_events` | read | Search device adverse-event reports (MAUDE) |
+| `openfda_search_device_510k` | read | Search 510(k) premarket clearances |
+| `openfda_search_device_recalls` | read | Search device recalls |
+| `openfda_search_device_classification` | read | Search device classification |
+| `openfda_search_food_events` | read | Search food/supplement/cosmetic adverse events (CAERS) |
+| `openfda_search_food_recalls` | read | Search food recall enforcement reports |
+| `openfda_count` | read | Count/aggregate over an openFDA dataset |
 | `openfda_query` | read | Query any openFDA endpoint (generic) |
 | `openfda_usage_status` | meta | Usage status (free-tier meter) |
 | `openfda_request_feature` | meta | Request a missing feature |

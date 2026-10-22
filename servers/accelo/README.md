@@ -34,29 +34,29 @@ per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `list_companies` | read | List companies |
-| `get_company` | read | Get a company |
-| `list_contacts` | read | List contacts |
-| `get_contact` | read | Get a contact |
-| `list_jobs` | read | List jobs (projects) |
-| `get_job` | read | Get a job (project) |
-| `list_tasks` | read | List tasks |
-| `get_task` | read | Get a task |
-| `list_activities` | read | List activities |
-| `get_activity` | read | Get an activity |
-| `list_invoices` | read | List invoices |
-| `get_invoice` | read | Get an invoice |
-| `list_prospects` | read | List prospects (sales) |
-| `get_prospect` | read | Get a prospect (sale) |
-| `list_staff` | read | List staff |
-| `get_staff` | read | Get a staff member |
-| `list_issues` | read | List issues (tickets) |
-| `get_issue` | read | Get an issue (ticket) |
+| `accelo_list_companies` | read | List companies |
+| `accelo_get_company` | read | Get a company |
+| `accelo_list_contacts` | read | List contacts |
+| `accelo_get_contact` | read | Get a contact |
+| `accelo_list_jobs` | read | List jobs (projects) |
+| `accelo_get_job` | read | Get a job (project) |
+| `accelo_list_tasks` | read | List tasks |
+| `accelo_get_task` | read | Get a task |
+| `accelo_list_activities` | read | List activities |
+| `accelo_get_activity` | read | Get an activity |
+| `accelo_list_invoices` | read | List invoices |
+| `accelo_get_invoice` | read | Get an invoice |
+| `accelo_list_prospects` | read | List prospects (sales) |
+| `accelo_get_prospect` | read | Get a prospect (sale) |
+| `accelo_list_staff` | read | List staff |
+| `accelo_get_staff` | read | Get a staff member |
+| `accelo_list_issues` | read | List issues (tickets) |
+| `accelo_get_issue` | read | Get an issue (ticket) |
 | `accelo_request` | read | Raw read request |
-| `create_company` | **write** | Create a company |
-| `create_contact` | **write** | Create a contact |
-| `create_task` | **write** | Create a task |
-| `create_activity` | **write** | Create an activity (log a note/email/call) |
+| `accelo_create_company` | **write** | Create a company |
+| `accelo_create_contact` | **write** | Create a contact |
+| `accelo_create_task` | **write** | Create a task |
+| `accelo_create_activity` | **write** | Create an activity (log a note/email/call) |
 | `accelo_usage_status` | meta | Usage status (free-tier meter) |
 | `accelo_request_feature` | meta | Request a missing feature |
 | `accelo_upgrade` | meta | Upgrade to Pro (unlimited) |

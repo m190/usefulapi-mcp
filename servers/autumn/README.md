@@ -33,24 +33,24 @@ On first connect you'll paste your Autumn API key. It's validated, stored per-us
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_customer` | read | Get a customer |
-| `list_customers` | read | List customers |
-| `check` | read | Check feature access / balance |
-| `list_invoices` | read | List invoices |
-| `get_entity` | read | Get an entity |
-| `list_entities` | read | List entities |
-| `list_features` | read | List features |
-| `get_feature` | read | Get a feature |
-| `list_plans` | read | List plans |
-| `get_plan` | read | Get a plan |
-| `preview_attach` | read | Preview attaching a plan |
+| `autumn_get_customer` | read | Get a customer |
+| `autumn_list_customers` | read | List customers |
+| `autumn_check` | read | Check feature access / balance |
+| `autumn_list_invoices` | read | List invoices |
+| `autumn_get_entity` | read | Get an entity |
+| `autumn_list_entities` | read | List entities |
+| `autumn_list_features` | read | List features |
+| `autumn_get_feature` | read | Get a feature |
+| `autumn_list_plans` | read | List plans |
+| `autumn_get_plan` | read | Get a plan |
+| `autumn_preview_attach` | read | Preview attaching a plan |
 | `autumn_request` | read | Raw read request |
-| `get_or_create_customer` | **write** | Get or create a customer |
-| `update_customer` | **write** | Update a customer |
-| `track_usage` | **write** | Track usage |
-| `attach_plan` | **write** | Attach a plan |
-| `create_entity` | **write** | Create an entity |
-| `open_customer_portal` | **write** | Open customer billing portal |
+| `autumn_get_or_create_customer` | **write** | Get or create a customer |
+| `autumn_update_customer` | **write** | Update a customer |
+| `autumn_track_usage` | **write** | Track usage |
+| `autumn_attach_plan` | **write** | Attach a plan |
+| `autumn_create_entity` | **write** | Create an entity |
+| `autumn_open_customer_portal` | **write** | Open customer billing portal |
 | `autumn_usage_status` | meta | Usage status (free-tier meter) |
 | `autumn_request_feature` | meta | Request a missing feature |
 | `autumn_upgrade` | meta | Upgrade to Pro (unlimited) |

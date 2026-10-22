@@ -37,26 +37,26 @@ scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_viewer` | read | Get current user (viewer) |
-| `list_teams` | read | List teams |
-| `get_team` | read | Get a team |
-| `list_team_members` | read | List team members |
-| `list_organizations` | read | List organizations |
-| `get_organization` | read | Get an organization |
-| `list_organization_users` | read | List organization users |
-| `list_meetings` | read | List meetings (history) |
-| `get_meeting` | read | Get a meeting |
-| `list_active_meetings` | read | List active meetings |
-| `list_tasks` | read | List tasks |
+| `parabol_get_viewer` | read | Get current user (viewer) |
+| `parabol_list_teams` | read | List teams |
+| `parabol_get_team` | read | Get a team |
+| `parabol_list_team_members` | read | List team members |
+| `parabol_list_organizations` | read | List organizations |
+| `parabol_get_organization` | read | Get an organization |
+| `parabol_list_organization_users` | read | List organization users |
+| `parabol_list_meetings` | read | List meetings (history) |
+| `parabol_get_meeting` | read | Get a meeting |
+| `parabol_list_active_meetings` | read | List active meetings |
+| `parabol_list_tasks` | read | List tasks |
 | `parabol_query` | read | Run a GraphQL query (read-only) |
-| `create_task` | **write** | Create a task |
-| `update_task` | **write** | Update a task |
-| `create_reflection` | **write** | Create a reflection |
-| `add_comment` | **write** | Add a comment |
-| `start_retrospective` | **write** | Start a retrospective |
-| `start_checkin` | **write** | Start a check-in meeting |
-| `start_team_prompt` | **write** | Start a standup (team prompt) |
-| `invite_to_team` | **write** | Invite users to a team |
+| `parabol_create_task` | **write** | Create a task |
+| `parabol_update_task` | **write** | Update a task |
+| `parabol_create_reflection` | **write** | Create a reflection |
+| `parabol_add_comment` | **write** | Add a comment |
+| `parabol_start_retrospective` | **write** | Start a retrospective |
+| `parabol_start_checkin` | **write** | Start a check-in meeting |
+| `parabol_start_team_prompt` | **write** | Start a standup (team prompt) |
+| `parabol_invite_to_team` | **write** | Invite users to a team |
 | `parabol_graphql` | **write** | Run a GraphQL operation (query or mutation) |
 | `parabol_usage_status` | meta | Usage status (free-tier meter) |
 | `parabol_request_feature` | meta | Request a missing feature |

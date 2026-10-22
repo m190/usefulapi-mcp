@@ -35,20 +35,20 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `list_active_orders` | read | List active orders |
-| `get_order` | read | Get order by order number |
-| `query_orders` | read | Search orders (history) |
-| `get_pickup_order` | read | Get a pickup order |
-| `get_delivery_progress` | read | Get delivery progress and ETA |
-| `list_carriers` | read | List carriers (drivers) |
-| `list_on_demand_services` | read | List on-demand delivery services |
-| `get_on_demand_estimate` | read | Get on-demand delivery estimates |
-| `get_on_demand_details` | read | Get on-demand delivery details |
-| `check_on_demand_availability` | read | Check on-demand delivery availability |
-| `create_order` | **write** | Create a delivery order |
-| `assign_order_to_carrier` | **write** | Assign an order to a driver |
-| `unassign_order` | **write** | Unassign an order from its driver |
-| `set_order_ready_to_pickup` | **write** | Mark an order ready for pickup |
+| `shipday_list_active_orders` | read | List active orders |
+| `shipday_get_order` | read | Get order by order number |
+| `shipday_query_orders` | read | Search orders (history) |
+| `shipday_get_pickup_order` | read | Get a pickup order |
+| `shipday_get_delivery_progress` | read | Get delivery progress and ETA |
+| `shipday_list_carriers` | read | List carriers (drivers) |
+| `shipday_list_on_demand_services` | read | List on-demand delivery services |
+| `shipday_get_on_demand_estimate` | read | Get on-demand delivery estimates |
+| `shipday_get_on_demand_details` | read | Get on-demand delivery details |
+| `shipday_check_on_demand_availability` | read | Check on-demand delivery availability |
+| `shipday_create_order` | **write** | Create a delivery order |
+| `shipday_assign_order_to_carrier` | **write** | Assign an order to a driver |
+| `shipday_unassign_order` | **write** | Unassign an order from its driver |
+| `shipday_set_order_ready_to_pickup` | **write** | Mark an order ready for pickup |
 | `shipday_usage_status` | meta | Usage status (free-tier meter) |
 | `shipday_request_feature` | meta | Request a missing feature |
 | `shipday_upgrade` | meta | Upgrade to Pro (unlimited) |

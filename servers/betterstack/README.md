@@ -36,15 +36,15 @@ It's validated, stored per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `list_monitors` | read | List monitors |
-| `get_monitor` | read | Get a monitor |
-| `list_incidents` | read | List incidents |
-| `get_incident` | read | Get an incident |
-| `list_heartbeats` | read | List heartbeats |
-| `list_on_call` | read | List on-call schedules |
-| `list_status_pages` | read | List status pages |
-| `acknowledge_incident` | **write** | Acknowledge an incident |
-| `resolve_incident` | **write** | Resolve an incident |
+| `betterstack_list_monitors` | read | List monitors |
+| `betterstack_get_monitor` | read | Get a monitor |
+| `betterstack_list_incidents` | read | List incidents |
+| `betterstack_get_incident` | read | Get an incident |
+| `betterstack_list_heartbeats` | read | List heartbeats |
+| `betterstack_list_on_call` | read | List on-call schedules |
+| `betterstack_list_status_pages` | read | List status pages |
+| `betterstack_acknowledge_incident` | **write** | Acknowledge an incident |
+| `betterstack_resolve_incident` | **write** | Resolve an incident |
 | `betterstack_usage_status` | meta | Usage status (free-tier meter) |
 | `betterstack_request_feature` | meta | Request a missing feature |
 | `betterstack_upgrade` | meta | Upgrade to Pro (unlimited) |

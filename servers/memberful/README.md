@@ -33,17 +33,17 @@ On first connect you'll paste your **Memberful API key** — create one in the M
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_member` | read | Get a member |
-| `list_members` | read | List members |
-| `get_subscription` | read | Get a subscription |
-| `list_subscriptions` | read | List subscriptions |
-| `list_plans` | read | List plans |
-| `list_passes` | read | List passes |
+| `memberful_get_member` | read | Get a member |
+| `memberful_list_members` | read | List members |
+| `memberful_get_subscription` | read | Get a subscription |
+| `memberful_list_subscriptions` | read | List subscriptions |
+| `memberful_list_plans` | read | List plans |
+| `memberful_list_passes` | read | List passes |
 | `memberful_query` | read | Run a GraphQL query (read-only) |
-| `create_member` | **write** | Create a member |
-| `update_member` | **write** | Update a member |
-| `change_subscription_expiration` | **write** | Change subscription expiration |
-| `create_coupons` | **write** | Create coupons |
+| `memberful_create_member` | **write** | Create a member |
+| `memberful_update_member` | **write** | Update a member |
+| `memberful_change_subscription_expiration` | **write** | Change subscription expiration |
+| `memberful_create_coupons` | **write** | Create coupons |
 | `memberful_graphql` | **write** | Run a GraphQL operation (query or mutation) |
 | `memberful_usage_status` | meta | Usage status (free-tier meter) |
 | `memberful_request_feature` | meta | Request a missing feature |

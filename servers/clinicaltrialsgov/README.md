@@ -36,13 +36,13 @@ and your plan stay yours.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `search_studies` | read | Search clinical trials (ClinicalTrials.gov) |
-| `get_study` | read | Get a clinical trial by NCT ID |
-| `count_studies` | read | Count matching clinical trials |
-| `list_field_values` | read | List value statistics for study fields |
-| `get_study_metadata` | read | Get the study data-model (field tree) |
-| `get_studies_stats` | read | Get study size statistics |
-| `get_api_version` | read | Get the ClinicalTrials.gov API version |
+| `clinicaltrialsgov_search_studies` | read | Search clinical trials (ClinicalTrials.gov) |
+| `clinicaltrialsgov_get_study` | read | Get a clinical trial by NCT ID |
+| `clinicaltrialsgov_count_studies` | read | Count matching clinical trials |
+| `clinicaltrialsgov_list_field_values` | read | List value statistics for study fields |
+| `clinicaltrialsgov_get_study_metadata` | read | Get the study data-model (field tree) |
+| `clinicaltrialsgov_get_studies_stats` | read | Get study size statistics |
+| `clinicaltrialsgov_get_api_version` | read | Get the ClinicalTrials.gov API version |
 | `clinicaltrialsgov_usage_status` | meta | Usage status (free-tier meter) |
 | `clinicaltrialsgov_request_feature` | meta | Request a missing feature |
 | `clinicaltrialsgov_upgrade` | meta | Upgrade to Pro (unlimited) |

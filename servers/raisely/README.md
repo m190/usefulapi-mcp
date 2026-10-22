@@ -33,29 +33,29 @@ On first connect you'll paste your Raisely campaign **Private API key** (Raisely
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `get_authenticated_user` | read | Get authenticated user |
-| `list_campaigns` | read | List campaigns |
-| `get_campaign` | read | Get a campaign |
-| `list_profiles` | read | List fundraising profiles |
-| `get_profile` | read | Get a fundraising profile |
-| `list_donations` | read | List donations |
-| `get_donation` | read | Get a donation |
-| `list_users` | read | List users |
-| `get_user` | read | Get a user |
-| `list_subscriptions` | read | List subscriptions |
-| `get_subscription` | read | Get a subscription |
-| `list_posts` | read | List posts |
-| `list_orders` | read | List orders |
-| `list_segments` | read | List segments |
-| `list_tags` | read | List tags |
-| `list_campaign_donations` | read | List a campaign's donations |
-| `list_campaign_profiles` | read | List a campaign's profiles |
-| `list_user_donations` | read | List a user's donations |
+| `raisely_get_authenticated_user` | read | Get authenticated user |
+| `raisely_list_campaigns` | read | List campaigns |
+| `raisely_get_campaign` | read | Get a campaign |
+| `raisely_list_profiles` | read | List fundraising profiles |
+| `raisely_get_profile` | read | Get a fundraising profile |
+| `raisely_list_donations` | read | List donations |
+| `raisely_get_donation` | read | Get a donation |
+| `raisely_list_users` | read | List users |
+| `raisely_get_user` | read | Get a user |
+| `raisely_list_subscriptions` | read | List subscriptions |
+| `raisely_get_subscription` | read | Get a subscription |
+| `raisely_list_posts` | read | List posts |
+| `raisely_list_orders` | read | List orders |
+| `raisely_list_segments` | read | List segments |
+| `raisely_list_tags` | read | List tags |
+| `raisely_list_campaign_donations` | read | List a campaign's donations |
+| `raisely_list_campaign_profiles` | read | List a campaign's profiles |
+| `raisely_list_user_donations` | read | List a user's donations |
 | `raisely_request` | read | Raw read request |
-| `create_donation` | **write** | Record a donation |
-| `upsert_user` | **write** | Upsert a user |
-| `update_profile` | **write** | Update a fundraising profile |
-| `create_post` | **write** | Create a post |
+| `raisely_create_donation` | **write** | Record a donation |
+| `raisely_upsert_user` | **write** | Upsert a user |
+| `raisely_update_profile` | **write** | Update a fundraising profile |
+| `raisely_create_post` | **write** | Create a post |
 | `raisely_usage_status` | meta | Usage status (free-tier meter) |
 | `raisely_request_feature` | meta | Request a missing feature |
 | `raisely_upgrade` | meta | Upgrade to Pro (unlimited) |
