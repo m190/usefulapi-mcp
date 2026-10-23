@@ -59598,6 +59598,612 @@
           "description": "Cancel the caller's FieldPulse Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run fieldpulse_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "bexio",
+      "name": "bexio",
+      "category": "billing",
+      "description": "Read bexio contacts, invoices, quotes, bills, projects and journal; log time, draft invoices.",
+      "endpoint": "https://bexio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your contacts, invoices, quotes, orders, items, projects, timesheets, supplier bills, chart of accounts, journal, taxes and bank accounts. It can create contacts, contact notes, timesheet entries and **draft** invoices when you ask it to; it never issues, sends, books, changes or deletes anything. It can do only what your bexio user is allowed to do. You can revoke access any time in bexio (Settings → Apps)."
+      },
+      "tools": [
+        {
+          "name": "bexio_get_company_profile",
+          "type": "read",
+          "title": "Get company profile",
+          "description": "The bexio company's profile: name, address, legal form, VAT (MWST) and UID numbers, contact details. Each bexio account has one profile."
+        },
+        {
+          "name": "bexio_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The signed-in bexio user (id, name, email, superadmin/accountant flags). Its id is the default user_id of new records."
+        },
+        {
+          "name": "bexio_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The company's bexio users (id, name, email). Use an id as user_id or owner of contacts, documents and timesheets."
+        },
+        {
+          "name": "bexio_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List or search contacts (customers, suppliers, persons, companies). Without filters it pages through all contacts; with filters it uses bexio's contact search (all filters must match). name_1 is the company name or a person's last name, name_2 a person's first name."
+        },
+        {
+          "name": "bexio_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact with its address, emails, phones, language, groups and remarks."
+        },
+        {
+          "name": "bexio_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List or search sales invoices (number, contact, totals, open amount, dates, status). Statuses: draft, pending (issued, open), paid, partial (partially paid), canceled, unpaid (overdue reminder state). Without filters it pages through all invoices; with filters all must match."
+        },
+        {
+          "name": "bexio_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice with its positions (line items), taxes, totals, received payments and remaining amount."
+        },
+        {
+          "name": "bexio_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "The payments recorded on one invoice (date, amount, bank account, cash discount)."
+        },
+        {
+          "name": "bexio_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "List or search quotes (Offerten): number, contact, totals, validity, status (draft, pending, confirmed, declined). With filters all must match."
+        },
+        {
+          "name": "bexio_get_quote",
+          "type": "read",
+          "title": "Get quote",
+          "description": "One quote with its positions, taxes and totals."
+        },
+        {
+          "name": "bexio_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List or search sales orders (Aufträge): number, contact, totals, recurring flag, status (pending, done, partial, canceled). With filters all must match."
+        },
+        {
+          "name": "bexio_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One sales order with its positions, taxes and totals."
+        },
+        {
+          "name": "bexio_list_articles",
+          "type": "read",
+          "title": "List items",
+          "description": "List or search items / products (Artikel): code, name, sale and purchase price, tax, unit, stock levels. Use an id as article_id in a draft invoice."
+        },
+        {
+          "name": "bexio_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List or search projects: number, name, contact, state, type, dates, budget. With filters all must match."
+        },
+        {
+          "name": "bexio_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project with its contact, state, type, dates, invoicing and budget settings."
+        },
+        {
+          "name": "bexio_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "List or search time tracking entries: date, duration, text, user, contact, project, business activity, billable flag. With filters all must match."
+        },
+        {
+          "name": "bexio_list_business_activities",
+          "type": "read",
+          "title": "List business activities",
+          "description": "Business activities (Tätigkeiten) for time tracking: id, name, billable default, hourly rate. A timesheet needs one."
+        },
+        {
+          "name": "bexio_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "The chart of accounts: account number, name, type (1 earning, 2 expenditure, 3 active/asset, 4 passive/liability, 5 complete/closing), default tax, active/locked flags."
+        },
+        {
+          "name": "bexio_list_journal",
+          "type": "read",
+          "title": "List journal entries",
+          "description": "Accounting journal bookings: date, debit and credit account ids, description, amount, currency, base-currency amount, and the source document (ref_class, ref_id)."
+        },
+        {
+          "name": "bexio_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "VAT (MWST) tax codes: id, code, rate, type (sales_tax, pre_tax, ...), validity. For a draft invoice use an active sales tax (types sales_tax, scope active)."
+        },
+        {
+          "name": "bexio_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The company's bank accounts shown in bexio banking: name, bank, IBAN / QR-IBAN, currency, linked ledger account, QR-invoice mode."
+        },
+        {
+          "name": "bexio_list_currencies",
+          "type": "read",
+          "title": "List currencies",
+          "description": "Currencies set up in bexio (id, code such as CHF or EUR, rounding), optionally with the exchange rate valid on a date. Use an id as currency_id."
+        },
+        {
+          "name": "bexio_list_business_years",
+          "type": "read",
+          "title": "List business years",
+          "description": "Accounting business (fiscal) years: start, end, status (open, locked, closed)."
+        },
+        {
+          "name": "bexio_list_bills",
+          "type": "read",
+          "title": "List supplier bills",
+          "description": "Supplier bills (Kreditoren / purchase bills): document number, vendor, title, status, gross/net, pending amount, bill and due date, overdue flag. status: DRAFTS, TODO (booked, not fully paid), PAID, OVERDUE."
+        },
+        {
+          "name": "bexio_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a new contact (company or person) in bexio. Nothing existing is changed. For a person, name is the last name and first_name the first name. Owner and responsible user default to the signed-in user."
+        },
+        {
+          "name": "bexio_create_note",
+          "type": "write",
+          "title": "Create note",
+          "description": "WRITE: add a note (call log, meeting minutes, follow-up) to a contact and/or project in bexio. Nothing existing is changed."
+        },
+        {
+          "name": "bexio_create_timesheet",
+          "type": "write",
+          "title": "Create timesheet entry",
+          "description": "WRITE: log time in bexio: either date + duration (HH:MM), or start + end. Needs a business activity (bexio_list_business_activities). Nothing existing is changed."
+        },
+        {
+          "name": "bexio_create_draft_invoice",
+          "type": "write",
+          "title": "Create draft invoice",
+          "description": "WRITE: create a DRAFT invoice in bexio for a contact, with custom, item (article) and text lines. It is never issued, sent or booked: the user reviews and issues it in bexio. Taxes must be active sales taxes (bexio_list_taxes with types sales_tax, scope active)."
+        },
+        {
+          "name": "bexio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bexio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the bexio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bexio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED bexio tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bexio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's bexio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run bexio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales invoices are still open, and which of them are overdue?",
+        "Which supplier bills are due this month, and how much is still to pay?",
+        "Show last month's journal bookings on the bank account.",
+        "Log 2 hours of consulting on the website project for today."
+      ]
+    },
+    {
+      "slug": "teamleader-focus",
+      "name": "Teamleader Focus",
+      "category": "crm",
+      "description": "Read Teamleader Focus contacts, companies, deals, invoices, projects; create deals, tasks.",
+      "endpoint": "https://teamleader-focus.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your contacts, companies, deals and pipelines, invoices, projects, tasks, tracked time, tickets, users and work types. It can create contacts, companies, deals, tasks and notes when you ask it to; it never updates, deletes, books, sends or credits anything. It can do only what your Teamleader user is allowed to do. You can revoke access any time in Teamleader (Settings → Integrations)."
+      },
+      "tools": [
+        {
+          "name": "teamleader_get_current_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Fetch the Teamleader user the sign-in belongs to: name, email, account id, language, time zone and teams. A cheap way to confirm the connection works. Teamleader: users.me."
+        },
+        {
+          "name": "teamleader_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users (colleagues) in the Teamleader account. Use it to find a user id to assign deals or tasks to. Teamleader: users.list."
+        },
+        {
+          "name": "teamleader_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List or search contacts (people). Filter by search term, primary email, linked company, tags, status or last update. Teamleader: contacts.list."
+        },
+        {
+          "name": "teamleader_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Fetch one contact in full: emails, telephones, addresses, linked companies (with position), tags, custom fields and remarks. Teamleader: contacts.info."
+        },
+        {
+          "name": "teamleader_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List or search companies (organisations). Filter by search term, primary email, VAT number, tags, status or last update. Teamleader: companies.list."
+        },
+        {
+          "name": "teamleader_get_company",
+          "type": "read",
+          "title": "Get a company",
+          "description": "Fetch one company in full: addresses, VAT number, responsible user, related contacts and companies, tags, custom fields and remarks. Teamleader: companies.info."
+        },
+        {
+          "name": "teamleader_list_deals",
+          "type": "read",
+          "title": "List deals",
+          "description": "List or search deals (sales opportunities). Filter by customer, phase, pipeline, status, responsible user, expected closing date or last update. Teamleader: deals.list."
+        },
+        {
+          "name": "teamleader_get_deal",
+          "type": "read",
+          "title": "Get a deal",
+          "description": "Fetch one deal in full: lead (customer + contact person), value, probability, current phase, phase history, linked quotations, responsible users, lost reason and custom fields. Teamleader: deals.info."
+        },
+        {
+          "name": "teamleader_list_deal_pipelines",
+          "type": "read",
+          "title": "List deal pipelines",
+          "description": "List the sales pipelines; the reply's meta names the default pipeline. Use a pipeline id with teamleader_list_deal_phases. Teamleader: dealPipelines.list."
+        },
+        {
+          "name": "teamleader_list_deal_phases",
+          "type": "read",
+          "title": "List deal phases",
+          "description": "List the phases (stages) of deal pipelines, in flow order, with their probability. Use a phase id when creating a deal. Teamleader: dealPhases.list."
+        },
+        {
+          "name": "teamleader_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List or search outgoing invoices. Filter by term, invoice number, status (draft / outstanding / matched = paid), customer, deal, project, invoice date range or last update. Returns totals, due date and paid state. Teamleader: invoices.list."
+        },
+        {
+          "name": "teamleader_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Fetch one invoice in full: invoicee, grouped line items, discounts, totals and taxes, payment term, payments received, payment reference and Peppol status. Teamleader: invoices.info."
+        },
+        {
+          "name": "teamleader_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects (the projects module). Filter by term, status, customer or deal. Returns budget, time tracked, billed/unbilled amounts, dates and owners. Teamleader: projects-v2/projects.list."
+        },
+        {
+          "name": "teamleader_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks (to-dos). Filter by assigned user, completed, scheduled, due date range, search term or customer. Teamleader: tasks.list."
+        },
+        {
+          "name": "teamleader_list_time_tracking",
+          "type": "read",
+          "title": "List time tracking",
+          "description": "List tracked time entries: who, when, duration (seconds), work type, subject, invoiceable flag and hourly rate. Filter by user, start range or subject. Teamleader: timeTracking.list."
+        },
+        {
+          "name": "teamleader_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List support tickets: subject, status, assignee, customer, project and last message time. Filter by customer, project or assignee. Teamleader: tickets.list."
+        },
+        {
+          "name": "teamleader_list_work_types",
+          "type": "read",
+          "title": "List work types",
+          "description": "List work types (e.g. Design, Development), alphabetically. A work type id is REQUIRED to create a task. Teamleader: workTypes.list."
+        },
+        {
+          "name": "teamleader_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "WRITE: create a new contact (person) in Teamleader. Only last_name is required. Returns the new contact's id. Teamleader: contacts.add."
+        },
+        {
+          "name": "teamleader_create_company",
+          "type": "write",
+          "title": "Create a company",
+          "description": "WRITE: create a new company in Teamleader. Only name is required. Returns the new company's id. Teamleader: companies.add."
+        },
+        {
+          "name": "teamleader_create_deal",
+          "type": "write",
+          "title": "Create a deal",
+          "description": "WRITE: create a new deal for an existing contact or company. Requires the customer and a title; optionally a phase (see teamleader_list_deal_phases), value, probability and expected closing date. Returns the new deal's id. Teamleader: deals.create."
+        },
+        {
+          "name": "teamleader_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: create a task (to-do). Requires a title, a due date and a work type id (see teamleader_list_work_types). Optionally assign it to a user or team and link a customer, deal, project or ticket. Returns the new task's id. Teamleader: tasks.create."
+        },
+        {
+          "name": "teamleader_add_note",
+          "type": "write",
+          "title": "Add a note",
+          "description": "WRITE: add a note to a contact, company, deal, invoice, quotation, project and more, e.g. a call summary. Optionally notify colleagues. Returns the new note's id. Teamleader: notes.create."
+        },
+        {
+          "name": "teamleader_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "teamleader_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Teamleader Focus tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "teamleader_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Teamleader Focus tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "teamleader_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Teamleader Focus Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run teamleader_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are still outstanding and who owes me?",
+        "Show my open deals and what they are worth by pipeline phase.",
+        "Find the company with VAT number BE 0899.623.035 and its contacts.",
+        "Create a task for tomorrow to call back our latest lead."
+      ]
+    },
+    {
+      "slug": "clio",
+      "name": "Clio",
+      "category": "productivity",
+      "description": "Read Clio matters, contacts, time, tasks, calendar and bills; add matters, time entries, notes.",
+      "endpoint": "https://clio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your firm's matters, contacts, time and expense entries, tasks, calendar, bills, document details (names and metadata, never file contents) and notes. It can create contacts, matters, time entries, tasks, notes and calendar entries and update tasks when you ask it to; it never deletes anything, changes a bill or touches payments or trust accounts. It can do only what your Clio user is allowed to do. This server is for Clio accounts in the US region. You can revoke access any time in Clio."
+      },
+      "tools": [
+        {
+          "name": "clio_who_am_i",
+          "type": "read",
+          "title": "Who am I",
+          "description": "Fetch the Clio user this access token belongs to — name, email, subscription type, time zone and default_calendar_id (needed to create calendar entries). A cheap way to confirm the token and region are right. Clio: GET /users/who_am_i.json."
+        },
+        {
+          "name": "clio_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the firm's Clio users (attorneys and staff) — use their ids for responsible attorneys, time entries and task assignees. Clio: GET /users.json."
+        },
+        {
+          "name": "clio_list_matters",
+          "type": "read",
+          "title": "List matters",
+          "description": "Search and list matters (the firm's cases) with their client, practice area, responsible attorney and status. `query` wildcard-matches matter number or description and the client's name. Clio: GET /matters.json."
+        },
+        {
+          "name": "clio_get_matter",
+          "type": "read",
+          "title": "Get one matter",
+          "description": "Fetch a single matter by id, with its client, practice area, stage and attorneys. Clio: GET /matters/{id}.json."
+        },
+        {
+          "name": "clio_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Search and list contacts — clients, prospective clients, companies, opposing parties and co-counsel. `query` wildcard-matches name, email, phone, address and more. Clio: GET /contacts.json."
+        },
+        {
+          "name": "clio_get_contact",
+          "type": "read",
+          "title": "Get one contact",
+          "description": "Fetch a single contact by id with all email addresses, phone numbers, postal addresses and web sites. Clio: GET /contacts/{id}.json."
+        },
+        {
+          "name": "clio_list_activities",
+          "type": "read",
+          "title": "List activities (time and expenses)",
+          "description": "List activities — time entries, expense entries and fixed fees — with hours, rate, total and billing status. Filter by matter, user, type, status or date range. `quantity` is in seconds; `quantity_in_hours` is hours. Clio: GET /activities.json."
+        },
+        {
+          "name": "clio_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks with status, priority, due date, matter and assignee. Filter by matter, assignee, status, priority or a due-date range — e.g. what is due this week. Clio: GET /tasks.json."
+        },
+        {
+          "name": "clio_list_calendar_entries",
+          "type": "read",
+          "title": "List calendar entries",
+          "description": "List calendar entries (hearings, meetings, deadlines) in a time window, optionally for one matter or calendar. Set expanded=true to get each occurrence of recurring events. Clio: GET /calendar_entries.json."
+        },
+        {
+          "name": "clio_list_bills",
+          "type": "read",
+          "title": "List bills",
+          "description": "List bills (invoices) with state, totals, amount due and dates. Filter by client, matter, state, overdue, or issue/due date. Clio: GET /bills.json."
+        },
+        {
+          "name": "clio_get_bill",
+          "type": "read",
+          "title": "Get one bill",
+          "description": "Fetch a single bill by id with its state, totals, balance, client and matters. Clio: GET /bills/{id}.json."
+        },
+        {
+          "name": "clio_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List documents (metadata only: name, file name, type, size, category, dates) for a matter, a contact or a folder, or search them by name. Clio: GET /documents.json."
+        },
+        {
+          "name": "clio_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes on a matter or a contact, with subject, body, date and author. Clio requires type; narrow to one matter or contact with matter_id or contact_id. Clio: GET /notes.json."
+        },
+        {
+          "name": "clio_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "WRITE: Create a contact — a person (give first_name and/or last_name) or a company (give name) — optionally with an email address and phone number. Clio: POST /contacts.json."
+        },
+        {
+          "name": "clio_create_matter",
+          "type": "write",
+          "title": "Create a matter",
+          "description": "WRITE: Open a new matter for an existing client contact. Requires the client's contact id and a description. Clio: POST /matters.json."
+        },
+        {
+          "name": "clio_create_time_entry",
+          "type": "write",
+          "title": "Record a time entry",
+          "description": "WRITE: Record billable (or non-billable) time on a matter. Give hours as a decimal (1.5 = 90 minutes); it is sent to Clio as seconds. If price (hourly rate) is omitted Clio applies the firm's rate hierarchy; if user_id is omitted it records for the token's user. Clio: POST /activities.json with type TimeEntry."
+        },
+        {
+          "name": "clio_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: Create a task and assign it to a firm user or a contact, optionally on a matter with a due date and priority. Clio: POST /tasks.json."
+        },
+        {
+          "name": "clio_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "WRITE: Update a task — mark it complete, change its status, due date, priority, name or description, or reassign it. Only the fields given are changed. Clio: PATCH /tasks/{id}.json."
+        },
+        {
+          "name": "clio_create_note",
+          "type": "write",
+          "title": "Create a note",
+          "description": "WRITE: Add a note to a matter (type Matter + matter_id) or to a contact (type Contact + contact_id). Clio: POST /notes.json."
+        },
+        {
+          "name": "clio_create_calendar_entry",
+          "type": "write",
+          "title": "Create a calendar entry",
+          "description": "WRITE: Put an event on a Clio calendar — a hearing, meeting or deadline — optionally linked to a matter. calendar_id is the calendar to put it on (the token user's own is default_calendar_id from clio_who_am_i). Clio: POST /calendar_entries.json."
+        },
+        {
+          "name": "clio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "clio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Clio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "clio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Clio tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "clio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Clio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run clio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my matters are open, and who is the responsible attorney on each?",
+        "What tasks are due this week across the firm?",
+        "Show unbilled time for the Smith matter and which bills are overdue.",
+        "Add a note to the Jones matter: spoke with the client, filing due Friday."
+      ]
     }
   ]
 }
