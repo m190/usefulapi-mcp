@@ -49,6 +49,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `fub_list_stages` | read | List contact stages |
 | `fub_list_users` | read | List users (agents) |
 | `fub_list_custom_fields` | read | List custom fields |
+| `fub_list_action_plans` | read | List action plans |
+| `fub_list_person_action_plans` | read | List action plans applied to people |
 | `fub_lead_source_report` | read | Lead source report by agent |
 | `fub_send_lead_event` | **write** | Send in a lead / lead event |
 | `fub_update_person` | **write** | Update a person |
