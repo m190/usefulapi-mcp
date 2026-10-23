@@ -218,6 +218,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Wild Apricot](servers/wild-apricot/) | membership | 25 | API token | [servers/wild-apricot/](servers/wild-apricot/) |
 | [Wufoo](servers/wufoo/) | productivity | 22 | API token | [servers/wufoo/](servers/wufoo/) |
 | [Lightspeed Retail (R-Series)](servers/lightspeed-r-series/) | ecommerce | 21 | OAuth | [servers/lightspeed-r-series/](servers/lightspeed-r-series/) |
+| [Lightspeed Retail (X-Series)](servers/lightspeed-x-series/) | ecommerce | 34 | OAuth | [servers/lightspeed-x-series/](servers/lightspeed-x-series/) |
 | [FreeAgent](servers/freeagent/) | billing | 24 | OAuth | [servers/freeagent/](servers/freeagent/) |
 | [Airbrake](servers/airbrake/) | observability | 17 | API token | [servers/airbrake/](servers/airbrake/) |
 | [ChurchSuite](servers/churchsuite/) | crm | 29 | API token | [servers/churchsuite/](servers/churchsuite/) |

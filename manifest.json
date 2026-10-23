@@ -34631,6 +34631,248 @@
       ]
     },
     {
+      "slug": "lightspeed-x-series",
+      "name": "Lightspeed Retail (X-Series)",
+      "category": "ecommerce",
+      "description": "Read Lightspeed X-Series products, stock, sales, customers, stock orders; one-call sales reports.",
+      "endpoint": "https://lightspeed-x-series.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per store account"
+        }
+      ],
+      "examples": [
+        "What were my total sales yesterday, by outlet and payment type?",
+        "Which products are below their reorder point at my main outlet?",
+        "Show the supplier stock orders that have not arrived yet.",
+        "Find the customer jane@example.com and add a note to her record."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your products, stock levels, sales, customers, suppliers, stock orders, outlets, registers and staff, and can create and update customers, set product prices and set stock levels when you ask it to. You can remove its access any time in your Lightspeed Retail back office."
+      },
+      "tools": [
+        {
+          "name": "lightspeedxseries_get_retailer",
+          "type": "read",
+          "title": "Get retailer",
+          "description": "The connected store: id, name, domain prefix, store URL, country, currency, time zone, tax-exclusive setting, loyalty and gift-card settings. Good first call (use the time zone to turn a local day into UTC for sales searches). GET /retailer."
+        },
+        {
+          "name": "lightspeedxseries_list_outlets",
+          "type": "read",
+          "title": "List outlets",
+          "description": "List the store's outlets (locations): id, name, address, currency, time zone, default tax. Use the outlet id to filter sales, stock and stock orders. Paginate with next_after. GET /outlets."
+        },
+        {
+          "name": "lightspeedxseries_get_outlet",
+          "type": "read",
+          "title": "Get outlet",
+          "description": "One outlet by id. GET /outlets/{outlet_id}."
+        },
+        {
+          "name": "lightspeedxseries_list_registers",
+          "type": "read",
+          "title": "List registers",
+          "description": "List registers (tills): id, name, outlet_id, is_open, open/close times and invoice numbering. Paginate with next_after. GET /registers."
+        },
+        {
+          "name": "lightspeedxseries_get_register_payments_summary",
+          "type": "read",
+          "title": "Get register payments summary",
+          "description": "Payment totals by payment type for one register since it was opened (the end-of-day / cash-up view). GET /registers/{register_id}/payments_summary."
+        },
+        {
+          "name": "lightspeedxseries_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List tax groups and their rates (id, name, is_default, rates). The vendor returns the whole list in one reply (no cursor). GET /taxes."
+        },
+        {
+          "name": "lightspeedxseries_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the store's users (staff): id, username, display name, email, account type (cashier, manager, admin), enabled flag, restricted outlets. Paginate with next_after. GET /users."
+        },
+        {
+          "name": "lightspeedxseries_get_user_sale_totals",
+          "type": "read",
+          "title": "Get user sale totals",
+          "description": "Sales totals for one staff user, as the vendor computes them (no date filter; use sales_summary for a period). GET /users/{user_id}/sale_totals."
+        },
+        {
+          "name": "lightspeedxseries_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (variants) in the catalog: id, family_id, sku, variant_name, prices (price_excluding_tax / price_including_tax), active flags, codes, suppliers, version. The product NAME lives on the product family: add includes=[\"families\"] to get it. Paginate with next_after (stop when data is empty). With sku set, only that SKU is looked up and the other filters are ignored. For text/brand/supplier filters use search_products; for stock use get_inventory_levels. GET /products."
+        },
+        {
+          "name": "lightspeedxseries_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product (variant) by id, with its prices, codes, suppliers and outlet taxes. GET /products/{product_id}."
+        },
+        {
+          "name": "lightspeedxseries_search_products",
+          "type": "read",
+          "title": "Search products",
+          "description": "Filter products by SKU, brand, supplier, tag, product type or variant parent. Uses offset paging: pass next_offset to continue (null = last page). GET /search?type=products."
+        },
+        {
+          "name": "lightspeedxseries_get_inventory_levels",
+          "type": "read",
+          "title": "Get inventory levels",
+          "description": "Stock on hand per product per outlet: product_id, location_id (= outlet id), current_inventory_level, reorder threshold/amount, quantity_to_procure, average cost, total cost, supplier. Filter by outlet_ids, product_ids (or root_product_ids for variant families), supplier_ids; to_be_procured_only keeps products with a positive quantity_to_procure (the vendor's re-order suggestion, which accounts for open orders); for a plain below-reorder-point list, compare current_inventory_level with reorder_threshold yourself. Offset paging: pass next_offset to continue (null = last page). Read-only even though the vendor takes the filter as a POST body. POST /inventory_levels."
+        },
+        {
+          "name": "lightspeedxseries_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "List product brands (id, name). Paginate with next_after. GET /brands."
+        },
+        {
+          "name": "lightspeedxseries_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List product tags (id, name). Paginate with next_after. GET /tags."
+        },
+        {
+          "name": "lightspeedxseries_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers: id, name, default markup and contact details. Paginate with next_after. GET /suppliers."
+        },
+        {
+          "name": "lightspeedxseries_list_consignments",
+          "type": "read",
+          "title": "List stock orders (consignments)",
+          "description": "List consignments: supplier stock orders (type SUPPLIER), transfers between outlets (OUTLET), stocktakes (STOCKTAKE) and returns (RETURN), with status (OPEN, SENT, DISPATCHED, RECEIVED, STOCKTAKE_*, CLOSED, CANCELLED), outlet, supplier, due and received dates, totals. Paginate with next_after. GET /consignments."
+        },
+        {
+          "name": "lightspeedxseries_get_consignment",
+          "type": "read",
+          "title": "Get consignment",
+          "description": "One consignment (stock order, transfer, stocktake or return) by id. GET /consignments/{consignment_id}."
+        },
+        {
+          "name": "lightspeedxseries_list_consignment_products",
+          "type": "read",
+          "title": "List consignment products",
+          "description": "The product lines of one consignment: product_id, SKU, ordered count, received quantity, cost. Paginate with next_after (stop when data is empty). GET /consignments/{consignment_id}/products."
+        },
+        {
+          "name": "lightspeedxseries_list_sales",
+          "type": "read",
+          "title": "List sales (change feed)",
+          "description": "Sales in version order, oldest changes first: the way to sync everything that changed. It has NO date filter: for a period use search_sales or sales_summary. Each sale: id, date, invoice_number, state, customer_id, source (outlet, register, user), payments, line_items, totals. Paginate with next_after (stop when data is empty). GET /sales."
+        },
+        {
+          "name": "lightspeedxseries_get_sale",
+          "type": "read",
+          "title": "Get sale",
+          "description": "One sale by id with its line items, payments, taxes and totals. GET /sales/{sale_id}."
+        },
+        {
+          "name": "lightspeedxseries_search_sales",
+          "type": "read",
+          "title": "Search sales",
+          "description": "Find sales by date range (UTC), state, outlet, register, user, customer, payment type, product or invoice number. Uses offset paging: pass next_offset to continue (null = last page). Replies can be large: for totals over a period use sales_summary instead of paging through this. GET /search?type=sales."
+        },
+        {
+          "name": "lightspeedxseries_sales_summary",
+          "type": "read",
+          "title": "Sales summary (totals for a period)",
+          "description": "Totals for a period computed here from up to max_pages x page_size sales, so a report needs ONE tool call instead of dozens: sale count and net / tax / gross (tax-inclusive) totals, plus breakdowns by state, UTC day, outlet and payment type name, and the top products by quantity. By default only closed sales are counted (states containing 'closed'); set counted_states to change that. Dates are UTC (convert local days with the retailer's time zone). If the reply says truncated, call again with offset = next_offset and add the figures up. Uses GET /search?type=sales."
+        },
+        {
+          "name": "lightspeedxseries_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers in version order: id, customer_code, name, email, phone, balance, loyalty_balance, year_to_date, customer group. To find one by name or email use search_customers. Paginate with next_after (stop when data is empty). GET /customers."
+        },
+        {
+          "name": "lightspeedxseries_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Find customers by email, first name, last name, company name, phone, mobile or customer code. Uses offset paging: pass next_offset to continue (null = last page). GET /search?type=customers."
+        },
+        {
+          "name": "lightspeedxseries_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id: contact details, addresses, customer group, balance, loyalty balance, year-to-date spend. GET /customers/{customer_id}."
+        },
+        {
+          "name": "lightspeedxseries_list_customer_groups",
+          "type": "read",
+          "title": "List customer groups",
+          "description": "List customer groups (id, name). Use the id as customer_group_id when creating or updating a customer. Paginate with next_after. GET /customer_groups."
+        },
+        {
+          "name": "lightspeedxseries_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a new customer. Give at least a first name, last name or company name. Check search_customers first so you do not create a duplicate. POST /customers."
+        },
+        {
+          "name": "lightspeedxseries_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: change fields of an existing customer. Only the fields you pass change: the tool first reads the customer and sends the vendor its full record with your changes applied (the vendor's update is a full PUT). Cannot delete a customer or change balances. Lightspeed offers no partial update for customers, so a change made by someone else in the moments between the tool's read and its write can be overwritten. PUT /customers/{customer_id}."
+        },
+        {
+          "name": "lightspeedxseries_update_product_prices",
+          "type": "write",
+          "title": "Update product prices",
+          "description": "WRITE: set the selling price of one product (variant). Pass price_excluding_tax or price_including_tax as a decimal string such as \"24.99\" (set one; the store's tax setting decides which the till uses). Nothing else on the product changes. Read the product first and confirm the new price with the user. PATCH /products/{product_id}."
+        },
+        {
+          "name": "lightspeedxseries_set_product_stock",
+          "type": "write",
+          "title": "Set product stock and reorder levels",
+          "description": "WRITE: set the stock on hand (current_amount) and/or the reorder point and reorder amount of ONE product at ONE outlet. current_amount is the NEW TOTAL on hand, not a change: it overwrites the count, so sales made since you last read it are lost from the count. Read get_inventory_levels first and confirm the number with the user. Other outlets and all other product fields stay as they are. PATCH /products/{product_id} (outlet_inventories)."
+        },
+        {
+          "name": "lightspeedxseries_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lightspeedxseries_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Lightspeed Retail (X-Series) tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "lightspeedxseries_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Lightspeed Retail (X-Series) tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "lightspeedxseries_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Lightspeed Retail (X-Series) Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run lightspeedxseries_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
       "slug": "freeagent",
       "name": "FreeAgent",
       "category": "billing",
