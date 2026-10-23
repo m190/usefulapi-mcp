@@ -213,7 +213,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Unleashed Software](servers/unleashed-software/) | ecommerce | 24 | API token | [servers/unleashed-software/](servers/unleashed-software/) |
 | [UpCloud](servers/upcloud/) | cloud | 26 | API token | [servers/upcloud/](servers/upcloud/) |
 | [updown.io](servers/updown-io/) | observability | 18 | API token | [servers/updown-io/](servers/updown-io/) |
-| [Virtuous](servers/virtuous-crm/) | fundraising | 24 | API token | [servers/virtuous-crm/](servers/virtuous-crm/) |
+| [Virtuous](servers/virtuous-crm/) | fundraising | 25 | API token | [servers/virtuous-crm/](servers/virtuous-crm/) |
 | [When I Work](servers/when-i-work/) | productivity | 25 | API token | [servers/when-i-work/](servers/when-i-work/) |
 | [Wild Apricot](servers/wild-apricot/) | membership | 25 | API token | [servers/wild-apricot/](servers/wild-apricot/) |
 | [Wufoo](servers/wufoo/) | productivity | 22 | API token | [servers/wufoo/](servers/wufoo/) |
@@ -350,6 +350,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Linnworks](servers/linnworks/) | ecommerce | 21 | API token | [servers/linnworks/](servers/linnworks/) |
 | [Employment Hero Payroll](servers/keypay/) | productivity | 30 | API token | [servers/keypay/](servers/keypay/) |
 | [Cratejoy](servers/cratejoy/) | ecommerce | 22 | API token | [servers/cratejoy/](servers/cratejoy/) |
+| [IDX Broker](servers/idx-broker/) | real-estate | 31 | API token | [servers/idx-broker/](servers/idx-broker/) |
+| [Gooten](servers/gooten/) | ecommerce | 21 | API token | [servers/gooten/](servers/gooten/) |
+| [Service Fusion](servers/service-fusion/) | productivity | 30 | API token | [servers/service-fusion/](servers/service-fusion/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

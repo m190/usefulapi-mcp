@@ -42,6 +42,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `virtuous_find_contact` | read | Find a contact by email or reference |
 | `virtuous_list_contact_individuals` | read | List a contact's individuals |
 | `virtuous_list_contact_notes` | read | List a contact's notes |
+| `virtuous_list_contact_note_types` | read | List contact note types |
 | `virtuous_list_contact_tags` | read | List a contact's tags |
 | `virtuous_list_contact_gifts` | read | List a contact's gifts |
 | `virtuous_get_gift` | read | Get a gift |

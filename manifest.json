@@ -33752,6 +33752,12 @@
           "description": "List the notes logged on a contact — calls, meetings, emails and other touchpoints — with type, date, text and author. Virtuous: GET /api/ContactNote/ByContact/{contactId}."
         },
         {
+          "name": "virtuous_list_contact_note_types",
+          "type": "read",
+          "title": "List contact note types",
+          "description": "List the note types this organization accepts on a contact note (e.g. Call, Email, Visit; admins can add custom ones). Call it before virtuous_create_contact_note and pass one of these names as its type. Virtuous: GET /api/ContactNote/Types."
+        },
+        {
           "name": "virtuous_list_contact_tags",
           "type": "read",
           "title": "List a contact's tags",
@@ -33809,7 +33815,7 @@
           "name": "virtuous_create_contact_note",
           "type": "write",
           "title": "Log a note on a contact",
-          "description": "Add a note to a contact's timeline — a call, meeting, visit or other touchpoint. Writes to the donor record. Virtuous: POST /api/ContactNote."
+          "description": "Add a note to a contact's timeline — a call, meeting, visit or other touchpoint. Writes to the donor record. Get the valid type names from virtuous_list_contact_note_types first. Virtuous: POST /api/ContactNote."
         },
         {
           "name": "virtuous_add_contact_tag",
@@ -33854,7 +33860,7 @@
           "description": "Cancel the caller's Virtuous Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run virtuous_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.17.0",
+      "version": "1.18.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -57929,6 +57935,630 @@
           "type": "meta",
           "title": "Cancel the Pro subscription",
           "description": "Cancel the caller's Cratejoy Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run cratejoy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "idx-broker",
+      "name": "IDX Broker",
+      "category": "real-estate",
+      "description": "Read IDX Broker leads, agents, listings and MLS data; create and update leads and notes.",
+      "endpoint": "https://idx-broker.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "examples": [
+        "Which new leads signed up in the last 24 hours?",
+        "Show me everything lead 4512 viewed and searched for.",
+        "Add a note to lead 4512: asked for a showing on Saturday.",
+        "List my featured listings with their prices."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "IDX Broker access key"
+          }
+        ],
+        "hint": "Find it in IDX Broker under **Home → Access Control** (create a key if there is none). The key is 22 characters. Your account allows 300 (Lite) or 500 (Platinum) API accesses per key per hour, and every tool call uses at least one; a dedicated key keeps your other integrations from competing. Your key is used only to call the IDX Broker API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "idx_get_account_info",
+          "type": "read",
+          "title": "Get account info",
+          "description": "The IDX Broker client account this access key belongs to: company and contact details and account settings (access keys and passwords are never returned). The reply also shows how many of the key's hourly API accesses are used. GET /clients/accountinfo."
+        },
+        {
+          "name": "idx_get_account_type",
+          "type": "read",
+          "title": "Get account type",
+          "description": "The IDX Broker plan of the account (Lite or Platinum). It sets the hourly API limit: 300 accesses per key on Lite, 500 on Platinum. GET /clients/accounttype."
+        },
+        {
+          "name": "idx_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "Agents on a multi-user IDX Broker account (id, name, office, contact details, category, language, login dates). Filter by one field or by a time window. GET /clients/agents."
+        },
+        {
+          "name": "idx_list_offices",
+          "type": "read",
+          "title": "List offices",
+          "description": "Offices on a multi-user IDX Broker account. Filter by one field or by a time window. GET /clients/offices."
+        },
+        {
+          "name": "idx_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List the account's leads (website registrants) with contact details, status, agent owner, and last viewed listings and searches. A reply holds up to 500 leads; pass offset to page on and look for pagination information in the reply. Filter by a time window on signup, edit, login or activity date. Uses one of the key's hourly API accesses. GET /leads/lead."
+        },
+        {
+          "name": "idx_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id with its details, last 5 viewed listings and searches, and the total number of listings viewed. GET /leads/lead/{leadID}."
+        },
+        {
+          "name": "idx_list_lead_notes",
+          "type": "read",
+          "title": "List lead notes",
+          "description": "Notes on a lead, or one note when note_id is given. GET /leads/note/{leadID}[/{noteID}]."
+        },
+        {
+          "name": "idx_list_lead_searches",
+          "type": "read",
+          "title": "List lead saved searches",
+          "description": "Saved property searches of a lead (or one search when search_id is given), with the results URL of each. GET /leads/search/{leadID}[/{searchID}]."
+        },
+        {
+          "name": "idx_list_lead_saved_properties",
+          "type": "read",
+          "title": "List lead saved properties",
+          "description": "Properties a lead saved (or one when property_id is given). GET /leads/property/{leadID}[/{propertyID}]."
+        },
+        {
+          "name": "idx_get_lead_traffic",
+          "type": "read",
+          "title": "Get lead traffic",
+          "description": "Website traffic history of one lead: date, page, referrer and IP of each visit (at most 5,000 rows per request; use interval/offset/limit to narrow it). GET /leads/leadtraffic/{leadID}."
+        },
+        {
+          "name": "idx_list_featured_listings",
+          "type": "read",
+          "title": "List featured listings",
+          "description": "The account's featured (active) listings with address, price, status, photos and agent. Only the account's own listings are returned, never general MLS data. GET /clients/featured."
+        },
+        {
+          "name": "idx_list_sold_pending_listings",
+          "type": "read",
+          "title": "List sold and pending listings",
+          "description": "The account's sold and pending listings, that is those removed from the MLS feed. GET /clients/soldpending."
+        },
+        {
+          "name": "idx_list_off_market_listings",
+          "type": "read",
+          "title": "List off-market listings",
+          "description": "The account's off-market listings. GET /clients/offmarket."
+        },
+        {
+          "name": "idx_list_supplemental_listings",
+          "type": "read",
+          "title": "List supplemental listings",
+          "description": "The account's supplemental (non-MLS) listings with a basic set of fields. GET /clients/supplemental."
+        },
+        {
+          "name": "idx_list_saved_links",
+          "type": "read",
+          "title": "List saved links",
+          "description": "Saved links (pre-built property search pages) of the account with id, name and URL. GET /clients/savedlinks."
+        },
+        {
+          "name": "idx_get_saved_link_count",
+          "type": "read",
+          "title": "Count properties of a saved link",
+          "description": "The total number of properties a saved link currently matches. GET /clients/savedlinks/{savedLinkID}/count."
+        },
+        {
+          "name": "idx_list_widgets",
+          "type": "read",
+          "title": "List widgets",
+          "description": "The JavaScript widgets on the account with id, name, URL and options. GET /clients/widgets."
+        },
+        {
+          "name": "idx_get_widget",
+          "type": "read",
+          "title": "Get widget",
+          "description": "One JavaScript widget with its settings. GET /clients/widgets/{id}."
+        },
+        {
+          "name": "idx_list_system_links",
+          "type": "read",
+          "title": "List system links",
+          "description": "The system pages of the account's site (search, featured, contact...) with name, id and URL, which can be linked to directly. GET /clients/systemlinks."
+        },
+        {
+          "name": "idx_list_approved_mls",
+          "type": "read",
+          "title": "List approved MLSs",
+          "description": "The MLSs approved for display on the account, with their IDX ids (such as a001) and names. Use the id in the other MLS tools. GET /mls/approvedmls."
+        },
+        {
+          "name": "idx_get_mls_age",
+          "type": "read",
+          "title": "Get MLS data age",
+          "description": "When an MLS feed was last downloaded and processed and when its images were last gathered (UTC). GET /mls/age/{idxID}."
+        },
+        {
+          "name": "idx_list_mls_property_types",
+          "type": "read",
+          "title": "List MLS property types",
+          "description": "Property types of an MLS with the IDX type id, the MLS name, the parent type and subtypes. GET /mls/propertytypes/{idxID}."
+        },
+        {
+          "name": "idx_list_mls_search_fields",
+          "type": "read",
+          "title": "List MLS search fields",
+          "description": "The fields of an MLS that can be searched under MLS rules: field name, display name and the property types they belong to. GET /mls/searchfields/{idxID}."
+        },
+        {
+          "name": "idx_list_mls_locations",
+          "type": "read",
+          "title": "List MLS cities, counties or postal codes",
+          "description": "Cities, counties or postal codes present in an MLS's data, with ids and a count of occurrences. Filter fields: cities = cityID, cityName, stateAbrv, mlsPtID; counties = countyID, countyName, stateAbrv, mlsPtID; postalcodes = id, stateAbrv, mlsPtID. GET /mls/{cities|counties|postalcodes}/{idxID}."
+        },
+        {
+          "name": "idx_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: creates a new lead in the IDX Broker account (and may trigger the account's own lead notifications). Needs a correctly formatted email with a valid MX record; IDX rejects bad addresses with a server error. Extra fields go in `fields` by their IDX name, as seen on a lead returned by idx_get_lead. Returns the new lead id. PUT /leads/lead."
+        },
+        {
+          "name": "idx_add_lead_note",
+          "type": "write",
+          "title": "Add lead note",
+          "description": "WRITE: adds a note to a lead (visible to the account's agents). Returns the new note id. PUT /leads/note/{leadID}."
+        },
+        {
+          "name": "idx_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "WRITE: changes fields of an existing lead; the given values replace the stored ones. Only pass what must change. Field names are the IDX lead field names as seen on a lead returned by idx_get_lead (for example firstName, lastName, email, phone, status). POST /leads/lead/{leadID}."
+        },
+        {
+          "name": "idx_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "idx_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the IDX Broker tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "idx_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED IDX Broker tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "idx_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's IDX Broker Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run idx_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "gooten",
+      "name": "Gooten",
+      "category": "ecommerce",
+      "description": "Browse the Gooten catalog, stock, shipping and price quotes; search orders and cancel items.",
+      "endpoint": "https://gooten.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "examples": [
+        "Which Gooten products are in the Drinkware category and what do they cost to ship to Canada?",
+        "Show my Gooten orders from last week that have not shipped yet.",
+        "What is the tracking number for Gooten order 13-f91acc87-bd23-40d?",
+        "Is the Bella 3001 tee out of stock for shipping to New York?"
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "RecipeID"
+          },
+          {
+            "label": "Partner Billing Key"
+          }
+        ],
+        "hint": "Find both in the Gooten Admin under **Settings → API** (the billing key is behind the Show button). The billing key can place and bill orders for your account, so treat it like a password. Your keys are used only to call the Gooten API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "gooten_list_products",
+          "type": "read",
+          "title": "List catalog products",
+          "description": "Browse the Gooten print-on-demand product catalog (public data): product id, name, categories, cheapest price and shipping, stock and deprecation flags. Filter by name text or category; use product_id with gooten_list_product_variants. Prices are in USD for the cheapest variant."
+        },
+        {
+          "name": "gooten_list_product_variants",
+          "type": "read",
+          "title": "List product variants (SKUs)",
+          "description": "The orderable variants (SKUs) of a catalog product for a destination country, with option values (size, color, ...) and Gooten's price for your account. SKUs differ by region (inch vs cm sizes). GET /productvariants."
+        },
+        {
+          "name": "gooten_get_product_templates",
+          "type": "read",
+          "title": "Get product templates",
+          "description": "Print templates for a SKU: how many images are needed, required pixel sizes/DPI, print spaces and layer coordinates, and preview assets. GET /producttemplates."
+        },
+        {
+          "name": "gooten_check_stock",
+          "type": "read",
+          "title": "Check stock for SKUs",
+          "description": "Which of the given SKUs are out of stock for a destination (country, state, postal code). Returns only the out-of-stock SKUs; an empty list means all are available. Unknown SKUs are an error. POST /variantstatus (a read: nothing is changed)."
+        },
+        {
+          "name": "gooten_get_shipping_estimate",
+          "type": "read",
+          "title": "Get shipping estimate for a product",
+          "description": "Shipping price range and delivery time for a product to a country: whether expedited is possible and estimated shipping days, plus min/max price and producing country when Gooten returns them. GET /shippriceestimate."
+        },
+        {
+          "name": "gooten_get_shipping_options",
+          "type": "read",
+          "title": "Get shipping options for a cart",
+          "description": "Available shipping methods (Standard, Expedited, Overnight) with price and delivery days for a cart of SKUs to a destination. POST /shippingprices (a quote: nothing is ordered)."
+        },
+        {
+          "name": "gooten_get_price_estimate",
+          "type": "read",
+          "title": "Get price estimate for an order",
+          "description": "Estimate the cost of an order before placing it: per-item partner price, customer price and tax, plus shipping total, for SKUs shipped to an address. POST /price (a quote: nothing is ordered or charged)."
+        },
+        {
+          "name": "gooten_validate_address",
+          "type": "read",
+          "title": "Validate a shipping address",
+          "description": "Check a shipping address: validity, a score and Gooten's suggested corrected address. GET /addressvalidation."
+        },
+        {
+          "name": "gooten_list_currencies",
+          "type": "read",
+          "title": "List supported currencies",
+          "description": "Currencies Gooten can quote prices in (name, code, display format). GET /currencies."
+        },
+        {
+          "name": "gooten_list_shipping_countries",
+          "type": "read",
+          "title": "List shipping countries",
+          "description": "Countries Gooten ships to (code, name, whether supported, measurement system, default currency). By default only supported countries. GET /countries."
+        },
+        {
+          "name": "gooten_list_print_ready_products",
+          "type": "read",
+          "title": "List print-ready products",
+          "description": "Your print-ready products (PRPs: SKUs with artwork already attached) with their variant counts. Paging starts at 1. GET /prpproducts."
+        },
+        {
+          "name": "gooten_list_print_ready_variants",
+          "type": "read",
+          "title": "List print-ready variants",
+          "description": "Orderable SKUs of your print-ready products, optionally for one PRP product name (from gooten_list_print_ready_products). GET /prpvariants."
+        },
+        {
+          "name": "gooten_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search your Gooten orders by free text (name, address, phone...), last name, email, postal code, creation date range or your own user id. Returns order id, items with status and tracking, totals and addresses. Needs the Partner Billing Key. GET /ordersearch."
+        },
+        {
+          "name": "gooten_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by its Safe Order ID: items with status, tracking numbers and carriers, images, options, totals, shipping and billing addresses, discount and metadata. GET /orders."
+        },
+        {
+          "name": "gooten_get_order_billing",
+          "type": "read",
+          "title": "Get order billing",
+          "description": "Billing breakdown of an order: product cost per item, shipping, surcharge, tax, fees, discount and total. Takes the numeric Gooten order id (GootenId from gooten_get_order), not the Safe Order ID. Needs the Partner Billing Key. GET /orderbilling."
+        },
+        {
+          "name": "gooten_set_order_status",
+          "type": "write",
+          "title": "Set order status",
+          "description": "WRITE: change an order's status. Allowed targets: Cancelled (cancels the whole order), Hold (pause before production) and New (re-submit an order that was fixed, e.g. after an image or address issue; it then goes on to production and billing). Only orders in AccountingIssue, AddressIssue, HoldByCIImageIssue, ImageIssue, NeedsManualApproval, New, ReadyForAccounting, ReadyForImageDl or Pending can change; a held order cannot be released through the API (Gooten support must release it); otherwise Gooten refuses. POST /orderstatus."
+        },
+        {
+          "name": "gooten_cancel_order_items",
+          "type": "write",
+          "title": "Cancel order items",
+          "description": "WRITE: cancel specific items of an order (cannot be undone). Only items of orders in a pre-production status can be cancelled. Pass the numeric Gooten order id and the order item ids (OrderItemId from gooten_get_order). PUT /orderCancel."
+        },
+        {
+          "name": "gooten_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gooten_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Gooten tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gooten_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Gooten tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gooten_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Gooten Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run gooten_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "service-fusion",
+      "name": "Service Fusion",
+      "category": "productivity",
+      "description": "Read Service Fusion customers, jobs, estimates, invoices and schedule; create customers and jobs.",
+      "endpoint": "https://service-fusion.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "examples": [
+        "Which jobs are scheduled for tomorrow and who is assigned to each?",
+        "Show the unpaid invoices from the last 30 days.",
+        "When is an HVAC technician free this week for a 2-hour visit?",
+        "Create a customer called Acme Plumbing with a primary contact and a service address."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "In Service Fusion open **Admin → Developer Settings → API Credentials** (OAuth Consumer) and copy the Client ID and Client Secret. API access is included with the PRO plan; on other plans ask Service Fusion support to enable it. The credentials act with your user's permissions and are used only to call the Service Fusion API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "servicefusion_get_me",
+          "type": "read",
+          "title": "Get current user",
+          "description": "The Service Fusion user the API credentials belong to: id, name and email. Use it to check the connection. GET /me."
+        },
+        {
+          "name": "servicefusion_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (newest id order unless sorted). Filter by name, contact, address, city, postal code, phone, email, tags or last-serviced date. Add expand=contacts,locations,custom_fields to include them. GET /customers."
+        },
+        {
+          "name": "servicefusion_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id, optionally with contacts, phones, emails, locations and custom fields. GET /customers/{id}."
+        },
+        {
+          "name": "servicefusion_list_customer_equipment",
+          "type": "read",
+          "title": "List customer equipment",
+          "description": "List the equipment on file for a customer (type, make, model, serial number, warranty and install dates). GET /customers/{id}/equipment."
+        },
+        {
+          "name": "servicefusion_get_customer_equipment",
+          "type": "read",
+          "title": "Get customer equipment",
+          "description": "One piece of equipment of a customer. GET /customers/{customer_id}/equipment/{equipment_id}."
+        },
+        {
+          "name": "servicefusion_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (work orders). Filter by status, number, PO or invoice number, customer, contact, address, phone, email, category, source and start/end/updated/closed dates. Add expand (techs_assigned, services, products, payments, invoices, visits, notes, ...) for detail. GET /jobs."
+        },
+        {
+          "name": "servicefusion_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job by id, optionally with technicians, line items, labor, expenses, payments, invoices, notes, visits and more. GET /jobs/{id}."
+        },
+        {
+          "name": "servicefusion_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates (quotes). Filter by status, number, PO number, customer, contact, address, phone, email, category, source and start/end/requested dates. GET /estimates."
+        },
+        {
+          "name": "servicefusion_get_estimate",
+          "type": "read",
+          "title": "Get estimate",
+          "description": "One estimate by id, optionally with line items, technicians, notes, tags and more. GET /estimates/{id}."
+        },
+        {
+          "name": "servicefusion_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with number, total, paid flag, dates and the customer. The API has no invoice filters: sort and page instead (for example sort=-date). GET /invoices."
+        },
+        {
+          "name": "servicefusion_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice by id. GET /invoices/{id}."
+        },
+        {
+          "name": "servicefusion_list_calendar_tasks",
+          "type": "read",
+          "title": "List calendar tasks",
+          "description": "List calendar tasks (appointments and to-dos on the schedule) for one day (start_date or end_date alone), a date range (both) and/or given users. A task is returned when it overlaps the range. GET /calendar-tasks."
+        },
+        {
+          "name": "servicefusion_get_calendar_task",
+          "type": "read",
+          "title": "Get calendar task",
+          "description": "One calendar task by id. GET /calendar-tasks/{id}."
+        },
+        {
+          "name": "servicefusion_get_availability",
+          "type": "read",
+          "title": "Get technician availability",
+          "description": "Open time slots for technicians and/or crews over up to 8 days (end_date at most 7 days after start_date). Filter by technician, crew, department, experience level and slot length. GET /availability."
+        },
+        {
+          "name": "servicefusion_list_techs",
+          "type": "read",
+          "title": "List technicians",
+          "description": "List technicians and sales reps (name, contact details, department, title, color, field-worker and sales-rep flags). GET /techs."
+        },
+        {
+          "name": "servicefusion_get_tech",
+          "type": "read",
+          "title": "Get technician",
+          "description": "One technician by id. GET /techs/{id}."
+        },
+        {
+          "name": "servicefusion_list_tech_departments",
+          "type": "read",
+          "title": "List technician departments",
+          "description": "The technician department names configured in the account (useful for availability filters). GET /techs/departments."
+        },
+        {
+          "name": "servicefusion_list_crews",
+          "type": "read",
+          "title": "List crews",
+          "description": "List crews (named groups of technicians), optionally with their members. GET /crews."
+        },
+        {
+          "name": "servicefusion_get_crew",
+          "type": "read",
+          "title": "Get crew",
+          "description": "One crew by id, optionally with its technicians. GET /crews/{id}."
+        },
+        {
+          "name": "servicefusion_list_job_categories",
+          "type": "read",
+          "title": "List job categories",
+          "description": "The job category names to use when creating or filtering jobs. GET /job-categories."
+        },
+        {
+          "name": "servicefusion_list_job_statuses",
+          "type": "read",
+          "title": "List job statuses",
+          "description": "The job status names (code, name, custom flag, category) to use when creating or filtering jobs. GET /job-statuses."
+        },
+        {
+          "name": "servicefusion_list_payment_types",
+          "type": "read",
+          "title": "List payment types",
+          "description": "The payment types configured in the account. GET /payment-types."
+        },
+        {
+          "name": "servicefusion_list_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "The lead/referral sources (short and long names) to use when creating or filtering jobs and estimates. GET /sources."
+        },
+        {
+          "name": "servicefusion_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer in Service Fusion, optionally with contacts (phones, emails) and service locations. It is visible to the whole team and cannot be deleted through this API; creating the same name twice makes two customers, so search with servicefusion_list_customers first. POST /customers."
+        },
+        {
+          "name": "servicefusion_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "WRITE: create a job (work order) for a customer, optionally with address, category, source, assigned technicians, tasks, notes, products, services and other charges. It appears on the team's schedule and cannot be deleted through this API; creating twice makes two jobs. Look up category, source and status names with the list tools first. POST /jobs."
+        },
+        {
+          "name": "servicefusion_create_estimate",
+          "type": "write",
+          "title": "Create estimate",
+          "description": "WRITE: create an estimate (quote) for a customer, optionally with address, category, source, technicians, tasks, notes, products, services, other charges and tags. It cannot be deleted through this API; creating twice makes two estimates. POST /estimates."
+        },
+        {
+          "name": "servicefusion_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "servicefusion_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Service Fusion tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "servicefusion_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Service Fusion tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "servicefusion_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Service Fusion Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run servicefusion_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
     }
