@@ -353,6 +353,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [IDX Broker](servers/idx-broker/) | real-estate | 31 | API token | [servers/idx-broker/](servers/idx-broker/) |
 | [Gooten](servers/gooten/) | ecommerce | 21 | API token | [servers/gooten/](servers/gooten/) |
 | [Service Fusion](servers/service-fusion/) | productivity | 30 | API token | [servers/service-fusion/](servers/service-fusion/) |
+| [Brightpearl](servers/brightpearl/) | ecommerce | 29 | API token | [servers/brightpearl/](servers/brightpearl/) |
+| [CharlieHR](servers/charliehr/) | productivity | 31 | API token | [servers/charliehr/](servers/charliehr/) |
+| [FieldPulse](servers/fieldpulse/) | productivity | 47 | API token | [servers/fieldpulse/](servers/fieldpulse/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

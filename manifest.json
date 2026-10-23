@@ -58573,6 +58573,789 @@
           "description": "Cancel the caller's Service Fusion Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run servicefusion_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "brightpearl",
+      "name": "Brightpearl",
+      "category": "ecommerce",
+      "description": "Search Brightpearl orders, products, stock, contacts and payments; add notes, update order status.",
+      "endpoint": "https://brightpearl.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "examples": [
+        "Which sales orders were placed yesterday and are still waiting to be shipped?",
+        "How much stock of SKU ABC-123 do we have in each warehouse?",
+        "Show the full details and notes of order 100182.",
+        "Find the customer with the email anna@example.com and list their latest orders."
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Account code"
+          },
+          {
+            "label": "Data centre (first part of your Brightpearl address)"
+          },
+          {
+            "label": "Private app reference"
+          },
+          {
+            "label": "Token type"
+          },
+          {
+            "label": "Private app token"
+          }
+        ],
+        "hint": "In Brightpearl open **App Store → Private Apps → Add Private App** (an account administrator with the settings permission). Choose a **staff app** (the token acts as one staff member and respects that member's permissions) or a system app (account token). Copy the app's **reference** and **token**. The account code and data centre are in your Brightpearl address: euw1.brightpearlapp.com/**mycompany**.login is data centre euw1, account mycompany. Your credentials are used only to call the Brightpearl API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "brightpearl_get_account_configuration",
+          "type": "read",
+          "title": "Get account configuration",
+          "description": "The Brightpearl account's configuration as key/value pairs: base currency, tax scheme, time zone, default and new-order status ids, nominal codes, weight unit, whether multiple warehouses are enabled. GET /integration-service/account-configuration."
+        },
+        {
+          "name": "brightpearl_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search sales orders, sales credits, purchase orders and purchase credits. Every filter is optional and they combine (AND); each result row has orderId, orderTypeId, contactId, orderStatusId, orderStockStatusId, createdOn, updatedOn, customerRef, externalRef, warehouseId and more. Use brightpearl_get_orders for the full order. Order type ids: brightpearl_list_order_types; status ids: brightpearl_list_order_statuses. GET /order-service/order-search."
+        },
+        {
+          "name": "brightpearl_get_orders",
+          "type": "read",
+          "title": "Get orders",
+          "description": "Full details of one or more orders by id: type, status, payment/stock/shipping status, dates, currency, totals, assignment, customer/supplier, billing and delivery parties, and the order rows (product, quantity, price, tax). Up to 50 ids. GET /order-service/order/{ids}."
+        },
+        {
+          "name": "brightpearl_get_order_notes",
+          "type": "read",
+          "title": "Get order notes",
+          "description": "All notes on one order (text, author contact id, date, whether it is public on the customer portal, the order status at the time). GET /order-service/order/{id}/note."
+        },
+        {
+          "name": "brightpearl_list_order_statuses",
+          "type": "read",
+          "title": "List order statuses",
+          "description": "The account's order statuses (id, name, order type code SO/PO/SC/PC, sort order, disabled, visible to the customer, state such as draft). Use the ids to filter orders or to change an order's status. GET /order-service/order-status."
+        },
+        {
+          "name": "brightpearl_list_order_types",
+          "type": "read",
+          "title": "List order types",
+          "description": "The four order types with their ids and codes (1 SO sales order, 2 PO purchase order, 3 SC sales credit, 4 PC purchase credit), for the order search. GET /order-service/order-type."
+        },
+        {
+          "name": "brightpearl_add_order_note",
+          "type": "write",
+          "title": "Add order note",
+          "description": "WRITE: add a note to an existing order. The note is private (staff only) unless is_public is true, which makes it visible on the customer portal. Returns the new note id. Notes cannot be removed with this server. POST /order-service/order/{id}/note."
+        },
+        {
+          "name": "brightpearl_update_order_status",
+          "type": "write",
+          "title": "Update order status",
+          "description": "WRITE: move an existing order to another status (ids from brightpearl_list_order_statuses; the new status must exist, be visible and belong to this order's type). Brightpearl adds an order note on success, and status changes can trigger the account's alerts and automations. Moving a sales order to the account's 'cancelled' status removes its reservations and coupons and is refused while goods-out notes or payments exist. PUT /order-service/order/{id}/status."
+        },
+        {
+          "name": "brightpearl_search_products",
+          "type": "read",
+          "title": "Search products",
+          "description": "Search the product catalogue. Every filter is optional and they combine (AND); each result row has productId, productName, SKU, barcode, EAN, UPC, ISBN, MPN, stockTracked, createdOn, updatedOn, brightpearlCategoryCode, productGroupId, brandId, productTypeId, productStatus, primarySupplierId. Use brightpearl_get_products for full details. GET /product-service/product-search."
+        },
+        {
+          "name": "brightpearl_get_products",
+          "type": "read",
+          "title": "Get products",
+          "description": "Full details of one or more products by id: identity (SKU, barcodes), brand, type, stock-tracking, weight and dimensions, tax code, sales-channel names/descriptions/categories, bundle composition, variations, per-warehouse reorder levels, supplier and status. Up to 50 ids. GET /product-service/product/{ids}."
+        },
+        {
+          "name": "brightpearl_get_product_prices",
+          "type": "read",
+          "title": "Get product prices",
+          "description": "Prices of products per price list: for each product and price list the currency, SKU and the quantity-break price map (e.g. {\"1\":\"12\",\"100\":\"11\"}). Up to 50 product ids; optionally only some price lists (ids from brightpearl_list_price_lists). GET /product-service/product-price/{product ids}/price-list/{price list ids}."
+        },
+        {
+          "name": "brightpearl_get_product_availability",
+          "type": "read",
+          "title": "Get product stock availability",
+          "description": "Stock availability of stock-tracked products: for each product the totals across all warehouses (inStock, onHand, allocated, inTransit) and the same per warehouse; optionally per location, with on-order quantities. Up to 50 product ids. GET /warehouse-service/product-availability/{ids}."
+        },
+        {
+          "name": "brightpearl_list_price_lists",
+          "type": "read",
+          "title": "List price lists",
+          "description": "The price lists (id, name, code, currency, SELL or BUY, gross or net). Id 0 is the cost price list. GET /product-service/price-list."
+        },
+        {
+          "name": "brightpearl_search_brands",
+          "type": "read",
+          "title": "Search brands",
+          "description": "Search product brands by name; each row has brandId, brandName, createdOn, updatedOn. GET /product-service/brand-search."
+        },
+        {
+          "name": "brightpearl_search_categories",
+          "type": "read",
+          "title": "Search product categories",
+          "description": "Search Brightpearl product categories; each row has id, name, parentId, active, createdOn, updatedOn. GET /product-service/brightpearl-category-search."
+        },
+        {
+          "name": "brightpearl_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "The warehouses (id, name, type, address id, click-and-collect settings, weekly operating hours). Use the ids for stock and order filters. GET /warehouse-service/warehouse."
+        },
+        {
+          "name": "brightpearl_list_shipping_methods",
+          "type": "read",
+          "title": "List shipping methods",
+          "description": "The shipping methods (id, name, code, carrier, price breaks, countries). GET /warehouse-service/shipping-method."
+        },
+        {
+          "name": "brightpearl_search_goods_out_notes",
+          "type": "read",
+          "title": "Search goods-out notes (shipments)",
+          "description": "Search goods-out notes, the pick/pack/ship records of sales orders; each row has goodsOutNoteId, printed, picked, packed, shipped, shippedOn, orderId, shippingMethodId, warehouseId, createdOn, releaseDate, transfer. GET /warehouse-service/goods-note/goods-out-search."
+        },
+        {
+          "name": "brightpearl_search_goods_in_notes",
+          "type": "read",
+          "title": "Search goods-in notes (stock received)",
+          "description": "Search goods-in records (stock received against purchase orders, by batch and location); each row has purchaseOrderId, batchId, productId, locationId, price, currCode, receivedQuantity, onHand, createdDate, receivedDate, warehouseId. GET /warehouse-service/goods-in-search."
+        },
+        {
+          "name": "brightpearl_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search contacts (customers, suppliers and staff). Every filter is optional and they combine (AND); each result row has contactId, primaryEmail, firstName, lastName, companyName, isSupplier, isStaff, isCustomer, createdOn, updatedOn, lastOrderedOn and more. Use brightpearl_get_contacts for the full record. GET /contact-service/contact-search."
+        },
+        {
+          "name": "brightpearl_get_contacts",
+          "type": "read",
+          "title": "Get contacts",
+          "description": "Full records of one or more contacts by id: name, emails, phones, status, supplier/staff flags, financial details (price list, tax code, credit limit and terms), assignment, organisation, tags, dates; optionally custom fields and the full postal addresses. Up to 50 ids. GET /contact-service/contact/{ids}."
+        },
+        {
+          "name": "brightpearl_add_contact_note",
+          "type": "write",
+          "title": "Add contact note",
+          "description": "WRITE: add a note to a contact's timeline (for example a record of correspondence). The note is private (staff only) unless is_public is true, which makes it visible on the customer portal. Returns the new note id. Notes cannot be removed with this server. POST /contact-service/contact/{id}/note."
+        },
+        {
+          "name": "brightpearl_search_customer_payments",
+          "type": "read",
+          "title": "Search customer payments",
+          "description": "Search payments received against sales orders; each row has paymentId, transactionRef, paymentMethodCode, paymentType, orderId, currencyCode, amountAuthorized, amountPaid, paymentDate, createdOn, journalId. GET /accounting-service/customer-payment-search."
+        },
+        {
+          "name": "brightpearl_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "The payment methods (name, code, active, bank accounts with currency and nominal code). GET /accounting-service/payment-method."
+        },
+        {
+          "name": "brightpearl_list_tax_codes",
+          "type": "read",
+          "title": "List tax codes",
+          "description": "The tax codes (id, code, description, rate). GET /accounting-service/tax-code."
+        },
+        {
+          "name": "brightpearl_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "brightpearl_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Brightpearl tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "brightpearl_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED Brightpearl tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "brightpearl_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Brightpearl Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run brightpearl_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "charliehr",
+      "name": "CharlieHR",
+      "category": "productivity",
+      "description": "Read CharlieHR team members, leave, allowances, offices, teams and salaries; add team member notes.",
+      "endpoint": "https://charliehr.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "examples": [
+        "Who is off on leave next week?",
+        "How much holiday allowance does each team member have left this year?",
+        "Show me the team members in the London office and who their managers are.",
+        "Add the employee number ABC123 as a note on Jane Doe's profile."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "CharlieHR client id"
+          },
+          {
+            "label": "CharlieHR client secret"
+          }
+        ],
+        "hint": "In Charlie open **Company → Integrations → API keys** (a Super Admin or Admin) and generate a key pair; the secret is shown only once. The keys act for your whole company. Your keys are used only to call the CharlieHR API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "charliehr_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "The Charlie company the API keys belong to: id, name, subdomain and logo. GET /company."
+        },
+        {
+          "name": "charliehr_list_offices",
+          "type": "read",
+          "title": "List offices",
+          "description": "List the company's offices: id, name, whether it is the head office, address, timezone, phone and email. GET /offices."
+        },
+        {
+          "name": "charliehr_get_office",
+          "type": "read",
+          "title": "Get office",
+          "description": "One office by id. GET /offices/{id}."
+        },
+        {
+          "name": "charliehr_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the company's teams with the ids of their team members. GET /teams."
+        },
+        {
+          "name": "charliehr_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "One team by id, with the ids of its team members. GET /teams/{id}."
+        },
+        {
+          "name": "charliehr_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the company's team members (employees): name, work and personal email, phone, address, office, manager, teams, job title, start date, employment status and leaving date. Sensitive fields included: date_of_birth, gender, married, personal email, phone and home address. National Insurance numbers, payroll id, starter declaration and student-loan flags are never returned. GET /team_members."
+        },
+        {
+          "name": "charliehr_get_team_member",
+          "type": "read",
+          "title": "Get team member",
+          "description": "One team member by id with the full profile (contact details, address, office, manager, teams, dates, employment status, job title, notes). Sensitive fields included: date_of_birth, gender, married, personal email, phone, home address and notes. National Insurance numbers (also inside notes), payroll id, starter declaration and student-loan flags are never returned. GET /team_members/{id}."
+        },
+        {
+          "name": "charliehr_get_team_member_working_location",
+          "type": "read",
+          "title": "Get a team member's working location",
+          "description": "Where one team member works on a date (custom overrides win over the default assignment). Defaults to today. GET /team_members/{id}/working_location."
+        },
+        {
+          "name": "charliehr_get_team_member_working_weeks",
+          "type": "read",
+          "title": "Get a team member's working weeks",
+          "description": "The working-week segments of one team member (which days are full_day/morning/afternoon, weekly hours, from/to dates), company defaults and custom overrides. Not paginated. GET /team_members/{id}/working_weeks."
+        },
+        {
+          "name": "charliehr_list_working_locations",
+          "type": "read",
+          "title": "List working locations",
+          "description": "List the active working locations (the catalog). With a date, instead returns where each active team member works on that date. GET /working_locations."
+        },
+        {
+          "name": "charliehr_list_leave_requests",
+          "type": "read",
+          "title": "List leave requests",
+          "description": "List leave requests of the whole company (id, team member, approver, status, request type, start/end date, amount and units, duration, details). Optionally only those in a date window. GET /leave_requests."
+        },
+        {
+          "name": "charliehr_get_leave_request",
+          "type": "read",
+          "title": "Get leave request",
+          "description": "One leave request by id. GET /leave_requests/{id}."
+        },
+        {
+          "name": "charliehr_list_team_member_leave_requests",
+          "type": "read",
+          "title": "List a team member's leave requests",
+          "description": "The leave requests of one team member, optionally only those in a date window. GET /team_members/{id}/leave_requests."
+        },
+        {
+          "name": "charliehr_list_leave_allowances",
+          "type": "read",
+          "title": "List leave allowances",
+          "description": "The current holiday allowance of every team member: allowance, used and remaining, in days and hours, with the leave period. GET /leave_allowances."
+        },
+        {
+          "name": "charliehr_get_team_member_leave_allowance",
+          "type": "read",
+          "title": "Get a team member's leave allowance",
+          "description": "The current holiday allowance of one team member (allowance, used, remaining, in days and hours, with the period). GET /team_members/{id}/leave_allowance."
+        },
+        {
+          "name": "charliehr_list_allowance_adjustments",
+          "type": "read",
+          "title": "List a team member's allowance adjustments",
+          "description": "All holiday allowance adjustments of one team member across every leave period (description, days/hours, carryover flag, creator, period). GET /team_members/{id}/allowance_adjustments."
+        },
+        {
+          "name": "charliehr_list_non_holiday_leave_allowances",
+          "type": "read",
+          "title": "List a team member's non-holiday leave allowances",
+          "description": "Days taken and limit for each non-holiday leave type (sick, compassionate...) of one team member. GET /team_members/{id}/non_holiday_leave_allowances."
+        },
+        {
+          "name": "charliehr_list_leave_types",
+          "type": "read",
+          "title": "List leave types",
+          "description": "The enabled leave types (Holiday, Sick...): id, name, deductible, default, auto-approved, sensitive. GET /leave_types."
+        },
+        {
+          "name": "charliehr_get_leave_type",
+          "type": "read",
+          "title": "Get leave type",
+          "description": "One leave type by id. GET /leave_types/{id}."
+        },
+        {
+          "name": "charliehr_list_company_holidays",
+          "type": "read",
+          "title": "List company holidays",
+          "description": "The company's holidays (bank holidays and closures): name, start/end date, duration, deductible. Optionally only those in a date window. GET /company_holidays."
+        },
+        {
+          "name": "charliehr_list_restricted_dates",
+          "type": "read",
+          "title": "List restricted dates",
+          "description": "The dates on which leave is restricted (e.g. a year-end freeze): name, start/end date, duration. Optionally only those in a date window. GET /restricted_dates."
+        },
+        {
+          "name": "charliehr_list_salaries",
+          "type": "read",
+          "title": "List salaries",
+          "description": "SENSITIVE: the salary records of all team members (job title, pay rate, pay period, frequency, currency, effective date, employment type). Needs API keys with access to salary data. GET /salaries."
+        },
+        {
+          "name": "charliehr_list_team_member_salaries",
+          "type": "read",
+          "title": "List a team member's salaries",
+          "description": "SENSITIVE: the salary history of one team member (job title, pay rate, currency, effective date). GET /team_members/{id}/salaries."
+        },
+        {
+          "name": "charliehr_list_team_member_note_types",
+          "type": "read",
+          "title": "List team member note types",
+          "description": "The custom note types (fields such as Employee No. or Laptop Serial Number) with who may see them. GET /team_member_note_types."
+        },
+        {
+          "name": "charliehr_get_team_member_note_type",
+          "type": "read",
+          "title": "Get team member note type",
+          "description": "One note type by id. GET /team_member_note_types/{id}."
+        },
+        {
+          "name": "charliehr_list_team_member_notes",
+          "type": "read",
+          "title": "List a team member's notes",
+          "description": "The custom notes (label and content) stored on one team member (the content of a note labelled as a National Insurance number, and NI-number-looking text, is redacted). GET /team_members/{id}/notes."
+        },
+        {
+          "name": "charliehr_create_team_member_note",
+          "type": "write",
+          "title": "Add a note to a team member",
+          "description": "WRITE: add a custom note (a value for one note type, e.g. an employee number) to a team member in Charlie. It is created immediately and visible to whoever the note type's permissions allow. Use charliehr_list_team_member_note_types for the note type id. POST /team_members/{id}/notes."
+        },
+        {
+          "name": "charliehr_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "charliehr_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the CharlieHR tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "charliehr_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED CharlieHR tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "charliehr_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's CharlieHR Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run charliehr_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
+    },
+    {
+      "slug": "fieldpulse",
+      "name": "FieldPulse",
+      "category": "productivity",
+      "description": "Read FieldPulse customers, jobs, estimates, invoices, assets and projects; create and update jobs.",
+      "endpoint": "https://fieldpulse.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "examples": [
+        "List the jobs created this week with their status and who is assigned to them.",
+        "Show the details and the balance due of invoice 1234.",
+        "Create a customer lead for Maria Lopez, phone 555-0142, with a service address on Oak Street.",
+        "Mark job 9876 as completed and add a note that the part was replaced."
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FieldPulse API token"
+          }
+        ],
+        "hint": "FieldPulse issues API tokens through support: email **support@fieldpulse.com** (or use the chat in the app) to have a token registered and activated for your account. The token is sent only to the FieldPulse API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fieldpulse_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List or search customers (name, email, phone, address, status, assigned user). GET /customers."
+        },
+        {
+          "name": "fieldpulse_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id. GET /customers/{id}."
+        },
+        {
+          "name": "fieldpulse_list_customer_contacts",
+          "type": "read",
+          "title": "List customer contacts",
+          "description": "The contacts (people) of one customer. GET /customers/{customerId}/customer-contact."
+        },
+        {
+          "name": "fieldpulse_get_customer_contact",
+          "type": "read",
+          "title": "Get customer contact",
+          "description": "One contact of a customer. GET /customers/{customerId}/customer-contact/{contactId}."
+        },
+        {
+          "name": "fieldpulse_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List or search jobs (type, status, customer, schedule, assignments), optionally within a created-at range or by custom status ids. GET /jobs."
+        },
+        {
+          "name": "fieldpulse_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job by id, optionally with its custom field values. GET /jobs/{id}."
+        },
+        {
+          "name": "fieldpulse_list_job_status_workflows",
+          "type": "read",
+          "title": "List job status workflows",
+          "description": "The job status workflows (use their ids with fieldpulse_list_job_workflow_statuses and when setting a custom job status). GET /jobs/status-workflows."
+        },
+        {
+          "name": "fieldpulse_list_job_workflow_statuses",
+          "type": "read",
+          "title": "List job workflow statuses",
+          "description": "The custom job statuses of all workflows, with their ids (for filtering jobs or setting a status). GET /jobs/status-workflow-statuses."
+        },
+        {
+          "name": "fieldpulse_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List or search estimates (customer, status, totals, line items). GET /estimates."
+        },
+        {
+          "name": "fieldpulse_get_estimate",
+          "type": "read",
+          "title": "Get estimate",
+          "description": "One estimate by id. GET /estimates/{id}."
+        },
+        {
+          "name": "fieldpulse_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List or search invoices (customer, status, totals, due dates). GET /invoices."
+        },
+        {
+          "name": "fieldpulse_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice by id. GET /invoices/{id}."
+        },
+        {
+          "name": "fieldpulse_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List or search payments (amount, method, date, invoice). GET /payments."
+        },
+        {
+          "name": "fieldpulse_get_payment",
+          "type": "read",
+          "title": "Get payment",
+          "description": "One payment by id. GET /payments/{id}."
+        },
+        {
+          "name": "fieldpulse_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List or search customer assets (equipment) by install status. GET /assets."
+        },
+        {
+          "name": "fieldpulse_get_asset",
+          "type": "read",
+          "title": "Get asset",
+          "description": "One asset by id. GET /assets/{id}."
+        },
+        {
+          "name": "fieldpulse_list_asset_categories",
+          "type": "read",
+          "title": "List asset categories",
+          "description": "List asset categories. GET /assets-category."
+        },
+        {
+          "name": "fieldpulse_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List locations (service addresses) of a customer or a job. GET /locations."
+        },
+        {
+          "name": "fieldpulse_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id. GET /locations/{id}."
+        },
+        {
+          "name": "fieldpulse_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List or search projects (status, completion). GET /projects."
+        },
+        {
+          "name": "fieldpulse_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project by id. GET /projects/{id}."
+        },
+        {
+          "name": "fieldpulse_list_contracts",
+          "type": "read",
+          "title": "List contracts",
+          "description": "List contracts (maintenance agreements). GET /contracts."
+        },
+        {
+          "name": "fieldpulse_get_contract",
+          "type": "read",
+          "title": "Get contract",
+          "description": "One contract by id. GET /contracts/{id}."
+        },
+        {
+          "name": "fieldpulse_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List the invoice item catalog (products and services with prices). GET /items."
+        },
+        {
+          "name": "fieldpulse_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One invoice item by id. GET /items/{id}."
+        },
+        {
+          "name": "fieldpulse_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders. GET /purchase-orders."
+        },
+        {
+          "name": "fieldpulse_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "One purchase order by id. GET /purchase-orders/{id}."
+        },
+        {
+          "name": "fieldpulse_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (suppliers). GET /vendors."
+        },
+        {
+          "name": "fieldpulse_get_vendor",
+          "type": "read",
+          "title": "Get vendor",
+          "description": "One vendor by id. GET /vendors/{id}."
+        },
+        {
+          "name": "fieldpulse_list_company_profiles",
+          "type": "read",
+          "title": "List company profiles",
+          "description": "The company profile(s) of this FieldPulse account (name, address, contact details, settings). GET /company-profile."
+        },
+        {
+          "name": "fieldpulse_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the account's users (team members) with ids for assignments. GET /users."
+        },
+        {
+          "name": "fieldpulse_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the account's teams. GET /teams."
+        },
+        {
+          "name": "fieldpulse_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags for customers or jobs. GET /tags."
+        },
+        {
+          "name": "fieldpulse_list_lead_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "List customer lead sources. GET /lead-source."
+        },
+        {
+          "name": "fieldpulse_list_pipeline_statuses",
+          "type": "read",
+          "title": "List pipeline statuses",
+          "description": "List customer pipeline statuses. GET /pipeline-status."
+        },
+        {
+          "name": "fieldpulse_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List custom field definitions, optionally for one object type. GET /custom-fields."
+        },
+        {
+          "name": "fieldpulse_list_comments",
+          "type": "read",
+          "title": "List comments",
+          "description": "List comments on a record (customer, job, project, subtasks, invoice). GET /comments."
+        },
+        {
+          "name": "fieldpulse_list_subtasks",
+          "type": "read",
+          "title": "List subtasks",
+          "description": "List subtasks (job checklist items) by status or assigned user. GET /subtasks."
+        },
+        {
+          "name": "fieldpulse_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "List timesheet entries (clock in/out), optionally for one user or a time window. GET /timesheets."
+        },
+        {
+          "name": "fieldpulse_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer (lead or account). Give first_name and/or last_name, or a unique display_name. Creates a new record every call; check fieldpulse_list_customers first to avoid duplicates. POST /customers."
+        },
+        {
+          "name": "fieldpulse_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: change fields of one customer (only the fields you pass). If FieldPulse asks for a name, include first_name/last_name or display_name. PUT /customers/{customerId}."
+        },
+        {
+          "name": "fieldpulse_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "WRITE: create a job for an existing customer. Needs customer_id, job_type and the numeric billing value FieldPulse requires; set a status (1-6) or a custom status_id + status_workflow_id. Creates a new job every call. POST /jobs."
+        },
+        {
+          "name": "fieldpulse_update_job",
+          "type": "write",
+          "title": "Update job",
+          "description": "WRITE: change a job: status, schedule, notes, assignments, location. FieldPulse requires customer_id, job_type and billing on every update, so this reads the job first and keeps those (and its current status) unless you pass new values. The read and the write are two requests; FieldPulse offers no version check. PUT /jobs/{jobId}."
+        },
+        {
+          "name": "fieldpulse_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fieldpulse_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FieldPulse tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fieldpulse_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited)",
+          "description": "Subscribe to the Pro plan for UNLIMITED FieldPulse tool calls (the free tier caps monthly usage). Choose monthly ($9/month) or yearly ($90/year — 2 months free) billing. Returns a short link to open in your browser (it opens Stripe Checkout); after payment your account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fieldpulse_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FieldPulse Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run fieldpulse_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ]
     }
   ]
 }
