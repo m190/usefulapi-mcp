@@ -44,7 +44,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `apitemplate_merge_pdfs` | **write** | Merge PDFs |
 | `apitemplate_usage_status` | meta | Usage status (free-tier meter) |
 | `apitemplate_request_feature` | meta | Request a missing feature |
-| `apitemplate_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
+| `apitemplate_upgrade` | meta | Upgrade to Pro (unlimited*) |
 | `apitemplate_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
@@ -54,7 +54,9 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+
+\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
 
 Pro covers this server only. Subscribe with `apitemplate_upgrade` (it returns a Stripe Checkout link). Cancel any time with `apitemplate_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `apitemplate_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 

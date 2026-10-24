@@ -61,7 +61,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `invoiced_create_task` | **write** | Create task |
 | `invoiced_usage_status` | meta | Usage status (free-tier meter) |
 | `invoiced_request_feature` | meta | Request a missing feature |
-| `invoiced_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
+| `invoiced_upgrade` | meta | Upgrade to Pro (unlimited*) |
 | `invoiced_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
@@ -71,7 +71,9 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+
+\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
 
 Pro covers this server only. Subscribe with `invoiced_upgrade` (it returns a Stripe Checkout link). Cancel any time with `invoiced_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `invoiced_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 

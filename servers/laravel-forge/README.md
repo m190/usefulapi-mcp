@@ -52,7 +52,7 @@ On first connect you'll paste your Laravel Forge API token. It's validated, stor
 | `forge_run_site_command` | **write** | Run site command |
 | `laravel_forge_usage_status` | meta | Usage status (free-tier meter) |
 | `laravel_forge_request_feature` | meta | Request a missing feature |
-| `laravel_forge_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
+| `laravel_forge_upgrade` | meta | Upgrade to Pro (unlimited*) |
 | `laravel_forge_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
@@ -62,7 +62,9 @@ On first connect you'll paste your Laravel Forge API token. It's validated, stor
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+| **Pro** | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+
+\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
 
 Pro covers this server only. Subscribe with `laravel_forge_upgrade` (it returns a Stripe Checkout link). Cancel any time with `laravel_forge_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `laravel_forge_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 

@@ -54,7 +54,7 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `cin7core_get_stock_transfer` | read | Get stock transfer |
 | `cin7core_usage_status` | meta | Usage status (free-tier meter) |
 | `cin7core_request_feature` | meta | Request a missing feature |
-| `cin7core_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
+| `cin7core_upgrade` | meta | Upgrade to Pro (unlimited*) |
 | `cin7core_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
@@ -64,7 +64,9 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** (per Cin7 account) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+| **Pro** (per Cin7 account) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+
+\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
 
 Pro covers this server only. Subscribe with `cin7core_upgrade` (it returns a Stripe Checkout link). Cancel any time with `cin7core_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `cin7core_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
