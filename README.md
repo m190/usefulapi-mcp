@@ -421,6 +421,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Instamojo](servers/instamojo/) | payments | 13 | API token | [servers/instamojo/](servers/instamojo/) |
 | [Stuart](servers/stuart/) | shipping | 19 | API token | [servers/stuart/](servers/stuart/) |
 | [GoCanvas](servers/gocanvas/) | productivity | 27 | API token | [servers/gocanvas/](servers/gocanvas/) |
+| [Axis LMS](servers/axis-lms/) | productivity | 48 | API token | [servers/axis-lms/](servers/axis-lms/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
