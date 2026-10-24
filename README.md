@@ -369,6 +369,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Seal Subscriptions](servers/seal-subscriptions/) | payments | 31 | API token | [servers/seal-subscriptions/](servers/seal-subscriptions/) |
 | [SuiteDash](servers/suitedash/) | crm | 20 | API token | [servers/suitedash/](servers/suitedash/) |
 | [UpKeep](servers/upkeep/) | productivity | 33 | API token | [servers/upkeep/](servers/upkeep/) |
+| [AgendaPro](servers/agendapro/) | calendar | 28 | API token | [servers/agendapro/](servers/agendapro/) |
+| [Appointo](servers/appointo/) | calendar | 14 | API token | [servers/appointo/](servers/appointo/) |
+| [Cyberimpact](servers/cyberimpact/) | email | 29 | API token | [servers/cyberimpact/](servers/cyberimpact/) |
+| [Loox](servers/loox/) | ecommerce | 11 | API token | [servers/loox/](servers/loox/) |
+| [Method CRM](servers/method-crm/) | crm | 20 | API token | [servers/method-crm/](servers/method-crm/) |
+| [noCRM.io](servers/nocrm-io/) | crm | 28 | API token | [servers/nocrm-io/](servers/nocrm-io/) |
+| [PHP Point of Sale](servers/php-point-of-sale/) | ecommerce | 30 | API token | [servers/php-point-of-sale/](servers/php-point-of-sale/) |
+| [Tamigo](servers/tamigo/) | productivity | 12 | API token | [servers/tamigo/](servers/tamigo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

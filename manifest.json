@@ -61947,6 +61947,1386 @@
         "Which spare parts are below their minimum quantity?",
         "Create a work order to inspect the forklift, due Friday, assigned to Sam."
       ]
+    },
+    {
+      "slug": "agendapro",
+      "name": "AgendaPro",
+      "category": "calendar",
+      "description": "Read AgendaPro bookings, slots, clients, services and sales; create, update and cancel bookings.",
+      "endpoint": "https://agendapro.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AgendaPro API key"
+          }
+        ],
+        "hint": "API access needs the **Pro plan**. Create the key in AgendaPro → **Configuraciones → Integraciones** (it is shown only once, and a company can have 2 active keys, so a dedicated key for this connection is easy to revoke). A key limited to some scopes limits the tools in the same way, and it needs at least one of the scopes locations:read, providers:read or services:read (they identify your company). Your key is used only to call the AgendaPro API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "agendapro_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the business's locations (sucursales / locales): id, name, address, phone, email, timezone, opening hours and country. Location ids are needed for bookings, slots and sales filters. GET /v3/locations."
+        },
+        {
+          "name": "agendapro_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id, with address, coordinates, timezone and weekly opening hours. GET /v3/locations/{id}."
+        },
+        {
+          "name": "agendapro_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services (treatments, classes, sessions) the business offers: id, name, price, duration, type, category, whether online booking/payment is on, and the location. Service ids are needed to book. GET /v3/services."
+        },
+        {
+          "name": "agendapro_get_service",
+          "type": "read",
+          "title": "Get service",
+          "description": "One service by id, including its category, images and the providers who perform it. GET /v3/services/{id}."
+        },
+        {
+          "name": "agendapro_list_service_categories",
+          "type": "read",
+          "title": "List service categories",
+          "description": "List service categories, ordered as the business arranges them. GET /v3/categories."
+        },
+        {
+          "name": "agendapro_list_providers",
+          "type": "read",
+          "title": "List providers",
+          "description": "List service providers (the staff who take bookings): id, public name, location, active flag, online-booking flag and working hours. Provider ids are needed to book. GET /v3/providers."
+        },
+        {
+          "name": "agendapro_get_provider",
+          "type": "read",
+          "title": "Get provider",
+          "description": "One service provider by id, with biography, images and working hours including breaks. GET /v3/providers/{id}."
+        },
+        {
+          "name": "agendapro_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings (reservas / appointments) with time, status, service, provider, client id, location, price and the linked sale. AgendaPro requires at least ONE of client_id, location_id, service_id or service_provider_id; dates only narrow the result. A sale may be a membership covering several bookings, so do not total amounts by sale id. GET /v3/bookings."
+        },
+        {
+          "name": "agendapro_get_booking",
+          "type": "read",
+          "title": "Get booking",
+          "description": "One booking by id with status, service, provider, client id, location, prices, notes and the linked sale. GET /v3/bookings/{id}."
+        },
+        {
+          "name": "agendapro_list_available_slots",
+          "type": "read",
+          "title": "List available slots",
+          "description": "Free booking time windows at a location on one date (optionally for one service and/or provider): start/end time, provider, plus a metadata summary (service duration, slot count). Use before creating a booking. GET /v3/available_slots."
+        },
+        {
+          "name": "agendapro_create_booking",
+          "type": "write",
+          "title": "Create booking",
+          "description": "WRITE: create a booking for an existing client, service, provider and location. Check agendapro_list_available_slots first. status_id must be a non-cancelled status: copy the status.id of an existing booking (agendapro_list_bookings). AgendaPro does NOT send email/SMS/WhatsApp notifications for bookings created through the API. Not idempotent: calling twice books twice. POST /v3/bookings."
+        },
+        {
+          "name": "agendapro_update_booking",
+          "type": "write",
+          "title": "Update booking",
+          "description": "WRITE: change an existing booking (partial update: only the fields you pass change): move it, switch service/provider/location, change status, price or notes. The merchant's customer policy applies: a change too close to the start time, or past the maximum number of changes, is refused with HTTP 422 and must not be retried. PATCH /v3/bookings/{id}."
+        },
+        {
+          "name": "agendapro_cancel_booking",
+          "type": "write",
+          "title": "Cancel booking",
+          "description": "WRITE: cancel a booking. This cannot be undone through the API. The merchant's customer policy applies: a cancellation that is disabled, too close to the start time or past the maximum number of changes is refused with HTTP 422 (tell the user the merchant does not allow it; do not retry). Confirm with the user before calling. PATCH /v3/bookings/{id}/cancel."
+        },
+        {
+          "name": "agendapro_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the business's clients (customers) page by page: name, email, phone, identification number, address, birth date, record number, active flag. Personal data: only use it for the task at hand. To find one person use agendapro_search_clients. GET /v3/clients."
+        },
+        {
+          "name": "agendapro_search_clients",
+          "type": "read",
+          "title": "Search clients",
+          "description": "Find clients by free text (name, email, phone, identification number or record number): a short ranked list with id, full name, email, phone. The fastest way to get a client_id. GET /v3/clients/quick-search."
+        },
+        {
+          "name": "agendapro_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One client by id with contact details, address, birth date, record number and active flag. GET /v3/clients/{id}."
+        },
+        {
+          "name": "agendapro_list_client_custom_attributes",
+          "type": "read",
+          "title": "List a client's custom attributes",
+          "description": "The custom attribute values stored for one client (id, name, datatype, value). GET /v3/clients/{id}/custom_attributes."
+        },
+        {
+          "name": "agendapro_list_custom_attributes",
+          "type": "read",
+          "title": "List custom attribute templates",
+          "description": "The custom client fields the business defined (id, name, datatype, mandatory, group, choices). Use the template ids when setting custom_attributes on a client. GET /v3/custom_attributes."
+        },
+        {
+          "name": "agendapro_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: create a new client. first_name is required and at least one of last_name, email or phone must also be given (AgendaPro's rule). Search first (agendapro_search_clients) to avoid duplicates; not idempotent. No message is sent to the client. POST /v3/clients."
+        },
+        {
+          "name": "agendapro_update_client",
+          "type": "write",
+          "title": "Update client",
+          "description": "WRITE: change an existing client (partial update: only the fields you pass change; it overwrites the stored value). PATCH /v3/clients/{id}."
+        },
+        {
+          "name": "agendapro_list_sales",
+          "type": "read",
+          "title": "List sales",
+          "description": "List sales (ventas): status (partially_paid, paid, canceled, refunded), paid and pending amounts, paid-at time, location, client id and the payment transactions. Filter by paid date range, location or client. GET /v3/sales."
+        },
+        {
+          "name": "agendapro_get_sale",
+          "type": "read",
+          "title": "Get sale",
+          "description": "One sale by id with amounts, status, location and its payment transactions (amount, paid-at, payment method). GET /v3/sales/{id}."
+        },
+        {
+          "name": "agendapro_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List retail products in the catalog: name, SKU, price, active flag, category, brand and display. GET /v3/products."
+        },
+        {
+          "name": "agendapro_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One catalog product by id with description, SKU, price, category, brand and display. GET /v3/products/{id}."
+        },
+        {
+          "name": "agendapro_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "agendapro_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AgendaPro tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "agendapro_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED AgendaPro tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "agendapro_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AgendaPro Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run agendapro_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which appointments do we have at my main location tomorrow, and which provider has free slots in the afternoon?",
+        "Find the client María López and show her upcoming bookings.",
+        "Book a 60-minute service for client 42 with provider 5 next Tuesday at 10:00.",
+        "What did we sell last week, and which sales are only partially paid?"
+      ]
+    },
+    {
+      "slug": "appointo",
+      "name": "Appointo",
+      "category": "calendar",
+      "description": "Read Appointo bookings, availability and subscriptions; create, reschedule and cancel bookings.",
+      "endpoint": "https://appointo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Appointo API token"
+          }
+        ],
+        "hint": "Find it in the Appointo app under **Plans & Settings → API access** (API access is available on paid Appointo plans). Your token is used only to call the Appointo API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "appointo_list_products",
+          "type": "read",
+          "title": "List bookable products",
+          "description": "List the Shopify products that are set up as bookable in Appointo: name, appointment type, whether the widget is shown, and each product's appointments (the bookable variants/services with price, currency and id). Use an appointment id for availability and bookings. GET /products."
+        },
+        {
+          "name": "appointo_list_appointments",
+          "type": "read",
+          "title": "List appointments (bookable services)",
+          "description": "List appointments, i.e. the bookable services/variants, with name, price, currency and configuration. Filter by product or fetch one by id. These are the services customers book, not the bookings themselves (use appointo_list_bookings for those). GET /appointments."
+        },
+        {
+          "name": "appointo_get_availability",
+          "type": "read",
+          "title": "Get appointment availability",
+          "description": "The free time slots of one appointment (bookable service) from start_date, optionally to end_date. Use it before creating or rescheduling a booking. GET /appointments/{appointment_id}/calendar_availability."
+        },
+        {
+          "name": "appointo_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings with time, product, duration, quantity, price and the customers (name, email, phone, address). Filter upcoming/past or search; pass booking_id for one booking. The customers' cancel/reschedule link ids are never returned. GET /bookings."
+        },
+        {
+          "name": "appointo_list_cancelled_bookings",
+          "type": "read",
+          "title": "List cancelled bookings",
+          "description": "List cancelled bookings, same shape as appointo_list_bookings. GET /bookings/cancelled_bookings."
+        },
+        {
+          "name": "appointo_list_subscription_contracts",
+          "type": "read",
+          "title": "List subscription contracts",
+          "description": "List the recurring booking subscription contracts (customers who subscribed to repeat appointments). Search by product, variant, order number or customer name. The API documents no paging for this list. GET /appointment_subscriptions."
+        },
+        {
+          "name": "appointo_create_booking",
+          "type": "write",
+          "title": "Create booking",
+          "description": "WRITE: create a booking for a customer on an appointment (bookable service) at a time slot. This is a real booking: Appointo may email the customer a confirmation and reserve the slot; the booking can later be cancelled with appointo_cancel_booking. Check appointo_get_availability first. Not idempotent: calling twice creates two bookings. The docs cap this at 100 requests per day. POST /bookings."
+        },
+        {
+          "name": "appointo_reschedule_booking",
+          "type": "write",
+          "title": "Reschedule booking",
+          "description": "WRITE: move a booking (or only some of its customers) to a new time slot. Appointo may notify the customers of the change. override=true forces the booking into the slot even if it is unavailable or full, so leave it off unless the user explicitly asked for it. The docs cap this at 100 requests per day. PUT /bookings/reschedule."
+        },
+        {
+          "name": "appointo_cancel_booking",
+          "type": "write",
+          "title": "Cancel booking",
+          "description": "WRITE: cancel a booking, or only some of its customers. The slot is freed and Appointo may notify the customers; whether a Shopify order is refunded is not controlled by this call. Cannot be undone through this server (create a new booking instead). The docs cap this at 100 requests per day. PUT /bookings/cancel."
+        },
+        {
+          "name": "appointo_update_booking_buffers",
+          "type": "write",
+          "title": "Update booking buffer times",
+          "description": "WRITE: set the start and/or end buffer time (minutes blocked before/after) of one booking. At least one value is required. The docs cap this at 100 requests per day. PUT /bookings/{booking_id}."
+        },
+        {
+          "name": "appointo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "appointo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Appointo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "appointo_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Appointo tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "appointo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Appointo Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run appointo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which bookings do I have tomorrow and who are the customers?",
+        "Show the free slots for my 60-minute consultation next week.",
+        "Move booking 969 to Thursday at 2 pm.",
+        "Which bookings were cancelled this month?"
+      ]
+    },
+    {
+      "slug": "cyberimpact",
+      "name": "Cyberimpact",
+      "category": "email",
+      "description": "Read Cyberimpact members, groups and mailing results; add members, send opt-ins, create mailings.",
+      "endpoint": "https://cyberimpact.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Cyberimpact API token"
+          }
+        ],
+        "hint": "In Cyberimpact open **Developers → API tokens** and create a token (a long text with two dots in it). It acts with your account's rights and can be revoked there at any time. Your token is used only to call the Cyberimpact API on your behalf; it is never shown to anyone. This is a token for integrations, not your Cyberimpact password."
+      },
+      "tools": [
+        {
+          "name": "cyberimpact_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Check the connection and show which Cyberimpact account the API token belongs to (username, email, account name). GET /ping."
+        },
+        {
+          "name": "cyberimpact_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List subscribed contacts (members) with name, email, language, consent type, mailing counts and custom fields. status: active (in at least one group, default), orphans (in no group) or all. Filter by the date a member joined or was last updated. Bounced and unsubscribed members have their own tools. GET /members."
+        },
+        {
+          "name": "cyberimpact_get_member",
+          "type": "read",
+          "title": "Get member",
+          "description": "One member by email address or id: all attributes, consent type, mailings received/opened/clicked and custom fields (keyed by custom field id; see cyberimpact_list_custom_fields). GET /members/{key}."
+        },
+        {
+          "name": "cyberimpact_get_member_groups",
+          "type": "read",
+          "title": "Get member's groups",
+          "description": "The groups a member belongs to (id, title, public/private, dynamic). GET /members/{key}/groups."
+        },
+        {
+          "name": "cyberimpact_get_member_mailings",
+          "type": "read",
+          "title": "Get member's mailings",
+          "description": "The mailings a member received (use it to see what a contact was sent and when). GET /members/{key}/mailings."
+        },
+        {
+          "name": "cyberimpact_get_member_consent",
+          "type": "read",
+          "title": "Get member consent",
+          "description": "A member's consent record: consent type, relation type, consent date, expiration and proof (for CASL compliance checks). GET /members/{key}/consent."
+        },
+        {
+          "name": "cyberimpact_list_bounced_members",
+          "type": "read",
+          "title": "List bounced members",
+          "description": "Members whose last mailing hard-bounced (invalid addresses to clean up), with the bounce date. GET /members/bounced."
+        },
+        {
+          "name": "cyberimpact_list_unsubscribed_members",
+          "type": "read",
+          "title": "List unsubscribed members",
+          "description": "Members who unsubscribed, with the unsubscribe date. These contacts must not be mailed again. GET /members/unsubscribed."
+        },
+        {
+          "name": "cyberimpact_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "The account's custom member fields (id, name, type text/date/integer/decimal). Member customFields are keyed by these ids. GET /customfields."
+        },
+        {
+          "name": "cyberimpact_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List the account's groups (mailing lists) with member and mailing counts, public/private and dynamic flags. Use the ids to target mailings and opt-ins. GET /groups."
+        },
+        {
+          "name": "cyberimpact_get_group",
+          "type": "read",
+          "title": "Get group",
+          "description": "One group by id with its member count, mailing count and flags. GET /groups/{id}."
+        },
+        {
+          "name": "cyberimpact_list_group_members",
+          "type": "read",
+          "title": "List group members",
+          "description": "The members of one group, with the same member filters as cyberimpact_list_members. GET /groups/{id}/members."
+        },
+        {
+          "name": "cyberimpact_list_mailings",
+          "type": "read",
+          "title": "List mailings",
+          "description": "List mailings by state: sent (default, archived ones excluded), scheduled (queued to go out) or archived. Each has id, subject, language, send/schedule date, recipient count and sender. Optionally only mailings sent to one group. GET /mailings/{sent|scheduled|archived}."
+        },
+        {
+          "name": "cyberimpact_get_mailing",
+          "type": "read",
+          "title": "Get mailing",
+          "description": "One mailing by id with its results: sent/delivered/stopped counts, views, clicks, delivery/click/view rates, per-link clicks, recipient groups, sender and body (HTML/text, cut at 20 000 characters). GET /mailings/{id}."
+        },
+        {
+          "name": "cyberimpact_list_mailing_recipients",
+          "type": "read",
+          "title": "List mailing recipients",
+          "description": "Who received a mailing and what happened: kind = all, delivered, stopped, hard_bounced, soft_bounced, unsubscribed, opened or clicked. Optionally only recipients from one group. GET /mailings/{id}/recipients[/{kind}]."
+        },
+        {
+          "name": "cyberimpact_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the account's email templates (id, title, created/updated). GET /templates."
+        },
+        {
+          "name": "cyberimpact_get_template",
+          "type": "read",
+          "title": "Get template",
+          "description": "One template by id with its HTML and text body (cut at 20 000 characters). GET /templates/{id}."
+        },
+        {
+          "name": "cyberimpact_get_batch",
+          "type": "read",
+          "title": "Get batch",
+          "description": "Status of a bulk batch job (NEW, PROCESSING or COMPLETED) and its result. Set show_error_details to list the per-member errors. GET /batches/{id}."
+        },
+        {
+          "name": "cyberimpact_add_member",
+          "type": "write",
+          "title": "Add member",
+          "description": "WRITE: add a contact as a subscribed member WITHOUT a confirmation email (implied consent) and put it in the given groups; the contact can then be mailed. Only use it for people who really gave their consent (CASL); to ask the person to confirm first use cyberimpact_send_optin. A member that already exists is rejected by the API. Throttled by Cyberimpact; for many contacts use the app's import. POST /members."
+        },
+        {
+          "name": "cyberimpact_update_member",
+          "type": "write",
+          "title": "Update member",
+          "description": "WRITE: change only the given attributes of a member (other attributes stay as they are). The old values of the changed fields are overwritten and not recoverable through the API. Set new_email to change the address. PATCH /members/{key}."
+        },
+        {
+          "name": "cyberimpact_add_member_to_groups",
+          "type": "write",
+          "title": "Add member to groups",
+          "description": "WRITE: add an existing member to more groups (existing group memberships are kept). Being in a group makes the member a recipient of mailings sent to it. Returns the member's groups after the update. POST /members/{key}/groups."
+        },
+        {
+          "name": "cyberimpact_send_optin",
+          "type": "write",
+          "title": "Send opt-in email",
+          "description": "WRITE, SENDS AN EMAIL to the given address: an opt-in confirmation request. The person is added to the groups only after they confirm (the member is created if it does not exist). Use this instead of cyberimpact_add_member when you do not have the person's consent yet. Only call it after the user has approved sending to this address, and set confirm_send to true. Throttled by Cyberimpact. POST /members/optins."
+        },
+        {
+          "name": "cyberimpact_create_group",
+          "type": "write",
+          "title": "Create group",
+          "description": "WRITE: create a new, empty group (mailing list). A public group can be offered on subscription forms; a private one is internal. Groups cannot be deleted through this server. POST /groups."
+        },
+        {
+          "name": "cyberimpact_create_template",
+          "type": "write",
+          "title": "Create template",
+          "description": "WRITE: create a new email template from HTML and/or text. It is only saved in the account; nothing is sent. POST /templates."
+        },
+        {
+          "name": "cyberimpact_create_mailing",
+          "type": "write",
+          "title": "Schedule mailing",
+          "description": "WRITE, SENDS EMAIL TO CUSTOMERS: create a mailing scheduled to be sent at send_at to every member of the chosen groups. It goes out for real unless it is cancelled in the Cyberimpact app before send_at. Only call it after the user has approved the subject, body, sender and groups, and set confirm_send to true. mail_from must be a validated sender address of the account. A mailing cannot be deleted through this server. POST /mailings."
+        },
+        {
+          "name": "cyberimpact_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cyberimpact_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Cyberimpact tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cyberimpact_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Cyberimpact tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cyberimpact_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Cyberimpact Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run cyberimpact_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my last 5 mailings had the best open and click rates?",
+        "List the addresses that hard-bounced in the last 30 days.",
+        "Show how many members are in each of my groups.",
+        "Send an opt-in email to jane@example.com for my Newsletter group."
+      ]
+    },
+    {
+      "slug": "loox",
+      "name": "Loox",
+      "category": "ecommerce",
+      "description": "Read Loox product and store reviews, reviewer details and rating summaries. Read-only.",
+      "endpoint": "https://loox.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store id (publicStoreId)"
+          },
+          {
+            "label": "Loox API secret key"
+          }
+        ],
+        "hint": "Both are in the Loox admin under **Settings → API Keys**: the **publicStoreId** is shown at the top, and **Generate new key** creates a secret key (shown only once; a key named for this connection is easy to revoke later). The key gives read access to your review data, including reviewer emails; it is used only to call the Loox API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "loox_list_product_reviews",
+          "type": "read",
+          "title": "List product reviews",
+          "description": "List product reviews of the store, newest or best first, with rating, text, photos/videos, merchant reply, product, verified-purchase flag, AI highlights, country and moderation status. Merchant data: includes the reviewer's name, email, Shopify customer id and order id. Filter by product, star rating, status (default: published only; use pending to find reviews awaiting approval) and date range. Real time. GET /api/v1/store/{id}/product-reviews."
+        },
+        {
+          "name": "loox_get_product_review",
+          "type": "read",
+          "title": "Get product review",
+          "description": "One product review by id, any moderation status (published, unpublished or pending), with full reviewer details. Merchant data: includes the reviewer's name, email, Shopify customer id and order id. GET /api/v1/store/{id}/product-reviews/{reviewId}."
+        },
+        {
+          "name": "loox_list_store_reviews",
+          "type": "read",
+          "title": "List store reviews",
+          "description": "List store-level reviews (about the shop, not one product) with rating, text, merchant reply and moderation status. Merchant data: includes the reviewer's name, email, Shopify customer id and order id. Filter by star rating, status (default published) and date range (applied to createdAt). GET /api/v1/store/{id}/store-reviews."
+        },
+        {
+          "name": "loox_get_store_review",
+          "type": "read",
+          "title": "Get store review",
+          "description": "One store-level review by id, any moderation status, with full reviewer details. Merchant data: includes the reviewer's name, email, Shopify customer id and order id. GET /api/v1/store/{id}/store-reviews/{reviewId}."
+        },
+        {
+          "name": "loox_get_product_reviews_summary",
+          "type": "read",
+          "title": "Get product reviews summary",
+          "description": "Overall rating of the store's published product reviews: total count, average stars and how many reviews per star (1-5). Public Storefront API, published reviews only. GET /storefront/v1/store/{id}/product-reviews/bottomline."
+        },
+        {
+          "name": "loox_get_product_rating",
+          "type": "read",
+          "title": "Get product rating",
+          "description": "Review count and average star rating of ONE product (published reviews; 0 when it has none). Public Storefront API. GET /storefront/v1/store/{id}/product-reviews/bottomline/{productId}."
+        },
+        {
+          "name": "loox_get_store_reviews_summary",
+          "type": "read",
+          "title": "Get store reviews summary",
+          "description": "Overall rating of the store-level reviews: total count, average stars and how many reviews per star (1-5). Public Storefront API, published reviews only. GET /storefront/v1/store/{id}/store-reviews/bottomline."
+        },
+        {
+          "name": "loox_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "loox_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Loox tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "loox_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Loox tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "loox_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Loox Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run loox_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the 1 and 2 star product reviews from the last 30 days.",
+        "Which reviews are still pending approval?",
+        "What is the average rating of product 7891234567890?",
+        "Summarize what customers praise and complain about in my latest photo reviews."
+      ]
+    },
+    {
+      "slug": "method-crm",
+      "name": "Method CRM",
+      "category": "crm",
+      "description": "Query Method CRM customers, leads, activities and invoices; create and update records.",
+      "endpoint": "https://method-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Method API key"
+          }
+        ],
+        "hint": "Only a Method **Admin** can create one: sign in to Method, click the blue circle icon (top right) → **Integrations** → **API** → **New**, name it and copy the key at once (it is shown only once). The key acts with that user's permissions and cannot be read-only, so a dedicated user makes its activity easy to track. It is used only to call the Method API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "method_get_account",
+          "type": "read",
+          "title": "Get API key owner",
+          "description": "Who the API key acts as: the Method user behind it (id and name; use the id as an assignee). Also a cheap check that the key works. GET /api/v1/me."
+        },
+        {
+          "name": "method_list_tables",
+          "type": "read",
+          "title": "List tables",
+          "description": "List every table on this Method account (standard QuickBooks/Xero/Method tables and custom ones) with its source and whether it can be created, updated or deleted. Tables differ per account: call this before querying a table you are unsure of. GET /api/v1/tables."
+        },
+        {
+          "name": "method_get_table_fields",
+          "type": "read",
+          "title": "Get table fields",
+          "description": "The exact field names of a table with type, whether required, creatable and mutable, and for dropdowns the table they reference. Use it to pick `select` fields and to name fields in create/update calls (names are case-sensitive and wrong ones are silently ignored). GET /api/v1/tables/{table}/fields."
+        },
+        {
+          "name": "method_query_records",
+          "type": "read",
+          "title": "Query records",
+          "description": "Query any table (Customer, Contacts, Activity, Invoice, Estimate, Item, Users, custom tables ...). Always pass `select`. `filter` uses OData-style syntax: strings in single quotes, dates as '2026-05-26T00:00:00Z' with Z or an offset, operators eq ne lt gt le ge and or not, functions contains(Name,'x') startswith() endswith(); e.g. \"BalanceRemaining gt 0 and DueDate lt '2026-10-01T00:00:00Z'\". `apply` runs server-side aggregation instead of listing rows, e.g. \"aggregate(BalanceRemaining with sum as Outstanding)\" or \"groupby((Customer), aggregate(Amount with sum as Total))\". Default order is RecordID ascending (stable paging); page with next_skip. GET /api/v1/tables/{table}."
+        },
+        {
+          "name": "method_count_records",
+          "type": "read",
+          "title": "Count records",
+          "description": "How many records a table has, optionally matching a filter (same filter syntax as method_query_records). Cheap: call it before paging through a big table. GET /api/v1/tables/{table}/count."
+        },
+        {
+          "name": "method_get_record",
+          "type": "read",
+          "title": "Get record",
+          "description": "One record by RecordID from any table. Pass `select` to limit the columns; `expand` names a related CHILD table whose rows are embedded (e.g. InvoiceLine on Invoice; at most 50 rows); a parent such as a contact's Entity is not expanded: read it with its own RecordID (Entity_RecordID). GET /api/v1/tables/{table}/{recordId}."
+        },
+        {
+          "name": "method_search_customers",
+          "type": "read",
+          "title": "Search customers and leads",
+          "description": "Find customers and leads (the Customer table: Customers & Leads in Method) by text in the name or email, by lead/customer type, or list them all. Returns RecordID, name, email, phone, lead flag and status; override `select` for other fields (see method_get_table_fields with table Customer). Page with next_skip. GET /api/v1/tables/Customer."
+        },
+        {
+          "name": "method_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (people), optionally those of one customer/lead entity (entity_id = the Customer's RecordID) or matching text in name/email/phone. Returns RecordID, name, email, phone, the entity link and active flag. Use a Contact's RecordID (not the Customer's) when linking activities. GET /api/v1/tables/Contacts."
+        },
+        {
+          "name": "method_list_activities",
+          "type": "read",
+          "title": "List activities",
+          "description": "List activities (calls, emails, to-dos, notes), newest first. Filter by the entity they belong to, the assigned user or a due-date window. The note text is in Comments. Override `select` for other fields (method_get_table_fields with table Activity). GET /api/v1/tables/Activity."
+        },
+        {
+          "name": "method_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices, newest first, optionally only unpaid ones (BalanceRemaining > 0), one customer's (customer_id = Customer RecordID) or created since a time. Returns reference number, customer, dates, amount and balance; override `select` for other fields. For totals use method_query_records with `apply`. GET /api/v1/tables/Invoice."
+        },
+        {
+          "name": "method_list_files",
+          "type": "read",
+          "title": "List files on a record",
+          "description": "List the files attached to a record (name, size, who added it, id). Use the id with method_get_file_url. GET /api/v1/files."
+        },
+        {
+          "name": "method_get_file_url",
+          "type": "read",
+          "title": "Get file download link",
+          "description": "A temporary download link (valid 20 minutes) for an attached file, by the file id from method_list_files. The link works without the API key: share it only with someone allowed to see the file. GET /api/v1/files/{id}/url."
+        },
+        {
+          "name": "method_create_customer",
+          "type": "write",
+          "title": "Create customer or lead",
+          "description": "WRITE: creates a record in Method's Customer table. is_lead true = a Customer Lead (does not sync to the accounting system); is_lead false = a full customer, which Method syncs to QuickBooks/Xero (it appears there too). Method also creates the primary Contact; its RecordID is returned as contact_id when it could be found (use it, not the customer id, to link activities). Name is required (for a person with no company use \"First Last\"). `extra_fields` sets other fields by their exact names (see method_get_table_fields, table Customer). Not idempotent: calling twice creates two records, so search first (method_search_customers). POST /api/v1/tables/Customer."
+        },
+        {
+          "name": "method_create_activity",
+          "type": "write",
+          "title": "Log an activity",
+          "description": "WRITE: logs an activity (call, email, to-do, note) on a customer/lead. entity_id is the Customer RecordID; contact_id is the Contact RecordID (not the Customer's; method_list_contacts finds it). The text goes in Comments. Prefer activity_type_id (read it from an existing activity of that type) over the caption activity_type: a caption that matches zero or several options is silently dropped. Method requires an assignee on standard accounts. The reply re-reads the activity so you can check the links were stored (field names are account-specific; method_get_table_fields with table Activity shows them). It does not email anyone. Not idempotent. POST /api/v1/tables/Activity."
+        },
+        {
+          "name": "method_create_record",
+          "type": "write",
+          "title": "Create a record",
+          "description": "WRITE: creates a record in any table that allows it (method_list_tables shows canCreate), e.g. Estimate, Invoice, Item, Vendor. For customers/leads and activities use the dedicated tools. Field names are case-sensitive and a wrong one is silently ignored: read them with method_get_table_fields first, and send dropdown links as their `_RecordID` integer. Creating accounting records (Invoice, Estimate, Customer ...) makes Method sync them to QuickBooks/Xero. Child lines (InvoiceLine ...) are not supported here. Not idempotent. Returns the new RecordID. POST /api/v1/tables/{table}."
+        },
+        {
+          "name": "method_update_record",
+          "type": "write",
+          "title": "Update a record",
+          "description": "WRITE: changes fields on one record (PATCH: only the fields you pass change). Field names are case-sensitive and Method silently ignores wrong or read-only names, so the reply re-reads the record and shows the stored values of the fields you sent: check them. Linked fields are changed through their `_RecordID` integer field. Updating accounting records (Customer, Invoice ...) makes Method sync the change to QuickBooks/Xero; setting IsLeadStatusOnly to false converts a lead into a synced customer. There is no delete tool. PATCH /api/v1/tables/{table}/{recordId}."
+        },
+        {
+          "name": "method_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "method_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Method CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "method_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Method CRM tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "method_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Method CRM Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run method_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customers and leads were added to Method this week?",
+        "Show every unpaid invoice older than 30 days with the customer's email.",
+        "Log a call note on Acme Landscaping: asked for a quote on spring cleanup.",
+        "Create a lead for Jane Smith, jane@example.com, assigned to me."
+      ]
+    },
+    {
+      "slug": "nocrm-io",
+      "name": "noCRM.io",
+      "category": "crm",
+      "description": "Read noCRM.io leads, pipeline steps, comments and client folders; create, update and assign leads.",
+      "endpoint": "https://nocrm-io.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "noCRM.io account"
+          },
+          {
+            "label": "noCRM.io API key"
+          }
+        ],
+        "hint": "In noCRM.io open the **Admin** section, **Integrations → API**, and generate a key (admins only). The account name is the first part of your address: `acme` for `https://acme.nocrm.io`. The key acts with admin rights on that account and is used only to call the noCRM.io API on your behalf; it is never shown to anyone. noCRM.io allows 2000 API requests per day per account."
+      },
+      "tools": [
+        {
+          "name": "nocrm_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List or search sales leads (noCRM.io's opportunities), newest first by default, with title, pipeline step, status, amount, probability, tags, owner, next reminder and the contact details in the description. Filter by status, step (names or ids, not mixed), owner, tags, email, starred or a date range. Unassigned leads are excluded unless include_unassigned is true. GET /leads."
+        },
+        {
+          "name": "nocrm_list_unassigned_leads",
+          "type": "read",
+          "title": "List unassigned leads",
+          "description": "Leads that have no owner yet (for example web-form or API leads waiting to be handed to a salesperson). GET /leads/unassigned."
+        },
+        {
+          "name": "nocrm_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id: title, step, status, amount, probability, tags, owner, client folder, team, reminder, and the full description with the contact's details. GET /leads/{id}."
+        },
+        {
+          "name": "nocrm_list_lead_comments",
+          "type": "read",
+          "title": "List lead comments",
+          "description": "The comments (notes, logged calls/meetings/emails) on a lead, newest first by default. GET /leads/{id}/comments."
+        },
+        {
+          "name": "nocrm_list_lead_history",
+          "type": "read",
+          "title": "List lead history",
+          "description": "The timeline of a lead: creation, assignments, step and status changes, amount changes, comments and emails sent, with who did it and when. Filter by date range, action type or user. GET /leads/{id}/action_histories."
+        },
+        {
+          "name": "nocrm_get_lead_duplicates",
+          "type": "read",
+          "title": "Find duplicate leads",
+          "description": "Leads that noCRM.io detects as possible duplicates of this lead (same email or key field). GET /leads/{id}/duplicates."
+        },
+        {
+          "name": "nocrm_list_lead_attachments",
+          "type": "read",
+          "title": "List lead attachments",
+          "description": "File attachments on a lead (names, ids, sizes, links). GET /leads/{id}/attachments."
+        },
+        {
+          "name": "nocrm_list_follow_ups",
+          "type": "read",
+          "title": "List post-sales follow-ups",
+          "description": "Post-sales processes (task checklists created from a template) of one lead OR of one user. Needs lead_id or user_id. Post-sales is a higher-edition feature (HTTP 403 otherwise). GET /follow_ups."
+        },
+        {
+          "name": "nocrm_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "The sales pipelines of the account (one unless the multiple-pipelines feature is on). GET /pipelines."
+        },
+        {
+          "name": "nocrm_list_steps",
+          "type": "read",
+          "title": "List pipeline steps",
+          "description": "The steps (stages) of the sales pipeline in order, with ids, positions and their pipeline. Use the ids or names when filtering leads or moving a lead. GET /steps."
+        },
+        {
+          "name": "nocrm_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The users (salespeople) of the account with name, email, phone, role (admin or not) and whether they are active or deactivated. Deleted users are included, flagged is_disabled. GET /users."
+        },
+        {
+          "name": "nocrm_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user by id or email address. GET /users/{id}."
+        },
+        {
+          "name": "nocrm_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "Sales teams with their members and who manages each. The Teams feature must be on in the account (HTTP 403 otherwise). GET /teams."
+        },
+        {
+          "name": "nocrm_list_client_folders",
+          "type": "read",
+          "title": "List client folders",
+          "description": "Client folders (accounts that group several leads), ordered by name by default. GET /clients."
+        },
+        {
+          "name": "nocrm_get_client_folder",
+          "type": "read",
+          "title": "Get client folder",
+          "description": "One client folder by id, with its contact fields and owner. GET /clients/{id}."
+        },
+        {
+          "name": "nocrm_list_activities",
+          "type": "read",
+          "title": "List activity types",
+          "description": "The activity types (call, email, meeting and their outcomes) that can be set on a comment or reminder. GET /activities."
+        },
+        {
+          "name": "nocrm_list_predefined_tags",
+          "type": "read",
+          "title": "List predefined tags",
+          "description": "The account's predefined tags (admin keys only; an HTTP 401 unauthorized_non_admin means the key lacks rights). GET /predefined_tags."
+        },
+        {
+          "name": "nocrm_list_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "The custom fields defined for leads or client folders. GET /fields."
+        },
+        {
+          "name": "nocrm_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: create a new lead. The description holds the contact's details, one 'Label: value' per line (for example 'Firstname: Ada', 'Email: ada@example.com', 'Phone: ...'); noCRM.io reads those lines. Without user_id the lead is created unassigned; a pipeline step can only be set when the lead is assigned. Not idempotent: calling twice creates two leads. POST /leads."
+        },
+        {
+          "name": "nocrm_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "WRITE: change a lead: title, status (won, lost, cancelled, todo or standby), pipeline step, amount, probability, star, estimated closing date, tags (replaces the lead's tag list), or append text to the description (existing description text is never replaced). Moving to standby needs remind_date. Only the fields you pass change. PUT /leads/{id}."
+        },
+        {
+          "name": "nocrm_assign_lead",
+          "type": "write",
+          "title": "Assign lead",
+          "description": "WRITE: assign a lead to a user (id or email), replacing its current owner. The owner may get a notification from noCRM.io. POST /leads/{id}/assign."
+        },
+        {
+          "name": "nocrm_add_lead_comment",
+          "type": "write",
+          "title": "Add lead comment",
+          "description": "WRITE: add a comment (an internal note) to a lead, optionally typed as an activity such as a call or meeting. It is visible to the lead's team in noCRM.io and sends nothing to the customer. Not idempotent. POST /leads/{id}/comments."
+        },
+        {
+          "name": "nocrm_create_client_folder",
+          "type": "write",
+          "title": "Create client folder",
+          "description": "WRITE: create a client folder (an account that groups leads). Not idempotent. POST /clients."
+        },
+        {
+          "name": "nocrm_add_lead_to_client_folder",
+          "type": "write",
+          "title": "Add lead to client folder",
+          "description": "WRITE: file a lead under a client folder. POST /leads/{id}/add_to_client."
+        },
+        {
+          "name": "nocrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "nocrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the noCRM.io tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "nocrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED noCRM.io tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "nocrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's noCRM.io Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run nocrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my leads are still open in the Proposal step, and what are they worth?",
+        "Show the history of lead 8113 and list its comments.",
+        "Create a lead for Acme Corp with John Doe's email and assign it to Stephanie.",
+        "Mark lead 8113 as won with an amount of 4,500 and add a note that the contract is signed."
+      ]
+    },
+    {
+      "slug": "php-point-of-sale",
+      "name": "PHP Point of Sale",
+      "category": "ecommerce",
+      "description": "Read PHP Point of Sale items, sales, customers and 138 reports; manage customers, items, expenses.",
+      "endpoint": "https://php-point-of-sale.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store name"
+          },
+          {
+            "label": "PHP Point of Sale API key"
+          }
+        ],
+        "hint": "The store name is the part before **.phppointofsale.com** in your store address. Create the key in the POS under **Store Config → API Settings → Add API Key**: choose **Read** for questions only, **Read/Write** to let the AI create or change customers, items and expenses. An employee scope limits the key to what that employee may do. Copy the key when it is shown (it appears only once). Your key is used only to call your store's API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "phppos_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the store's locations (shops/warehouses) with name, address, phone, email, time zone and default tax rates, plus each location's registers (id and name). Use the location ids to filter sales, expenses, customers and reports. Payment-processor credentials and device settings are never returned. GET /locations."
+        },
+        {
+          "name": "phppos_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List or search inventory items with name, item number, category, supplier, prices and reorder level. Search by text, or by one field (name, item_number, product_id, supplier, tag_name...). GET /items."
+        },
+        {
+          "name": "phppos_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One inventory item by id: prices, tax settings, category, supplier, tags, attributes, variations, tier pricing and per-location settings. GET /items/{id}."
+        },
+        {
+          "name": "phppos_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List item categories with their ids. Use the ids to filter items or to file a new item. GET /categories."
+        },
+        {
+          "name": "phppos_list_item_kits",
+          "type": "read",
+          "title": "List item kits",
+          "description": "List item kits (bundles of items sold together) with their prices. GET /item_kits."
+        },
+        {
+          "name": "phppos_list_sales",
+          "type": "read",
+          "title": "List sales",
+          "description": "List or search completed sales, by date range, customer (id or email) or location. verbosity: minimal (headline fields), medium (adds customer, totals, profit, location - the default here) or full (every line item, payment and tax). Suspended sales (layaways, estimates) are fetched with suspended_type. GET /sales."
+        },
+        {
+          "name": "phppos_get_sale",
+          "type": "read",
+          "title": "Get sale",
+          "description": "One sale by id with line items, payments, taxes, customer and employee (verbosity full by default). GET /sales/{id}."
+        },
+        {
+          "name": "phppos_list_receivings",
+          "type": "read",
+          "title": "List receivings",
+          "description": "List receivings (stock received from suppliers, purchase orders, transfers) with supplier, totals and items, by date range. GET /receivings."
+        },
+        {
+          "name": "phppos_get_receiving",
+          "type": "read",
+          "title": "Get receiving",
+          "description": "One receiving by id: supplier, items, quantities, costs and payments. GET /receivings/{id}."
+        },
+        {
+          "name": "phppos_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List or search customers with contact details, tier, store-account balance, credit limit and loyalty points. Search by text or by one field (email, phone_number, first_name, last_name, account_number). GET /customers."
+        },
+        {
+          "name": "phppos_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by person id: contact details, tier, tax settings, balance, credit limit, points, notes and custom fields. GET /customers/{person_id}."
+        },
+        {
+          "name": "phppos_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List or search suppliers with contact details, company, account number and balance. GET /suppliers."
+        },
+        {
+          "name": "phppos_get_supplier",
+          "type": "read",
+          "title": "Get supplier",
+          "description": "One supplier by person id. GET /suppliers/{person_id}."
+        },
+        {
+          "name": "phppos_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees with name, contact details, username, hire date, manager, commission and pay rate settings and assigned locations. Passwords and the permission maps are never returned. GET /employees."
+        },
+        {
+          "name": "phppos_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List customer invoices (money customers owe) or supplier invoices (money the store owes) with date, due date, status and amount. GET /invoices/customer or /invoices/supplier."
+        },
+        {
+          "name": "phppos_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List recorded expenses with type, description, date, amount, tax, payment type, category and location. GET /expenses."
+        },
+        {
+          "name": "phppos_list_gift_cards",
+          "type": "read",
+          "title": "List gift cards",
+          "description": "List gift cards with number, description, remaining value, customer and whether inactive. GET /giftcards."
+        },
+        {
+          "name": "phppos_get_gift_card",
+          "type": "read",
+          "title": "Get gift card",
+          "description": "One gift card by its card number (or id): remaining value, customer and status. GET /giftcards/{giftcard_number}."
+        },
+        {
+          "name": "phppos_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments (bookings) with customer, employee, service, start and end time, optionally within a time window. GET /appointments."
+        },
+        {
+          "name": "phppos_list_reports",
+          "type": "read",
+          "title": "List reports",
+          "description": "The catalog of the store's reports (138 of them: sales summaries, top sellers, inventory low/aging/summary, profit and loss, taxes, payments, employee, customer, supplier and store-account reports) with the inputs each accepts. Without `search` only the report keys are returned; with `search` (for example 'inventory' or 'profit') the matching reports are returned with their inputs. GET /reports."
+        },
+        {
+          "name": "phppos_run_report",
+          "type": "read",
+          "title": "Run report",
+          "description": "Run one of the store's reports and return it (title, summary, detail rows); `paging.next_offset` is set when more detail rows remain. Report keys and their inputs come from phppos_list_reports (for example summary_sales, top_sellers, inventory_low, summary_profit_and_loss, summary_taxes, closeout). Typical inputs go in `params`: start_date, end_date, sale_type, location_ids (array), category_id, supplier_id, customer_id, employee_id. A scoped key needs the Reports module plus that report's view permission. GET /reports/{report_key}."
+        },
+        {
+          "name": "phppos_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer in the store. Store-account balance, credit limit and loyalty points cannot be set here. Needs a Read/Write API key. Retrying creates a duplicate (check phppos_list_customers first). The store's 'new customer' webhook, if configured, fires. POST /customers."
+        },
+        {
+          "name": "phppos_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: change fields of an existing customer; only the fields you pass are sent. Overwrites the current values. Needs a Read/Write API key. The store's 'edit customer' webhook, if configured, fires. POST /customers/{person_id}."
+        },
+        {
+          "name": "phppos_create_item",
+          "type": "write",
+          "title": "Create item",
+          "description": "WRITE: create an inventory item (name required). Stock quantities are not set here. Needs a Read/Write API key. Retrying creates a duplicate (search with phppos_list_items first). The store's item webhooks, if configured, fire. POST /items."
+        },
+        {
+          "name": "phppos_update_item",
+          "type": "write",
+          "title": "Update item",
+          "description": "WRITE: change fields of an existing item (for example its price, category or active state); only the fields you pass are sent. Overwrites the current values, and a price change applies to the next sale. Needs a Read/Write API key. The store's 'edit item' webhook, if configured, fires. POST /items/{item_id}."
+        },
+        {
+          "name": "phppos_create_expense",
+          "type": "write",
+          "title": "Create expense",
+          "description": "WRITE: record an expense in the store's books (description, amount and date). It affects expense and profit-and-loss reports. Needs a Read/Write API key. Retrying records it twice (check phppos_list_expenses first). POST /expenses."
+        },
+        {
+          "name": "phppos_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "phppos_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the PHP Point of Sale tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "phppos_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED PHP Point of Sale tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "phppos_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's PHP Point of Sale Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run phppos_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How much did we sell yesterday, and which items sold best this week?",
+        "Which items are below their reorder level?",
+        "Find the customer with the email jane@example.com and show her last five sales.",
+        "Change the price of item 142 to 19.90."
+      ]
+    },
+    {
+      "slug": "tamigo",
+      "name": "Tamigo",
+      "category": "productivity",
+      "description": "Read Tamigo departments, employees, shifts, absences and opening hours; register attendance.",
+      "endpoint": "https://tamigo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Application name"
+          },
+          {
+            "label": "Application key"
+          }
+        ],
+        "hint": "A Tamigo administrator creates the key in Tamigo under **Configuration → Web Services (API)**: enter a name, then choose **Create Key**. The key is tied to your company; the web-services API may need to be enabled in your Tamigo package. Your key is used only to call the Tamigo API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tamigo_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List all departments (shops, restaurants, units) of the company: DepartmentId (a GUID, used by other tools), DepartmentKey (the POS key set in Tamigo), Name, IsDefault and ParentDepartmentId. GET /departments/application/."
+        },
+        {
+          "name": "tamigo_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List all employees of the company (basic): EmployeeId, Name, Email, IsPlanner, PosKey (the employee key used by the attendance tool) and DepartmentRoles. For contract, wage and absence-balance details use tamigo_list_employee_details. GET /employees/."
+        },
+        {
+          "name": "tamigo_list_employee_details",
+          "type": "read",
+          "title": "List employee details",
+          "description": "Detailed employee records, 500 per page in alphabetical order: contact data, roles per department, home department, contract hours, wage type and history, absence balances, competencies, custom columns, notes and availability. Bank details and ID numbers are never returned. Large pages are returned in slices: pass the reply's next_page and next_offset to continue. GET /employees/getemployeedetails/."
+        },
+        {
+          "name": "tamigo_list_shifts",
+          "type": "read",
+          "title": "List shifts (original, planned, worked)",
+          "description": "Per employee and day, the original rota, the planned (current) rota and the worked (timesheet) hours for a date range, with department, employee POS key, email and wage number. Use it for payroll checks, hours worked vs planned and who worked when. Shift values are hours. GET /shifts/all/{start}/{end}/."
+        },
+        {
+          "name": "tamigo_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "All absences (holiday, sickness, leave) that overlap a date range: employee, department, absence type, start and end, and whether it is approved or rejected. GET /LeaveRequests/All/."
+        },
+        {
+          "name": "tamigo_get_opening_hours",
+          "type": "read",
+          "title": "Get opening hours",
+          "description": "Normal and special opening hours per department for a date range. GET /OpeningHours/{start}/{end}/."
+        },
+        {
+          "name": "tamigo_register_attendance",
+          "type": "write",
+          "title": "Register check-ins / check-outs",
+          "description": "WRITE: register check-in and check-out times in the Tamigo timesheet, for one or many employees (the same call a POS system makes). Each entry names a department key and an employee key (the POS keys set in Tamigo under Configuration -> Departments / POS Keys; they are shown by tamigo_list_departments and tamigo_list_employees) and EITHER a check_in_time OR a check_out_time, in chronological order per employee. A break is registered by giving the same activity_name (for example Lunch, SmallBreak) on its check-in and its check-out. Tamigo may round the times by the company's rules, and the reply echoes the times actually registered. This changes worked hours and wages: it is not undone by repeating it, so confirm the entries first."
+        },
+        {
+          "name": "tamigo_upload_daily_revenue",
+          "type": "write",
+          "title": "Upload daily revenue",
+          "description": "WRITE: import daily revenue per department into Tamigo (the same call a cash-register system makes), used for revenue-based planning and KPIs. Each row is a department key (the POS key set in Tamigo), a date and a revenue amount (a plain number with a dot as decimal separator). A date that already has revenue for that department may be overwritten by Tamigo, so confirm the rows first. POST /Revenues/."
+        },
+        {
+          "name": "tamigo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tamigo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tamigo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tamigo_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Tamigo tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tamigo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tamigo Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run tamigo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which departments do we have in Tamigo, and what are their keys?",
+        "Show planned vs worked hours per employee for last week.",
+        "Who is absent next week and is it approved?",
+        "List all employees with their roles and contract hours."
+      ]
     }
   ]
 }
