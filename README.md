@@ -388,6 +388,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Pobuca Connect](servers/pobuca-connect/) | crm | 21 | API token | [servers/pobuca-connect/](servers/pobuca-connect/) |
 | [Referral Rock](servers/referral-rock/) | marketing | 19 | API token | [servers/referral-rock/](servers/referral-rock/) |
 | [Smartrr](servers/smartrr/) | payments | 25 | API token | [servers/smartrr/](servers/smartrr/) |
+| [AiSensy](servers/aisensy/) | communications | 20 | API token | [servers/aisensy/](servers/aisensy/) |
+| [Shippit](servers/shippit/) | shipping | 16 | API token | [servers/shippit/](servers/shippit/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

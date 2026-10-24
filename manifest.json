@@ -65553,6 +65553,312 @@
         "Pause the subscription of jane@example.com until January 15.",
         "How many active subscribers did we have each day last month?"
       ]
+    },
+    {
+      "slug": "aisensy",
+      "name": "AiSensy",
+      "category": "communications",
+      "description": "Read AiSensy contacts, templates and campaigns; add contacts, send WhatsApp messages on approval.",
+      "endpoint": "https://aisensy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AiSensy project id"
+          },
+          {
+            "label": "Project API key"
+          }
+        ],
+        "hint": "In AiSensy open **Developer → Developer Hub → Project API Keys**, create a key and copy it (it is shown once). The project id is the id in your dashboard address: `app.aisensy.com/projects/<project id>/dashboard`. Messages sent through this server use your AiSensy credit. The key is used only to call the AiSensy API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "aisensy_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "The AiSensy project (WhatsApp account) this key belongs to: name, status, plan and renewal date, monthly active user quota and usage, credit balance (raw units as AiSensy reports them), WhatsApp number, display name status, quality rating and messaging tier. GET /project/{project_id}."
+        },
+        {
+          "name": "aisensy_list_templates",
+          "type": "read",
+          "title": "List WhatsApp templates",
+          "description": "List the WhatsApp template messages of the project with name, language, status (PENDING, APPROVED, REJECTED), category, text and parameter count. Only APPROVED templates can be sent. Pages by record id: pass next_after from the previous reply as `after`. GET /project/{project_id}/wa_template/."
+        },
+        {
+          "name": "aisensy_get_template",
+          "type": "read",
+          "title": "Get WhatsApp template",
+          "description": "One WhatsApp template by id, with status, rejection reason, buttons and text. GET /project/{project_id}/wa_template/{id}."
+        },
+        {
+          "name": "aisensy_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns (API campaigns, broadcasts or both) with name, type, status, audience size, submitted count, template and creation time. Pages with skip + limit. POST /project/{project_id}/campaigns (a read: it only queries)."
+        },
+        {
+          "name": "aisensy_list_api_campaigns",
+          "type": "read",
+          "title": "List API campaigns",
+          "description": "List the project's API campaigns (the campaigns messages can be sent through) with status and template. A campaign must be LIVE to send. GET /project/{project_id}/campaign/api."
+        },
+        {
+          "name": "aisensy_get_api_campaign",
+          "type": "read",
+          "title": "Get API campaign",
+          "description": "One API campaign by id: status, template, parameters and counts. GET /project/{project_id}/campaign/api/{campaign_id}."
+        },
+        {
+          "name": "aisensy_get_campaign_analytics",
+          "type": "read",
+          "title": "Get campaign analytics",
+          "description": "Daily delivery and credit-usage statistics of one campaign (sent, delivered, read, failed counts and message credit usage), optionally within a date range. POST /project/{project_id}/campaign/analytics/{campaign_id} (a read: it only queries)."
+        },
+        {
+          "name": "aisensy_list_campaign_audience",
+          "type": "read",
+          "title": "List campaign audience",
+          "description": "Who a campaign was sent to, with name, number and sent/delivered/read times, optionally filtered by outcome (SENT, DELIVERED, READ, FAILED, REPLIED, CLICKED) and date range. Pages by cursor: pass next_after from the previous reply as `after`. GET /project/{project_id}/campaign/audience/{campaign_id}."
+        },
+        {
+          "name": "aisensy_create_api_campaign",
+          "type": "write",
+          "title": "Create API campaign",
+          "description": "WRITE: create an API campaign that binds a name to an APPROVED WhatsApp template. It sends nothing; messages go out only when aisensy_send_campaign_message is called for it. Not idempotent: calling twice with the same name may create two campaigns or fail. POST /project/{project_id}/campaign/api."
+        },
+        {
+          "name": "aisensy_find_contact",
+          "type": "read",
+          "title": "Find contact by phone number",
+          "description": "Look up a contact by phone number: id, name, tags, attributes, opt-in/chat state and last activity. 404 means no such contact. GET /project/{project_id}/contact?action=FetchContact&mobile_number=."
+        },
+        {
+          "name": "aisensy_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id: name, phone number, tags, attributes, chat state and last activity. GET /project/{project_id}/contact/{contact_id}."
+        },
+        {
+          "name": "aisensy_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: add a contact (name and phone number with country code). AiSensy opts new contacts in to WhatsApp notifications automatically, so only add people who agreed to be messaged. A number that already exists returns a 409 conflict. POST /project/{project_id}/contact."
+        },
+        {
+          "name": "aisensy_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change a contact's name, custom attributes, WhatsApp opt-in status or blocked status. Setting opted_in=false stops campaign messages to that person; blocked=true blocks them. Only the fields you pass change. PATCH /project/{project_id}/contact/{contact_id}."
+        },
+        {
+          "name": "aisensy_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One WhatsApp message by id: status (SENT, DELIVERED, READ), sent/delivered/read times, sender, campaign, content and price. GET /project/{project_id}/messages/{message_id}."
+        },
+        {
+          "name": "aisensy_send_campaign_message",
+          "type": "write",
+          "title": "Send campaign message",
+          "description": "WRITE, SENDS A WHATSAPP MESSAGE TO A CUSTOMER AND SPENDS AISENSY CREDIT: send the template of a LIVE API campaign to one phone number (a new contact is created if the number is unknown). Not idempotent: every call sends again. template_params must match the template's parameter count. Show the user the recipient and the template first and set confirm=true only after they approve. POST /project/{project_id}/campaign/api/send."
+        },
+        {
+          "name": "aisensy_send_message",
+          "type": "write",
+          "title": "Send WhatsApp message",
+          "description": "WRITE, SENDS A WHATSAPP MESSAGE TO A CUSTOMER AND MAY SPEND AISENSY CREDIT: send either a free-text message (type=text; WhatsApp only delivers it inside the 24-hour window after the customer last wrote) or an approved template (type=template with template_name, language_code and body_params). Not idempotent. Show the user the recipient and the text first and set confirm=true only after they approve. POST /project/{project_id}/messages."
+        },
+        {
+          "name": "aisensy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "aisensy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AiSensy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "aisensy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on AiSensy (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "aisensy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AiSensy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run aisensy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my WhatsApp templates are approved, and which were rejected?",
+        "How did my Diwali campaign perform: delivered, read and failed counts?",
+        "Find the contact with number 919876543210 and show their tags.",
+        "Send the order-confirmation campaign to Priya (919876543210) with order number 1042."
+      ]
+    },
+    {
+      "slug": "shippit",
+      "name": "Shippit",
+      "category": "shipping",
+      "description": "Get Shippit quotes, track and manage orders; create, label, book and cancel shipments on approval.",
+      "endpoint": "https://shippit.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Shippit API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "Log in to your Shippit account ([app.shippit.com](https://app.shippit.com/)), make sure carriers are enabled and billing details added, and copy the **API key** (see [Shippit developer guide](https://developer.shippit.com/dev_guide/using_apis/using_apis.html)). Choose Production unless your key is from a Shippit staging test account. Your key is used only to call the Shippit API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "shippit_get_merchant",
+          "type": "read",
+          "title": "Get merchant account",
+          "description": "The Shippit merchant account behind this API key: store and company name, contact, preparation time, website and the home (pickup) address with country. GET /merchant."
+        },
+        {
+          "name": "shippit_get_operating_hours",
+          "type": "read",
+          "title": "Get store operating hours",
+          "description": "The store operating hours per weekday (open flag, start and end of the working day) that Shippit uses for pickup and delivery estimates. GET /merchants/settings/locations/operating_hours."
+        },
+        {
+          "name": "shippit_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "The tracking webhooks configured on the account (at most 6): url, the order states that trigger each, whether address or receiver details are hidden, enabled flag. Custom header values are masked by Shippit. GET /merchants/webhooks."
+        },
+        {
+          "name": "shippit_get_quotes",
+          "type": "read",
+          "title": "Get shipping quotes",
+          "description": "Ask the carriers enabled on the account for a price and delivery estimate to a destination, for given parcels. Nothing is booked and nothing is charged. Set return_all_quotes to see every carrier instead of only the cheapest or fastest. A 200 can hold per-carrier errors (success false) and a quote of 0 means that carrier cannot take the parcel. Dangerous goods cannot be quoted. POST /quotes."
+        },
+        {
+          "name": "shippit_estimate_delivery_dates",
+          "type": "read",
+          "title": "Estimate delivery dates",
+          "description": "Estimated delivery window (earliest, latest, confidence and a ready-to-show text) per service level (standard, express) between two postcodes, optionally limited to some carriers. Returns an empty list if no carrier is enabled. POST /estimated_delivery_dates."
+        },
+        {
+          "name": "shippit_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One Shippit order by tracking number: state, courier and price allocated, delivery address, receiver, parcels, products, references and (once booked) manifest id and number. There is no list-orders endpoint in the Shippit API. GET /orders/{tracking_number}."
+        },
+        {
+          "name": "shippit_get_tracking",
+          "type": "read",
+          "title": "Get order tracking",
+          "description": "The status history of an order (status, date, time, who changed it) and the public tracking page URL to give the recipient. GET /orders/{tracking_number}/tracking."
+        },
+        {
+          "name": "shippit_get_manifest_document",
+          "type": "read",
+          "title": "Get manifest document",
+          "description": "The booking manifest document for a manifest id (from shippit_book_orders or shippit_get_order): carrier, order count, tracking numbers and a pre-signed PDF URL valid for 7 days. A 422 means the manifest is still generating: retry shortly. GET /book/{manifest_id}/document."
+        },
+        {
+          "name": "shippit_create_order",
+          "type": "write",
+          "title": "Create order",
+          "description": "WRITE: create a domestic shipping order in Shippit. Shippit then allocates a carrier (your account rules, or the carrier named in courier_allocation) and, unless suppress_communications is true, emails the recipient tracking notifications. Requires confirm: true. Standard, express and click-and-collect orders are only booked with the carrier later, by shippit_label_order and shippit_book_orders (priority and on-demand orders, which book inside the create request, are not supported here). validate defaults to true: the order is not saved when the suburb and postcode do not match (a suggested address is returned instead). Creating twice creates two orders. International orders (customs data) are not supported here. POST /orders."
+        },
+        {
+          "name": "shippit_label_order",
+          "type": "write",
+          "title": "Label order",
+          "description": "WRITE: confirm an order for shipping and fetch its label. This is the Shippit 'label' step: it finalises the carrier and price (the order moves to Ready to Ship) and returns the carrier, tracking and consignment details plus pre-signed PDF URLs (valid 7 days) for the shipping label, packing slip and any customs documents. A 422 means the order is still processing or has no valid carrier or quote: retry shortly or read the error. Labelling is the step before shippit_book_orders. GET /orders/{tracking_number}/label."
+        },
+        {
+          "name": "shippit_book_orders",
+          "type": "write",
+          "title": "Book orders with carriers",
+          "description": "WRITE: book labelled orders with their carriers for pickup (the Shippit 'book' step). Shippit returns one manifest per carrier; the carrier then collects and bills the parcels. Orders must have been labelled first (shippit_label_order). The call fails as a whole when a tracking number is unknown; otherwise each manifest reports success or an error per order. Booked orders can no longer be edited. Requires confirm: true. A reply where every manifest failed is an error. POST /book."
+        },
+        {
+          "name": "shippit_cancel_order",
+          "type": "write",
+          "title": "Cancel order",
+          "description": "WRITE: cancel a Shippit order by tracking number (the order ends in state cancelled and cannot be revived; for some carriers Shippit also sends a cancellation request to the carrier). Shippit refuses with a 422 and the reason when the order can no longer be cancelled, for example once the carrier has it. Requires confirm: true. DELETE /orders/{tracking_number}."
+        },
+        {
+          "name": "shippit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shippit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Shippit tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shippit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Shippit (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shippit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Shippit Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shippit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Quote shipping for a 2 kg parcel to Pyrmont NSW 2009 and show all carriers.",
+        "Where is my order PPuqD0J0uLslM and what is its tracking history?",
+        "Create a standard order for 1 parcel of 1.5 kg to 1 Union Street, Pyrmont NSW 2009 for John Smith.",
+        "Label and book these three orders for today's pickup."
+      ]
     }
   ]
 }
