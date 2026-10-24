@@ -165,7 +165,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Eventbrite](servers/eventbrite/) | ecommerce | 30 | API token | [servers/eventbrite/](servers/eventbrite/) |
 | [Less Annoying CRM](servers/less-annoying-crm/) | crm | 27 | API token | [servers/less-annoying-crm/](servers/less-annoying-crm/) |
 | [Workiz](servers/workiz/) | productivity | 23 | API token | [servers/workiz/](servers/workiz/) |
-| [Depot](servers/depot/) | devops | 26 | API token | [servers/depot/](servers/depot/) |
+| [Depot](servers/depot/) | devops | 28 | API token | [servers/depot/](servers/depot/) |
 | [Mindbody](servers/mindbody/) | calendar | 24 | API token | [servers/mindbody/](servers/mindbody/) |
 | [Buildium](servers/buildium/) | productivity | 27 | API token | [servers/buildium/](servers/buildium/) |
 | [Housecall Pro](servers/housecall-pro/) | productivity | 29 | API token | [servers/housecall-pro/](servers/housecall-pro/) |

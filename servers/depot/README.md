@@ -53,6 +53,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `depot_gha_search_logs` | read | Search GitHub Actions logs |
 | `depot_gha_get_analytics` | read | Get GitHub Actions analytics |
 | `depot_gha_list_recommendations` | read | List runner-size recommendations |
+| `depot_cache_list_entries` | read | List cache entries |
+| `depot_cache_delete_entries` | **write** | Delete cache entries |
 | `depot_create_project` | **write** | Create a project |
 | `depot_ci_retry_job` | **write** | Retry a CI job |
 | `depot_ci_retry_failed_jobs` | **write** | Retry a workflow's failed jobs |
