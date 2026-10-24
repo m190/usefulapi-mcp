@@ -71336,6 +71336,375 @@
         "Create a payment link for 1500 INR for 'Workshop seat' and give me the URL.",
         "List my refunds from this month."
       ]
+    },
+    {
+      "slug": "stuart",
+      "name": "Stuart",
+      "category": "shipping",
+      "description": "Quote, validate, book and track Stuart courier deliveries; cancel jobs and check zone coverage.",
+      "endpoint": "https://stuart.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "API client ID"
+          },
+          {
+            "label": "API client secret"
+          }
+        ],
+        "hint": "Find both in the Stuart admin under **API credentials** (admin.stuart.com for production, admin.sandbox.stuart.com for the sandbox; they are separate). Pick the matching environment below. We exchange the pair for an access token with Stuart; your credentials are used only to call the API on your behalf and are never shown to anyone. Creating a job books a real, charged courier on production: use the sandbox to try things out."
+      },
+      "tools": [
+        {
+          "name": "stuart_list_jobs",
+          "type": "read",
+          "title": "List delivery jobs",
+          "description": "List the delivery jobs of the last 90 days, newest pickup first, with status, deliveries (tracking URLs, courier proof), driver and pricing. Filter by status, active or your client_reference. Paginated: when a page returns per_page rows, ask for the next page. Stuart: GET /v2/jobs."
+        },
+        {
+          "name": "stuart_get_job",
+          "type": "read",
+          "title": "Get a delivery job",
+          "description": "One job in full: status, each delivery with tracking URL, pickup/dropoff addresses and contacts, ETA, cancellation, proof of delivery, driver, distance and pricing. Stuart: GET /v2/jobs/{jobId}."
+        },
+        {
+          "name": "stuart_estimate_price",
+          "type": "read",
+          "title": "Get a delivery price quote",
+          "description": "Price of a job before you create it: amount excluding and including tax, and currency. Nothing is booked. Needs pickup address, dropoff address and package type. Stuart: POST /v2/jobs/pricing."
+        },
+        {
+          "name": "stuart_validate_job",
+          "type": "read",
+          "title": "Validate a delivery job",
+          "description": "Check that a job would be accepted (addresses geocode inside a covered zone, fields valid) without creating it. Returns {valid}. Stuart: POST /v2/jobs/validate."
+        },
+        {
+          "name": "stuart_estimate_pickup_eta",
+          "type": "read",
+          "title": "Estimate courier arrival at pickup",
+          "description": "Estimated seconds until a courier could arrive at the pickup address, for the same job body as create. Nothing is booked. Stuart: POST /v2/jobs/eta."
+        },
+        {
+          "name": "stuart_estimate_dropoff_eta",
+          "type": "read",
+          "title": "Estimate time to dropoff",
+          "description": "Estimated seconds to reach the destination address for a job (coordinates need the text address too). Nothing is booked. Stuart: POST /v2/jobs/cpt."
+        },
+        {
+          "name": "stuart_validate_address",
+          "type": "read",
+          "title": "Validate a pickup or dropoff address",
+          "description": "Check that an address can be geocoded and lies inside a Stuart zone, as a pickup (picking) or a dropoff (delivering). A phone number is needed when the address is approximate. Stuart: POST /v2/addresses/validate."
+        },
+        {
+          "name": "stuart_get_zone_coverage",
+          "type": "read",
+          "title": "Get a zone's coverage area",
+          "description": "GeoJSON of the picking or delivery area of an open Stuart zone (for example paris, london). Stuart: GET /v2/areas/{zone}."
+        },
+        {
+          "name": "stuart_get_zone_schedule_slots",
+          "type": "read",
+          "title": "Get a zone's scheduling slots",
+          "description": "Available time slots (start and end, 15-minute steps) in a zone for a date, from the time of the request onward. Use a future date. Stuart: GET /v2/jobs/schedules/{zone}/{type}/{date}."
+        },
+        {
+          "name": "stuart_get_courier_phone",
+          "type": "read",
+          "title": "Get the courier's anonymous phone number",
+          "description": "Anonymised phone number of the courier assigned to a delivery. Only works once a courier is assigned; expires when the delivery ends. Stuart: GET /v2/deliveries/{deliveryId}/phone_number."
+        },
+        {
+          "name": "stuart_create_job",
+          "type": "write",
+          "title": "Create a delivery job (dispatches a courier)",
+          "description": "BOOKS A REAL, CHARGED DELIVERY: creates a job with one pickup and 1-8 dropoffs and starts looking for a courier right away (unless pickup_at schedules it: up to 4 days ahead, 30 for corporate accounts). Get a quote with stuart_estimate_price and check with stuart_validate_job first, and confirm with the user. Use the sandbox environment for tests. Stuart: POST /v2/jobs."
+        },
+        {
+          "name": "stuart_update_job",
+          "type": "write",
+          "title": "Update delivery details",
+          "description": "Change allowed details of a delivery in a job: client_reference, package_description, and the pickup/dropoff comment and contact (what is editable depends on the delivery status: once delivered only client_reference). Stuart: PATCH /v2/jobs/{jobId}."
+        },
+        {
+          "name": "stuart_cancel_job",
+          "type": "write",
+          "title": "Cancel a delivery job",
+          "description": "Cancels a whole job and all its deliveries. Stuart may charge a cancellation fee once a courier is on the way; confirm with the user first. Give a reason key for reporting. Stuart: POST /v2/jobs/{jobId}/cancel."
+        },
+        {
+          "name": "stuart_cancel_delivery",
+          "type": "write",
+          "title": "Cancel one delivery",
+          "description": "Cancels a single delivery (one dropoff) of a multi-drop job. A cancellation fee may apply; confirm with the user first. Stuart: POST /v2/deliveries/{deliveryId}/cancel."
+        },
+        {
+          "name": "stuart_mark_order_ready",
+          "type": "write",
+          "title": "Signal that an order is ready for pickup",
+          "description": "Tell Stuart the order is packed and ready for the courier to collect. Pass exactly one of job_id (all orders of the job) or delivery_id (one order). Send it only when the order is really ready. Stuart: POST /v2/jobs/{jobId}/order_ready or /v2/deliveries/{deliveryId}/order_ready."
+        },
+        {
+          "name": "stuart_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "stuart_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Stuart tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "stuart_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Stuart (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "stuart_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Stuart Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run stuart_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How much would a courier from 32 Coombe Lane, London SW20 0LA to 23 Ethelbert Rd, London SW20 8QD cost for a medium package?",
+        "Show my deliveries that are still in progress and where each courier is.",
+        "Is 10 Rue de Rivoli, Paris inside Stuart's delivery area?",
+        "Cancel job 100202968, the customer changed their mind."
+      ]
+    },
+    {
+      "slug": "gocanvas",
+      "name": "GoCanvas",
+      "category": "productivity",
+      "description": "Read GoCanvas forms, submissions, users, dispatches and reference data; create dispatches.",
+      "endpoint": "https://gocanvas.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "In GoCanvas, open your **profile → API Settings** (administrator) and create an **OAuth application**; copy the client ID and the client secret (shown only once). API v3 is included in the Pro and Max plans or available as an add-on. The server acts as the user who owns the application and sees what that user can see. Your credentials are used only to call the GoCanvas API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "gocanvas_get_me",
+          "type": "read",
+          "title": "Get the connected GoCanvas user",
+          "description": "The user who owns the connected OAuth application: id, login, company id and name, default department and role. Use it to learn the default department id."
+        },
+        {
+          "name": "gocanvas_list_forms",
+          "type": "read",
+          "title": "List GoCanvas forms",
+          "description": "Forms (mobile form definitions) the connected user can see: id, name, status, version, department. Paged, 100 per page. Use gocanvas_get_form for a form's fields (entries)."
+        },
+        {
+          "name": "gocanvas_get_form",
+          "type": "read",
+          "title": "Get a GoCanvas form definition",
+          "description": "One form definition, including its screens and entries (field ids and labels). Use format 'flat' for the simplest list of fields (what you need to read submissions or create a dispatch), 'nested' (default) for the full structure, 'metadata' or 'minimal' for less."
+        },
+        {
+          "name": "gocanvas_list_form_reports",
+          "type": "read",
+          "title": "List report definitions of a GoCanvas form",
+          "description": "The report (PDF) definitions attached to a form: id, name, format, whether emailed by default. Paged."
+        },
+        {
+          "name": "gocanvas_list_submissions",
+          "type": "read",
+          "title": "List GoCanvas submissions",
+          "description": "Completed forms (submissions): id, form, number, created time, department, user, status. At least one of form_id, user_id or user_email is required (user_id and user_email cannot be combined). Default status is completed. Dates filter created_at. Paged, 100 per page. Use gocanvas_get_submission for the answers."
+        },
+        {
+          "name": "gocanvas_get_submission",
+          "type": "read",
+          "title": "Get a GoCanvas submission",
+          "description": "One submission with all its responses (entry id, label, type, value). Accepts the numeric submission id or the client GUID."
+        },
+        {
+          "name": "gocanvas_list_submission_revisions",
+          "type": "read",
+          "title": "List revisions of a GoCanvas submission",
+          "description": "The revision history of a submission (who changed it and when). Paged."
+        },
+        {
+          "name": "gocanvas_list_users",
+          "type": "read",
+          "title": "List GoCanvas users",
+          "description": "Users of the company: id, name, email, enabled. Paged, 100 per page."
+        },
+        {
+          "name": "gocanvas_get_user",
+          "type": "read",
+          "title": "Get a GoCanvas user",
+          "description": "One user by id: name, login, contact data, default department and role."
+        },
+        {
+          "name": "gocanvas_list_departments",
+          "type": "read",
+          "title": "List GoCanvas departments",
+          "description": "Departments of the company: id, name, description. The pseudo department -1 'All' is included."
+        },
+        {
+          "name": "gocanvas_list_department_users",
+          "type": "read",
+          "title": "List users of a GoCanvas department",
+          "description": "The users in one department with their department role."
+        },
+        {
+          "name": "gocanvas_list_dispatches",
+          "type": "read",
+          "title": "List GoCanvas dispatches",
+          "description": "Dispatches (jobs sent to field workers): id, form, assignee, status, schedule. At least one of user_id, department_id or form_id is required. Dates are ISO-8601. Paged."
+        },
+        {
+          "name": "gocanvas_get_dispatch",
+          "type": "read",
+          "title": "Get a GoCanvas dispatch",
+          "description": "One dispatch by id with its pre-filled responses, schedule and status."
+        },
+        {
+          "name": "gocanvas_list_customers",
+          "type": "read",
+          "title": "List GoCanvas customers",
+          "description": "Customers (contacts of the Project Management view): individuals or businesses, optionally tied to a site. Paged."
+        },
+        {
+          "name": "gocanvas_list_projects",
+          "type": "read",
+          "title": "List GoCanvas projects",
+          "description": "Projects of the Project Management view. Paged."
+        },
+        {
+          "name": "gocanvas_list_sites",
+          "type": "read",
+          "title": "List GoCanvas sites",
+          "description": "Sites (job locations) of the Project Management view. Paged."
+        },
+        {
+          "name": "gocanvas_list_reference_data",
+          "type": "read",
+          "title": "List GoCanvas reference data sets",
+          "description": "Reference data (lookup tables used by forms): id, name, columns, version. Without department_id the user's default department is used."
+        },
+        {
+          "name": "gocanvas_get_reference_data",
+          "type": "read",
+          "title": "Get a GoCanvas reference data set",
+          "description": "One reference data set with its rows."
+        },
+        {
+          "name": "gocanvas_list_groups",
+          "type": "read",
+          "title": "List GoCanvas groups",
+          "description": "User groups: id, name, and the forms and users assigned. Paged."
+        },
+        {
+          "name": "gocanvas_list_workflows",
+          "type": "read",
+          "title": "List GoCanvas workflows",
+          "description": "Workflows (handoff chains between users) the connected user takes part in, with their handoff states and the count of tasks available to claim. Paged."
+        },
+        {
+          "name": "gocanvas_list_locations",
+          "type": "read",
+          "title": "List GoCanvas tracker locations",
+          "description": "GPS location events of field users (needs the tracker feature). start_date and end_date are required and may span at most 7 days. Omit user_id for all users of the company. Paged."
+        },
+        {
+          "name": "gocanvas_create_dispatch",
+          "type": "write",
+          "title": "Create a GoCanvas dispatch",
+          "description": "WRITE: creates a dispatch, a job that appears on the assignee's mobile device (immediate_dispatch is sent at once, with a push notification when send_notification is true; scheduled_dispatch needs scheduled_at and scheduled_end). Responses pre-fill the assignee's form (entry ids from gocanvas_get_form). Without assignee_id the dispatch stays unassigned. Not idempotent: calling twice creates two dispatches. Media fields cannot be pre-filled."
+        },
+        {
+          "name": "gocanvas_mark_dispatch_received",
+          "type": "write",
+          "title": "Mark a GoCanvas dispatch as received",
+          "description": "WRITE: acknowledges a dispatch (status becomes received). Only works for a dispatch in the assigned state that is assigned to the connected user; repeating it is refused by GoCanvas."
+        },
+        {
+          "name": "gocanvas_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gocanvas_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoCanvas tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gocanvas_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on GoCanvas (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gocanvas_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoCanvas Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gocanvas_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which inspection forms were submitted this week, and by whom?",
+        "Show me the answers of the latest completed safety checklist.",
+        "List my field users and the departments they belong to.",
+        "Dispatch the site inspection form to Maria for tomorrow at 8 AM."
+      ]
     }
   ]
 }

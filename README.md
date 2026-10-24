@@ -419,6 +419,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Vision6](servers/vision6/) | email | 27 | API token | [servers/vision6/](servers/vision6/) |
 | [WaiverFile](servers/waiverfile/) | productivity | 21 | API token | [servers/waiverfile/](servers/waiverfile/) |
 | [Instamojo](servers/instamojo/) | payments | 13 | API token | [servers/instamojo/](servers/instamojo/) |
+| [Stuart](servers/stuart/) | shipping | 19 | API token | [servers/stuart/](servers/stuart/) |
+| [GoCanvas](servers/gocanvas/) | productivity | 27 | API token | [servers/gocanvas/](servers/gocanvas/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
