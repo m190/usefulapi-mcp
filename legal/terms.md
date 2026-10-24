@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 9 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 24 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -28,6 +28,10 @@ pricing. You are responsible for activity performed under your authorized creden
 
 - **Free tier:** up to the stated monthly call limit. **Paid plans** (Pro) are billed via
   Stripe on a recurring monthly or annual basis and **renew automatically** until cancelled.
+- **Pro fair use:** Pro gives unlimited tool calls for normal use, with a fair use limit of
+  **10,000 tool calls per calendar month (UTC)** on each server. Above the limit, tool calls on
+  that server stop until the next month. If you need more, write to **support@usefulapi.io**. Pro
+  subscriptions started before 25 October 2026 have no fair use limit while they stay active.
 - **Billing is per server:** a Pro subscription covers only the server (`<product>.usefulapi.io`) you
   subscribed on. You subscribe with that server's `<product>_upgrade` tool, which returns a Stripe
   Checkout link.

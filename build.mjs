@@ -109,6 +109,11 @@ const priceText = (p) => {
 };
 const proTier = (s) => (s.pricing || []).find((p) => /pro/i.test(p.plan));
 const freeTier = (s) => (s.pricing || []).find((p) => /free/i.test(p.plan));
+// The limit the fleet runtime enforces (core.ts PRO_FAIR_USE_LIMIT); the manifest says only "Unlimited".
+const PRO_FAIR_USE = "fair use limit: 10,000 tool calls a month";
+const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit);
+/** The limit as a sentence shows it: Pro's "Unlimited" carries its fair use limit. */
+const limitText = (p) => (isUnlimitedPro(p) ? `${p.limit} (${PRO_FAIR_USE})` : p.limit);
 const MARK = `<svg class="mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient></defs><rect width="512" height="512" rx="114" fill="url(#tl)"/><g fill="#fff"><circle cx="169" cy="256" r="61"/><circle cx="343" cy="256" r="61"/><rect x="169" y="223" width="174" height="66" rx="33"/></g></svg>`;
 const PRODUCT_CSS = `
 :root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--card:#fff;--border:#e6e6e3;--accent:#4f46e5;--chip:#f0f0ee}
@@ -250,7 +255,7 @@ function faqFor(s) {
     ? `Yes, if you approve it. ${writes} of the ${reads + writes} ${n} tools can create or change data. The other ${reads} are marked read-only. Most MCP clients ask you to approve a tool call before it runs.`
     : `All ${reads} ${n} tools are marked read-only.` });
   if (ft && pt) faq.push({ q: `What does it cost?`, a:
-    `The Free plan gives ${esc(ft.limit)}. Pro costs ${esc(priceText(pt).replace(" · ", " or "))}, with ${esc(pt.limit.toLowerCase())} tool calls, for this ${n} server only.` +
+    `The Free plan gives ${esc(ft.limit)}. Pro costs ${esc(priceText(pt).replace(" · ", " or "))}, with ${esc(isUnlimitedPro(pt) ? `unlimited tool calls (${PRO_FAIR_USE})` : `${pt.limit.toLowerCase()} tool calls`)}, for this ${n} server only. Cancel any time: Pro then runs to the end of the paid period.` +
     (usage ? ` Run <code>${esc(usage.name)}</code> to see how many calls you used.` : "") });
   if (up && cancel) faq.push({ q: `How do I subscribe or cancel?`, a:
     `Ask the AI to run <code>${esc(up.name)}</code>: it returns a Stripe Checkout link. To cancel, run <code>${esc(cancel.name)}</code>. Pro continues to the end of the paid period.` });
@@ -340,10 +345,11 @@ ${copyLine(`codex mcp login ${esc(s.slug)}`)}</div>
     : "";
   const priceRow = (p) =>
     `<tr><td>${esc(p.plan)}${p.scope ? `<span class="scope">${esc(p.scope)}</span>` : ""}</td>` +
-    `<td>${esc(priceText(p))}</td><td>${esc(p.limit)}</td></tr>`;
+    `<td>${esc(priceText(p))}</td><td>${esc(p.limit)}${isUnlimitedPro(p) ? "*" : ""}</td></tr>`;
   // Billing is per product: say so, and name this server's subscribe/cancel tools.
   const metaTool = (suffix) => (s.tools || []).find((t) => t.type === "meta" && t.name.endsWith(suffix));
   const upTool = metaTool("_upgrade"), cancelTool = metaTool("_cancel_subscription");
+  const fairUseNote = pt && isUnlimitedPro(pt) ? `<p class="hint">*Pro ${esc(PRO_FAIR_USE)} on this server. For more, write to <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>.</p>` : "";
   const billingNote = pt && upTool && cancelTool
     ? `<p class="hint">Pro covers this ${esc(s.name)} server only. Subscribe with <code>${esc(upTool.name)}</code> (it returns a Stripe Checkout link). ` +
       `Cancel any time with <code>${esc(cancelTool.name)}</code>: Pro continues to the end of the paid period, with no refund for the current period, ` +
@@ -353,7 +359,7 @@ ${copyLine(`codex mcp login ${esc(s.slug)}`)}</div>
     ? `<h2 class="sec">Pricing</h2>
 <table class="pricing"><thead><tr><th>Plan</th><th>Price</th><th>Limit</th></tr></thead>
 <tbody>${s.pricing.map(priceRow).join("")}</tbody></table>
-${billingNote}`
+${fairUseNote}${billingNote}`
     : "";
 
   const hint = live ? `<p class="hint">This is a Model Context Protocol endpoint — meant to be connected from an AI client, not opened in a browser. An <code>invalid_token</code> response at the URL is the auth gate working as designed; clients authenticate automatically.</p>` : "";
@@ -385,7 +391,7 @@ ${related}
   const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server for Claude, ChatGPT, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
   const offers = (s.pricing || []).map((p) => ({
     "@type": "Offer", name: p.plan, priceCurrency: "USD",
-    price: String(p.monthly || "$0").replace(/[^0-9.]/g, "") || "0", description: p.limit
+    price: String(p.monthly || "$0").replace(/[^0-9.]/g, "") || "0", description: limitText(p)
   }));
   const ld = [
     {
@@ -583,7 +589,7 @@ writeFileSync(`${outDir}/llms.txt`,
   `> ${manifest.servers.length} hosted MCP servers that connect AI assistants (Claude, ChatGPT, Codex, Cursor and other MCP clients) to business APIs. ` +
   `Each server is a remote MCP endpoint with an OAuth login: add its URL to the client as a custom connector, then sign in ` +
   `with your vendor account or API key (a few public-data servers ask only for an email code). ` +
-  (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls; each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
+  (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls (${PRO_FAIR_USE}); each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
   groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
     .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
   `\n\n## Optional\n\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n`);

@@ -137,10 +137,15 @@ function priceCell(p) {
   const mo = `**${p.monthly}/mo**`;
   return p.yearly ? `${mo} or **${p.yearly}/yr** (2 months free)` : mo;
 }
+const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit);
 function pricingSection(s) {
   const rows = s.pricing
-    .map((p) => `| **${p.plan}**${p.scope ? ` (${p.scope})` : ""} | ${priceCell(p)} | ${p.limit} |`)
+    .map((p) => `| **${p.plan}**${p.scope ? ` (${p.scope})` : ""} | ${priceCell(p)} | ${p.limit}${isUnlimitedPro(p) ? "*" : ""} |`)
     .join("\n");
+  // The limit the fleet runtime enforces (core.ts PRO_FAIR_USE_LIMIT); the manifest says only "Unlimited".
+  const fairUse = s.pricing.some(isUnlimitedPro)
+    ? `\n\\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.\n`
+    : "";
   // Billing is per product: say so, and name this server's subscribe/cancel tools.
   const meta = (suffix) => s.tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
   const up = meta("_upgrade"), cancel = meta("_cancel_subscription");
@@ -149,7 +154,7 @@ function pricingSection(s) {
       `Cancel any time with \`${cancel.name}\`: Pro continues to the end of the paid period, with no refund ` +
       `for the current period, and running \`${up.name}\` before then undoes the cancel. Or write to support@usefulapi.io.\n`
     : "";
-  return `## Pricing\n\n| Plan | Price | Limit |\n|------|-------|-------|\n${rows}\n${note}`;
+  return `## Pricing\n\n| Plan | Price | Limit |\n|------|-------|-------|\n${rows}\n${fairUse}${note}`;
 }
 
 // Replace a "## <Heading>" section (including the blank line up to the next "## "
