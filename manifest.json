@@ -72038,6 +72038,198 @@
         "Enroll user 142 in the onboarding learning path and add them to the New Hires usergroup.",
         "How many seats are left in the next session of the Forklift Operator ILT program?"
       ]
+    },
+    {
+      "slug": "bookingmood",
+      "name": "Bookingmood",
+      "category": "calendar",
+      "description": "Read Bookingmood bookings, availability, guests, payments and invoices; update bookings, contacts.",
+      "endpoint": "https://bookingmood.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per organization"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bookingmood API key"
+          }
+        ],
+        "hint": "Create the key in your Bookingmood admin dashboard: **Settings** of your organization, **API keys** at the bottom of the page. The key belongs to your organization. Your key is used only to call the Bookingmood API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "bookingmood_get_organization",
+          "type": "read",
+          "title": "Get organization",
+          "description": "The Bookingmood organization this API key belongs to: name, company, plan (tier, subscription type, expiry), languages, country, VAT number, custom domain and contact details. Payment-provider ids and secrets are not returned. GET /organizations."
+        },
+        {
+          "name": "bookingmood_list_products",
+          "type": "read",
+          "title": "List products (rentals)",
+          "description": "List the rentable products (apartments, rooms, boats, bikes...) with name, currency, timezone, rent period (daily/nightly), booking interaction, fee and deposit. Names and descriptions are objects keyed by language ('default', 'nl-NL', ...). Images are not returned. GET /products."
+        },
+        {
+          "name": "bookingmood_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id with its capacities (guest-group min/max limits) embedded. GET /products?id=eq.{id}&select=*,capacities(*)."
+        },
+        {
+          "name": "bookingmood_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings, newest first: reference, method (request or book), currency, confirmed_at (null = not confirmed yet), created_at. A booking's dates and guests are on its calendar events (bookingmood_list_calendar_events) and contacts. Filter by creation date, confirmation state or reference text. The guest access secret is never returned. GET /bookings."
+        },
+        {
+          "name": "bookingmood_get_booking",
+          "type": "read",
+          "title": "Get booking with details",
+          "description": "One booking with everything attached: its calendar events (dates, product, status, occupancy, notes), line items, payments, invoices and the guest contacts linked to it. Five or six read requests. The guest contacts come from the booking-contact link table; if that lookup fails the reply says so instead of failing. GET /bookings, /calendar_events, /line_items, /payments, /invoices, /contact_bookings, /contacts."
+        },
+        {
+          "name": "bookingmood_list_calendar_events",
+          "type": "read",
+          "title": "List calendar events",
+          "description": "List calendar events: bookings (type 'booking'), blocked periods and notes, with product_id, booking_id, start_date, end_date, status (TENTATIVE, CONFIRMED, CANCELLED), occupancy, title and notes. Use the date filters for arrivals/departures (e.g. start_date_from = start_date_to = today lists today's arrivals) or active_on for who is in the property on a day. Ordered by start date. GET /calendar_events."
+        },
+        {
+          "name": "bookingmood_check_availability",
+          "type": "read",
+          "title": "Check availability",
+          "description": "Availability calendar of up to 5 products: per product a list of intervals {start, end, status} with status available, tentative, unavailable, booked or reserved. One request per product. GET /availability?product_id={id}."
+        },
+        {
+          "name": "bookingmood_search_products",
+          "type": "read",
+          "title": "Search available products",
+          "description": "Which products can be booked for a stay: for each product whether it matches the dates, guest numbers and options, its availability and a price range {min, max}. Read-only (a search; nothing is booked). occupancy maps a capacity-group id (from bookingmood_get_product capacities) to a number of guests. POST /search."
+        },
+        {
+          "name": "bookingmood_list_contacts",
+          "type": "read",
+          "title": "List contacts (guests)",
+          "description": "List contacts (guests and customers): name, email, phone, company, address, language, notes. Search by name, email or company (case-insensitive, contains). Newest first. GET /contacts."
+        },
+        {
+          "name": "bookingmood_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id. GET /contacts?id=eq.{id}."
+        },
+        {
+          "name": "bookingmood_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments (deposits, balances, offline payments): booking_id, invoice_id, amount and paid (integers; the API reference does not state the unit, normally the smallest currency unit), currency, due_at, completed_at (null = not paid), status, offline. Filter to unpaid payments, a booking or a due date. Ordered by due date, latest first. GET /payments."
+        },
+        {
+          "name": "bookingmood_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices: reference, booking_id, attachment (a custom uploaded file URL, if any), created_at. Filter by booking or creation date. Newest first. GET /invoices."
+        },
+        {
+          "name": "bookingmood_list_line_items",
+          "type": "read",
+          "title": "List line items",
+          "description": "List invoice/booking line items: name (per language), amount and quantity (integers; the API reference does not state the unit), item_type (rent, fee...), fee_type (fee or deposit), booking_id, event_id, invoice_id. GET /line_items."
+        },
+        {
+          "name": "bookingmood_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List discount coupons: code, description, definition, quota, scope (global, product, service, rent), stackable. Deleted coupons are left out. GET /coupons."
+        },
+        {
+          "name": "bookingmood_list_services",
+          "type": "read",
+          "title": "List services (extras and fees)",
+          "description": "List services: the extras, fees and form fields guests can add to a booking, with label, type, fee, deposit and description. GET /services."
+        },
+        {
+          "name": "bookingmood_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List housekeeping/operations tasks attached to calendar events: label, due_at, completed_at (null = open), schedule (manual, arrival, departure), calendar_event_id. Filter to open tasks or a due-date window. Earliest due first. GET /tasks."
+        },
+        {
+          "name": "bookingmood_list_messages",
+          "type": "read",
+          "title": "List guest messages",
+          "description": "List the e-mails and SMS Bookingmood sent or scheduled to guests: subject, body, type (email or sms), status (sent, manually-scheduled, scheduled-around-arrival, scheduled-around-departure), send_at, booking_id. The rendered HTML is not returned. Latest first. GET /messages."
+        },
+        {
+          "name": "bookingmood_update_event_notes",
+          "type": "write",
+          "title": "Set calendar event notes",
+          "description": "WRITE: replace the internal notes of ONE calendar event (the whole notes text is overwritten, so include the existing text if you want to keep it - read it first with bookingmood_list_calendar_events). Notes are internal; no guest is notified. PATCH /calendar_events?id=eq.{id}."
+        },
+        {
+          "name": "bookingmood_set_event_status",
+          "type": "write",
+          "title": "Set calendar event status (confirm / cancel)",
+          "description": "WRITE: change the status of ONE calendar event to CONFIRMED, TENTATIVE or CANCELLED. This changes what the calendar shows as available and can trigger Bookingmood's own automations for the booking (guest e-mails, tasks, payment reminders), so confirm with the user before cancelling or confirming. PATCH /calendar_events?id=eq.{id}."
+        },
+        {
+          "name": "bookingmood_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create ONE new contact (guest/customer) in Bookingmood. Not idempotent: calling it twice creates two contacts, so search with bookingmood_list_contacts first. No message is sent to the contact. POST /contacts."
+        },
+        {
+          "name": "bookingmood_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of ONE existing contact (only the fields you pass are changed; others stay). No message is sent to the contact. PATCH /contacts?id=eq.{id}."
+        },
+        {
+          "name": "bookingmood_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bookingmood_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bookingmood tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bookingmood_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Bookingmood (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bookingmood_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bookingmood Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bookingmood_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who arrives at my properties this weekend?",
+        "Which payments are still open and past their due date?",
+        "Is the beach house free from 12 to 19 July for 4 guests, and at what price?",
+        "Add a note to this booking: guests arrive late, key in the lockbox."
+      ]
     }
   ]
 }
