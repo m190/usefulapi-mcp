@@ -48,16 +48,19 @@ Clio. One subscription covers one Clio user in one firm.
 | `clio_get_bill` | read | Get one bill |
 | `clio_list_documents` | read | List documents |
 | `clio_list_notes` | read | List notes |
+| `clio_list_custom_fields` | read | List custom fields |
+| `clio_list_communications` | read | List communications |
 | `clio_create_contact` | **write** | Create a contact |
 | `clio_create_matter` | **write** | Create a matter |
 | `clio_create_time_entry` | **write** | Record a time entry |
 | `clio_create_task` | **write** | Create a task |
 | `clio_update_task` | **write** | Update a task |
 | `clio_create_note` | **write** | Create a note |
+| `clio_log_communication` | **write** | Log a phone call or email |
 | `clio_create_calendar_entry` | **write** | Create a calendar entry |
 | `clio_usage_status` | meta | Usage status (free-tier meter) |
 | `clio_request_feature` | meta | Request a missing feature |
-| `clio_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `clio_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `clio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

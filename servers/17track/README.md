@@ -43,7 +43,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `track17_retrack` | **write** | Restart tracking of stopped numbers |
 | `track17_usage_status` | meta | Usage status (free-tier meter) |
 | `track17_request_feature` | meta | Request a missing feature |
-| `track17_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `track17_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `track17_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

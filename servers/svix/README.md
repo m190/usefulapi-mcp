@@ -55,7 +55,7 @@ stored per-user, and scoped to you — no keys in config files.
 | `svix_recover_endpoint` | **write** | Recover an endpoint's failed messages |
 | `svix_usage_status` | meta | Usage status (free-tier meter) |
 | `svix_request_feature` | meta | Request a missing feature |
-| `svix_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `svix_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `svix_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -54,7 +54,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `megaventory_create_purchase_order` | **write** | Create pending purchase order |
 | `megaventory_usage_status` | meta | Usage status (free-tier meter) |
 | `megaventory_request_feature` | meta | Request a missing feature |
-| `megaventory_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `megaventory_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `megaventory_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

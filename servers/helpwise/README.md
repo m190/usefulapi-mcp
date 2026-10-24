@@ -55,7 +55,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `helpwise_send_email` | **write** | Send email |
 | `helpwise_usage_status` | meta | Usage status (free-tier meter) |
 | `helpwise_request_feature` | meta | Request a missing feature |
-| `helpwise_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `helpwise_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `helpwise_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

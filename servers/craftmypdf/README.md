@@ -45,7 +45,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `craftmypdf_merge_pdfs` | **write** | Merge PDFs by URL |
 | `craftmypdf_usage_status` | meta | Usage status (free-tier meter) |
 | `craftmypdf_request_feature` | meta | Request a missing feature |
-| `craftmypdf_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `craftmypdf_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `craftmypdf_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

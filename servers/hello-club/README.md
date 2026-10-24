@@ -48,7 +48,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `hello_club_create_transaction` | **write** | Create transaction |
 | `hello_club_usage_status` | meta | Usage status (free-tier meter) |
 | `hello_club_request_feature` | meta | Request a missing feature |
-| `hello_club_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `hello_club_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `hello_club_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -43,7 +43,7 @@ On first connect you'll paste your Recurly API key. It's validated, stored per-u
 | `recurly_pause_subscription` | **write** | Pause subscription (WRITE — changes billing) |
 | `recurly_usage_status` | meta | Usage status (free-tier meter) |
 | `recurly_request_feature` | meta | Request a missing feature |
-| `recurly_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `recurly_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `recurly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

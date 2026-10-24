@@ -57,7 +57,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `sevdesk_create_draft_invoice` | **write** | Create a draft invoice |
 | `sevdesk_usage_status` | meta | Usage status (free-tier meter) |
 | `sevdesk_request_feature` | meta | Request a missing feature |
-| `sevdesk_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `sevdesk_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `sevdesk_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

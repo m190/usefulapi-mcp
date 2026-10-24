@@ -51,7 +51,7 @@ On first connect you'll paste your Healthie API key. It's validated, stored per-
 | `healthie_create_note` | **write** | Create a note / chat entry (WRITE — creates a record) |
 | `healthie_usage_status` | meta | Usage status (free-tier meter) |
 | `healthie_request_feature` | meta | Request a missing feature |
-| `healthie_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `healthie_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `healthie_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

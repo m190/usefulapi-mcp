@@ -44,7 +44,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `simplyrets_get_listing_analytics` | read | Get listing analytics |
 | `simplyrets_usage_status` | meta | Usage status (free-tier meter) |
 | `simplyrets_request_feature` | meta | Request a missing feature |
-| `simplyrets_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `simplyrets_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `simplyrets_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

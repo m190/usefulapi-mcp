@@ -51,7 +51,7 @@ On first connect you'll paste your Bird API key. It's validated, stored per-user
 | `bird_create_audience` | **write** | Create an audience |
 | `bird_usage_status` | meta | Usage status (free-tier meter) |
 | `bird_request_feature` | meta | Request a missing feature |
-| `bird_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `bird_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `bird_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

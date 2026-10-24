@@ -45,7 +45,7 @@ keys in config files.
 | `plausible_list_goals` | read | List goals |
 | `plausible_analytics_usage_status` | meta | Usage status (free-tier meter) |
 | `plausible_analytics_request_feature` | meta | Request a missing feature |
-| `plausible_analytics_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `plausible_analytics_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `plausible_analytics_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

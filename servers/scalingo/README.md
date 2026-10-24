@@ -56,7 +56,7 @@ On first connect you'll paste your Scalingo API token. It's validated, stored pe
 | `scalingo_trigger_deployment` | **write** | Trigger a deployment |
 | `scalingo_usage_status` | meta | Usage status (free-tier meter) |
 | `scalingo_request_feature` | meta | Request a missing feature |
-| `scalingo_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `scalingo_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `scalingo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

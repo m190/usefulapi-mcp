@@ -49,7 +49,7 @@ On first connect you'll paste your Sendbird App ID and API token. It's validated
 | `sendbird_create_group_channel` | **write** | Create a group channel |
 | `sendbird_usage_status` | meta | Usage status (free-tier meter) |
 | `sendbird_request_feature` | meta | Request a missing feature |
-| `sendbird_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `sendbird_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `sendbird_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

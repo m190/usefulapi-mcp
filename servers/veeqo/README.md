@@ -59,7 +59,7 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `veeqo_tag_orders` | **write** | Tag orders |
 | `veeqo_usage_status` | meta | Usage status (free-tier meter) |
 | `veeqo_request_feature` | meta | Request a missing feature |
-| `veeqo_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `veeqo_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `veeqo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

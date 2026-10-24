@@ -51,7 +51,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `localazy_translate_with_ai` | **write** | Translate texts with Localazy AI (spends credits) |
 | `localazy_usage_status` | meta | Usage status (free-tier meter) |
 | `localazy_request_feature` | meta | Request a missing feature |
-| `localazy_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `localazy_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `localazy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

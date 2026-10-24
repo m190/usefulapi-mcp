@@ -57,7 +57,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `atera_resolve_alert` | **write** | Resolve an alert |
 | `atera_usage_status` | meta | Usage status (free-tier meter) |
 | `atera_request_feature` | meta | Request a missing feature |
-| `atera_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `atera_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `atera_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

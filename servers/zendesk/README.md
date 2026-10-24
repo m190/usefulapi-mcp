@@ -56,7 +56,7 @@ keys in config files.
 | `zendesk_add_ticket_comment` | **write** | Add ticket comment |
 | `zendesk_usage_status` | meta | Usage status (free-tier meter) |
 | `zendesk_request_feature` | meta | Request a missing feature |
-| `zendesk_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `zendesk_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `zendesk_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

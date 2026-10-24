@@ -51,14 +51,28 @@ You can remove the access any time in Teamleader Focus. One subscription covers 
 | `teamleader_list_time_tracking` | read | List time tracking |
 | `teamleader_list_tickets` | read | List tickets |
 | `teamleader_list_work_types` | read | List work types |
+| `teamleader_list_departments` | read | List departments |
+| `teamleader_list_products` | read | List products |
+| `teamleader_get_product` | read | Get a product |
+| `teamleader_list_product_categories` | read | List product categories |
+| `teamleader_list_quotations` | read | List quotations |
+| `teamleader_get_quotation` | read | Get a quotation |
+| `teamleader_list_activity_types` | read | List activity types |
+| `teamleader_list_events` | read | List calendar events |
+| `teamleader_list_subscriptions` | read | List subscriptions |
+| `teamleader_get_subscription` | read | Get a subscription |
+| `teamleader_list_notes` | read | List notes |
 | `teamleader_create_contact` | **write** | Create a contact |
 | `teamleader_create_company` | **write** | Create a company |
 | `teamleader_create_deal` | **write** | Create a deal |
 | `teamleader_create_task` | **write** | Create a task |
 | `teamleader_add_note` | **write** | Add a note |
+| `teamleader_create_event` | **write** | Create a calendar event |
+| `teamleader_complete_task` | **write** | Complete a task |
+| `teamleader_add_time_tracking` | **write** | Add tracked time |
 | `teamleader_usage_status` | meta | Usage status (free-tier meter) |
 | `teamleader_request_feature` | meta | Request a missing feature |
-| `teamleader_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `teamleader_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `teamleader_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

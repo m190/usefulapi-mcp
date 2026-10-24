@@ -57,7 +57,7 @@ keys in config files.
 | `gumroad_disable_license` | **write** | Disable license |
 | `gumroad_usage_status` | meta | Usage status (free-tier meter) |
 | `gumroad_request_feature` | meta | Request a missing feature |
-| `gumroad_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `gumroad_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `gumroad_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

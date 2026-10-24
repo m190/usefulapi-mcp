@@ -52,7 +52,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `oblio_delete_webhook` | **write** | Delete a webhook |
 | `oblio_usage_status` | meta | Usage status (free-tier meter) |
 | `oblio_request_feature` | meta | Request a missing feature |
-| `oblio_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `oblio_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `oblio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

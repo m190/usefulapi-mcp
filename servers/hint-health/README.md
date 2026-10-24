@@ -53,7 +53,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `hinthealth_list_invoice_payments` | read | List invoice payments |
 | `hinthealth_usage_status` | meta | Usage status (free-tier meter) |
 | `hinthealth_request_feature` | meta | Request a missing feature |
-| `hinthealth_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `hinthealth_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `hinthealth_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

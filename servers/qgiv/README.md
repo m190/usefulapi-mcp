@@ -55,7 +55,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `qgiv_get_report_mapping` | read | Get report mapping |
 | `qgiv_usage_status` | meta | Usage status (free-tier meter) |
 | `qgiv_request_feature` | meta | Request a missing feature |
-| `qgiv_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `qgiv_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `qgiv_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

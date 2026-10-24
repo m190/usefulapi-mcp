@@ -59,7 +59,7 @@ stored per-user, and scoped to you — no keys in config files.
 | `kinde_create_permission` | **write** | Create a permission |
 | `kinde_usage_status` | meta | Usage status (free-tier meter) |
 | `kinde_request_feature` | meta | Request a missing feature |
-| `kinde_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `kinde_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `kinde_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -52,7 +52,7 @@ On first connect you'll paste your Northflank API token. It's validated, stored 
 | `northflank_resume_service` | **write** | Resume service (mutates infra) |
 | `northflank_usage_status` | meta | Usage status (free-tier meter) |
 | `northflank_request_feature` | meta | Request a missing feature |
-| `northflank_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `northflank_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `northflank_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

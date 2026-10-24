@@ -52,7 +52,7 @@ On first connect you'll paste your Cliniko API key. It's validated, stored per-u
 | `cliniko_create_appointment` | **write** | Create an appointment |
 | `cliniko_usage_status` | meta | Usage status (free-tier meter) |
 | `cliniko_request_feature` | meta | Request a missing feature |
-| `cliniko_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `cliniko_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `cliniko_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

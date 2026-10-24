@@ -41,7 +41,7 @@ On first connect you'll paste your Cronitor API key. It's validated, stored per-
 | `cronitor_ping_monitor` | **write** | Ping monitor (telemetry) |
 | `cronitor_usage_status` | meta | Usage status (free-tier meter) |
 | `cronitor_request_feature` | meta | Request a missing feature |
-| `cronitor_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `cronitor_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `cronitor_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

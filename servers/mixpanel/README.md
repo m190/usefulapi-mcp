@@ -42,7 +42,7 @@ On first connect you'll paste your Mixpanel project API secret. It's validated, 
 | `mixpanel_jql` | read | Run a JQL query |
 | `mixpanel_usage_status` | meta | Usage status (free-tier meter) |
 | `mixpanel_request_feature` | meta | Request a missing feature |
-| `mixpanel_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `mixpanel_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `mixpanel_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

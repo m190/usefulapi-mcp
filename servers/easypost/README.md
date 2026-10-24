@@ -46,7 +46,7 @@ On first connect you'll paste your EasyPost API key. It's validated, stored per-
 | `easypost_refund_shipment` | **write** | Refund / void a label |
 | `easypost_usage_status` | meta | Usage status (free-tier meter) |
 | `easypost_request_feature` | meta | Request a missing feature |
-| `easypost_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `easypost_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `easypost_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

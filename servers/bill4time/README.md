@@ -42,7 +42,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `bill4time_list_contacts` | read | List contacts |
 | `bill4time_usage_status` | meta | Usage status (free-tier meter) |
 | `bill4time_request_feature` | meta | Request a missing feature |
-| `bill4time_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `bill4time_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `bill4time_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

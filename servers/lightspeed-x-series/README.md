@@ -67,7 +67,7 @@ You can remove the access any time in your Lightspeed Retail back office. One su
 | `lightspeedxseries_set_product_stock` | **write** | Set product stock and reorder levels |
 | `lightspeedxseries_usage_status` | meta | Usage status (free-tier meter) |
 | `lightspeedxseries_request_feature` | meta | Request a missing feature |
-| `lightspeedxseries_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `lightspeedxseries_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `lightspeedxseries_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

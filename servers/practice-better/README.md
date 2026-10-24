@@ -51,7 +51,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `practice_better_list_form_requests` | read | List form requests |
 | `practice_better_usage_status` | meta | Usage status (free-tier meter) |
 | `practice_better_request_feature` | meta | Request a missing feature |
-| `practice_better_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `practice_better_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `practice_better_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

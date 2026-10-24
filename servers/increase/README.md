@@ -53,7 +53,7 @@ On first connect you'll paste your Increase API key. It's validated, stored per-
 | `increase_create_external_account` | **write** | Create external account |
 | `increase_usage_status` | meta | Usage status (free-tier meter) |
 | `increase_request_feature` | meta | Request a missing feature |
-| `increase_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `increase_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `increase_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

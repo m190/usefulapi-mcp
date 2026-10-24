@@ -57,7 +57,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `uservoice_attach_label` | **write** | Attach label |
 | `uservoice_usage_status` | meta | Usage status (free-tier meter) |
 | `uservoice_request_feature` | meta | Request a missing feature |
-| `uservoice_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `uservoice_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `uservoice_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

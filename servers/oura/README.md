@@ -46,7 +46,7 @@ stored per-user, and scoped to you — no keys in config files.
 | `oura_delete_webhook_subscription` | **write** | Delete a webhook subscription |
 | `oura_usage_status` | meta | Usage status (free-tier meter) |
 | `oura_request_feature` | meta | Request a missing feature |
-| `oura_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `oura_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `oura_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

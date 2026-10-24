@@ -59,7 +59,7 @@ On first connect you'll paste your Lago API key. It's validated, stored per-user
 | `lago_create_event` | **write** | Create usage event |
 | `lago_usage_status` | meta | Usage status (free-tier meter) |
 | `lago_request_feature` | meta | Request a missing feature |
-| `lago_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `lago_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `lago_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

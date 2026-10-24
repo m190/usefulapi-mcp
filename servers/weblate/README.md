@@ -57,7 +57,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `weblate_autotranslate` | **write** | Run automatic translation |
 | `weblate_usage_status` | meta | Usage status (free-tier meter) |
 | `weblate_request_feature` | meta | Request a missing feature |
-| `weblate_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `weblate_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `weblate_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

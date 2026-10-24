@@ -57,7 +57,7 @@ On first connect you'll paste your Checkly API key (and account ID). It's valida
 | `checkly_create_maintenance_window` | **write** | Create maintenance window |
 | `checkly_usage_status` | meta | Usage status (free-tier meter) |
 | `checkly_request_feature` | meta | Request a missing feature |
-| `checkly_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `checkly_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `checkly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

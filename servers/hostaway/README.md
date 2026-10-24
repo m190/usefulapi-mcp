@@ -57,7 +57,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `hostaway_update_task` | **write** | Update a task |
 | `hostaway_usage_status` | meta | Usage status (free-tier meter) |
 | `hostaway_request_feature` | meta | Request a missing feature |
-| `hostaway_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `hostaway_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `hostaway_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

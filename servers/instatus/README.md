@@ -50,7 +50,7 @@ It's validated, stored per-user, and scoped to you — no keys in config files.
 | `instatus_delete_maintenance` | **write** | Delete maintenance |
 | `instatus_usage_status` | meta | Usage status (free-tier meter) |
 | `instatus_request_feature` | meta | Request a missing feature |
-| `instatus_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `instatus_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `instatus_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

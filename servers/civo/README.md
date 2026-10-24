@@ -59,7 +59,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `civo_create_dns_record` | **write** | Add a DNS record |
 | `civo_usage_status` | meta | Usage status (free-tier meter) |
 | `civo_request_feature` | meta | Request a missing feature |
-| `civo_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `civo_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `civo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

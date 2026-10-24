@@ -48,7 +48,7 @@ On first connect you'll paste your MailerLite API key. It's validated, stored pe
 | `mailerlite_assign_subscriber_to_group` | **write** | Assign subscriber to group |
 | `mailerlite_usage_status` | meta | Usage status (free-tier meter) |
 | `mailerlite_request_feature` | meta | Request a missing feature |
-| `mailerlite_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `mailerlite_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `mailerlite_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

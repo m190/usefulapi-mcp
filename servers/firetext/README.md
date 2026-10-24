@@ -47,7 +47,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `firetext_unsubscribe_contact` | **write** | Unsubscribe contact |
 | `firetext_usage_status` | meta | Usage status (free-tier meter) |
 | `firetext_request_feature` | meta | Request a missing feature |
-| `firetext_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `firetext_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `firetext_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

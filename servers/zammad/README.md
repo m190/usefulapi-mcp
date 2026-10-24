@@ -53,7 +53,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `zammad_create_ticket` | **write** | Create ticket |
 | `zammad_usage_status` | meta | Usage status (free-tier meter) |
 | `zammad_request_feature` | meta | Request a missing feature |
-| `zammad_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `zammad_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `zammad_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -53,7 +53,7 @@ On first connect you'll paste **two** values — your **Account ID** and **API k
 | `youcanbookme_create_location` | **write** | Add a location |
 | `youcanbookme_usage_status` | meta | Usage status (free-tier meter) |
 | `youcanbookme_request_feature` | meta | Request a missing feature |
-| `youcanbookme_upgrade` | meta | Upgrade to Pro (unlimited) |
+| `youcanbookme_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
 | `youcanbookme_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
