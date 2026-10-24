@@ -30,8 +30,13 @@ pricing. You are responsible for activity performed under your authorized creden
   Stripe on a recurring monthly or annual basis and **renew automatically** until cancelled.
 - **Pro fair use:** Pro gives unlimited tool calls for normal use, with a fair use limit of
   **10,000 tool calls per calendar month (UTC)** on each server. Above the limit, tool calls on
-  that server stop until the next month. If you need more, write to **support@usefulapi.io**. Pro
+  that server stop until the next month. If you need more, change to Pro+ (below) or write to
+  **support@usefulapi.io**. Pro
   subscriptions started before 25 October 2026 have no fair use limit while they stay active.
+- **Pro+:** the same as Pro with a fair use limit of **100,000 tool calls per calendar month (UTC)**
+  on each server, at the price shown when you subscribe. A Pro subscription can change to Pro+ with
+  the `<product>_upgrade` tool; the change keeps the billing interval and charges the price
+  difference for the rest of the current period at once.
 - **Billing is per server:** a Pro subscription covers only the server (`<product>.usefulapi.io`) you
   subscribed on. You subscribe with that server's `<product>_upgrade` tool, which returns a Stripe
   Checkout link.
