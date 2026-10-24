@@ -391,6 +391,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [AiSensy](servers/aisensy/) | communications | 20 | API token | [servers/aisensy/](servers/aisensy/) |
 | [Shippit](servers/shippit/) | shipping | 16 | API token | [servers/shippit/](servers/shippit/) |
 | [Bilflo](servers/bilflo/) | billing | 30 | API token | [servers/bilflo/](servers/bilflo/) |
+| [Bidsketch](servers/bidsketch/) | productivity | 33 | API token | [servers/bidsketch/](servers/bidsketch/) |
+| [CentralStationCRM](servers/centralstationcrm/) | crm | 37 | API token | [servers/centralstationcrm/](servers/centralstationcrm/) |
+| [Chaport](servers/chaport/) | chat | 18 | API token | [servers/chaport/](servers/chaport/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
