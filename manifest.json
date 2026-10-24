@@ -60308,6 +60308,1645 @@
         "Add a note to the Jones matter: spoke with the client, filing due Friday.",
         "Log my call with Jane Smith on the Smith matter: we discussed the settlement offer."
       ]
+    },
+    {
+      "slug": "chatra",
+      "name": "Chatra",
+      "category": "chat",
+      "description": "Read and update Chatra visitors; send, edit and delete chat and pushed messages.",
+      "endpoint": "https://chatra.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Public API key"
+          },
+          {
+            "label": "Secret API key"
+          }
+        ],
+        "hint": "Find both keys in Chatra under **Settings → Preferences → API keys**. The keys act for your whole Chatra account and messages you send reach real visitors. They are used only to call the Chatra API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "chatra_get_visitor",
+          "type": "read",
+          "title": "Get visitor",
+          "description": "A chat visitor by id: name and contact details (basicInfo, integrationData and the merged `info`), custom form answers, location, browser, the link to the chat in the Chatra dashboard, the agent group, and the pages viewed in the latest visit. The id is the `clientId` your website passed to the widget or the visitor id from a Chatra webhook; Chatra has no endpoint to list or search visitors. GET /clients/{id}."
+        },
+        {
+          "name": "chatra_update_visitor",
+          "type": "write",
+          "title": "Update visitor",
+          "description": "WRITE: edit a visitor's basic info (name, email, phone, notes) exactly as if an agent edited it in the Chatra dashboard. Only the fields you pass change; `null` removes a value. Returns the updated visitor. PUT /clients/{id}."
+        },
+        {
+          "name": "chatra_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One chat message by id (a visitor's or an agent's): type (agent or client), text, visitor id, agent id, timestamp (ms) and receivedFrom. Chatra has no endpoint to list a conversation, so the id must come from a send call or a webhook. GET /messages/{id}."
+        },
+        {
+          "name": "chatra_send_message",
+          "type": "write",
+          "title": "Send message as an agent",
+          "description": "WRITE: send a chat message to a visitor as a Chatra agent. The visitor sees it immediately in their chat window as if the agent typed it, so only call it with text the user asked you to send. It cannot be unsent except by deleting it. Say which agent writes: agent_id, or agent_email + agent_name + received_from (a dummy agent is created in Chatra when the email is unknown). For automated notices (order status, announcements) use chatra_push_message instead. Returns the new message with its id. POST /messages/."
+        },
+        {
+          "name": "chatra_edit_message",
+          "type": "write",
+          "title": "Edit agent message",
+          "description": "WRITE: replace the text of an agent message that was sent earlier. Only agents' messages can be edited, not visitors'. The visitor sees the edited text. Returns the updated message. PUT /messages/{id}."
+        },
+        {
+          "name": "chatra_delete_message",
+          "type": "write",
+          "title": "Delete agent message",
+          "description": "WRITE, IRREVERSIBLE: delete an agent message from the conversation. Only agents' messages can be deleted, not visitors'. Returns the deleted message. DELETE /messages/{id}."
+        },
+        {
+          "name": "chatra_get_pushed_message",
+          "type": "read",
+          "title": "Get pushed message",
+          "description": "One pushed (automated) message sent earlier by id: text, visitor id, agent id, timestamp (ms), isPushed. GET /pushedMessages/{id}."
+        },
+        {
+          "name": "chatra_push_message",
+          "type": "write",
+          "title": "Push message to a visitor",
+          "description": "WRITE: send an automated message (order status, product update, announcement) to a visitor whose account is bound to Chatra through a clientId. It is delivered into the visitor's chat on behalf of a random agent, a given agent (agent_id) or a random agent of a group (group_id). It reaches a real customer and cannot be unsent except by deleting it, so only call it with text the user asked you to send. Returns the new message with its id. POST /pushedMessages/."
+        },
+        {
+          "name": "chatra_edit_pushed_message",
+          "type": "write",
+          "title": "Edit pushed message",
+          "description": "WRITE: replace the text of a pushed message sent earlier; the visitor sees the edited text. Returns the updated message. PUT /pushedMessages/{id}."
+        },
+        {
+          "name": "chatra_delete_pushed_message",
+          "type": "write",
+          "title": "Delete pushed message",
+          "description": "WRITE, IRREVERSIBLE: delete a pushed message sent earlier. Returns the deleted message. DELETE /pushedMessages/{id}."
+        },
+        {
+          "name": "chatra_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "chatra_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Chatra tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "chatra_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Chatra tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "chatra_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Chatra Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run chatra_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the contact details and viewed pages of Chatra visitor 5f3a9c.",
+        "Send a Chatra message to visitor 5f3a9c as agent Liz: your refund has been issued.",
+        "Push 'Your order has shipped, tracking number 9114 5847' to visitor 5f3a9c.",
+        "Change the phone number and notes of visitor 5f3a9c in Chatra."
+      ]
+    },
+    {
+      "slug": "corsizio",
+      "name": "Corsizio",
+      "category": "calendar",
+      "description": "Read Corsizio events, attendees and registrations, including payment status. Read-only.",
+      "endpoint": "https://corsizio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Corsizio API Secret Access Key"
+          }
+        ],
+        "hint": "In Corsizio open **Account → Integrations**, enable the **API** integration and copy the **API Secret Access Key** ([how to find it](https://help.corsizio.com/article/37-api-endpoint-authentication)). Grant the key the permissions you want available, such as attendees. Your key is used only to call the Corsizio API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "corsizio_get_account",
+          "type": "read",
+          "title": "Get account details",
+          "description": "Get the Corsizio account behind the API key: name, alias, time zone, currency, site URL, contact, and the configured locations, categories, age groups, genders, levels and price ranges (their ids are the filters for corsizio_list_events). Good first call. API: GET /account."
+        },
+        {
+          "name": "corsizio_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the account's events (classes, workshops, camps) with dates, location, prices and page URLs, newest start first by default. Only published events unless status says otherwise. Filter by status, date range, price range, category/location/age/gender/level id (from corsizio_get_account) or a name word. API: GET /events."
+        },
+        {
+          "name": "corsizio_get_event",
+          "type": "read",
+          "title": "Get event details",
+          "description": "Get one event in full: dates, location, ticket prices and early-bird prices, descriptions, max spots, contact and instructors. Use include=stats for registration counts. For the attendee list use corsizio_list_attendees with the event id (or corsizio_get_event_with_attendees). API: GET /events/{id}."
+        },
+        {
+          "name": "corsizio_get_event_with_attendees",
+          "type": "read",
+          "title": "Get event with its attendees",
+          "description": "Get one event together with its attendees (and optionally each attendee's payment) in a single call. Returns personal data of registrants (names, emails, phones, notes); only use it when you need the roster, otherwise prefer corsizio_get_event or corsizio_list_attendees with a limit. API: GET /events/{id}?include=attendees[,payment]."
+        },
+        {
+          "name": "corsizio_list_attendees",
+          "type": "read",
+          "title": "List attendees (registrations)",
+          "description": "List attendee registrations across the account, or for one event (event filter): name, email, phone, status, registration answers and dates. Default status is active. Filter by status (e.g. owing,!canceled), created-date range, event id, coupon code or a search word (name, email, phone). Returns personal data. The API key needs the attendees permission. API: GET /attendees."
+        },
+        {
+          "name": "corsizio_get_attendee",
+          "type": "read",
+          "title": "Get attendee details",
+          "description": "Get one attendee registration in full: contact data, registration answers, internal remark, status, and with include=payment the amount, fees, taxes, refunds and transactions (card brand and last 4 digits). Returns personal data. The API key needs the attendees permission. API: GET /attendees/{id}."
+        },
+        {
+          "name": "corsizio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "corsizio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Corsizio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "corsizio_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Corsizio tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "corsizio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Corsizio Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run corsizio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my classes start in the next two weeks, and how full are they?",
+        "List everyone registered for my Saturday workshop.",
+        "Which attendees still owe a payment, excluding canceled ones?",
+        "Show the payment details for Jamie Garland's registration."
+      ]
+    },
+    {
+      "slug": "dialmycalls",
+      "name": "DialMyCalls",
+      "category": "communications",
+      "description": "Manage DialMyCalls contacts and groups; read broadcasts; send text and voice broadcasts on approval.",
+      "endpoint": "https://dialmycalls.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "DialMyCalls API key"
+          }
+        ],
+        "hint": "Log in to DialMyCalls and open [account management](https://www.dialmycalls.com/members/v2/management.php) and find **API Info** to copy your API key. Your key is used only to call the DialMyCalls API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "dialmycalls_get_account",
+          "type": "read",
+          "title": "Get DialMyCalls account",
+          "description": "Get the account: credits available (calls and texts spend credits) and the account creation date."
+        },
+        {
+          "name": "dialmycalls_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts in the account (name, phone, email, groups), 100 per page."
+        },
+        {
+          "name": "dialmycalls_list_contacts_in_group",
+          "type": "read",
+          "title": "List contacts in a group",
+          "description": "List the contacts that belong to one contact group (from dialmycalls_list_groups), 100 per page."
+        },
+        {
+          "name": "dialmycalls_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id."
+        },
+        {
+          "name": "dialmycalls_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Add a contact (phone number required) to the contact list, optionally into contact groups. Sends nothing to the contact."
+        },
+        {
+          "name": "dialmycalls_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Update a contact. DialMyCalls requires the phone number on every update. Fields you omit are left as they are; if you pass group_ids the contact's groups are REPLACED by that list."
+        },
+        {
+          "name": "dialmycalls_list_groups",
+          "type": "read",
+          "title": "List contact groups",
+          "description": "List contact groups with their contact counts, 100 per page."
+        },
+        {
+          "name": "dialmycalls_get_group",
+          "type": "read",
+          "title": "Get a contact group",
+          "description": "Get one contact group (name, contacts_count) by id."
+        },
+        {
+          "name": "dialmycalls_create_group",
+          "type": "write",
+          "title": "Create a contact group",
+          "description": "Create an empty contact group. Sends nothing."
+        },
+        {
+          "name": "dialmycalls_list_recordings",
+          "type": "read",
+          "title": "List voice recordings",
+          "description": "List voice recordings (the messages a call broadcast can play): id, name, type, length, processed. A call needs a processed recording."
+        },
+        {
+          "name": "dialmycalls_get_recording",
+          "type": "read",
+          "title": "Get a recording",
+          "description": "Get one voice recording by id (includes its audio file url and whether it is processed and ready)."
+        },
+        {
+          "name": "dialmycalls_create_recording_tts",
+          "type": "write",
+          "title": "Create a text-to-speech recording",
+          "description": "Create a voice recording from text (text-to-speech) that a call broadcast can then play. Makes no call and sends nothing."
+        },
+        {
+          "name": "dialmycalls_list_caller_ids",
+          "type": "read",
+          "title": "List caller IDs",
+          "description": "List caller ID phone numbers on the account (id, name, phone, approved). A call broadcast needs an approved caller ID."
+        },
+        {
+          "name": "dialmycalls_list_keywords",
+          "type": "read",
+          "title": "List text keywords",
+          "description": "List text-message keywords (id, keyword, status). A text broadcast must be tied to one active keyword."
+        },
+        {
+          "name": "dialmycalls_list_shortcodes",
+          "type": "read",
+          "title": "List shortcodes",
+          "description": "List shortcodes available to send texts from."
+        },
+        {
+          "name": "dialmycalls_list_do_not_contacts",
+          "type": "read",
+          "title": "List do-not-contact numbers",
+          "description": "List phone numbers on the account's do-not-contact lists (type call or text); these opted out."
+        },
+        {
+          "name": "dialmycalls_list_calls",
+          "type": "read",
+          "title": "List call broadcasts",
+          "description": "List voice call broadcasts (name, recording, recipients, credit cost, send time), 100 per page."
+        },
+        {
+          "name": "dialmycalls_get_call",
+          "type": "read",
+          "title": "Get a call broadcast",
+          "description": "Get one voice call broadcast by id (name, recipients, credit cost, send time, pending_cancel)."
+        },
+        {
+          "name": "dialmycalls_list_call_recipients",
+          "type": "read",
+          "title": "List call recipients",
+          "description": "List the recipients of a call broadcast with the result per number (answered, voicemail, busy, no answer...), 100 per page."
+        },
+        {
+          "name": "dialmycalls_send_call",
+          "type": "write",
+          "title": "Send a voice call broadcast (spends credits)",
+          "description": "Send (or schedule) an automated VOICE CALL broadcast that plays a recording to real people. THIS SPENDS ACCOUNT CREDITS AND PHONES THE RECIPIENTS; it cannot be undone once it goes out (a scheduled one can be stopped with dialmycalls_cancel_call). Needs an approved caller_id (dialmycalls_list_caller_ids) and a processed recording (dialmycalls_list_recordings or dialmycalls_create_recording_tts). Ask the user to approve the recipients, recording and time first; with confirm false nothing is sent and a preview is returned."
+        },
+        {
+          "name": "dialmycalls_cancel_call",
+          "type": "write",
+          "title": "Cancel a call broadcast",
+          "description": "Cancel an outgoing or scheduled call broadcast that has not finished. Calls already placed are not undone."
+        },
+        {
+          "name": "dialmycalls_list_texts",
+          "type": "read",
+          "title": "List text broadcasts",
+          "description": "List outgoing text (SMS) broadcasts (name, recipients, credit cost, send time), 100 per page."
+        },
+        {
+          "name": "dialmycalls_get_text",
+          "type": "read",
+          "title": "Get a text broadcast",
+          "description": "Get one outgoing text broadcast by id (name, recipients, credit cost, send time, pending_cancel)."
+        },
+        {
+          "name": "dialmycalls_list_text_recipients",
+          "type": "read",
+          "title": "List text recipients",
+          "description": "List the recipients of a text broadcast with the delivery status per number (delivered, undeliverable, queued...), 100 per page."
+        },
+        {
+          "name": "dialmycalls_send_text",
+          "type": "write",
+          "title": "Send a text (SMS) broadcast (spends credits)",
+          "description": "Send (or schedule) a TEXT MESSAGE (SMS) broadcast to real people. THIS SPENDS ACCOUNT CREDITS AND TEXTS THE RECIPIENTS; it cannot be undone once it goes out (a scheduled one can be stopped with dialmycalls_cancel_text). Needs an active keyword (dialmycalls_list_keywords). Up to 10 messages per broadcast. Ask the user to approve the recipients, wording and time first; with confirm false nothing is sent and a preview is returned."
+        },
+        {
+          "name": "dialmycalls_cancel_text",
+          "type": "write",
+          "title": "Cancel a text broadcast",
+          "description": "Cancel an outgoing or scheduled text broadcast that has not finished. Texts already sent are not undone."
+        },
+        {
+          "name": "dialmycalls_list_incoming_texts",
+          "type": "read",
+          "title": "List incoming texts",
+          "description": "List text messages people sent to the account's numbers (from, to, message, time), 100 per page."
+        },
+        {
+          "name": "dialmycalls_get_incoming_text",
+          "type": "read",
+          "title": "Get an incoming text",
+          "description": "Get one incoming text message by id."
+        },
+        {
+          "name": "dialmycalls_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "dialmycalls_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the DialMyCalls tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "dialmycalls_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED DialMyCalls tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "dialmycalls_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's DialMyCalls Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run dialmycalls_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many credits are left on my DialMyCalls account?",
+        "Show my last 10 text broadcasts and how many were delivered.",
+        "List the contacts in my Volunteers group.",
+        "Draft a text to my Volunteers group about Saturday's cleanup and show me the preview before sending."
+      ]
+    },
+    {
+      "slug": "namely",
+      "name": "Namely",
+      "category": "productivity",
+      "description": "Read Namely employee profiles, groups, teams, jobs and reports; update profiles, post to the feed.",
+      "endpoint": "https://namely.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Namely site name"
+          },
+          {
+            "label": "Personal Access Token"
+          }
+        ],
+        "hint": "The site name is the first part of your Namely address: **acme** for acme.namely.com. In Namely open the **API** menu (ask your Namely administrator if you do not see it), tab **Personal Access Tokens**, and create a token. The token acts with the permissions of the profile that created it, so use an account that may see the HR data you want to ask about; it is valid for 2 years. It is used only to call the Namely API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "namely_get_me",
+          "type": "read",
+          "title": "Get my profile",
+          "description": "Get the profile of the user the connected token belongs to (name, email, job title, manager, access role). Namely API: GET /profiles/me."
+        },
+        {
+          "name": "namely_list_profiles",
+          "type": "read",
+          "title": "List employee profiles",
+          "description": "List employee profiles (active, pending and inactive unless filtered) with paging, sorting and filters. Returns {profiles, meta:{count}, linked}. Use format=short for a smaller record (ids, names, email, status, job title); the full record includes every custom field the token may see (compensation, addresses and other sensitive HR data). An empty page means the end. Namely API: GET /profiles (limit 100 requests per minute)."
+        },
+        {
+          "name": "namely_get_profile",
+          "type": "read",
+          "title": "Get employee profile",
+          "description": "Get one employee's full profile by id: personal and job data, manager, groups, teams and the custom fields the token may see (can include compensation and other sensitive HR data). Namely API: GET /profiles/{id}."
+        },
+        {
+          "name": "namely_list_profile_fields",
+          "type": "read",
+          "title": "List profile fields",
+          "description": "List the fields of the employee profile as configured at this company (standard and custom), with their labels, sections and the valid format of each value. Namely API: GET /profiles/fields."
+        },
+        {
+          "name": "namely_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List all groups (departments, office locations and other company groups). Every group belongs to one group type. Namely API: GET /groups."
+        },
+        {
+          "name": "namely_get_group",
+          "type": "read",
+          "title": "Get group",
+          "description": "Get one group by id, with the profiles (members) linked to it. Namely API: GET /groups/{id}."
+        },
+        {
+          "name": "namely_list_group_types",
+          "type": "read",
+          "title": "List group types",
+          "description": "List the group types (the containers of groups, such as Department or Office). Namely API: GET /group_types."
+        },
+        {
+          "name": "namely_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List all teams with their team categories. Namely API: GET /teams."
+        },
+        {
+          "name": "namely_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "Get one team by id, with the profiles (members) linked to it. Namely API: GET /teams/{id}."
+        },
+        {
+          "name": "namely_list_job_titles",
+          "type": "read",
+          "title": "List job titles",
+          "description": "List all job titles; each belongs to one job tier. Namely API: GET /job_titles."
+        },
+        {
+          "name": "namely_list_job_tiers",
+          "type": "read",
+          "title": "List job tiers",
+          "description": "List all job tiers (the levels that group job titles). Namely API: GET /job_tiers."
+        },
+        {
+          "name": "namely_list_events",
+          "type": "read",
+          "title": "List feed events",
+          "description": "List events of the company home feed (announcements, birthdays, work anniversaries, new arrivals), newest first by default, with limit and after (an event id) for paging. Namely API: GET /events."
+        },
+        {
+          "name": "namely_list_event_comments",
+          "type": "read",
+          "title": "List event comments",
+          "description": "List the comments on a feed event. Namely API: GET /events/{event-id}/comments."
+        },
+        {
+          "name": "namely_get_report",
+          "type": "read",
+          "title": "Get report",
+          "description": "Run a saved Namely report by id and return its columns and rows (live data; each row is a list in column order). Find the id in the URL of the report in Namely. Reports can contain sensitive HR data such as salary history. Namely API: GET /reports/{id}."
+        },
+        {
+          "name": "namely_update_profile",
+          "type": "write",
+          "title": "Update employee profile",
+          "description": "Change standard fields of an employee profile (name, emails, start date, status, manager, job title). WRITES live HR data. Send only the fields to change. Setting user_status to pending needs a personal_email. Namely API: PUT /profiles/{id}."
+        },
+        {
+          "name": "namely_create_announcement",
+          "type": "write",
+          "title": "Post announcement",
+          "description": "Post an announcement to the company home feed, visible to every employee. Markdown; to mention a person write [Full Name](/people/<profile_id>). With is_appreciation, mentioned people are appreciated. email_all=true ALSO EMAILS every active employee at their company address (needs the permission) and cannot be undone: set it only when the user explicitly asks. Namely API: POST /events."
+        },
+        {
+          "name": "namely_create_event_comment",
+          "type": "write",
+          "title": "Comment on event",
+          "description": "Add a comment to a feed event, posted as the token's user and visible to employees who see the event. Markdown; mention a person with [Full Name](/people/<profile_id>). Namely API: POST /events/{id}/comments."
+        },
+        {
+          "name": "namely_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "namely_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Namely tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "namely_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Namely tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "namely_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Namely Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run namely_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who reports to Jane Smith, and what are their job titles?",
+        "List everyone in the Sales department with their start dates.",
+        "Which employees have a work anniversary or birthday coming up?",
+        "Post an announcement welcoming our new hire to the company feed."
+      ]
+    },
+    {
+      "slug": "papershift",
+      "name": "Papershift",
+      "category": "productivity",
+      "description": "Read Papershift absences, vacation, time tracking and shifts; request and review absences.",
+      "endpoint": "https://papershift.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Papershift API key"
+          }
+        ],
+        "hint": "Create it in Papershift → gear icon → **Account settings → API** (Account Admin only; the paid Papershift API add-on must be active). New keys can read and write; edit the key's permissions to make it read-only if you only want to look things up. Your key is used only to call the Papershift API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "papershift_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Papershift account this API key belongs to (id and name). A quick way to check the connection. GET /accounts."
+        },
+        {
+          "name": "papershift_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List all locations (sites/companies inside the account) with id, name and status. Most other tools need a location id from here. GET /locations."
+        },
+        {
+          "name": "papershift_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id. GET /locations?id=."
+        },
+        {
+          "name": "papershift_list_working_areas",
+          "type": "read",
+          "title": "List working areas",
+          "description": "List working areas (departments/stations shifts are planned in), optionally for one location. Use the ids for shifts and time trackings. GET /working_areas."
+        },
+        {
+          "name": "papershift_list_users",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (users) with name, email, status, contract basics and their location, working-area and tag ids. Filter by location, working area or tag. 25 per page. GET /users."
+        },
+        {
+          "name": "papershift_get_user",
+          "type": "read",
+          "title": "Get employee",
+          "description": "One employee by id: contact data, status, locations, working areas, tags and profile fields. GET /users?id=."
+        },
+        {
+          "name": "papershift_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the tags of a location (labels on shifts, time trackings and employees). GET /filters."
+        },
+        {
+          "name": "papershift_list_absence_types",
+          "type": "read",
+          "title": "List absence types",
+          "description": "List the absence types of a location (vacation, sick leave, ...) with id, title and rules. Use the ids to create absences. GET /absence_types."
+        },
+        {
+          "name": "papershift_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absences (vacation, sick leave, ...) that fall between two dates, optionally for one employee or location. Shows type title, times, hours, vacation days and whether it is confirmed. 25 per page. GET /absences."
+        },
+        {
+          "name": "papershift_get_absence",
+          "type": "read",
+          "title": "Get absence",
+          "description": "One absence by id, with its status, confirmation, hours and vacation days. GET /absences?id=."
+        },
+        {
+          "name": "papershift_list_vacation_entitlements",
+          "type": "read",
+          "title": "List vacation entitlements",
+          "description": "An employee's vacation entitlements (planned days, spent days, expiry, carry-over) for the given period. Use it to answer 'how many vacation days does X have left'. 25 per page. GET /vacation_entitlements."
+        },
+        {
+          "name": "papershift_list_time_trackings",
+          "type": "read",
+          "title": "List time trackings",
+          "description": "List worked-time entries (clock-ins) from a start date, optionally to an end date and for one employee. Shows start, end, break time, location, employee and whether confirmed. 25 per page. GET /working_sessions."
+        },
+        {
+          "name": "papershift_get_time_tracking",
+          "type": "read",
+          "title": "Get time tracking",
+          "description": "One worked-time entry by id, with its breaks, tags and break total. GET /working_sessions?id=."
+        },
+        {
+          "name": "papershift_list_evaluations",
+          "type": "read",
+          "title": "List evaluations (daily hours)",
+          "description": "An employee's daily evaluations: target, planned and actual hours, vacation and compensation per day. Use it for overtime and balance questions. 25 per page. GET /evaluations."
+        },
+        {
+          "name": "papershift_list_target_hours",
+          "type": "read",
+          "title": "List target hours",
+          "description": "An employee's contractual target hours (weekly/monthly rhythm and hours per weekday) over time. 25 per page. GET /target_hours."
+        },
+        {
+          "name": "papershift_list_payrolls",
+          "type": "read",
+          "title": "List payrolls",
+          "description": "An employee's payroll entries (paid hours, salary, bonus, time-account start/end per period). Sensitive pay data. 25 per page. GET /payrolls."
+        },
+        {
+          "name": "papershift_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List planned shifts of a location between two dates, optionally for one working area or tags. Shows start, end, number of employees needed, note and visibility. Assigned employees: papershift_list_shift_assignments. 25 per page. GET /shifts."
+        },
+        {
+          "name": "papershift_get_shift",
+          "type": "read",
+          "title": "Get shift",
+          "description": "One shift by id. GET /shifts?id=."
+        },
+        {
+          "name": "papershift_list_shift_assignments",
+          "type": "read",
+          "title": "List shift assignments",
+          "description": "Who is assigned to a shift and who has applied for it (user id and name). GET /assignments?shift_id=."
+        },
+        {
+          "name": "papershift_list_availabilities",
+          "type": "read",
+          "title": "List availabilities",
+          "description": "The times an employee has marked as available between two dates. 25 per page. GET /availabilities."
+        },
+        {
+          "name": "papershift_create_absence",
+          "type": "write",
+          "title": "Create absence",
+          "description": "WRITE: record an absence (vacation, sick leave, ...) for an employee. Get the absence type id from papershift_list_absence_types and the user id from papershift_list_users. Whether it counts immediately or waits for approval depends on the absence type and the account's approval rules; the employee may be notified. Papershift calculates the paid hours and vacation days. POST /absences."
+        },
+        {
+          "name": "papershift_review_absence",
+          "type": "write",
+          "title": "Confirm, reject or reset an absence",
+          "description": "WRITE: decide on an absence request. action 'confirm' approves it (it then counts against vacation days and the plan), 'reject' declines it, 'reset' puts a decided absence back to pending. The employee is typically notified of the decision. Find ids with papershift_list_absences. PUT /absences/{confirm|reject|reset}."
+        },
+        {
+          "name": "papershift_create_time_tracking",
+          "type": "write",
+          "title": "Create time tracking",
+          "description": "WRITE: add a worked-time entry for an employee after the fact (start, end and break minutes) in a location and working area. It changes the employee's recorded hours and balance. Ids from papershift_list_locations, papershift_list_working_areas and papershift_list_users. POST /working_sessions."
+        },
+        {
+          "name": "papershift_confirm_time_tracking",
+          "type": "write",
+          "title": "Confirm time tracking",
+          "description": "WRITE: confirm (approve) a worked-time entry so it counts as final for payroll and balances. Find ids with papershift_list_time_trackings. PUT /working_sessions/confirm."
+        },
+        {
+          "name": "papershift_create_shift",
+          "type": "write",
+          "title": "Create shift",
+          "description": "WRITE: plan a new shift in a location and working area for a number of employees. Set visible to true only if employees should see it right away (default: left to the account's setting). Assign people afterwards with papershift_assign_user_to_shift. POST /shifts."
+        },
+        {
+          "name": "papershift_assign_user_to_shift",
+          "type": "write",
+          "title": "Assign employee to shift",
+          "description": "WRITE: put an employee on a shift (or, with application true, record them as having applied for it). The employee is typically notified of the assignment. An already assigned user is re-assigned. Returns the shift's assigned and applied users. POST /assignments."
+        },
+        {
+          "name": "papershift_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "papershift_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Papershift tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "papershift_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Papershift tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "papershift_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Papershift Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run papershift_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is absent next week, and which absence requests are still pending?",
+        "How many vacation days does Anna have left this year?",
+        "Show last week's tracked hours for the Berlin location.",
+        "Approve Ben's vacation request for 3-7 November.",
+        "List the open shifts for tomorrow and who is assigned to them."
+      ]
+    },
+    {
+      "slug": "robly",
+      "name": "Robly",
+      "category": "email",
+      "description": "Find Robly contacts and lists; subscribe, update and move contacts between lists.",
+      "endpoint": "https://robly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Robly API ID"
+          },
+          {
+            "label": "Robly API Key"
+          }
+        ],
+        "hint": "Both are shown in Robly under **My Account**. If there is no key yet, or you need a new one, email support@robly.com from your login address. Use the API ID and key, never your Robly password. They are used only to call the Robly API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "robly_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (members) of the Robly account, newest first as Robly orders them: id, email, subscribed/deleted flags, subscription date, sign-up source, timestamps. Filter by status, by list, or by last-updated time; optionally include each contact's lists and data fields. Pages with limit (max 100) and offset: pass next_offset from the previous reply. Robly does not return a total. GET /api/v1/contacts/show."
+        },
+        {
+          "name": "robly_find_contact",
+          "type": "read",
+          "title": "Find contact",
+          "description": "Look up one contact by email address or member id: status, subscription date, sign-up source and, on request, the lists and data fields. Returns found: false when Robly has no such contact. GET /api/v1/contacts/search."
+        },
+        {
+          "name": "robly_check_list_membership",
+          "type": "read",
+          "title": "Check list membership",
+          "description": "Whether one contact (by email or member id) is on one list. GET /api/v1/contacts/exists_in_sub_list."
+        },
+        {
+          "name": "robly_list_sub_lists",
+          "type": "read",
+          "title": "List sub lists",
+          "description": "List the account's sub lists (the lists contacts belong to): id, name, position, timestamps. Public lists only unless include_all is true. Use the ids for list filters and for adding contacts. GET /api/v1/sub_lists/show."
+        },
+        {
+          "name": "robly_list_fields",
+          "type": "read",
+          "title": "List data fields",
+          "description": "List the contact data fields (First Name, Last Name, custom fields): id, label, type, required flag and the user_tag that robly_subscribe_contact and robly_update_contact use as the field key. GET /api/v1/fields/show."
+        },
+        {
+          "name": "robly_get_signup_form",
+          "type": "read",
+          "title": "Get sign-up form",
+          "description": "The data fields and sub lists a new subscriber can be given through the sign-up API (public ones unless include_all is true). GET /api/v1/sign_up/show."
+        },
+        {
+          "name": "robly_subscribe_contact",
+          "type": "write",
+          "title": "Subscribe contact",
+          "description": "WRITE: add a new subscribed contact (or re-submit an existing one through the sign-up form). With double_opt_in Robly EMAILS the contact a confirmation link first; with welcome_email it EMAILS the welcome message right away; with include_autoresponder it triggers matching autoresponders, which email the contact. Only subscribe people who agreed to receive email. Field values go in `fields`, keyed by the user_tag from robly_list_fields (for example fname, lname). POST /api/v1/sign_up/generate."
+        },
+        {
+          "name": "robly_add_contact_to_list",
+          "type": "write",
+          "title": "Add contact to list",
+          "description": "WRITE: put an existing contact on a list. With include_autoresponder Robly triggers autoresponders matching the newly listed contact, which EMAIL the contact. POST /api/v1/contacts/add_sub_list."
+        },
+        {
+          "name": "robly_remove_contact_from_list",
+          "type": "write",
+          "title": "Remove contact from list",
+          "description": "WRITE: take a contact off one list (the contact itself is kept). POST /api/v1/contacts/remove_sub_list."
+        },
+        {
+          "name": "robly_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change an existing contact's data fields and/or list memberships in one call. Name the contact by member_id (look it up with robly_find_contact). `fields` are keyed by user_tag (robly_list_fields); the email address cannot be changed here. add_to_list_ids puts the contact on those lists, remove_from_list_ids takes it off them. remove_from_all_other_lists also removes the contact from every list NOT named in add_to_list_ids (requires add_to_list_ids). include_autoresponder triggers autoresponders that EMAIL the contact. POST /api/v1/contacts/update_full_contact."
+        },
+        {
+          "name": "robly_unsubscribe_contact",
+          "type": "write",
+          "title": "Unsubscribe contact",
+          "description": "WRITE: unsubscribe a contact so Robly stops emailing it. Robly's API cannot undo this: an unsubscribed contact can only come back through a sign-up form. Use it for a contact that asked to stop. POST /api/v1/contacts/unsubscribe."
+        },
+        {
+          "name": "robly_create_sub_list",
+          "type": "write",
+          "title": "Create sub list",
+          "description": "WRITE: create a new, empty sub list. Robly does not say whether a list with the same name already exists, so check robly_list_sub_lists first. POST /api/v1/sub_lists/add_sub_list."
+        },
+        {
+          "name": "robly_rename_sub_list",
+          "type": "write",
+          "title": "Rename sub list",
+          "description": "WRITE: rename a sub list. POST /api/v1/sub_lists/rename_sub_list."
+        },
+        {
+          "name": "robly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "robly_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Robly tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "robly_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Robly tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "robly_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Robly Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run robly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which contacts joined my Robly account this week, and which lists are they on?",
+        "Is jane@example.com subscribed, and which lists is she on?",
+        "Add john@example.com to the Newsletter list with the first name John.",
+        "Create a list called Fall Webinar and put these three contacts on it."
+      ]
+    },
+    {
+      "slug": "seal-subscriptions",
+      "name": "Seal Subscriptions",
+      "category": "payments",
+      "description": "Manage Seal Subscriptions on Shopify: subscriptions, billing attempts, items, discounts, rules.",
+      "endpoint": "https://seal-subscriptions.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Seal Subscriptions API token"
+          }
+        ],
+        "hint": "Find it in your Shopify admin → **Apps → Seal Subscriptions → Settings → General Settings → API**. Use the **API token**, not the API secret. The token belongs to one shop and can manage its subscriptions; your token is used only to call the Seal Subscriptions API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sealsubscriptions_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List or search the shop's subscriptions (50 per page): status, customer, interval, total value, shipping address and card brand/last digits. Search by customer email, first or last name; filter by status; optionally include the items and the billing attempts of each. GET /subscriptions."
+        },
+        {
+          "name": "sealsubscriptions_list_subscriptions_by_billing_date",
+          "type": "read",
+          "title": "List subscriptions by billing date",
+          "description": "Subscriptions that have at least one billing attempt scheduled between two UTC date-times: the way to see what will be charged tomorrow or this week. Each subscription carries a cursor; pass the last one's cursor as `cursor` to get the next page. GET /subscriptions-by-billing-date."
+        },
+        {
+          "name": "sealsubscriptions_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "One subscription with everything Seal knows: customer, shipping and billing address, status, intervals, delivery method, items with discounts, billing attempts (with status and error messages), fulfillment orders, invoices, tags and the activity log. Private customer links are removed. GET /subscription?id=."
+        },
+        {
+          "name": "sealsubscriptions_list_subscription_rules",
+          "type": "read",
+          "title": "List subscription rules",
+          "description": "List the subscription rules (plans) of the shop: name, payment type, the products and variants they apply to and their selling plans. GET /subscription-rules."
+        },
+        {
+          "name": "sealsubscriptions_get_subscription_rule",
+          "type": "read",
+          "title": "Get subscription rule",
+          "description": "One subscription rule by id, with its products, variants and selling plans. GET /subscription-rule?id=."
+        },
+        {
+          "name": "sealsubscriptions_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks registered for this shop through the API (topic and address). GET /webhooks."
+        },
+        {
+          "name": "sealsubscriptions_pause_subscription",
+          "type": "write",
+          "title": "Pause subscription",
+          "description": "WRITE: Pause an active subscription: no further charges or shipments until it is resumed. Undo with sealsubscriptions_resume_subscription. PUT /subscription action=pause."
+        },
+        {
+          "name": "sealsubscriptions_resume_subscription",
+          "type": "write",
+          "title": "Resume subscription",
+          "description": "WRITE: Resume a paused subscription so charges and shipments continue on the schedule. PUT /subscription action=resume."
+        },
+        {
+          "name": "sealsubscriptions_reactivate_subscription",
+          "type": "write",
+          "title": "Reactivate subscription",
+          "description": "WRITE: Reactivate a cancelled subscription (the effect is the same as resume; use this for cancelled ones). Charges restart on the schedule, so the customer may be billed. PUT /subscription action=reactivate."
+        },
+        {
+          "name": "sealsubscriptions_cancel_customer_subscription",
+          "type": "write",
+          "title": "Cancel subscription",
+          "description": "WRITE: Cancel a subscription now: all future charges and shipments stop and the customer may get Seal's cancellation email. It can be brought back with sealsubscriptions_reactivate_subscription. For a later cancellation use sealsubscriptions_schedule_cancellation. PUT /subscription action=cancel."
+        },
+        {
+          "name": "sealsubscriptions_schedule_cancellation",
+          "type": "write",
+          "title": "Schedule subscription cancellation",
+          "description": "WRITE: Schedule the cancellation of a subscription for a future date and time (it stays active until then). PUT /subscription-schedule-cancellation."
+        },
+        {
+          "name": "sealsubscriptions_add_items",
+          "type": "write",
+          "title": "Add items to subscription",
+          "description": "WRITE: Add products to a subscription. Prices are in the subscription's currency and change what the customer pays on the next charge. An item with one_time=true is removed after the next renewal. PUT /subscription action=add_items."
+        },
+        {
+          "name": "sealsubscriptions_edit_items",
+          "type": "write",
+          "title": "Edit subscription items",
+          "description": "WRITE: Change existing items of a subscription: variant, quantity (> 0), price (>= 0), SKU, one-time flag, properties. Changes what the customer pays on the next charge. PUT /subscription action=edit_items."
+        },
+        {
+          "name": "sealsubscriptions_remove_items",
+          "type": "write",
+          "title": "Remove items from subscription",
+          "description": "WRITE: Remove items from a subscription by item id. The customer stops receiving and paying for them. PUT /subscription action=remove_items."
+        },
+        {
+          "name": "sealsubscriptions_edit_subscription",
+          "type": "write",
+          "title": "Edit subscription",
+          "description": "WRITE: Edit a subscription's schedule and details: delivery and billing interval (a billing interval longer than the delivery interval makes it prepaid), min/max number of payments, note attributes (an empty list removes them), delivery method and price, and the shipping address. Only the fields you pass change. To change items use the item tools. PUT /subscription action=edit."
+        },
+        {
+          "name": "sealsubscriptions_reschedule_billing_attempt",
+          "type": "write",
+          "title": "Reschedule billing attempt",
+          "description": "WRITE: Move a billing attempt that has not been processed yet to another date and time. With reset_schedule=true the later attempts are rebuilt from the new date. PUT /subscription-billing-attempt action=reschedule."
+        },
+        {
+          "name": "sealsubscriptions_skip_billing_attempt",
+          "type": "write",
+          "title": "Skip billing attempt",
+          "description": "WRITE: Skip one upcoming billing attempt so the customer is not charged for that cycle. Undo with sealsubscriptions_unskip_billing_attempt. PUT /subscription-billing-attempt action=skip."
+        },
+        {
+          "name": "sealsubscriptions_unskip_billing_attempt",
+          "type": "write",
+          "title": "Unskip billing attempt",
+          "description": "WRITE: Bring back a skipped billing attempt, so it is charged on its date again. PUT /subscription-billing-attempt action=unskip."
+        },
+        {
+          "name": "sealsubscriptions_delete_billing_attempt",
+          "type": "write",
+          "title": "Delete billing attempt",
+          "description": "WRITE: Delete a billing attempt that has not been processed. Seal keeps 65 days of attempts scheduled, so a deleted one is recreated within hours unless the schedule is moved first (see sealsubscriptions_reschedule_billing_attempt). DELETE /subscription-billing-attempt."
+        },
+        {
+          "name": "sealsubscriptions_reschedule_fulfillment_order",
+          "type": "write",
+          "title": "Reschedule fulfillment order",
+          "description": "WRITE: Move a fulfillment order of a prepaid subscription to another date and time. PUT /subscription-fulfillment-order action=reschedule."
+        },
+        {
+          "name": "sealsubscriptions_create_charge_now",
+          "type": "write",
+          "title": "Charge subscription now",
+          "description": "WRITE: CHARGES THE CUSTOMER'S PAYMENT METHOD IMMEDIATELY for the next billing attempt of the subscription and creates a Shopify order; it does not wait for the scheduled date. Only call it when the user clearly asked for an immediate charge. With reset_schedule=true the later attempts are rebuilt from today. PUT /subscription-create-charge-now."
+        },
+        {
+          "name": "sealsubscriptions_process_charge",
+          "type": "write",
+          "title": "Process a specific charge",
+          "description": "WRITE: CHARGES THE CUSTOMER'S PAYMENT METHOD NOW for one specific billing attempt (for example a failed or upcoming one) and creates a Shopify order. Only call it when the user clearly asked for that charge. PUT /subscription-process-charge."
+        },
+        {
+          "name": "sealsubscriptions_apply_discount_code",
+          "type": "write",
+          "title": "Apply discount code",
+          "description": "WRITE: Apply a Shopify discount code to an auto-charging subscription (not to recurring-invoice subscriptions); it lowers what the customer pays on the next charges. PUT /subscription-discount-code action=apply."
+        },
+        {
+          "name": "sealsubscriptions_remove_discount_code",
+          "type": "write",
+          "title": "Remove discount code",
+          "description": "WRITE: Remove a discount code from a subscription. Use the discount code id from the subscription's items[].discount_codes[].id (a uuid), not the code text. DELETE /subscription-discount-code."
+        },
+        {
+          "name": "sealsubscriptions_send_payment_method_update_email",
+          "type": "write",
+          "title": "Email customer to update payment method",
+          "description": "WRITE: SENDS AN EMAIL TO THE CUSTOMER of the subscription with a link to update their payment method (for example after failed charges). Only call it when the user clearly asked to contact the customer. PUT /subscription action=send_payment_method_update_email."
+        },
+        {
+          "name": "sealsubscriptions_edit_subscription_rule",
+          "type": "write",
+          "title": "Edit subscription rule",
+          "description": "WRITE: Edit a subscription rule: its name, the plan selector label (`options`, e.g. \"Deliver every\") and the products it applies to. product_variants REPLACES all products and variants linked to the rule: to add some without removing the others use sealsubscriptions_append_rule_product_variants. PUT /subscription-rule."
+        },
+        {
+          "name": "sealsubscriptions_append_rule_product_variants",
+          "type": "write",
+          "title": "Add products to subscription rule",
+          "description": "WRITE: Add products or variants to a subscription rule without touching the ones already linked. PUT /subscription-rule/append-product-variants."
+        },
+        {
+          "name": "sealsubscriptions_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sealsubscriptions_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Seal Subscriptions tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sealsubscriptions_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED Seal Subscriptions tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sealsubscriptions_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Seal Subscriptions Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run sealsubscriptions_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which subscriptions are scheduled to be charged tomorrow?",
+        "Show the subscriptions of john@example.com and their next billing dates.",
+        "Skip the next billing attempt of subscription 568185.",
+        "Which of my subscriptions have failed charges this week?"
+      ]
+    },
+    {
+      "slug": "suitedash",
+      "name": "SuiteDash",
+      "category": "crm",
+      "description": "Read and update SuiteDash contacts, companies and projects; create leads and clients.",
+      "endpoint": "https://suitedash.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Public ID"
+          },
+          {
+            "label": "Secret Key"
+          }
+        ],
+        "hint": "An account admin finds both in SuiteDash → **Integrations → Secure API** (create a Secret Key there if you have none). The pair acts with full API access to your account and counts against its monthly API-call quota. Your credentials are used only to call the SuiteDash API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "suitedash_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List CRM contacts (leads, prospects, clients) 10 per page: name, emails, phones, role, tags, companies, address and custom fields. Filter by creation time and sort by name or creation date. GET /contacts."
+        },
+        {
+          "name": "suitedash_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One CRM contact by UID or primary email, with companies, tags, address and custom fields. GET /contact/{identifier}."
+        },
+        {
+          "name": "suitedash_get_contact_fields",
+          "type": "read",
+          "title": "Get contact field schema",
+          "description": "The contact field schema of this account: every default and custom field with its type, whether it is required, and which actions (read/create/update) allow it. Custom fields appear under their UID: use these UIDs in custom_fields. GET /contact/meta."
+        },
+        {
+          "name": "suitedash_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a CRM contact in SuiteDash. role and names are required; email is required except for a Lead. Optionally link the contact to a company by name (set create_company_if_not_exists to create it). If send_welcome_email is true SuiteDash EMAILS the contact a portal access invitation: leave it false unless the user asked for that. POST /contact."
+        },
+        {
+          "name": "suitedash_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: update fields of an existing CRM contact (found by UID or email); only the fields you pass change, and null clears a field. Tags and custom fields passed here replace the current values. If send_welcome_email is true SuiteDash EMAILS the contact a portal invitation (only if none was sent before): leave it unset unless the user asked. PUT /contact/{identifier}."
+        },
+        {
+          "name": "suitedash_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List CRM companies 10 per page (idle companies are not available): name, role, category, phones, website, address, tags, primary contact and custom fields. Filter by creation time and sort by name or creation date. GET /companies."
+        },
+        {
+          "name": "suitedash_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "One CRM company by UID or exact name, with primary contact, category, tags, address and custom fields. GET /company/{identifier}."
+        },
+        {
+          "name": "suitedash_get_company_fields",
+          "type": "read",
+          "title": "Get company field schema",
+          "description": "The company field schema of this account: every default and custom field (public, private and target custom fields under their UIDs) with type, required flag and the actions allowed. GET /company/meta."
+        },
+        {
+          "name": "suitedash_create_company",
+          "type": "write",
+          "title": "Create company",
+          "description": "WRITE: create a CRM company (name and role are required) with an optional primary contact. With create_primary_contact_if_not_exists the primary contact is created from the given names/email when no contact has that email. If send_welcome_email is true SuiteDash EMAILS the primary contact a portal invitation: leave it false unless the user asked. POST /company."
+        },
+        {
+          "name": "suitedash_update_company",
+          "type": "write",
+          "title": "Update company",
+          "description": "WRITE: update fields of an existing CRM company (found by UID or name); only the fields you pass change, and null clears a field. Tags and custom fields passed here replace the current values. PUT /company/{identifier}."
+        },
+        {
+          "name": "suitedash_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects 10 per page: name, status, start/end dates, due time. Filter by creation time and sort by name, creation, start or end date. Use suitedash_get_project for the client, team and economics. GET /projects."
+        },
+        {
+          "name": "suitedash_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project with its description, client and secondary clients, teammates, team, leader, economics (estimated value, currency, sector) and custom fields. Find it by UID (default), exact name, a name fragment, or the most recent one. GET /project/{type}/{identifier}."
+        },
+        {
+          "name": "suitedash_get_project_fields",
+          "type": "read",
+          "title": "Get project field schema",
+          "description": "The project field schema of this account: default and custom fields (under their UIDs) with type, required flag and allowed actions. GET /project/meta."
+        },
+        {
+          "name": "suitedash_update_project",
+          "type": "write",
+          "title": "Update project",
+          "description": "WRITE: update fields of an existing project (found by UID, name, name fragment or most recent); only the fields you pass change. The status must be one of the account's project statuses (see suitedash_get_project_fields). The description and client text accept HTML. PUT /project/{type}/{identifier}."
+        },
+        {
+          "name": "suitedash_subscribe_to_marketing",
+          "type": "write",
+          "title": "Subscribe contacts to marketing audiences",
+          "description": "WRITE: subscribe people (by email) to one or more marketing audiences (numeric audience ids from SuiteDash > Marketing). Unknown emails may be created as marketing contacts. This enrolls real people in email marketing and can start campaigns or automations tied to those audiences: only do it for people who have consented, and only when the user asked. The reply holds the outcome per person. POST /marketing/subscribe."
+        },
+        {
+          "name": "suitedash_list_worlds",
+          "type": "read",
+          "title": "List worlds",
+          "description": "List the account's Worlds (client groupings), 10 per page. Only available with the WORLDS Power-Up; otherwise SuiteDash answers 403. GET /worlds."
+        },
+        {
+          "name": "suitedash_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "suitedash_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SuiteDash tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "suitedash_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED SuiteDash tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "suitedash_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SuiteDash Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run suitedash_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the contacts created in the last 7 days and tell me which ones are still leads.",
+        "Show everything SuiteDash has on the company Acme Corp, including custom fields.",
+        "Create a Lead for Jane Doe (jane@example.com) and tag her 'webinar'.",
+        "Which projects end this month, and what status are they in?"
+      ]
+    },
+    {
+      "slug": "upkeep",
+      "name": "UpKeep",
+      "category": "productivity",
+      "description": "Read UpKeep work orders, assets, parts and meters; create requests and work orders.",
+      "endpoint": "https://upkeep.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "UpKeep API token"
+          }
+        ],
+        "hint": "An UpKeep admin creates it under **Settings > API Tokens > Create token** (it starts with `uk_pat_` and is shown only once). The token acts with the role you choose for it, so pick the narrowest role that fits; changes it makes are attributed to the token's name. The UpKeep API is available on the Enterprise plan. Your token is used only to call the UpKeep API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "upkeep_get_account",
+          "type": "read",
+          "title": "Check API token",
+          "description": "Confirm the UpKeep API token is active: returns the company id, the token's name, when it was created and when it was last used. GET /api/v1/organization-api-tokens/introspect."
+        },
+        {
+          "name": "upkeep_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders (reactive and preventive), newest first, with status, priority, due date, asset, location, assignee, parts, time and cost. Filter by status, completion, priority, category, asset, location, assignee, title or date ranges. GET /work-orders."
+        },
+        {
+          "name": "upkeep_get_work_order",
+          "type": "read",
+          "title": "Get work order",
+          "description": "One work order by id with its checklist items, custom fields, time log, parts and files. GET /work-orders/{id}."
+        },
+        {
+          "name": "upkeep_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List assets (equipment) with name, model, serial and barcode, location, status, downtime status, warranty and number of open work orders. Filter by name, serial number, barcode, location, status, category or assignee. GET /assets."
+        },
+        {
+          "name": "upkeep_get_asset",
+          "type": "read",
+          "title": "Get asset",
+          "description": "One asset by id with purchase and warranty details, custom fields and (optionally) assigned users, teams, vendors, parts, files and sub-assets. GET /assets/{id}."
+        },
+        {
+          "name": "upkeep_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List locations (sites, buildings, rooms) with address, barcode, parent location and hierarchy level. GET /locations."
+        },
+        {
+          "name": "upkeep_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id. GET /locations/{id}."
+        },
+        {
+          "name": "upkeep_list_parts",
+          "type": "read",
+          "title": "List parts (inventory)",
+          "description": "List spare parts with quantity on hand, minimum quantity, cost, category, location and part number. Compare quantity with minimumQuantity to find parts to reorder. GET /parts."
+        },
+        {
+          "name": "upkeep_get_part",
+          "type": "read",
+          "title": "Get part",
+          "description": "One part by id with quantity, cost, location and custom fields. GET /parts/{id}."
+        },
+        {
+          "name": "upkeep_list_meters",
+          "type": "read",
+          "title": "List meters",
+          "description": "List meters (usage counters such as hours, mileage, temperature) with units, reading frequency and the asset or location they belong to. GET /meters."
+        },
+        {
+          "name": "upkeep_get_meter",
+          "type": "read",
+          "title": "Get meter",
+          "description": "One meter by id. GET /meters/{id}."
+        },
+        {
+          "name": "upkeep_list_meter_readings",
+          "type": "read",
+          "title": "List meter readings",
+          "description": "Readings recorded for one meter (value, date, who recorded it), newest first. GET /meters/{id}/readings."
+        },
+        {
+          "name": "upkeep_add_meter_reading",
+          "type": "write",
+          "title": "Add meter reading",
+          "description": "WRITE: record a new reading on a meter (for example engine hours or mileage). A reading cannot be removed with this server, and a meter notification can create a work order automatically when its condition is met. POST /meters/{id}/readings."
+        },
+        {
+          "name": "upkeep_list_requests",
+          "type": "read",
+          "title": "List work requests",
+          "description": "List work requests submitted by staff or through the request portal (before they become work orders), with status open/approved/rejected. GET /requests."
+        },
+        {
+          "name": "upkeep_get_request",
+          "type": "read",
+          "title": "Get work request",
+          "description": "One work request by id with its form fields and, once approved, the linked work order id. GET /requests/{id}."
+        },
+        {
+          "name": "upkeep_create_request",
+          "type": "write",
+          "title": "Create work request",
+          "description": "WRITE: submit a new work request for the maintenance team to approve (it appears in UpKeep's Requests list and may notify the approvers or the assignee). It is not a work order until approved. If the account has a request form configured, pass its field labels in `fields`. POST /requests."
+        },
+        {
+          "name": "upkeep_approve_request",
+          "type": "write",
+          "title": "Approve work request",
+          "description": "WRITE: approve a pending work request, which converts it into a work order (it may notify the assignee). Needs a token whose role may approve requests. Approving a request that is already approved or declined fails with HTTP 409. POST /requests/{id}/approve."
+        },
+        {
+          "name": "upkeep_create_work_order",
+          "type": "write",
+          "title": "Create work order",
+          "description": "WRITE: create a new work order (it may notify the assignee and appears in UpKeep's work order board). Ids for asset, location and assignee come from the list tools. POST /work-orders."
+        },
+        {
+          "name": "upkeep_update_work_order",
+          "type": "write",
+          "title": "Update work order",
+          "description": "WRITE: change fields of an existing work order: status (open, onHold, inProgress, complete), title, description, priority, due date or assignee. Only the fields you pass change; completing a work order may trigger the account's integrations (for example Zapier). Archiving and deleting are not offered. PATCH /work-orders/{id}."
+        },
+        {
+          "name": "upkeep_add_work_order_message",
+          "type": "write",
+          "title": "Add work order message",
+          "description": "WRITE: post a message (comment) on a work order's activity thread; people following the work order may be notified. POST /work-orders/{id}/update-messages."
+        },
+        {
+          "name": "upkeep_update_part_quantity",
+          "type": "write",
+          "title": "Update part quantity",
+          "description": "WRITE: set the quantity on hand (and optionally the minimum quantity that triggers a low-stock notification) of a part. This overwrites the stored number: read the part first and pass the new total, not the difference. PATCH /parts/{id}."
+        },
+        {
+          "name": "upkeep_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List UpKeep users (technicians, admins, requesters) with account type, job title, status and last login. Use the ids to assign work orders. GET /users."
+        },
+        {
+          "name": "upkeep_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user by id. GET /users/{id}."
+        },
+        {
+          "name": "upkeep_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams with name and description. Use the ids to assign work. GET /teams."
+        },
+        {
+          "name": "upkeep_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (suppliers and contractors) with contact details. GET /vendors."
+        },
+        {
+          "name": "upkeep_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (the parties whose assets or locations you maintain) with contact details. GET /customers."
+        },
+        {
+          "name": "upkeep_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders with status (awaiting, approved, declined, fulfilled), vendor, dates, total cost and quantities. GET /purchase-orders."
+        },
+        {
+          "name": "upkeep_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "One purchase order by id with its parts, quantities, costs and shipping details. GET /purchase-orders/{id}."
+        },
+        {
+          "name": "upkeep_list_preventive_maintenance",
+          "type": "read",
+          "title": "List preventive maintenance plans",
+          "description": "List preventive maintenance (PM) templates, the recurring work that generates scheduled work orders, with their schedules. Filter by text, asset, location, assignee, team or priority. Pages are 1-based. GET /pm."
+        },
+        {
+          "name": "upkeep_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current free-tier usage this month: calls used, monthly limit, remaining, and whether the cap is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "upkeep_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the UpKeep tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "upkeep_upgrade",
+          "type": "meta",
+          "title": "Upgrade: 7-day pass or Pro (unlimited)",
+          "description": "Get UNLIMITED UpKeep tool calls (the free tier caps monthly usage). Plans: \"pass\" — 7 days for $5, one payment, no subscription (good for a one-off job); \"monthly\" — Pro, $9/month; \"yearly\" — Pro, $90/year (2 months free). Returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "upkeep_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's UpKeep Pro subscription at the end of the paid period (no refund for the current period; unlimited calls continue until then, then the free tier applies). Requires confirm: true. Run upkeep_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which work orders are overdue and who are they assigned to?",
+        "List the open high-priority work orders for the Boiler Room location.",
+        "Which spare parts are below their minimum quantity?",
+        "Create a work order to inspect the forklift, due Friday, assigned to Sam."
+      ]
     }
   ]
 }

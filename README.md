@@ -360,6 +360,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [bexio](servers/bexio/) | billing | 32 | OAuth | [servers/bexio/](servers/bexio/) |
 | [Teamleader Focus](servers/teamleader-focus/) | crm | 40 | OAuth | [servers/teamleader-focus/](servers/teamleader-focus/) |
 | [Clio](servers/clio/) | productivity | 27 | OAuth | [servers/clio/](servers/clio/) |
+| [Chatra](servers/chatra/) | chat | 14 | API token | [servers/chatra/](servers/chatra/) |
+| [Corsizio](servers/corsizio/) | calendar | 10 | API token | [servers/corsizio/](servers/corsizio/) |
+| [DialMyCalls](servers/dialmycalls/) | communications | 32 | API token | [servers/dialmycalls/](servers/dialmycalls/) |
+| [Namely](servers/namely/) | productivity | 21 | API token | [servers/namely/](servers/namely/) |
+| [Papershift](servers/papershift/) | productivity | 30 | API token | [servers/papershift/](servers/papershift/) |
+| [Robly](servers/robly/) | email | 17 | API token | [servers/robly/](servers/robly/) |
+| [Seal Subscriptions](servers/seal-subscriptions/) | payments | 31 | API token | [servers/seal-subscriptions/](servers/seal-subscriptions/) |
+| [SuiteDash](servers/suitedash/) | crm | 20 | API token | [servers/suitedash/](servers/suitedash/) |
+| [UpKeep](servers/upkeep/) | productivity | 33 | API token | [servers/upkeep/](servers/upkeep/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -1,0 +1,71 @@
+# Namely MCP by usefulapi
+
+Read Namely employee profiles, groups, teams, jobs and reports; update profiles, post to the feed.
+
+**Live endpoint:** `https://namely.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io/namely
+
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://namely.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http namely https://namely.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=namely&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fnamely.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
+
+```json
+{
+  "mcpServers": {
+    "namely": {
+      "url": "https://namely.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Namely credentials.
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/namely/
+
+<!-- connect:end (generated above, edit below) -->
+
+On first connect you'll enter your Namely **site name** (acme for acme.namely.com) and a **Personal Access Token**.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `namely_get_me` | read | Get my profile |
+| `namely_list_profiles` | read | List employee profiles |
+| `namely_get_profile` | read | Get employee profile |
+| `namely_list_profile_fields` | read | List profile fields |
+| `namely_list_groups` | read | List groups |
+| `namely_get_group` | read | Get group |
+| `namely_list_group_types` | read | List group types |
+| `namely_list_teams` | read | List teams |
+| `namely_get_team` | read | Get team |
+| `namely_list_job_titles` | read | List job titles |
+| `namely_list_job_tiers` | read | List job tiers |
+| `namely_list_events` | read | List feed events |
+| `namely_list_event_comments` | read | List event comments |
+| `namely_get_report` | read | Get report |
+| `namely_update_profile` | **write** | Update employee profile |
+| `namely_create_announcement` | **write** | Post announcement |
+| `namely_create_event_comment` | **write** | Comment on event |
+| `namely_usage_status` | meta | Usage status (free-tier meter) |
+| `namely_request_feature` | meta | Request a missing feature |
+| `namely_upgrade` | meta | Upgrade: 7-day pass or Pro (unlimited) |
+| `namely_cancel_subscription` | meta | Cancel the Pro subscription |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 50 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited |
+
+Pro covers this server only. Subscribe with `namely_upgrade` (it returns a Stripe Checkout link). Cancel any time with `namely_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `namely_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+
+## License
+
+MIT © usefulapi. Not affiliated with or endorsed by Namely.
