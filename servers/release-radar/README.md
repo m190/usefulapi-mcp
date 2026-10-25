@@ -34,11 +34,11 @@ per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
-| `release_radar_whats_broken_since_last_deploy` | **write** | What's broken since the last deploy? |
-| `release_radar_incident_snapshot` | **write** | Current incident snapshot |
-| `release_radar_oncall_handoff` | **write** | On-call handoff briefing |
-| `release_radar_github_latest_deploy` | **write** | Latest GitHub deploy/release |
-| `release_radar_sentry_recent_issues` | **write** | Recent unresolved Sentry issues |
+| `release_radar_whats_broken_since_last_deploy` | read | What's broken since the last deploy? |
+| `release_radar_incident_snapshot` | read | Current incident snapshot |
+| `release_radar_oncall_handoff` | read | On-call handoff briefing |
+| `release_radar_github_latest_deploy` | read | Latest GitHub deploy/release |
+| `release_radar_sentry_recent_issues` | read | Recent unresolved Sentry issues |
 | `release_radar_usage_status` | meta | Usage status (free-tier meter) |
 | `release_radar_request_feature` | meta | Request a missing feature |
 | `release_radar_upgrade` | meta | Upgrade to Pro (unlimited*) |
