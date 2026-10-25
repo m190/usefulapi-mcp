@@ -446,6 +446,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Street.co.uk](servers/street-co-uk/) | real-estate | 58 | API token | [servers/street-co-uk/](servers/street-co-uk/) |
 | [TicketSpice](servers/ticketspice/) | ecommerce | 19 | API token | [servers/ticketspice/](servers/ticketspice/) |
 | [Upper Route Planner](servers/upper-route-planner/) | shipping | 16 | API token | [servers/upper-route-planner/](servers/upper-route-planner/) |
+| [Spoke Phone](servers/spoke-phone/) | communications | 31 | API token | [servers/spoke-phone/](servers/spoke-phone/) |
+| [Laposta](servers/laposta/) | email | 22 | API token | [servers/laposta/](servers/laposta/) |
+| [Appointedd](servers/appointedd/) | calendar | 24 | API token | [servers/appointedd/](servers/appointedd/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
