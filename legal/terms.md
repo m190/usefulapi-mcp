@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 24 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 25 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -31,8 +31,8 @@ pricing. You are responsible for activity performed under your authorized creden
 - **Pro fair use:** Pro gives unlimited tool calls for normal use, with a fair use limit of
   **10,000 tool calls per calendar month (UTC)** on each server. Above the limit, tool calls on
   that server stop until the next month. If you need more, change to Pro+ (below) or write to
-  **support@usefulapi.io**. Pro
-  subscriptions started before 25 October 2026 have no fair use limit while they stay active.
+  **support@usefulapi.io**. The limit applies to every Pro subscription, also to one started
+  before it was introduced.
 - **Pro+:** the same as Pro with a fair use limit of **100,000 tool calls per calendar month (UTC)**
   on each server, at the price shown when you subscribe. A Pro subscription can change to Pro+ with
   the `<product>_upgrade` tool; the change keeps the billing interval and charges the price
