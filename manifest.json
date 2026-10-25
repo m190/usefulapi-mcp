@@ -74415,6 +74415,633 @@
         "Find the customer with email marie@example.com and list her latest sales.",
         "Which products sold best in my store last month?"
       ]
+    },
+    {
+      "slug": "feefo",
+      "name": "Feefo",
+      "category": "marketing",
+      "description": "Read Feefo service, product and NPS reviews and ratings; reply to reviews.",
+      "endpoint": "https://feefo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per merchant account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "App Key Client ID"
+          },
+          {
+            "label": "App Key Secret"
+          },
+          {
+            "label": "Merchant identifier"
+          }
+        ],
+        "hint": "In Feefo Hub open **Settings -> Connectivity -> App Keys**, create an App Key (limit its services if you like) and copy the Client ID and Secret from its Details. The merchant identifier is under **Settings -> Business details**. Your credentials are used only to call the Feefo API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "feefo_list_reviews",
+          "type": "read",
+          "title": "List Feefo reviews",
+          "description": "List reviews of your Feefo account, newest updates first. mode: all (service + product, default), service (seller/service reviews), product (product reviews; give product_sku or parent_product_sku) or nps (Net Promoter Score responses). Returns summary.meta (count, pages) and reviews[] with ratings, comment text, customer display name and review threads. Page with page/page_size."
+        },
+        {
+          "name": "feefo_get_review",
+          "type": "read",
+          "title": "Get a Feefo review",
+          "description": "Get one review by its id (the `id` of a service or product element from feefo_list_reviews), optionally with its full thread of replies."
+        },
+        {
+          "name": "feefo_get_review_summary",
+          "type": "read",
+          "title": "Get Feefo rating summary",
+          "description": "Aggregate ratings for your Feefo account: average rating and star distribution (1 to 5 stars) for service and product reviews, merchant details, review counts. mode: all (default), service, product (needs product_sku or parent_product_sku) or nps (promoters/passives/detractors). Use since_period=all for lifetime figures (Feefo default: the last year)."
+        },
+        {
+          "name": "feefo_get_product_ratings",
+          "type": "read",
+          "title": "Get Feefo product ratings",
+          "description": "Average star rating per product SKU (products[] with rating, sku and optionally review_count). Filter by product_sku (comma-separated, leading/trailing * wildcards allowed) or parent_product_sku."
+        },
+        {
+          "name": "feefo_reply_to_review",
+          "type": "write",
+          "title": "Reply to a Feefo review",
+          "description": "WRITE: publish a public reply to a review on your Feefo account, optionally emailing the customer (notify_customer). Visible to the public on your Feefo page and not undoable through this server. `review_id` is the `id` of the service or product element returned by feefo_list_reviews (not the outer review url id). Confirm the wording with the user first."
+        },
+        {
+          "name": "feefo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "feefo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Feefo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "feefo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Feefo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "feefo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Feefo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run feefo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show my latest 1 and 2 star Feefo reviews from the last month.",
+        "What is my average Feefo service rating and star breakdown this year?",
+        "Which products have the best average rating? Show the top 10 by rating.",
+        "Reply to the review from yesterday about late delivery with a short apology."
+      ]
+    },
+    {
+      "slug": "inv-bg",
+      "name": "inv.bg",
+      "category": "billing",
+      "description": "Read inv.bg invoices, clients, items, payments and banking; create clients, items, invoices.",
+      "endpoint": "https://inv-bg.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "inv.bg API token"
+          }
+        ],
+        "hint": "Create it in inv.bg under **Settings → About the Company → API access** (a long-term token). Do not use your inv.bg password. The token is used only to call the inv.bg API on your behalf and is never shown to anyone; you can delete it in the same place at any time."
+      },
+      "tools": [
+        {
+          "name": "invbg_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The company (id, name, subdomain) and the user the API token belongs to. GET /account."
+        },
+        {
+          "name": "invbg_get_firm",
+          "type": "read",
+          "title": "Get company",
+          "description": "The issuing company's details: name, Bulstat, VAT registration and VAT number, address, MOL, contact email, custom properties. GET /firm."
+        },
+        {
+          "name": "invbg_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List documents (tax invoices, proformas, debit and credit notes) with filters: type, number, issue-date range, amount ranges, payment status, client, draft/annulled, sent status, currency. Each row has number, client, totals, balance_paid, balance_due and dates. GET /invoices."
+        },
+        {
+          "name": "invbg_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One document by id: number, type, issuer and recipient, line items, VAT, totals, balance_paid and balance_due, dates, bank accounts, sent/confirmation status. Optionally with its comments. GET /invoices/{id}."
+        },
+        {
+          "name": "invbg_list_invoice_types",
+          "type": "read",
+          "title": "List document types",
+          "description": "All document types of this company (tax invoice, proforma, debit/credit note and any custom types) with their codes. GET /invoices/types."
+        },
+        {
+          "name": "invbg_get_next_invoice_number",
+          "type": "read",
+          "title": "Get next invoice number",
+          "description": "The next free document number of the default number set for a document type. Read-only: it does not reserve the number. GET /invoices/free-number."
+        },
+        {
+          "name": "invbg_list_number_sets",
+          "type": "read",
+          "title": "List number sets",
+          "description": "The company's invoice number sets (separate numbering series) with ids; pass an id as number_set to invbg_create_invoice. GET /invoices/number-sets."
+        },
+        {
+          "name": "invbg_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "The payment method codes a document accepts (cash, bank, card, ...) with their names. GET /invoices/payment-methods."
+        },
+        {
+          "name": "invbg_list_vat_exemption_reasons",
+          "type": "read",
+          "title": "List VAT exemption reasons",
+          "description": "The legal reasons for issuing a document without VAT (use one as vat_exemption_reason in invbg_create_invoice). GET /invoices/without-vat-reasons."
+        },
+        {
+          "name": "invbg_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List or search clients (customers): name, Bulstat, VAT number, address, MOL, whether it is a person. GET /clients."
+        },
+        {
+          "name": "invbg_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One client by id with all stored details (names in both languages, Bulstat, VAT, address, MOL, code, custom properties). GET /clients/{id}."
+        },
+        {
+          "name": "invbg_list_client_contacts",
+          "type": "read",
+          "title": "List client contacts",
+          "description": "Contact people of a client (or of all clients) with their names and roles. GET /client-contacts."
+        },
+        {
+          "name": "invbg_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "The product/service catalogue: name, price, currency, unit, tags. GET /items."
+        },
+        {
+          "name": "invbg_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One catalogue item by id. GET /items/{id}."
+        },
+        {
+          "name": "invbg_list_item_units",
+          "type": "read",
+          "title": "List units of measure",
+          "description": "Units of measure accepted as quantity_unit on items and invoice lines. GET /items/units."
+        },
+        {
+          "name": "invbg_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "Recorded payments (income and expense) with amount, method, date, counterparty, how much is allocated to invoices (amount_used) and what is left (amount_left). GET /payments."
+        },
+        {
+          "name": "invbg_get_payment",
+          "type": "read",
+          "title": "Get payment",
+          "description": "One payment by id with its allocations to invoices (invoice_payments). GET /payments/{id}."
+        },
+        {
+          "name": "invbg_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The company's bank accounts (alias, bank, IBAN, BIC, currency). GET /bank/accounts."
+        },
+        {
+          "name": "invbg_list_bank_transactions",
+          "type": "read",
+          "title": "List bank transactions",
+          "description": "Imported bank transactions with amount, date, counterparty, and whether they are linked to a document. Useful for reconciliation (linked=false = unmatched). GET /bank/transactions."
+        },
+        {
+          "name": "invbg_list_cashboxes",
+          "type": "read",
+          "title": "List cashboxes",
+          "description": "The company's cash registers (cashboxes) with names and balances. GET /cashboxes."
+        },
+        {
+          "name": "invbg_get_exchange_rate",
+          "type": "read",
+          "title": "Get exchange rate",
+          "description": "The exchange rate of a currency to BGN on a date (default: today), as inv.bg uses it for documents. GET /currency/rates/{currency}."
+        },
+        {
+          "name": "invbg_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: add a company client (name, Bulstat, VAT, address, MOL). Check invbg_list_clients first to avoid a duplicate. For an individual (EGN) issue the document with invbg_create_invoice and is_to_person instead. POST /clients."
+        },
+        {
+          "name": "invbg_update_client",
+          "type": "write",
+          "title": "Update client",
+          "description": "WRITE: change fields of an existing client (only the fields you pass are changed). PATCH /clients/{id}."
+        },
+        {
+          "name": "invbg_create_item",
+          "type": "write",
+          "title": "Create item",
+          "description": "WRITE: add a product or service to the catalogue (name, price, unit). POST /items."
+        },
+        {
+          "name": "invbg_create_invoice",
+          "type": "write",
+          "title": "Create invoice",
+          "description": "WRITE: create a document (tax invoice by default; proforma, debit/credit note via type). It is saved as a DRAFT unless draft is false: an issued document takes the next legal number and cannot be undone through this tool. Address it to an existing client_id, or give to_name + to_address (+ to_mol and to_bulstat for a company, to_egn for a person) and inv.bg matches or creates the client from those details (an existing client matched by Bulstat or VAT number is UPDATED with the address, MOL and other details you pass). VAT: set vat_percent on the document, or on every item. POST /invoices."
+        },
+        {
+          "name": "invbg_send_invoice_email",
+          "type": "write",
+          "title": "Email invoice",
+          "description": "WRITE: email a document to a recipient (as a download link or an attached file). The email goes out immediately and cannot be recalled. POST /invoices/{id}/emails."
+        },
+        {
+          "name": "invbg_record_invoice_payment",
+          "type": "write",
+          "title": "Record invoice payment",
+          "description": "WRITE: record a payment received for a document and allocate it, which updates the document's balance_paid/balance_due and payment status. Two calls: POST /payments, then POST /payments/{id}/invoices. If the allocation fails the payment stays recorded: the error names its id (see invbg_get_payment)."
+        },
+        {
+          "name": "invbg_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "invbg_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the inv.bg tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "invbg_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on inv.bg (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "invbg_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's inv.bg Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run invbg_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are still unpaid, oldest first?",
+        "Show everything I invoiced to client Acme OOD this year.",
+        "Create a draft invoice for 3 hours of consulting at 80 BGN plus 20% VAT for client 1042.",
+        "Which bank transactions are not yet linked to an invoice?"
+      ]
+    },
+    {
+      "slug": "kashflow",
+      "name": "KashFlow",
+      "category": "billing",
+      "description": "Read KashFlow invoices, customers, suppliers, banking and reports; add customers, notes.",
+      "endpoint": "https://kashflow.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "KashFlow username"
+          },
+          {
+            "label": "KashFlow password (or API password)"
+          }
+        ],
+        "hint": "KashFlow's API is available on the Business package. In KashFlow open **Apps → API Settings**, tick **Enable API**, untick **Restrict Access** (this server has no fixed IP address) and, if you like, choose **Separate API password** and use that password here instead of your main one ([KashFlow explains it](https://www.kashflow.com/support/kb/enabling-the-api/)). Your login is used only to call the KashFlow API on your behalf and is never shown to anyone. KashFlow locks an account after repeated wrong passwords, so check them before you try again."
+      },
+      "tools": [
+        {
+          "name": "kashflow_get_company_details",
+          "type": "read",
+          "title": "Get company details",
+          "description": "The KashFlow company: name, address, contact, VAT registration, currency, payment terms and business type. SOAP GetCompanyDetails."
+        },
+        {
+          "name": "kashflow_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "All customers (name, code, contact, email, phone, address, VAT number, payment terms, notes), paged here: the reply says total and next_offset. SOAP GetCustomers."
+        },
+        {
+          "name": "kashflow_get_customer",
+          "type": "read",
+          "title": "Get customer by code",
+          "description": "One customer by its KashFlow customer code (the short code shown in the customer list, e.g. ACME01). SOAP GetCustomer."
+        },
+        {
+          "name": "kashflow_get_customer_by_id",
+          "type": "read",
+          "title": "Get customer by id",
+          "description": "One customer by its numeric CustomerID (as returned in other replies). SOAP GetCustomerByID."
+        },
+        {
+          "name": "kashflow_find_customer_by_email",
+          "type": "read",
+          "title": "Find customer by email",
+          "description": "The customer whose e-mail address matches. SOAP GetCustomerByEmail."
+        },
+        {
+          "name": "kashflow_get_customer_balance",
+          "type": "read",
+          "title": "Get customer balance",
+          "description": "What one customer owes: the total invoiced value and the outstanding balance. SOAP GetCustomerBalance."
+        },
+        {
+          "name": "kashflow_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a new customer. The code must be unique (KashFlow refuses a code that exists) and nothing existing is changed. Returns the new CustomerID. SOAP InsertCustomer."
+        },
+        {
+          "name": "kashflow_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "All suppliers (name, code, contact, email, phone, address, VAT number, payment terms), paged here: the reply says total and next_offset. SOAP GetSuppliers."
+        },
+        {
+          "name": "kashflow_get_supplier",
+          "type": "read",
+          "title": "Get supplier by code",
+          "description": "One supplier by its KashFlow supplier code. SOAP GetSupplier."
+        },
+        {
+          "name": "kashflow_create_supplier",
+          "type": "write",
+          "title": "Create supplier",
+          "description": "WRITE: create a new supplier. The code must be unique (KashFlow refuses a code that exists) and nothing existing is changed. Returns the new SupplierID. SOAP InsertSupplier."
+        },
+        {
+          "name": "kashflow_get_invoice",
+          "type": "read",
+          "title": "Get invoice by number",
+          "description": "One sales invoice by its invoice number: customer, dates, lines (description, quantity, rate, VAT), net, VAT, amount paid and a link. SOAP GetInvoice."
+        },
+        {
+          "name": "kashflow_list_invoices",
+          "type": "read",
+          "title": "List invoices by date range",
+          "description": "Sales invoices dated within a range (inclusive; a bare end date means the end of that day), paged here. Dates are yyyy-mm-dd. SOAP GetInvoicesByDateRange."
+        },
+        {
+          "name": "kashflow_list_customer_invoices",
+          "type": "read",
+          "title": "List a customer's invoices",
+          "description": "All sales invoices of one customer, by numeric CustomerID (see kashflow_get_customer for the id), paged here. SOAP GetInvoicesForCustomer."
+        },
+        {
+          "name": "kashflow_list_unpaid_invoices",
+          "type": "read",
+          "title": "List unpaid invoices",
+          "description": "All sales invoices not yet paid in full, paged here. SOAP GetInvoices_Unpaid."
+        },
+        {
+          "name": "kashflow_list_overdue_invoices",
+          "type": "read",
+          "title": "List overdue invoices",
+          "description": "All sales invoices past their due date and not paid in full, paged here. SOAP GetInvoices_Overdue."
+        },
+        {
+          "name": "kashflow_list_recent_invoices",
+          "type": "read",
+          "title": "List recent invoices",
+          "description": "The most recently created sales invoices. SOAP GetInvoices_Recent."
+        },
+        {
+          "name": "kashflow_list_invoice_payments",
+          "type": "read",
+          "title": "List payments of an invoice",
+          "description": "The payments recorded against one sales invoice (date, amount, method, bank account, note), by invoice number. SOAP GetInvoicePayment."
+        },
+        {
+          "name": "kashflow_list_payments_by_date",
+          "type": "read",
+          "title": "List invoice payments by date range",
+          "description": "Customer payments received within a date range (date, amount, invoice, method, bank account). KashFlow returns them a page at a time: set page_number 1, 2, ... until a page comes back empty. Dates are yyyy-mm-dd. SOAP GetInvoicePaymentsByDateRange."
+        },
+        {
+          "name": "kashflow_get_invoice_notes",
+          "type": "read",
+          "title": "Get invoice notes",
+          "description": "The notes attached to one sales invoice, by its InvoiceDBID (the numeric id in invoice replies, not the invoice number). SOAP GetInvoiceNotes."
+        },
+        {
+          "name": "kashflow_add_invoice_note",
+          "type": "write",
+          "title": "Add invoice note",
+          "description": "WRITE: add a note to a sales invoice, by its InvoiceDBID (the numeric id in invoice replies). Existing notes and the invoice are not changed. SOAP InsertInvoiceNote."
+        },
+        {
+          "name": "kashflow_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "All sales quotes (same shape as invoices), paged here. SOAP GetQuotes."
+        },
+        {
+          "name": "kashflow_get_receipt",
+          "type": "read",
+          "title": "Get purchase by number",
+          "description": "One purchase (supplier invoice / receipt) by its receipt number: supplier, dates, lines, net, VAT, amount paid. SOAP GetReceipt."
+        },
+        {
+          "name": "kashflow_list_recent_receipts",
+          "type": "read",
+          "title": "List recent purchases",
+          "description": "The most recently created purchases (supplier invoices / receipts). SOAP GetReceipts_Recent."
+        },
+        {
+          "name": "kashflow_list_supplier_receipts",
+          "type": "read",
+          "title": "List a supplier's purchases",
+          "description": "All purchases (supplier invoices / receipts) of one supplier, by numeric SupplierID (see kashflow_get_supplier), paged here. SOAP GetReceiptsForSupplier."
+        },
+        {
+          "name": "kashflow_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "The product catalogue (name, code, description, price, stock level), paged here. SOAP GetProducts."
+        },
+        {
+          "name": "kashflow_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "The bank accounts (AccountID, name, nominal code). SOAP GetBankAccounts."
+        },
+        {
+          "name": "kashflow_list_bank_transactions",
+          "type": "read",
+          "title": "List bank transactions",
+          "description": "The transactions of one bank account (date, money in/out, VAT, type, comment, customer/supplier), by AccountID from kashflow_list_bank_accounts, paged here. SOAP GetBankTransactions."
+        },
+        {
+          "name": "kashflow_get_bank_balance",
+          "type": "read",
+          "title": "Get bank balance",
+          "description": "The balance of one bank account on a date (default today). SOAP GetBankBalance."
+        },
+        {
+          "name": "kashflow_list_nominal_codes",
+          "type": "read",
+          "title": "List nominal codes",
+          "description": "The chart of accounts: nominal codes with their names. SOAP GetNominalCodes."
+        },
+        {
+          "name": "kashflow_list_vat_rates",
+          "type": "read",
+          "title": "List VAT rates",
+          "description": "The VAT rates set up in the account. SOAP GetVATRates."
+        },
+        {
+          "name": "kashflow_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "The projects defined in the account (id, name). SOAP GetProjects."
+        },
+        {
+          "name": "kashflow_get_profit_and_loss",
+          "type": "read",
+          "title": "Get profit and loss",
+          "description": "The profit and loss report for a date range: turnover, cost of sales, gross profit, expenses and net profit, with the lines of each section. SOAP GetProfitAndLoss."
+        },
+        {
+          "name": "kashflow_get_balance_sheet",
+          "type": "read",
+          "title": "Get balance sheet",
+          "description": "The balance sheet at a date (default today): fixed assets, current assets, current liabilities, capital and reserves with the lines of each. SOAP GetBalanceSheet."
+        },
+        {
+          "name": "kashflow_get_trial_balance",
+          "type": "read",
+          "title": "Get trial balance",
+          "description": "The trial balance for a date range: every nominal code with debit, credit and balance. SOAP GetTrialBalance."
+        },
+        {
+          "name": "kashflow_get_aged_debtors",
+          "type": "read",
+          "title": "Get aged debtors",
+          "description": "Who owes you money at a date (default today), aged into current, three periods and older, per customer. SOAP GetAgedDebtors."
+        },
+        {
+          "name": "kashflow_get_aged_creditors",
+          "type": "read",
+          "title": "Get aged creditors",
+          "description": "Who you owe money to at a date (default today), aged into current, three periods and older, per supplier. SOAP GetAgedCreditors."
+        },
+        {
+          "name": "kashflow_get_vat_report",
+          "type": "read",
+          "title": "Get VAT report",
+          "description": "The VAT return figures (boxes 1 to 9) for a period, and whether it was submitted to HMRC. SOAP GetVATReport."
+        },
+        {
+          "name": "kashflow_get_kpis",
+          "type": "read",
+          "title": "Get KPIs",
+          "description": "Key figures for a date range (income, expenses, profit and similar, as name/value pairs). SOAP GetKPIs."
+        },
+        {
+          "name": "kashflow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kashflow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the KashFlow tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kashflow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on KashFlow (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kashflow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's KashFlow Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kashflow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales invoices are overdue, and how much is outstanding in total?",
+        "Show my profit and loss for the last tax year.",
+        "What does Acme Ltd owe me, and which invoices are still unpaid?",
+        "Add a new customer called Acme Ltd with the email billing@acme-example.com."
+      ]
     }
   ]
 }

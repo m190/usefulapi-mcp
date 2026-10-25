@@ -433,6 +433,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [iContact](servers/icontact/) | marketing | 24 | API token | [servers/icontact/](servers/icontact/) |
 | [Freshsales](servers/freshsales/) | crm | 35 | API token | [servers/freshsales/](servers/freshsales/) |
 | [Hiboutik](servers/hiboutik/) | ecommerce | 35 | API token | [servers/hiboutik/](servers/hiboutik/) |
+| [Feefo](servers/feefo/) | marketing | 9 | API token | [servers/feefo/](servers/feefo/) |
+| [inv.bg](servers/inv-bg/) | billing | 31 | API token | [servers/inv-bg/](servers/inv-bg/) |
+| [KashFlow](servers/kashflow/) | billing | 42 | API token | [servers/kashflow/](servers/kashflow/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
