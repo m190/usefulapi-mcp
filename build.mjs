@@ -6,6 +6,7 @@
 //   <outDir>/terms/index.html      (rendered from legal/terms.md)
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
+import { loadContent } from "./content.mjs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
 const outDir = process.argv[2] || "dist";
@@ -67,6 +68,9 @@ const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`le
 // ---- per-product pages (generated from manifest.json — the single source of truth) ----
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", ROOT), "utf8"));
 const SITE = manifest.portal.domain.replace(/\/$/, "");
+// Portal-owned page text (content/<slug>.json: audience + use cases), checked against each product's real tools.
+const { content: CONTENT, errors: contentErrors } = loadContent(manifest);
+if (contentErrors.length) throw new Error(`content/ has ${contentErrors.length} error(s):\n${contentErrors.join("\n")}`);
 
 // URL + SEO helpers. Canonical page URLs carry the trailing slash: Pages serves /<slug>/index.html
 // and 308-redirects /<slug> → /<slug>/, so links/sitemap/canonical all use the final form.
@@ -153,6 +157,8 @@ table tr:last-child td{border-bottom:0}
 .tag.write{color:#b4530a;background:#fbeae0}.tag.read{color:#12873f;background:#e7f5ec}.tag.meta{color:var(--accent);background:var(--chip)}
 @media (prefers-color-scheme:dark){.tag.write{color:#f0a978;background:#2a1a10}.tag.read{color:#5fd68a;background:#12241a}}
 .pricing td:first-child{font-weight:600}.pricing .scope{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+.uses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.use h3{font-size:15px;margin:0 0 6px}.use p{margin:0;font-size:14px}.use .via{color:var(--muted);font-size:12px;margin-top:8px}
 .tname{font-weight:600;font-size:13px}.tdesc{color:var(--muted);font-size:13px;margin-top:2px}
 footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}
 .crumbs{font-size:13px;color:var(--muted);margin:0 0 14px}.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
@@ -219,6 +225,14 @@ function setupSection(s) {
   const help = [s.keyHelp, s.login?.hint].filter(Boolean).map((h) => `<p>${hintHtml(h)}</p>`).join("");
   return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${patientDataNote(s)}${lead}${optional}${help}<p>${noHeaderText(s)}</p></div>`;
 }
+// "What you can do": the jobs this server does, each with the tools that do it (content/<slug>.json).
+function useCasesSection(s) {
+  const c = CONTENT.get(s.slug);
+  if (!c) return "";
+  const use = (u) => `<div class="card use"><h3>${esc(u.title)}</h3><p>${esc(u.text)}</p>` +
+    `<p class="via">${u.changes ? "Changes data · " : ""}${u.tools.map((t) => `<code>${esc(t)}</code>`).join(" ")}</p></div>`;
+  return `<h2 class="sec">What you can do with ${esc(s.name)} in Claude and ChatGPT</h2>\n<div class="uses">${c.useCases.map(use).join("")}</div>`;
+}
 function examplesSection(s) {
   if (!(s.examples || []).length) return "";
   return `<h2 class="sec">Example prompts</h2>\n<ul class="prompts">${s.examples.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>\n` +
@@ -233,6 +247,9 @@ function faqFor(s) {
   const up = metaTool("_upgrade"), cancel = metaTool("_cancel_subscription"), usage = metaTool("_usage_status"), feature = metaTool("_request_feature");
   const ft = freeTier(s), pt = proTier(s);
   const faq = [];
+  const c = CONTENT.get(s.slug);
+  if (c) faq.push({ q: `What can I do with ${n} in Claude or ChatGPT?`, a:
+    `${c.useCases.map((u) => esc(u.title.replace(/\.$/, ""))).join(". ")}. See <a href="#uses">what you can do</a> for the details.` });
   faq.push({ q: `Is this an official ${n} product?`, a:
     `No. usefulapi is an independent service. It is not affiliated with or endorsed by ${n}. ` +
     (k === "email" ? `The server calls the public ${n} API for you.` : `The server calls the ${n} API with your own ${n} access, so it sees only the data that your account can see.`) });
@@ -373,10 +390,10 @@ ${fairUseNote}${billingNote}`
     : "";
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="${categoryPath(g)}">${esc(g)}</a></nav>
 <div class="brand">${MARK}<h1>${esc(s.name)} MCP server</h1></div>
-<p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong> — connect from Claude, ChatGPT, Cursor, or any MCP client.</p>
+<p class="sub">${esc(s.description)}${CONTENT.has(s.slug) ? ` For ${esc(CONTENT.get(s.slug).audience)}.` : ""} Hosted by <strong>usefulapi</strong> — connect from Claude, ChatGPT, Cursor, or any MCP client.</p>
 <div id="connect">${cards}</div>
 ${chips}
-${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
+${live && CONTENT.has(s.slug) ? `<div id="uses">${useCasesSection(s)}</div>\n` : ""}${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
 ${live ? examplesSection(s) : ""}
 ${live ? toolsSection : ""}
 ${pricingSection}
@@ -398,7 +415,11 @@ ${related}
       "@context": "https://schema.org", "@type": "SoftwareApplication",
       name: `${s.name} MCP Server by usefulapi`, url, description: s.description,
       applicationCategory: "DeveloperApplication", operatingSystem: "Any (remote MCP server)",
-      offers, publisher: { "@type": "Organization", name: "usefulapi", url: SITE }
+      offers, publisher: { "@type": "Organization", name: "usefulapi", url: SITE },
+      ...(CONTENT.has(s.slug) ? {
+        audience: { "@type": "Audience", audienceType: CONTENT.get(s.slug).audience },
+        featureList: CONTENT.get(s.slug).useCases.map((u) => `${u.title}: ${u.text}`)
+      } : {})
     },
     {
       "@context": "https://schema.org", "@type": "BreadcrumbList",
