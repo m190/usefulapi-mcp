@@ -58,6 +58,8 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `rotacloud_create_shift` | **write** | Create shift |
 | `rotacloud_update_shift` | **write** | Update shift |
 | `rotacloud_publish_shifts` | **write** | Publish shifts |
+| `rotacloud_find_shifts` | read | Find shifts |
+| `rotacloud_delete_shifts` | **write** | Delete shifts |
 | `rotacloud_create_leave_request` | **write** | Request leave |
 | `rotacloud_approve_leave_request` | **write** | Approve leave request |
 | `rotacloud_deny_leave_request` | **write** | Deny leave request |

@@ -230,7 +230,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Nookal](servers/nookal/) | healthcare | 15 | API token | [servers/nookal/](servers/nookal/) |
 | [Ordoro](servers/ordoro/) | shipping | 22 | API token | [servers/ordoro/](servers/ordoro/) |
 | [Photon Health](servers/photon-health/) | healthcare | 25 | API token | [servers/photon-health/](servers/photon-health/) |
-| [RotaCloud](servers/rotacloud/) | productivity | 30 | API token | [servers/rotacloud/](servers/rotacloud/) |
+| [RotaCloud](servers/rotacloud/) | productivity | 32 | API token | [servers/rotacloud/](servers/rotacloud/) |
 | [Shiftbase](servers/shiftbase/) | productivity | 26 | API token | [servers/shiftbase/](servers/shiftbase/) |
 | [Shipday](servers/shipday/) | shipping | 18 | API token | [servers/shipday/](servers/shipday/) |
 | [SlickText](servers/slicktext/) | communications | 28 | API token | [servers/slicktext/](servers/slicktext/) |
