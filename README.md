@@ -438,6 +438,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [KashFlow](servers/kashflow/) | billing | 42 | API token | [servers/kashflow/](servers/kashflow/) |
 | [Papierkram](servers/papierkram/) | billing | 37 | API token | [servers/papierkram/](servers/papierkram/) |
 | [PaySpace](servers/payspace/) | billing | 25 | API token | [servers/payspace/](servers/payspace/) |
+| [Sapo](servers/sapo/) | ecommerce | 24 | API token | [servers/sapo/](servers/sapo/) |
+| [Sarbacane](servers/sarbacane/) | email | 23 | API token | [servers/sarbacane/](servers/sarbacane/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
