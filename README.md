@@ -426,6 +426,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Mail Blaze](servers/mailblaze/) | email | 30 | API token | [servers/mailblaze/](servers/mailblaze/) |
 | [Parsley](servers/parsley/) | productivity | 19 | API token | [servers/parsley/](servers/parsley/) |
 | [Placetel](servers/placetel/) | communications | 32 | API token | [servers/placetel/](servers/placetel/) |
+| [FinerWorks](servers/finerworks/) | ecommerce | 23 | API token | [servers/finerworks/](servers/finerworks/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
