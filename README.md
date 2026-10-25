@@ -423,6 +423,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [GoCanvas](servers/gocanvas/) | productivity | 27 | API token | [servers/gocanvas/](servers/gocanvas/) |
 | [Axis LMS](servers/axis-lms/) | productivity | 48 | API token | [servers/axis-lms/](servers/axis-lms/) |
 | [Bookingmood](servers/bookingmood/) | calendar | 25 | API token | [servers/bookingmood/](servers/bookingmood/) |
+| [Mail Blaze](servers/mailblaze/) | email | 30 | API token | [servers/mailblaze/](servers/mailblaze/) |
+| [Parsley](servers/parsley/) | productivity | 19 | API token | [servers/parsley/](servers/parsley/) |
+| [Placetel](servers/placetel/) | communications | 32 | API token | [servers/placetel/](servers/placetel/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

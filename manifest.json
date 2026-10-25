@@ -35053,7 +35053,7 @@
           "description": "Cancel the caller's FreeAgent Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run freeagent_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.13.0",
+      "version": "1.14.0",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -72229,6 +72229,618 @@
         "Which payments are still open and past their due date?",
         "Is the beach house free from 12 to 19 July for 4 guests, and at what price?",
         "Add a note to this booking: guests arrive late, key in the lockbox."
+      ]
+    },
+    {
+      "slug": "mailblaze",
+      "name": "Mail Blaze",
+      "category": "email",
+      "description": "Manage Mail Blaze lists, subscribers, templates, campaigns and reports; send transactional email.",
+      "endpoint": "https://mailblaze.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Mail Blaze API public key"
+          }
+        ],
+        "hint": "Find it in Mail Blaze → your **Profile menu → API Keys**: create a key and copy the **Public key**. The key acts with full access to your account; you can revoke it there at any time. Your key is used only to call the Mail Blaze API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "mailblaze_list_lists",
+          "type": "read",
+          "title": "List mailing lists",
+          "description": "List the account's mailing lists (name, uid, subscriber counts, defaults). Use the list uid in the other tools. Paged: page + per_page."
+        },
+        {
+          "name": "mailblaze_get_list",
+          "type": "read",
+          "title": "Get a mailing list",
+          "description": "Get one mailing list by its uid: general settings, default sender, company details and counts."
+        },
+        {
+          "name": "mailblaze_list_list_fields",
+          "type": "read",
+          "title": "List a list's custom fields",
+          "description": "List the fields of a mailing list (label, tag, type, required). The tags (EMAIL, FNAME, LNAME, custom ones) are the keys used when adding or updating subscribers."
+        },
+        {
+          "name": "mailblaze_list_segments",
+          "type": "read",
+          "title": "List a list's segments",
+          "description": "List the segments defined on a mailing list (uid, name). A segment uid can be used when creating a campaign."
+        },
+        {
+          "name": "mailblaze_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List the subscribers of a mailing list (sets of 10 per page; use page to go on). Contains personal data (emails, names)."
+        },
+        {
+          "name": "mailblaze_get_subscriber",
+          "type": "read",
+          "title": "Get a subscriber",
+          "description": "Get one subscriber of a list by subscriber uid (status, fields, dates)."
+        },
+        {
+          "name": "mailblaze_find_subscriber_by_email",
+          "type": "read",
+          "title": "Find a subscriber by email",
+          "description": "Look up a subscriber in one list by email address. Returns the subscriber (with its uid) or a not-found error."
+        },
+        {
+          "name": "mailblaze_add_subscriber",
+          "type": "write",
+          "title": "Add a subscriber",
+          "description": "WRITE, MAY SEND A CONFIRMATION EMAIL: add one subscriber to a mailing list. Depending on the list's settings Mail Blaze may send the person a confirmation (double opt-in) email. Only add people who agreed to receive your email. An email that is already on the list answers with a conflict error."
+        },
+        {
+          "name": "mailblaze_add_subscribers_bulk",
+          "type": "write",
+          "title": "Add or update subscribers in bulk",
+          "description": "WRITE, MAY SEND CONFIRMATION EMAILS: add up to 100 subscribers to a mailing list in one request; an email already on the list is updated instead. Depending on the list's settings Mail Blaze may send confirmation emails. Only add people who agreed to receive your email."
+        },
+        {
+          "name": "mailblaze_update_subscriber",
+          "type": "write",
+          "title": "Update a subscriber",
+          "description": "WRITE: update a subscriber's name or custom fields. Pass the subscriber's current email (Mail Blaze requires it) plus only the values to change. Does not change subscription status."
+        },
+        {
+          "name": "mailblaze_unsubscribe_subscriber",
+          "type": "write",
+          "title": "Unsubscribe a subscriber",
+          "description": "WRITE: set a subscriber's status to unsubscribed so they receive no more campaigns from this list. By default Mail Blaze also adds the address to the account's local blacklist. Do this only when the person asked to stop (or a data-protection request requires it). The subscriber record is kept."
+        },
+        {
+          "name": "mailblaze_resubscribe_subscriber",
+          "type": "write",
+          "title": "Resubscribe a subscriber",
+          "description": "WRITE: set a previously unsubscribed subscriber back to subscribed so campaigns reach them again. Only do this when the person asked to be re-added (consent)."
+        },
+        {
+          "name": "mailblaze_list_templates",
+          "type": "read",
+          "title": "List email templates",
+          "description": "List the account's email templates (uid, name). A template uid is needed to create a campaign."
+        },
+        {
+          "name": "mailblaze_get_template",
+          "type": "read",
+          "title": "Get an email template",
+          "description": "Get one email template by uid (name and content)."
+        },
+        {
+          "name": "mailblaze_create_template",
+          "type": "write",
+          "title": "Create an email template",
+          "description": "WRITE: create an email template from HTML (the tool base64-encodes it). Mail Blaze requires the HTML to contain an unsubscribe link. Sends nothing."
+        },
+        {
+          "name": "mailblaze_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List the account's email campaigns (uid, name, status, dates). Use the campaign uid for details and reports."
+        },
+        {
+          "name": "mailblaze_get_campaign",
+          "type": "read",
+          "title": "Get a campaign",
+          "description": "Get one campaign by uid: sender, subject, list, template, status and schedule."
+        },
+        {
+          "name": "mailblaze_create_campaign",
+          "type": "write",
+          "title": "Create and schedule a campaign",
+          "description": "WRITE, SENDS EMAIL TO PEOPLE: create a campaign for a mailing list (or one of its segments) from an existing template and schedule it for send_at. Once it goes out it reaches every subscriber of the list or segment, may use sending credit and cannot be recalled. Confirm the list, segment, subject, template and send time with the user before calling. Needs a template uid (mailblaze_list_templates) and a list uid (mailblaze_list_lists)."
+        },
+        {
+          "name": "mailblaze_get_campaign_summaries",
+          "type": "read",
+          "title": "Get campaign report summaries",
+          "description": "Bulk report summary (sent, opens, clicks, bounces, unsubscribes) for up to 50 campaigns in one call. Read-only (it is a POST in the API only because of the id list)."
+        },
+        {
+          "name": "mailblaze_get_campaign_inbox_breakdown",
+          "type": "read",
+          "title": "Get a campaign's inbox breakdown",
+          "description": "Inbox-provider breakdown (e.g. Gmail, Outlook, Yahoo) of a campaign's delivery."
+        },
+        {
+          "name": "mailblaze_list_campaign_events",
+          "type": "read",
+          "title": "List a campaign's opens, clicks, bounces or unsubscribes",
+          "description": "List the individual events of a campaign by kind: opens, clicks, bounces or unsubscribes. Cursor-paged: pass the reply's next_cursor back until it is null. For very large campaigns Mail Blaze answers 202 with a job_id; check it with mailblaze_get_report_job."
+        },
+        {
+          "name": "mailblaze_get_subscriber_activity",
+          "type": "read",
+          "title": "Get a subscriber's activity",
+          "description": "Email activity (sends, opens, clicks, bounces) of one subscriber by email address, optionally limited to one list. Cursor-paged."
+        },
+        {
+          "name": "mailblaze_get_report_job",
+          "type": "read",
+          "title": "Get a report job's status",
+          "description": "Status (and result when finished) of an asynchronous report job, as returned in a 202 reply with a job_id."
+        },
+        {
+          "name": "mailblaze_list_transactional_emails",
+          "type": "read",
+          "title": "List transactional emails",
+          "description": "List the transactional emails sent through the account (uid, recipient, subject, status). Paged."
+        },
+        {
+          "name": "mailblaze_get_transactional_email",
+          "type": "read",
+          "title": "Get a transactional email",
+          "description": "Get one transactional email by uid: recipient, subject, status and timestamps."
+        },
+        {
+          "name": "mailblaze_send_transactional_email",
+          "type": "write",
+          "title": "Send a transactional email",
+          "description": "WRITE, SENDS ONE EMAIL NOW: send a single one-to-one email to one recipient through Mail Blaze. It leaves immediately, uses sending credit and cannot be recalled. Give either html (the body) or template_id (a transactional template, with merge_tags covering every tag in it), not both. Confirm the recipient and content with the user before calling. Not for bulk or marketing mail; use a campaign for that."
+        },
+        {
+          "name": "mailblaze_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mailblaze_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MailBlaze tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mailblaze_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on MailBlaze (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mailblaze_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MailBlaze Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mailblaze_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many subscribers are on each of my mailing lists?",
+        "Show the open and click rates of my last five campaigns.",
+        "Add jane@example.com to my newsletter list as Jane Smith.",
+        "Is anna@example.com subscribed, and what did she open recently?"
+      ]
+    },
+    {
+      "slug": "parsley",
+      "name": "Parsley",
+      "category": "productivity",
+      "description": "Read Parsley menu items, nutrition, allergens, ingredients and events; record event sales and waste.",
+      "endpoint": "https://parsley.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Parsley API key"
+          }
+        ],
+        "hint": "Generate an API key in your **Parsley account** (the Open API is switched on per account; if you do not see API keys, ask Parsley support at devel@parsleyapp.com). The key acts with the permissions of the user who created it. Your key is used only to call the Parsley API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "parsley_list_menu_items",
+          "type": "read",
+          "title": "List menu items",
+          "description": "List the recipes, sub-recipes and ingredients in the Parsley account that can be used on events: id, name, item number, price, tags, active flag, chef and last-modified time. Use the ids with parsley_get_menu_item for nutrition, allergens and ingredients, and on events. The API returns the whole list at once; search/limit/offset slice it here. GET /menu_items."
+        },
+        {
+          "name": "parsley_get_menu_item",
+          "type": "read",
+          "title": "Get menu item (nutrition, allergens, ingredients)",
+          "description": "One menu item in full: names, description, price, cost, shelf life, serving size, nutrition facts (nutrients), the allergen flags and allergen text, dietary characteristics (meat, pork, corn, poultry) and the ingredient list. The photo link is returned without its access token. GET /menu_items/{id}."
+        },
+        {
+          "name": "parsley_list_menus",
+          "type": "read",
+          "title": "List menus",
+          "description": "List the menus (menu plans) in the account: id, name and last-modified time. Use the id with parsley_get_menu or when creating an event. GET /menus."
+        },
+        {
+          "name": "parsley_get_menu",
+          "type": "read",
+          "title": "Get menu",
+          "description": "One menu with its sections and the menu items in each section, and its serving stations. GET /menus/{id}."
+        },
+        {
+          "name": "parsley_list_ingredients",
+          "type": "read",
+          "title": "List ingredients",
+          "description": "List the ingredients that can be used in recipes: id, parent id, name, label name, item number, supported units, and whether a recipe uses it. The API returns the whole list at once; search/limit/offset slice it here. GET /ingredients."
+        },
+        {
+          "name": "parsley_get_ingredient",
+          "type": "read",
+          "title": "Get ingredient (costing and suppliers)",
+          "description": "One ingredient in full: unit conversions, supported units, tags, the supply options (supplier, SKU, pack size, cost) used for costing and the preparations with yield. Parsley limits this call to 1 request every 3 seconds, so fetch ingredients one at a time. GET /ingredients/{id}."
+        },
+        {
+          "name": "parsley_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events (a workday, shift, service or catering event) that fall in a date window: id, name, type (standard, cafe-hot-bar, sale, forecast), date, start and end time, menu id. A bare date means the whole day in the account timezone. GET /events."
+        },
+        {
+          "name": "parsley_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event with its metadata and all line items (menu item, amount, unit, station, section). GET /events/{id}."
+        },
+        {
+          "name": "parsley_list_serving_stations",
+          "type": "read",
+          "title": "List serving stations",
+          "description": "List the serving stations (id, name) that menu items and event line items can be assigned to. GET /tags/serving_stations."
+        },
+        {
+          "name": "parsley_list_chef_tags",
+          "type": "read",
+          "title": "List chef tags",
+          "description": "List the chef tags (id, name) that recipes are attributed to. Only meaningful for accounts with Chef IDs enabled. GET /tags/chefs."
+        },
+        {
+          "name": "parsley_list_chef_users",
+          "type": "read",
+          "title": "List chef users",
+          "description": "List the chef users of the account: id, email, join date, active flag, permission level and the chef tag they are tied to. Only meaningful for accounts with Chef IDs enabled. GET /users/chefs."
+        },
+        {
+          "name": "parsley_create_event",
+          "type": "write",
+          "title": "Create event",
+          "description": "WRITE: create an event (a workday, shift, service or catering event) in Parsley with its menu items. This changes the account's production plan and is NOT idempotent: calling it twice creates two events. Returns the new event id. Use parsley_list_events first to avoid duplicates. POST /events."
+        },
+        {
+          "name": "parsley_update_event_covers",
+          "type": "write",
+          "title": "Update event covers",
+          "description": "WRITE: set the forecast and/or actual number of covers (guests served) on an event. Only the fields you pass change. actual_covers works only on cafe/hot bar events. Setting the same values again has no further effect. PATCH /events/{id}."
+        },
+        {
+          "name": "parsley_record_event_sales",
+          "type": "write",
+          "title": "Record event sales",
+          "description": "WRITE: push sold quantities per menu item to a cafe/hot bar event, which feeds Parsley's cost and usage reports. Other event types are refused by Parsley, as is a menu item with no made quantity on the event. Sending the same quantities again overwrites rather than adds. PUT /events/{id}/sales."
+        },
+        {
+          "name": "parsley_record_waste_leftover",
+          "type": "write",
+          "title": "Record waste and leftover",
+          "description": "WRITE: push waste and/or leftover quantities per menu item to a cafe/hot bar event. If no sold quantity exists, Parsley derives it as made minus waste minus leftover. Parsley refuses amounts above what was made minus sold. Sending the same quantities again overwrites rather than adds. PUT /events/{id}/waste_leftover."
+        },
+        {
+          "name": "parsley_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "parsley_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Parsley tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "parsley_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Parsley (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "parsley_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Parsley Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run parsley_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our recipes contain peanuts or tree nuts?",
+        "Show the nutrition facts and ingredient list for the lemon chicken.",
+        "What events are on the calendar next week and which menu does each use?",
+        "Record 12 portions sold and 2 wasted of the soup of the day on today's cafe event."
+      ]
+    },
+    {
+      "slug": "placetel",
+      "name": "Placetel",
+      "category": "communications",
+      "description": "Read Placetel calls, recordings, numbers and routing; edit contacts, start calls, send SMS.",
+      "endpoint": "https://placetel.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Placetel API key"
+          }
+        ],
+        "hint": "Find it in Placetel at **Integrations → Web API** (web.placetel.de/integrations/web_api); an API v1 key works too. The key acts with your account's permissions. Your key is used only to call the Placetel API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "placetel_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Placetel account this API key belongs to: user id, name, email, company, platform (e.g. PROFI), primary SIP user id and the numbers the key may use. GET /me."
+        },
+        {
+          "name": "placetel_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the web users of the account (main account and sub-users) with name, email, login, type, permissions and numbers. Filter by name, email, login or type. GET /users."
+        },
+        {
+          "name": "placetel_list_sip_users",
+          "type": "read",
+          "title": "List SIP users (extensions)",
+          "description": "List SIP users (phone extensions, softphones, fax and trunk lines) with extension number (did), caller id, type, online state and registrations. SIP passwords and PINs are never returned. GET /sip_users."
+        },
+        {
+          "name": "placetel_get_sip_user",
+          "type": "read",
+          "title": "Get SIP user",
+          "description": "One SIP user (extension) by id: sipuid, extension, caller id, type, linked web user, online state and call settings. The SIP password and PINs are never returned. GET /sip_users/{id}."
+        },
+        {
+          "name": "placetel_list_calls",
+          "type": "read",
+          "title": "List incoming calls",
+          "description": "Incoming calls (accepted, missed, blocked, voicemail) on one day, today by default: caller number, called number, duration, matching contact, voicemail file URL and unread flag. For a different day pass date. GET /calls."
+        },
+        {
+          "name": "placetel_get_call",
+          "type": "read",
+          "title": "Get call",
+          "description": "One incoming call by id: caller, called number, type, duration, contact, voicemail file URL. GET /calls/{id}."
+        },
+        {
+          "name": "placetel_list_call_detail_records",
+          "type": "read",
+          "title": "List call detail records",
+          "description": "Call detail records (billing view) for one day: from, to, answering SIP user, length in seconds, cost amount and description. date is required. GET /call_detail_records."
+        },
+        {
+          "name": "placetel_list_recordings",
+          "type": "read",
+          "title": "List call recordings",
+          "description": "Call recordings with direction, from, to, duration, time and the file URL. Filter by direction, number or day. GET /recordings."
+        },
+        {
+          "name": "placetel_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the shared phone-book contacts with names, company, phone/mobile/fax numbers, emails, tags and blocked flag. Filter by name, company, email, number or update time. search_number finds a contact by any of its numbers. GET /contacts."
+        },
+        {
+          "name": "placetel_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id with all its fields. GET /contacts/{id}."
+        },
+        {
+          "name": "placetel_list_numbers",
+          "type": "read",
+          "title": "List phone numbers",
+          "description": "List the phone numbers of the account with number, E.164 form, name, description, site, activation state and the routing object id that answers them. GET /numbers."
+        },
+        {
+          "name": "placetel_get_number",
+          "type": "read",
+          "title": "Get phone number",
+          "description": "One phone number by id: number, E.164, name, site, carrier, activation state and routing id. GET /numbers/{id}."
+        },
+        {
+          "name": "placetel_list_number_profiles",
+          "type": "read",
+          "title": "List number profiles",
+          "description": "The routing profiles of a phone number (for example Standard, Holiday, Night) and which one is active. Needs a Placetel plan with number profiles. GET /numbers/{number_id}/profiles."
+        },
+        {
+          "name": "placetel_list_routings",
+          "type": "read",
+          "title": "List routings",
+          "description": "List routing objects (what happens to an incoming call: forward, group, routing plan, IVR, queue, voicemail, API) with their settings and time settings. Filter by update time. GET /routings."
+        },
+        {
+          "name": "placetel_get_routing",
+          "type": "read",
+          "title": "Get routing",
+          "description": "One routing object by its id or by the phone number it answers. GET /routings/{number_or_id}."
+        },
+        {
+          "name": "placetel_list_routing_plans",
+          "type": "read",
+          "title": "List routing plans",
+          "description": "List routing plans (time-based call distribution plans) with name, description, ring duration and object counts. GET /routing_plans."
+        },
+        {
+          "name": "placetel_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List ring groups (ring_all, hunt, monitoring) with members. Filter by name, description or type. GET /groups."
+        },
+        {
+          "name": "placetel_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List company sites (locations) with address and prefix. GET /sites."
+        },
+        {
+          "name": "placetel_list_faxes",
+          "type": "read",
+          "title": "List faxes",
+          "description": "In- and outbound faxes with from/to number, status, pages, duration, type and the file URL. Filter by direction or number. GET /faxes."
+        },
+        {
+          "name": "placetel_get_fax",
+          "type": "read",
+          "title": "Get fax",
+          "description": "One fax by id: numbers, status, status info, pages, retries, report and file URL. GET /faxes/{id}."
+        },
+        {
+          "name": "placetel_list_call_center_queues",
+          "type": "read",
+          "title": "List call center queues",
+          "description": "List call-center queues with name, ring time, loops and prompts. Use the ids to filter call-center calls. GET /call_center_queues."
+        },
+        {
+          "name": "placetel_list_call_center_agents",
+          "type": "read",
+          "title": "List call center agents",
+          "description": "List call-center agents with name, status, extension, priority and last call time. GET /call_center_agents."
+        },
+        {
+          "name": "placetel_list_call_center_calls",
+          "type": "read",
+          "title": "List call center calls",
+          "description": "Call-center calls of one day with queue, agent, from/to, answer status, start/end time and time spent in queue. date is required; narrow to queues with queue_ids. GET /call_center_calls."
+        },
+        {
+          "name": "placetel_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a contact in the shared Placetel phone book. Give at least a name, company or number. Nothing is sent to the contact. POST /contacts."
+        },
+        {
+          "name": "placetel_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: update the given fields of a contact (omitted fields stay; an empty string clears a text field). tags replaces the whole tag list; blocked=true blocks the caller. PUT /contacts/{id}."
+        },
+        {
+          "name": "placetel_activate_number_profile",
+          "type": "write",
+          "title": "Activate number profile",
+          "description": "WRITE: switch the active routing profile of a phone number (for example to Holiday or Night). This changes LIVE call handling for that number immediately: callers are routed differently. Find ids with placetel_list_number_profiles. PUT /numbers/{number_id}/profiles."
+        },
+        {
+          "name": "placetel_initiate_call",
+          "type": "write",
+          "title": "Initiate call",
+          "description": "WRITE: start a real phone call. Placetel rings the given SIP user's phone first and, once answered, dials the target number. This places an actual call and call charges apply. Do not use without the user's explicit request. POST /calls."
+        },
+        {
+          "name": "placetel_send_sms",
+          "type": "write",
+          "title": "Send SMS",
+          "description": "WRITE: send a real SMS to a phone number from the Placetel account. The recipient receives it immediately and SMS charges apply; it cannot be recalled. Do not use without the user's explicit request and exact text. POST /sms."
+        },
+        {
+          "name": "placetel_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "placetel_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Placetel tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "placetel_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Placetel (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "placetel_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Placetel Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run placetel_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which calls did we miss today, and who called?",
+        "Show the call detail records for yesterday.",
+        "Which of our phone numbers use which routing, and who is in the sales ring group?",
+        "Add a contact for Anna Schmidt at Muster GmbH, mobile +4915112345678."
       ]
     }
   ]
