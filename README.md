@@ -428,6 +428,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Placetel](servers/placetel/) | communications | 32 | API token | [servers/placetel/](servers/placetel/) |
 | [FinerWorks](servers/finerworks/) | ecommerce | 23 | API token | [servers/finerworks/](servers/finerworks/) |
 | [Sakari](servers/sakari/) | communications | 27 | API token | [servers/sakari/](servers/sakari/) |
+| [Funraise](servers/funraise/) | fundraising | 32 | API token | [servers/funraise/](servers/funraise/) |
+| [Hiveage](servers/hiveage/) | billing | 32 | API token | [servers/hiveage/](servers/hiveage/) |
+| [iContact](servers/icontact/) | marketing | 24 | API token | [servers/icontact/](servers/icontact/) |
+| [Freshsales](servers/freshsales/) | crm | 35 | API token | [servers/freshsales/](servers/freshsales/) |
+| [Hiboutik](servers/hiboutik/) | ecommerce | 35 | API token | [servers/hiboutik/](servers/hiboutik/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

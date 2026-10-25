@@ -73235,6 +73235,1186 @@
           "description": "Cancel the caller's Sakari Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sakari_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "funraise",
+      "name": "Funraise",
+      "category": "fundraising",
+      "description": "Read Funraise supporters, donations, recurring gifts and forms; add notes, tasks and supporters.",
+      "endpoint": "https://funraise.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Funraise API key"
+          }
+        ],
+        "hint": "Create it in Funraise under **Settings → API Keys** (the API is included in paid plans; the base plan allows 3,000 requests a month). Your key is used only to call the Funraise API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "funraise_list_supporters",
+          "type": "read",
+          "title": "List supporters",
+          "description": "List supporters (donors) in the Funraise CRM, newest first as Funraise returns them. Filter by exact email or by records changed in the last N hours. GET /api/v1/crm/supporter."
+        },
+        {
+          "name": "funraise_get_supporter",
+          "type": "read",
+          "title": "Get supporter",
+          "description": "One supporter: name, email, phone, tags, opt-ins, household, primary address, institution. GET /api/v1/crm/supporter/{id}."
+        },
+        {
+          "name": "funraise_list_donations",
+          "type": "read",
+          "title": "List donations",
+          "description": "List donations (transactions) with amount, date, supporter, form, campaign page, allocation, fees and tags. Filter by an exact transactionId, by last N hours, or by a lastUpdated timestamp; use last_id to continue from the last donation id of the previous page. GET /api/v1/crm/donation."
+        },
+        {
+          "name": "funraise_get_donation",
+          "type": "read",
+          "title": "Get donation",
+          "description": "One donation by its Funraise id: amount, date, supporter, household, form, allocation, dedication, fees, UTM, subscription. GET /api/v1/crm/donation/{id}."
+        },
+        {
+          "name": "funraise_list_subscriptions",
+          "type": "read",
+          "title": "List recurring subscriptions",
+          "description": "List recurring gifts (subscriptions) with status, frequency, amount, next payment date and supporter. The q filter is a Funraise expression (Funraise requires it; default: id > 0 order by id asc), for example: id > 10 and status = \"Cancelled\" order by id asc. GET /api/v1/crm/subscription."
+        },
+        {
+          "name": "funraise_get_subscription",
+          "type": "read",
+          "title": "Get recurring subscription",
+          "description": "One recurring gift by id: status, frequency, amount, last and next payment date, cancel date, supporter. GET /api/v1/crm/subscription/{id}."
+        },
+        {
+          "name": "funraise_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List donation and event forms, filtered by type, status and version. Needs the CREATOR role on the key. GET /api/v1/form."
+        },
+        {
+          "name": "funraise_list_campaign_sites",
+          "type": "read",
+          "title": "List campaign sites",
+          "description": "List campaign sites (fundraising pages), active by default or archived. Returns campaignSites with totalPageCount and totalRowCount. GET /api/v1/campaignSite/active or /archived."
+        },
+        {
+          "name": "funraise_get_campaign_site",
+          "type": "read",
+          "title": "Get campaign site",
+          "description": "One campaign site by UUID: configuration preview (payment options, goals, form, homepage, fundraiser settings). GET /api/v1/campaignSite/{uuid}."
+        },
+        {
+          "name": "funraise_list_form_custom_questions",
+          "type": "read",
+          "title": "List form custom questions",
+          "description": "The custom questions attached to a form. GET /api/v2/form/{formId}/custom-question."
+        },
+        {
+          "name": "funraise_get_household",
+          "type": "read",
+          "title": "Get household",
+          "description": "One household: name, salutation, member count, primary contact, preferred address, total giving. GET /api/v1/household/{householdId}."
+        },
+        {
+          "name": "funraise_get_household_member",
+          "type": "read",
+          "title": "Get household of a supporter",
+          "description": "The household membership of a supporter (household and supporter details). GET /api/v1/household/member/{supporterId}."
+        },
+        {
+          "name": "funraise_list_household_addresses",
+          "type": "read",
+          "title": "List household addresses",
+          "description": "Addresses of a household (paginated: list, page, pageSize, totalPageCount, totalRowCount). GET /api/v1/household/{householdId}/address."
+        },
+        {
+          "name": "funraise_list_supporter_addresses",
+          "type": "read",
+          "title": "List supporter addresses",
+          "description": "Addresses of a supporter (paginated). GET /api/v1/supporter/{supporterId}/address."
+        },
+        {
+          "name": "funraise_get_address",
+          "type": "read",
+          "title": "Get address",
+          "description": "One address by id (street, city, state, postal code, country, primary flag, household and supporter). GET /api/v1/address/{addressId}."
+        },
+        {
+          "name": "funraise_list_supporter_notes",
+          "type": "read",
+          "title": "List supporter notes",
+          "description": "Notes on a supporter's record (paginated). GET /api/v2/supporter/{id}/note."
+        },
+        {
+          "name": "funraise_list_household_notes",
+          "type": "read",
+          "title": "List household notes",
+          "description": "Notes on a household's record (paginated). GET /api/v2/household/{id}/note."
+        },
+        {
+          "name": "funraise_get_note",
+          "type": "read",
+          "title": "Get note",
+          "description": "One note by id, with title, body, importance and author. GET /api/v2/note/{id}."
+        },
+        {
+          "name": "funraise_list_supporter_interactions",
+          "type": "read",
+          "title": "List supporter interactions",
+          "description": "The interaction log of a supporter (calls, emails, meetings): subject, description, action, assigned user, dates. GET /api/v1/interaction/donor/{donorId}."
+        },
+        {
+          "name": "funraise_list_user_interactions",
+          "type": "read",
+          "title": "List interactions assigned to a user",
+          "description": "Interactions assigned to a Funraise user (staff member). GET /api/v1/interaction/user/{userId}."
+        },
+        {
+          "name": "funraise_get_interaction",
+          "type": "read",
+          "title": "Get interaction",
+          "description": "One interaction by id. GET /api/v1/interaction/{id}."
+        },
+        {
+          "name": "funraise_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id: title, description, due date, status, assigned user, supporter, linked donation. GET /api/v2/task/{id}."
+        },
+        {
+          "name": "funraise_create_supporter_note",
+          "type": "write",
+          "title": "Add a note to a supporter",
+          "description": "WRITE: add a note to a supporter's record in Funraise. Creates a new note each call. POST /api/v2/supporter/{id}/note."
+        },
+        {
+          "name": "funraise_create_household_note",
+          "type": "write",
+          "title": "Add a note to a household",
+          "description": "WRITE: add a note to a household's record in Funraise. Creates a new note each call. POST /api/v2/household/{id}/note."
+        },
+        {
+          "name": "funraise_create_interaction",
+          "type": "write",
+          "title": "Log an interaction",
+          "description": "WRITE: log an interaction (call, email, meeting) on a supporter's record. Creates a new interaction each call. POST /api/v1/interaction."
+        },
+        {
+          "name": "funraise_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: create a task in Funraise, linked to a supporter or to a donation (give at least one). Title is 40 characters at most. Creates a new task each call. POST /api/v2/task."
+        },
+        {
+          "name": "funraise_complete_task",
+          "type": "write",
+          "title": "Complete a task",
+          "description": "WRITE: mark a task complete (sets the completed date to now; Funraise may also log an interaction if the task automation says so). PUT /api/v1/task/{id}/complete."
+        },
+        {
+          "name": "funraise_create_supporter",
+          "type": "write",
+          "title": "Create a supporter",
+          "description": "WRITE: create a supporter (donor) record in Funraise. Creates a new record each call, so search with funraise_list_supporters (email) first to avoid duplicates. POST /api/v1/crm/supporter."
+        },
+        {
+          "name": "funraise_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "funraise_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Funraise tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "funraise_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Funraise (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "funraise_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Funraise Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run funraise_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who donated in the last 24 hours and how much?",
+        "Show every active monthly subscription with its next payment date.",
+        "Find the supporter with email jane@example.org and list her notes and interactions.",
+        "Create a follow-up task for supporter 1234: thank them for their gift, due Friday."
+      ]
+    },
+    {
+      "slug": "hiveage",
+      "name": "Hiveage",
+      "category": "billing",
+      "description": "Manage Hiveage clients, invoices, estimates and payments; send invoices and record payments.",
+      "endpoint": "https://hiveage.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hiveage subdomain"
+          },
+          {
+            "label": "Hiveage API key"
+          }
+        ],
+        "hint": "Your subdomain is the part before **.hiveage.com** in your account address. Find the API key in Hiveage **Launchpad > Your Global Profile**; it acts with your own permissions. Your key is used only to call the Hiveage API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hiveage_list_connections",
+          "type": "read",
+          "title": "List connections",
+          "description": "List connections: the companies, clients and vendors in the account's network, sorted by name. Each has a hash_key (used by other tools) and a numeric id (used as connection_id when creating invoices). Hiveage: GET /network."
+        },
+        {
+          "name": "hiveage_get_connection",
+          "type": "read",
+          "title": "Get connection",
+          "description": "Get one connection (client, vendor or company) by hash_key. Hiveage: GET /network/{hash_key}."
+        },
+        {
+          "name": "hiveage_list_connection_invoices",
+          "type": "read",
+          "title": "List a connection's invoices",
+          "description": "List the invoices of one connection (client), by date. Hiveage: GET /network/{hash_key}/invoices."
+        },
+        {
+          "name": "hiveage_list_connection_estimates",
+          "type": "read",
+          "title": "List a connection's estimates",
+          "description": "List the estimates of one connection (client). Hiveage: GET /network/{hash_key}/estimates."
+        },
+        {
+          "name": "hiveage_list_connection_recurring_invoices",
+          "type": "read",
+          "title": "List a connection's recurring invoices",
+          "description": "List the recurring invoice profiles of one connection (client). Hiveage: GET /network/{hash_key}/recurring_invoices."
+        },
+        {
+          "name": "hiveage_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the contacts (people with an email address for sending statements) of a connection. Hiveage: GET /network/{hash_key}/contacts."
+        },
+        {
+          "name": "hiveage_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one contact of a connection by its numeric id. Hiveage: GET /network/{hash_key}/contacts/{id}."
+        },
+        {
+          "name": "hiveage_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices (state draft, viewed, sent, paid or partial) with totals, sorted by date. Hiveage: GET /invs."
+        },
+        {
+          "name": "hiveage_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one invoice by hash_key, with its line items, taxes, discounts and shipping. Hiveage: GET /invs/{hash_key}."
+        },
+        {
+          "name": "hiveage_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates (quotes), sorted by date. Hiveage: GET /estm."
+        },
+        {
+          "name": "hiveage_get_estimate",
+          "type": "read",
+          "title": "Get estimate",
+          "description": "Get one estimate by hash_key, with its line items. Hiveage: GET /estm/{hash_key}."
+        },
+        {
+          "name": "hiveage_list_recurring_invoices",
+          "type": "read",
+          "title": "List recurring invoices",
+          "description": "List recurring invoice profiles (interval, next billing date, occurrences). Hiveage: GET /rinv."
+        },
+        {
+          "name": "hiveage_get_recurring_invoice",
+          "type": "read",
+          "title": "Get recurring invoice",
+          "description": "Get one recurring invoice profile by hash_key. Hiveage: GET /rinv/{hash_key}."
+        },
+        {
+          "name": "hiveage_list_recurring_invoice_invoices",
+          "type": "read",
+          "title": "List invoices generated by a recurring invoice",
+          "description": "List the invoices a recurring invoice profile has generated. Hiveage: GET /rinv/{hash_key}/invoices."
+        },
+        {
+          "name": "hiveage_list_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments entered on an invoice. Hiveage: GET /invs/{hash_key}/payments."
+        },
+        {
+          "name": "hiveage_get_payment",
+          "type": "read",
+          "title": "Get payment",
+          "description": "Get one payment of an invoice by its numeric id. Hiveage: GET /invs/{hash_key}/payments/{id}."
+        },
+        {
+          "name": "hiveage_list_categories",
+          "type": "read",
+          "title": "List saved items, expense, task or trip categories",
+          "description": "List the saved line-item templates: kind items (saved items with price and unit), expenses, tasks (with rate) or trips (with rate). Hiveage: GET /categories/{kind}."
+        },
+        {
+          "name": "hiveage_create_connection",
+          "type": "write",
+          "title": "Create connection",
+          "description": "WRITE: create a new connection (client, vendor or company) in the account. For an organization give `name`; for an individual give first_name and last_name. Hiveage: POST /network."
+        },
+        {
+          "name": "hiveage_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: add a contact (name and email, used when sending statements) to a connection. Hiveage: POST /network/{hash_key}/contacts."
+        },
+        {
+          "name": "hiveage_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of a contact (only the fields you pass are sent). Hiveage: PUT /network/{hash_key}/contacts/{id}."
+        },
+        {
+          "name": "hiveage_create_invoice",
+          "type": "write",
+          "title": "Create invoice",
+          "description": "WRITE: create an invoice (starts as a draft; nothing is emailed) for a connection. statement_no must be unique. connection_id is the numeric `id` from hiveage_list_connections. Hiveage: POST /invs."
+        },
+        {
+          "name": "hiveage_create_estimate",
+          "type": "write",
+          "title": "Create estimate",
+          "description": "WRITE: create an estimate (quote; starts as a draft, nothing is emailed) for a connection. statement_no must be unique. Hiveage: POST /estm."
+        },
+        {
+          "name": "hiveage_record_payment",
+          "type": "write",
+          "title": "Record invoice payment",
+          "description": "WRITE: enter a payment received on an invoice (changes its paid and due totals). Offline payments (cash, check, bank_transfer) are saved as unrealized until marked realized. Hiveage: POST /invs/{hash_key}/payments."
+        },
+        {
+          "name": "hiveage_mark_payment_realized",
+          "type": "write",
+          "title": "Mark payment realized",
+          "description": "WRITE: mark an offline (unrealized) payment as realized, so it counts as received. Hiveage: POST /invs/{hash_key}/payments/{id}/mark_as_realized."
+        },
+        {
+          "name": "hiveage_create_saved_item",
+          "type": "write",
+          "title": "Create saved item",
+          "description": "WRITE: save a reusable line item (name, price, unit) for statements. Hiveage: POST /categories/items."
+        },
+        {
+          "name": "hiveage_send_invoice",
+          "type": "write",
+          "title": "Send invoice by email",
+          "description": "WRITE, SENDS EMAIL: email an invoice to the client (the default invoice template to the connection's contacts, or a custom recipient/subject/message). Cannot be undone. Hiveage: POST /invs/{hash_key}/deliver."
+        },
+        {
+          "name": "hiveage_send_invoice_reminder",
+          "type": "write",
+          "title": "Send invoice reminder by email",
+          "description": "WRITE, SENDS EMAIL: email a payment reminder for an invoice (default reminder template, or custom). Cannot be undone. Hiveage: POST /invs/{hash_key}/reminder."
+        },
+        {
+          "name": "hiveage_send_estimate",
+          "type": "write",
+          "title": "Send estimate by email",
+          "description": "WRITE, SENDS EMAIL: email an estimate to the client (default template, or custom). Cannot be undone. Hiveage: POST /estm/{hash_key}/deliver."
+        },
+        {
+          "name": "hiveage_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hiveage_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hiveage tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hiveage_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Hiveage (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hiveage_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hiveage Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hiveage_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are overdue or still unpaid, and what is the total outstanding?",
+        "Show all invoices and estimates for the client Acme Inc.",
+        "Record a $500 bank transfer payment on invoice IN-014.",
+        "Create a draft invoice for Acme Inc for 10 hours of consulting at $120."
+      ]
+    },
+    {
+      "slug": "icontact",
+      "name": "iContact",
+      "category": "marketing",
+      "description": "Read iContact contacts, lists, campaigns and message stats; add contacts and manage subscriptions.",
+      "endpoint": "https://icontact.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Application id (API-AppId)"
+          },
+          {
+            "label": "iContact username"
+          },
+          {
+            "label": "API password"
+          },
+          {
+            "label": "Client folder id (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "iContact API access needs an application id: register one in iContact's developer portal (help.icontact.com, search for \"API Developer Portal\") and set an API password for it. The API password is the one you choose for the application id, not your iContact login password. The username is the one you log in to iContact with. If your account has several client folders and you want one other than the first, enter its id. Your credentials are used only to call the iContact API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "icontact_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The iContact account behind the credentials (company name, address, plan fields) and its client folders, with the folder this server uses. GET /a/ and GET /a/{accountId}/c/."
+        },
+        {
+          "name": "icontact_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (email, name, address, phone, status, create date). Filter by status, exact email, first/last name or a list the contact belongs to. GET /contacts."
+        },
+        {
+          "name": "icontact_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id. GET /contacts/{contactId}."
+        },
+        {
+          "name": "icontact_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: add one contact to the account (it is not added to any list; use icontact_set_subscription for that). Not idempotent: an email that already exists is reported by iContact as a warning. POST /contacts."
+        },
+        {
+          "name": "icontact_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of one contact; only the fields you pass are sent. Setting status to donotcontact or deleted stops mail to that contact. POST /contacts/{contactId}."
+        },
+        {
+          "name": "icontact_list_lists",
+          "type": "read",
+          "title": "List mailing lists",
+          "description": "List the account's mailing lists (name, description, welcome-message settings). GET /lists."
+        },
+        {
+          "name": "icontact_get_list",
+          "type": "read",
+          "title": "Get mailing list",
+          "description": "One mailing list by id. GET /lists/{listId}."
+        },
+        {
+          "name": "icontact_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List list memberships (subscriptionId, contactId, listId, status). Filter by list, contact or status. GET /subscriptions."
+        },
+        {
+          "name": "icontact_set_subscription",
+          "type": "write",
+          "title": "Subscribe or unsubscribe contact",
+          "description": "WRITE: put a contact on a list (status normal, or pending to start double opt-in) or unsubscribe it (status unsubscribed). Only for contacts who agreed to receive mail. POST /subscriptions."
+        },
+        {
+          "name": "icontact_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns (the sender identity and settings that messages belong to). GET /campaigns."
+        },
+        {
+          "name": "icontact_get_campaign",
+          "type": "read",
+          "title": "Get campaign",
+          "description": "One campaign by id. GET /campaigns/{campaignId}."
+        },
+        {
+          "name": "icontact_list_messages",
+          "type": "read",
+          "title": "List messages",
+          "description": "List messages (subject, type, campaign, create date, HTML and text bodies). Filter by type or campaign. GET /messages."
+        },
+        {
+          "name": "icontact_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One message by id, with subject and HTML/text bodies. GET /messages/{messageId}."
+        },
+        {
+          "name": "icontact_get_message_statistics",
+          "type": "read",
+          "title": "Get message statistics",
+          "description": "Delivery statistics of a message (released, bounces, opens, clicks, unsubscribes, complaints, forwards). GET /messages/{messageId}/statistics."
+        },
+        {
+          "name": "icontact_list_message_activity",
+          "type": "read",
+          "title": "List message activity",
+          "description": "Who opened, clicked, bounced from or unsubscribed after a message: one page of events for one message. GET /messages/{messageId}/opens | clicks | bounces | unsubscribes."
+        },
+        {
+          "name": "icontact_list_sends",
+          "type": "read",
+          "title": "List sends",
+          "description": "List sends (a message sent to lists/segments: send id, message id, included/excluded lists, scheduled time, status). GET /sends."
+        },
+        {
+          "name": "icontact_get_send",
+          "type": "read",
+          "title": "Get send",
+          "description": "One send by id. GET /sends/{sendId}."
+        },
+        {
+          "name": "icontact_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List saved segments (rule-based groups of contacts). GET /segments."
+        },
+        {
+          "name": "icontact_get_segment",
+          "type": "read",
+          "title": "Get segment",
+          "description": "One segment by id. GET /segments/{segmentId}."
+        },
+        {
+          "name": "icontact_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the account's custom contact fields (name, type). GET /customfields."
+        },
+        {
+          "name": "icontact_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "icontact_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the iContact tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "icontact_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on iContact (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "icontact_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's iContact Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run icontact_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many contacts are on my newsletter list and how many unsubscribed?",
+        "Show the open and click statistics of my latest message.",
+        "Add jane@example.com to the Customers list.",
+        "Which contacts bounced from my last send?"
+      ]
+    },
+    {
+      "slug": "freshsales",
+      "name": "Freshsales",
+      "category": "crm",
+      "description": "Manage Freshsales contacts, accounts, deals, tasks and appointments; add notes.",
+      "endpoint": "https://freshsales.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Freshsales domain"
+          },
+          {
+            "label": "Freshsales API key"
+          }
+        ],
+        "hint": "Both are under your profile picture -> **Profile Settings -> API Settings**: the API key, and the **bundle alias** below it (for example acme.myfreshworks.com; accounts on freshworks.com or freshsales.io enter that host). The key acts with that user's permissions. Freshsales allows 1,000 API requests per hour per account, shared with your other integrations. Your key is used only to call the Freshsales API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "freshsales_list_contact_views",
+          "type": "read",
+          "title": "List contact views",
+          "description": "List the saved contact views (filters) of the account, e.g. 'My Contacts', 'New Contacts', 'All Contacts'. A view id is needed by freshsales_list_contacts; ids differ per account. GET /contacts/filters."
+        },
+        {
+          "name": "freshsales_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the contacts in a view (get view_id from freshsales_list_contact_views), 25 per page with name, email, phone numbers, job title, lead score, open deals amount and last contacted. Pages: use next_page. GET /contacts/view/{view_id}."
+        },
+        {
+          "name": "freshsales_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id with all its fields, optionally with related records embedded via include (notes, tasks, appointments, deals, sales_accounts, owner, sales_activities...). GET /contacts/{id}."
+        },
+        {
+          "name": "freshsales_search",
+          "type": "read",
+          "title": "Search records",
+          "description": "Search by name/email text across one record type: contact, sales_account (company), deal or user. Returns id, type, name and email for the matches (up to per_page, default 10). Use the id with the get tools. GET /search."
+        },
+        {
+          "name": "freshsales_lookup",
+          "type": "read",
+          "title": "Look up by exact field",
+          "description": "Exact-match lookup of contacts, companies or deals by one field, e.g. a contact by email address. field is 'email' (contacts), 'name', or a custom field name (cf_...). Returns the full records. GET /lookup."
+        },
+        {
+          "name": "freshsales_list_account_views",
+          "type": "read",
+          "title": "List account views",
+          "description": "List the saved account (company) views of the account, e.g. 'My Accounts'. A view id is needed by freshsales_list_accounts. GET /sales_accounts/filters."
+        },
+        {
+          "name": "freshsales_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List the accounts (companies) in a view (view_id from freshsales_list_account_views), 25 per page, with name, location, open deals amount and last contacted. GET /sales_accounts/view/{view_id}."
+        },
+        {
+          "name": "freshsales_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "One account (company) by id with its fields, optionally with related records embedded (contacts, deals, tasks, appointments, owner...). GET /sales_accounts/{id}."
+        },
+        {
+          "name": "freshsales_list_deal_views",
+          "type": "read",
+          "title": "List deal views",
+          "description": "List the saved deal views of the account, e.g. 'Open Deals'. A view id is needed by freshsales_list_deals. GET /deals/filters."
+        },
+        {
+          "name": "freshsales_list_deals",
+          "type": "read",
+          "title": "List deals",
+          "description": "List the deals in a view (view_id from freshsales_list_deal_views), 25 per page, with name, amount, expected close, probability and age. GET /deals/view/{view_id}."
+        },
+        {
+          "name": "freshsales_get_deal",
+          "type": "read",
+          "title": "Get deal",
+          "description": "One deal by id with amount, expected close, probability and ids of its stage, pipeline and owner, optionally with related records embedded (contacts, sales_account, deal_stage, owner, notes via sales_activities...). GET /deals/{id}."
+        },
+        {
+          "name": "freshsales_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks by status filter: open, due_today, due_tomorrow, overdue or completed (one filter per call). Returns title, due date, owner and status. GET /tasks."
+        },
+        {
+          "name": "freshsales_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id. GET /tasks/{id}."
+        },
+        {
+          "name": "freshsales_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments that are open (upcoming) or complete (one filter per call), with title, time, location and creator. GET /appointments."
+        },
+        {
+          "name": "freshsales_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "One appointment by id with its attendees. GET /appointments/{id}."
+        },
+        {
+          "name": "freshsales_list_sales_activities",
+          "type": "read",
+          "title": "List sales activities",
+          "description": "List logged sales activities (calls, meetings, emails...) of the account. GET /sales_activities."
+        },
+        {
+          "name": "freshsales_list_owners",
+          "type": "read",
+          "title": "List owners (users)",
+          "description": "List the users of the account (id and name). Use the id as owner_id when creating or updating records. GET /selector/owners."
+        },
+        {
+          "name": "freshsales_list_deal_pipelines",
+          "type": "read",
+          "title": "List deal pipelines",
+          "description": "List the deal pipelines (id, name). GET /selector/deal_pipelines."
+        },
+        {
+          "name": "freshsales_list_deal_stages",
+          "type": "read",
+          "title": "List deal stages",
+          "description": "List deal stages (id, name, deal_pipeline_id): those of the default pipeline, or of the pipeline given by pipeline_id. Use the id as deal_stage_id. GET /selector/deal_stages or /selector/deal_pipelines/{id}/deal_stages."
+        },
+        {
+          "name": "freshsales_list_options",
+          "type": "read",
+          "title": "List option values",
+          "description": "List the configured choices (id and name) for a field: lead_sources, contact_statuses, lifecycle_stages, deal_types, deal_reasons, deal_products, deal_payment_statuses, territories, currencies, industry_types, business_types, campaigns, sales_activity_types, sales_activity_outcomes. Use the ids in the *_id fields of the write tools. GET /selector/{kind}."
+        },
+        {
+          "name": "freshsales_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a contact. Freshsales requires an email or a mobile number. It may create a duplicate of an existing contact: search first (freshsales_lookup by email). POST /contacts."
+        },
+        {
+          "name": "freshsales_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of an existing contact; only the fields you pass are changed (passing sales_accounts replaces the associated companies). PUT /contacts/{id}."
+        },
+        {
+          "name": "freshsales_create_account",
+          "type": "write",
+          "title": "Create account",
+          "description": "WRITE: create an account (company). name is required. It may duplicate an existing company: search first (freshsales_search). POST /sales_accounts."
+        },
+        {
+          "name": "freshsales_update_account",
+          "type": "write",
+          "title": "Update account",
+          "description": "WRITE: change fields of an existing account (company); only the fields you pass are changed. PUT /sales_accounts/{id}."
+        },
+        {
+          "name": "freshsales_create_deal",
+          "type": "write",
+          "title": "Create deal",
+          "description": "WRITE: create a deal. name, amount and sales_account_id are required; contact_ids attach existing contacts. Stage and pipeline default to the first of the default pipeline. POST /deals."
+        },
+        {
+          "name": "freshsales_update_deal",
+          "type": "write",
+          "title": "Update deal",
+          "description": "WRITE: change fields of an existing deal, e.g. move it to another stage (deal_stage_id), change amount or expected close; only the fields you pass are changed. PUT /deals/{id}."
+        },
+        {
+          "name": "freshsales_create_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: add a note to a contact, account or deal. Visible to your team on the record. POST /notes."
+        },
+        {
+          "name": "freshsales_update_note",
+          "type": "write",
+          "title": "Update note",
+          "description": "WRITE: replace the text of an existing note. PUT /notes/{id}."
+        },
+        {
+          "name": "freshsales_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: create a task (to-do) attached to a contact, account or deal. title, due_date, owner_id and the target are required. POST /tasks."
+        },
+        {
+          "name": "freshsales_update_task",
+          "type": "write",
+          "title": "Update task",
+          "description": "WRITE: change a task: title, details, due date, owner, or mark it completed (status 1) or open (status 0). PUT /tasks/{id}."
+        },
+        {
+          "name": "freshsales_create_appointment",
+          "type": "write",
+          "title": "Create appointment",
+          "description": "WRITE: create an appointment (meeting) with a start and end, optionally attached to a contact, account or deal and with attendees. Attendees may be notified by Freshsales. POST /appointments."
+        },
+        {
+          "name": "freshsales_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "freshsales_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Freshsales tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "freshsales_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Freshsales (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "freshsales_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Freshsales Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run freshsales_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which deals are in my open-deals view, and which close this month?",
+        "Find the contact with the email jane@example.com and show her notes and open tasks.",
+        "Add a note to the Acme account: renewal call went well, send the quote Friday.",
+        "Create a task for tomorrow 9am to follow up with the contact Tom Reed."
+      ]
+    },
+    {
+      "slug": "hiboutik",
+      "name": "Hiboutik",
+      "category": "ecommerce",
+      "description": "Read Hiboutik products, stock, customers, sales and turnover; edit customers and sale comments.",
+      "endpoint": "https://hiboutik.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hiboutik account"
+          },
+          {
+            "label": "Hiboutik user email"
+          },
+          {
+            "label": "Hiboutik API key"
+          }
+        ],
+        "hint": "The account name is the first part of your back-office address (youraccount.hiboutik.com). The API key is in Hiboutik under **Settings > API**, for the user whose email you enter; it acts with that user's rights. Your key is used only to call the Hiboutik API on your behalf; it is never shown to anyone. The shop's Hiboutik API allowance (10,000 calls a month) is shared with your other apps."
+      },
+      "tools": [
+        {
+          "name": "hiboutik_list_stores",
+          "type": "read",
+          "title": "List stores",
+          "description": "List the shops (stores) of the account: id, name, warehouse id, currency, time zone, address. Use store ids for sales, payment types and reports. GET /stores."
+        },
+        {
+          "name": "hiboutik_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List warehouses (stock locations) with id and name. Use the ids for stock levels. GET /warehouses."
+        },
+        {
+          "name": "hiboutik_list_users",
+          "type": "read",
+          "title": "List users (vendors)",
+          "description": "List the Hiboutik users (staff, sales vendors): id, name, email, access level. The id is the vendor_id of a sale. Passwords and keys are never returned. GET /users."
+        },
+        {
+          "name": "hiboutik_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the tax (VAT) rates with id, name, value and default flag. GET /taxes."
+        },
+        {
+          "name": "hiboutik_list_payment_types",
+          "type": "read",
+          "title": "List payment types",
+          "description": "List the payment types enabled in a store (cash, card, cheque...) with currency and flags. GET /payment_types/{store_id}/."
+        },
+        {
+          "name": "hiboutik_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List product categories (newest id first) with parent id and flags. GET /categories."
+        },
+        {
+          "name": "hiboutik_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "List product brands (newest id first). GET /brands."
+        },
+        {
+          "name": "hiboutik_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List the suppliers with id, name and contact details. GET /suppliers/."
+        },
+        {
+          "name": "hiboutik_list_size_types",
+          "type": "read",
+          "title": "List variant types",
+          "description": "List the variant (size) types, such as clothing sizes or colours. Use an id with hiboutik_list_sizes. GET /size_types."
+        },
+        {
+          "name": "hiboutik_list_sizes",
+          "type": "read",
+          "title": "List variants of a type",
+          "description": "List the variants (sizes) of one variant type: size_id and name. The size_id identifies a variant of a product in stock and sales. GET /sizes/{size_type_id}."
+        },
+        {
+          "name": "hiboutik_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (default newest id first) with model, barcode, price, supply price, brand, category, supplier and stock management flag. 250 per page. GET /products/."
+        },
+        {
+          "name": "hiboutik_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product with its full details. GET /products/{product_id}."
+        },
+        {
+          "name": "hiboutik_search_products_by_name",
+          "type": "read",
+          "title": "Search products by name",
+          "description": "Find products whose model (name) matches the text. GET /products/search/name/{q}."
+        },
+        {
+          "name": "hiboutik_find_product_by_barcode",
+          "type": "read",
+          "title": "Find product by barcode",
+          "description": "Find the product (and variant) with this barcode. GET /products/search/barcode/{barcode}/."
+        },
+        {
+          "name": "hiboutik_search_products",
+          "type": "read",
+          "title": "Search products by filters",
+          "description": "Search products by model, category, brand, supplier, archived state, supplier or external reference. GET /products/search/."
+        },
+        {
+          "name": "hiboutik_stock_all_warehouses",
+          "type": "read",
+          "title": "Stock in all warehouses",
+          "description": "Available stock per product and variant across warehouses, optionally filtered by category, brand, supplier or archived state. GET /stock_available/all_wh."
+        },
+        {
+          "name": "hiboutik_stock_by_warehouse",
+          "type": "read",
+          "title": "Stock in one warehouse",
+          "description": "Available stock per product and variant in one warehouse, optionally filtered. GET /stock_available/warehouse_id/{warehouse_id}."
+        },
+        {
+          "name": "hiboutik_stock_by_product",
+          "type": "read",
+          "title": "Stock of one product",
+          "description": "Available stock of one product per variant and warehouse, with the inventory alert level. GET /stock_available/product_id/{product_id}."
+        },
+        {
+          "name": "hiboutik_list_stock_orders",
+          "type": "read",
+          "title": "List stock orders (inventory inputs)",
+          "description": "List the stock orders / goods receipts. GET /inventory_inputs/."
+        },
+        {
+          "name": "hiboutik_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (newest id first) with name, email, phone, country, loyalty points and store credit. Personal data of the shop's customers. GET /customers/."
+        },
+        {
+          "name": "hiboutik_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers by last name, first name, email, phone, VAT number, country, customer code or external reference (each text value needs at least 3 characters). Dates: yyyy-mm-dd, or prefix with > < >= <= to compare. GET /customers/search/."
+        },
+        {
+          "name": "hiboutik_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer with full details. GET /customer/{customers_id}."
+        },
+        {
+          "name": "hiboutik_list_customer_sales",
+          "type": "read",
+          "title": "List sales of a customer",
+          "description": "List the sales made to one customer (newest first). GET /customer/{customers_id}/sales/."
+        },
+        {
+          "name": "hiboutik_get_sale",
+          "type": "read",
+          "title": "Get sale",
+          "description": "One sale with its header, totals, payment and line items. GET /sales/{sale_id}."
+        },
+        {
+          "name": "hiboutik_list_open_sales",
+          "type": "read",
+          "title": "List open sales",
+          "description": "List the sales not yet closed in a store (newest first). GET /open_sales/{store_id}."
+        },
+        {
+          "name": "hiboutik_list_closed_sales",
+          "type": "read",
+          "title": "List closed sales",
+          "description": "List the closed (completed) sales of a store for one day, or for a whole month when day is omitted. GET /closed_sales/{store_id}/{year}/{month}[/{day}]."
+        },
+        {
+          "name": "hiboutik_report_turnover",
+          "type": "read",
+          "title": "Turnover report",
+          "description": "Sales total (turnover) of a store for one day, or per day for a whole month when day is omitted. GET /reports/turnover/{store_id}/{year}/{month}[/{day}]."
+        },
+        {
+          "name": "hiboutik_report_products_sold",
+          "type": "read",
+          "title": "Products sold report",
+          "description": "Products sold in a store during one month: quantities and revenue per product. GET /reports/products/{store_id}/{year}/{month}."
+        },
+        {
+          "name": "hiboutik_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer in Hiboutik. Needs at least a last name, first name, company or email. Returns the new customer id. POST /customers/."
+        },
+        {
+          "name": "hiboutik_update_customer",
+          "type": "write",
+          "title": "Update a customer attribute",
+          "description": "WRITE: change ONE attribute of a customer (it overwrites the current value). Attributes: gender (0 unknown, 1 male, 2 female), last_name, first_name, email, company, phone, vat, country, date_of_birth, customers_code, comments, validity, customers_ref_ext, customers_misc. PUT /customer/{customers_id}/."
+        },
+        {
+          "name": "hiboutik_set_sale_comment",
+          "type": "write",
+          "title": "Set sale comment",
+          "description": "WRITE: add or replace the comment of a sale (it overwrites any existing comment). POST /sales/comments/."
+        },
+        {
+          "name": "hiboutik_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hiboutik_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hiboutik tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hiboutik_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Hiboutik (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $19/month or $190/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hiboutik_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hiboutik Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hiboutik_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What was the turnover of my shop yesterday, and how many sales were closed?",
+        "Which products are low on stock in my main warehouse?",
+        "Find the customer with email marie@example.com and list her latest sales.",
+        "Which products sold best in my store last month?"
+      ]
     }
   ]
 }
