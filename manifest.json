@@ -77930,6 +77930,978 @@
           "description": "Cancel the caller's Appointedd Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run appointedd_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ]
+    },
+    {
+      "slug": "ticketsauce",
+      "name": "Ticketsauce",
+      "category": "ecommerce",
+      "description": "Read Ticketsauce events, orders and ticket check-in IDs (read-only).",
+      "endpoint": "https://ticketsauce.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "Log in to Ticketsauce, hover **My Account** (top right), click **API**, and copy the Client ID and Client Secret (click **Generate API Keys** if the secret is not shown). They are used only to call the Ticketsauce API on your behalf; they are never shown to anyone. The API only reads: this server cannot change your events or orders."
+      },
+      "tools": [
+        {
+          "name": "ticketsauce_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events you own on Ticketsauce with id, name, slug, start/end (local and UTC), venue address, timezone, organization, privacy type, whether tickets are on sale, and the event and ticket-shop URLs. Filter by start/end/created dates (yyyy-mm-dd, UTC), a phrase such as this_weekend, organization or partner. The API has no paging for events. Use the event id for orders and check-ins. GET /v2/events."
+        },
+        {
+          "name": "ticketsauce_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id or slug: everything in the list plus summary and description (text and HTML), order_count and ticket_count (tickets sold, not refunded or voided). Replies are cached for an hour. GET /v2/event/{id_or_slug}."
+        },
+        {
+          "name": "ticketsauce_list_orders",
+          "type": "read",
+          "title": "List orders of an event",
+          "description": "Orders of one event, oldest first by default (pass sort_dir desc for newest first): order id, status, buyer name, email, phone and address, totals (total_paid, refund_amount, taxes, fees), promo code, ticket_count, paid date. Contains your customers' personal data. Filter by order or modified dates, a phrase, buyer email or last name (exact match), totals, or promo use; optionally embed tickets, questionnaire answers and line-item fees. Paged: per_page up to 500, then pass next_page. Replies are cached for an hour. GET /v2/orders/{event_id}."
+        },
+        {
+          "name": "ticketsauce_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id, with its buyer details, totals and its tickets (ticket type, name, price, redeemed state, promo code). Contains personal data. Replies are cached for an hour. GET /v2/order/{order_id}."
+        },
+        {
+          "name": "ticketsauce_list_checkin_ids",
+          "type": "read",
+          "title": "List ticket check-in ids",
+          "description": "The ticket check-in ids of one event, for door/scanning reconciliation (the API documents no response fields; the reply is returned as is). Paged: per_page up to 5000, then pass next_page. Replies are cached for 5 minutes. GET /v2/tickets/checkin_ids/{event_id}."
+        },
+        {
+          "name": "ticketsauce_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ticketsauce_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Ticketsauce tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ticketsauce_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Ticketsauce (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ticketsauce_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Ticketsauce Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ticketsauce_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my events start this weekend, and how many tickets has each sold?",
+        "List the orders for my next event placed in the last 24 hours.",
+        "Find the order for jane@example.com on the Summer Fest event and show her tickets.",
+        "Which orders over $200 used a promo code?"
+      ]
+    },
+    {
+      "slug": "evenium",
+      "name": "Evenium",
+      "category": "ecommerce",
+      "description": "Read Evenium events, guests, contacts and hotels; register guests and update contacts and statuses.",
+      "endpoint": "https://evenium.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Evenium platform"
+          },
+          {
+            "label": "Evenium API key"
+          }
+        ],
+        "hint": "Find it in your Evenium profile: **My account → API key** (Facility accounts on evenium.com), or **Profile → API key** on the evenium.net platform. The key acts with your account's rights. Your key is used only to call the Evenium API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "evenium_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events of the Evenium account, with id, title, dates, status and creation date. Filter by title (partial match), status and start/end/creation dates. Use an event id with the guest and session tools. GET /events."
+        },
+        {
+          "name": "evenium_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by id: title, description, dates, status, site path and its fields (type, your external id, ...). GET /events/{eventId}."
+        },
+        {
+          "name": "evenium_list_guests",
+          "type": "read",
+          "title": "List guests",
+          "description": "List the guests (invited contacts) of an event with name, email, company, registration status (e.g. CONFIRMED, DECLINED, UNANSWERED), category and fields. Filter by status, name, email, company or last update. GET /events/{eventId}/guests."
+        },
+        {
+          "name": "evenium_get_guest",
+          "type": "read",
+          "title": "Get guest",
+          "description": "One guest of an event, by contact id or by guest code: name, email, status, category and fields (event-only fields flagged). Optionally include REGISTRATION (registrations to sessions), PRESENCE and SIGNATURE data. GET /events/{eventId}/guests/{contactId} or /guests/guestCode/{guestCode}."
+        },
+        {
+          "name": "evenium_get_guest_status",
+          "type": "read",
+          "title": "Get guest status",
+          "description": "The registration status of one guest at an event (e.g. CONFIRMED, DECLINED, CANCELED). GET /events/{eventId}/guests/{contactId}/status."
+        },
+        {
+          "name": "evenium_get_guest_post_status",
+          "type": "read",
+          "title": "Get guest attendance",
+          "description": "The attendance (post) status of one guest after the event: UNKNOWN, NO_SHOW or PRESENT. GET /events/{eventId}/guests/{contactId}/postStatus."
+        },
+        {
+          "name": "evenium_get_guest_accommodations",
+          "type": "read",
+          "title": "Get guest accommodations",
+          "description": "The hotel room bookings of one guest at an event: room id, check-in and check-out dates, status. Not available on the evenium.net platform. GET /events/{eventId}/guests/{contactId}/accommodations."
+        },
+        {
+          "name": "evenium_list_hotels",
+          "type": "read",
+          "title": "List hotels",
+          "description": "The hotels of an event with name, group, stars, contact details and, if asked, full location and rooms. Not available on the evenium.net platform. GET /events/{eventId}/hotels."
+        },
+        {
+          "name": "evenium_create_guest",
+          "type": "write",
+          "title": "Create guest",
+          "description": "WRITE: invite a person to an event. Either invite an existing contact (contact_id) or create a guest from scratch (first_name, last_name, email, ...), which may also create a new contact. The optional status sets the registration status (the invitation emails of the event may follow Evenium's own rules). POST /events/{eventId}/guests."
+        },
+        {
+          "name": "evenium_update_guest_status",
+          "type": "write",
+          "title": "Update guest status",
+          "description": "WRITE: set the registration status of a guest at an event (e.g. CONFIRMED, DECLINED, CANCELED). Can trigger Evenium's own workflows for that status. Read the current value first with evenium_get_guest_status. PUT /events/{eventId}/guests/{contactId}/status."
+        },
+        {
+          "name": "evenium_update_guest_post_status",
+          "type": "write",
+          "title": "Update guest attendance",
+          "description": "WRITE: set the attendance (post) status of a guest: PRESENT, NO_SHOW or UNKNOWN (for example after check-in). PUT /events/{eventId}/guests/{contactId}/postStatus."
+        },
+        {
+          "name": "evenium_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the contacts of the address book (id, your custom id, name, email, company and fields). Filter by name, email, company or last update. GET /contacts."
+        },
+        {
+          "name": "evenium_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by Evenium id or `ext:<customId>`: name, gender, email, company and fields. GET /contacts/{contactId}."
+        },
+        {
+          "name": "evenium_get_contact_events",
+          "type": "read",
+          "title": "Get contact events",
+          "description": "The events a contact is invited to, with the contact's registration (status, post status, category) in each. Filter by event start, end or creation date. GET /contacts/{contactId}/events."
+        },
+        {
+          "name": "evenium_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: add a contact to the address book (name, email, company, optional custom id and fields). Does not invite them to an event (use evenium_create_guest). May create a duplicate of an existing person: search with evenium_list_contacts first. POST /contacts."
+        },
+        {
+          "name": "evenium_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change a contact's email, company or fields (only what you pass is sent). The change applies to the contact everywhere, including its guest records. PUT /contacts/{contactId}."
+        },
+        {
+          "name": "evenium_list_event_parts",
+          "type": "read",
+          "title": "List event sessions",
+          "description": "List the event parts (sessions, workshops, activities) of an event with title, dates, nature, code and location. Filter by title and start/end/update dates. GET /events/{eventId}/eventParts."
+        },
+        {
+          "name": "evenium_get_event_part",
+          "type": "read",
+          "title": "Get event session",
+          "description": "One event part (session) by id: title, dates, nature, code, location and fields. GET /events/{eventId}/eventParts/{eventPartId}."
+        },
+        {
+          "name": "evenium_list_event_part_registrations",
+          "type": "read",
+          "title": "List session registrations",
+          "description": "The registrations to one session: contact id, status, attendance, category and dates. With include_deleted, deleted registrations are returned too (status DELETED). GET /events/{eventId}/eventParts/{eventPartId}/registrations."
+        },
+        {
+          "name": "evenium_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "evenium_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Evenium tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "evenium_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Evenium (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "evenium_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Evenium Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run evenium_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my upcoming Evenium events.",
+        "Who has not answered the invitation to event 12458?",
+        "Confirm guest 1102365 at event 12458.",
+        "Mark guest 1102365 as present at event 12458."
+      ]
+    },
+    {
+      "slug": "goformz",
+      "name": "GoFormz",
+      "category": "documents",
+      "description": "Read GoFormz templates, forms, groups and data sources; create and update forms and rows.",
+      "endpoint": "https://goformz.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "GoFormz Client ID"
+          },
+          {
+            "label": "GoFormz Client Secret"
+          }
+        ],
+        "hint": "In the GoFormz web app open **Settings**, then **API Access**. Copy the Client ID and the Client Secret (the secret is shown once; use Regenerate if you lost it). API access depends on your GoFormz plan and has a daily call quota; ask your GoFormz account manager if the API Access page is missing. They are used only to call the GoFormz API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "goformz_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the form templates of the account (id, name). Use a template id to list its forms or to create a form. GET /v2/templates."
+        },
+        {
+          "name": "goformz_get_template",
+          "type": "read",
+          "title": "Get a template",
+          "description": "Get one template by id. GET /v2/templates/{id}."
+        },
+        {
+          "name": "goformz_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List forms (filled-in instances of templates) with name, status (draft or complete), last update date and assignment. Field values are NOT included: call goformz_get_form for those. Filter by name prefix, status or last-updated date. GET /v2/formz."
+        },
+        {
+          "name": "goformz_list_template_forms",
+          "type": "read",
+          "title": "List forms of a template",
+          "description": "List the forms created from one template (name, status, last update date). Field values are not included. GET /v2/templates/{templateId}/formz."
+        },
+        {
+          "name": "goformz_get_form",
+          "type": "read",
+          "title": "Get a form",
+          "description": "Get one form with all its field values (text, numbers, dates, checkboxes, table rows, signature/image references), status, assignment and template version. GET /v2/formz/{id}."
+        },
+        {
+          "name": "goformz_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List user groups (forms can be assigned to a group). GET /v2/groups."
+        },
+        {
+          "name": "goformz_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "Get one group by id. GET /v2/groups/{id}."
+        },
+        {
+          "name": "goformz_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the account's users (id, username, first and last name). A user id is needed to assign a new form. GET /v2/users."
+        },
+        {
+          "name": "goformz_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id. GET /v2/users/{id}."
+        },
+        {
+          "name": "goformz_list_datasources",
+          "type": "read",
+          "title": "List data sources",
+          "description": "List data sources (lookup tables that feed dropdown and database fields in templates). GET /v2/datasources."
+        },
+        {
+          "name": "goformz_get_datasource",
+          "type": "read",
+          "title": "Get a data source",
+          "description": "Get one data source: its name, columns and indexed columns. GET /v2/datasources/{id}."
+        },
+        {
+          "name": "goformz_list_datasource_rows",
+          "type": "read",
+          "title": "List data source rows",
+          "description": "List the rows of a data source. Each row has an id, a keyColumn (the lookup key) and a value (a JSON-encoded array of the column values). GET /v2/datasources/{dataSourceId}/rows."
+        },
+        {
+          "name": "goformz_get_datasource_row",
+          "type": "read",
+          "title": "Get a data source row",
+          "description": "Get one data source row by id. GET /v2/datasources/{dataSourceId}/rows/{rowId}."
+        },
+        {
+          "name": "goformz_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks that call a URL when a form of a template is completed (event form.complete). Read-only. GET /v2/webhooks."
+        },
+        {
+          "name": "goformz_get_queue_item",
+          "type": "read",
+          "title": "Get an async job status",
+          "description": "Check a queued job, for example the PDF export started by goformz_export_form_pdf. Returns status (and progressIndicator); when it is Completed, redirectUrl points at the result (a /v2/files/{id} URL: pass that id to goformz_get_file). GET /v2/queue/{id}."
+        },
+        {
+          "name": "goformz_get_file",
+          "type": "read",
+          "title": "Get a file",
+          "description": "Get a file summary: type, created date and a temporary download `link` (it expires; see linkExpiration). Use it for an exported PDF or a form image/signature. The file itself is not downloaded here. GET /v2/files/{id}."
+        },
+        {
+          "name": "goformz_get_pdf_export",
+          "type": "read",
+          "title": "Get a PDF export",
+          "description": "Get the metadata of a PDF export of a form, including the temporary download `link` once the PDF is ready. GET /v2/formz/{formId}/exports/{exportId}."
+        },
+        {
+          "name": "goformz_export_form_pdf",
+          "type": "write",
+          "title": "Export a form to PDF",
+          "description": "WRITE: start a PDF export of a form (the form is not changed; GoFormz creates a PDF file). The reply gives the queue_id of the job: poll goformz_get_queue_item until Completed, then read the file with goformz_get_file using the id in redirectUrl. POST /v2/formz/{formId}/exports."
+        },
+        {
+          "name": "goformz_create_form",
+          "type": "write",
+          "title": "Create a form",
+          "description": "WRITE: create a new draft form from a template, optionally pre-filled and assigned to a user or group (assignment is only possible at creation). Field keys are the template's field names (or ids) and the values are field objects such as {\"text\": \"Acme\"}; see goformz_get_form on an existing form of the template for each field's shape. Each call creates another form. POST /v2/formz."
+        },
+        {
+          "name": "goformz_update_form",
+          "type": "write",
+          "title": "Update a form",
+          "description": "WRITE: change a form's name and/or field values (partial update: only the fields given change; a null value clears a field). Does NOT change the status and does not trigger workflows; to re-run completion workflows use goformz_set_form_status draft, update, then complete. PATCH /v2/formz/{id}."
+        },
+        {
+          "name": "goformz_set_form_status",
+          "type": "write",
+          "title": "Complete or re-open a form",
+          "description": "WRITE: mark a form complete (this can trigger the template's completion workflows and webhooks) or re-open it as a draft so it can be edited. POST /v2/formz/{id}/status."
+        },
+        {
+          "name": "goformz_create_datasource_row",
+          "type": "write",
+          "title": "Add a data source row",
+          "description": "WRITE: add a row to a data source. key_column is the lookup key; values are the column values in the data source's column order (see goformz_get_datasource). Each call adds another row. POST /v2/datasources/{dataSourceId}/rows."
+        },
+        {
+          "name": "goformz_update_datasource_row",
+          "type": "write",
+          "title": "Update a data source row",
+          "description": "WRITE: replace a data source row's key and values (the whole row is replaced; send every column). PATCH /v2/datasources/{dataSourceId}/rows/{rowId}."
+        },
+        {
+          "name": "goformz_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "goformz_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoFormz tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "goformz_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on GoFormz (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "goformz_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoFormz Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run goformz_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which forms were completed this week for the Safety Inspection template?",
+        "Show every field value on form 170f4764-293c-4e94-b0b1-6d72ea778825.",
+        "Create a draft Work Order form for Acme and assign it to Maria.",
+        "Export the completed Delivery Receipt form to PDF and give me the download link."
+      ]
+    },
+    {
+      "slug": "fastbill",
+      "name": "FastBill",
+      "category": "billing",
+      "description": "Read FastBill customers, invoices, estimates, expenses; create customers, invoices, projects.",
+      "endpoint": "https://fastbill.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FastBill login e-mail address"
+          },
+          {
+            "label": "FastBill API key"
+          }
+        ],
+        "hint": "Find the API key in FastBill under **Einstellungen (Settings) → Integrationen / API**. The e-mail address is the one you log in to FastBill with. FastBill limits API calls per hour by plan (Solo 50, Solo-Plus 100, Pro 500, Premium 1000), so every tool call counts against it. Your key is used only to call the FastBill API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fastbill_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (name, address, e-mail, VAT id, payment terms and bank details as stored in FastBill). Filter by search term (organization, name, address, zip, e-mail or tags), customer number, country or city. customer.get."
+        },
+        {
+          "name": "fastbill_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by FastBill customer id. customer.get with CUSTOMER_ID."
+        },
+        {
+          "name": "fastbill_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contact persons of customers (name, position, e-mail, phone). Filter by customer, search term or contact id. contact.get."
+        },
+        {
+          "name": "fastbill_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List outgoing invoices, drafts and credit notes with totals, state (draft, unpaid, overdue, paid, canceled), dates and line items. Filter by customer, number, type, date ranges (invoice date, due date, paid date, last update). invoice.get."
+        },
+        {
+          "name": "fastbill_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice by FastBill invoice id, with all line items, VAT, payments and the document URL. invoice.get with INVOICE_ID."
+        },
+        {
+          "name": "fastbill_list_recurring_invoices",
+          "type": "read",
+          "title": "List recurring invoices",
+          "description": "List recurring invoice templates (customer, interval data, totals, items). recurring.get."
+        },
+        {
+          "name": "fastbill_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates (quotes) with state (a created, b sent, c negotiation, d accepted, e rejected, f invoiced), totals and items. estimate.get."
+        },
+        {
+          "name": "fastbill_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expense entries (supplier, category, net/VAT/gross, dates, document URL). Filter by invoice number or date ranges. expense.get."
+        },
+        {
+          "name": "fastbill_list_revenues",
+          "type": "read",
+          "title": "List revenues",
+          "description": "List revenue entries (income booked in FastBill: customer, totals, dates, payments). Takes the same filters as invoices. revenue.get."
+        },
+        {
+          "name": "fastbill_list_articles",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services (article number, type, title, unit price, VAT, unit). article.get."
+        },
+        {
+          "name": "fastbill_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects (name, customer, hourly rate, VAT, start/end date). project.get."
+        },
+        {
+          "name": "fastbill_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List work time entries (customer, project, date, minutes, billable minutes, comment, invoice). Without filters FastBill returns the latest entries of the current month. time.get."
+        },
+        {
+          "name": "fastbill_list_templates",
+          "type": "read",
+          "title": "List document templates",
+          "description": "List the invoice/estimate templates (template id, name, hash). Use a template id with the create tools. Ids change whenever a template is edited. template.get."
+        },
+        {
+          "name": "fastbill_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a customer. customer_type is required; a business needs organization, a consumer needs last_name. Bank details are not accepted by this tool. FastBill does not check for duplicates, so search with fastbill_list_customers first. customer.create."
+        },
+        {
+          "name": "fastbill_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: update fields of an existing customer; only the fields you pass change. Bank details are not accepted by this tool. customer.update."
+        },
+        {
+          "name": "fastbill_create_invoice",
+          "type": "write",
+          "title": "Create invoice",
+          "description": "WRITE: create an invoice for a customer from line items. FastBill stores it as a draft; it gets its number and becomes final only with fastbill_complete_invoice, and it is never sent by this tool. Check the result with fastbill_get_invoice. invoice.create."
+        },
+        {
+          "name": "fastbill_complete_invoice",
+          "type": "write",
+          "title": "Finalize invoice",
+          "description": "WRITE, NOT REVERSIBLE: turn a draft invoice into a final invoice. FastBill assigns the invoice number and PDF; a final invoice can no longer be edited (it can only be canceled in FastBill). Nothing is sent to the customer. Only call this after the user confirmed the draft. invoice.complete."
+        },
+        {
+          "name": "fastbill_set_invoice_paid",
+          "type": "write",
+          "title": "Mark invoice paid",
+          "description": "WRITE: mark a final invoice as paid, with the payment date and method. invoice.setpaid."
+        },
+        {
+          "name": "fastbill_create_estimate",
+          "type": "write",
+          "title": "Create estimate",
+          "description": "WRITE: create an estimate (quote) for a customer from line items. It is not sent. estimate.create."
+        },
+        {
+          "name": "fastbill_create_article",
+          "type": "write",
+          "title": "Create product",
+          "description": "WRITE: create a product or service (article number, title and unit price are required). article.create."
+        },
+        {
+          "name": "fastbill_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "WRITE: create a project for a customer (name and customer are required). project.create."
+        },
+        {
+          "name": "fastbill_create_time_entry",
+          "type": "write",
+          "title": "Create time entry",
+          "description": "WRITE: book a work time entry on a project (customer, project and start time are required). time.create."
+        },
+        {
+          "name": "fastbill_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fastbill_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FastBill tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fastbill_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on FastBill (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fastbill_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FastBill Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fastbill_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my invoices are overdue, and who are the customers?",
+        "Show all invoices for customer Acme GmbH from this year.",
+        "Create a draft invoice for customer 5376 with 10 hours of consulting at 120 EUR plus 19% VAT.",
+        "List my expenses from last month."
+      ]
+    },
+    {
+      "slug": "halaxy",
+      "name": "Halaxy",
+      "category": "healthcare",
+      "description": "Read Halaxy patients, appointments, slots and invoices; create patients, appointments and notes.",
+      "endpoint": "https://halaxy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Region"
+          },
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "Buy the API add-on under **Add-ons** (only the account owner can), then open **Developer** in Halaxy, create an API key and copy the Client ID and Client Secret ([Halaxy docs](https://developers.halaxy.com/docs/authentication)). Choose **UK and EU** if your practice is in the UK or EU, otherwise Australia and rest of world. Your credentials are used only to call the Halaxy API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "halaxy_list_patients",
+          "type": "read",
+          "title": "List or search patients",
+          "description": "List or search patient records (demographics and contact details; HEALTH DATA). Filters combine with AND. Paged: pass next_page as page. GET /main/Patient."
+        },
+        {
+          "name": "halaxy_list_practitioners",
+          "type": "read",
+          "title": "List practitioners",
+          "description": "List or search practitioners and administrators of the practice group (ids look like PR-12345). Filters combine with AND. Paged: pass next_page as page. GET /main/Practitioner."
+        },
+        {
+          "name": "halaxy_list_practitioner_roles",
+          "type": "read",
+          "title": "List practitioner roles (clinic locations)",
+          "description": "List or search practitioner roles: a practitioner's association with one clinic location (the id used when booking and for clinical notes). Filters combine with AND. Paged: pass next_page as page. GET /main/PractitionerRole."
+        },
+        {
+          "name": "halaxy_list_organizations",
+          "type": "read",
+          "title": "List organizations and clinics",
+          "description": "List or search the practice group, its clinic locations, funders and external practices (practice group ids look like PG-12345). Filters combine with AND. Paged: pass next_page as page. GET /main/Organization."
+        },
+        {
+          "name": "halaxy_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List or search appointments (HEALTH DATA: names the patient). Filters combine with AND. Paged: pass next_page as page. GET /main/Appointment."
+        },
+        {
+          "name": "halaxy_list_schedules",
+          "type": "read",
+          "title": "List practitioner schedules",
+          "description": "List or search schedules: containers of bookable time slots per practitioner. Filters combine with AND. Paged: pass next_page as page. GET /main/Schedule."
+        },
+        {
+          "name": "halaxy_list_slots",
+          "type": "read",
+          "title": "List time slots",
+          "description": "List or search time slots of practitioner schedules (free or busy). Filters combine with AND. Paged: pass next_page as page. GET /main/Slot."
+        },
+        {
+          "name": "halaxy_list_healthcare_services",
+          "type": "read",
+          "title": "List appointment types",
+          "description": "List or search appointment types used by the practice group, clinics and practitioners. Filters combine with AND. Paged: pass next_page as page. GET /main/HealthcareService."
+        },
+        {
+          "name": "halaxy_list_fees",
+          "type": "read",
+          "title": "List fees",
+          "description": "List or search fees (ChargeItemDefinition): the services and products a practice charges for. Filters combine with AND. Paged: pass next_page as page. GET /main/ChargeItemDefinition."
+        },
+        {
+          "name": "halaxy_list_coverage",
+          "type": "read",
+          "title": "List patient coverage (claim details)",
+          "description": "List or search patients' health fund membership and claim details (HEALTH DATA). Filters combine with AND. Paged: pass next_page as page. GET /main/Coverage."
+        },
+        {
+          "name": "halaxy_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List or search invoices of the practice group. Filters combine with AND. Paged: pass next_page as page. GET /main/Invoice."
+        },
+        {
+          "name": "halaxy_list_invoice_lines",
+          "type": "read",
+          "title": "List invoice lines",
+          "description": "List or search invoice lines: single fees on invoices. Filters combine with AND. Paged: pass next_page as page. GET /main/InvoiceLine."
+        },
+        {
+          "name": "halaxy_list_payment_transactions",
+          "type": "read",
+          "title": "List payment transactions",
+          "description": "List or search payment transactions recorded on invoices. Filters combine with AND. Paged: pass next_page as page. GET /main/PaymentTransaction."
+        },
+        {
+          "name": "halaxy_list_referrals",
+          "type": "read",
+          "title": "List referrals",
+          "description": "List or search referrals from one healthcare provider to another (HEALTH DATA). Filters combine with AND. Paged: pass next_page as page. GET /main/Referral."
+        },
+        {
+          "name": "halaxy_list_referral_definitions",
+          "type": "read",
+          "title": "List referral templates",
+          "description": "List or search referral templates with preset properties. Filters combine with AND. Paged: pass next_page as page. GET /main/ReferralDefinition."
+        },
+        {
+          "name": "halaxy_get_patient",
+          "type": "read",
+          "title": "Get a patient",
+          "description": "Fetch a patient record (HEALTH DATA) by id. GET /main/Patient/{id}."
+        },
+        {
+          "name": "halaxy_get_practitioner",
+          "type": "read",
+          "title": "Get a practitioner",
+          "description": "Fetch a practitioner or administrator by id. GET /main/Practitioner/{id}."
+        },
+        {
+          "name": "halaxy_get_practitioner_role",
+          "type": "read",
+          "title": "Get a practitioner role",
+          "description": "Fetch a practitioner role at a clinic location by id. GET /main/PractitionerRole/{id}."
+        },
+        {
+          "name": "halaxy_get_organization",
+          "type": "read",
+          "title": "Get an organization",
+          "description": "Fetch a practice group, clinic, funder or external practice by id. GET /main/Organization/{id}."
+        },
+        {
+          "name": "halaxy_get_appointment",
+          "type": "read",
+          "title": "Get an appointment",
+          "description": "Fetch an appointment with its participants and statuses (HEALTH DATA) by id. GET /main/Appointment/{id}."
+        },
+        {
+          "name": "halaxy_get_schedule",
+          "type": "read",
+          "title": "Get a schedule",
+          "description": "Fetch a practitioner schedule by id. GET /main/Schedule/{id}."
+        },
+        {
+          "name": "halaxy_get_slot",
+          "type": "read",
+          "title": "Get a time slot",
+          "description": "Fetch a time slot by id. GET /main/Slot/{id}."
+        },
+        {
+          "name": "halaxy_get_healthcare_service",
+          "type": "read",
+          "title": "Get an appointment type",
+          "description": "Fetch an appointment type by id. GET /main/HealthcareService/{id}."
+        },
+        {
+          "name": "halaxy_get_fee",
+          "type": "read",
+          "title": "Get a fee",
+          "description": "Fetch a fee (ChargeItemDefinition) by id. GET /main/ChargeItemDefinition/{id}."
+        },
+        {
+          "name": "halaxy_get_coverage",
+          "type": "read",
+          "title": "Get patient coverage",
+          "description": "Fetch a patient's coverage (claim details) record by id. GET /main/Coverage/{id}."
+        },
+        {
+          "name": "halaxy_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Fetch an invoice by id. GET /main/Invoice/{id}."
+        },
+        {
+          "name": "halaxy_get_invoice_line",
+          "type": "read",
+          "title": "Get an invoice line",
+          "description": "Fetch an invoice line by id. GET /main/InvoiceLine/{id}."
+        },
+        {
+          "name": "halaxy_get_payment_transaction",
+          "type": "read",
+          "title": "Get a payment transaction",
+          "description": "Fetch a payment transaction by id. GET /main/PaymentTransaction/{id}."
+        },
+        {
+          "name": "halaxy_get_referral",
+          "type": "read",
+          "title": "Get a referral",
+          "description": "Fetch a referral (HEALTH DATA) by id. GET /main/Referral/{id}."
+        },
+        {
+          "name": "halaxy_get_referral_definition",
+          "type": "read",
+          "title": "Get a referral template",
+          "description": "Fetch a referral template by id. GET /main/ReferralDefinition/{id}."
+        },
+        {
+          "name": "halaxy_find_available_appointments",
+          "type": "read",
+          "title": "Find available appointment times",
+          "description": "Find free appointment times between start and end for a given duration, respecting each practitioner's online booking preferences (buffer time, lead time, advance booking limit). Narrow it with practitioner, practitioner_role or organization. GET /main/Appointment/$find."
+        },
+        {
+          "name": "halaxy_create_patient",
+          "type": "write",
+          "title": "Create a patient",
+          "description": "Writes to the live Halaxy account. Creates a new patient record (always a new one: search with halaxy_list_patients first to avoid a duplicate). Pass managing_organization (the practice group id, e.g. PG-12345, from halaxy_list_organizations) if Halaxy asks for it. POST /main/Patient."
+        },
+        {
+          "name": "halaxy_create_appointment",
+          "type": "write",
+          "title": "Book an appointment",
+          "description": "Writes to the live Halaxy account. Books an appointment for a patient with a practitioner at a clinic (the practitioner role). Halaxy also creates the invoice, clinical note and reminder. Use halaxy_find_available_appointments for free times. By default a double booking is refused (HTTP 409, nothing created). POST /main/Appointment/$book."
+        },
+        {
+          "name": "halaxy_update_appointment_status",
+          "type": "write",
+          "title": "Update an appointment status",
+          "description": "Writes to the live Halaxy account. Sets the patient's status on an appointment (shown in the Halaxy calendar), for example arrived, attended, confirmed or cancelled. \"cancelled (no charge)\" also sets the invoice to $0. For a group appointment pass patient_id to say whose status changes. PATCH /main/Appointment/{id}."
+        },
+        {
+          "name": "halaxy_create_clinical_note",
+          "type": "write",
+          "title": "Create a draft clinical note",
+          "description": "Writes to the live Halaxy account. Adds a clinical note to a patient's record as a DRAFT (preliminary); the practitioner reviews and publishes it in Halaxy. The author is a PractitionerRole (practitioner at a clinic). Only HTML text is supported. POST /main/DocumentReference."
+        },
+        {
+          "name": "halaxy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "halaxy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Halaxy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "halaxy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Halaxy (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "halaxy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Halaxy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run halaxy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which appointments does Dr Smith have tomorrow, and who are the patients?",
+        "Find free 30-minute appointment times next week at the main clinic.",
+        "List unpaid invoices from the last month with the amount owing.",
+        "Book Jane Citizen in for a 1 hour appointment on Friday at 3pm."
+      ]
     }
   ]
 }

@@ -449,6 +449,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Spoke Phone](servers/spoke-phone/) | communications | 31 | API token | [servers/spoke-phone/](servers/spoke-phone/) |
 | [Laposta](servers/laposta/) | email | 22 | API token | [servers/laposta/](servers/laposta/) |
 | [Appointedd](servers/appointedd/) | calendar | 24 | API token | [servers/appointedd/](servers/appointedd/) |
+| [Ticketsauce](servers/ticketsauce/) | ecommerce | 9 | API token | [servers/ticketsauce/](servers/ticketsauce/) |
+| [Evenium](servers/evenium/) | ecommerce | 23 | API token | [servers/evenium/](servers/evenium/) |
+| [GoFormz](servers/goformz/) | documents | 27 | API token | [servers/goformz/](servers/goformz/) |
+| [FastBill](servers/fastbill/) | billing | 26 | API token | [servers/fastbill/](servers/fastbill/) |
+| [Halaxy](servers/halaxy/) | healthcare | 39 | API token | [servers/halaxy/](servers/halaxy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
