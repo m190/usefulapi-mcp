@@ -7,6 +7,7 @@
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 import { loadContent } from "./content.mjs";
+import { loadBlog } from "./blog.mjs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
 const outDir = process.argv[2] || "dist";
@@ -71,6 +72,12 @@ const SITE = manifest.portal.domain.replace(/\/$/, "");
 // Portal-owned page text (content/<slug>.json: audience + use cases), checked against each product's real tools.
 const { content: CONTENT, errors: contentErrors } = loadContent(manifest);
 if (contentErrors.length) throw new Error(`content/ has ${contentErrors.length} error(s):\n${contentErrors.join("\n")}`);
+// Blog posts (blog/<slug>.md, newest first), checked against the manifest's servers and tools.
+const { posts: POSTS, errors: blogErrors } = loadBlog(manifest);
+if (blogErrors.length) throw new Error(`blog/ has ${blogErrors.length} error(s):\n${blogErrors.join("\n")}`);
+const postPath = (p) => `/blog/${p.slug}/`;
+const postsFor = (s) => POSTS.filter((p) => p.products.includes(s.slug));
+const dateText = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
 // URL + SEO helpers. Canonical page URLs carry the trailing slash: Pages serves /<slug>/index.html
 // and 308-redirects /<slug> → /<slug>/, so links/sitemap/canonical all use the final form.
@@ -170,8 +177,16 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .prompts{margin:0;padding:0;list-style:none;display:grid;gap:8px}.prompts li{margin:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:15px}
 .prompts li::before{content:"“";color:var(--muted)}.prompts li::after{content:"”";color:var(--muted)}
 .faq details{border-bottom:1px solid var(--border);padding:12px 0}.faq summary{cursor:pointer;font-weight:600}.faq p{margin:8px 0 0;color:var(--muted);font-size:15px}.faq a{color:var(--accent)}
+.posts{list-style:none;margin:0;padding:0;display:grid;gap:12px}.posts li{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px}
+.posts a{font-weight:600;text-decoration:none}.posts a:hover{color:var(--accent)}.posts p{margin:4px 0 0;color:var(--muted);font-size:14px}.posts .date{color:var(--muted);font-size:12px}
+.post{max-width:720px}.post h1{margin:0 0 8px}.post .meta{color:var(--muted);font-size:14px;margin:0 0 28px}.post .meta a{color:var(--accent)}
+.post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
+.post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
+.post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
 @media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
+const FOOTER = `<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; ${POSTS.length ? `<a href="/blog/">Blog</a> &nbsp;·&nbsp; ` : ""}<a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+const postList = (list) => `<ul class="posts">${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 // Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
 // a 6-digit email code). From s.login (codegen syncs it from fleet product.ts), else from s.auth.
@@ -395,12 +410,12 @@ ${fairUseNote}${billingNote}`
 ${chips}
 ${live && CONTENT.has(s.slug) ? `<div id="uses">${useCasesSection(s)}</div>\n` : ""}${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
 ${live ? examplesSection(s) : ""}
-${live ? toolsSection : ""}
+${live && postsFor(s).length ? `<h2 class="sec">Guides</h2>\n${postList(postsFor(s))}\n` : ""}${live ? toolsSection : ""}
 ${pricingSection}
 ${live ? faqSection(faq) : ""}
 ${hint}
 ${related}
-<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+${FOOTER}`;
   const url = `${SITE}${pagePath(s)}`;
   const n = toolCount(s);
   // Worded like the question a user asks an AI assistant ("connect Acuity to ChatGPT"): answer engines bring most users.
@@ -461,7 +476,61 @@ function categoryPage(g, list) {
 <table class="tools"><thead><tr><th>Server</th><th>What it does</th><th>Tools</th></tr></thead><tbody>${rows}</tbody></table>
 <h2 class="sec">Other categories</h2>
 <div class="rel">${others.map((x) => `<a href="${categoryPath(x)}">${esc(x)}</a>`).join("")}</div>
-<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+${FOOTER}`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+${headMeta({ title, desc, url })}
+${jsonLd(ld)}
+<style>${PRODUCT_CSS}</style></head>
+<body><div class="wrap">${body}</div></body></html>`;
+}
+
+// Blog post pages (/blog/<slug>/) and the blog index (/blog/).
+const serverBySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
+function postPage(p) {
+  const url = `${SITE}${postPath(p)}`;
+  const prods = p.products.map((x) => serverBySlug.get(x));
+  const connect = prods.map((s) => `<div class="card"><h2>Connect ${esc(s.name)}</h2>` +
+    `<p class="lead">Add this URL to Claude, ChatGPT, Cursor or any MCP client, then log in. <a href="${pagePath(s)}">Setup steps, tools and pricing →</a></p>` +
+    `<div class="copywrap line"><span class="url">${esc(s.endpoint)}</span><button class="copy" type="button">Copy</button></div></div>`).join("");
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="/blog/">Blog</a></nav>
+<article class="post"><h1>${esc(p.title)}</h1>
+<p class="meta"><time datetime="${p.date}">${dateText(p.date)}</time> · ${prods.map((s) => `<a href="${pagePath(s)}">${esc(s.name)} MCP server</a>`).join(", ")}</p>
+${p.html}</article>
+<h2 class="sec">Try it</h2>
+<div class="grid">${connect}</div>
+${FOOTER}`;
+  const title = `${p.title} | usefulapi`;
+  const ld = [
+    { "@context": "https://schema.org", "@type": "BlogPosting", headline: p.title, description: p.description, url, mainEntityOfPage: url,
+      datePublished: p.date, author: { "@type": "Organization", name: "usefulapi", url: `${SITE}/` },
+      publisher: { "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: { "@type": "ImageObject", url: `${SITE}/icon-512.png` } },
+      about: prods.map((s) => ({ "@type": "SoftwareApplication", name: `${s.name} MCP Server by usefulapi`, url: `${SITE}${pagePath(s)}` })) },
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
+      { "@type": "ListItem", position: 1, name: "usefulapi", item: `${SITE}/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog/` },
+      { "@type": "ListItem", position: 3, name: p.title, item: url }] }
+  ];
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+${headMeta({ title, desc: p.description, url }).replace('content="website"', 'content="article"')}
+${ld.map(jsonLd).join("\n")}
+<style>${PRODUCT_CSS}</style></head>
+<body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
+}
+function blogIndexPage() {
+  const url = `${SITE}/blog/`;
+  const title = "Blog: business tools in Claude and ChatGPT | usefulapi";
+  const desc = "Short guides and real use cases: how people use their business tools from Claude, ChatGPT and other AI assistants with usefulapi MCP servers.";
+  const ld = { "@context": "https://schema.org", "@type": "Blog", name: "usefulapi blog", url, description: desc,
+    blogPost: POSTS.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date })) };
+  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › Blog</nav>
+<div class="brand">${MARK}<h1>Blog</h1></div>
+<p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>
+${postList(POSTS)}
+${FOOTER}`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
@@ -563,6 +632,7 @@ const homeLd = [
     itemListElement: manifest.servers.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: `${s.name} MCP Server`, url: `${SITE}${pagePath(s)}` })) }
 ];
 indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
+if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
 indexHtml = replaceOnce(indexHtml, "  <footer>",
   `  <nav class="cats" aria-label="Browse by category"><h2 class="group-head">Browse by category</h2>` +
   groupsPresent.map((g) => `<a href="${categoryPath(g)}">${esc(g)}</a>`).join("") + `</nav>\n  <footer>`);
@@ -587,6 +657,14 @@ for (const g of groupsPresent) {
   mkdirSync(`${outDir}${categoryPath(g)}`, { recursive: true });
   writeFileSync(`${outDir}${categoryPath(g)}index.html`, categoryPage(g, list));
 }
+if (POSTS.length) {
+  mkdirSync(`${outDir}/blog`, { recursive: true });
+  writeFileSync(`${outDir}/blog/index.html`, blogIndexPage());
+  for (const p of POSTS) {
+    mkdirSync(`${outDir}${postPath(p)}`, { recursive: true });
+    writeFileSync(`${outDir}${postPath(p)}index.html`, postPage(p));
+  }
+}
 // A top-level 404.html makes Cloudflare Pages return a real 404 for unknown paths instead of its
 // SPA fallback (serving index.html with 200 for every URL = soft-404s / duplicate content).
 writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found</h1>
@@ -596,7 +674,8 @@ writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found<
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
 const base = SITE;
-const urls = [`${base}/`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`)];
+const urls = [`${base}/`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
+  ...(POSTS.length ? [`${base}/blog/`, ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
@@ -613,6 +692,7 @@ writeFileSync(`${outDir}/llms.txt`,
   (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls (${PRO_FAIR_USE}); each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
   groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
     .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
+  (POSTS.length ? `\n\n## Blog\n\n` + POSTS.map((p) => `- [${p.title}](${base}${postPath(p)}): ${p.description}`).join("\n") : "") +
   `\n\n## Optional\n\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n`);
 
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
@@ -625,4 +705,4 @@ writeFileSync(`${outDir}/mcp-robots.txt`,
   `# These hosts are JSON-RPC API endpoints; the human-readable pages live on ${base}.\n` +
   `User-agent: *\nDisallow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
-console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, robots.txt, mcp-robots.txt, llms.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
+console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${POSTS.length} blog post(s), robots.txt, mcp-robots.txt, llms.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
