@@ -78902,6 +78902,804 @@
         "List unpaid invoices from the last month with the amount owing.",
         "Book Jane Citizen in for a 1 hour appointment on Friday at 3pm."
       ]
+    },
+    {
+      "slug": "semble",
+      "name": "Semble",
+      "category": "healthcare",
+      "description": "Read Semble patients, bookings, invoices and products; create patients and tasks, label patients.",
+      "endpoint": "https://semble.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "tools": [
+        {
+          "name": "semble_get_practice",
+          "type": "read",
+          "title": "Get the practice",
+          "description": "The practice the API token belongs to: name, timezone, locations, appointment types and medical specialties. A good first call to check the connection."
+        },
+        {
+          "name": "semble_list_patients",
+          "type": "read",
+          "title": "List or search patients",
+          "description": "Patients of the practice (personal and health data). `search` matches name, email, phone or date of birth. Returns id, name, date of birth, contact details and status, plus pageInfo.hasMore for the next page."
+        },
+        {
+          "name": "semble_get_patient",
+          "type": "read",
+          "title": "Get a patient",
+          "description": "One patient by id (personal data): demographics, phones, address, numbers, custom attributes, labels, comments and status. Appointments, invoices and tasks have their own tools."
+        },
+        {
+          "name": "semble_list_patient_bookings",
+          "type": "read",
+          "title": "List a patient's bookings",
+          "description": "The bookings (appointments) of one patient between two dates, with doctor, location, appointment type and status. Both dates are required (YYYY-MM-DD)."
+        },
+        {
+          "name": "semble_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "Bookings (appointments) of the whole practice. With a date range, a booking is included if it starts or ends inside it. Returns patient, doctor, location, appointment type, status and journey (arrived, consultation, departed, dna)."
+        },
+        {
+          "name": "semble_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "One booking by id, with patient, doctor, location, appointment type, status and journey."
+        },
+        {
+          "name": "semble_list_users",
+          "type": "read",
+          "title": "List users (staff)",
+          "description": "Staff users of the practice (clinicians and admin): name, email, role, qualifications and specialties. Use the ids for bookings and tasks."
+        },
+        {
+          "name": "semble_get_user",
+          "type": "read",
+          "title": "Get a user (staff)",
+          "description": "One staff user by id."
+        },
+        {
+          "name": "semble_list_products",
+          "type": "read",
+          "title": "List products and services",
+          "description": "The practice's price list: appointment types, services and stock items, with price, cost, duration and stock level. `search` matches the item code or name."
+        },
+        {
+          "name": "semble_get_product",
+          "type": "read",
+          "title": "Get a product or service",
+          "description": "One product, service or appointment type by id."
+        },
+        {
+          "name": "semble_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "Invoices whose invoice date is inside a date range, with patient, totals and what is outstanding. Filter by status (active or cancelled) and paid_or_outstanding. Monetary amounts are in the practice currency."
+        },
+        {
+          "name": "semble_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "One invoice by id, with its line items, totals and what is outstanding."
+        },
+        {
+          "name": "semble_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Contacts of the practice (referring doctors, insurers and other payors). `search` matches name, email, phone, specialty and numbers."
+        },
+        {
+          "name": "semble_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "Practice tasks, filtered by patient, status, priority, type or assignee. Returns subject, due date, priority, assignee and patient."
+        },
+        {
+          "name": "semble_list_labels",
+          "type": "read",
+          "title": "List patient labels",
+          "description": "The labels that can be put on patients (id, title, colour). Use the id with semble_add_patient_label."
+        },
+        {
+          "name": "semble_create_task",
+          "type": "write",
+          "title": "Create a task (WRITE)",
+          "description": "Creates a task in Semble assigned to a staff user (get ids from semble_list_users), optionally about a patient, with a due date, priority and type. Creates a new record each time it is called."
+        },
+        {
+          "name": "semble_update_task",
+          "type": "write",
+          "title": "Update a task (WRITE)",
+          "description": "Changes a task: close or reopen it (status), reassign it, move the due date, or edit subject, priority and notes. Only the fields you pass are changed."
+        },
+        {
+          "name": "semble_add_patient_label",
+          "type": "write",
+          "title": "Add a label to a patient (WRITE)",
+          "description": "Puts an existing label on a patient (label ids from semble_list_labels). Adds only; nothing is removed."
+        },
+        {
+          "name": "semble_create_patient",
+          "type": "write",
+          "title": "Create a patient (WRITE)",
+          "description": "Creates a new patient record (personal data) from the details you give. It does not check for an existing patient: search with semble_list_patients first to avoid a duplicate."
+        },
+        {
+          "name": "semble_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "semble_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Semble tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "semble_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Semble (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "semble_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Semble Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run semble_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which appointments does my practice have booked tomorrow?",
+        "Find the patient Jane Doe and show her recent bookings.",
+        "List the outstanding invoices from the last month.",
+        "Create a recall task for Dr Patel about patient 1234, due next Friday."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Semble API token"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "In Semble open **Settings** and generate an API token (see [Semble API authentication](https://docs.semble.io/docs/authentication/)). Give it only the permissions you want to share. Choose **Sandbox** only for a token created in the Semble sandbox. Your token is stored encrypted and used only to call the Semble API on your behalf; it is never shown to anyone."
+      }
+    },
+    {
+      "slug": "yuki",
+      "name": "Yuki",
+      "category": "billing",
+      "description": "Read Yuki administrations, open invoices, ledger balances, contacts and documents.",
+      "endpoint": "https://yuki.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "tools": [
+        {
+          "name": "yuki_list_domains",
+          "type": "read",
+          "title": "List domains",
+          "description": "List the Yuki domains (customer environments) this access key can reach: id, name and URL. Accountant keys reach many domains. Accounting.Domains."
+        },
+        {
+          "name": "yuki_list_administrations",
+          "type": "read",
+          "title": "List administrations",
+          "description": "List the administrations (companies with their own books) this access key can reach: id, name, address, Chamber of Commerce and VAT numbers, start date. Use the ids in the other tools. Accounting.Administrations."
+        },
+        {
+          "name": "yuki_list_outstanding_debtor_items",
+          "type": "read",
+          "title": "List open sales invoices (debtors)",
+          "description": "Open items on the debtors list (unpaid sales invoices): date, description, contact, open and original amount, reference, due date. Optionally within a date range. Accounting.OutstandingDebtorItems / OutstandingDebtorItemsByDate."
+        },
+        {
+          "name": "yuki_list_outstanding_creditor_items",
+          "type": "read",
+          "title": "List open purchase invoices (creditors)",
+          "description": "Open items on the creditors list (unpaid purchase invoices): date, description, contact, open and original amount, reference, due date. Optionally within a date range. Accounting.OutstandingCreditorItems / OutstandingCreditorItemsByDate."
+        },
+        {
+          "name": "yuki_get_gl_account_balance",
+          "type": "read",
+          "title": "Get general ledger balances",
+          "description": "The balance of every general ledger account of an administration on a date (yyyy-mm-dd): account code, description, amount. Accounting.GLAccountBalance."
+        },
+        {
+          "name": "yuki_list_gl_account_transactions",
+          "type": "read",
+          "title": "List general ledger transactions",
+          "description": "The transactions booked on one general ledger account in a date range: date, description, amount, contact, project. Get account codes from yuki_get_gl_account_scheme. Accounting.GLAccountTransactions."
+        },
+        {
+          "name": "yuki_get_net_revenue",
+          "type": "read",
+          "title": "Get net revenue",
+          "description": "The net revenue (turnover) of an administration in a date range, by transaction date. Accounting.NetRevenue."
+        },
+        {
+          "name": "yuki_get_gl_account_scheme",
+          "type": "read",
+          "title": "Get chart of accounts",
+          "description": "The general ledger accounts (chart of accounts) of an administration: code, description, type. Use the codes in yuki_list_gl_account_transactions. AccountingInfo.GetGLAccountScheme."
+        },
+        {
+          "name": "yuki_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "Projects of an administration (code, description, company, contact, period, budgets), optionally filtered. AccountingInfo.GetProjects."
+        },
+        {
+          "name": "yuki_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search the contacts (customers and suppliers) of a domain by name, city, postcode, tag, email, website, phone, code, Chamber of Commerce number, VAT number or bank account. Returns at most 100 contacts per page; ask for the next page_number until the reply is empty. Contact.SearchContacts."
+        },
+        {
+          "name": "yuki_list_document_folders",
+          "type": "read",
+          "title": "List archive folders",
+          "description": "The folders of the document archive (id, name). With an accountant key that reaches several domains, pass domain_id so the archive of that domain is read (default: the key's only domain). Archive.DocumentFolders."
+        },
+        {
+          "name": "yuki_list_document_folder_tabs",
+          "type": "read",
+          "title": "List archive folder tabs",
+          "description": "The tabs inside one archive folder (id, name). Archive.DocumentFolderTabs."
+        },
+        {
+          "name": "yuki_list_documents",
+          "type": "read",
+          "title": "List archive documents",
+          "description": "Documents in the archive (invoices, receipts, bank statements...) with id, subject, type, contact, dates, amount. Narrow by archive folder or by document type, and by creation date range. Page with number_of_records and start_record. Archive.Documents / DocumentsInFolder / DocumentsByType."
+        },
+        {
+          "name": "yuki_search_documents",
+          "type": "read",
+          "title": "Search archive documents",
+          "description": "Search archive documents by text in the creator, contact, subject, tag or type (or all). Optionally limit to a folder or tab and a date range. Archive.SearchDocuments."
+        },
+        {
+          "name": "yuki_get_document",
+          "type": "read",
+          "title": "Get document",
+          "description": "Details of one archive document by id (subject, type, contact, dates, amounts, folder). Archive.FindDocument."
+        },
+        {
+          "name": "yuki_get_document_download_url",
+          "type": "read",
+          "title": "Get document download link",
+          "description": "A presigned download URL for the file of one archive document (the link works for a short time; open it in a browser). Archive.DocumentDownloadUrl."
+        },
+        {
+          "name": "yuki_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "yuki_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Yuki tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "yuki_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Yuki (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "yuki_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Yuki Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run yuki_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales invoices are still open, and which are past their due date?",
+        "Show the balance of every ledger account of my company on 31 December.",
+        "What was my net revenue in the third quarter?",
+        "Find the contact with VAT number NL123456789B01 and their open invoices."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Yuki web service access key"
+          }
+        ],
+        "hint": "In Yuki open **Settings → Integrations → Web services** and choose **Add new API key** (needs the Management or Backoffice role; the key can be limited to one administration). Copy the key. It is used only to read your Yuki data on your behalf; revoke it in Yuki at any time."
+      }
+    },
+    {
+      "slug": "kiotviet",
+      "name": "KiotViet",
+      "category": "ecommerce",
+      "description": "Read KiotViet products, customers, invoices, orders and stock; create customers and orders.",
+      "endpoint": "https://kiotviet.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per store account"
+        }
+      ],
+      "tools": [
+        {
+          "name": "kiotviet_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (code, barcode, name, category, base price, units, attributes). Optionally include stock per branch (include_inventory) and price-book prices. Filter by name, category, branch, active flag or last change. GET /products."
+        },
+        {
+          "name": "kiotviet_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id: code, barcode, name, category, base price, units, attributes, images, stock per branch and price books. GET /products/{id}."
+        },
+        {
+          "name": "kiotviet_get_product_by_code",
+          "type": "read",
+          "title": "Get product by code",
+          "description": "One product by its product code (SKU). GET /products/code/{code}."
+        },
+        {
+          "name": "kiotviet_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List product categories (id, name, parent, whether it has children). Set hierarchical to get the category tree. GET /categories."
+        },
+        {
+          "name": "kiotviet_get_category",
+          "type": "read",
+          "title": "Get category",
+          "description": "One product category by id (name, parent, children). GET /categories/{id}."
+        },
+        {
+          "name": "kiotviet_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (code, name, phone, email, address, debt, total invoiced, reward points, groups). Contains personal data of the shop's customers. Filter by code, name, phone, group or last change. GET /customers."
+        },
+        {
+          "name": "kiotviet_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id: contact data, debt, total invoiced, reward points, groups. GET /customers/{id}."
+        },
+        {
+          "name": "kiotviet_get_customer_by_code",
+          "type": "read",
+          "title": "Get customer by code",
+          "description": "One customer by customer code. GET /customers/code/{code}."
+        },
+        {
+          "name": "kiotviet_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a new customer in the shop (name required; code is generated by KiotViet if omitted). Always check with the user first, and look the customer up by phone before creating a duplicate. POST /customers."
+        },
+        {
+          "name": "kiotviet_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List sales invoices (code, date, branch, customer, total, amount paid, status, lines). Filter by branch, customer, status, order, purchase-date range or last change. GET /invoices."
+        },
+        {
+          "name": "kiotviet_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One invoice by id with its lines, payments and delivery. GET /invoices/{id}."
+        },
+        {
+          "name": "kiotviet_get_invoice_by_code",
+          "type": "read",
+          "title": "Get invoice by code",
+          "description": "One invoice by invoice code (for example HD000123). GET /invoices/code/{code}."
+        },
+        {
+          "name": "kiotviet_list_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders (code, date, branch, customer, total, status, lines, delivery). Filter by branch, customer, status, creation date (from) or last change (from/to). GET /orders."
+        },
+        {
+          "name": "kiotviet_get_order",
+          "type": "read",
+          "title": "Get sales order",
+          "description": "One sales order by id with its lines, payments and delivery. GET /orders/{id}."
+        },
+        {
+          "name": "kiotviet_get_order_by_code",
+          "type": "read",
+          "title": "Get sales order by code",
+          "description": "One sales order by order code (for example DH000123). GET /orders/code/{code}."
+        },
+        {
+          "name": "kiotviet_create_order",
+          "type": "write",
+          "title": "Create sales order",
+          "description": "WRITE: create a sales order (an order, not an invoice: no invoice is made and no payment is recorded) with lines of existing products in a branch, for an existing customer or none. Always confirm the products, quantities and prices with the user first. POST /orders."
+        },
+        {
+          "name": "kiotviet_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List the shop's branches (id, name, code, phone, address). Use the ids to filter other tools. GET /branches."
+        },
+        {
+          "name": "kiotviet_list_stock",
+          "type": "read",
+          "title": "List stock on hand",
+          "description": "Stock on hand and reserved quantity per product and branch. Filter by branch or last change. GET /productOnHands."
+        },
+        {
+          "name": "kiotviet_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers (code, name, phone, email, address, debt, total invoiced). Filter by code, name, phone or last change. GET /suppliers."
+        },
+        {
+          "name": "kiotviet_get_supplier",
+          "type": "read",
+          "title": "Get supplier",
+          "description": "One supplier by id. GET /suppliers/{id}."
+        },
+        {
+          "name": "kiotviet_list_purchase_orders",
+          "type": "read",
+          "title": "List goods receipts",
+          "description": "List goods receipts from suppliers (nhap hang: code, date, branch, supplier, total, lines). Filter by branch, status or purchase-date range. GET /purchaseorders."
+        },
+        {
+          "name": "kiotviet_get_purchase_order",
+          "type": "read",
+          "title": "Get goods receipt",
+          "description": "One goods receipt (nhap hang) by id with its lines. GET /purchaseorders/{id}."
+        },
+        {
+          "name": "kiotviet_list_supplier_orders",
+          "type": "read",
+          "title": "List supplier orders",
+          "description": "List orders placed with suppliers (dat hang nhap: code, date, branch, supplier, status, lines, amount paid). Filter by branch, status, supplier or product text. GET /ordersuppliers."
+        },
+        {
+          "name": "kiotviet_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List customer returns (code, date, branch, customer, invoice, return total, lines). GET /returns."
+        },
+        {
+          "name": "kiotviet_get_return",
+          "type": "read",
+          "title": "Get return",
+          "description": "One customer return by id with its lines. GET /returns/{id}."
+        },
+        {
+          "name": "kiotviet_list_cashflow",
+          "type": "read",
+          "title": "List cash flow",
+          "description": "List cash-book entries (receipts and payments: code, branch, method, partner, amount, date, status). Filter by branch, direction or date range. GET /cashflow."
+        },
+        {
+          "name": "kiotviet_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the shop's staff users (id, username, name, phone, email). GET /users."
+        },
+        {
+          "name": "kiotviet_list_price_books",
+          "type": "read",
+          "title": "List price books",
+          "description": "List price books (bang gia: name, active flag, validity dates, branches, customer groups). GET /pricebooks."
+        },
+        {
+          "name": "kiotviet_get_price_book",
+          "type": "read",
+          "title": "Get price book prices",
+          "description": "The product prices of one price book (product id, code, price), paged. GET /pricebooks/{id}."
+        },
+        {
+          "name": "kiotviet_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kiotviet_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the KiotViet tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kiotviet_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on KiotViet (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kiotviet_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's KiotViet Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kiotviet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which products are running low on stock at the Hanoi branch?",
+        "Show today's invoices with their totals and payment status.",
+        "Find the customer with phone number 0901234567 and list their latest orders.",
+        "Create a sales order for customer 1024 with 3 units of product 5531 at 120000 each."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "KiotViet Client ID"
+          },
+          {
+            "label": "KiotViet secret (Mã bảo mật)"
+          },
+          {
+            "label": "Shop name (tên gian hàng)"
+          }
+        ],
+        "hint": "In KiotViet, a shop administrator opens **Thiết lập → Cửa hàng → Kết nối API** (Settings, Store, API connection), verifies the contract phone number, generates the secret (Mã bảo mật), accepts the terms and ticks access to customer, invoice and order data. Copy the Client ID and secret from there. The shop name is the store name (tên gian hàng) you log in with, for example minhanhshop. They are used only to call the KiotViet API on your behalf; they are never shown to anyone."
+      }
+    },
+    {
+      "slug": "bukku",
+      "name": "Bukku",
+      "category": "billing",
+      "description": "Read Bukku contacts, accounts, invoices, bills and journals; create contacts and sales invoices.",
+      "endpoint": "https://bukku.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account"
+        }
+      ],
+      "tools": [
+        {
+          "name": "bukku_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (customers, suppliers, employees) with name, code, type, receivable and payable balances. Search matches the name, receivable, payable and created date. GET /contacts."
+        },
+        {
+          "name": "bukku_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact with its persons, addresses, tax and registration numbers, default accounts and credit limit. GET /contacts/{id}."
+        },
+        {
+          "name": "bukku_list_contact_groups",
+          "type": "read",
+          "title": "List contact groups",
+          "description": "List the contact groups; use their ids to filter bukku_list_contacts. GET /contacts/groups."
+        },
+        {
+          "name": "bukku_list_accounts",
+          "type": "read",
+          "title": "List accounts (chart of accounts)",
+          "description": "List ledger accounts from the chart of accounts, optionally by category. Account ids are used on invoice lines. GET /accounts."
+        },
+        {
+          "name": "bukku_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "One ledger account by id. GET /accounts/{id}."
+        },
+        {
+          "name": "bukku_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and bundles (sales and purchase details, SKU, stock). GET /products."
+        },
+        {
+          "name": "bukku_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product with its units, prices, accounts and tax settings. GET /products/{id}."
+        },
+        {
+          "name": "bukku_list_product_groups",
+          "type": "read",
+          "title": "List product groups",
+          "description": "List the product groups. GET /products/groups."
+        },
+        {
+          "name": "bukku_list_sales_invoices",
+          "type": "read",
+          "title": "List sales invoices",
+          "description": "List sales invoices with number, date, contact, amount, balance and payment status. Filter by date, customer, payment status (PAID, OUTSTANDING, OVERDUE) or keywords. GET /sales/invoices."
+        },
+        {
+          "name": "bukku_list_sales_documents",
+          "type": "read",
+          "title": "List other sales documents",
+          "description": "List quotes, sales orders, delivery orders, credit notes, customer payments or refunds (invoices have their own tool, bukku_list_sales_invoices). payment_status applies to credit notes, payments and refunds only. GET /sales/{quotes|orders|delivery_orders|credit_notes|payments|refunds}."
+        },
+        {
+          "name": "bukku_get_sales_document",
+          "type": "read",
+          "title": "Get sales document",
+          "description": "One sales document in full (lines, taxes, terms, payments, status): an invoice, quote, order, delivery order, credit note, payment or refund. GET /sales/{type}/{id}."
+        },
+        {
+          "name": "bukku_list_purchase_bills",
+          "type": "read",
+          "title": "List purchase bills",
+          "description": "List purchase bills with number, date, supplier, amount, balance and payment status. Filter by date, supplier, payment status (PAID, OUTSTANDING, OVERDUE) or keywords. GET /purchases/bills."
+        },
+        {
+          "name": "bukku_list_purchase_documents",
+          "type": "read",
+          "title": "List other purchase documents",
+          "description": "List purchase orders, goods received notes, supplier credit notes, supplier payments or refunds (bills have their own tool, bukku_list_purchase_bills). payment_status applies to credit notes, payments and refunds only. GET /purchases/{orders|goods_received_notes|credit_notes|payments|refunds}."
+        },
+        {
+          "name": "bukku_get_purchase_document",
+          "type": "read",
+          "title": "Get purchase document",
+          "description": "One purchase document in full (lines, taxes, terms, payments, status): a bill, order, goods received note, credit note, payment or refund. GET /purchases/{type}/{id}."
+        },
+        {
+          "name": "bukku_list_journal_entries",
+          "type": "read",
+          "title": "List journal entries",
+          "description": "List manual journal entries by date, status or keywords. GET /journal_entries."
+        },
+        {
+          "name": "bukku_get_journal_entry",
+          "type": "read",
+          "title": "Get journal entry",
+          "description": "One journal entry with its debit and credit lines. GET /journal_entries/{id}."
+        },
+        {
+          "name": "bukku_list_bank_transactions",
+          "type": "read",
+          "title": "List bank transactions",
+          "description": "List banking transactions: money in (incomes), money out (expenses) or transfers between accounts. contact_id and sort_by do not apply to transfers. GET /banking/{incomes|expenses|transfers}."
+        },
+        {
+          "name": "bukku_get_bank_transaction",
+          "type": "read",
+          "title": "Get bank transaction",
+          "description": "One money in, money out or transfer transaction in full. GET /banking/{incomes|expenses|transfers}/{id}."
+        },
+        {
+          "name": "bukku_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the tags (labels) that can be put on transactions. GET /tags."
+        },
+        {
+          "name": "bukku_get_lookup_lists",
+          "type": "read",
+          "title": "Get lookup lists",
+          "description": "Reference data needed to fill in documents: tax codes, payment terms, payment methods, currencies, countries, accounts, contact groups, product groups, price levels, tag groups, number formats, custom fields and company settings. Read-only (POST /v2/lists is a read endpoint)."
+        },
+        {
+          "name": "bukku_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a contact (customer, supplier and/or employee) in Bukku. The contact code must be unique (A-Z, 0-9, _ and -, max 15 characters). POST /contacts."
+        },
+        {
+          "name": "bukku_set_contact_archived",
+          "type": "write",
+          "title": "Archive or unarchive contact",
+          "description": "WRITE: archive (is_archived true) or restore (false) a contact. Archiving hides it from active lists; nothing is deleted. PATCH /contacts/{id}."
+        },
+        {
+          "name": "bukku_create_sales_invoice",
+          "type": "write",
+          "title": "Create sales invoice",
+          "description": "WRITE: create a sales invoice for a customer. status defaults to draft (nothing posted to the ledger), status ready finalizes it and affects the books. payment_mode credit needs term_items, cash needs deposit_items. Companies with MyInvois submission switched on must pass myinvois_action when status is ready: NORMAL (not sent), EXTERNAL (already validated elsewhere) or VALIDATE (submits the invoice to LHDN MyInvois, which cannot be taken back). Look up contact, account, term and tax code ids first. POST /sales/invoices."
+        },
+        {
+          "name": "bukku_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bukku_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bukku tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bukku_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Bukku (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bukku_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bukku Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bukku_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales invoices are overdue, and how much does each customer owe?",
+        "Show last month's purchase bills from my suppliers.",
+        "Create a draft invoice for Alpha Company Sdn Bhd for 3 hours of consulting at RM 200.",
+        "List the bank money-in transactions for this week."
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Company subdomain"
+          },
+          {
+            "label": "Bukku access token"
+          }
+        ],
+        "hint": "In Bukku open **Control Panel → Integrations**, switch **API Access** on and click **Save** to show the Access Token. The subdomain is the name before `.bukku.my` in your Bukku address. The token has full access to the company, so keep it private. It is used only to call the Bukku API on your behalf and is never shown to anyone."
+      }
     }
   ]
 }
