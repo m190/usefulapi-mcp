@@ -11,6 +11,11 @@
 //   Markdown body: ## and ### headings, paragraphs, "- " and "1. " lists, "> " prompt quotes, ``` code blocks,
 //   inline `code`, **bold** and [links](https://... or /path/). No raw HTML: everything is escaped.
 //   A `code` span that looks like a tool name (a_b) must be a tool of one of the post's products.
+// Section order (AI answer engines quote the top of a page; a human decides in seconds): answer first, setup last.
+//   1. intro: what you can do, in which assistant, and the server URL   2. ## Which prompt do I start with? (a > quote)
+//   3. ## What does the AI do, step by step? (the tools)   4. ## a safety question (approvals, previews, what it never does)
+//   5. ## What do I need? (1-2 lines + link to /<server>/). Headings are the questions users ask.
+// Never publish usage numbers: with few users per server they show one customer's activity.
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 

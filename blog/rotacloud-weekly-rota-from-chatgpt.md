@@ -1,30 +1,29 @@
 ---
 title: Build next week's RotaCloud rota from ChatGPT
-description: Copy a week of RotaCloud shifts, check availability and days off, fix the drafts, then publish them, all from one chat in ChatGPT or Claude.
+description: ChatGPT or Claude can copy a week of RotaCloud shifts as drafts, skip people on leave or days off, and publish the rota after you review it.
 date: 2026-10-23
 products: rotacloud
 ---
-Most rotas look like last week's rota with a few changes. With the RotaCloud MCP server, you can ask an AI assistant to do the copy work and you only make the decisions.
+You can build next week's RotaCloud rota from ChatGPT or Claude. The AI copies last week's shifts, checks leave, availability and days off, and creates the new shifts as unpublished drafts. You review them, then ask it to publish. To start, add `https://rotacloud.usefulapi.io/mcp` to your AI client as a connector.
 
-## What you need
-
-- A RotaCloud API key. An account admin creates it in RotaCloud under **Settings → Integrations → API**.
-- The RotaCloud connector in ChatGPT, Claude or another MCP client. See the [setup steps](/rotacloud/).
-
-## Step by step
-
-1. Ask for last week's rota. The AI reads it with `rotacloud_list_shifts` and maps user, location and role ids to names with `rotacloud_list_users`, `rotacloud_list_locations` and `rotacloud_list_roles`.
-2. Ask it to check who can work next week. It reads `rotacloud_get_availability` and `rotacloud_list_days_off`, and `rotacloud_list_leave` for booked leave.
-3. Ask it to create next week's shifts. It uses `rotacloud_create_shift`. New shifts are not published, so employees do not see them yet.
-4. Read the result and ask for changes in plain words. The AI changes times, people or breaks with `rotacloud_update_shift`.
-5. When the rota is correct, ask it to publish. `rotacloud_publish_shifts` makes the shifts visible, and RotaCloud notifies the assigned employees.
-
-A prompt to start with:
+## Which prompt do I start with?
 
 > Copy last week's shifts at our Main site to next week. Skip anyone who is on leave or unavailable, and leave those shifts open. Do not publish yet.
 
-## Tips
+## What does the AI do, step by step?
 
-- Most AI clients ask you to approve each call that creates or changes data. For a large rota, you can allow the RotaCloud write tools for the chat.
-- To remove short open shifts, ask the AI to find them first. `rotacloud_find_shifts` selects them and `rotacloud_delete_shifts` shows a preview. It deletes only after you confirm.
-- Ask for a check before you publish, for example: "List every shift that overlaps with leave or a day off."
+1. It reads last week's rota with `rotacloud_list_shifts` and maps user, location and role ids to names with `rotacloud_list_users`, `rotacloud_list_locations` and `rotacloud_list_roles`.
+2. It checks who can work next week with `rotacloud_get_availability`, `rotacloud_list_days_off` and `rotacloud_list_leave`.
+3. It creates next week's shifts with `rotacloud_create_shift`. By default, a new shift is not published, so employees do not see it yet.
+4. You read the result and ask for changes in plain words. The AI changes times, people or breaks with `rotacloud_update_shift`.
+5. When the rota is correct, you ask it to publish. `rotacloud_publish_shifts` makes the shifts visible, and RotaCloud notifies the assigned employees.
+
+## How do I stay in control of the changes?
+
+- Most AI clients ask you to approve each call that creates or changes data. This depends on the client's settings. For a large rota, you can allow the RotaCloud write tools for the chat.
+- Ask for drafts, as in the prompt above. New shifts are unpublished by default, but the tools can also publish, so tell the AI to keep them unpublished while it creates and changes them. Before you publish, ask for a check, for example: "List every shift that overlaps with leave or a day off."
+- To remove short open shifts, ask the AI to find them first. `rotacloud_find_shifts` selects them. Without `confirm: true`, `rotacloud_delete_shifts` only shows a preview. Ask the AI to show you the preview and to wait for your approval before it deletes.
+
+## What do I need?
+
+A RotaCloud API key. An account admin creates it in RotaCloud under **Settings → Integrations → API**. See the [setup steps](/rotacloud/) for Claude, ChatGPT, Cursor and other clients.
