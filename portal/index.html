@@ -76,6 +76,10 @@
   .chip.live { color: #12873f; }
   .chip.soon { color: var(--accent); }
   @media (prefers-color-scheme: dark) { .chip.live { color: #5fd68a; } }
+  header p.custom-line { margin: -16px 0 28px; font-size: 15px; max-width: none; }
+  .custom-line a, .custom a, .empty a { color: var(--accent); }
+  .custom { margin-top: 44px; }
+  .custom p { color: var(--muted); font-size: 15px; margin: 0 0 8px; max-width: 64ch; }
   footer { margin-top: 56px; color: var(--muted); font-size: 13px; }
   footer a { color: var(--muted); }
   code { background: var(--chip); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
@@ -225,7 +229,14 @@
 
       if (!list.length) {
         results.innerHTML = '';
-        countEl.innerHTML = '<span class="empty">No servers match <b>' + esc(searchEl.value.trim()) + '</b>.</span>';
+        // Subject stays "Custom work"; the search text goes into the body, cut by code point (never a half emoji).
+        let mailBody = '';
+        try {
+          const q0 = searchEl.value.trim();
+          mailBody = '&body=' + encodeURIComponent('I searched usefulapi.io for: ' + Array.from(q0.toWellFormed ? q0.toWellFormed() : q0).slice(0, 80).join(''));
+        } catch (e) { mailBody = ''; }
+        countEl.innerHTML = '<span class="empty">No servers match <b>' + esc(searchEl.value.trim()) + '</b>. ' +
+          '<a href="mailto:support@usefulapi.io?subject=Custom%20work' + mailBody + '">Ask us to build it</a> or see <a href="/services/">custom integrations</a>.</span>';
         return;
       }
       countEl.textContent = list.length + (list.length === 1 ? " server" : " servers") +

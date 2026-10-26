@@ -185,7 +185,10 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
 @media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
-const FOOTER = `<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; ${POSTS.length ? `<a href="/blog/">Blog</a> &nbsp;·&nbsp; ` : ""}<a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+// Custom work (professional services): one page, contact by email only, no prices on the site.
+const SERVICES_PATH = "/services/";
+const SERVICES_MAIL = "mailto:support@usefulapi.io?subject=Custom%20work";
+const FOOTER = `<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; ${POSTS.length ? `<a href="/blog/">Blog</a> &nbsp;·&nbsp; ` : ""}<a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
 const postList = (list) => `<ul class="posts">${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 // Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
@@ -414,6 +417,7 @@ ${live && postsFor(s).length ? `<h2 class="sec">Guides</h2>\n${postList(postsFor
 ${pricingSection}
 ${live ? faqSection(faq) : ""}
 ${hint}
+<p class="hint">Need a tool this server does not have, or a connection to another system? <a href="${SERVICES_PATH}">We build custom integrations and MCP servers</a>.</p>
 ${related}
 ${FOOTER}`;
   const url = `${SITE}${pagePath(s)}`;
@@ -598,6 +602,36 @@ const homeResults = () => {
   ).join("");
 };
 
+// /services/: what we build for a customer. Facts only: no prices, no customer names or numbers, no SLA.
+function servicesPage() {
+  const title = "Custom integrations and MCP servers";
+  const desc = "We build and run custom integrations: new MCP servers, extra tools for an existing server, connectors between business systems, AI assistant setups and private deployments. Email us with what you need.";
+  const body = `<h1>${title}</h1>
+<p>We build connections between business software and AI assistants, and between business systems. This site is our own work: ${manifest.servers.length} hosted MCP servers, each with its tools, a secure sign-in, usage limits and billing, built and run by us.</p>
+<h2>What we build</h2>
+<ul>
+<li><strong>A new MCP server</strong> for a tool that is not in our catalog, including the API of your own product.</li>
+<li><strong>Extra tools on an existing server</strong> for a workflow of your own, for example a bulk change with a preview, or a report that combines several API calls.</li>
+<li><strong>Custom integrations and connectors</strong> between your systems, also without AI: data syncs, webhooks, internal APIs, and connectors for platforms such as Alteryx.</li>
+<li><strong>AI assistant setups</strong> for your team: Claude, ChatGPT, Cursor or another MCP client, connected to the tools you use.</li>
+<li><strong>Private deployments</strong>: a server for your company only. Tell us your hosting, region and data-handling requirements, and we confirm what is possible before we agree the scope.</li>
+<li><strong>Maintenance</strong>: we keep an integration working when the vendor changes its API.</li>
+</ul>
+<h2>How it works</h2>
+<ol>
+<li>Email us what you want to connect, and what the AI assistant or the system must do. Include the systems involved, an example workflow with its inputs and outputs, the API access you have, your target date, and any hosting or data requirements.</li>
+<li>We reply with our questions. Then we send a written scope and a price, before any work starts.</li>
+<li>We build and test it, and deliver it to you. If you want, we also maintain it.</li>
+</ol>
+<p>Before we build on a vendor's API, we check the vendor's API terms.</p>
+<h2>Contact</h2>
+<p>Email <a href="${SERVICES_MAIL}">support@usefulapi.io</a> with the subject "Custom work".</p>
+<p>For paid custom work, email us. For a suggestion about one of our hosted servers, ask your AI assistant to use the server's <code>request_feature</code> tool (for example <code>rotacloud_request_feature</code>). We read every suggestion, but a suggestion does not order work and does not guarantee that we build it.</p>`;
+  return SHELL(title, body)
+    .replace(`<title>${title} — usefulapi</title>`, `<title>${title} — usefulapi</title>\n${headMeta({ title: `${title} — usefulapi`, desc, url: `${SITE}${SERVICES_PATH}` })}`)
+    .replace("<style>", "<style>\n ol{margin:0 0 14px;padding-left:22px}");
+}
+
 mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
 // Inject manifest.json (source of truth) into the portal, overriding its dev-fallback MANIFEST.
@@ -633,7 +667,14 @@ const homeLd = [
 ];
 indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
 if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
+indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', `<a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>`);
+// Custom work: a short line under the tagline, and a section above the category links.
+indexHtml = replaceOnce(indexHtml, '<p id="tagline">Hosted MCP servers for the tools you already use.</p>',
+  `<p id="tagline">Hosted MCP servers for the tools you already use.</p>\n    <p class="custom-line">Need a tool that is not here, or a custom integration? <a href="${SERVICES_PATH}">We build it →</a></p>`);
 indexHtml = replaceOnce(indexHtml, "  <footer>",
+  `  <section class="custom" aria-labelledby="custom-h"><h2 class="group-head" id="custom-h">Custom integrations</h2>` +
+  `<p>Need a server that is not in this list, more tools on one of them, or a connection between your own systems? We build new MCP servers, custom tools, integrations and connectors (also without AI), AI assistant setups and private deployments.</p>` +
+  `<p><a href="${SERVICES_PATH}">How it works</a> &nbsp;·&nbsp; <a href="${SERVICES_MAIL}">Email support@usefulapi.io</a></p></section>\n` +
   `  <nav class="cats" aria-label="Browse by category"><h2 class="group-head">Browse by category</h2>` +
   groupsPresent.map((g) => `<a href="${categoryPath(g)}">${esc(g)}</a>`).join("") + `</nav>\n  <footer>`);
 writeFileSync(`${outDir}/index.html`, indexHtml);
@@ -648,6 +689,8 @@ for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new U
 writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=300\n`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
+mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
+writeFileSync(`${outDir}${SERVICES_PATH}index.html`, servicesPage());
 for (const s of manifest.servers) {
   mkdirSync(`${outDir}/${s.slug}`, { recursive: true });
   writeFileSync(`${outDir}/${s.slug}/index.html`, productPage(s));
@@ -674,7 +717,7 @@ writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found<
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
 const base = SITE;
-const urls = [`${base}/`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
+const urls = [`${base}/`, `${base}${SERVICES_PATH}`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
   ...(POSTS.length ? [`${base}/blog/`, ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
@@ -693,6 +736,7 @@ writeFileSync(`${outDir}/llms.txt`,
   groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
     .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
   (POSTS.length ? `\n\n## Blog\n\n` + POSTS.map((p) => `- [${p.title}](${base}${postPath(p)}): ${p.description}`).join("\n") : "") +
+  `\n\n## Custom work\n\n- [Custom integrations and MCP servers](${base}${SERVICES_PATH}): we build new MCP servers, extra tools for an existing server, integrations and connectors between business systems (also without AI), AI assistant setups and private deployments. Contact: support@usefulapi.io, subject "Custom work".` +
   `\n\n## Optional\n\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n`);
 
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
