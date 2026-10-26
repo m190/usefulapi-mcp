@@ -12227,7 +12227,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.24.0",
+      "version": "1.25.0",
       "pricing": [
         {
           "plan": "Free",
@@ -12342,7 +12342,7 @@
           "name": "lob_create_letter",
           "type": "write",
           "title": "Send a letter (COSTS MONEY)",
-          "description": "⚠️ SENDS A REAL LETTER and charges your Lob account (use a test_ key to avoid real mail/charges). `to`/`from` accept an address id (adr_…) or inline object. `file` accepts an HTML string, a hosted PDF/URL, or a template id (tmpl_…). `color` is required. Cancelable only before `send_date`. Lob API: POST /v1/letters."
+          "description": "⚠️ SENDS A REAL LETTER and charges your Lob account (use a test_ key to avoid real mail/charges). `to`/`from` accept an address id (adr_…) or inline object. `file` accepts an HTML string, a hosted PDF/URL, or a template id (tmpl_…). `color` is required. Cancelable only before `send_date`. Tracked mail: `extra_service` = certified (U.S. addresses: tracking + proof of delivery), certified_return_receipt (certified + the recipient's electronic signature) or registered (international addresses only); extra cost, first class only, not for us_legal size. The tracking number is on the letter (lob_get_letter). Lob API: POST /v1/letters."
         },
         {
           "name": "lob_cancel_postcard",
@@ -31936,6 +31936,12 @@
           "description": "Fetch a single work order by id — customer, vehicle, complaint, totals (parts/labor/tax in cents), payment state and profitability. Shopmonkey: GET /v3/order/:id."
         },
         {
+          "name": "shopmonkey_find_order_by_number",
+          "type": "read",
+          "title": "Find an order by its number",
+          "description": "Find a work order by the number the shop sees (e.g. 1042 or #1042), also matching an overridden external number. Tries Shopmonkey's server-side filter first, then reads the order list page by page (newest first) and compares each number exactly, up to maxOrders orders. Returns the order (use its id with the other order tools) or found: false with how many orders were read. Shopmonkey: GET /v3/order."
+        },
+        {
           "name": "shopmonkey_list_order_services",
           "type": "read",
           "title": "List an order's services",
@@ -31999,7 +32005,7 @@
           "name": "shopmonkey_create_order",
           "type": "write",
           "title": "Create an order",
-          "description": "Open a new work order (it starts as an estimate) for a customer and vehicle. Add services in the Shopmonkey UI. Shopmonkey: POST /v3/order."
+          "description": "Open a new work order (it starts as an estimate) for a customer and vehicle. Add services and labor with shopmonkey_add_service. Shopmonkey: POST /v3/order."
         },
         {
           "name": "shopmonkey_update_order",
@@ -32012,6 +32018,30 @@
           "type": "write",
           "title": "Book an appointment",
           "description": "Book an appointment on the shop calendar, optionally for a customer, vehicle and order and assigned to technicians. Confirmation/reminder messages are only sent if you ask. Shopmonkey: POST /v3/appointment."
+        },
+        {
+          "name": "shopmonkey_update_appointment",
+          "type": "write",
+          "title": "Update or reschedule an appointment",
+          "description": "Change an existing appointment — move it (new startDate/endDate), rename it, change its note, color, technicians, customer, vehicle or linked order, or set its confirmation status. Only the fields you pass are sent, so nothing is duplicated. Find the id with shopmonkey_search_appointments. Shopmonkey: PUT /v3/appointment/:id."
+        },
+        {
+          "name": "shopmonkey_delete_appointment",
+          "type": "write",
+          "title": "Delete (cancel) an appointment",
+          "description": "WRITE — removes an appointment from the shop calendar. To move it instead, use shopmonkey_update_appointment. Without confirm it only previews: it reads the appointment and deletes nothing. Show the preview to the user, then call again with confirm: true. After the delete the appointment is read again to verify it is gone. Shopmonkey: DELETE /v3/appointment/:id."
+        },
+        {
+          "name": "shopmonkey_add_service",
+          "type": "write",
+          "title": "Add a service (job) to an order",
+          "description": "Add a new service (job) to a work order, e.g. 'Road Call', optionally with labor lines (name, hours, hourly rate in cents). The service is created first, then each labor line is added to it. Find the order id with shopmonkey_find_order_by_number. To add labor to a service that exists, use shopmonkey_add_labor. Shopmonkey: POST /v3/order/:orderId/service, then POST /v3/order/:orderId/service/:serviceId/labor."
+        },
+        {
+          "name": "shopmonkey_add_labor",
+          "type": "write",
+          "title": "Add a labor line to a service",
+          "description": "Add a labor line (name, hours, hourly rate in cents, technician) to a service on a work order. Get the service id with shopmonkey_list_order_services; to start a new service, use shopmonkey_add_service. Shopmonkey: POST /v3/order/:orderId/service/:serviceId/labor."
         },
         {
           "name": "shopmonkey_usage_status",
@@ -32038,7 +32068,7 @@
           "description": "Cancel the caller's Shopmonkey Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shopmonkey_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.24.0",
+      "version": "1.25.0",
       "login": {
         "kind": "key",
         "fields": [

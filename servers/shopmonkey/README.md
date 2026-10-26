@@ -45,6 +45,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_get_vehicle` | read | Get one vehicle |
 | `shopmonkey_list_orders` | read | List orders |
 | `shopmonkey_get_order` | read | Get one order |
+| `shopmonkey_find_order_by_number` | read | Find an order by its number |
 | `shopmonkey_list_order_services` | read | List an order's services |
 | `shopmonkey_search_appointments` | read | Search appointments |
 | `shopmonkey_search_inventory_parts` | read | Search inventory parts |
@@ -58,6 +59,10 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_create_order` | **write** | Create an order |
 | `shopmonkey_update_order` | **write** | Update an order |
 | `shopmonkey_create_appointment` | **write** | Book an appointment |
+| `shopmonkey_update_appointment` | **write** | Update or reschedule an appointment |
+| `shopmonkey_delete_appointment` | **write** | Delete (cancel) an appointment |
+| `shopmonkey_add_service` | **write** | Add a service (job) to an order |
+| `shopmonkey_add_labor` | **write** | Add a labor line to a service |
 | `shopmonkey_usage_status` | meta | Usage status (free-tier meter) |
 | `shopmonkey_request_feature` | meta | Request a missing feature |
 | `shopmonkey_upgrade` | meta | Upgrade to Pro (unlimited*) |
