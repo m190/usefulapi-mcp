@@ -204,7 +204,7 @@ const noHeaderText = (s) =>
 // Servers that can return patient data: no PHI, no BAA (Terms §5 "Health data", decided 2026-10-09).
 const PATIENT_DATA = new Set(["drchrono", "healthie", "nexhealth", "canvas-medical", "intakeq", "metriport", "particlehealth",
   "health-gorilla", "photon-health", "spruce-health", "cliniko", "nookal", "infermedica",
-  "hint-health", "elation-health", "akute-health", "practice-better", "spoke-phone", "appointedd", "goformz", "halaxy", "semble"]);
+  "hint-health", "elation-health", "akute-health", "practice-better", "spoke-phone", "appointedd", "goformz", "halaxy", "semble", "cogmento"]);
 const PATIENT_DATA_TEXT = `Do not use this server with protected health information (PHI). We do not sign HIPAA Business Associate Agreements (BAAs).`;
 // Servers that return personal data about other people (employees, applicants): the user is the controller.
 const PERSONAL_DATA = {
