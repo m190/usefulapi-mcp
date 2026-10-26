@@ -647,8 +647,8 @@ indexHtml = indexHtml.replace(
 // link and description. The homepage JS re-renders the same content on load (progressive enhancement).
 indexHtml = indexHtml.replace('<main id="results"></main>', `<main id="results">${homeResults()}</main>`);
 indexHtml = indexHtml.replace('<p class="count" id="count"></p>', `<p class="count" id="count">${manifest.servers.length} servers</p>`);
-// SEO: server count in the title/description, canonical, structured data, and a static
-// "Browse by category" footer nav (crawlable hub links; not touched by the homepage JS).
+// SEO: server count in the title/description, canonical, structured data. The pre-rendered
+// group headings link the category pages (crawlable hub links).
 const N = manifest.servers.length;
 const homeTitle = `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
 const homeDesc = `${N} hosted, remote MCP servers for the SaaS and developer tools you already use — CRM, payments, messaging, healthcare, DevOps and more. Free tier on every server.`;
@@ -668,15 +668,9 @@ const homeLd = [
 indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
 if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
 indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', `<a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>`);
-// Custom work: a short line under the tagline, and a section above the category links.
+// Custom work: one line under the tagline (the footer has the link and the support email).
 indexHtml = replaceOnce(indexHtml, '<p id="tagline">Hosted MCP servers for the tools you already use.</p>',
   `<p id="tagline">Hosted MCP servers for the tools you already use.</p>\n    <p class="custom-line">Need a tool that is not here, or a custom integration? <a href="${SERVICES_PATH}">We build it →</a></p>`);
-indexHtml = replaceOnce(indexHtml, "  <footer>",
-  `  <section class="custom" aria-labelledby="custom-h"><h2 class="group-head" id="custom-h">Custom integrations</h2>` +
-  `<p>Need a server that is not in this list, more tools on one of them, or a connection between your own systems? We build new MCP servers, custom tools, integrations and connectors (also without AI), AI assistant setups and private deployments.</p>` +
-  `<p><a href="${SERVICES_PATH}">How it works</a> &nbsp;·&nbsp; <a href="${SERVICES_MAIL}">Email support@usefulapi.io</a></p></section>\n` +
-  `  <nav class="cats" aria-label="Browse by category"><h2 class="group-head">Browse by category</h2>` +
-  groupsPresent.map((g) => `<a href="${categoryPath(g)}">${esc(g)}</a>`).join("") + `</nav>\n  <footer>`);
 writeFileSync(`${outDir}/index.html`, indexHtml);
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);

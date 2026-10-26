@@ -57,10 +57,6 @@
   .group-head .n { font-weight: 400; opacity: .7; }
   .group-head a { color: inherit; text-decoration: none; }
   .group-head a:hover { color: var(--accent); }
-  .cats { margin-top: 44px; display: flex; flex-wrap: wrap; gap: 8px; }
-  .cats .group-head { width: 100%; margin: 0 0 4px; }
-  .cats a { background: var(--chip); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--muted); text-decoration: none; }
-  .cats a:hover { color: var(--accent); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
   .grid + .group-head { margin-top: 34px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
@@ -77,9 +73,9 @@
   .chip.soon { color: var(--accent); }
   @media (prefers-color-scheme: dark) { .chip.live { color: #5fd68a; } }
   header p.custom-line { margin: -16px 0 28px; font-size: 15px; max-width: none; }
-  .custom-line a, .custom a, .empty a { color: var(--accent); }
-  .custom { margin-top: 44px; }
-  .custom p { color: var(--muted); font-size: 15px; margin: 0 0 8px; max-width: 64ch; }
+  .custom-line a, .empty a { color: var(--accent); }
+  .empty button { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .empty p { margin: 0 0 6px; }
   footer { margin-top: 56px; color: var(--muted); font-size: 13px; }
   footer a { color: var(--muted); }
   code { background: var(--chip); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
@@ -229,14 +225,13 @@
 
       if (!list.length) {
         results.innerHTML = '';
-        // Subject stays "Custom work"; the search text goes into the body, cut by code point (never a half emoji).
-        let mailBody = '';
-        try {
-          const q0 = searchEl.value.trim();
-          mailBody = '&body=' + encodeURIComponent('I searched usefulapi.io for: ' + Array.from(q0.toWellFormed ? q0.toWellFormed() : q0).slice(0, 80).join(''));
-        } catch (e) { mailBody = ''; }
-        countEl.innerHTML = '<span class="empty">No servers match <b>' + esc(searchEl.value.trim()) + '</b>. ' +
-          '<a href="mailto:support@usefulapi.io?subject=Custom%20work' + mailBody + '">Ask us to build it</a> or see <a href="/services/">custom integrations</a>.</span>';
+        // Recovery first, then the custom-work page (it explains what to send; no mail link here).
+        countEl.innerHTML = '<span class="empty"><p>No servers match <b>' + esc(searchEl.value.trim()) + '</b>' +
+          (group ? ' in ' + esc(group) : '') + '. <button type="button" id="clear">Clear search and filters</button></p>' +
+          '<p>Need something built? <a href="/services/">See custom integrations →</a></p></span>';
+        document.getElementById('clear').addEventListener('click', function () {
+          searchEl.value = ''; groupEl.value = ''; render(); searchEl.focus();
+        });
         return;
       }
       countEl.textContent = list.length + (list.length === 1 ? " server" : " servers") +
