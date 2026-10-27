@@ -1,7 +1,7 @@
 ---
 title: Check Cratejoy shipments and subscriptions from Claude or Cursor
 description: Claude, ChatGPT or Cursor can list your Cratejoy subscriptions and shipments by status, find what is not shipped yet, and read one shipment in full.
-date: 2026-10-27
+date: 2026-10-26
 products: cratejoy
 ---
 You can ask Claude, ChatGPT or Cursor which Cratejoy boxes still have to ship and which subscriptions are active. The AI lists the subscriptions and the shipments by status, then reads one shipment with its customer and tracking number. To start, add `https://cratejoy.usefulapi.io/mcp` to your AI client as a connector.

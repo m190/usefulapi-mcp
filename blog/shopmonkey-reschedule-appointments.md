@@ -24,7 +24,7 @@ You can manage the Shopmonkey shop calendar from Claude, ChatGPT or Cursor. The 
 - The booking and reschedule tools have options to send the customer a confirmation, a reminder or a message about the new time, by email or SMS. Tell the AI if the customer must not get a message.
 - Without `confirm: true`, `shopmonkey_delete_appointment` only shows a preview of the appointment and deletes nothing. With `confirm: true`, it deletes at once. Ask the AI to show you the preview and to wait for your approval.
 - To move a job, ask the AI to change the start and end time of the existing appointment, not to delete it and book it again. Tell the AI to keep the customer, the vehicle, the order and the technicians, because the tool can also change them.
-- Most AI clients ask you to approve each call that creates or changes data. This depends on the client's settings.
+- Your AI client can ask you to approve each call that creates or changes data. This depends on the client and its settings.
 
 ## What do I need?
 

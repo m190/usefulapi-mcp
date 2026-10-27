@@ -1,7 +1,7 @@
 ---
 title: Read the Shiftbase schedule per department from Claude
 description: Claude or ChatGPT can list the Shiftbase schedule for a department and date range, with employees, hours and open shifts, and move a shift when you ask.
-date: 2026-10-27
+date: 2026-10-17
 products: shiftbase
 ---
 You can read the Shiftbase schedule from Claude or ChatGPT. The AI lists the shifts of a department for a week, shows who works when and for how many hours, and finds the open shifts and the absences. When you ask, it moves a shift. To start, add `https://shiftbase.usefulapi.io/mcp` to your AI client as a connector.

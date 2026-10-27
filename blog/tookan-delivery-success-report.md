@@ -1,7 +1,7 @@
 ---
 title: Count successful and failed Tookan deliveries from Claude
 description: Claude or ChatGPT can count your Tookan tasks per status for a team and a date range, then list the failed deliveries with agent and customer.
-date: 2026-10-27
+date: 2026-10-13
 products: tookan
 ---
 You can ask Claude or ChatGPT how many Tookan deliveries succeeded or failed last week, per team. The AI counts the tasks per status, then lists the failed ones with the agent, the customer and the times. To start, add `https://tookan.usefulapi.io/mcp` to your AI client as a connector.

@@ -1,7 +1,7 @@
 ---
 title: Check Hostaway reservations and free nights from Claude or ChatGPT
 description: Claude, ChatGPT or Cursor can list your Hostaway listings and reservations across channels, show a listing's calendar, and read guest reviews.
-date: 2026-10-27
+date: 2026-10-18
 products: hostaway
 ---
 You can ask Claude, ChatGPT or Cursor what is booked across your Hostaway listings. The AI lists the reservations from every channel, shows the free and blocked nights of a listing, and reads the guest reviews. To start, add `https://hostaway.usefulapi.io/mcp` to your AI client as a connector.

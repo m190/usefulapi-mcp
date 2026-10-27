@@ -21,7 +21,7 @@ You can ask ChatGPT or Claude what is booked in Acuity Scheduling and when you a
 
 - By default, Acuity can send a confirmation, an update or a cancellation email, as when you make the change in Acuity.
 - The tools that create, reschedule or cancel a booking can turn these emails off. Tell the AI if the client must not get an email.
-- Most AI clients ask you to approve each call that changes data. This depends on the client's settings.
+- Your AI client can ask you to approve each call that changes data. This depends on the client and its settings.
 
 ## What do I need?
 

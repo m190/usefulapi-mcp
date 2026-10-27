@@ -1,7 +1,7 @@
 ---
 title: Check Deputy timesheets against the roster before payroll
 description: Claude or ChatGPT can list Deputy timesheets for a pay period, compare them with the scheduled shifts and leave, and show what is still unapproved.
-date: 2026-10-27
+date: 2026-10-21
 products: deputy
 ---
 You can check Deputy timesheets before payroll from Claude or ChatGPT. The AI lists the worked time for the pay period, compares it with the scheduled shifts and the leave, and shows the timesheets that are not approved yet. To start, add `https://deputy.usefulapi.io/mcp` to your AI client as a connector.

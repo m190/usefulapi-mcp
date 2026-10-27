@@ -1,7 +1,7 @@
 ---
 title: Answer "what does this tenant owe?" from Buildium in Claude
 description: Claude or ChatGPT can find a tenant in Buildium, read the lease ledger and explain the balance. The server only reads ledgers and never posts to them.
-date: 2026-10-24
+date: 2026-10-19
 products: buildium
 ---
 You can ask Claude or ChatGPT what a Buildium tenant owes and why. The AI finds the tenant, reads the lease ledger and the overdue amount, and explains the balance in one answer. To start, add `https://buildium.usefulapi.io/mcp` to your AI client as a connector.

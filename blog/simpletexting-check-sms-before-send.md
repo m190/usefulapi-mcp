@@ -20,7 +20,7 @@ You can ask Claude or ChatGPT to check a text message before it goes out with Si
 ## Can the AI send a text by mistake?
 
 - `simpletexting_send_message` sends a real SMS or MMS and uses message credits. Ask the AI to show you the final text and the phone number before it sends.
-- Most AI clients ask you to approve each call that changes data. This depends on the client's settings.
+- Your AI client can ask you to approve each call that changes data. This depends on the client and its settings.
 - `simpletexting_list_campaigns` returns only immediate campaigns. Scheduled and recurring campaigns are not in the list.
 
 ## What do I need?

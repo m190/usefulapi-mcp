@@ -20,7 +20,7 @@ You can build next week's RotaCloud rota from ChatGPT or Claude. The AI copies l
 
 ## How do I stay in control of the changes?
 
-- Most AI clients ask you to approve each call that creates or changes data. This depends on the client's settings. For a large rota, you can allow the RotaCloud write tools for the chat.
+- Your AI client can ask you to approve each call that creates or changes data. This depends on the client and its settings. For a large rota, you can allow the RotaCloud write tools for the chat.
 - Ask for drafts, as in the prompt above. New shifts are unpublished by default, but the tools can also publish, so tell the AI to keep them unpublished while it creates and changes them. Before you publish, ask for a check, for example: "List every shift that overlaps with leave or a day off."
 - To remove short open shifts, ask the AI to find them first. `rotacloud_find_shifts` selects them. Without `confirm: true`, `rotacloud_delete_shifts` only shows a preview. Ask the AI to show you the preview and to wait for your approval before it deletes.
 

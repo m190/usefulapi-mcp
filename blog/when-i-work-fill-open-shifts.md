@@ -23,7 +23,7 @@ You can ask Claude or ChatGPT who works this week in When I Work and which shift
 - An open shift that is already published stays published when the AI assigns it. The change is visible at once.
 - `wheniwork_publish_shifts` does not itself send notifications. `wheniwork_unpublish_shifts` returns shifts to draft.
 - When I Work can remove a shift's breaks when the shift changes. After an assignment, ask the AI to check the breaks of that shift.
-- Most AI clients ask you to approve each call that changes data. This depends on the client's settings.
+- Your AI client can ask you to approve each call that changes data. This depends on the client and its settings.
 
 ## What do I need?
 

@@ -5,7 +5,7 @@
 //   ---
 //   title: Plan RotaCloud shifts from ChatGPT          (max 70 chars)
 //   description: One sentence for search results.      (50-160 chars)
-//   date: 2026-10-26                                    (YYYY-MM-DD, not in the future)
+//   date: 2026-10-26                                    (YYYY-MM-DD, not in the future, one post per day)
 //   products: rotacloud                                 (1+ live server slugs, space- or comma-separated)
 //   ---
 //   Markdown body: ## and ### headings, paragraphs, "- " and "1. " lists, "> " prompt quotes, ``` code blocks,
@@ -166,6 +166,15 @@ export function loadBlog(manifest, only, today = new Date().toISOString().slice(
     const m = l.match(/^\/blog\/([a-z0-9-]+)\//);
     if (m && !known.has(m[1])) errors.push(`blog/${p.slug}.md: link ${l}: no such post`);
   }
+  // At most one post per day: compared across ALL posts, reported when a checked post is involved.
+  const byDate = new Map();
+  for (const f of files) {
+    const d = parse(readFileSync(new URL(f, DIR), "utf8")).meta?.date;
+    if (d) byDate.set(d, [...(byDate.get(d) ?? []), f.replace(/\.md$/, "")]);
+  }
+  for (const [d, slugs] of byDate)
+    if (slugs.length > 1 && (!only || slugs.some((s) => only.includes(s))))
+      errors.push(`date ${d}: ${slugs.length} posts (${slugs.sort().join(", ")}): use one post per day`);
   posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
   return { posts, errors };
 }

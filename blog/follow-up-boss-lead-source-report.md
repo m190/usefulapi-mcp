@@ -1,7 +1,7 @@
 ---
 title: Count Follow Up Boss leads by source and agent from Claude
 description: Claude or ChatGPT can count your Follow Up Boss leads from a source per agent, show how many are now in a closed stage, and add a note to a contact.
-date: 2026-10-27
+date: 2026-10-15
 products: follow-up-boss
 ---
 You can ask Claude or ChatGPT how many leads from a source such as Zillow each agent has now, and how many of them are now in a closed stage. The AI counts the leads per agent and per lender with one report tool, so it does not page through every contact. To start, add `https://follow-up-boss.usefulapi.io/mcp` to your AI client as a connector.

@@ -1,7 +1,7 @@
 ---
 title: Make Printful mockups for a new design from Claude or Cursor
 description: Claude, ChatGPT or Cursor can pick a Printful product, check the print file size, upload your design, make mockups and estimate the order cost.
-date: 2026-10-27
+date: 2026-10-16
 products: printful
 ---
 You can make Printful mockups for a new design from Claude, ChatGPT or Cursor. The AI finds a blank product and its variants, checks the print area sizes, adds your design to the File Library, and gets the mockup images. It can also estimate what an order costs. To start, add `https://printful.usefulapi.io/mcp` to your AI client as a connector.
