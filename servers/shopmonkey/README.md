@@ -44,6 +44,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_list_customer_orders` | read | List a customer's orders |
 | `shopmonkey_get_vehicle` | read | Get one vehicle |
 | `shopmonkey_list_orders` | read | List orders |
+| `shopmonkey_search_orders` | read | Search orders by name and creation date |
+| `shopmonkey_list_purchase_orders` | read | List purchase orders |
+| `shopmonkey_get_purchase_order` | read | Get a purchase order |
 | `shopmonkey_get_order` | read | Get one order |
 | `shopmonkey_find_order_by_number` | read | Find an order by its number |
 | `shopmonkey_list_order_services` | read | List an order's services |
@@ -62,6 +65,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_update_appointment` | **write** | Update or reschedule an appointment |
 | `shopmonkey_delete_appointment` | **write** | Delete (cancel) an appointment |
 | `shopmonkey_add_service` | **write** | Add a service (job) to an order |
+| `shopmonkey_apply_canned_service` | **write** | Apply a canned service to an order |
+| `shopmonkey_add_fee` | **write** | Add a flat fee to a service |
+| `shopmonkey_send_message` | **write** | Send a customer SMS or email |
 | `shopmonkey_add_labor` | **write** | Add a labor line to a service |
 | `shopmonkey_send_estimate` | **write** | Send an estimate for customer authorization |
 | `shopmonkey_add_part` | **write** | Add a part to a work order service |

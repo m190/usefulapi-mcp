@@ -25080,7 +25080,7 @@
           "description": "Cancel the caller's Buildium Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run buildium_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.26.0",
+      "version": "1.27.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -27787,7 +27787,7 @@
           "name": "fub_lead_source_report",
           "type": "read",
           "title": "Lead source report by agent",
-          "description": "Count leads from lead sources (e.g. Zillow) per assigned agent, how many reached the closed stage(s) (conversion rate), and leads per lender user (e.g. Zillow Home Loans loan officers). Use it to count instead of paging through fub_search_people. The numbers approximate FUB's in-app Lead Source report, which has no API, and cover only the people the API key can see (use an owner, admin or broker key for the whole account). At most 100 FUB requests per call (one per count). FUB: GET /v1/people totals, GET /v1/users."
+          "description": "Count leads from lead sources (e.g. Zillow) per assigned agent, how many reached the closed stage(s) (conversion rate), and leads per lender user (e.g. Zillow Home Loans loan officers). Use it to count instead of paging through fub_search_people. The numbers approximate FUB's in-app Lead Source report, which has no API, not the Zillow Preferred or Zillow Home Loans dashboard metrics (including pre-approvals), which are not exposed by the public API, and cover only the people the API key can see (use an owner, admin or broker key for the whole account). At most 100 FUB requests per call (one per count). FUB: GET /v1/people totals, GET /v1/users."
         },
         {
           "name": "fub_send_lead_event",
@@ -27862,7 +27862,7 @@
           "description": "Cancel the caller's Follow Up Boss Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.29.0",
+      "version": "1.30.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -31927,7 +31927,25 @@
           "name": "shopmonkey_list_orders",
           "type": "read",
           "title": "List orders",
-          "description": "List work orders for the shop, paged. Each order carries its number, status flags (authorized, invoiced, paid), totals in cents, workflow status and assigned technicians. For one customer's orders use shopmonkey_list_customer_orders. Shopmonkey: GET /v3/order."
+          "description": "List work orders for the shop, paged. Use orderBy: {createdDate: 'desc'} for newest first. Each order carries its number, status flags, totals in cents, workflow status and assigned technicians. For name/date filters use shopmonkey_search_orders; for one customer's orders use shopmonkey_list_customer_orders. Shopmonkey: GET /v3/order."
+        },
+        {
+          "name": "shopmonkey_search_orders",
+          "type": "read",
+          "title": "Search orders by name and creation date",
+          "description": "Find work orders by case-insensitive name substring, creation date, customer or status. Reads pages and checks filters locally because some shops ignore GET filters. Matches are sorted by createdDate, newest first, then paged with limit/matchSkip (default 100 results). complete: false means only a segment was scanned: newer matches may exist outside it; continue with nextScanSkip or increase maxOrders. scanSkip is a scan offset, not a matched-result offset. A changing order list can shift offsets; restart from 0 for a fresh search. Shopmonkey: GET /v3/order."
+        },
+        {
+          "name": "shopmonkey_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "Read purchase orders with parts, tires, received quantities, inventory links and Draft/Ordered/Received/Fulfilled/Cancelled status. Paged; use orderBy for sorting. The public API documents reads and deletions, but no create/update/receive endpoints: change status, Receive All and inventory linking in the Shopmonkey UI. Shopmonkey: GET /v3/purchase_order."
+        },
+        {
+          "name": "shopmonkey_get_purchase_order",
+          "type": "read",
+          "title": "Get a purchase order",
+          "description": "Read one purchase order, including its status, vendor, parts/tires, ordered and received quantities, inventory links and associated work order. Purchase-order creation, status changes and receiving are not documented public API operations; use the Shopmonkey UI for those writes. Shopmonkey: GET /v3/purchase_order/:id."
         },
         {
           "name": "shopmonkey_get_order",
@@ -32038,6 +32056,24 @@
           "description": "Add a new service (job) to a work order, e.g. 'Road Call', optionally with labor lines (name, hours, hourly rate in cents). The service is created first, then each labor line is added to it. Find the order id with shopmonkey_find_order_by_number. To add labor to a service that exists, use shopmonkey_add_labor. Shopmonkey: POST /v3/order/:orderId/service, then POST /v3/order/:orderId/service/:serviceId/labor."
         },
         {
+          "name": "shopmonkey_apply_canned_service",
+          "type": "write",
+          "title": "Apply a canned service to an order",
+          "description": "Copy a saved canned service onto an existing work order in one vendor request, including its labor, parts and fees. Use shopmonkey_list_canned_services for cannedServiceId. Creates a new service each time; check shopmonkey_list_order_services before retrying an uncertain result. Shopmonkey: POST /v3/order/:orderId/service with fromCannedServiceId."
+        },
+        {
+          "name": "shopmonkey_add_fee",
+          "type": "write",
+          "title": "Add a flat fee to a service",
+          "description": "Add a fixed-cent fee/surcharge to an existing work order service, e.g. amountCents: 3000 for a $30 fuel or on-site fee. Uses the vendor's FixedCents fee type, not a labor line. Get serviceId with shopmonkey_list_order_services. Each call creates a fee; check the service before retrying an uncertain result. Shopmonkey: POST /v3/order/:orderId/service/:serviceId/fee."
+        },
+        {
+          "name": "shopmonkey_send_message",
+          "type": "write",
+          "title": "Send a customer SMS or email",
+          "description": "Send a free-form customer message by Email, SMS or All through Shopmonkey messaging. This sends the supplied text without sharing an estimate or changing order authorization. Contact ids must belong to customerId; omitted ids use the primary or only contact (or the selected order contact when orderId is given). Optional orderId must belong to this customer. Returns message delivery statuses; creation does not guarantee delivery. Shopmonkey: GET /v3/customer/:id, optionally GET /v3/order/:id, then POST /v3/message."
+        },
+        {
           "name": "shopmonkey_add_labor",
           "type": "write",
           "title": "Add a labor line to a service",
@@ -32080,7 +32116,7 @@
           "description": "Cancel the caller's Shopmonkey Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shopmonkey_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.28.0",
+      "version": "1.29.0",
       "login": {
         "kind": "key",
         "fields": [
