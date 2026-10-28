@@ -82030,6 +82030,310 @@
         "Log 90 minutes on the 'Website redesign' task for me today.",
         "Create a client called Jane Cooper and a project 'Brand refresh' for her."
       ]
+    },
+    {
+      "slug": "workyard",
+      "name": "Workyard",
+      "category": "time-tracking",
+      "description": "Read Workyard employees, projects, time cards and geofences; approve time cards and add notes.",
+      "endpoint": "https://workyard.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per organization"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Workyard API token"
+          },
+          {
+            "label": "Organization ID (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "In Workyard (web or desktop app) go to **Integrations → API Token → Generate API Token** (account Admin; API access needs the Autopilot plan). The Organization ID is only needed if your token sees several organizations. Your token is used only to call the Workyard API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "workyard_get_organization",
+          "type": "read",
+          "title": "Get Workyard organization",
+          "description": "The organization this connection uses (id, name, settings such as timezone) from GET /orgs/{org_id}."
+        },
+        {
+          "name": "workyard_list_employees",
+          "type": "read",
+          "title": "List Workyard employees",
+          "description": "List employees of the organization (employee_id, profile_id, name, title, role, status, contact data). Filter by status (active, removed, saas_disabled, expired; comma list), email, role name or free-text search. Paged: use next_page."
+        },
+        {
+          "name": "workyard_list_projects",
+          "type": "read",
+          "title": "List Workyard projects",
+          "description": "List projects (id, name, identifier, customer, locations). Optionally filter by name or archived state. Paged: use next_page."
+        },
+        {
+          "name": "workyard_get_project",
+          "type": "read",
+          "title": "Get Workyard project",
+          "description": "One project by id (workyard_list_projects gives the ids)."
+        },
+        {
+          "name": "workyard_list_time_cards",
+          "type": "read",
+          "title": "List Workyard time cards",
+          "description": "List time cards (id, employee_id, start_dt_unix, end_dt_unix, status, approver, totals). Workyard returns only status=working when no status is given, so pass status (for example submitted,approved) for finished work. Filter by employee and by start time (unix seconds, interpreted in the organization timezone). Paged: use next_page; the reply also carries time_summary."
+        },
+        {
+          "name": "workyard_get_time_card",
+          "type": "read",
+          "title": "Get Workyard time card",
+          "description": "One time card by id, with its details (workyard_list_time_cards gives the ids)."
+        },
+        {
+          "name": "workyard_list_time_card_activity_segments",
+          "type": "read",
+          "title": "List Workyard time card activity segments",
+          "description": "The activity segments of one time card (where and on which project the employee worked, segment by segment). Not paged."
+        },
+        {
+          "name": "workyard_list_geofences",
+          "type": "read",
+          "title": "List Workyard geofences (work sites)",
+          "description": "List geofences / work sites (id, name, place, enabled, radius). Filter by name, enabled state or project. Paged: use next_page."
+        },
+        {
+          "name": "workyard_list_active_geofences",
+          "type": "read",
+          "title": "List active Workyard geofences",
+          "description": "All active geofences with limited data (Workyard: GET active_geofences). It does not say who is clocked in; use workyard_list_time_cards with status working for that."
+        },
+        {
+          "name": "workyard_list_geofence_projects",
+          "type": "read",
+          "title": "List projects of a Workyard geofence",
+          "description": "The projects attached to one geofence (work site). Paged: use next_page."
+        },
+        {
+          "name": "workyard_approve_time_card",
+          "type": "write",
+          "title": "Approve a Workyard time card",
+          "description": "WRITE: approve ONE time card (PATCH .../time_cards/{id}/approve). Approval feeds payroll in Workyard and may not be undoable through the API: only call it when the user asked to approve this exact time card."
+        },
+        {
+          "name": "workyard_add_time_card_note",
+          "type": "write",
+          "title": "Add a note to a Workyard time card",
+          "description": "WRITE: add a text note to one time card (POST .../time_cards/{id}/notes). Adds a new note on every call; it does not edit or delete existing notes."
+        },
+        {
+          "name": "workyard_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "workyard_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Workyard tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "workyard_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Workyard (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "workyard_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Workyard Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run workyard_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which employees are clocked in right now?",
+        "Show all submitted time cards from last week that are not approved yet.",
+        "List my active projects and the geofences they use.",
+        "Approve time card 12345 and add the note 'checked with the foreman'."
+      ]
+    },
+    {
+      "slug": "hub-planner",
+      "name": "Hub Planner",
+      "category": "project-management",
+      "description": "Read Hub Planner resources, projects, bookings and timesheets; create clients and time entries.",
+      "endpoint": "https://hub-planner.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hub Planner API key"
+          }
+        ],
+        "hint": "An administrator can enable API access and generate a key under **Settings → API**. Use a **Read Only** key for queries, or a **Read & Write** key to create clients and time entries. Paste the key itself, without Bearer. Your key is used to call Hub Planner on your behalf."
+      },
+      "tools": [
+        {
+          "name": "hubplanner_list_resources",
+          "type": "read",
+          "title": "List resources",
+          "description": "List one page of Hub Planner resources. Pages start at 0; follow next_page until null. For filtered results use the search tool where available."
+        },
+        {
+          "name": "hubplanner_get_resource",
+          "type": "read",
+          "title": "Get resource",
+          "description": "Get one Hub Planner resource by its ID."
+        },
+        {
+          "name": "hubplanner_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List one page of Hub Planner projects. Pages start at 0; follow next_page until null. For filtered results use the search tool where available."
+        },
+        {
+          "name": "hubplanner_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Get one Hub Planner project by its ID."
+        },
+        {
+          "name": "hubplanner_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List one page of Hub Planner bookings. Pages start at 0; follow next_page until null. For filtered results use the search tool where available."
+        },
+        {
+          "name": "hubplanner_get_booking",
+          "type": "read",
+          "title": "Get booking",
+          "description": "Get one Hub Planner booking by its ID."
+        },
+        {
+          "name": "hubplanner_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List one page of Hub Planner time entries. Pages start at 0; follow next_page until null. For filtered results use the search tool where available."
+        },
+        {
+          "name": "hubplanner_get_time_entry",
+          "type": "read",
+          "title": "Get timeentry",
+          "description": "Get one Hub Planner timeentry by its ID."
+        },
+        {
+          "name": "hubplanner_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List one page of Hub Planner clients. Pages start at 0; follow next_page until null. For filtered results use the search tool where available."
+        },
+        {
+          "name": "hubplanner_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "Get one Hub Planner client by its ID."
+        },
+        {
+          "name": "hubplanner_search_projects",
+          "type": "read",
+          "title": "Search projects",
+          "description": "Search projects by exact name or status. Pagination is zero-based."
+        },
+        {
+          "name": "hubplanner_search_resources",
+          "type": "read",
+          "title": "Search resources",
+          "description": "Search resources by exact email, first name, last name or status. Pagination is zero-based."
+        },
+        {
+          "name": "hubplanner_search_bookings",
+          "type": "read",
+          "title": "Search bookings",
+          "description": "Find bookings for a resource, project or date range. start/end select bookings overlapping that inclusive range. Pagination is zero-based."
+        },
+        {
+          "name": "hubplanner_search_time_entries",
+          "type": "read",
+          "title": "Search time entries",
+          "description": "Find time entries by resource, project, inclusive YYYY-MM-DD date range or submission status. Pagination is zero-based."
+        },
+        {
+          "name": "hubplanner_create_time_entry",
+          "type": "write",
+          "title": "Create time entry",
+          "description": "WRITE: Create a time entry for a resource and project on one date. Requires a Read & Write API key. This records actual worked time and can affect reports and billing; verify details first. No automatic retries."
+        },
+        {
+          "name": "hubplanner_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: Create a client by name. Requires a Read & Write API key. Repeating the call can create duplicates."
+        },
+        {
+          "name": "hubplanner_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hubplanner_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hub Planner tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hubplanner_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Hub Planner (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hubplanner_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hub Planner Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hubplanner_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show active projects and the people assigned to them.",
+        "Find bookings overlapping next week.",
+        "Compare the booked time and actual time entries for a project.",
+        "Record 120 minutes for a resource on a project today."
+      ]
     }
   ]
 }

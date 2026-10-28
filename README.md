@@ -469,6 +469,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [WuBook](servers/wubook/) | productivity | 23 | API token | [servers/wubook/](servers/wubook/) |
 | [Saldeo](servers/saldeo/) | billing | 14 | API token | [servers/saldeo/](servers/saldeo/) |
 | [Plutio](servers/plutio/) | project-management | 41 | API token | [servers/plutio/](servers/plutio/) |
+| [Workyard](servers/workyard/) | time-tracking | 16 | API token | [servers/workyard/](servers/workyard/) |
+| [Hub Planner](servers/hub-planner/) | project-management | 20 | API token | [servers/hub-planner/](servers/hub-planner/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
