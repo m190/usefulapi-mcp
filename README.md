@@ -464,6 +464,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Vtiger](servers/vtiger/) | crm | 17 | API token | [servers/vtiger/](servers/vtiger/) |
 | [Cogmento](servers/cogmento/) | crm | 30 | API token | [servers/cogmento/](servers/cogmento/) |
 | [SafetyChain](servers/safetychain/) | productivity | 33 | API token | [servers/safetychain/](servers/safetychain/) |
+| [Fakturowo](servers/fakturowo/) | billing | 13 | API token | [servers/fakturowo/](servers/fakturowo/) |
+| [Propertyware](servers/propertyware/) | productivity | 25 | API token | [servers/propertyware/](servers/propertyware/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

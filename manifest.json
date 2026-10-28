@@ -81105,6 +81105,328 @@
         ],
         "hint": "Create a dedicated user for this connection in SafetyChain: **System Management → Roles** (a role with the Access to Integration API Scope permission), then add a user with that role and tick Disable Password Expiration Policy. The tenant is the part before .safetychain.com in your address (acme.safetychain.com → acme). That permission lets the user read all records and resources, so every record the integration user can see is visible to your AI assistant. The password is used only to sign in to the SafetyChain API on your behalf (SafetyChain issues 5-minute access tokens) and is never shown to anyone. If you change the password you must reconnect, and SafetyChain locks an account after 10 failed sign-ins."
       }
+    },
+    {
+      "slug": "fakturowo",
+      "name": "Fakturowo",
+      "category": "billing",
+      "description": "Read invoices, clients and products in Fakturowo; create documents and update payment status.",
+      "endpoint": "https://fakturowo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Fakturowo API key (api_id)"
+          },
+          {
+            "label": "API URL from Konto (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Find it in Fakturowo → **Konto** (generate the key there). Fakturowo says the API URL can differ per account: if the URL shown in Konto is not `https://www.fakturowo.pl/api`, copy it into the second field. The API is a paid add-on of your Fakturowo account (one-off activation, Konto → Abonament). The key is used only to call the Fakturowo API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fakturowo_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List invoices and other documents on the account, 100 per page: id (api_numer), type, number, issue and sale date, currency, net/VAT/gross value, seller and buyer, payment status, due date and KSeF number. Filter by document type or by seller/buyer tax number. Values are the vendor's own (dates DD-MM-YYYY; dokument_rodzaj is the type code with a readable name for common types). Fakturowo api_zadanie=3."
+        },
+        {
+          "name": "fakturowo_get_document",
+          "type": "read",
+          "title": "Get document",
+          "description": "One document by its id (api_numer, from fakturowo_list_documents or the id returned when it was created): the header fields and every line item (name, unit, quantity, net/gross price, discount, VAT rate and amount, gross value). Fakturowo api_zadanie=3 with api_numer."
+        },
+        {
+          "name": "fakturowo_get_next_document_number",
+          "type": "read",
+          "title": "Get next document number",
+          "description": "The running number Fakturowo will give the next document of a type (the sequence counter saved on the account). Nothing is created. Fakturowo api_zadanie=8."
+        },
+        {
+          "name": "fakturowo_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the saved clients (contractors), 100 per page: id (api_numer), name, address, tax number, contact details, account number and notes. PESEL and ID-card numbers are never returned. Fakturowo api_zadanie=4."
+        },
+        {
+          "name": "fakturowo_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One saved client by id (api_numer, from fakturowo_list_clients). PESEL and ID-card numbers are never returned. Fakturowo api_zadanie=4 with api_numer."
+        },
+        {
+          "name": "fakturowo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the saved products and services (the catalogue used on documents), 100 per page: id (api_numer), name, unit, VAT rate, net price, gross value, currency, comment, GTU code and discount. Fakturowo api_zadanie=6."
+        },
+        {
+          "name": "fakturowo_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One saved product by id (api_numer, from fakturowo_list_products). Fakturowo api_zadanie=6 with api_numer."
+        },
+        {
+          "name": "fakturowo_create_document",
+          "type": "write",
+          "title": "Create document",
+          "description": "WRITE: issue a new document (invoice, proforma, receipt...) on the account. It is saved immediately and takes the next number in its sequence; this tool cannot delete it again, and calling it twice issues two documents. Issue documents one at a time and wait for each reply: Fakturowo says overlapping saves can get the same number when the account's numbering check is off. Needs a buyer and at least one line item; the seller defaults to what the account has saved only if Fakturowo allows that, otherwise pass seller. Returns the new document's id (api_numer); with public_links true also a public PDF and preview link (anyone with the link can open the document). Fakturowo api_zadanie=1."
+        },
+        {
+          "name": "fakturowo_set_document_payment_status",
+          "type": "write",
+          "title": "Set document payment status",
+          "description": "WRITE: change the payment status of an existing document (unpaid, paid, partially_paid) and optionally the amount already paid. Only those fields are sent; Fakturowo edits the document in place. Fakturowo api_zadanie=1 with api_numer."
+        },
+        {
+          "name": "fakturowo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fakturowo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Fakturowo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fakturowo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Fakturowo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fakturowo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Fakturowo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fakturowo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my unpaid invoices from this month.",
+        "Show invoice 818950 with all its line items.",
+        "Issue a VAT invoice to Jan Kowalski for 3 hours of consulting at 200 PLN net, 23% VAT.",
+        "Mark invoice 818950 as paid."
+      ]
+    },
+    {
+      "slug": "propertyware",
+      "name": "Propertyware",
+      "category": "productivity",
+      "description": "Read Propertyware properties, leases and work orders; add maintenance tasks and comments.",
+      "endpoint": "https://propertyware.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per organization"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Organization ID (system ID)"
+          }
+        ],
+        "hint": "An administrator creates an API key under Administration Setup > API Keys. Enable Buildings read access for the login check and read access for the resources you need. Work Orders write access is only needed for task/comment creation. Use a read-only key to disable writes."
+      },
+      "tools": [
+        {
+          "name": "propertyware_list_buildings",
+          "type": "read",
+          "title": "List buildings",
+          "description": "List Propertyware buildings. One page; use next (preserves filters) for the following call. Requires BUILDINGS read permission."
+        },
+        {
+          "name": "propertyware_get_building",
+          "type": "read",
+          "title": "Get building",
+          "description": "Get one Propertyware building by ID."
+        },
+        {
+          "name": "propertyware_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List Propertyware units. One page; use next (preserves filters) for the following call. Requires UNITS read permission."
+        },
+        {
+          "name": "propertyware_get_unit",
+          "type": "read",
+          "title": "Get unit",
+          "description": "Get one Propertyware unit by ID."
+        },
+        {
+          "name": "propertyware_list_leases",
+          "type": "read",
+          "title": "List leases",
+          "description": "List Propertyware leases. One page; use next (preserves filters) for the following call. Requires LEASES read permission."
+        },
+        {
+          "name": "propertyware_get_lease",
+          "type": "read",
+          "title": "Get lease",
+          "description": "Get one Propertyware lease by ID."
+        },
+        {
+          "name": "propertyware_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List Propertyware contacts. One page; use next (preserves filters) for the following call. Requires CONTACTS read permission."
+        },
+        {
+          "name": "propertyware_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one Propertyware contact by ID."
+        },
+        {
+          "name": "propertyware_list_portfolios",
+          "type": "read",
+          "title": "List portfolios",
+          "description": "List Propertyware portfolios. One page; use next (preserves filters) for the following call. Requires PORTFOLIOS read permission."
+        },
+        {
+          "name": "propertyware_get_portfolio",
+          "type": "read",
+          "title": "Get portfolio",
+          "description": "Get one Propertyware portfolio by ID."
+        },
+        {
+          "name": "propertyware_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List Propertyware vendors. One page; use next (preserves filters) for the following call. Requires VENDORS read permission."
+        },
+        {
+          "name": "propertyware_get_vendor",
+          "type": "read",
+          "title": "Get vendor",
+          "description": "Get one Propertyware vendor by ID."
+        },
+        {
+          "name": "propertyware_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List Propertyware work orders. One page; use next (preserves filters) for the following call. Requires WORKORDERS read permission."
+        },
+        {
+          "name": "propertyware_get_work_order",
+          "type": "read",
+          "title": "Get work order",
+          "description": "Get one Propertyware work order by ID."
+        },
+        {
+          "name": "propertyware_list_prospects",
+          "type": "read",
+          "title": "List prospects",
+          "description": "List Propertyware prospects. One page; use next (preserves filters) for the following call. Requires PROSPECTS read permission."
+        },
+        {
+          "name": "propertyware_get_prospect",
+          "type": "read",
+          "title": "Get prospect",
+          "description": "Get one Propertyware prospect by ID."
+        },
+        {
+          "name": "propertyware_list_building_notes",
+          "type": "read",
+          "title": "List building notes",
+          "description": "Read notes for one Propertyware building. The vendor does not paginate this endpoint."
+        },
+        {
+          "name": "propertyware_list_lease_notes",
+          "type": "read",
+          "title": "List lease notes",
+          "description": "Read notes for one Propertyware lease. The vendor does not paginate this endpoint."
+        },
+        {
+          "name": "propertyware_list_work_order_tasks",
+          "type": "read",
+          "title": "List work order tasks",
+          "description": "List tasks on one work order; next preserves filters for the next page."
+        },
+        {
+          "name": "propertyware_create_work_order_task",
+          "type": "write",
+          "title": "Create work order task",
+          "description": "WRITE: Add a task to an existing work order. Requires WORK ORDERS write permission. Creates a new task on each call; do not retry blindly."
+        },
+        {
+          "name": "propertyware_add_task_comment",
+          "type": "write",
+          "title": "Add task comment",
+          "description": "WRITE: Add a comment to an existing work order task. May be visible to other users with task access. Repeating the call creates duplicate comments."
+        },
+        {
+          "name": "propertyware_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "propertyware_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Propertyware tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "propertyware_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Propertyware (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "propertyware_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Propertyware Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run propertyware_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find vacant properties in my portfolio.",
+        "Which leases end next month?",
+        "List high priority work orders.",
+        "Add a private maintenance task to a work order."
+      ]
     }
   ]
 }
