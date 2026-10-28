@@ -81427,6 +81427,315 @@
         "List high priority work orders.",
         "Add a private maintenance task to a work order."
       ]
+    },
+    {
+      "slug": "wubook",
+      "name": "WuBook",
+      "category": "productivity",
+      "description": "Read WuBook ZaK rooms, availability and reservations; manage inventory and guest check-in.",
+      "endpoint": "https://wubook.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "WuBook ZaK API key"
+          }
+        ],
+        "hint": "In ZaK open **Settings → Configurations → ZaK API** and generate the key (it starts with `wb_`). The ZaK API needs the Essentials Module and must be switched on by WuBook staff first. If you set an IP allow-list on the key, leave it empty or calls from this server are refused. Your key is used only to call the WuBook API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "wubook_list_rooms",
+          "type": "read",
+          "title": "List rooms",
+          "description": "List the physical rooms of the property (id, room type id, name, tags). POST /kp/property/fetch_rooms."
+        },
+        {
+          "name": "wubook_list_room_types",
+          "type": "read",
+          "title": "List room types",
+          "description": "List the room types (id, name, short name, default price, default occupancy). POST /kp/property/fetch_room_types."
+        },
+        {
+          "name": "wubook_list_rates",
+          "type": "read",
+          "title": "List rates",
+          "description": "List the rates of the property (id, name, board, currency, standard flag). Use a rate id for prices and restrictions. POST /kp/property/fetch_rates."
+        },
+        {
+          "name": "wubook_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products (a room type sold on a board basis: id, room type id, name, default price, occupancy). Product ids are the keys of prices and availability. POST /kp/property/fetch_products."
+        },
+        {
+          "name": "wubook_list_meal_boards",
+          "type": "read",
+          "title": "List meal boards",
+          "description": "List the meal rules and meal prices per board type (fb, hb, bb, ai) for adults, teens, children and babies. POST /kp/property/fetch_meals_board."
+        },
+        {
+          "name": "wubook_list_extras",
+          "type": "read",
+          "title": "List extras",
+          "description": "List the extras the property sells (id, name, price, VAT percentage, cost, tags). POST /kp/property/fetch_extras."
+        },
+        {
+          "name": "wubook_get_inventory_symbols",
+          "type": "read",
+          "title": "Get inventory symbols",
+          "description": "The meaning of the short keys in prices and restrictions (p price, a availability, m MinStay, M MaxStay, c closure, ...). POST /kp/inventory/fetch_symbols."
+        },
+        {
+          "name": "wubook_get_room_availability",
+          "type": "read",
+          "title": "Get room availability",
+          "description": "Availability for a stay: for each room type id, the number of rooms available and the ids of the available physical rooms. The availability count can be lower than the number of listed physical rooms when a reservation has no physical room assigned yet; use the availability count when assessing bookable capacity. POST /kp/inventory/fetch_rooms_availability."
+        },
+        {
+          "name": "wubook_get_rate_values",
+          "type": "read",
+          "title": "Get rate values",
+          "description": "Daily prices, availability and restrictions of one rate, starting at a date: for each product id a list with one object per day (p price, a availability, m/M min/max stay, c closed, ...; see wubook_get_inventory_symbols). POST /kp/inventory/fetch_rate_values."
+        },
+        {
+          "name": "wubook_update_inventory",
+          "type": "write",
+          "title": "Update prices, availability and restrictions",
+          "description": "WRITE: overwrite daily prices, availability and stay restrictions of one rate. `products` maps a product id to a list of day objects; the first object is the day `from`, the next the following day, and so on. Only the fields you send per day change. Changes can be pushed to connected channels (OTAs) and affect live bookings, so confirm the values with the user first. POST /kp/inventory/write."
+        },
+        {
+          "name": "wubook_get_reservation",
+          "type": "read",
+          "title": "Get reservation",
+          "description": "One reservation by id or by reservation code (XY-0001): status, booker customer id, origin channel, board, dates, price split (rooms, extras, meals), payment, taxes and rooms with occupancy and customer ids. POST /kp/reservations/fetch_one_reservation."
+        },
+        {
+          "name": "wubook_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "List reservations, optionally filtered by creation, arrival or departure date ranges (inclusive). Newest first is not guaranteed; page with offset. Returns the page plus next_offset (null when the last page was reached). POST /kp/reservations/fetch_reservations."
+        },
+        {
+          "name": "wubook_list_todays_reservations",
+          "type": "read",
+          "title": "List today's reservations",
+          "description": "Reservations of the property for today (arrivals, departures and stays in house). POST /kp/reservations/fetch_today_reservations."
+        },
+        {
+          "name": "wubook_create_reservation",
+          "type": "write",
+          "title": "Create reservation",
+          "description": "WRITE: create a reservation in ZaK for one guest. Give rooms (room type and optionally the physical room id, with price and currency) and/or products (product id with price and currency). Set assign_rooms to let ZaK pick the physical rooms. This books inventory and is NOT idempotent: calling it twice creates two reservations, so check wubook_get_room_availability first and do not retry on an error without looking the reservation up. POST /kp/reservations/new."
+        },
+        {
+          "name": "wubook_check_in",
+          "type": "write",
+          "title": "Check in",
+          "description": "WRITE: check in the guests of a reservation in ZaK. Applies to every guest of the reservation unless room_customer_ids is given. POST /kp/reservations/do_checkin."
+        },
+        {
+          "name": "wubook_check_out",
+          "type": "write",
+          "title": "Check out",
+          "description": "WRITE: check out the guests of a reservation in ZaK. Applies to every guest of the reservation unless room_customer_ids is given. POST /kp/reservations/do_checkout."
+        },
+        {
+          "name": "wubook_undo_check_in",
+          "type": "write",
+          "title": "Undo check-in",
+          "description": "WRITE: revert the check-in of a reservation in ZaK. POST /kp/reservations/undo_checkin."
+        },
+        {
+          "name": "wubook_undo_check_out",
+          "type": "write",
+          "title": "Undo check-out",
+          "description": "WRITE: revert the check-out of a reservation in ZaK. POST /kp/reservations/undo_checkout."
+        },
+        {
+          "name": "wubook_get_customer",
+          "type": "read",
+          "title": "Get customer (guest)",
+          "description": "One guest record by customer id (from a reservation's booker or room customers): name, country, address, contact, birth data, billing info. Personal data. Identity documents (type, number, expiry) are left out unless include_documents is true. POST /kp/customers/fetch_one."
+        },
+        {
+          "name": "wubook_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "wubook_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the WuBook tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "wubook_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on WuBook (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "wubook_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's WuBook Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run wubook_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which rooms are available from 12 to 15 November?",
+        "Show today's arrivals and departures.",
+        "What is the reservation XY-0123 and how much has been paid?",
+        "Close the Double room type for sale on 24 and 25 December."
+      ]
+    },
+    {
+      "slug": "saldeo",
+      "name": "Saldeo",
+      "category": "billing",
+      "description": "Read SaldeoSMART companies, contractors, documents, invoices, bank statements and employees.",
+      "endpoint": "https://saldeo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Saldeo user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SaldeoSMART username"
+          },
+          {
+            "label": "Saldeo API token"
+          }
+        ],
+        "hint": "Saldeo API access is for **office accounts** (all accounting-office packages, and company packages Specjalista / Ekspert). Sign in to SaldeoSMART, open **Konfiguracja → Konto → API** and generate or copy the token. The username is the login of that same user. The token only signs requests and is never shown to anyone; for a client, create a separate user for them in the office account ([Saldeo help](https://pomoc.saldeosmart.pl/hc/pl/articles/30603709166237))."
+      },
+      "tools": [
+        {
+          "name": "saldeo_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the companies (clients) the Saldeo user can see: COMPANY_PROGRAM_ID (needed by every other tool), COMPANY_ID, names, VAT number, address, bank accounts. Start here. Saldeo: GET /api/xml/3.0/company/list."
+        },
+        {
+          "name": "saldeo_list_contractors",
+          "type": "read",
+          "title": "List contractors",
+          "description": "List the contractors (suppliers and customers) of one company: names, VAT number (NIP), address, bank accounts, e-mails, payment days. Saldeo: GET /api/xml/3.0/contractor/list."
+        },
+        {
+          "name": "saldeo_search_documents",
+          "type": "read",
+          "title": "Search documents",
+          "description": "Find documents of one company by field (at least one of document_id, number, nip, guid; several are combined with AND). Returns the matching documents. Saldeo: POST /api/xml/3.1/document/search (policy BY_FIELDS)."
+        },
+        {
+          "name": "saldeo_list_document_ids",
+          "type": "read",
+          "title": "List document ids",
+          "description": "List the ids of all documents of one company in one month folder, grouped by type (contracts, cost/sale/internal/material invoices, orders, writings, other). Feed the ids to saldeo_get_documents_by_ids. Saldeo: POST /api/xml/3.0/document/getidlist."
+        },
+        {
+          "name": "saldeo_get_documents_by_ids",
+          "type": "read",
+          "title": "Get documents by id",
+          "description": "Get full documents of one company by id, per type (use the groups from saldeo_list_document_ids; at most 200 ids per call). Saldeo: POST /api/xml/3.1/document/listbyid."
+        },
+        {
+          "name": "saldeo_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List the sales invoices of one company that were marked for export in Saldeo (policy SALDEO): number, dates, contractor, line items, amounts. Saldeo: GET /api/xml/3.0/invoice/list."
+        },
+        {
+          "name": "saldeo_list_invoice_ids",
+          "type": "read",
+          "title": "List invoice ids",
+          "description": "List the ids of the invoices (invoices, corrective invoices, pre-invoices, corrective pre-invoices) of one company in one month folder. Feed them to saldeo_get_invoices_by_ids. Saldeo: POST /api/xml/3.0/invoice/getidlist."
+        },
+        {
+          "name": "saldeo_get_invoices_by_ids",
+          "type": "read",
+          "title": "Get invoices by id",
+          "description": "Get full invoices of one company by id (ids from saldeo_list_invoice_ids; at most 200 per call). Saldeo: POST /api/xml/3.0/invoice/listbyid."
+        },
+        {
+          "name": "saldeo_list_bank_statements",
+          "type": "read",
+          "title": "List bank statements",
+          "description": "List the bank statements of one company with their entries, contractors and links. Saldeo: GET /api/xml/3.0/bank_statement/list."
+        },
+        {
+          "name": "saldeo_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees of one company (personnel module): names, acronym and HR master data. Contains personal data. Saldeo: GET /api/xml/3.0/employee/list."
+        },
+        {
+          "name": "saldeo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "saldeo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Saldeo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "saldeo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Saldeo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "saldeo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Saldeo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run saldeo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the companies in our SaldeoSMART office account.",
+        "Show the documents of company X that were sent for export.",
+        "Which cost invoices are in the October 2026 folder of this company?",
+        "Find the document with number FV/101/2026 and show its contractor and amounts."
+      ]
     }
   ]
 }

@@ -466,6 +466,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SafetyChain](servers/safetychain/) | productivity | 33 | API token | [servers/safetychain/](servers/safetychain/) |
 | [Fakturowo](servers/fakturowo/) | billing | 13 | API token | [servers/fakturowo/](servers/fakturowo/) |
 | [Propertyware](servers/propertyware/) | productivity | 25 | API token | [servers/propertyware/](servers/propertyware/) |
+| [WuBook](servers/wubook/) | productivity | 23 | API token | [servers/wubook/](servers/wubook/) |
+| [Saldeo](servers/saldeo/) | billing | 14 | API token | [servers/saldeo/](servers/saldeo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
