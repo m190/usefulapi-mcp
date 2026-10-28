@@ -82382,6 +82382,673 @@
         "Compare the booked time and actual time entries for a project.",
         "Record 120 minutes for a resource on a project today."
       ]
+    },
+    {
+      "slug": "courtreserve",
+      "name": "CourtReserve",
+      "category": "sports",
+      "description": "Read club members, court availability, reservations, events, attendance and revenue reports.",
+      "endpoint": "https://courtreserve.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per connected account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API Username"
+          },
+          {
+            "label": "API Password"
+          }
+        ],
+        "hint": "In CourtReserve open **Settings → Additional Features → Integrations → API Access**, click **Create API Key** (choose Restricted Access and Read permission for only the roles you want to share), then **View** to see the Username and Password. API access needs the Advance, Momentum or Enterprise plan, and one key belongs to one location. Your credentials are used only to call the CourtReserve API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "courtreserve_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List the club's members (name, email, phone, membership type and status, start/end/next payment dates, family id). Filter by member id, family, exact email, phone or the created (at most 30 days) / created-or-updated (at most 31 days) time. Paged: pass next_page back as page. PIN codes and SSO links are not returned. Needs the Member role (Read). GET /api/v1/member/get."
+        },
+        {
+          "name": "courtreserve_get_member_reservations",
+          "type": "read",
+          "title": "Get a member's reservations",
+          "description": "A member's upcoming (or dated) court bookings and event registrations: type, start/end, courts, event name and players. For a family member the reply covers the whole family. Give the member id or your own external id. Needs the Member role (Read). GET /api/v1/member/reservations."
+        },
+        {
+          "name": "courtreserve_list_families",
+          "type": "read",
+          "title": "List families",
+          "description": "List family accounts (family id, name, number, members and membership). Needs the Family role (Read). GET /api/v1/family/get."
+        },
+        {
+          "name": "courtreserve_list_membership_types",
+          "type": "read",
+          "title": "List membership types",
+          "description": "The club's membership types (id, name, price, billing and status). Use the ids to filter the membership report. Needs the MembershipType role (Read). GET /api/v1/membershiptype/get."
+        },
+        {
+          "name": "courtreserve_membership_report",
+          "type": "read",
+          "title": "Membership report",
+          "description": "The Membership report: one row per member or family membership with status, billing cadence, start/end, next payment and cancellation history. Filter by type, assignment (family or individual) and the start, end, next-payment or cancellation dates. Paged. Needs the Membership Report role (Read). GET /api/v1/membershipreport/list."
+        },
+        {
+          "name": "courtreserve_list_courts",
+          "type": "read",
+          "title": "List courts",
+          "description": "The club's courts: id, label, court type and order. Use the ids in court utilization and court blocks. Needs the Reservation role (Read). GET /api/v1/reservation/courts."
+        },
+        {
+          "name": "courtreserve_list_reservation_types",
+          "type": "read",
+          "title": "List reservation types",
+          "description": "The club's reservation types (court booking, lesson, court block and so on) with ids. Needs the Reservation role (Read). GET /api/v1/reservation/reservationtypes."
+        },
+        {
+          "name": "courtreserve_get_court_availability",
+          "type": "read",
+          "title": "Get court availability",
+          "description": "Court availability: each court's operating hours and the time slots already booked, for one date or a date range of at most 31 days (time zone of the club in the reply). Needs the Reservation role (Read). GET /api/v1/reservation/availability."
+        },
+        {
+          "name": "courtreserve_list_reservations",
+          "type": "read",
+          "title": "List active reservations",
+          "description": "Active court reservations for a reservation period (the dates played) or a created/updated period, at most 31 days each: type, courts, start/end, players with contact details and what they owe/paid. Give at least one period. PIN codes are not returned. Needs the ReservationReport role (Read). GET /api/v1/reservationreport/listactive."
+        },
+        {
+          "name": "courtreserve_list_cancelled_reservations",
+          "type": "read",
+          "title": "List cancelled reservations",
+          "description": "Cancelled court reservations by the date they were cancelled or by the reservation period, at most 31 days each. Give at least one period. Needs the ReservationReport role (Read). GET /api/v1/reservationreport/listcancelled."
+        },
+        {
+          "name": "courtreserve_whos_here",
+          "type": "read",
+          "title": "Who is here",
+          "description": "Who is booked in a time window (for example today): member reservations and event registrations with the member, court and time, optionally including or only cancelled ones. The window can be at most 31 days. Needs the ReservationReport role (Read). GET /api/v1/reservationreport/whoisheretoday."
+        },
+        {
+          "name": "courtreserve_court_utilization",
+          "type": "read",
+          "title": "Court utilization",
+          "description": "Court utilization report (booked vs available time per time slot) for a period of at most 7 days, optionally for chosen courts, court types, event types, event tags or reservation types. Needs the ReservationReport role (Read). GET /api/v1/reservationreport/courtutilization."
+        },
+        {
+          "name": "courtreserve_list_event_categories",
+          "type": "read",
+          "title": "List event categories",
+          "description": "Event categories (clinics, round robins, tournaments, open play...) with ids. Needs the EventCalendar role (Read). GET /api/v1/eventcalendar/categories."
+        },
+        {
+          "name": "courtreserve_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "Events on the club calendar between two dates: name, category, start/end, courts, instructors, capacity, registered and waitlist counts, price and rating limits. SSO links are not returned. Needs the EventCalendar role (Read). GET /api/v1/eventcalendar/eventlist."
+        },
+        {
+          "name": "courtreserve_list_event_registrations",
+          "type": "read",
+          "title": "List event registrations",
+          "description": "Active registrations for events, clinics and lessons with the member, event and what was paid. Give an event period or a registration period, at most 31 days each. Needs the EventRegistrationReport role (Read). GET /api/v1/eventregistrationreport/listactive."
+        },
+        {
+          "name": "courtreserve_list_event_waitlist",
+          "type": "read",
+          "title": "List event waitlist",
+          "description": "People on event waitlists. Give an event period or a registration period, at most 31 days each. Needs the EventRegistrationReport role (Read). GET /api/v1/eventregistrationreport/listwaitlist."
+        },
+        {
+          "name": "courtreserve_list_cancelled_event_registrations",
+          "type": "read",
+          "title": "List cancelled event registrations",
+          "description": "Cancelled event registrations by cancellation date or by event date, at most 31 days each. Give at least one period. Needs the EventRegistrationReport role (Read). GET /api/v1/eventregistrationreport/listcancelled."
+        },
+        {
+          "name": "courtreserve_list_checkins",
+          "type": "read",
+          "title": "List check-ins",
+          "description": "Check-in report: who checked in to court bookings and events, by check-in period or reservation period (at most 31 days each). Give at least one period. Role: the key's access to attendance data. GET /api/v1/attendancereport/checkin."
+        },
+        {
+          "name": "courtreserve_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "Transactions (fees, membership fees, payments, refunds...) by transaction date or reservation date: id, type, date, subtotal, tax, total, unpaid amount, payment type, category and the member's name, email and phone. Filter by type, paid/unpaid and payment type. Give at least one period. Needs the Transactions role (Read). GET /api/v1/transactions/list."
+        },
+        {
+          "name": "courtreserve_sales_summary",
+          "type": "read",
+          "title": "Sales summary",
+          "description": "Detailed sales summary for a payment period of at most 31 days: paid fees plus refunds by category and payment type. Needs the Transactions role (Read). GET /api/v1/transactions/salessummarydetailed."
+        },
+        {
+          "name": "courtreserve_list_promo_codes",
+          "type": "read",
+          "title": "List promo codes",
+          "description": "The club's promo codes: code, name, type, value, dates, limits and what they apply to. Needs the PromoCodes role (Read). GET /api/v1/promocode/get."
+        },
+        {
+          "name": "courtreserve_list_leagues",
+          "type": "read",
+          "title": "List leagues",
+          "description": "The club's leagues, with their sessions (id and name) when include_sessions is true (default). Paged. Needs the League role (Read). GET /api/v1/league/get."
+        },
+        {
+          "name": "courtreserve_list_league_sessions",
+          "type": "read",
+          "title": "List league sessions",
+          "description": "League sessions, for one league or one session, optionally with their game days and registered players. Paged. Needs the League role (Read). GET /api/v1/league/sessions."
+        },
+        {
+          "name": "courtreserve_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "courtreserve_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the CourtReserve tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "courtreserve_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on CourtReserve (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "courtreserve_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's CourtReserve Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run courtreserve_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which courts are free tomorrow evening between 6 and 9 pm?",
+        "Which memberships end in the next 30 days, and who has not booked a court in a month?",
+        "How many people are registered for Saturday's pickleball clinic, and who is on the waitlist?",
+        "What was yesterday's revenue by category and payment type?",
+        "Show which members checked in yesterday and the courts they booked."
+      ]
+    },
+    {
+      "slug": "emma",
+      "name": "Emma",
+      "category": "email-marketing",
+      "description": "Read audiences, groups, mailings and campaign results without sending email or changing contacts.",
+      "endpoint": "https://emma.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per connected account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Emma account id"
+          },
+          {
+            "label": "Public API key"
+          },
+          {
+            "label": "Private API key"
+          }
+        ],
+        "hint": "In Emma open **Account settings → API Key** and click **Generate API Key**: that page shows the account id, public key and private key (agency accounts: Menu → Accounts → the account's settings → API key, and use that sub-account's own id). See the [Emma API documentation](https://api.myemma.com/). Your keys are used only to call the Emma API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "emma_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List the member groups (audience lists) of the Emma account with their active, opted-out and error member counts. Defaults to normal groups; group_types can add test and hidden groups."
+        },
+        {
+          "name": "emma_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "Get one member group with its member counts (active, opted-out, error)."
+        },
+        {
+          "name": "emma_list_group_members",
+          "type": "read",
+          "title": "List group members",
+          "description": "List the members of one group (email, status, custom fields). Paged: use next_start for more."
+        },
+        {
+          "name": "emma_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List the members (contacts) of the whole audience: id, email, status (a active, o opted out, e error), custom fields, bounce count. Paged: use next_start for more. With count_only the reply is just the number of members."
+        },
+        {
+          "name": "emma_get_member",
+          "type": "read",
+          "title": "Get a member",
+          "description": "Get one member by id, with all custom fields, status, SMS status and bounce count."
+        },
+        {
+          "name": "emma_find_member_by_email",
+          "type": "read",
+          "title": "Find a member by email",
+          "description": "Find one member by email address, with all custom fields and status. A 404 means the address is not in the audience."
+        },
+        {
+          "name": "emma_get_member_groups",
+          "type": "read",
+          "title": "Get a member's groups",
+          "description": "List the groups one member belongs to."
+        },
+        {
+          "name": "emma_get_member_mailings",
+          "type": "read",
+          "title": "Get a member's mailing history",
+          "description": "The mailing history of one member: which mailings they were sent and what they did with them."
+        },
+        {
+          "name": "emma_list_fields",
+          "type": "read",
+          "title": "List member fields",
+          "description": "List the custom member fields of the account (shortcut names, display names, types)."
+        },
+        {
+          "name": "emma_get_import",
+          "type": "read",
+          "title": "Get an import",
+          "description": "Status and results of one bulk member import (by import id), or, without an id, the list of all imports of the account."
+        },
+        {
+          "name": "emma_list_mailings",
+          "type": "read",
+          "title": "List mailings",
+          "description": "List mailings (campaigns): id, name, subject, sender, status (p pending, a paused, i injecting, s sending, x canceled, c complete, w waiting, u unapproved, f failed), type, recipient count, scheduled time. Defaults to standard and test mailings in all statuses, newest first. Paged: use next_start."
+        },
+        {
+          "name": "emma_get_mailing",
+          "type": "read",
+          "title": "Get a mailing",
+          "description": "Get one mailing in full: content (HTML and plain text), recipients (groups, searches, segments), links, schedule, status."
+        },
+        {
+          "name": "emma_list_mailing_members",
+          "type": "read",
+          "title": "List a mailing's members",
+          "description": "List the individual members a mailing was sent to (not groups or searches). Paged: use next_start."
+        },
+        {
+          "name": "emma_get_response_summary",
+          "type": "read",
+          "title": "Account response summary",
+          "description": "Month-by-month response statistics for the whole account: mailings, sent, delivered, bounced, opened, clicked, forwarded, opt-outs, sign-ups (test mailings excluded)."
+        },
+        {
+          "name": "emma_get_mailing_response",
+          "type": "read",
+          "title": "Get a mailing's response",
+          "description": "Response summary of one mailing: recipients, sent, delivered, bounced, opened, clicked (unique and total), forwarded, opt-outs, sign-ups."
+        },
+        {
+          "name": "emma_list_mailing_links",
+          "type": "read",
+          "title": "List a mailing's link clicks",
+          "description": "The links of one mailing with their unique and total clicks."
+        },
+        {
+          "name": "emma_list_mailing_activity",
+          "type": "read",
+          "title": "List mailing activity",
+          "description": "Who did what with one mailing: members it was sent to (sends), still in the queue (in_progress), delivered or bounced (deliveries), opened (opens), clicked (clicks), forwarded, opted out (optouts) or signed up (signups). Each row has the member's email and timestamp. Paged: use next_start."
+        },
+        {
+          "name": "emma_list_searches",
+          "type": "read",
+          "title": "List saved searches",
+          "description": "List the saved searches (dynamic segments) of the account, with their criteria."
+        },
+        {
+          "name": "emma_get_search_members",
+          "type": "read",
+          "title": "List a search's members",
+          "description": "The members that currently match a saved search. Paged: use next_start."
+        },
+        {
+          "name": "emma_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "emma_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Emma tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "emma_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Emma (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "emma_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Emma Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run emma_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me my Emma groups and how many active members each has.",
+        "How did last month's mailings perform? Opens, clicks and opt-outs.",
+        "Is jane@example.com in my audience? Which groups is she in?",
+        "Show the links with the most clicks in my latest mailing."
+      ]
+    },
+    {
+      "slug": "oksign",
+      "name": "OKSign",
+      "category": "e-sign",
+      "description": "Read documents, signatures, contacts and credits; manage contacts and remove documents.",
+      "endpoint": "https://oksign.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per connected account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API header value (x-oksign-authorization)"
+          }
+        ],
+        "hint": "Find it in your OKsign account under **REST API → API Console**: it is the value of the `x-oksign-authorization` header, three parts joined by semicolons, e.g. `100693;463204-5BC1F362-…;marketing` (add an organizational token there first if you have none). The credentials are used only to call the OKsign API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "oksign_get_credits",
+          "type": "read",
+          "title": "Get credits and storage",
+          "description": "The account's remaining credits (quantity), when they expire (validuntil), the plan (subscription), whether it is paid, and storage used (account_size) versus the maximum (max_account_size) in bytes. GET /v1/credits/retrieve."
+        },
+        {
+          "name": "oksign_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The users of the OKsign account: name, email, mobile, role, status, language and the immutable signerid (use it to tell who signed). GET /v1/users/retrieve."
+        },
+        {
+          "name": "oksign_list_email_templates",
+          "type": "read",
+          "title": "List email templates",
+          "description": "The email templates defined in the account: id, name, subject, HTML body, reminder_days and repeat. GET /v1/email-templates/retrieve."
+        },
+        {
+          "name": "oksign_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "The account's contact list: name, email, mobile, actingas (capacity) and group. GET /v1/contacts/retrieve."
+        },
+        {
+          "name": "oksign_list_active_documents",
+          "type": "read",
+          "title": "List active documents",
+          "description": "Documents in the account's Active Documents tab: docid, filename, creator, createdate, signatures required/valid, orgtoken, status (1 active, 10 briefcase, 11 document in a briefcase, 12 reusable, 14 template), viaapi and signed_docid when signed. OKsign allows this call only once every 3 minutes (429 otherwise). GET /v1/documents/active."
+        },
+        {
+          "name": "oksign_list_signed_documents",
+          "type": "read",
+          "title": "List signed documents",
+          "description": "Documents uploaded through the API that were signed between two moments: signed_docid, source_docid, filename, signerid, signing source, signature counts, completed fields, credits per signer and timestamp. Keep the window short; OKsign allows this call only once every 3 minutes (429 otherwise). GET /v1/documents/signed."
+        },
+        {
+          "name": "oksign_list_notification_errors",
+          "type": "read",
+          "title": "List email and SMS delivery errors",
+          "description": "Email and SMS delivery problems (hard_bounce, soft_bounce, blocked, spam, invalid_email, deferred) for signing invitations sent between two moments: recipient, source_docid, reason, orgtoken and timestamp. Only error events are reported. OKsign allows this call only once every 3 minutes (429 otherwise). GET /v1/webhooks/retrieve."
+        },
+        {
+          "name": "oksign_document_exists",
+          "type": "read",
+          "title": "Check a document exists",
+          "description": "Whether a (signed) document still exists on the platform; returns its filename and whether it is a template. GET /v1/document/exists."
+        },
+        {
+          "name": "oksign_get_document_metadata",
+          "type": "read",
+          "title": "Get signed document metadata",
+          "description": "Metadata of a signed document (pass the signed_docid): filename, size, signatures required/valid, who signed, and the values of all completed fields (can contain personal data). Metadata v2. GET /v2/metadata/retrieve."
+        },
+        {
+          "name": "oksign_get_form_descriptor",
+          "type": "read",
+          "title": "Get a document's form descriptor",
+          "description": "The form descriptor of an uploaded document: its signature and form fields (type, page, position, signer, required, signing options) and the signing URL of each signer. The URLs let their holders sign, so share them only with the signer. GET /v1/formdesc/retrieve."
+        },
+        {
+          "name": "oksign_get_linked_document",
+          "type": "read",
+          "title": "Find the source or signed copy of a document",
+          "description": "Given a source_docid, the signed_docid of its signed copy (absent if not signed yet) and the timestamp; given a signed_docid, the source_docid. An empty result means the document never existed here or was removed. GET /v1/linkedlist/retrieve."
+        },
+        {
+          "name": "oksign_upsert_contacts",
+          "type": "write",
+          "title": "Add or update contacts",
+          "description": "WRITE: add contacts to the account's contact list, or update them when a contact with the same email AND name exists (its other fields are replaced). Existing contacts are never cleared. Contacts OKsign rejects are skipped and reported. POST /v1/contacts/upload."
+        },
+        {
+          "name": "oksign_remove_contacts",
+          "type": "write",
+          "title": "Remove contacts",
+          "description": "WRITE: permanently remove contacts from the account's contact list. A contact is identified by its email AND name. Cannot be undone (re-add with oksign_upsert_contacts). POST /v1/contacts/remove."
+        },
+        {
+          "name": "oksign_remove_document",
+          "type": "write",
+          "title": "Remove a document",
+          "description": "WRITE: permanently remove a (signed) document from the OKsign platform. This deletes the file and its pending webhook events and cannot be undone. A signed document removed right after its callback may answer 'Too soon': retry later. DELETE /v1/document/remove."
+        },
+        {
+          "name": "oksign_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "oksign_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the OKSign tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "oksign_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on OKSign (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "oksign_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's OKSign Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run oksign_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which documents are still waiting for a signature in my OKsign account?",
+        "List the documents signed yesterday between 00:00 and 23:59 and who signed them.",
+        "Show how many credits and how much storage my OKsign account has left.",
+        "Add Jane Peeters (jane@example.com, +32495123456) to my OKsign contacts."
+      ]
+    },
+    {
+      "slug": "hirehop",
+      "name": "HireHop",
+      "category": "rental",
+      "description": "Read rental jobs, projects, late returns, contacts, inventory catalogs, depots and notes.",
+      "endpoint": "https://hirehop.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "HireHop API token"
+          },
+          {
+            "label": "HireHop host"
+          }
+        ],
+        "hint": "In HireHop administrator mode go to **Settings → Users**, select a user, then **Menu → API Token**. HireHop recommends a dedicated API user: logging into that user interactively, changing its email or changing its password invalidates the token. Choose the HireHop host you use and keep the same host when reconnecting to retain your subscription. Your token is used only server-side to access your account. HireHop's limit is 60 API requests per minute and 3 per second; ask for one page at a time."
+      },
+      "tools": [
+        {
+          "name": "hirehop_get_current_user",
+          "type": "read",
+          "title": "Get connected user",
+          "description": "Show the connected HireHop user's ID, company ID, name, email and default depot. Uses the authenticated current-user endpoint; excludes account settings and credentials."
+        },
+        {
+          "name": "hirehop_list_depots",
+          "type": "read",
+          "title": "List depots",
+          "description": "List depot IDs, names and whether each is virtual. GET /php_functions/get_depots.php."
+        },
+        {
+          "name": "hirehop_search_jobs",
+          "type": "read",
+          "title": "Search jobs and projects",
+          "description": "Search rental jobs and open/closed projects with customer, company, venue or job-name filters. Can filter late returns, money owing or jobs needing an invoice. Returns one page and the vendor's totals; follow pages for a complete report. Dates use depot-local calendar dates."
+        },
+        {
+          "name": "hirehop_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "Read one rental job's details using its numeric job ID from hirehop_search_jobs. GET /api/job_data.php; returns customer, dates, status and the details available to your user."
+        },
+        {
+          "name": "hirehop_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Read a project's details, customer, managers, dates and status. Use its numeric project ID from hirehop_search_jobs. GET /php_functions/project_get_data.php."
+        },
+        {
+          "name": "hirehop_list_project_jobs",
+          "type": "read",
+          "title": "List project jobs",
+          "description": "List a single page of the jobs in a project, with vendor totals. Use subsequent pages for the full project. GET /php_functions/projects_jobs_list.php."
+        },
+        {
+          "name": "hirehop_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Read or search customer, delivery-address and supplier contacts. One page, with vendor paging totals. Hidden/deleted contacts are excluded. GET /modules/contacts/list.php."
+        },
+        {
+          "name": "hirehop_list_products",
+          "type": "read",
+          "title": "List rental or tracked sales products",
+          "description": "List rental products or tracked sales products and their categories, IDs, names, part numbers and status. This is a catalog, not a date-specific availability report. One page with vendor totals. GET /modules/stock/asset_assign_list.php."
+        },
+        {
+          "name": "hirehop_list_notes",
+          "type": "read",
+          "title": "Read record notes",
+          "description": "Read a page of notes belonging to a job, project, rental inventory product (stock) or asset. Sales inventory notes are not included. Notes can contain HTML. GET /php_functions/notes_list.php. This tool never creates or changes notes."
+        },
+        {
+          "name": "hirehop_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hirehop_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the HireHop tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hirehop_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on HireHop (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hirehop_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's HireHop Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hirehop_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which rental jobs have late returns? Show the customer and return date.",
+        "Find jobs for Acme, then show the details and notes for the job I choose.",
+        "List the jobs in project 12 and summarize their dates and status.",
+        "Show our rental product catalog and depot names."
+      ]
     }
   ]
 }
