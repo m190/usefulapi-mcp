@@ -63,6 +63,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_delete_appointment` | **write** | Delete (cancel) an appointment |
 | `shopmonkey_add_service` | **write** | Add a service (job) to an order |
 | `shopmonkey_add_labor` | **write** | Add a labor line to a service |
+| `shopmonkey_send_estimate` | **write** | Send an estimate for customer authorization |
+| `shopmonkey_add_part` | **write** | Add a part to a work order service |
 | `shopmonkey_usage_status` | meta | Usage status (free-tier meter) |
 | `shopmonkey_request_feature` | meta | Request a missing feature |
 | `shopmonkey_upgrade` | meta | Upgrade to Pro (unlimited*) |
