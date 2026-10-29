@@ -480,6 +480,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SMS Everyone](servers/sms-everyone/) | communications | 15 | API token | [servers/sms-everyone/](servers/sms-everyone/) |
 | [Reoon Email Verifier](servers/reoon-email-verifier/) | email-validation | 8 | API token | [servers/reoon-email-verifier/](servers/reoon-email-verifier/) |
 | [Weatherbit](servers/weatherbit/) | data | 16 | API token | [servers/weatherbit/](servers/weatherbit/) |
+| [ScrapeOwl](servers/scrapeowl/) | data | 8 | API token | [servers/scrapeowl/](servers/scrapeowl/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
