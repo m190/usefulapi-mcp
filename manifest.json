@@ -84161,6 +84161,914 @@
         "Retrieve https://example.com after I confirm the vendor allowance usage.",
         "Render https://example.com with JavaScript after I confirm the marketplace charge or allowance usage."
       ]
+    },
+    {
+      "slug": "infoplus",
+      "name": "Infoplus",
+      "category": "shipping",
+      "description": "Read Infoplus warehouses, item stock, order status and inbound shipment notices.",
+      "endpoint": "https://infoplus.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Infoplus site name"
+          },
+          {
+            "label": "Infoplus API key"
+          }
+        ],
+        "hint": "Use the site name from **your-site.infopluswms.com**, without a URL or domain. In Infoplus, open the **User table → API Key column → Create API Key**. Use a dedicated API user with access to the tables you need. Connecting checks one warehouse record and does not change inventory. Your Infoplus account's API entitlement and permissions apply. Limits are 3 requests/second per key and 10/second per customer site. A different site or API key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "infoplus_search_warehouses",
+          "type": "read",
+          "title": "Search Infoplus warehouses",
+          "description": "Read one page of warehouse logistics metadata. Optional Infoplus filter and sort expressions. A full_page result may have a following page; request the next page to check. Reads only; no automatic pagination or retries. Pace calls within the API user's 3/second and site-wide 10/second limits."
+        },
+        {
+          "name": "infoplus_get_warehouse",
+          "type": "read",
+          "title": "Read an Infoplus warehouse",
+          "description": "Read selected warehouse logistics metadata by its Infoplus numeric record ID. Does not modify, allocate, receive or ship stock."
+        },
+        {
+          "name": "infoplus_search_items",
+          "type": "read",
+          "title": "Search Infoplus items",
+          "description": "Read one page of item SKU, status, packaging and reorder metadata. Optional Infoplus filter and sort expressions. A full_page result may have a following page; request the next page to check. Reads only; no automatic pagination or retries. Pace calls within the API user's 3/second and site-wide 10/second limits."
+        },
+        {
+          "name": "infoplus_get_item",
+          "type": "read",
+          "title": "Read an Infoplus item",
+          "description": "Read selected item SKU, status, packaging and reorder metadata by its Infoplus numeric record ID. Does not modify, allocate, receive or ship stock."
+        },
+        {
+          "name": "infoplus_search_inventory",
+          "type": "read",
+          "title": "Search Infoplus inventory",
+          "description": "Read one page of stock quantities, lots and warehouse location IDs. Optional Infoplus filter and sort expressions. A full_page result may have a following page; request the next page to check. Reads only; no automatic pagination or retries. Pace calls within the API user's 3/second and site-wide 10/second limits."
+        },
+        {
+          "name": "infoplus_get_inventory_detail",
+          "type": "read",
+          "title": "Read an Infoplus inventory detail",
+          "description": "Read selected stock quantities, lots and warehouse location IDs by its Infoplus numeric record ID. Does not modify, allocate, receive or ship stock."
+        },
+        {
+          "name": "infoplus_search_orders",
+          "type": "read",
+          "title": "Search Infoplus orders",
+          "description": "Read one page of order status, amounts and up to 100 line items. Optional Infoplus filter and sort expressions. A full_page result may have a following page; request the next page to check. Reads only; no automatic pagination or retries. Pace calls within the API user's 3/second and site-wide 10/second limits."
+        },
+        {
+          "name": "infoplus_get_order",
+          "type": "read",
+          "title": "Read an Infoplus order",
+          "description": "Read selected order status, amounts and up to 100 line items by its Infoplus order number (decimal suffixes are supported). Does not modify, allocate, receive or ship stock."
+        },
+        {
+          "name": "infoplus_search_asns",
+          "type": "read",
+          "title": "Search Infoplus asns",
+          "description": "Read one page of advance shipping notices and up to 100 receipt lines. Optional Infoplus filter and sort expressions. A full_page result may have a following page; request the next page to check. Reads only; no automatic pagination or retries. Pace calls within the API user's 3/second and site-wide 10/second limits."
+        },
+        {
+          "name": "infoplus_get_asn",
+          "type": "read",
+          "title": "Read an Infoplus asn",
+          "description": "Read selected advance shipping notices and up to 100 receipt lines by its Infoplus numeric record ID. Does not modify, allocate, receive or ship stock."
+        },
+        {
+          "name": "infoplus_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "infoplus_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Infoplus tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "infoplus_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Infoplus (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "infoplus_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Infoplus Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run infoplus_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find active items and their reorder metadata.",
+        "Show inventory quantities by SKU and warehouse location.",
+        "Check an order's status and shipped quantities.",
+        "List incoming advance shipping notices for our warehouse."
+      ]
+    },
+    {
+      "slug": "mailercheck",
+      "name": "MailerCheck",
+      "category": "email-validation",
+      "description": "Check MailerCheck credits and lists, and run confirmed asynchronous email verification.",
+      "endpoint": "https://mailercheck.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MailerCheck API token"
+          }
+        ],
+        "hint": "In MailerCheck, open your **profile → API → Create token**. Copy the token when it is shown. Connecting only reads account details. Email verification spends your MailerCheck credits and requires confirmation. Only submit addresses you have permission to process. Changing the token creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "mailercheck_account",
+          "type": "read",
+          "title": "Read MailerCheck account",
+          "description": "Read the connected MailerCheck account name, ID and credit balance. Does not verify emails or spend verification credits."
+        },
+        {
+          "name": "mailercheck_credits",
+          "type": "read",
+          "title": "Check MailerCheck credits",
+          "description": "Read the available MailerCheck verification credit balance without starting verification."
+        },
+        {
+          "name": "mailercheck_lists",
+          "type": "read",
+          "title": "List MailerCheck verification lists",
+          "description": "Read one bounded page of list summaries, processing status and statistics. Does not create, verify or delete lists. Pagination stays on the MailerCheck API; no response links are followed."
+        },
+        {
+          "name": "mailercheck_get_list",
+          "type": "read",
+          "title": "Read MailerCheck list status",
+          "description": "Read one existing list's verification status and aggregate result counts. Does not start or restart verification."
+        },
+        {
+          "name": "mailercheck_verify_email",
+          "type": "write",
+          "title": "Start MailerCheck email verification",
+          "description": "Submit one email for asynchronous verification. Spends MailerCheck credits and requires confirm:true. This call is never retried. Read the returned verification ID with mailercheck_verification_result; wait between polls. If the response is lost, check MailerCheck before submitting again."
+        },
+        {
+          "name": "mailercheck_verification_result",
+          "type": "read",
+          "title": "Read MailerCheck email verification result",
+          "description": "Read the status and result of a previously submitted asynchronous email check. Does not start new verification. Call once and wait before polling again; no automatic polling is performed."
+        },
+        {
+          "name": "mailercheck_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mailercheck_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MailerCheck tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mailercheck_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on MailerCheck (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mailercheck_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MailerCheck Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mailercheck_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many MailerCheck verification credits remain?",
+        "Show my email verification lists and their status.",
+        "Verify this email after I confirm the credit charge, then read its result."
+      ]
+    },
+    {
+      "slug": "ipdetective",
+      "name": "IPDetective",
+      "category": "fraud-detection",
+      "description": "Check IPDetective usage and investigate IP bot, VPN, proxy, ASN and country signals.",
+      "endpoint": "https://ipdetective.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "IPDetective API key"
+          }
+        ],
+        "hint": "Sign in at **ipdetective.io** and copy your API key from the dashboard. Connecting checks your usage without looking up an address. Lookups use your IPDetective allowance; batches require confirmation. Bot and proxy signals do not prove abuse. A changed key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "ipdetective_account_usage",
+          "type": "read",
+          "title": "Check IPDetective allowance",
+          "description": "Read account request and lookup limits and current usage. Does not look up an IP address."
+        },
+        {
+          "name": "ipdetective_lookup_ip",
+          "type": "read",
+          "title": "Investigate an IP address",
+          "description": "Look up a public IPv4 or IPv6 address for IPDetective's bot signal and optional datacenter, VPN/proxy, ASN and country information. Uses your vendor allowance. This is a risk signal, not proof of abuse. No automatic retries."
+        },
+        {
+          "name": "ipdetective_lookup_batch",
+          "type": "read",
+          "title": "Investigate a batch of IP addresses",
+          "description": "Look up 1–100 public IP addresses in one vendor request. Requires confirm:true because it consumes your IPDetective allowance. Duplicates are removed before submission. No automatic retries or background polling; check usage before resubmitting after an error."
+        },
+        {
+          "name": "ipdetective_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ipdetective_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the IPDetective tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ipdetective_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on IPDetective (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ipdetective_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's IPDetective Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ipdetective_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Check my IPDetective request and lookup allowance.",
+        "Investigate 8.8.8.8 for bot, datacenter and ASN signals.",
+        "Check this list of IP addresses after I confirm the allowance usage."
+      ]
+    },
+    {
+      "slug": "bouncify",
+      "name": "Bouncify",
+      "category": "email-validation",
+      "description": "Check Bouncify credits, verify emails and run confirmed bulk verification jobs.",
+      "endpoint": "https://bouncify.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bouncify API key"
+          }
+        ],
+        "hint": "Create an API key in your **Bouncify dashboard**. Connecting reads your credit balance without verifying an address. Verification can spend Bouncify credits and requires confirmation. Optional API IP restrictions must permit your integration. A changed API key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "bouncify_credit_balance",
+          "type": "read",
+          "title": "Read Bouncify credits",
+          "description": "Read available Bouncify verification credits without verifying any email."
+        },
+        {
+          "name": "bouncify_verify_email",
+          "type": "write",
+          "title": "Verify one email with Bouncify",
+          "description": "Verify one address with a 30-second vendor timeout. Can spend Bouncify credits and requires confirm:true. Unknown and catch-all results do not guarantee delivery. Never automatically retry an uncertain response."
+        },
+        {
+          "name": "bouncify_create_bulk_list",
+          "type": "write",
+          "title": "Upload a Bouncify email list",
+          "description": "Upload 1–1,000 email addresses as a new list with auto_verify:false. Does not start verification. Creates stored vendor data and requires confirm:true. Use bouncify_start_bulk_verification after the job becomes ready."
+        },
+        {
+          "name": "bouncify_start_bulk_verification",
+          "type": "write",
+          "title": "Start Bouncify bulk verification",
+          "description": "Start a ready uploaded list. Can spend credits for every address, cannot be paused or cancelled, and requires confirm:true. Check job status and the dashboard before resubmitting an uncertain request."
+        },
+        {
+          "name": "bouncify_bulk_status",
+          "type": "read",
+          "title": "Read Bouncify bulk status",
+          "description": "Read one existing job's preparation, verification progress and aggregate result counts. Does not start verification or download address-level results. Wait between polls; API docs specify 120 requests per minute."
+        },
+        {
+          "name": "bouncify_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bouncify_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bouncify tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bouncify_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Bouncify (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bouncify_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bouncify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bouncify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many Bouncify verification credits remain?",
+        "Verify this email after I confirm the credit usage.",
+        "Upload this email list without starting verification, then check its job status.",
+        "Start verification of this ready bulk list after I confirm the credit usage."
+      ]
+    },
+    {
+      "slug": "salesbinder",
+      "name": "SalesBinder",
+      "category": "ecommerce",
+      "description": "Read SalesBinder customers, inventory, warehouse locations, invoices and sales orders.",
+      "endpoint": "https://salesbinder.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SalesBinder account subdomain"
+          },
+          {
+            "label": "SalesBinder API v3 key"
+          }
+        ],
+        "hint": "In **Profile → API Keys**, create a dedicated API v3 key for UsefulAPI (v3 keys begin with sb_live_). Connecting requires **customers:read**; inventory, invoices and sales orders additionally require items:read, invoices:read and sales_orders:read. User permissions still apply. Enter only the account subdomain from your SalesBinder address. Connecting reads one customer page without changing data. A different account or key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "salesbinder_list_customers",
+          "type": "read",
+          "title": "Find SalesBinder customers",
+          "description": "Read one visible customer page. Search name, office email or an exact numeric customer number. Requires customers:read. Follow next_page manually; totals are omitted unless requested."
+        },
+        {
+          "name": "salesbinder_get_customer",
+          "type": "read",
+          "title": "Read a SalesBinder customer",
+          "description": "Read a visible customer by UUID, including contact and account summary fields. Requires customers:read."
+        },
+        {
+          "name": "salesbinder_list_items",
+          "type": "read",
+          "title": "Find SalesBinder inventory",
+          "description": "Read one visible inventory page with quantity, reserved/incoming quantity, price and permission-visible cost. Search name, SKU, barcode, serial or an exact numeric item number. Location filtering adds separate location totals. Requires items:read. No stock changes."
+        },
+        {
+          "name": "salesbinder_get_item",
+          "type": "read",
+          "title": "Read a SalesBinder inventory item",
+          "description": "Read one inventory item by UUID, including archived or sold items visible to the API user. Returns stock and pricing summary; photo galleries and custom fields are omitted. Requires items:read."
+        },
+        {
+          "name": "salesbinder_list_locations",
+          "type": "read",
+          "title": "List SalesBinder warehouses",
+          "description": "Read one page of active inventory locations and their UUIDs. Assigned-location visibility applies. Requires items:read."
+        },
+        {
+          "name": "salesbinder_list_invoices",
+          "type": "read",
+          "title": "Find SalesBinder invoices",
+          "description": "Read one visible invoice page, newest invoice number first, with status and decimal amount summaries. Filter by customer UUID, status ID or issue date. Line items are omitted. Requires invoices:read; no sending or payment operations."
+        },
+        {
+          "name": "salesbinder_list_sales_orders",
+          "type": "read",
+          "title": "Find SalesBinder sales orders",
+          "description": "Read one visible sales-order page with status, amount and invoiced/packed/shipped progress. Search or filter by customer, status, warehouse or issue date. Line items are omitted. Requires sales_orders:read; no fulfillment changes."
+        },
+        {
+          "name": "salesbinder_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "salesbinder_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SalesBinder tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "salesbinder_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on SalesBinder (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "salesbinder_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SalesBinder Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run salesbinder_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find SalesBinder inventory matching WIDGET and show stock by warehouse.",
+        "Show this month's invoices for a customer.",
+        "List open SalesBinder sales orders and their shipping progress."
+      ]
+    },
+    {
+      "slug": "rackbeat",
+      "name": "Rackbeat",
+      "category": "ecommerce",
+      "description": "Read Rackbeat products, location stock, sales orders and customer summaries.",
+      "endpoint": "https://rackbeat.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Rackbeat API key"
+          }
+        ],
+        "hint": "In Rackbeat, open **Company Settings → API → Create New**. Name a dedicated key for this integration and grant only the scopes needed for the data you want to read. Your account must allow API access. The connection checks `/self`; tool access depends on your key's permissions. This integration only reads data. Rackbeat's 480 requests/minute quota is shared by your account. UsefulAPI billing follows the connected Rackbeat account and user."
+      },
+      "tools": [
+        {
+          "name": "rackbeat_account",
+          "type": "read",
+          "title": "Read Rackbeat account",
+          "description": "Read the connected Rackbeat account and user IDs, company name and readiness. Omits addresses and email details."
+        },
+        {
+          "name": "rackbeat_products",
+          "type": "read",
+          "title": "Search Rackbeat products",
+          "description": "Read one bounded page of product summaries, stock and available quantities. Optional search and barred/sellable filters are sent to Rackbeat. Does not change inventory."
+        },
+        {
+          "name": "rackbeat_get_product",
+          "type": "read",
+          "title": "Read Rackbeat product stock",
+          "description": "Read one product's pricing and inventory quantities using its product number. Does not change stock, pricing or product data."
+        },
+        {
+          "name": "rackbeat_product_locations",
+          "type": "read",
+          "title": "Read Rackbeat stock by location",
+          "description": "Read stock and available quantities for one product across warehouse locations. only_toplevel is an upstream filter. offset/limit slice a bounded complete upstream response locally; very large responses require the Rackbeat dashboard."
+        },
+        {
+          "name": "rackbeat_orders",
+          "type": "read",
+          "title": "Search Rackbeat sales orders",
+          "description": "Read one bounded page of sales order summaries, totals and shipment/invoice status. Optional search, customer number and status filters are sent to Rackbeat. Does not book, cancel or ship orders."
+        },
+        {
+          "name": "rackbeat_get_order",
+          "type": "read",
+          "title": "Read Rackbeat sales order",
+          "description": "Read an order summary plus a bounded page of line quantities and prices. line_offset/line_limit slice locally after fetching one complete order within the response-size limit. Omits attachments, addresses and notes. Does not change the order."
+        },
+        {
+          "name": "rackbeat_customers",
+          "type": "read",
+          "title": "Search Rackbeat customers",
+          "description": "Read one bounded page of customer number, name, company, currency and barred/deleted status. Optional text search is sent to Rackbeat. Omits contact details, addresses and payment settings."
+        },
+        {
+          "name": "rackbeat_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "rackbeat_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Rackbeat tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "rackbeat_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Rackbeat (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "rackbeat_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Rackbeat Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run rackbeat_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find products with low available stock in Rackbeat.",
+        "Show stock by warehouse location for this product.",
+        "Which sales orders are ready for shipping?",
+        "Find the Rackbeat customer number for this company."
+      ]
+    },
+    {
+      "slug": "viralsweep",
+      "name": "ViralSweep",
+      "category": "marketing",
+      "description": "Read ViralSweep brands, promotions, entrant summaries and existing winners.",
+      "endpoint": "https://viralsweep.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ViralSweep API key"
+          }
+        ],
+        "hint": "Requires a **ViralSweep Premium plan or higher** and API access enabled by ViralSweep support. Create your API key in **Account Settings → API Access**. The promotion-specific Zapier key is a different credential. Connecting reads your brands. Read-only tools include entrant and winner emails; no promotion writes are provided. A changed key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "viralsweep_list_brands",
+          "type": "read",
+          "title": "List ViralSweep brands",
+          "description": "Read account brands. Offset/limit page a bounded vendor response locally; no vendor-native pagination is claimed."
+        },
+        {
+          "name": "viralsweep_list_promotions",
+          "type": "read",
+          "title": "List ViralSweep promotions",
+          "description": "Read promotions for a brand, optionally active or archived. Offset/limit page a bounded vendor response locally."
+        },
+        {
+          "name": "viralsweep_list_entries",
+          "type": "read",
+          "title": "Read ViralSweep promotion entries",
+          "description": "Read one vendor page of entrants, their emails and entry/referral counts. Optional query searches email addresses. Login links and arbitrary form fields are excluded."
+        },
+        {
+          "name": "viralsweep_list_winners",
+          "type": "read",
+          "title": "Read ViralSweep winners",
+          "description": "Read a promotion's winners and prize titles, optionally filtered by Unix timestamps. Reads existing winners without selecting new ones. Offset/limit page a bounded response locally; private login and prize redemption codes are excluded."
+        },
+        {
+          "name": "viralsweep_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "viralsweep_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ViralSweep tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "viralsweep_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ViralSweep (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "viralsweep_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ViralSweep Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run viralsweep_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my ViralSweep brands and their active promotions.",
+        "Find entrants matching this email address in a promotion.",
+        "Show existing winners and prize titles for this promotion."
+      ]
+    },
+    {
+      "slug": "bounceban",
+      "name": "BounceBan",
+      "category": "email-validation",
+      "description": "Check BounceBan credits, verify emails and read asynchronous bulk verification results.",
+      "endpoint": "https://bounceban.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "BounceBan API key"
+          }
+        ],
+        "hint": "Find or create a key in **BounceBan → API → Settings**. Paste only the key, without a Bearer prefix. Connecting only reads your credit balance and rate limits. Verification tools require confirmation and can spend BounceBan credits. All keys in an account share credits, rate limits and any optional IP whitelist; per-key expiry and credit quotas also apply. If a key is rejected, check API Settings and verify your account email. Changing the key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "bounceban_account",
+          "type": "read",
+          "title": "Read BounceBan credits and rate limits",
+          "description": "Read verification credit balance and account rate limits without starting verification. Limits and credit balance are shared across the account's API keys."
+        },
+        {
+          "name": "bounceban_verify_email",
+          "type": "write",
+          "title": "Start BounceBan email verification",
+          "description": "Verify one email in regular mode. Costs verification credits on each request, including repeats, and requires confirm:true. Uses the standard API's 15-second result window; returns a final result or a queue/verifying task ID. Read that existing ID with bounceban_single_status later. Never resubmit simply because it is still pending. Basic-only mode can return unknown with score -1 for catch-all/SEG-protected addresses."
+        },
+        {
+          "name": "bounceban_single_status",
+          "type": "read",
+          "title": "Read a BounceBan single verification",
+          "description": "Read an existing single verification ID without spending verification credits. Returns success, verifying or queue. Honor try_again_at when provided; poll no more than 10 times for an ID within 5 minutes, then stop. Results remain available for 90 days. This tool never starts another verification."
+        },
+        {
+          "name": "bounceban_create_bulk_verification",
+          "type": "write",
+          "title": "Create a BounceBan bulk verification",
+          "description": "Submit 1–1,000 emails for regular-mode asynchronous verification. Starts a task and can consume verification credits; requires confirm:true. Check the dashboard before resubmitting after a lost/invalid response. greylisting_bypass:auto balances speed and accuracy; speed may yield more risky results; robust waits longer. No callbacks or automatic polling are configured."
+        },
+        {
+          "name": "bounceban_bulk_status",
+          "type": "read",
+          "title": "Read BounceBan bulk task progress",
+          "description": "Read progress and aggregate results of an existing bulk task. Does not start verification. Wait between polls and honor account rate limits. importing/verifying status is still pending; finished means the task has ended."
+        },
+        {
+          "name": "bounceban_bulk_results",
+          "type": "read",
+          "title": "Read one page of BounceBan bulk results",
+          "description": "Read up to 100 existing email results and a cursor for the next page. Results are retained for 90 days. No verification is started and no following page is fetched automatically. Omit state to get all processed results while a task is running; filtering by state can omit in-progress results. A pending response means wait and check the existing task later."
+        },
+        {
+          "name": "bounceban_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bounceban_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the BounceBan tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bounceban_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on BounceBan (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bounceban_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's BounceBan Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bounceban_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Check my BounceBan verification credits and rate limits.",
+        "Verify this email and read the existing task if it is still pending.",
+        "Submit a list for bulk verification and check its progress.",
+        "Read a page of deliverable results from a completed bulk task."
+      ]
+    },
+    {
+      "slug": "millionverifier",
+      "name": "MillionVerifier",
+      "category": "email-validation",
+      "description": "Check MillionVerifier credits, verify emails and monitor confirmed bulk verification jobs.",
+      "endpoint": "https://millionverifier.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MillionVerifier API key"
+          }
+        ],
+        "hint": "Copy your key from **MillionVerifier → API**. Connecting only reads the credit balance. Verification and bulk upload can spend your MillionVerifier credits and require confirmation. Only submit addresses you have permission to process. Optional API IP restrictions may need adjustment for hosted access. A changed API key creates a separate UsefulAPI billing identity."
+      },
+      "tools": [
+        {
+          "name": "millionverifier_credits",
+          "type": "read",
+          "title": "Check MillionVerifier credits",
+          "description": "Read remaining MillionVerifier credits without starting verification."
+        },
+        {
+          "name": "millionverifier_verify_email",
+          "type": "write",
+          "title": "Verify an email with MillionVerifier",
+          "description": "Verify one email using MillionVerifier's real-time API. Can spend credits and requires confirm:true. The vendor timeout is 10 seconds; this charged GET is never retried. Unknown/catch-all results do not establish deliverability. If the response is lost, check the dashboard before submitting again."
+        },
+        {
+          "name": "millionverifier_upload_file",
+          "type": "write",
+          "title": "Start MillionVerifier bulk verification",
+          "description": "Create and upload a CSV of 1–1,000 emails for bulk verification. Can start a billable job and spend credits; requires confirm:true. Returns a file ID for millionverifier_file_info. Never retries or automatically polls. A timed-out submission may still create a job; check the dashboard before repeating it. Download individual results in MillionVerifier."
+        },
+        {
+          "name": "millionverifier_file_info",
+          "type": "read",
+          "title": "Read MillionVerifier bulk file status",
+          "description": "Read an existing bulk file's verification status, progress and aggregate result counts using its file ID. Includes failed/canceled jobs without starting, stopping or re-verifying anything. Does not download individual email results. Wait between polls."
+        },
+        {
+          "name": "millionverifier_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "millionverifier_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MillionVerifier tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "millionverifier_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on MillionVerifier (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "millionverifier_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MillionVerifier Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run millionverifier_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many MillionVerifier verification credits remain?",
+        "Verify this email after I confirm the credit charge.",
+        "Upload this list for bulk verification after I confirm the credit charge.",
+        "Check the progress of my existing MillionVerifier bulk file."
+      ]
     }
   ]
 }
