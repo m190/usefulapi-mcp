@@ -123,7 +123,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Plausible](servers/plausible-analytics/) | analytics | 12 | API token | [servers/plausible-analytics/](servers/plausible-analytics/) |
 | [Polar](servers/polar-sh/) | billing | 30 | API token | [servers/polar-sh/](servers/polar-sh/) |
 | [Portkey](servers/portkey/) | ai-infra | 20 | API token | [servers/portkey/](servers/portkey/) |
-| [Printify](servers/printify/) | ecommerce | 18 | API token | [servers/printify/](servers/printify/) |
+| [Printify](servers/printify/) | ecommerce | 21 | API token | [servers/printify/](servers/printify/) |
 | [Quaderno](servers/quaderno/) | tax | 27 | API token | [servers/quaderno/](servers/quaderno/) |
 | [Raisely](servers/raisely/) | fundraising | 27 | API token | [servers/raisely/](servers/raisely/) |
 | [Re:amaze](servers/re-amaze/) | support | 21 | API token | [servers/re-amaze/](servers/re-amaze/) |

@@ -35,6 +35,9 @@ keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `printify_copy_products` | **write** | Copy products between shops |
+| `printify_copy_status` | read | Check product copy progress |
+| `printify_resolve_copy` | **write** | Resolve an uncertain product copy |
 | `printify_list_shops` | read | List shops |
 | `printify_list_products` | read | List products |
 | `printify_get_product` | read | Get product |

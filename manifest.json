@@ -17472,6 +17472,24 @@
       ],
       "tools": [
         {
+          "name": "printify_copy_products",
+          "type": "write",
+          "title": "Copy products between shops",
+          "description": "Preview or copy selected products or a complete catalog between two Printify shops in the same account. Preserves title, description, blueprint/provider, variant IDs/prices/enabled flags, artwork IDs and print-area transforms. Preserves canvas side printing and image pattern rotation. This initial workflow does not copy tags, SKUs, channel IDs, publication state or generated mockups. Products with text/personalization layers are explicitly refused because their creation fields are read-only. Preview by default. confirm:true starts/resumes a durable bounded job; save job_id and keep calling with that job_id and confirm:true until complete. Duplicate prevention remembers copies made by this connector, including across restarts/jobs; pre-existing copies made elsewhere are not detected. An uncertain create is never automatically retried: inspect the target and use printify_resolve_copy. Do not change the source catalog during an all-products run. Requires shops.read/products.read/products.write. Confirmed copying requires the hosted connector's durable coordinator."
+        },
+        {
+          "name": "printify_copy_status",
+          "type": "read",
+          "title": "Check product copy progress",
+          "description": "Read a durable product-copy job's progress, target mappings, failures and uncertain writes. Verifies that the current token can access both shops. Does not create or retry products."
+        },
+        {
+          "name": "printify_resolve_copy",
+          "type": "write",
+          "title": "Resolve an uncertain product copy",
+          "description": "Resolve one failed or uncertain source product in a durable copy job. Provide an existing target_product_id to verify the exact supported fields against the checkpoint and record it as copied. Or set verified_not_created:true only after checking the target shop manually; this allows one future retry through printify_copy_products. Requires confirm:true, never creates/publishes/deletes anything itself. An ambiguous write must never be blindly retried."
+        },
+        {
           "name": "printify_list_shops",
           "type": "read",
           "title": "List shops",
@@ -17580,7 +17598,7 @@
           "description": "Cancel the caller's Printify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run printify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.28.0",
+      "version": "1.30.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -17588,13 +17606,14 @@
             "label": "Printify API token"
           }
         ],
-        "hint": "Create one in Printify → **My profile → Connections → API tokens**. Your API token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+        "hint": "Create one in Printify → **My profile → Connections → API tokens**. For product copying, grant **shops.read, products.read and products.write**. Copies remain drafts until you separately publish them. Your API token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
       },
       "examples": [
         "Which orders in my shop are still in production?",
         "Show tracking numbers for shipped orders in my shop.",
         "Which products do I have in my shop, and which are not published yet?",
-        "Show the t-shirts in my shop and the size and color options for each."
+        "Show the t-shirts in my shop and the size and color options for each.",
+        "Preview copying all products from one of my Printify shops to another, preserving artwork and prices."
       ]
     },
     {
