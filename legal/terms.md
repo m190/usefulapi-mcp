@@ -74,6 +74,8 @@ For feature requests, we keep and read the text that you send with a
 metadata, encrypted vendor credentials and, for about 10 seconds, a one-way hash of the arguments.
 Resumable product-copy workflows also retain shop/product identifiers, progress, timestamps and
 one-way checksums to support recovery and prevent duplicate copies; they do not retain full product records.
+API polling limits may retain opaque account identifiers, endpoint names and cooldown timestamps,
+without API credentials, message contents or phone numbers.
 The Privacy Policy describes what we keep.
 
 ## 6. Availability and beta status

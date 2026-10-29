@@ -44,7 +44,7 @@ does not contain the text.
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to
 complete your request** and is not stored by us beyond what is technically necessary to serve the
-response, except transient logs (see §4) and the resumable-workflow metadata described below. Our servers
+response, except transient logs (see §4) and the resumable-workflow and polling metadata described below. Our servers
 process tool arguments and results in memory to complete each call. We do not log or retain full tool
 payloads, and no person at usefulapi reads them. A
 server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
@@ -59,6 +59,11 @@ and prevent repeated requests from creating duplicate products. They do not cont
 full product records, descriptions or artwork files. Each operation checks access to both shops again.
 Source-to-target mappings are long-lived so later jobs can recognize previous copies. You may request
 deletion at privacy@usefulapi.io; removing these records also removes their protection against duplicate copies.
+
+**API polling limits (SMS Everyone).** We keep an opaque account identifier, the fixed polling
+endpoint names and next-allowed-request timestamps to limit repeated polling across connections.
+These records contain no API credentials, message contents or phone numbers. Cooldown records may
+remain between sessions; you can request their deletion at privacy@usefulapi.io.
 
 **Billing.** Payments are handled by **Stripe**. We do not receive or store full card numbers;
 Stripe does. We store your Stripe customer/subscription identifiers and plan status.

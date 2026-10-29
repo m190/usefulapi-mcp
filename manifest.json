@@ -83468,6 +83468,141 @@
         "Find the client with the email jane@example.com and list their open tickets.",
         "Add an internal note to ticket 218 saying the invoice was resent, then set it to the Pending status."
       ]
+    },
+    {
+      "slug": "sms-everyone",
+      "name": "SMS Everyone",
+      "category": "communications",
+      "description": "Send confirmed SMS, check credits, delivery and replies, and manage opt-outs with SMS Everyone.",
+      "endpoint": "https://sms-everyone.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per SMS Everyone account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API username"
+          },
+          {
+            "label": "API password"
+          }
+        ],
+        "hint": "Use the API username and password SMS Everyone provided. If you have not received them, ask SMS Everyone for API access. Sending SMS through this server spends credits from your account. Your login is used only to call the SMS Everyone API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "smseveryone_get_account",
+          "type": "read",
+          "title": "Get account settings and credits",
+          "description": "Show the SMS Everyone account: user id, remaining SMS credits, whether unicode (emoji, non-English text) is enabled and whether international messaging is allowed. SMS Everyone REST: POST /api/RetrieveUserSettings."
+        },
+        {
+          "name": "smseveryone_get_campaign_status",
+          "type": "read",
+          "title": "Get campaign status",
+          "description": "Show whether a sent or scheduled campaign is Scheduled, Running, Paused or Deleted. SMS Everyone REST: POST /api/campaign with Action status."
+        },
+        {
+          "name": "smseveryone_get_delivery_status",
+          "type": "read",
+          "title": "Get delivery status",
+          "description": "Delivery receipts of a campaign: one entry per destination with a timestamp, a DeliveryReceiptStatusId and a carrier code. Pass destination to see one number only. An empty list means no receipt has arrived yet (carriers can take up to 24 hours) or the campaign id is not on this account. SMS Everyone asks for no more than one request per minute in production. SMS Everyone REST: POST /api/DRStatus."
+        },
+        {
+          "name": "smseveryone_list_replies",
+          "type": "read",
+          "title": "List SMS replies",
+          "description": "List SMS replies received on the account: received time, the sender's number (Originator), the account number it was sent to (Recipient), the text and a reference id. Always asks for a time window (the last `days` days, 1 to 7, counted back to 12am yesterday for 1, or a date range of at most 30 days), which leaves the replies available for later calls. Default: days 1. Production polling is limited to once per minute per account through this MCP; five minutes is recommended. SMS Everyone REST: POST /api/replies."
+        },
+        {
+          "name": "smseveryone_list_optouts",
+          "type": "read",
+          "title": "List opted-out numbers",
+          "description": "List phone numbers in the account's optout database (messages to them are never sent): number, date added, reason. The API returns the whole list; this tool shows the first `limit` entries and the total. SMS Everyone REST: POST /api/optouts with Action list."
+        },
+        {
+          "name": "smseveryone_list_contact_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List the stored lists (CRM groups) of mobile numbers: list id (CrmId), description and number count. SMS Everyone REST: POST /api/crm with Action list."
+        },
+        {
+          "name": "smseveryone_get_contact_list",
+          "type": "read",
+          "title": "Get the numbers in a contact list",
+          "description": "Show the mobile numbers stored in one list. The API returns the whole list; this tool shows the first `limit` numbers and the total count. SMS Everyone REST: POST /api/crm with Action details."
+        },
+        {
+          "name": "smseveryone_send_sms",
+          "type": "write",
+          "title": "Send SMS",
+          "description": "WRITE: SENDS REAL SMS to real people and SPENDS CREDITS from the user's SMS Everyone account; a sent message cannot be recalled (a campaign scheduled for later can be cancelled with cancel_campaign). One message text to 1 to 25 phone numbers in international format without \"+\" (e.g. 61400123456 for Australia, 6421123456 for New Zealand). Cost = credits per part x number of parts x recipients: a text is 160 characters per part (153 when longer), and one emoji or non-English character makes it unicode: 70 characters per part (67 when longer), more credits. Numbers on the account's optout list are skipped. The originator is where the message appears to come from and must be one registered with SMS Everyone for the account (an Australian alphanumeric sender must be ACMA registered). Optional time_scheduled (YYYYMMDDHHmm in the account's time zone; a time in the past sends at once). Only send what the user explicitly asked for; confirm the text, recipients and sender first. No stored lists, no bulk. SMS Everyone REST: POST /api/campaign with Action create."
+        },
+        {
+          "name": "smseveryone_cancel_campaign",
+          "type": "write",
+          "title": "Cancel a scheduled campaign",
+          "description": "WRITE: deletes a scheduled SMS campaign so it is not sent. Only works before the campaign start time (afterwards SMS Everyone refuses it with an error code). It cannot be undone. SMS Everyone REST: POST /api/campaign with Action delete."
+        },
+        {
+          "name": "smseveryone_pause_campaign",
+          "type": "write",
+          "title": "Pause a campaign",
+          "description": "WRITE: pauses a scheduled campaign (or one that is sending; SMS Everyone sends over 1000 messages a second, so a running campaign usually finishes first). A campaign scheduled in the past cannot be paused. This server has no way to resume it: the user must do that in SMS Everyone. SMS Everyone REST: POST /api/campaign with Action pause."
+        },
+        {
+          "name": "smseveryone_add_optouts",
+          "type": "write",
+          "title": "Opt numbers out",
+          "description": "WRITE: adds 1 to 25 phone numbers to the account's optout database, so no later campaign is sent to them. This server cannot opt a number back in. Do it only when the user asks. SMS Everyone REST: POST /api/optouts with Action add."
+        },
+        {
+          "name": "smseveryone_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "smseveryone_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SMS Everyone tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "smseveryone_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on SMS Everyone (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "smseveryone_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SMS Everyone Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run smseveryone_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many SMS credits do I have left on my SMS Everyone account?",
+        "Did anyone reply to our texts today?",
+        "Show the delivery status of campaign 11967215.",
+        "Which phone numbers have opted out of our messages?"
+      ]
     }
   ]
 }
