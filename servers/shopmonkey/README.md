@@ -71,6 +71,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_add_labor` | **write** | Add a labor line to a service |
 | `shopmonkey_send_estimate` | **write** | Send an estimate for customer authorization |
 | `shopmonkey_add_part` | **write** | Add a part to a work order service |
+| `shopmonkey_delete_service` | **write** | Remove a work order service and its lines |
+| `shopmonkey_delete_labor` | **write** | Remove a labor line |
+| `shopmonkey_delete_part` | **write** | Remove a part line |
 | `shopmonkey_usage_status` | meta | Usage status (free-tier meter) |
 | `shopmonkey_request_feature` | meta | Request a missing feature |
 | `shopmonkey_upgrade` | meta | Upgrade to Pro (unlimited*) |
