@@ -476,6 +476,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [OKSign](servers/oksign/) | e-sign | 18 | API token | [servers/oksign/](servers/oksign/) |
 | [HireHop](servers/hirehop/) | rental | 13 | API token | [servers/hirehop/](servers/hirehop/) |
 | [TOConline](servers/toconline/) | billing | 24 | API token | [servers/toconline/](servers/toconline/) |
+| [Vision Helpdesk](servers/vision-helpdesk/) | support | 23 | API token | [servers/vision-helpdesk/](servers/vision-helpdesk/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
