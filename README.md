@@ -481,6 +481,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Reoon Email Verifier](servers/reoon-email-verifier/) | email-validation | 8 | API token | [servers/reoon-email-verifier/](servers/reoon-email-verifier/) |
 | [Weatherbit](servers/weatherbit/) | data | 16 | API token | [servers/weatherbit/](servers/weatherbit/) |
 | [ScrapeOwl](servers/scrapeowl/) | data | 8 | API token | [servers/scrapeowl/](servers/scrapeowl/) |
+| [SendPost](servers/sendpost/) | email | 19 | API token | [servers/sendpost/](servers/sendpost/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
