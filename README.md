@@ -478,6 +478,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TOConline](servers/toconline/) | billing | 24 | API token | [servers/toconline/](servers/toconline/) |
 | [Vision Helpdesk](servers/vision-helpdesk/) | support | 23 | API token | [servers/vision-helpdesk/](servers/vision-helpdesk/) |
 | [SMS Everyone](servers/sms-everyone/) | communications | 15 | API token | [servers/sms-everyone/](servers/sms-everyone/) |
+| [Reoon Email Verifier](servers/reoon-email-verifier/) | email-validation | 8 | API token | [servers/reoon-email-verifier/](servers/reoon-email-verifier/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
