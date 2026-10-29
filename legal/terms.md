@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 25 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 29 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -65,13 +65,15 @@ terms.
 **Health data.** Do not send or retrieve protected health information (PHI) under HIPAA through any
 usefulapi server. We do not sign Business Associate Agreements (BAAs). If you process health data
 about other people, you need your own lawful basis under GDPR Articles 6 and 9. Tool results also
-reach your AI client provider. Our servers process tool arguments and results in memory only, to
-complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
+reach your AI client provider. Our servers process tool arguments and results in memory to
+complete each call. We do not log or retain full tool payloads, and no person at usefulapi reads them. A
 server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
 client.
-The only exception is a feature request: we keep and read the text that you send with a
+For feature requests, we keep and read the text that you send with a
 `<prefix>_request_feature` tool. We keep request
 metadata, encrypted vendor credentials and, for about 10 seconds, a one-way hash of the arguments.
+Resumable product-copy workflows also retain shop/product identifiers, progress, timestamps and
+one-way checksums to support recovery and prevent duplicate copies; they do not retain full product records.
 The Privacy Policy describes what we keep.
 
 ## 6. Availability and beta status

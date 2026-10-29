@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 9 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 29 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -44,12 +44,21 @@ does not contain the text.
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to
 complete your request** and is not stored by us beyond what is technically necessary to serve the
-response, except transient logs (see §4). Our servers process tool arguments and results in memory only, to
-complete each call. We do not log or keep their contents, and no person at usefulapi reads them. A
+response, except transient logs (see §4) and the resumable-workflow metadata described below. Our servers
+process tool arguments and results in memory to complete each call. We do not log or retain full tool
+payloads, and no person at usefulapi reads them. A
 server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
 client.
-The only exception is a feature request: we keep and read the text that you send with a
+For feature requests, we keep and read the text that you send with a
 `<prefix>_request_feature` tool.
+
+**Resumable product-copy workflows (Printify).** When you confirm a product-copy job, we retain its
+job identifier, source and target shop/product identifiers, selection, progress, timestamps, error status
+and one-way checksums of supported product fields. These checkpoints let a job resume after a disconnect
+and prevent repeated requests from creating duplicate products. They do not contain API credentials,
+full product records, descriptions or artwork files. Each operation checks access to both shops again.
+Source-to-target mappings are long-lived so later jobs can recognize previous copies. You may request
+deletion at privacy@usefulapi.io; removing these records also removes their protection against duplicate copies.
 
 **Billing.** Payments are handled by **Stripe**. We do not receive or store full card numbers;
 Stripe does. We store your Stripe customer/subscription identifiers and plan status.
@@ -88,6 +97,8 @@ its own privacy policy. A current list is available on request at privacy@useful
   years** for tax/VAT documentation).
 - Operational logs: retained about **30 days**, then rotated.
 - Tool-call telemetry and feature requests: about **90 days**, then deleted.
+- Resumable copy checkpoints and mappings: kept until deletion is requested, then deleted within
+  **30 days**. They are retained across completed jobs to prevent later duplicate copies.
 
 ## 6. Your rights
 
