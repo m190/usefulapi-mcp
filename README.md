@@ -504,6 +504,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Open To Close](servers/open-to-close/) | real-estate-transactions | 24 | API token | [servers/open-to-close/](servers/open-to-close/) |
 | [Zylvie](servers/zylvie/) | digital-commerce | 8 | API token | [servers/zylvie/](servers/zylvie/) |
 | [Fitssey](servers/fitssey/) | membership | 19 | API token | [servers/fitssey/](servers/fitssey/) |
+| [Prodigi](servers/prodigi/) | ecommerce | 10 | API token | [servers/prodigi/](servers/prodigi/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

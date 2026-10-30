@@ -87008,6 +87008,113 @@
         "List low-stock studio products.",
         "Read the first page of sales for this month, then tell me whether more pages remain."
       ]
+    },
+    {
+      "slug": "prodigi",
+      "name": "Prodigi",
+      "category": "ecommerce",
+      "description": "Read Prodigi print orders, tracking and product details; compare quotes without placing orders.",
+      "endpoint": "https://prodigi.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per environment and API key"
+        }
+      ],
+      "keyHelp": "Use your Prodigi Print API v4 key and select its matching sandbox or live environment. This connector only reads data and calculates quotes; the underlying key also permits paid orders outside this connector. Regenerating the key starts a separate usage and subscription identity.",
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "Prodigi API key"
+          }
+        ],
+        "hint": "In the [Prodigi dashboard](https://dashboard.prodigi.com) (or the [sandbox dashboard](https://sandbox-beta-dashboard.pwinty.com)) click the **gear icon → Show API key**. Sandbox and live keys are different: choose the matching environment. Start with the sandbox, which charges and fulfils nothing. Your API key can authorize paid orders in Prodigi even though this connector exposes no order mutations. Connect only if you authorize usefulapi to store and use that key on your behalf. Usage and subscriptions are separate for each environment and API key; rotating a key creates a new identity."
+      },
+      "tools": [
+        {
+          "name": "prodigi_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List print orders of this Prodigi account, newest first (sorted by order id, descending), with status stage, items, shipments and charges. Filter by status, creation time, Prodigi order ids or your own merchant references. Paging: top (1-100, default 10) and skip; the reply has has_more and next_skip. Recipient names and addresses are real customer data. GET /orders."
+        },
+        {
+          "name": "prodigi_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One print order by Prodigi order id: status stage and per-step details (asset download, production, shipping), issues, charges, shipments with tracking, recipient, items with print assets and costs, metadata. The webhook callbackUrl is reduced to its host. GET /orders/{id}."
+        },
+        {
+          "name": "prodigi_get_order_actions",
+          "type": "read",
+          "title": "Get order actions",
+          "description": "Which changes Prodigi still allows on an order right now (cancel, change recipient details, change shipping method, change metadata), each with isAvailable (Yes/No). Only reports availability; it changes nothing. GET /orders/{id}/actions."
+        },
+        {
+          "name": "prodigi_create_quote",
+          "type": "read",
+          "title": "Get a price quote",
+          "description": "Price a print order WITHOUT creating or charging one: item cost, shipping (per shipping method, or all methods when none is given), branding inserts, tax and total, with carrier, fulfilment lab and unit costs, in the account's currency unless currency_code is set. Each item needs a sku, copies and the print areas (assets, e.g. printArea 'default'); books take pageCount. Items with problems come back as outcome CreatedWithIssues. POST /quotes (read-only: nothing is saved or billed)."
+        },
+        {
+          "name": "prodigi_get_product",
+          "type": "read",
+          "title": "Get product details",
+          "description": "Details of one Prodigi product by SKU: description, dimensions, the attribute names and allowed values (size, wrap, colour...), print areas and which are required, and variants with the countries each ships to and the print-area pixel sizes. Use it to build valid quote requests. GET /products/{sku}."
+        },
+        {
+          "name": "prodigi_get_spine_width",
+          "type": "read",
+          "title": "Get book spine width",
+          "description": "Calculate the spine width in mm of a book product for a page count (for cover artwork). A pure calculation: nothing is created or charged. POST /products/spine."
+        },
+        {
+          "name": "prodigi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "prodigi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Prodigi tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "prodigi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Prodigi (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "prodigi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Prodigi Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run prodigi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my ten most recent print orders and tell me whether more pages remain.",
+        "Show the production status and shipment tracking for a Prodigi order ID I provide.",
+        "Look up the available attributes and print areas for a product SKU I provide.",
+        "Quote five copies of a product SKU to ship to GB without placing an order.",
+        "Calculate a photobook spine width using its SKU, destination country and page count."
+      ]
     }
   ]
 }
