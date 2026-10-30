@@ -500,6 +500,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PlentyONE](servers/plentymarkets/) | ecommerce | 22 | Backend credentials | [servers/plentymarkets/](servers/plentymarkets/) |
 | [InnoVint](servers/innovint/) | winery-production | 31 | API token | [servers/innovint/](servers/innovint/) |
 | [Famly](servers/famly/) | childcare-administration | 16 | API token | [servers/famly/](servers/famly/) |
+| [Cliento](servers/cliento/) | business-operations | 22 | API token | [servers/cliento/](servers/cliento/) |
+| [Open To Close](servers/open-to-close/) | real-estate-transactions | 24 | API token | [servers/open-to-close/](servers/open-to-close/) |
+| [Zylvie](servers/zylvie/) | digital-commerce | 8 | API token | [servers/zylvie/](servers/zylvie/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
