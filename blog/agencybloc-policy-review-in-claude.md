@@ -27,7 +27,13 @@ Yes. After reviewing the exact record and proposed text, you can ask the assista
 
 For supported policy fields, `agencybloc_update_policy` can change values such as status, policy number, premium, effective date or renewal date. Ask the assistant to show the proposed changes first, save only the fields you approve, and read the policy again afterward. Review and approval are instructions you give the assistant; the policy update tool does not enforce a separate confirmation step.
 
-Policy-level premium and dates do not provide coverage-line editing or commission-payment management. This workflow focuses on the policy and client information the connector currently exposes.
+## Can I set a coverage's carrier product?
+
+Yes. Supply the carrier name and carrier product when creating a policy with `agencybloc_create_policy`. On an existing policy, `agencybloc_update_policy` first reads the coverages: it creates the first coverage if none exist, or changes the carrier product on the sole existing coverage. It refuses this change when several coverages exist, because the API would add another coverage rather than select one to update.
+
+An unknown product name creates a new product for that carrier, so review its spelling before saving. Avoid simultaneous coverage edits in other integrations while making this change.
+
+Coverage-level dates and premiums, writing-agent number assignments, Election Member ID edits, and commission-payment reads or moves are not exposed by the connector's documented REST API. Policy-level premium and dates remain separate fields. Use AMS+ for those remaining changes.
 
 ## What do I need?
 
