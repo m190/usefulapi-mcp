@@ -42,6 +42,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `formstack_count_form_submissions` | read | Count a form's submissions |
 | `formstack_search_submissions` | read | Search submissions across all forms |
 | `formstack_get_submission` | read | Get one submission |
+| `formstack_delete_submission` | **write** | Preview or delete one submission |
 | `formstack_list_partial_submissions` | read | List a form's partial submissions |
 | `formstack_list_folders` | read | List folders |
 | `formstack_get_folder` | read | Get one folder |

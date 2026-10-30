@@ -182,7 +182,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Deskpro](servers/deskpro/) | support | 24 | API token | [servers/deskpro/](servers/deskpro/) |
 | [Elvanto](servers/elvanto/) | membership | 27 | API token | [servers/elvanto/](servers/elvanto/) |
 | [Follow Up Boss](servers/follow-up-boss/) | crm | 29 | API token | [servers/follow-up-boss/](servers/follow-up-boss/) |
-| [Formstack](servers/formstack/) | productivity | 24 | API token | [servers/formstack/](servers/formstack/) |
+| [Formstack](servers/formstack/) | productivity | 25 | API token | [servers/formstack/](servers/formstack/) |
 | [TeamUp](servers/goteamup/) | membership | 24 | API token | [servers/goteamup/](servers/goteamup/) |
 | [HappyFox](servers/happyfox/) | support | 27 | API token | [servers/happyfox/](servers/happyfox/) |
 | [Hostfully](servers/hostfully/) | productivity | 24 | API token | [servers/hostfully/](servers/hostfully/) |
