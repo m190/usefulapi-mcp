@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 29 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 30 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -23,6 +23,19 @@ You must have a valid account with, and comply with the terms of, each third-par
 connect. Your use of that service through usefulapi remains subject to that provider's own terms and
 pricing. You are responsible for activity performed under your authorized credentials, including any
 **write** actions (e.g. creating issues or comments) initiated through the Service.
+
+### Extensiv API connections
+
+When you connect Extensiv, you appoint usefulapi as your API service provider for the calls you request.
+We accept the confidentiality duties applicable to that role under sections 5.3.1 and 10 of the
+[Extensiv Master Subscription Agreement](https://www.extensiv.com/hubfs/MSAs%2C%20Terms%20of%20Service%2C%20Privacy%20Policy%2C%20etc/Extensiv%20-%20Master%20Subscription%20Agreement%20%28last%20updated%209.19.24%29.pdf).
+These duties govern our handling of Extensiv API credentials and information that agreement protects
+as confidential. We use it only for your authorized connection and restrict access to people and
+infrastructure providers who need it for that work and are bound to the required confidentiality
+standard. Your API credentials are not disclosed to your AI client or LLM provider, and we do not
+transfer your API licence. These commitments prevail over any less protective provision of these
+Terms for Extensiv confidential information. You remain responsible for your API entitlement and
+authorization to send your own records to the AI client and provider you choose.
 
 ## 3. Plans, billing, and cancellation
 
