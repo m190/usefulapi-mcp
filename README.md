@@ -507,6 +507,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Prodigi](servers/prodigi/) | ecommerce | 10 | API token | [servers/prodigi/](servers/prodigi/) |
 | [Bokio](servers/bokio/) | billing | 27 | OAuth | [servers/bokio/](servers/bokio/) |
 | [SOS Inventory](servers/sos-inventory/) | ecommerce | 23 | OAuth | [servers/sos-inventory/](servers/sos-inventory/) |
+| [Arthur Online](servers/arthur-online/) | real-estate | 24 | OAuth | [servers/arthur-online/](servers/arthur-online/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
