@@ -88082,6 +88082,184 @@
         "Find the customer with email jane@example.com and show her recent orders.",
         "Mark order 2308671 as shipped with tracking number EN813659438MY."
       ]
+    },
+    {
+      "slug": "bol-com",
+      "name": "bol.com",
+      "category": "ecommerce",
+      "description": "Read bol orders, returns, offers and inventory; update an offer’s stock, price or sale status.",
+      "endpoint": "https://bol-com.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API client ID"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "Create credentials specifically for UsefulAPI in the bol **Seller Dashboard**: Settings → Services → API settings → Client Credentials (add a technical contact first). This uses bol's documented client-credentials flow for unlisted integration providers; UsefulAPI is independent and is not a listed bol integration partner. Revoke these credentials there to stop vendor access. Reads orders, shipments, returns, offers, inventory and invoices; when requested, it can change an offer's price, stock, reference or on-sale status. Buyer information passes to your chosen AI client and its LLM provider. Billing is per client ID; creating a new client ID starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "bol_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List the seller's bol orders (50 per page), each with its order items, EANs, quantities, prices, fulfilment method and the buyer's shipment details (personal data). By default only OPEN orders fulfilled by the retailer (FBR). Use change_interval_minute or latest_change_date to poll for recent changes. GET /retailer/orders."
+        },
+        {
+          "name": "bol_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order by id: the order items (with their order item ids), prices, quantities, fulfilment, the buyer's shipment and billing details (personal data) and the latest delivery dates. GET /retailer/orders/{order-id}."
+        },
+        {
+          "name": "bol_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments up to 3 months old, newest first (50 per page): shipment id, date, the order items shipped and the transport (track and trace). Filter by order_id OR fulfilment_method (order_id wins). GET /retailer/shipments."
+        },
+        {
+          "name": "bol_get_shipment",
+          "type": "read",
+          "title": "Get a shipment",
+          "description": "One shipment by id: shipment date, order items, transport and track and trace details, the buyer's delivery address (personal data). GET /retailer/shipments/{shipment-id}."
+        },
+        {
+          "name": "bol_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List customer returns (RMA): return id, registration date, fulfilment method and the return items with their handling status. Set handled explicitly: true = handled returns (newest first), false = returns still to handle (oldest first); bol documents no default. GET /retailer/returns."
+        },
+        {
+          "name": "bol_get_return",
+          "type": "read",
+          "title": "Get a return",
+          "description": "One return by id: return items, reasons, handling results, the customer's details (personal data). GET /retailer/returns/{return-id}."
+        },
+        {
+          "name": "bol_list_offers",
+          "type": "read",
+          "title": "List offers",
+          "description": "List the seller's offers (Offers API v11): offer id, EAN, condition, price bundles, stock, fulfilment, on-hold flag and last-modified time. Filter by offer ids, EANs, your reference, for-sale state or last-modified time. Cursor paging: pass the previous reply's next_cursor. GET /retailer/offers (v11)."
+        },
+        {
+          "name": "bol_get_offer",
+          "type": "read",
+          "title": "Get an offer",
+          "description": "One offer by id (Offers API v11): condition, price bundles, stock, fulfilment, countries, product. GET /retailer/offers/{offer-id} (v11)."
+        },
+        {
+          "name": "bol_get_offer_not_for_sale_reasons",
+          "type": "read",
+          "title": "Why an offer is not for sale",
+          "description": "The reasons an offer is not for sale per country (an offer that is for sale everywhere has none) (content, price, stock, shop status, selling rights, on hold, assortment policy), each with a code and description. GET /retailer/offers/{offer-id}/not-for-sale-reasons (v11)."
+        },
+        {
+          "name": "bol_update_offer",
+          "type": "write",
+          "title": "Update an offer",
+          "description": "WRITE: change an existing offer on bol (Offers API v11 PATCH): put it on hold or back on sale, set your reference, replace its price bundles and/or its own stock. Only the fields you pass change. A price or stock change goes live on bol.com. Use bol_list_offers first to see the current values. PATCH /retailer/offers/{offer-id} (v11)."
+        },
+        {
+          "name": "bol_list_inventory",
+          "type": "read",
+          "title": "List FBB inventory",
+          "description": "Fulfilment by bol (FBB/LVB) inventory only, not your own stock (50 per page): EAN, title, regular and graded stock, and the stock level. Filter by EAN or title, stock level, stock type or a quantity range. GET /retailer/inventory."
+        },
+        {
+          "name": "bol_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List bol invoices (the seller's statements from bol), by default the past 4 weeks: invoice id, issue date, type, period and the media types it can be downloaded in. Pass both dates to look further back (max 31 days). GET /retailer/invoices."
+        },
+        {
+          "name": "bol_get_invoice_specification",
+          "type": "read",
+          "title": "Get an invoice specification",
+          "description": "The transactions (sales, commissions, shipping, returns) behind one bol invoice, as JSON, up to 25,000 lines per page. GET /retailer/invoices/{invoice-id}/specification."
+        },
+        {
+          "name": "bol_get_commissions",
+          "type": "read",
+          "title": "Calculate commissions",
+          "description": "Calculate bol's commission for up to 100 products: for each EAN, a selling price and optionally a condition, returns the fixed amount, the percentage, total cost and any reductions. Read-only (a POST because of the request body). POST /retailer/commission."
+        },
+        {
+          "name": "bol_get_competing_offers",
+          "type": "read",
+          "title": "Competing offers for an EAN",
+          "description": "The offers on bol.com for one EAN from all retailers: price, condition, fulfilment, the best offer. Optionally only the best offer or one condition and country. GET /retailer/products/{ean}/offers."
+        },
+        {
+          "name": "bol_get_performance_indicator",
+          "type": "read",
+          "title": "Get a performance indicator",
+          "description": "The seller's weekly measurements of one bol performance indicator (cancellations, fulfilment, phone availability, response time, case/item ratio, track and trace, returns, reviews) for an ISO year and week. GET /retailer/insights/performance/indicator."
+        },
+        {
+          "name": "bol_get_sales_forecast",
+          "type": "read",
+          "title": "Get a sales forecast",
+          "description": "bol's sales forecast for one offer: expected sales on the whole bol.com platform for the next 1-12 weeks. GET /retailer/insights/sales-forecast."
+        },
+        {
+          "name": "bol_get_process_status",
+          "type": "read",
+          "title": "Get a process status",
+          "description": "The status of an asynchronous bol process (a write that answered 202) by its process status id: PENDING, SUCCESS, FAILURE or TIMEOUT, with the error message on failure. GET /shared/process-status/{process-status-id}."
+        },
+        {
+          "name": "bol_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bol_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the bol.com tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bol_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on bol.com (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bol_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's bol.com Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bol_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open bol orders do I still have to ship?",
+        "Show my unhandled returns from the last weeks.",
+        "Which of my offers are not for sale on bol, and why?",
+        "What do my competitors charge for EAN 8718964000000?",
+        "Put my offer 6ff736b5-cdd0-4150-8c67-78269ee986f5 on hold."
+      ]
     }
   ]
 }
