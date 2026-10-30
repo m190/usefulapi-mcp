@@ -497,6 +497,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Collmex](servers/collmex/) | accounting | 19 | API token | [servers/collmex/](servers/collmex/) |
 | [Senta](servers/senta/) | accounting-practice | 11 | API token | [servers/senta/](servers/senta/) |
 | [Talenox](servers/talenox/) | hr | 32 | API token | [servers/talenox/](servers/talenox/) |
+| [PlentyONE](servers/plentymarkets/) | ecommerce | 22 | Backend credentials | [servers/plentymarkets/](servers/plentymarkets/) |
+| [InnoVint](servers/innovint/) | winery-production | 31 | API token | [servers/innovint/](servers/innovint/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

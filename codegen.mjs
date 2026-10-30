@@ -215,7 +215,7 @@ function replaceConnect(md, s) {
 function rootServersTable() {
   const head = "| Server | Category | Tools | Auth | Docs |\n|--------|----------|------:|------|------|";
   const rows = manifest.servers.map((s) => {
-    const auth = s.auth === "oauth" ? "OAuth" : "API token";
+    const auth = s.authLabel || (s.auth === "oauth" ? "OAuth" : "API token");
     return `| [${s.name}](${SUBDIR}${s.slug}/) | ${s.category} | ${s.tools.length} | ${auth} | [${SUBDIR}${s.slug}/](${SUBDIR}${s.slug}/) |`;
   });
   return `${head}\n${rows.join("\n")}`;
