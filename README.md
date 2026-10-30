@@ -517,6 +517,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Bsale](servers/bsale/) | retail | 29 | OAuth | [servers/bsale/](servers/bsale/) |
 | [Glue Up](servers/glue-up/) | crm | 17 | OAuth | [servers/glue-up/](servers/glue-up/) |
 | [Extensiv](servers/extensiv/) | inventory | 20 | OAuth | [servers/extensiv/](servers/extensiv/) |
+| [Zenfulfillment](servers/zenfulfillment/) | shipping | 13 | OAuth | [servers/zenfulfillment/](servers/zenfulfillment/) |
+| [Taleez](servers/taleez/) | hr | 29 | OAuth | [servers/taleez/](servers/taleez/) |
+| [Desk365](servers/desk365/) | support | 17 | OAuth | [servers/desk365/](servers/desk365/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

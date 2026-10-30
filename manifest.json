@@ -89535,6 +89535,492 @@
         "Which purchase orders are still open for customer 12?",
         "Create an order for 3 x SKU ABC-1 for customer 12, shipped from facility 1 to our Chicago office."
       ]
+    },
+    {
+      "slug": "zenfulfillment",
+      "name": "Zenfulfillment",
+      "category": "shipping",
+      "description": "Read Zenfulfillment orders and stock; import or cancel orders and mark returns done.",
+      "endpoint": "https://zenfulfillment.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key and environment"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Zenfulfillment API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "Zenfulfillment support issues API keys: write to support@zenfulfillment.com and ask for an API key for your account. Use Production for your live warehouse, or Test mode for a test key (it does not touch live data or your shop). Requested order, buyer and return records pass to your chosen AI client and its LLM provider. When requested, tools can create or update orders that trigger paid fulfillment and shipping, cancel eligible orders, or mark returns done (status only; no refund is paid). Ask Zenfulfillment to revoke or replace this key to stop vendor access. Billing is per key and environment; rotating the key starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "zenfulfillment_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List or search the fulfillment orders of this Zenfulfillment account (warehouse pick/pack/ship), with status, order reference, shop order number, totals, shipping and billing address, the products ordered/shipped and shipments (tracking number, carrier). Filter by ONE status, created/updated time or free text. The export has one row per product line; rows are grouped into orders. Paging: pass next_page back as page; an empty page is the end. GET /orders/export."
+        },
+        {
+          "name": "zenfulfillment_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by its EXTERNAL reference, i.e. the order number from the connected shop or from your own import (for example 332-11-5599), with addresses, products with quantities (ordered, shipped, returned, refunded) and shipments with tracking numbers. Not the ZF reference: use zenfulfillment_list_orders with query for that. GET /orders/external/{reference}."
+        },
+        {
+          "name": "zenfulfillment_list_stock",
+          "type": "read",
+          "title": "List stock levels",
+          "description": "Stock on hand in the Zenfulfillment warehouse per SKU (sku, quantity_on_stock). Filter by SKU text and/or a maximum quantity to find low stock (then sorted lowest first). GET /products/export."
+        },
+        {
+          "name": "zenfulfillment_list_inventory_shipments",
+          "type": "read",
+          "title": "List inbound shipments",
+          "description": "List inbound inventory shipments (goods you sent to the warehouse) with reference, SKU lines, announced quantity, quantity arrived and note. Filter by ONE status, created/updated time or free text (ZF number, tracking code, type). Rows are grouped per shipment. Paging as in list_orders. GET /inventory_shipments/export."
+        },
+        {
+          "name": "zenfulfillment_get_inventory_shipment",
+          "type": "read",
+          "title": "Get inbound shipment",
+          "description": "One inbound inventory shipment by its ZF reference (for example ZF01123700): SKU lines with announced and arrived quantities and the note. GET /inventory_shipments/export/{reference}/reference."
+        },
+        {
+          "name": "zenfulfillment_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List returns processed by the warehouse (PROCESSED = received, DONE = marked refunded), with the return's `_id` (needed by zenfulfillment_mark_return_done), ZF reference, note, products with quantity, reason, condition and whether they were actually returned, and the original order. Filter by ONE status, time or free text. Paging as in list_orders. GET /returns/export."
+        },
+        {
+          "name": "zenfulfillment_import_order",
+          "type": "write",
+          "title": "Create or update an order",
+          "description": "WRITE: send ONE order to the Zenfulfillment warehouse for picking, packing and shipping to the given address (fulfillment and shipping fees apply per the contract). The reference is your own order number: a reference that already exists UPDATES that order instead of creating a new one. Each item becomes one CSV row (Reference;Date;Name;Company;Street1;Street2;Zip Code;City;Region;Country;Email;Phone;SKU;Quantity). Use SKUs from zenfulfillment_list_stock. Check the address with the user first. In test mode nothing ships. POST /orders/import."
+        },
+        {
+          "name": "zenfulfillment_cancel_orders",
+          "type": "write",
+          "title": "Cancel orders",
+          "description": "WRITE, cannot be undone: cancel orders by reference (up to 50). Only orders that can still be cancelled (before the warehouse has packed or shipped them) are cancelled; the others come back in `errors`. Confirm the references with the user first. POST /orders/cancel."
+        },
+        {
+          "name": "zenfulfillment_mark_return_done",
+          "type": "write",
+          "title": "Mark return as refunded",
+          "description": "WRITE: set a return's status to DONE (refunded) in Zenfulfillment. Zenfulfillment only records the status; refund the customer in your shop yourself. Use the `_id` from zenfulfillment_list_returns (not the ZF reference). Cannot be set back through the API. POST /returns/{returnId}/done."
+        },
+        {
+          "name": "zenfulfillment_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zenfulfillment_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zenfulfillment tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zenfulfillment_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Zenfulfillment (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zenfulfillment_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zenfulfillment Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zenfulfillment_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are still pending or stuck with an invalid address?",
+        "Show the tracking numbers for the orders shipped this week.",
+        "Which SKUs have fewer than 20 units on stock?",
+        "List the returns the warehouse processed this month that are not yet marked refunded."
+      ]
+    },
+    {
+      "slug": "taleez",
+      "name": "Taleez",
+      "category": "hr",
+      "description": "Read Taleez recruiting data; create or update candidates and add them to pools or jobs.",
+      "endpoint": "https://taleez.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per secret API key"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Taleez secret key"
+          }
+        ],
+        "hint": "Create it in Taleez → account settings → **API & Webhooks** (copy the **secret** key, not the public one) and give it the scopes you want to allow. Candidate read scope is required for login. Candidate contact details, CV/document links, recruiting notes and events you request pass to your chosen AI client and its LLM provider; connect only records you are authorized to share. When requested, tools create or update candidates, set properties or associate them with pools or jobs. They do not hire, reject or delete candidates. Revoke this dedicated key in Taleez to stop vendor access. Billing is per secret key; rotating it starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "taleez_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List the job postings of the company (id, label, status DRAFT/PUBLISHED/DONE/SUSPENDED, contract, location, recruiter, unit, tags, visibility, public URL). Filter by status, contract, unit, city, tag, company label or visibility; sort by creation or publication date. Job and profile descriptions are only included with with_details. GET /0/jobs."
+        },
+        {
+          "name": "taleez_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job posting by id with its full details: descriptions, contract, location, recruiter, unit, tags, custom properties, public and application URLs. GET /0/jobs/{id}."
+        },
+        {
+          "name": "taleez_get_job_steps",
+          "type": "read",
+          "title": "Get job pipeline steps",
+          "description": "The recruitment pipeline steps of a job in order (id, name, order). Use them to read where each candidate stands. GET /0/jobs/{id}/steps."
+        },
+        {
+          "name": "taleez_get_job_statuses",
+          "type": "read",
+          "title": "Get job status history",
+          "description": "The status history of a job: each change (date timestamp, status DRAFT/PUBLISHED/SUSPENDED/DONE). GET /0/jobs/{id}/statuses."
+        },
+        {
+          "name": "taleez_get_job_questions",
+          "type": "read",
+          "title": "Get job application questions",
+          "description": "The questions candidates answer when applying to a job (id, label, type, required, choices). GET /0/jobs/{id}/questions."
+        },
+        {
+          "name": "taleez_get_job_filters",
+          "type": "read",
+          "title": "Count jobs by filter",
+          "description": "The total number of jobs and the job counts per status, contract, city, tag and company label (only values with at least one job). A quick overview of the hiring activity. GET /0/jobs/filters."
+        },
+        {
+          "name": "taleez_list_job_properties",
+          "type": "read",
+          "title": "List job properties",
+          "description": "The custom job properties defined in the account (id, name, type, choices). GET /0/job-properties."
+        },
+        {
+          "name": "taleez_list_candidates",
+          "type": "read",
+          "title": "List candidates",
+          "description": "List the candidates in the company (id, name, mail, phone, language, location, social links, unit, creation date). Filter by exact e-mail address to find one person. Custom properties only with with_props. Candidates contain personal data: use it only for the user's own recruiting. GET /0/candidates."
+        },
+        {
+          "name": "taleez_get_candidate",
+          "type": "read",
+          "title": "Get candidate",
+          "description": "One candidate by id: name, mail, phone, language, location, social links, unit, CV link and custom properties. GET /0/candidates/{id}."
+        },
+        {
+          "name": "taleez_get_candidate_applications",
+          "type": "read",
+          "title": "Get candidate applications",
+          "description": "Where a candidate stands: every application or association (type SPONTANEOUS, APPLICATION_TO_A_JOB, ASSOCIATED_TO_A_JOB...) with the job id, current pipeline step, rejected/hired dates and the step history. GET /0/candidates/{id}/applications."
+        },
+        {
+          "name": "taleez_get_candidate_properties",
+          "type": "read",
+          "title": "Get candidate properties",
+          "description": "The custom property values of a candidate (property id, name key, type, value or choices). GET /0/candidates/{id}/properties."
+        },
+        {
+          "name": "taleez_get_candidate_pools",
+          "type": "read",
+          "title": "Get candidate pools",
+          "description": "The talent pools a candidate belongs to (pool id, name, date added, referrer). GET /0/candidates/{id}/pools."
+        },
+        {
+          "name": "taleez_get_candidate_documents",
+          "type": "read",
+          "title": "Get candidate documents",
+          "description": "The documents attached to a candidate (CV, cover letter...): id, name, date, size and file URL. GET /0/candidates/{id}/documents."
+        },
+        {
+          "name": "taleez_get_candidate_events",
+          "type": "read",
+          "title": "Get candidate events",
+          "description": "The events (interviews, calls, meetings) scheduled with a candidate: subject, start/end, location, meeting URL, attendees. GET /0/candidates/{id}/events."
+        },
+        {
+          "name": "taleez_list_candidate_properties",
+          "type": "read",
+          "title": "List candidate properties",
+          "description": "The custom candidate properties defined in the account (id, name, type, choices, disabled). Use the ids with taleez_set_candidate_properties. GET /0/candidate-properties."
+        },
+        {
+          "name": "taleez_list_pools",
+          "type": "read",
+          "title": "List talent pools",
+          "description": "List the talent pools of the company (id, name, dates, recruiter). GET /0/pools."
+        },
+        {
+          "name": "taleez_list_pool_candidates",
+          "type": "read",
+          "title": "List pool candidates",
+          "description": "The candidates in one talent pool. Custom properties only with with_props. GET /0/pools/{id}/candidates."
+        },
+        {
+          "name": "taleez_list_recruiters",
+          "type": "read",
+          "title": "List recruiters",
+          "description": "List the recruiters (users) of the company. Use the ids to read who owns a job or to credit a new candidate. GET /0/recruiters."
+        },
+        {
+          "name": "taleez_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List the units (entities, subsidiaries, sites) of the company. Use the ids to filter jobs. GET /0/units."
+        },
+        {
+          "name": "taleez_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the company's calendar events (interviews, meetings): subject, start/end timestamps, location, meeting URL, job id, attendees. GET /0/events."
+        },
+        {
+          "name": "taleez_create_candidate",
+          "type": "write",
+          "title": "Create candidate",
+          "description": "WRITE: add a new candidate to the Taleez database (first and last name required; the e-mail, if given, must be unique in the company). Creates a record only: the candidate is not attached to a job and no e-mail is sent by this call. Not idempotent: calling twice with no mail creates two candidates. POST /0/candidates."
+        },
+        {
+          "name": "taleez_update_candidate",
+          "type": "write",
+          "title": "Update candidate",
+          "description": "WRITE: change a candidate's name, e-mail, phone, social links or location. The current record is read first and unchanged name, mail and phone are sent back, so only what you pass changes (Taleez' update endpoint otherwise needs first and last name). Social links and location, when given, REPLACE the existing ones (an empty social_links object removes them all). Overwrites data; no message is sent. POST /0/candidates/{id}."
+        },
+        {
+          "name": "taleez_set_candidate_properties",
+          "type": "write",
+          "title": "Set candidate properties",
+          "description": "WRITE: set custom property values on a candidate. For a property without choices pass value (DATE as yyyy-MM-dd); for a property with choices pass choices (choice ids, see taleez_list_candidate_properties). An empty choices list removes all selected choices unless append_choices is true. Overwrites the previous values of the listed properties. POST /0/candidates/{id}/properties."
+        },
+        {
+          "name": "taleez_add_candidates_to_pool",
+          "type": "write",
+          "title": "Add candidates to a pool",
+          "description": "WRITE: add existing candidates to a talent pool (see taleez_list_pools). Adding a candidate already in the pool is harmless. No message is sent. POST /0/pools/{id}/candidates."
+        },
+        {
+          "name": "taleez_add_candidates_to_job",
+          "type": "write",
+          "title": "Add candidates to a job",
+          "description": "WRITE: associate existing candidates to a job so they appear in its recruitment pipeline (the vendor's 'add candidates to a job'; this is an association made by the recruiter, not a candidate application, and this call sends no message). Pass location_id for a job with several locations. POST /0/jobs/{id}/candidates."
+        },
+        {
+          "name": "taleez_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "taleez_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Taleez tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "taleez_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Taleez (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "taleez_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Taleez Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run taleez_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my jobs are published right now, and how many are in each contract type?",
+        "Show me the pipeline steps and where candidate 4821 stands in each application.",
+        "Find the candidate with the e-mail anna@example.com and list the talent pools she is in.",
+        "Add candidates 4821 and 4822 to the 'Developers 2026' talent pool."
+      ]
+    },
+    {
+      "slug": "desk365",
+      "name": "Desk365",
+      "category": "support",
+      "description": "Read Desk365 tickets, conversations, contacts, companies, time entries and knowledge articles.",
+      "endpoint": "https://desk365.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per helpdesk subdomain"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Desk365 subdomain"
+          },
+          {
+            "label": "Desk365 API key"
+          }
+        ],
+        "hint": "The subdomain is the part before **.desk365.io** in your helpdesk address. Find the API key in Desk365 → **Settings → Integrations → API** (the API is part of the Standard, Plus and Premium plans). This hosted connection is read-only. Requested ticket conversations (including private notes), contact and company details, time entries and knowledge-base records pass to your chosen AI client and its LLM provider. Connect only records you are authorized to share. Regenerate or revoke the key in Desk365 to stop vendor access. Billing follows this helpdesk subdomain; rotating its key keeps that identity."
+      },
+      "tools": [
+        {
+          "name": "desk365_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List helpdesk tickets, newest first by default, with subject, status, priority (1 Low, 5 Medium, 10 High, 20 Urgent), source, assignee, group, category, contact, company, SLA and dates. Filter by status, priority, type, group, assignee, category, contact, company or source. Use \"--\" in a list to match unassigned/empty. Descriptions are left out unless include_description is set. GET /v3/tickets."
+        },
+        {
+          "name": "desk365_search_tickets",
+          "type": "read",
+          "title": "Search tickets",
+          "description": "Full-text search over tickets, most relevant first. Searches subject and ticket number by default; widen it with search_in (description, replies and notes, attachment names, custom fields, contacts and companies, archived tickets). Double quotes around a phrase match it exactly; *text* matches inside words. GET /v3/tickets/search."
+        },
+        {
+          "name": "desk365_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "Everything on one ticket by its number: subject, description, status, priority, source, assignee, group, category, contact, company, SLA, due date, response/resolution durations (minutes), custom fields, watchers. GET /v3/tickets/details."
+        },
+        {
+          "name": "desk365_get_ticket_conversations",
+          "type": "read",
+          "title": "Get ticket conversation",
+          "description": "The conversation on a ticket: customer replies, agent replies, private and public notes and forwarded messages, each with sender, recipients, HTML and plain-text body, attachment details and time. The original description is not included (it is on desk365_get_ticket). GET /v3/tickets/conversations."
+        },
+        {
+          "name": "desk365_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (customers/requesters), 30 per call, sorted by name by default, optionally only those of one company. GET /v3/contacts."
+        },
+        {
+          "name": "desk365_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by primary email (or, if the primary is not known, a secondary email): name, title, phones, company, departments, custom fields. GET /v3/contacts/details."
+        },
+        {
+          "name": "desk365_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List companies (customer organisations), 30 per call, sorted by name. GET /v3/companies."
+        },
+        {
+          "name": "desk365_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "One company by exact name: description, phone, address, SLA, domains, departments, custom fields. GET /v3/companies/details."
+        },
+        {
+          "name": "desk365_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List logged time entries (ticket, agent, minutes, billable, note), filtered by ticket, agent, company, billable flag, running timers or date ranges. GET /v3/time_entries."
+        },
+        {
+          "name": "desk365_get_time_entry",
+          "type": "read",
+          "title": "Get time entry",
+          "description": "One time entry by id. GET /v3/time_entries/details."
+        },
+        {
+          "name": "desk365_list_survey_ratings",
+          "type": "read",
+          "title": "List survey ratings",
+          "description": "Customer satisfaction survey ratings (type 1 CSAT, 2 five-star, 3 NPS), oldest reply first, 30 per call. GET /v3/surveys/ratings."
+        },
+        {
+          "name": "desk365_list_kb_articles",
+          "type": "read",
+          "title": "List knowledge base articles",
+          "description": "The titles of all live knowledge base articles. Open one with desk365_get_kb_article. GET /v3/kb/article/."
+        },
+        {
+          "name": "desk365_get_kb_article",
+          "type": "read",
+          "title": "Get knowledge base article",
+          "description": "A live knowledge base article by its exact title: HTML and plain-text content, category, folder, author, views, likes and status (0 unpublished, 1 published). GET /v3/kb/article/details."
+        },
+        {
+          "name": "desk365_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "desk365_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Desk365 tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "desk365_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Desk365 (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "desk365_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Desk365 Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run desk365_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tickets are still open and unassigned right now?",
+        "Show me the urgent tickets from this week and who is working on them.",
+        "Summarise the conversation on ticket 1042.",
+        "Which contacts at Contoso have open tickets, and how many hours did we log for them this month?"
+      ]
     }
   ]
 }
