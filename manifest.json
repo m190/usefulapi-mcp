@@ -88990,6 +88990,551 @@
         "List the students who were absent last week and have a makeup scheduled.",
         "Put Emma on the waitlist for the Saturday ballet class."
       ]
+    },
+    {
+      "slug": "bsale",
+      "name": "Bsale",
+      "category": "retail",
+      "description": "Read Bsale products, documents and stock; manage customers, prices, receipts and payments.",
+      "endpoint": "https://bsale.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Bsale company and API host"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bsale access token"
+          },
+          {
+            "label": "Country"
+          }
+        ],
+        "hint": "Bsale does not show the token in the app: ask for a dedicated token for this UsefulAPI connection by email at **ayuda@bsale.app** (from the account owner's address), or use a sandbox token from a free Bsale test account. The token acts with the permissions of the Bsale user it was issued for. Customer, document and stock records you request pass to your chosen AI client and its LLM provider. When requested, tools can create/update customers, change prices, receive stock and record payments; they do not charge a card. Ask Bsale to revoke or replace the token to stop vendor access. Billing follows the verified Bsale company and API host."
+      },
+      "tools": [
+        {
+          "name": "bsale_list_documents",
+          "type": "read",
+          "title": "List documents (sales)",
+          "description": "List issued documents (boletas, facturas, notas de credito, guias...) newest-first as Bsale returns them, with number, dates, net/tax/total amounts, state, SII status and public PDF link. Filter by emission date range, document type, client, office, folio number or SII code. Use expand (details, payments, client, office, document_type) to embed related data. GET /v1/documents.json."
+        },
+        {
+          "name": "bsale_get_document",
+          "type": "read",
+          "title": "Get document",
+          "description": "One document by id with its amounts, dates, state and links. Use expand=[details,payments,client,office,document_type,references,sellers] to include line items, payments and related records. GET /v1/documents/{id}.json."
+        },
+        {
+          "name": "bsale_sales_summary",
+          "type": "read",
+          "title": "Sales summary",
+          "description": "Totals of sales documents (net, tax, total, count) by month, document type and office for a date range; set per_document to list each document instead. Good for 'how much did we sell in September?'. GET /v1/documents/summary.json."
+        },
+        {
+          "name": "bsale_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List returns (devoluciones) with date, motive, amounts and the credit note issued. Use expand=[reference_document,credit_note,details] for more. GET /v1/returns.json."
+        },
+        {
+          "name": "bsale_list_document_types",
+          "type": "read",
+          "title": "List document types",
+          "description": "List document types (boleta, factura, nota de credito, guia de despacho...) with their id and tax (SII) code. Use the id when filtering documents. GET /v1/document_types.json."
+        },
+        {
+          "name": "bsale_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List customers with name, tax id (code), email, phone, address, credit limit and loyalty points. Filter by tax id, name, last name or email. GET /v1/clients.json."
+        },
+        {
+          "name": "bsale_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One customer by id. Use expand=[contacts,attributes,addresses] to include contacts and extra attributes. GET /v1/clients/{id}.json."
+        },
+        {
+          "name": "bsale_client_unpaid_documents",
+          "type": "read",
+          "title": "Client unpaid documents",
+          "description": "A client's receivables: overdue and upcoming debt, total owed, and the unpaid documents with amounts. Give client_id or client_code. GET /v1/clients/unpaid_documents.json."
+        },
+        {
+          "name": "bsale_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services (name, description, class, stock control, state). SKUs live on variants: see bsale_list_variants. GET /v1/products.json."
+        },
+        {
+          "name": "bsale_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id; expand=[product_type] adds the type. GET /v1/products/{id}.json."
+        },
+        {
+          "name": "bsale_list_variants",
+          "type": "read",
+          "title": "List variants (SKUs)",
+          "description": "List product variants, the sellable SKUs: description, SKU code, barcode, stock settings and product link. Search by SKU code, barcode, description or product id. GET /v1/variants.json."
+        },
+        {
+          "name": "bsale_get_variant",
+          "type": "read",
+          "title": "Get variant",
+          "description": "One variant (SKU) by id; expand=[product] embeds the product. GET /v1/variants/{id}.json."
+        },
+        {
+          "name": "bsale_list_stocks",
+          "type": "read",
+          "title": "List stock levels",
+          "description": "Stock per variant and office: quantity, reserved and available. Filter by office, variant id, SKU code or barcode (for a pack give a variant filter plus office_id). expand=[variant,office] adds names. GET /v1/stocks.json."
+        },
+        {
+          "name": "bsale_list_price_lists",
+          "type": "read",
+          "title": "List price lists",
+          "description": "List price lists with name, currency and state. Use the id with bsale_list_price_list_details. GET /v1/price_lists.json."
+        },
+        {
+          "name": "bsale_list_price_list_details",
+          "type": "read",
+          "title": "List price list prices",
+          "description": "Prices in one price list: the net price (variantValue) and price with taxes per variant, plus the detail id needed to change a price. Filter by variant id, SKU code or barcode. GET /v1/price_lists/{id}/details.json."
+        },
+        {
+          "name": "bsale_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments received (amount, date, payment type, document, office, user). Filter by payment date, document id, or document tax code plus folio number. GET /v1/payments.json."
+        },
+        {
+          "name": "bsale_list_payment_types",
+          "type": "read",
+          "title": "List payment types",
+          "description": "List payment methods (cash, card, transfer, credit...) with their id. The id is needed to record a payment. GET /v1/payment_types.json."
+        },
+        {
+          "name": "bsale_list_offices",
+          "type": "read",
+          "title": "List offices (branches)",
+          "description": "List branches (sucursales) with name, address and cost center. Use the id for stock and document filters. GET /v1/offices.json."
+        },
+        {
+          "name": "bsale_list_users",
+          "type": "read",
+          "title": "List users (sellers)",
+          "description": "List Bsale users (sellers/cashiers) with name and office. GET /v1/users.json."
+        },
+        {
+          "name": "bsale_user_sales_summary",
+          "type": "read",
+          "title": "Sales by seller",
+          "description": "Sales and tax subtotal per seller for a date range (default: today, UTC), or for one user. GET /v1/users/sales_summary.json."
+        },
+        {
+          "name": "bsale_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: create a new customer in Bsale (it is visible to every user of the instance). Give at least a first name or a company. Bsale rejects a second client with the same tax id. POST /v1/clients.json."
+        },
+        {
+          "name": "bsale_update_client",
+          "type": "write",
+          "title": "Update client",
+          "description": "WRITE: change fields of an existing customer; only the fields you pass are sent. This overwrites the stored values. PUT /v1/clients/{id}.json."
+        },
+        {
+          "name": "bsale_update_price",
+          "type": "write",
+          "title": "Update price list price",
+          "description": "WRITE: set the net price (variantValue, without taxes) of one variant in a price list. This changes what Bsale charges on new sales using that list. Get detail_id from bsale_list_price_list_details. PUT /v1/price_lists/{id}/details/{detail_id}.json."
+        },
+        {
+          "name": "bsale_create_stock_reception",
+          "type": "write",
+          "title": "Receive stock",
+          "description": "WRITE: record a stock reception (ingreso de stock) that ADDS quantities to an office's inventory. Each line names the variant by id, SKU code or barcode, with quantity and unit cost. It changes stock levels and cost; Bsale has no undo through this API, so confirm the numbers first. POST /v1/stocks/receptions.json."
+        },
+        {
+          "name": "bsale_create_payment",
+          "type": "write",
+          "title": "Record payment",
+          "description": "WRITE: record a payment against an issued document (normally a credit sale that is still unpaid). It changes the document's receivable balance in the books and cannot be removed through this API. Check the amount with bsale_client_unpaid_documents first and get payment_type_id from bsale_list_payment_types. POST /v1/payments.json."
+        },
+        {
+          "name": "bsale_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bsale_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bsale tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bsale_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Bsale (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bsale_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bsale Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bsale_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How much did we sell last month, by document type and branch?",
+        "Which products are low on stock in my main branch?",
+        "Does client 12.345.678-9 have unpaid invoices?",
+        "Show the details of invoice number 4521."
+      ]
+    },
+    {
+      "slug": "glue-up",
+      "name": "Glue Up",
+      "category": "crm",
+      "description": "Read Glue Up events, memberships, contacts, organizations and finance records.",
+      "endpoint": "https://glue-up.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API public key and region"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Glue Up API public key"
+          },
+          {
+            "label": "Glue Up API private key"
+          },
+          {
+            "label": "Region"
+          },
+          {
+            "label": "Organization id (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Glue Up gives API-enabled organizations a public/private key pair (see the [Glue Up open API v2 guide](https://support.glueup.com/hc/en-us/articles/46960548123673-Glue-Up-open-API-v2); API access is an add-on you request from Glue Up). Choose the region your organization is hosted in. The keys act for the whole organization. Event, membership and invoice records you request pass to your chosen AI client and its LLM provider. Revoke or replace the key pair with Glue Up to stop vendor access. Billing is per public key and region; replacing the public key changes the usage and billing identity. The optional organization id is only needed if Glue Up told you to send it with directory requests."
+      },
+      "tools": [
+        {
+          "name": "glueup_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the organization's events with dates, venue and publication flags. Timestamps are epoch milliseconds. Filter by status (upcoming, ongoing, past), published / open-to-public flags, a start-date window or a title word. API: POST /event/list[/{status}]."
+        },
+        {
+          "name": "glueup_list_membership_types",
+          "type": "read",
+          "title": "List membership types",
+          "description": "List the published membership types (tiers) with price versions, durations, member limits and whether approval is required. API: POST /public/membership/publishedMembershipTypeList."
+        },
+        {
+          "name": "glueup_list_members",
+          "type": "read",
+          "title": "List directory members",
+          "description": "List the active people in the membership directory: name, company, position, membership type, start date, contact data and custom properties. Returns personal data. basic=true returns only the basic public fields. Search a name, email or company; filter by any property (featured, familyName, properties.<custom-field>...). API: POST /membershipDirectory/members[/basic]."
+        },
+        {
+          "name": "glueup_get_member",
+          "type": "read",
+          "title": "Get a directory member",
+          "description": "Get one person from the membership directory by member id, with membership, contact data and custom properties. Returns personal data. API: GET /membershipDirectory/member/{memberId}."
+        },
+        {
+          "name": "glueup_list_company_memberships",
+          "type": "read",
+          "title": "List company memberships",
+          "description": "List the active company memberships in the directory: company name, industry, membership type, start date, address and custom properties. basic=true returns only the basic fields. Filter by featured, industryCode, name prefix and more. API: POST /membershipDirectory/corporateMemberships[/basic]."
+        },
+        {
+          "name": "glueup_get_company_membership",
+          "type": "read",
+          "title": "Get a company membership",
+          "description": "Get one company membership by membership id, with its members, type, address and custom properties. Returns personal data. API: GET /membershipDirectory/corporate/{membershipId}."
+        },
+        {
+          "name": "glueup_list_individual_memberships",
+          "type": "read",
+          "title": "List individual memberships",
+          "description": "List the active individual (people) memberships in the directory, each with its person, membership type, start date and contact data. Returns personal data. API: POST /membershipDirectory/individualMemberships."
+        },
+        {
+          "name": "glueup_get_individual_membership",
+          "type": "read",
+          "title": "Get an individual membership",
+          "description": "Get one individual membership by membership id. Returns personal data. API: GET /membershipDirectory/individual/{membershipId}."
+        },
+        {
+          "name": "glueup_list_industry_codes",
+          "type": "read",
+          "title": "List industry codes",
+          "description": "List the industry codes in use for People or Company memberships (the values for an industryCode filter). API: GET /membershipDirectory/type/{membershipType}/industryCode/list."
+        },
+        {
+          "name": "glueup_get_directory_settings",
+          "type": "read",
+          "title": "Get membership directory settings",
+          "description": "Get the membership directory settings: who can see the directory, and the visibility of each form field and the enabled search fields. API: GET /membershipDirectory/settings."
+        },
+        {
+          "name": "glueup_get_application_forms",
+          "type": "read",
+          "title": "Get membership application forms",
+          "description": "Get the membership application forms: kind company or individual. all=false (default) returns the default form's items in listing order; all=true returns every form including custom ones, each with its items. API: GET /public/membership/{kind}ApplicationForm or POST /public/membership/{kind}ApplicationForms."
+        },
+        {
+          "name": "glueup_list_application_form_fields",
+          "type": "read",
+          "title": "List application form fields",
+          "description": "List every field of the company or individual membership application forms, including those of custom forms (keys, types, mandatory flags). API: GET /public/membership/{kind}ApplicationFormFields."
+        },
+        {
+          "name": "glueup_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List the organization's finance invoices: number, currency, face total, balance due, purchaser, origin (e.g. EventTicket), voided flag and dates (epoch milliseconds). Filter by status (e.g. Overdue) or any property. Returns purchaser names and emails. API: POST /finance/invoice/list."
+        },
+        {
+          "name": "glueup_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "glueup_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Glue Up tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "glueup_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Glue Up (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "glueup_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Glue Up Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run glueup_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our events start in the next 30 days, and are they published?",
+        "List the members of our directory whose company name starts with A.",
+        "Which company memberships are in the software industry?",
+        "Show the overdue invoices, newest first."
+      ]
+    },
+    {
+      "slug": "extensiv",
+      "name": "Extensiv",
+      "category": "inventory",
+      "description": "Read Extensiv warehouse records, create outbound orders and cancel eligible orders.",
+      "endpoint": "https://extensiv.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per warehouse API user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "tpl GUID"
+          },
+          {
+            "label": "User Login ID"
+          }
+        ],
+        "hint": "Your warehouse needs an API package and Support Portal access. Create an External REST/Developer credential under **Support → Manage Credentials**, or ask your Customer Success Manager if that page is unavailable. Prefer a key scoped to the intended customer; the API user’s ordinary permissions do not limit the API key. Requested warehouse and buyer records pass to your chosen AI client and its LLM provider. When requested, tools can submit outbound orders for picking and shipping or irreversibly cancel an eligible order, potentially with a cancellation fee. Revoke the API credential in Extensiv to stop vendor access. Billing follows the verified tpl GUID and User Login ID. UsefulAPI acts as your API service provider under the Extensiv confidentiality provision in our Terms."
+      },
+      "tools": [
+        {
+          "name": "extensiv_list_facilities",
+          "type": "read",
+          "title": "List facilities",
+          "description": "List the warehouse's facilities with their ids and properties (facility ids are needed for orders, stock details and receivers). GET /properties/facilities."
+        },
+        {
+          "name": "extensiv_list_carriers",
+          "type": "read",
+          "title": "List carriers and services",
+          "description": "List the carriers with their shipment services (modes) and billing codes, the values an order's routingInfo and billingCode must use. GET /properties/carriers."
+        },
+        {
+          "name": "extensiv_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the warehouse's customers (the companies whose goods it stores), with their customer ids. GET /customers."
+        },
+        {
+          "name": "extensiv_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "One customer by customer id: company info, contacts and settings. GET /customers/{customer_id}."
+        },
+        {
+          "name": "extensiv_list_items",
+          "type": "read",
+          "title": "List a customer's items",
+          "description": "List the items (SKUs) of one customer, with item ids, descriptions and units. Filter with rql, for example `sku==ABC-1`. GET /customers/{customer_id}/items."
+        },
+        {
+          "name": "extensiv_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List outbound orders matching an RQL filter, for example `ReadOnly.CustomerIdentifier.id==1` or `readonly.processDate=gt=2026-10-01T00:00:00` (orders closed after that time). Use detail=OrderItems to include the line items. Orders carry the ship-to name, address and contact details (personal data). GET /orders."
+        },
+        {
+          "name": "extensiv_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order by its transaction id (the order id from extensiv_list_orders): status, ship-to, routing, and with detail=OrderItems the lines. GET /orders/{transaction_id}."
+        },
+        {
+          "name": "extensiv_list_stock_summaries",
+          "type": "read",
+          "title": "List stock summaries",
+          "description": "Inventory totals per item and facility (on hand, allocated, available). Filter with rql, for example `ItemId==123` or a customer filter. GET /inventory/stocksummaries."
+        },
+        {
+          "name": "extensiv_list_inventory",
+          "type": "read",
+          "title": "List inventory details",
+          "description": "Inventory detail lines (location, lot, quantities). Filter with rql, for example `itemIdentifier.sku==SF-Box-DG`. GET /inventory."
+        },
+        {
+          "name": "extensiv_list_stock_details",
+          "type": "read",
+          "title": "List stock details",
+          "description": "All inventory of one customer in one facility, broken out by receive item (lot number, serial number and other track-by values). Both ids are required. GET /inventory/stockdetails."
+        },
+        {
+          "name": "extensiv_list_receivers",
+          "type": "read",
+          "title": "List receivers",
+          "description": "List inbound receivers (receipts of goods), for example `ReadOnly.CustomerIdentifier.id==1`. Use detail=ReceiveItems for the lines. GET /inventory/receivers."
+        },
+        {
+          "name": "extensiv_get_receiver",
+          "type": "read",
+          "title": "Get a receiver",
+          "description": "One receiver by its transaction id. GET /inventory/receivers/{transaction_id}."
+        },
+        {
+          "name": "extensiv_list_receiver_items",
+          "type": "read",
+          "title": "List a receiver's items",
+          "description": "The line items of one receiver, with item details. GET /inventory/receivers/{transaction_id}/items."
+        },
+        {
+          "name": "extensiv_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List inbound purchase orders per customer. Filter with rql, sort with sort. GET /inventory/pos."
+        },
+        {
+          "name": "extensiv_create_order",
+          "type": "write",
+          "title": "Create an order",
+          "description": "WRITE: submit a new outbound order for a customer and facility (the warehouse will pick and ship it). Not idempotent: calling twice creates two orders, so check extensiv_list_orders for the reference_num first. Needs ids from extensiv_list_customers, extensiv_list_facilities and SKUs from extensiv_list_items; billing_code, carrier and mode are required by Extensiv and must come from extensiv_list_carriers. POST /orders."
+        },
+        {
+          "name": "extensiv_cancel_order",
+          "type": "write",
+          "title": "Cancel an order",
+          "description": "WRITE: cancel one order by transaction id, with a reason and an optional cancellation fee. This cannot be undone; the order must be in a state the warehouse can still cancel (otherwise Extensiv answers with an error). The tool first reads the order to get the ETag Extensiv requires (If-Match). POST /orders/{transaction_id}/canceler."
+        },
+        {
+          "name": "extensiv_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "extensiv_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Extensiv tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "extensiv_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Extensiv (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "extensiv_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Extensiv Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run extensiv_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open orders does my warehouse have for customer 12?",
+        "How much stock of SKU ABC-1 is available in each facility?",
+        "Show the receivers that arrived this week, with their line items.",
+        "Which purchase orders are still open for customer 12?",
+        "Create an order for 3 x SKU ABC-1 for customer 12, shipped from facility 1 to our Chicago office."
+      ]
     }
   ]
 }

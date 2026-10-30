@@ -514,6 +514,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Pin Payments](servers/pin-payments/) | payments | 39 | OAuth | [servers/pin-payments/](servers/pin-payments/) |
 | [Tillhub](servers/tillhub/) | retail | 31 | OAuth | [servers/tillhub/](servers/tillhub/) |
 | [Jackrabbit Class](servers/jackrabbit-class/) | education | 28 | OAuth | [servers/jackrabbit-class/](servers/jackrabbit-class/) |
+| [Bsale](servers/bsale/) | retail | 29 | OAuth | [servers/bsale/](servers/bsale/) |
+| [Glue Up](servers/glue-up/) | crm | 17 | OAuth | [servers/glue-up/](servers/glue-up/) |
+| [Extensiv](servers/extensiv/) | inventory | 20 | OAuth | [servers/extensiv/](servers/extensiv/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
