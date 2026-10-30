@@ -512,6 +512,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [EasyStore](servers/easystore/) | ecommerce | 33 | OAuth | [servers/easystore/](servers/easystore/) |
 | [bol.com](servers/bol-com/) | ecommerce | 22 | OAuth | [servers/bol-com/](servers/bol-com/) |
 | [Pin Payments](servers/pin-payments/) | payments | 39 | OAuth | [servers/pin-payments/](servers/pin-payments/) |
+| [Tillhub](servers/tillhub/) | retail | 31 | OAuth | [servers/tillhub/](servers/tillhub/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
