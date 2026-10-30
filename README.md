@@ -492,6 +492,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ViralSweep](servers/viralsweep/) | marketing | 8 | API token | [servers/viralsweep/](servers/viralsweep/) |
 | [BounceBan](servers/bounceban/) | email-validation | 10 | API token | [servers/bounceban/](servers/bounceban/) |
 | [MillionVerifier](servers/millionverifier/) | email-validation | 8 | API token | [servers/millionverifier/](servers/millionverifier/) |
+| [Formspree](servers/formspree/) | forms-surveys | 7 | API token | [servers/formspree/](servers/formspree/) |
+| [Bookafy](servers/bookafy/) | scheduling | 19 | API token | [servers/bookafy/](servers/bookafy/) |
+| [Collmex](servers/collmex/) | accounting | 19 | API token | [servers/collmex/](servers/collmex/) |
+| [Senta](servers/senta/) | accounting-practice | 11 | API token | [servers/senta/](servers/senta/) |
+| [Talenox](servers/talenox/) | hr | 32 | API token | [servers/talenox/](servers/talenox/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

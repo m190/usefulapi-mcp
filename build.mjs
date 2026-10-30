@@ -226,6 +226,7 @@ const PATIENT_DATA = new Set(["drchrono", "healthie", "nexhealth", "canvas-medic
 const PATIENT_DATA_TEXT = `Do not use this server with protected health information (PHI). We do not sign HIPAA Business Associate Agreements (BAAs).`;
 // Servers that return personal data about other people (employees, applicants): the user is the controller.
 const PERSONAL_DATA = {
+  "talenox": `This server can return employee and payroll information. Employee lookups hide sensitive identifiers by default; the employee tool can include them when explicitly requested. Connect only a token with access to information you intend to use with your AI client.`,
   "breathe-hr": `This server returns personal data about your employees, including sickness records. Sickness records are health data under GDPR Article 9: you need your own lawful basis to process them with an AI client. Bank details and national insurance numbers are never returned.`,
   "jazzhr": `This server returns personal data about job applicants (contact details, resumes, notes). You need your own lawful basis to process it with an AI client. EEO answers (gender, race, veteran and disability status) are never returned.`,
 };

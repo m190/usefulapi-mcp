@@ -85095,6 +85095,755 @@
         "Upload this list for bulk verification after I confirm the credit charge.",
         "Check the progress of my existing MillionVerifier bulk file."
       ]
+    },
+    {
+      "slug": "formspree",
+      "name": "Formspree",
+      "category": "forms-surveys",
+      "description": "Read submissions, review spam and inspect the fields of a Formspree form.",
+      "endpoint": "https://formspree.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per form"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Form id (hashid)"
+          },
+          {
+            "label": "Form API key (Read-only or Master)"
+          }
+        ],
+        "hint": "Needs a Formspree Professional or Business plan. Open your form → **Settings** → turn on **HTTP API**, then copy the **Read-only** key (enough for this server; the Master key also works). The form id is the last part of the form endpoint, `https://formspree.io/f/<form id>` (Integration tab). One connection covers one form. Submissions hold your visitors' personal data: use a key you can reset, and never share it. Your key is used only to call the Formspree API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "formspree_list_submissions",
+          "type": "read",
+          "title": "List submissions",
+          "description": "List the form's submissions (not spam), newest first by default. Each has its _date and one value per form field. Submissions hold visitors' personal data: ask for the columns you need. Filter by date with since; page with limit and offset. GET /forms/{hashid}/submissions."
+        },
+        {
+          "name": "formspree_list_spam_submissions",
+          "type": "read",
+          "title": "List spam submissions",
+          "description": "List the submissions Formspree flagged or the owner marked as spam, newest first by default. Use it to check for false positives. Same filters and paging as formspree_list_submissions. GET /forms/{hashid}/submissions?spam=true."
+        },
+        {
+          "name": "formspree_get_form_fields",
+          "type": "read",
+          "title": "Get form fields",
+          "description": "The field names (columns) of the form's submissions, taken from the latest 100 submissions. Returns names only, no submission data. Use it to pick the columns for formspree_list_submissions. GET /forms/{hashid}/submissions?limit=100."
+        },
+        {
+          "name": "formspree_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "formspree_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Formspree tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "formspree_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Formspree (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "formspree_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Formspree Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run formspree_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the newest submissions from this form with their dates and email addresses.",
+        "Review recent spam submissions for enquiries that may have been misclassified.",
+        "List this form's field names so I can choose which columns to read."
+      ]
+    },
+    {
+      "slug": "bookafy",
+      "name": "Bookafy",
+      "category": "scheduling",
+      "description": "Review appointments, customers and staff, and manage Bookafy bookings.",
+      "endpoint": "https://bookafy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per admin account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bookafy API key"
+          }
+        ],
+        "hint": "Find it in Bookafy → **Settings → Integrations** (the API key of an admin user; API access depends on your Bookafy plan). Your key is used only to call the Bookafy API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "bookafy_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The account this API key belongs to: the admin user's email. Use it to confirm which Bookafy account is connected. GET /api/v3/me."
+        },
+        {
+          "name": "bookafy_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List the appointments of ONE staff member (identified by their email: take it from bookafy_list_staff), newest first, optionally within a UTC date range. Each item has the service, customer, start/end time (UTC), title, price, duration and status. Page with page/per_page (default 25). Cancel/reschedule tokens are never returned. GET /api/v3/appointments."
+        },
+        {
+          "name": "bookafy_create_appointment",
+          "type": "write",
+          "title": "Create appointment",
+          "description": "WRITE: book an appointment for a customer with a staff member and service (ids from bookafy_list_staff and bookafy_list_services). The customer is created from the given name/email/phone. Bookafy may email the booking confirmation to the customer and add the event to connected calendars, so only call it when the user clearly asked to book. Times are converted to UTC. POST /api/v3/appointments."
+        },
+        {
+          "name": "bookafy_update_appointment",
+          "type": "write",
+          "title": "Update appointment",
+          "description": "WRITE: reschedule or edit an existing appointment. Send the required staff, service, new times and customer name — read current values with bookafy_list_appointments first. Omitted optional fields are not sent. The customer may be notified of the change. Times are converted to UTC. PUT /api/v3/appointments/{id}."
+        },
+        {
+          "name": "bookafy_cancel_appointment",
+          "type": "write",
+          "title": "Cancel appointment",
+          "description": "WRITE, IRREVERSIBLE: delete (cancel) an appointment. Bookafy may notify the customer and remove the event from connected calendars, and the appointment cannot be restored through the API. Only call it when the user explicitly asked to cancel this appointment. DELETE /api/v3/appointments/{id}."
+        },
+        {
+          "name": "bookafy_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the account's customers (id, name, email, phone and custom booking-form answers). Bookafy returns the whole list at once; use `search` (matches name, email or phone) and `limit`/`offset` to page through it. GET /api/v3/customers."
+        },
+        {
+          "name": "bookafy_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: add a customer record (name required; email, phone and custom booking-form answers optional). It does not book anything. POST /api/v3/customers."
+        },
+        {
+          "name": "bookafy_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: change a customer's details. Bookafy needs the name every time, so pass the current name when you only change the email or phone. Fields you leave out are not sent. PUT /api/v3/customers/{id}."
+        },
+        {
+          "name": "bookafy_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List every service (appointment type) with id, name, price, duration, buffers, category, scheduling mode and online-meeting options. Use the ids when booking. GET /api/v3/services."
+        },
+        {
+          "name": "bookafy_list_appointment_types",
+          "type": "read",
+          "title": "List appointment types with booking links",
+          "description": "The appointment types grouped by category, each with its public booking-page link — use it to give a customer the link to book themselves. GET /api/v3/appointment_types."
+        },
+        {
+          "name": "bookafy_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List the staff users (id, name, email, booking-page URL). Use the id or email for appointments. GET /api/v3/staff_members."
+        },
+        {
+          "name": "bookafy_list_classes",
+          "type": "read",
+          "title": "List classes",
+          "description": "List classes and one-off appointments with price, duration, location, seats, booking link and their sessions (date, seats total/filled/remaining, zoom link). GET /api/v3/classes."
+        },
+        {
+          "name": "bookafy_get_class",
+          "type": "read",
+          "title": "Get class with sessions and attendees",
+          "description": "One class with its sessions and the attendees booked on each (name, email, phone, booking time). Optional filters narrow the sessions. GET /api/v3/classes/{id}."
+        },
+        {
+          "name": "bookafy_list_session_attendees",
+          "type": "read",
+          "title": "List session attendees",
+          "description": "The attendees of one class session (name, email, phone). Get session ids from bookafy_list_classes. GET /api/v3/sessions."
+        },
+        {
+          "name": "bookafy_list_webhooks",
+          "type": "read",
+          "title": "List webhook subscriptions",
+          "description": "List the webhook subscriptions (id, callback URL, event type such as appointment_created or customer_updated). Read-only. GET /api/v3/api_subscriptions."
+        },
+        {
+          "name": "bookafy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bookafy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bookafy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bookafy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Bookafy (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bookafy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bookafy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bookafy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What appointments does Maria have next week?",
+        "Which services do I offer and what are their booking links?",
+        "Find the customer with the email jane@example.com.",
+        "Reschedule appointment 1788326 to Thursday at 2 pm."
+      ]
+    },
+    {
+      "slug": "collmex",
+      "name": "Collmex",
+      "category": "accounting",
+      "description": "Review Collmex customers, products, invoices and orders; create customers and addresses.",
+      "endpoint": "https://collmex.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Collmex account"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Collmex customer number"
+          },
+          {
+            "label": "API user name"
+          },
+          {
+            "label": "API user password"
+          }
+        ],
+        "hint": "In Collmex create a separate user for this connection under **Verwaltung → Benutzer** and tick **Nur für API** (Collmex requires it for API access, and such users cost nothing extra). The user acts with that user's permissions. Collmex allows 10,000 API calls per day per customer number. Your login is used only to call the Collmex API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "collmex_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "Search Collmex customers (record CUSTOMER_GET): by customer number, free text (name, city, e-mail ...), postal code or country. Returns address, contact, bank (IBAN/BIC), VAT id, payment terms, agent and status fields. Inactive customers are left out unless asked for."
+        },
+        {
+          "name": "collmex_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "Search Collmex vendors/suppliers (record VENDOR_GET): by vendor number, free text, postal code or country. Returns address, contact, bank, VAT id, payment terms and expense account fields."
+        },
+        {
+          "name": "collmex_list_addresses",
+          "type": "read",
+          "title": "List addresses",
+          "description": "Search the Collmex address book (record ADDRESS_GET): customers, vendors and address-book entries in one list, optionally with their contact persons. address_type: 0 all, 1 customers, 2 vendors, 3 address-book entries."
+        },
+        {
+          "name": "collmex_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "Search Collmex products (record PRODUCT_GET): by product number, product group, free text (number, description, remark, GTIN, manufacturer) or price group. Returns description, unit, tax class, sales price, purchase data and stock settings."
+        },
+        {
+          "name": "collmex_get_available_stock",
+          "type": "read",
+          "title": "Get available stock",
+          "description": "Currently available stock per product (record STOCK_AVAILABLE_GET): on-hand stock of the available stock types minus demand due today or earlier. A service product shows (NULL). Leave product_no empty for every product."
+        },
+        {
+          "name": "collmex_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "Search Collmex customer invoices and credit notes (record INVOICE_GET): by invoice number, customer, invoice date range, customer order or product. Each invoice has its header (customer address, dates, payment terms, status code: 0 new, 10 to be posted, 20 open, 30 dunned, 40 settled, 100 deleted) and its positions with quantities, prices and values. Reads only; no PDF/XML export."
+        },
+        {
+          "name": "collmex_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "Search Collmex customer orders (record SALES_ORDER_GET): by order number, customer, order date range or the customer's own order number. Each order has its header (customer address, dates, payment terms, status code: 0 new, 10 confirmed, 30 paid, 50 delivered, 90 invoiced, 100 done, 1000 cancelled) and its positions. Reads only; no PDF export."
+        },
+        {
+          "name": "collmex_list_payment_terms",
+          "type": "read",
+          "title": "List payment terms",
+          "description": "The payment terms defined in Collmex (record TERMS_OF_PAYMENT_GET): number, description, payment method and discount periods. The number is what customers, vendors and invoices refer to as payment_terms."
+        },
+        {
+          "name": "collmex_list_open_items",
+          "type": "read",
+          "title": "List open items",
+          "description": "Open items (unpaid invoices) from the Collmex accounting (record OPEN_ITEMS_GET), for customers (receivables, default) or vendors (payables). Returns invoice number, document and due date, days overdue, dunning level, amount, paid and outstanding. Optionally as of a key date."
+        },
+        {
+          "name": "collmex_list_accounting_documents",
+          "type": "read",
+          "title": "List accounting postings",
+          "description": "Accounting postings (record ACCDOC_GET), one row per posting position: posting number, date, text, account, debit/credit (0 debit, 1 credit), amount, customer/vendor, invoice number. Filter by fiscal year, account, cost centre, customer, vendor, invoice or document date range. Cancelled postings are excluded unless asked for."
+        },
+        {
+          "name": "collmex_get_account_balances",
+          "type": "read",
+          "title": "Get account balances",
+          "description": "Account balances from the Collmex accounting (record ACCBAL_GET) for a fiscal year: account number, name and balance. Filter by account, account group (1 other, 2 fixed assets, 3 bank/cash, 4 income, 5 expenses, 6 output VAT, 7 input VAT, 8 receivables, 9 payables, 10 depreciation, 11 provisions, 12 inventory, 13 private, 14 non-deductible expenses), cost centre or an up-to date. With a customer or vendor given, the date is ignored."
+        },
+        {
+          "name": "collmex_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "Collmex projects (record PROJECT_GET) with customer, budget, value of recorded activities, completion state and the project's rates (rate number, description, product, hourly or daily rate)."
+        },
+        {
+          "name": "collmex_list_activities",
+          "type": "read",
+          "title": "List project activities",
+          "description": "Recorded time-tracking activities (record ACTIVITIES_GET): project, employee, date, from/to times, breaks, description, and the invoice that billed it. Filter by project, employee (needs company), date range, only not-yet-billed or only invoice-relevant activities."
+        },
+        {
+          "name": "collmex_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a NEW customer in Collmex (record CMXKND without a customer number, so Collmex assigns the next number; an existing customer is never overwritten). Each call creates another customer: check collmex_list_customers first to avoid duplicates. Nothing is sent to the customer. Give at least a company or a last name. Returns the new customer number."
+        },
+        {
+          "name": "collmex_create_address",
+          "type": "write",
+          "title": "Create address-book entry",
+          "description": "WRITE: create a NEW entry in the Collmex address book (record CMXADR, address type 3, no address number so Collmex assigns one; existing addresses are never overwritten). Each call creates another entry: check collmex_list_addresses first to avoid duplicates. Nothing is sent to the person. Give at least a company or a last name. Returns the new address number."
+        },
+        {
+          "name": "collmex_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "collmex_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Collmex tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "collmex_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Collmex (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "collmex_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Collmex Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run collmex_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customer invoices are still open and how many days overdue are they?",
+        "Show all invoices to customer 12345 from the last quarter.",
+        "How much stock is available for product A-100?",
+        "Create a new customer Muster GmbH, Hauptstr. 1, 10115 Berlin, DE."
+      ]
+    },
+    {
+      "slug": "senta",
+      "name": "Senta",
+      "category": "accounting-practice",
+      "description": "Review Senta clients, contacts and jobs, and update client records or add notes.",
+      "endpoint": "https://senta.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per practice workspace"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Senta workspace name"
+          },
+          {
+            "label": "Senta API key"
+          }
+        ],
+        "hint": "The workspace name is the part before **.senta.co** in your Senta address. Create the key in Senta under **Settings → Users → Add integration**, then generate its API key (generating a new key stops the old one). The key acts as that integration user and sees your client data. Your key is used only to call the Senta API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "senta_search_clients",
+          "type": "read",
+          "title": "Search clients",
+          "description": "Find the practice's clients by keywords. Returns matching clients with their id (`_id`) and name (`title`). Use the id with senta_get_client, senta_list_jobs or senta_add_note. GET /api/clients/search."
+        },
+        {
+          "name": "senta_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Read one client: name, state, type, business area, contacts (name, email, mobile, shareholding), address and the other fields the practice configured. GET /api/clients/{id}."
+        },
+        {
+          "name": "senta_list_client_view",
+          "type": "read",
+          "title": "List clients in a saved client list",
+          "description": "Read a saved client list of the practice (the same filter and columns as in the Senta app). The view id is the last part of the list's address: https://<practice>.senta.co/c/l/v08a361263f4a has the view id v08a361263f4a. Column names are the list's column titles (for example \"Client name\", \"State\"). GET /api/clients/{viewId}."
+        },
+        {
+          "name": "senta_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (id, client id `cid`, job template id `wid`, title and main date). Filter by client, job template or status (pending, ready, overdue, completed, cancelled). With no filter this is every job of the practice, so filter when you can. GET /api/jobs."
+        },
+        {
+          "name": "senta_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "WRITE: create a new client (company) in the practice. A name (title) is required; the other fields depend on the practice's own client form. Returns the new client with its id. Check senta_search_clients first so you do not create a duplicate. POST /api/clients."
+        },
+        {
+          "name": "senta_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "WRITE: partially update an existing client; only submitted properties are changed, per Senta's Client API. Read current contacts with senta_get_client before editing them and pass the contact details to update or add. Changing clientstate or enabling a service can start jobs in Senta. There is no delete tool. PUT /api/clients/{id}."
+        },
+        {
+          "name": "senta_add_note",
+          "type": "write",
+          "title": "Add a note to a client",
+          "description": "WRITE: add a note to a client, optionally attached to one of its jobs. The text may contain simple HTML. Returns the note. POST /api/notes."
+        },
+        {
+          "name": "senta_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "senta_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Senta tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "senta_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Senta (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "senta_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Senta Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run senta_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the client Watchful Cobweb and show me their contacts.",
+        "Which jobs are overdue for my clients right now?",
+        "List the clients in my Prospects client list.",
+        "Add a note to Hidden Cobweb: phoned about the VAT return, call back Friday."
+      ]
+    },
+    {
+      "slug": "talenox",
+      "name": "Talenox",
+      "category": "hr",
+      "description": "Review employees, payroll and leave, and approve or reject Talenox leave applications.",
+      "endpoint": "https://talenox.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API token"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Talenox API token"
+          }
+        ],
+        "hint": "Create a token in Talenox ([app.talenox.com](https://app.talenox.com)) under the top right menu → **API Settings**. The token acts as the user who created it. To approve leave, use the leave approver’s API token. Usage and subscriptions belong to this API token; replacing it creates a separate connection identity. Your token is used only to call the Talenox API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "talenox_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the company's employees as a short summary (id, employee_id, names, email, hired/resign dates, current job). Talenox returns every employee in one reply, so use search to narrow and limit/offset to page here. Use talenox_get_employee for the full record. Sensitive fields (national id, passport, bank account) are never included."
+        },
+        {
+          "name": "talenox_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee's full record: personal details, jobs, cost centres, custom fields. National id, passport, bank account and health fields are left out unless include_sensitive is true."
+        },
+        {
+          "name": "talenox_get_job",
+          "type": "read",
+          "title": "Get a job record",
+          "description": "Get one job record of an employee (title, department, start/end date, pay amount and rate, currency). Job ids are in the employee's `jobs` list."
+        },
+        {
+          "name": "talenox_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List the company's branches with their head and employee ids."
+        },
+        {
+          "name": "talenox_get_branch",
+          "type": "read",
+          "title": "Get a branch",
+          "description": "Get one branch (name, address, head, employee ids)."
+        },
+        {
+          "name": "talenox_list_cost_centres",
+          "type": "read",
+          "title": "List cost centres",
+          "description": "List the company's cost centres with their employee ids."
+        },
+        {
+          "name": "talenox_list_roles",
+          "type": "read",
+          "title": "List employee roles",
+          "description": "List the company's employee roles (access roles)."
+        },
+        {
+          "name": "talenox_get_role",
+          "type": "read",
+          "title": "Get an employee role",
+          "description": "Get one employee role."
+        },
+        {
+          "name": "talenox_get_company_settings",
+          "type": "read",
+          "title": "Get company settings",
+          "description": "Get the company's API-related settings (for example whether an employee may belong to several cost centres)."
+        },
+        {
+          "name": "talenox_list_working_days",
+          "type": "read",
+          "title": "List working-day schedules",
+          "description": "List the working-day schedules (weekly pattern Sunday to Saturday: full_day, first_half, second_half, not_working) and who is on each."
+        },
+        {
+          "name": "talenox_get_working_day",
+          "type": "read",
+          "title": "Get a working-day schedule",
+          "description": "Get one working-day schedule."
+        },
+        {
+          "name": "talenox_list_holiday_policies",
+          "type": "read",
+          "title": "List holiday policies",
+          "description": "List the company's public-holiday policies (country, state, default flag). Paged: pass next_last_seen_id as last_seen_id."
+        },
+        {
+          "name": "talenox_get_holiday_policy",
+          "type": "read",
+          "title": "Get a holiday policy",
+          "description": "Get one holiday policy with its calendar events between two dates."
+        },
+        {
+          "name": "talenox_list_company_holidays",
+          "type": "read",
+          "title": "List company holidays",
+          "description": "List the company's holidays (from its default holiday policy) for a year."
+        },
+        {
+          "name": "talenox_list_leave_applications",
+          "type": "read",
+          "title": "List leave applications",
+          "description": "List leave applications that overlap a date range, optionally by status, employee, approver or leave type. Paged: pass next_last_seen_id as last_seen_id. Uses Talenox's leave API (beta)."
+        },
+        {
+          "name": "talenox_get_leave_application",
+          "type": "read",
+          "title": "Get a leave application",
+          "description": "Get one leave application (employee, dates, half-day markers, amount, status, approvers, attachments)."
+        },
+        {
+          "name": "talenox_list_leave_types",
+          "type": "read",
+          "title": "List leave types",
+          "description": "List the leave types of the company, or those an employee may apply for (employee_id). Paged: pass next_last_seen_id as last_seen_id."
+        },
+        {
+          "name": "talenox_get_leave_type",
+          "type": "read",
+          "title": "Get a leave type",
+          "description": "Get one leave type (name, half-day allowed, quantity type, policy dates)."
+        },
+        {
+          "name": "talenox_get_leave_balance",
+          "type": "read",
+          "title": "Get leave balances",
+          "description": "Get an employee's leave balance on a date, for every leave type or for one (leave_type_id). A type that does not apply to the employee comes back with an error text instead of a balance."
+        },
+        {
+          "name": "talenox_get_leave_entitlement_period",
+          "type": "read",
+          "title": "Get leave entitlement periods",
+          "description": "Get the entitlement periods (start and end dates) of one leave type for an employee around a date."
+        },
+        {
+          "name": "talenox_list_off_in_lieus",
+          "type": "read",
+          "title": "List off in lieu types",
+          "description": "List the off-in-lieu types of the company, or of one employee. Paged: pass next_last_seen_id as last_seen_id."
+        },
+        {
+          "name": "talenox_get_off_in_lieu_balance",
+          "type": "read",
+          "title": "Get off in lieu balances",
+          "description": "Get an employee's off-in-lieu balance on a date, for every off in lieu or for one (off_in_lieu_id)."
+        },
+        {
+          "name": "talenox_list_payroll_payments",
+          "type": "read",
+          "title": "List payroll payments",
+          "description": "List the payroll payment runs of a month (period, pay group, status Draft or Processed, bank file state)."
+        },
+        {
+          "name": "talenox_get_payroll_payment",
+          "type": "read",
+          "title": "Get a payroll payment",
+          "description": "Get one payroll payment run (period, status, bank file and cheque export state)."
+        },
+        {
+          "name": "talenox_list_custom_pay_items",
+          "type": "read",
+          "title": "List custom pay items",
+          "description": "List the company's pay item definitions (name, category such as Adhoc or Recurring, taxable, gross/net setting)."
+        },
+        {
+          "name": "talenox_get_payslips_data",
+          "type": "read",
+          "title": "Get payslip data",
+          "description": "Get the payslip figures (gross, net, deductions, year-to-date) of a month as data, for all employees or the listed ones. Read only: nothing is created, processed or published. Contains salary data."
+        },
+        {
+          "name": "talenox_approve_leave_application",
+          "type": "write",
+          "title": "Approve a leave application",
+          "description": "WRITE: approve a leave application as the token's user. The employee's balance and payroll are affected and Talenox may notify them. Read the application first (talenox_get_leave_application) and confirm with the user."
+        },
+        {
+          "name": "talenox_reject_leave_application",
+          "type": "write",
+          "title": "Reject a leave application",
+          "description": "WRITE: reject a leave application as the token's user. Talenox may notify the employee. Read the application first (talenox_get_leave_application) and confirm with the user."
+        },
+        {
+          "name": "talenox_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "talenox_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Talenox tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "talenox_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Talenox (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "talenox_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Talenox Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run talenox_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on leave next week, and who approves each request?",
+        "Show the pending leave applications for October.",
+        "How many days of annual leave does Alex Tan have left?",
+        "Which payroll runs for September are still in draft?"
+      ]
     }
   ]
 }
