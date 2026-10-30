@@ -32015,6 +32015,30 @@
           "description": "List the shop's users (service writers, technicians, admins) — the ids to use for technicians and service writers. Shopmonkey: GET /v3/user."
         },
         {
+          "name": "shopmonkey_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "Find time entries and their ids, technician, order, activity, running state, clock-in/out times and duration. Use inProgress: true to reconcile a clock-in/out whose response was uncertain. Paginate with limit/skip. Shopmonkey: POST /v3/timesheet/search (read-only)."
+        },
+        {
+          "name": "shopmonkey_get_time_entry",
+          "type": "read",
+          "title": "Get a time entry",
+          "description": "Read one time entry to inspect its technician, order, activity, running state and clock-in/out times. Use the timesheetId returned by shopmonkey_clock_in or shopmonkey_list_time_entries. Shopmonkey: GET /v3/timesheet/:id."
+        },
+        {
+          "name": "shopmonkey_clock_in",
+          "type": "write",
+          "title": "Clock a technician into a work order",
+          "description": "Start an order-level timer now for orderId and technicianId (a user id from shopmonkey_list_users). Omit confirm to preview; confirm: true starts it. Reuses an already-running timer on this order and refuses to silently stop/switch any other activity. Returns timesheetId for clock-out and verifies the running entry. Never automatically retries a write; after an uncertain response inspect shopmonkey_list_time_entries. Does not backdate or edit recorded hours. Shopmonkey: POST /v3/timesheet/clock_in with activity Order."
+        },
+        {
+          "name": "shopmonkey_clock_out",
+          "type": "write",
+          "title": "Clock a technician out of a work order",
+          "description": "Stop an order-level timer now, scoped to orderId and technicianId. Pass timesheetId from clock-in/list, or omit it to resolve exactly one active matching entry. Omit confirm to preview, then call with the preview's timesheetId and confirm: true. Checks entry ownership/activity and verifies it stopped. Already-stopped entries are returned without a write. Never automatically retries; inspect shopmonkey_get_time_entry after an uncertain response. Does not edit past hours. Shopmonkey: PUT /v3/timesheet/:id/clock_out."
+        },
+        {
           "name": "shopmonkey_create_customer",
           "type": "write",
           "title": "Create a customer",
@@ -32153,7 +32177,7 @@
           "description": "Cancel the caller's Shopmonkey Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shopmonkey_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.32.0",
+      "version": "1.33.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -32164,6 +32188,7 @@
         "hint": "A shop admin creates it in Shopmonkey → **Settings → Integration → API Keys**. The key has the same permissions as the user who created it and is shown only once. It is used only to call the Shopmonkey API on your behalf and to derive a private account id; it is never shown to anyone."
       },
       "examples": [
+        "Clock a technician into a work order, then show their running time entry.",
         "List the shop's work orders with their status and assigned technicians.",
         "Which vehicles has Jane Smith brought in, and what was done?",
         "What appointments are on the calendar for tomorrow?",
@@ -63706,7 +63731,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.9.0",
+      "version": "1.10.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -63832,13 +63857,13 @@
           "name": "agencybloc_create_policy",
           "type": "write",
           "title": "Create policy",
-          "description": "WRITE: create a policy on an existing group or individual. Needs the holder (entity_id + entity_type), coverage type, status and the carrier's full name; unknown coverage types / statuses are created in the account. Returns the new policyID. POST policies/create."
+          "description": "WRITE: create a policy on an existing group or individual. Needs the holder (entity_id + entity_type), coverage type, status and the carrier's full name; unknown coverage types / statuses are created in the account. carrier_product also creates a coverage (and the carrier product if unknown). effective_date and premium are policy-level fields, not coverage fields. Returns the new policyID. POST policies/create."
         },
         {
           "name": "agencybloc_update_policy",
           "type": "write",
           "title": "Update policy",
-          "description": "WRITE: change fields of an existing policy (status, carrier, dates, premium ...); fields you leave out are not sent. Returns the policyID. POST policies/update."
+          "description": "WRITE: change fields of an existing policy (status, carrier, dates, premium ...); fields you leave out are not sent. carrier_product requires carrier and first reads the policy: it creates the first coverage or changes the sole existing coverage, but refuses multiple coverages to avoid adding an unintended one. effective_date and premium remain policy-level fields. Returns the policyID. POST policies/update."
         },
         {
           "name": "agencybloc_create_activity",
@@ -63880,6 +63905,7 @@
       "examples": [
         "Find the individual named Maria Lopez and show her policies.",
         "Which policies were submitted in the last 14 days and what are their carriers?",
+        "Show the coverages on policy 48213, then set its carrier product to Health Plus for the existing carrier if it has only one coverage.",
         "List the open activities on group 48213 and add a note that the renewal quote was sent.",
         "Create a new individual for John Smith, cell 555-0100, and log a Phone activity that I called him today."
       ]

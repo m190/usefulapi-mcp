@@ -55,6 +55,10 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_list_canned_services` | read | List canned services |
 | `shopmonkey_list_workflow_statuses` | read | List workflow statuses |
 | `shopmonkey_list_users` | read | List users |
+| `shopmonkey_list_time_entries` | read | List time entries |
+| `shopmonkey_get_time_entry` | read | Get a time entry |
+| `shopmonkey_clock_in` | **write** | Clock a technician into a work order |
+| `shopmonkey_clock_out` | **write** | Clock a technician out of a work order |
 | `shopmonkey_create_customer` | **write** | Create a customer |
 | `shopmonkey_update_customer` | **write** | Update a customer |
 | `shopmonkey_add_customer_email` | **write** | Add an email to a customer |
