@@ -88260,6 +88260,285 @@
         "What do my competitors charge for EAN 8718964000000?",
         "Put my offer 6ff736b5-cdd0-4150-8c67-78269ee986f5 on hold."
       ]
+    },
+    {
+      "slug": "pin-payments",
+      "name": "Pin Payments",
+      "category": "payments",
+      "description": "Read Pin Payments charges, refunds, balances, transfers and subscriptions without moving money.",
+      "endpoint": "https://pin-payments.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key and environment"
+        }
+      ],
+      "version": "1.0.2",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "Pin Payments secret API key"
+          }
+        ],
+        "hint": "Find the key in the Pin Payments dashboard under **Settings → API Keys**. Live and test each have their own keys: choose the matching environment. Pin Payments has no read-only API key: the secret key can create charges, refunds and bank transfers if misused, although this server only sends GET requests. Payment and customer records you request pass to your chosen AI client and its LLM provider. Revoke or replace the key in Pin Payments to stop vendor access. Billing is per secret key and environment; rotating the key starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "pinpayments_get_balance",
+          "type": "read",
+          "title": "Get balance",
+          "description": "The current Pin Payments account balance: available (ready to transfer) and pending (available plus estimated funds from charges that have not settled yet), per currency, in the currency's base unit (cents for AUD). GET /balance."
+        },
+        {
+          "name": "pinpayments_list_charges",
+          "type": "read",
+          "title": "List charges",
+          "description": "List charges (card payments), 25 per page: amount (in the currency's base unit, e.g. cents for AUD), currency, description, payer email, status_message/success, total_fees, merchant_entitlement, amount_refunded, captured, settlement transfers, chargebacks flag, metadata. The card is shown only as scheme and last four digits. GET /charges."
+        },
+        {
+          "name": "pinpayments_search_charges",
+          "type": "read",
+          "title": "Search charges",
+          "description": "Search charges by free text (description, email, metadata, cardholder name, currency, exact amount in the currency's base unit, exact charge/card/refund/customer token) and/or a created-date range. GET /charges/search."
+        },
+        {
+          "name": "pinpayments_get_charge",
+          "type": "read",
+          "title": "Get charge",
+          "description": "One charge by token (ch_...), with fees, refunds total, settlement transfer state and chargeback flag. GET /charges/{token}."
+        },
+        {
+          "name": "pinpayments_list_charge_refunds",
+          "type": "read",
+          "title": "List refunds of a charge",
+          "description": "All refunds issued against one charge. GET /charges/{token}/refunds."
+        },
+        {
+          "name": "pinpayments_list_refunds",
+          "type": "read",
+          "title": "List refunds",
+          "description": "List all refunds, 25 per page: amount (in the currency's base unit), currency, charge token, status_message, error_message, created_at. GET /refunds."
+        },
+        {
+          "name": "pinpayments_get_refund",
+          "type": "read",
+          "title": "Get refund",
+          "description": "One refund by token (rf_...). GET /refunds/{token}."
+        },
+        {
+          "name": "pinpayments_list_authorisations",
+          "type": "read",
+          "title": "List authorisations",
+          "description": "List card authorisations (held funds, not yet captured; they expire after seven days) with amount, amount_captured, amount_remaining and expired flags. GET /authorisations."
+        },
+        {
+          "name": "pinpayments_get_authorisation",
+          "type": "read",
+          "title": "Get authorisation",
+          "description": "One authorisation by token (auth_...). GET /authorisations/{token}."
+        },
+        {
+          "name": "pinpayments_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List stored customers, 25 per page: token, email, first_name, last_name, phone_number, company, notes and the primary card as scheme and last four digits. GET /customers."
+        },
+        {
+          "name": "pinpayments_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by token (cus_...). GET /customers/{token}."
+        },
+        {
+          "name": "pinpayments_list_customer_charges",
+          "type": "read",
+          "title": "List a customer's charges",
+          "description": "Charges made by one customer. GET /customers/{token}/charges."
+        },
+        {
+          "name": "pinpayments_list_customer_cards",
+          "type": "read",
+          "title": "List a customer's cards",
+          "description": "Cards stored for one customer, each shown only as scheme, last four digits and issuing country (no token, expiry or address). GET /customers/{token}/cards."
+        },
+        {
+          "name": "pinpayments_list_customer_subscriptions",
+          "type": "read",
+          "title": "List a customer's subscriptions",
+          "description": "Subscriptions of one customer: state, plan, next billing date, active interval, cancellation time. GET /customers/{token}/subscriptions."
+        },
+        {
+          "name": "pinpayments_list_deposits",
+          "type": "read",
+          "title": "List deposits",
+          "description": "List deposits made to the account (amount, currency, bank narration, available_at). GET /deposits."
+        },
+        {
+          "name": "pinpayments_get_deposit",
+          "type": "read",
+          "title": "Get deposit",
+          "description": "One deposit by token (dpo_...). GET /deposits/{token}."
+        },
+        {
+          "name": "pinpayments_list_transfers",
+          "type": "read",
+          "title": "List transfers",
+          "description": "List transfers (payouts to bank accounts), 25 per page: status, amount, debits/credits, paid_at, reference, line item count, bank account (masked) and recipient. GET /transfers."
+        },
+        {
+          "name": "pinpayments_search_transfers",
+          "type": "read",
+          "title": "Search transfers",
+          "description": "Search transfers by token, description, amount or recipient details and/or a created-date range. GET /transfers/search."
+        },
+        {
+          "name": "pinpayments_get_transfer",
+          "type": "read",
+          "title": "Get transfer",
+          "description": "One transfer by token (tfer_...). GET /transfers/{token}."
+        },
+        {
+          "name": "pinpayments_list_transfer_line_items",
+          "type": "read",
+          "title": "List transfer line items",
+          "description": "The ledger line items that make up one transfer (charge entitlements, fees, refunds, chargebacks). GET /transfers/{token}/line_items."
+        },
+        {
+          "name": "pinpayments_list_recipients",
+          "type": "read",
+          "title": "List recipients",
+          "description": "List transfer recipients (name, email, masked bank account). GET /recipients."
+        },
+        {
+          "name": "pinpayments_get_recipient",
+          "type": "read",
+          "title": "Get recipient",
+          "description": "One recipient by token (rp_...). GET /recipients/{token}."
+        },
+        {
+          "name": "pinpayments_list_recipient_transfers",
+          "type": "read",
+          "title": "List a recipient's transfers",
+          "description": "Transfers paid to one recipient. GET /recipients/{token}/transfers."
+        },
+        {
+          "name": "pinpayments_list_disputes",
+          "type": "read",
+          "title": "List disputes",
+          "description": "List chargeback disputes: category, status, amount, the disputed charge, evidence_required_by and the relevant evidence types. GET /disputes."
+        },
+        {
+          "name": "pinpayments_search_disputes",
+          "type": "read",
+          "title": "Search disputes",
+          "description": "Search disputes by status or exact charge token, optionally filtered by status. GET /disputes/search."
+        },
+        {
+          "name": "pinpayments_get_dispute",
+          "type": "read",
+          "title": "Get dispute",
+          "description": "One dispute by token (dis_...). GET /disputes/{token}."
+        },
+        {
+          "name": "pinpayments_get_dispute_activity",
+          "type": "read",
+          "title": "Get dispute activity",
+          "description": "The activity feed of one dispute (status changes, ledger entries such as chargeback fees and recoveries). GET /disputes/{token}/activity."
+        },
+        {
+          "name": "pinpayments_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List subscription plans: name, amount, currency, interval, trial and setup amounts, subscription counts by state. GET /plans."
+        },
+        {
+          "name": "pinpayments_get_plan",
+          "type": "read",
+          "title": "Get plan",
+          "description": "One plan by token (plan_...). GET /plans/{token}."
+        },
+        {
+          "name": "pinpayments_list_plan_subscriptions",
+          "type": "read",
+          "title": "List a plan's subscriptions",
+          "description": "Subscriptions to one plan. GET /plans/{token}/subscriptions."
+        },
+        {
+          "name": "pinpayments_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List all subscriptions: state (trial, active, cancelling, cancelled), plan, customer, next_billing_date, active interval, cancelled_at. GET /subscriptions."
+        },
+        {
+          "name": "pinpayments_get_subscription",
+          "type": "read",
+          "title": "Get subscription",
+          "description": "One subscription by token (sub_...). GET /subscriptions/{token}."
+        },
+        {
+          "name": "pinpayments_get_subscription_ledger",
+          "type": "read",
+          "title": "Get subscription ledger",
+          "description": "The ledger entries (credits and debits) of one subscription. GET /subscriptions/{token}/ledger."
+        },
+        {
+          "name": "pinpayments_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "The account's event log (charge.captured, refund.created, dispute.updated, ...), each with the affected record (cards masked). GET /events."
+        },
+        {
+          "name": "pinpayments_get_event",
+          "type": "read",
+          "title": "Get event",
+          "description": "One event by token (evt_...). GET /events/{token}."
+        },
+        {
+          "name": "pinpayments_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pinpayments_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Pin Payments tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pinpayments_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Pin Payments (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pinpayments_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Pin Payments Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run pinpayments_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which charges failed last week?",
+        "What are my available and pending balances?",
+        "Show my latest deposits and their amounts.",
+        "Which disputes still need attention?"
+      ]
     }
   ]
 }
