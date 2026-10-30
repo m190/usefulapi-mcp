@@ -86848,6 +86848,166 @@
         "List active subscriptions scheduled to cancel.",
         "Find refunded transactions for buyer anna@example.com."
       ]
+    },
+    {
+      "slug": "fitssey",
+      "name": "Fitssey",
+      "category": "membership",
+      "description": "Read Fitssey schedules, class capacity, stock, pass pricing, sales and attendance reports.",
+      "endpoint": "https://fitssey.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Studio UUID and API key"
+        }
+      ],
+      "keyHelp": "Create a dedicated key in Studio → Integrations → API Keys. Find the Studio UUID in Studio → Your Studio → UUID. Calls read one page or a bounded date range; reports omit customer names and contact details.",
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Fitssey Studio UUID"
+          },
+          {
+            "label": "Fitssey API key"
+          }
+        ],
+        "hint": "Create a separate key in **Studio → Integrations → API Keys**. Copy the Studio UUID from **Studio → Your Studio → UUID**. This connector is read-only and excludes private notes, health details, livestream secrets and customer contact details. Billing and usage are per Studio UUID and API key; replacing the key creates a separate identity without automatic plan or usage transfer. Fitssey applies API limits and lockouts; each tool reads one page or a bounded date range, with no automatic retries."
+      },
+      "tools": [
+        {
+          "name": "fitssey_list_classes",
+          "type": "read",
+          "title": "List classes",
+          "description": "Read one page of the class catalog and categories. Excludes descriptions and private notes."
+        },
+        {
+          "name": "fitssey_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "Read studio locations, business addresses and rooms. Excludes entrance instructions and phone details."
+        },
+        {
+          "name": "fitssey_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "Read one page of studio staff IDs and names; optionally filter by role. Excludes contact and profile details."
+        },
+        {
+          "name": "fitssey_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "Read one page of products with SKU, stock and prices in the vendor’s smallest currency unit."
+        },
+        {
+          "name": "fitssey_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Read one product’s stock, SKU and price. Excludes private notes."
+        },
+        {
+          "name": "fitssey_list_pricing_options",
+          "type": "read",
+          "title": "List pricing options",
+          "description": "Read pass catalog, session allowance and prices in the vendor’s smallest currency unit."
+        },
+        {
+          "name": "fitssey_get_pricing_option",
+          "type": "read",
+          "title": "Get pricing option",
+          "description": "Read one pass offering and its session, expiry and price settings. Excludes private notes."
+        },
+        {
+          "name": "fitssey_list_contracts",
+          "type": "read",
+          "title": "List contracts",
+          "description": "Read contract catalog IDs, names and online-sale flags. Excludes private notes and payment details."
+        },
+        {
+          "name": "fitssey_get_contract",
+          "type": "read",
+          "title": "Get contract",
+          "description": "Read one contract’s ID, name and online-sale flag; no payment or bank details."
+        },
+        {
+          "name": "fitssey_get_schedule",
+          "type": "read",
+          "title": "Get schedule",
+          "description": "Read scheduled classes and remaining capacities for a date range of at most 31 days. No bookings are changed."
+        },
+        {
+          "name": "fitssey_list_courses",
+          "type": "read",
+          "title": "List courses",
+          "description": "Read online-bookable courses and their scheduled sessions for a date range of at most 31 days."
+        },
+        {
+          "name": "fitssey_get_schedule_event",
+          "type": "read",
+          "title": "Get schedule event",
+          "description": "Read one scheduled event, capacities and assigned teachers. Excludes livestream URLs, passwords and private notes."
+        },
+        {
+          "name": "fitssey_get_client_visits_report",
+          "type": "read",
+          "title": "Get client visits report",
+          "description": "Read one page of class visits for at most 31 days, with client IDs, pass and payment status. Excludes names, emails and private notes. This page is not a complete attendance total."
+        },
+        {
+          "name": "fitssey_get_sales_report",
+          "type": "read",
+          "title": "Get sales report",
+          "description": "Read one page of sales for at most 31 days, preserving vendor monetary numbers. Excludes customer names, emails, addresses and invoice tax identifiers. This page is not total revenue."
+        },
+        {
+          "name": "fitssey_get_active_passes_report",
+          "type": "read",
+          "title": "Get active passes report",
+          "description": "Read one page of active client passes with client IDs and validity; cached by Fitssey for five minutes. Interpret remain with sessionType: limitedVisits counts visits, limitedTime counts minutes, and -1 means no session limit. Excludes names and emails. This page is not a full membership total."
+        },
+        {
+          "name": "fitssey_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fitssey_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Fitssey tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fitssey_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Fitssey (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fitssey_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Fitssey Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fitssey_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the class schedule and remaining capacity for this week.",
+        "Compare the prices and session allowances of my passes.",
+        "List low-stock studio products.",
+        "Read the first page of sales for this month, then tell me whether more pages remain."
+      ]
     }
   ]
 }
