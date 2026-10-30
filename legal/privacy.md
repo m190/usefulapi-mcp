@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 29 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 30 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -98,6 +98,10 @@ its own privacy policy. A current list is available on request at privacy@useful
 
 - Stored credentials: kept until you disconnect, cancel, or request deletion, then deleted within
   **30 days**.
+- EasyStore connections: stored OAuth grants and installation metadata are deleted after a verified
+  uninstall notification or a confirmed rejection of the store token, and after **30 days without a
+  successful EasyStore API call**. If an uninstall notification is missed, a later token rejection
+  or the inactivity deadline triggers cleanup.
 - Billing/accounting records: retained as required by Czech accounting and tax law (**up to 10
   years** for tax/VAT documentation).
 - Operational logs: retained about **30 days**, then rotated.
