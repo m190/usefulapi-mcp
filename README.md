@@ -505,6 +505,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zylvie](servers/zylvie/) | digital-commerce | 8 | API token | [servers/zylvie/](servers/zylvie/) |
 | [Fitssey](servers/fitssey/) | membership | 19 | API token | [servers/fitssey/](servers/fitssey/) |
 | [Prodigi](servers/prodigi/) | ecommerce | 10 | API token | [servers/prodigi/](servers/prodigi/) |
+| [Bokio](servers/bokio/) | billing | 27 | OAuth | [servers/bokio/](servers/bokio/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
