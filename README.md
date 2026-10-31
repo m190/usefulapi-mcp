@@ -542,6 +542,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Jisr](servers/jisr/) | productivity | 20 | OAuth | [servers/jisr/](servers/jisr/) |
 | [Feegow](servers/feegow/) | healthcare | 30 | OAuth | [servers/feegow/](servers/feegow/) |
 | [Stamped](servers/stamped/) | ecommerce | 15 | OAuth | [servers/stamped/](servers/stamped/) |
+| [Channable](servers/channable/) | ecommerce | 17 | OAuth | [servers/channable/](servers/channable/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

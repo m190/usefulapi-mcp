@@ -94607,6 +94607,157 @@
         "Show the latest earned or redeemed rewards with coupon codes masked.",
         "List products tagged as summer."
       ]
+    },
+    {
+      "slug": "channable",
+      "name": "Channable",
+      "category": "ecommerce",
+      "description": "Read marketplace orders and returns; send shipment, cancellation and stock updates.",
+      "endpoint": "https://channable.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "version": "1.1.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per Channable company"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Channable company"
+        }
+      ],
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Channable API token"
+          },
+          {
+            "label": "Company id"
+          },
+          {
+            "label": "Project id"
+          }
+        ],
+        "hint": "In the [Channable app](https://app.channable.com) open **Company settings → Channable API**: the company id is shown there and a **company owner** can generate the API token. The project id is in the project's **Settings**. The API is the order connection API, so the project needs an order connection. Use your own API-enabled subscription with the order-sync add-on and configured order connections; any customer-specific vendor enablement still applies. Vendor charges are separate. Requested customer contacts, addresses, orders and returns pass to your chosen AI client and LLM provider; the API token does not. Shipment, cancellation, return and stock tools can change live marketplace orders and availability; confirm the target and values before use. Mark-manual stops Channable processing without notifying the marketplace. No request is automatically retried; check Channable after an uncertain write. Revoke the token under Company settings to stop access; tokens expire after one year. Company ID supplies the usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "channable_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List the marketplace orders of a project, newest first. Filters combine with AND; dates are read as UTC. Paged: pass next_offset as offset (total is the size of the page, not of all orders). Reply: orders, error_count (orders with an error), count, next_offset. GET /v2/companies/{company}/projects/{project}/orders."
+        },
+        {
+          "name": "channable_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order with its customer, addresses, items, status, fulfillments and event log. order_id is the Channable order id (the id field from channable_list_orders). GET /v2/companies/{company}/projects/{project}/orders/{order_id}."
+        },
+        {
+          "name": "channable_ship_order",
+          "type": "write",
+          "title": "Mark an order as shipped",
+          "description": "Set an order to shipped, with tracking data. Give transporter as a Channable transporter code (channable_list_transporters lists them) and tracking_code. Pass order_item_ids to ship only some items (the order then becomes partial; repeat with the other items later); omit it to ship the whole order. Spartoo and Veepee do not support partial shipments. POST /v1/companies/{company}/projects/{project}/orders/{order_id}/shipment. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_cancel_order",
+          "type": "write",
+          "title": "Cancel an order",
+          "description": "Seller-side cancellation: set an order to cancelled. Pass order_item_ids to cancel only some items (the order then becomes partial); omit it to cancel the whole order. Amazon, Cdiscount and Spartoo do not support partial cancellations. A buyer-side cancellation must be confirmed in the marketplace seller account instead. POST /v1/companies/{company}/projects/{project}/orders/{order_id}/cancel. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_mark_order_manual",
+          "type": "write",
+          "title": "Mark an order as handled manually",
+          "description": "Tell Channable that you handle this order yourself: Channable takes no further action on it (no status updates to the marketplace). POST /v1/companies/{company}/projects/{project}/orders/{order_id}/manual. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_create_return",
+          "type": "write",
+          "title": "Create a return for an order",
+          "description": "Manually create a return on the marketplace for products of an order. Only Fruugo, Otto, Veepee and Zalando support this. products lists the product ids (the item id of the order), the quantity and optionally accepted or rejected. POST /v1/companies/{company}/projects/{project}/orders/{order_id}/return. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List the returns of a project, newest first. Dates are read as UTC. Paged: pass next_offset as offset. Reply: returns, error_count, count, next_offset. GET /v1/companies/{company}/projects/{project}/returns."
+        },
+        {
+          "name": "channable_get_return",
+          "type": "read",
+          "title": "Get a return",
+          "description": "One return with its item, reason, customer, status and log. return_id is the id field from channable_list_returns. GET /v1/companies/{company}/projects/{project}/returns/{return_id}."
+        },
+        {
+          "name": "channable_update_return_status",
+          "type": "write",
+          "title": "Set the status of a return",
+          "description": "Set the status of a return: accepted, rejected, repaired, keeps, exchanged, cancelled. Depending on the status the customer does or does not get their money back (accepted and cancelled differ from rejected). POST /v1/companies/{company}/projects/{project}/returns/{return_id}/status. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_list_stock_updates",
+          "type": "read",
+          "title": "List posted stock updates",
+          "description": "List the offers (product stock updates) that were posted to a project, newest first: id, stock, price, title, GTIN. Paged: pass next_offset as offset. Reply: offers, count, next_offset. GET /v1/companies/{company}/projects/{project}/offers."
+        },
+        {
+          "name": "channable_update_stock",
+          "type": "write",
+          "title": "Update product stock on all marketplaces",
+          "description": "Set the stock of up to 50 offers. Each item is the offer id as the marketplaces know it, plus the WHOLE new stock value (not a delta). Channable passes the new stock to every marketplace of the project, which changes what customers can buy. POST /v1/companies/{company}/projects/{project}/stock_updates. Channable passes this change on to the marketplace. It cannot be undone through this API and the call is never retried; if it times out, check the order in Channable before trying again."
+        },
+        {
+          "name": "channable_get_order_statistics",
+          "type": "read",
+          "title": "Get order statistics",
+          "description": "Order statistics of a project for a time frame: orders, ordered products, marketplace commission, shipping costs, revenue and daily revenue, per order connection and in total. Pass order_config_id (the order_config_id field of an order) for one order connection only. GET /v1/companies/{company}/projects/{project}/statistics/orders[/{order_config_id}]."
+        },
+        {
+          "name": "channable_list_transporters",
+          "type": "read",
+          "title": "List transporter codes",
+          "description": "Channable transporter codes for shipping updates. With no argument: all codes and labels (transporter_code is what channable_ship_order expects). With transporter_code: the marketplace-specific carriers behind that code. With channel (a marketplace such as bol, amazon, ebay): the carriers that marketplace supports. Give at most one of the two. GET /v1/transporters/all | /transporter/{code} | /channel/{channel}."
+        },
+        {
+          "name": "channable_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "channable_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Channable tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "channable_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Channable (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "channable_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Channable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run channable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List marketplace orders waiting for shipment.",
+        "Show returns received this week.",
+        "Check the latest stock updates for a project.",
+        "Mark an order shipped with the confirmed carrier and tracking code."
+      ]
     }
   ]
 }
