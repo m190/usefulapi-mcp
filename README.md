@@ -545,6 +545,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Channable](servers/channable/) | ecommerce | 17 | OAuth | [servers/channable/](servers/channable/) |
 | [DecoNetwork](servers/deconetwork/) | ecommerce | 9 | OAuth | [servers/deconetwork/](servers/deconetwork/) |
 | [e-Courier](servers/e-courier/) | logistics | 21 | OAuth | [servers/e-courier/](servers/e-courier/) |
+| [TalentHR](servers/talenthr/) | hr | 33 | OAuth | [servers/talenthr/](servers/talenthr/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
