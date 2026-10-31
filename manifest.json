@@ -93246,6 +93246,287 @@
         "Which products have 5 or fewer units left in stock?",
         "Create a new customer entry for Acme s.r.o. in Brno."
       ]
+    },
+    {
+      "slug": "neverbounce",
+      "name": "NeverBounce",
+      "category": "email",
+      "description": "MCP server for NeverBounce — business email verification, credits and bulk jobs.",
+      "endpoint": "https://neverbounce.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Custom Integration API key"
+        }
+      ],
+      "version": "1.0.2",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "NeverBounce API key"
+          }
+        ],
+        "hint": "Create a **Custom Integration** app in the NeverBounce dashboard (Apps → Custom Integration) and copy the key (`secret_...`) from its overview page. Use a V4 key; old V3 credentials do not work. Verifying addresses and starting jobs spends your NeverBounce credits. Use a dedicated Custom Integration key; only connect systems authorized to process these business contacts. Requested addresses, job results and account-credit information pass to your chosen AI client and its LLM provider; verifying addresses sends them to NeverBounce and spends vendor credits. Three write tools verify one address, create a bulk job, or start/sample a job; they do not send email. Single checks are for point-of-entry use, not loops over lists. Review NeverBounce data-contribution privacy settings and terms, which govern its use of business contact data. Reset this app key in NeverBounce to stop access. Billing is per key and changes if it is reset."
+      },
+      "tools": [
+        {
+          "name": "neverbounce_get_account_info",
+          "type": "read",
+          "title": "Get account info and credits",
+          "description": "Credits left (paid and free), credits used, and how many verification jobs are completed, queued, processing or under review. Free: it spends no credits. POST /account/info."
+        },
+        {
+          "name": "neverbounce_verify_email",
+          "type": "write",
+          "title": "Verify one email address",
+          "description": "WRITE: SPENDS 1 of your NeverBounce credits per call. Verifies ONE e-mail address and returns result (valid, invalid, disposable, catchall or unknown), flags (e.g. has_dns_mx, role_account, free_email_host), a suggested correction for typos like gmal.com, and optionally the parsed address parts. NeverBounce's usage rules: use this for a single address at the point of entry; do NOT call it in a loop over a list or database (the account can be locked) - use neverbounce_create_job for lists. POST /single/check."
+        },
+        {
+          "name": "neverbounce_list_jobs",
+          "type": "read",
+          "title": "List verification jobs",
+          "description": "Bulk verification jobs of the account (most recent first as NeverBounce returns them) with id, status, filename, timestamps, totals per result (valid, invalid, catchall, disposable, unknown, duplicates, bad_syntax), bounce estimate and percent complete. Filter by id, exact filename or status. POST /jobs/search."
+        },
+        {
+          "name": "neverbounce_get_job",
+          "type": "read",
+          "title": "Get job status",
+          "description": "One verification job: status (waiting, parsing, running, complete, failed, under_review...), failure reason, timestamps, totals (records, billable = credits it will use, processed, valid, invalid, catchall, disposable, unknown, duplicates, bad_syntax), bounce estimate and percent complete. Poll this until status is complete. POST /jobs/status."
+        },
+        {
+          "name": "neverbounce_get_job_results",
+          "type": "read",
+          "title": "Get job results (paged)",
+          "description": "Per-address results of a job: the submitted row (data) and its verification (result, flags, suggested_correction, address info). Paged; use neverbounce_download_job_results for a CSV. The job must be complete. POST /jobs/results."
+        },
+        {
+          "name": "neverbounce_download_job_results",
+          "type": "read",
+          "title": "Download job results as CSV",
+          "description": "The results of a complete job as CSV text (the submitted columns plus email_status), cut at 200000 characters with a note when longer (use neverbounce_get_job_results to page through large jobs). By default every result type is included; set a type to false to leave it out. POST /jobs/download."
+        },
+        {
+          "name": "neverbounce_create_job",
+          "type": "write",
+          "title": "Create a bulk verification job",
+          "description": "WRITE: creates a bulk verification job from up to 100 e-mail addresses given in this call, and has NeverBounce parse it. It does NOT start the verification and spends NO credits; run neverbounce_start_job afterwards (that spends 1 credit per billable address). Put ALL the addresses of one list into ONE job: NeverBounce's rules allow 10 concurrent jobs and 50 runs a day, and many small jobs in a short time can get the account locked. Returns the job_id. POST /jobs/create."
+        },
+        {
+          "name": "neverbounce_start_job",
+          "type": "write",
+          "title": "Start a verification job",
+          "description": "WRITE: STARTS a created job and SPENDS 1 credit per billable address (shown as total.billable in neverbounce_get_job); it cannot be stopped or undone. Safety: you must pass max_credits, and the job is refused when its billable count is above it or above 1000 (start bigger jobs in the NeverBounce dashboard). The job must be in status waiting or waiting_analyzed. With run_sample true it only runs the free sample analysis (estimated bounce rate) and spends nothing. POST /jobs/start."
+        },
+        {
+          "name": "neverbounce_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "neverbounce_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the NeverBounce tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "neverbounce_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on NeverBounce (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "neverbounce_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's NeverBounce Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run neverbounce_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many NeverBounce verification credits do I have left?",
+        "Show the progress and bounce estimate of my latest bulk verification job.",
+        "Create a bulk job from the business email addresses I provide, without starting verification."
+      ]
+    },
+    {
+      "slug": "superphone",
+      "name": "SuperPhone",
+      "category": "messaging",
+      "description": "MCP server for SuperPhone — contacts, conversations, tags and consent-based text messages.",
+      "endpoint": "https://superphone.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per verified SuperPhone user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Superphone API key"
+          }
+        ],
+        "hint": "Find it in Superphone -> **Settings -> Public API key** (app.superphone.io/settings/public-api-key); generate one there if you have none. The key can read your contacts and conversations and send texts from your number, so only share it with assistants you trust. Requested contacts, conversations and message content passes to your chosen AI client and its LLM provider. Six write tools create/update contacts, add/remove tags, record purchases, or send a text from your number; recording a purchase does not charge a card. Send texts only to recipients who have consented and inspect current opt-out flags first. Updating a contact reads then writes it and may race with other edits; review changes in SuperPhone. Regenerate the key in SuperPhone to stop vendor access. Billing follows the verified user ID and survives key rotation."
+      },
+      "tools": [
+        {
+          "name": "superphone_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Superphone account behind the API key: user id, email, name, the business phone numbers (number, default/active flags, short code) and notification preferences. GraphQL query `me`."
+        },
+        {
+          "name": "superphone_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the SMS contacts (the subscriber list) with name, mobile, email, company, VIP/hidden/archived/unsubscribed/opted-out flags, total spent, creation date and tags (up to 20). Oldest first; page with next_cursor. `total` is the size of the whole list. GraphQL query `contacts`."
+        },
+        {
+          "name": "superphone_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One contact by id with every profile field, tags, custom contributions (recorded purchases) and its latest 10 conversations (ids to read with superphone_get_conversation). GraphQL query `contact`."
+        },
+        {
+          "name": "superphone_find_contact",
+          "type": "read",
+          "title": "Find contact by mobile or email",
+          "description": "Find one contact by exact mobile number or email address (give at least one; E.164 such as +12132679977 is best). Returns the full contact or null when none matches. GraphQL query `contactByIdentifier`."
+        },
+        {
+          "name": "superphone_list_conversations",
+          "type": "read",
+          "title": "List conversations",
+          "description": "List text conversations (the inbox): id, participant number, platform (TWILIO = SMS, FACEBOOK = Messenger), hidden/archived flags, creation date and the contact. Page with next_cursor. Read the messages of one with superphone_get_conversation. GraphQL query `conversations`."
+        },
+        {
+          "name": "superphone_get_conversation",
+          "type": "read",
+          "title": "Get conversation messages",
+          "description": "One conversation with its most recent messages (default 20, newest last): body, from/to, direction (INCOMING_TEXT, OUTGOING_TEXT, SYSTEM, calls), delivery status, errors and media. To read older messages pass `before` = the previous reply's previous_cursor. GraphQL query `conversation`."
+        },
+        {
+          "name": "superphone_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "One message by id: body, from/to, direction, delivery status, error and media. GraphQL query `message`."
+        },
+        {
+          "name": "superphone_list_forms",
+          "type": "read",
+          "title": "List sign-up forms",
+          "description": "List the sign-up (opt-in) forms: id, public hashId, domain, titles, opt-in text flag, optional fields, redirect URL, default and enabled flags. GraphQL query `forms`."
+        },
+        {
+          "name": "superphone_get_form",
+          "type": "read",
+          "title": "Get sign-up form",
+          "description": "One sign-up form by id, or the account's default form when form_id is omitted. GraphQL queries `form` / `defaultForm`."
+        },
+        {
+          "name": "superphone_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the configured webhooks: id, destination URL, active flag and subscribed events (CONTACT_ADDED, CONTACT_UPDATED, CONTACT_TAGS_CHANGED, MESSAGE_RECEIVED, MESSAGE_SENT, MESSAGE_STATUS_UPDATED). GraphQL query `webhooks`."
+        },
+        {
+          "name": "superphone_search_numbers",
+          "type": "read",
+          "title": "Search available phone numbers",
+          "description": "Search phone numbers that could be bought for the account, optionally starting with some digits (for example an area code), with their price. Read-only: this tool never buys a number. GraphQL query `searchNumbers`."
+        },
+        {
+          "name": "superphone_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "WRITE: create a contact (first name required; add a mobile number or email so it can be reached). Creating a contact does not send it a message. Returns the new contact. GraphQL mutation `createContact`."
+        },
+        {
+          "name": "superphone_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "WRITE: change fields of an existing contact. Only the fields you pass change: the tool first reads the contact and sends the full record back with your changes (the API requires the first name on every update). Pass an empty string to clear a text field. Returns the updated contact. GraphQL mutation `updateContact`."
+        },
+        {
+          "name": "superphone_add_contact_tags",
+          "type": "write",
+          "title": "Add tags to contact",
+          "description": "WRITE: apply tags to a contact, by name (a new name creates the tag) or by tag id. Tags can drive automations in Superphone. Returns the contact with its tags. GraphQL mutations `addContactTagsByNames` / `addContactTags`."
+        },
+        {
+          "name": "superphone_remove_contact_tags",
+          "type": "write",
+          "title": "Remove tags from contact",
+          "description": "WRITE: remove tags from a contact, by name or by tag id. This can take the contact out of tag-driven segments and automations. Returns the contact with its remaining tags. GraphQL mutations `removeContactTagsByNames` / `removeContactTags`."
+        },
+        {
+          "name": "superphone_add_contribution",
+          "type": "write",
+          "title": "Record a purchase (custom contribution)",
+          "description": "WRITE: record a purchase or donation against a contact (name, amount, date). It adds to the contact's total spent and cannot be undone with this server. Returns the new contribution. GraphQL mutation `createCustomContribution`."
+        },
+        {
+          "name": "superphone_send_message",
+          "type": "write",
+          "title": "Send a text message",
+          "description": "WRITE, IRREVERSIBLE: send a real text message to a customer from the account's number. It is delivered immediately, uses the account's messaging credits and cannot be recalled. Only send what the user explicitly asked for, to the number they named, and never to contacts who unsubscribed or opted out. Give exactly one of conversation_id (reply in an existing conversation) or mobile (a number, ideally E.164 like +12132679977; without a country code Superphone assumes the US). Returns the new message id. GraphQL mutation `sendMessage`."
+        },
+        {
+          "name": "superphone_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "superphone_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Superphone tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "superphone_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Superphone (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "superphone_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Superphone Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run superphone_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who texted us back today, and what did they say?",
+        "How many contacts do we have, and which ones are tagged VIP?",
+        "Find the contact with mobile +12132679977 and show their conversation history.",
+        "Add the tag 'october-sale' to Maria Lopez."
+      ]
     }
   ]
 }

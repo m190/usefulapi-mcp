@@ -534,6 +534,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ExakTime / Arcoro](servers/exaktime/) | hr | 36 | OAuth | [servers/exaktime/](servers/exaktime/) |
 | [SmartHR](servers/smarthr/) | hr | 27 | OAuth | [servers/smarthr/](servers/smarthr/) |
 | [ABRA Flexi](servers/abra-flexi/) | accounting | 23 | OAuth | [servers/abra-flexi/](servers/abra-flexi/) |
+| [NeverBounce](servers/neverbounce/) | email | 12 | OAuth | [servers/neverbounce/](servers/neverbounce/) |
+| [SuperPhone](servers/superphone/) | messaging | 21 | OAuth | [servers/superphone/](servers/superphone/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
