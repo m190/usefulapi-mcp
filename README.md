@@ -560,6 +560,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ConstructionOnline](servers/constructiononline/) | project-management | 10 | API token | [servers/constructiononline/](servers/constructiononline/) |
 | [Text Request](servers/text-request/) | messaging | 23 | API token | [servers/text-request/](servers/text-request/) |
 | [SMSGlobal](servers/smsglobal/) | messaging | 22 | API token | [servers/smsglobal/](servers/smsglobal/) |
+| [Givecloud](servers/givecloud/) | fundraising | 14 | API token | [servers/givecloud/](servers/givecloud/) |
+| [TimeTap](servers/timetap/) | scheduling | 13 | API token | [servers/timetap/](servers/timetap/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

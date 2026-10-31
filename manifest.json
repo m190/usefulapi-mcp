@@ -97734,6 +97734,259 @@
         "Show contacts in our support group and check this number's opt-out status.",
         "Which dedicated numbers and approved sender IDs are available?"
       ]
+    },
+    {
+      "slug": "givecloud",
+      "name": "Givecloud",
+      "category": "fundraising",
+      "description": "Read supporters, contributions, recurring donations, fundraising products and feed posts.",
+      "endpoint": "https://givecloud.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per account/token pair"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Givecloud account"
+          },
+          {
+            "label": "Givecloud personal access token"
+          }
+        ],
+        "hint": "Create a dedicated token in **My Profile → Personal Access Tokens**. Enter only the account label from **account.givecloud.co**; custom domains are not supported. API access must be enabled for your account. These tools only read data, but your token may allow broader actions: revoke it in Givecloud to disconnect. Requested donor identities, emails, donation amounts and other selected business data pass through UsefulAPI to your chosen AI client and model provider. Addresses, payment instruments, child/sponsorship records and arbitrary custom fields are omitted. Billing and usage are per account/token pair; rotating the token creates a separate identity. Independent integration, not an official Givecloud product."
+      },
+      "tools": [
+        {
+          "name": "givecloud_list_supporters",
+          "type": "read",
+          "title": "Search supporters",
+          "description": "Read one page of supporters, with name/email and consent status. Addresses, payment details, custom fields and groups are omitted. Name and email are partial filters. GET /admin/api/v2/supporters."
+        },
+        {
+          "name": "givecloud_list_contributions",
+          "type": "read",
+          "title": "List contributions",
+          "description": "Read one page of contribution amounts, status, supporter identity and selected line items. Payment instruments, addresses, custom fields, comments and sponsored-child data are omitted. Date filters are exclusive and UTC. GET /admin/api/v3/contributions."
+        },
+        {
+          "name": "givecloud_list_recurring_profiles",
+          "type": "read",
+          "title": "List recurring donation profiles",
+          "description": "Read one page of recurring donation amounts, schedules, status and supporter identity. Payment instruments and addresses are omitted. GET /admin/api/v3/recurring-profiles."
+        },
+        {
+          "name": "givecloud_list_products",
+          "type": "read",
+          "title": "Search fundraising products",
+          "description": "Read one page of products, prices, goals and selected variants. code is exact; name is partial. GET /admin/api/v2/products."
+        },
+        {
+          "name": "givecloud_list_posts",
+          "type": "read",
+          "title": "List feed posts",
+          "description": "Read one page of posts in a known feed. Obtain the feed ID in Givecloud; this connector does not enumerate feeds. name is partial. GET /admin/api/v2/feeds/{feedId}/posts."
+        },
+        {
+          "name": "givecloud_get_supporter",
+          "type": "read",
+          "title": "Get a supporter",
+          "description": "Read one supporter by its Givecloud ID. Returns the same selected fields as the corresponding list tool.  No business data is changed."
+        },
+        {
+          "name": "givecloud_get_contribution",
+          "type": "read",
+          "title": "Get a contribution",
+          "description": "Read one contribution by its Givecloud ID. Returns the same selected fields as the corresponding list tool.  No business data is changed."
+        },
+        {
+          "name": "givecloud_get_recurring_profile",
+          "type": "read",
+          "title": "Get a recurring profile",
+          "description": "Read one recurring profile by its Givecloud ID. Returns the same selected fields as the corresponding list tool.  No business data is changed."
+        },
+        {
+          "name": "givecloud_get_product",
+          "type": "read",
+          "title": "Get a fundraising product",
+          "description": "Read one fundraising product by its Givecloud ID. Returns the same selected fields as the corresponding list tool.  No business data is changed."
+        },
+        {
+          "name": "givecloud_get_post",
+          "type": "read",
+          "title": "Get a feed post",
+          "description": "Read one feed post by its Givecloud ID. Returns the same selected fields as the corresponding list tool. A known feed_id is required. No business data is changed."
+        },
+        {
+          "name": "givecloud_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "givecloud_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Givecloud tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "givecloud_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Givecloud (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "givecloud_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Givecloud Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run givecloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find supporters matching this name and show their contact and consent status.",
+        "Show this month's contributions and their donation totals.",
+        "List recurring donations and their next billing dates.",
+        "Find our fundraising products and compare progress toward their goals.",
+        "Read recent posts from this Givecloud feed ID."
+      ]
+    },
+    {
+      "slug": "timetap",
+      "name": "TimeTap",
+      "category": "scheduling",
+      "description": "Review business details, scheduling staff, locations, services and appointment schedules.",
+      "endpoint": "https://timetap.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per TimeTap business"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TimeTap API key"
+          },
+          {
+            "label": "TimeTap private key"
+          }
+        ],
+        "hint": "Requires a **TimeTap Business or Enterprise account with API access enabled**. Generate a dedicated pair in **Settings → Integrations → API Key**; the account's allowAPIKeys setting must be enabled. Enter the API key and matching private key, not a temporary session token. These keys may permit broader vendor access, although this connector offers only reads. Requested scheduling information passes through UsefulAPI to your selected AI client and its model provider; service names can reveal sensitive context. Client identities/contact details, appointment notes, form answers, custom fields, private URLs and payment settings are omitted. Revoke or rotate the keys in TimeTap to stop access. Usage and billing are shared per verified TimeTap business ID, so key rotation retains that identity. TimeTap sessions expire after 4 hours of inactivity; this connector obtains a fresh session as needed. Independent integration; no vendor endorsement."
+      },
+      "tools": [
+        {
+          "name": "timetap_get_business",
+          "type": "read",
+          "title": "Get connected business",
+          "description": "Read the authenticated business ID, name and selected scheduling settings. Excludes billing tokens and payment configuration."
+        },
+        {
+          "name": "timetap_list_staff",
+          "type": "read",
+          "title": "List scheduling staff",
+          "description": "GET /staff. Read staff IDs, names and scheduling flags. No contact details, user logins or profiles. Vendor route is unpaginated, bounded here to 5,000 rows/2 MiB. locationId values are sent comma-separated as documented."
+        },
+        {
+          "name": "timetap_list_locations",
+          "type": "read",
+          "title": "List scheduling locations",
+          "description": "Read one page of scheduling locations. Continue pageNumber while the returned page is full; vendor provides no total on this route. Excludes private scheduling links, embed codes, email and tax IDs."
+        },
+        {
+          "name": "timetap_list_services",
+          "type": "read",
+          "title": "List bookable services",
+          "description": "GET /services. Read service/reason IDs, names, duration and pricing; private PERSONAL reasons are excluded via includePersonal=0. Vendor route is unpaginated, bounded to 5,000 rows/2 MiB. Results reflect the credential's permissions and scheduling filters."
+        },
+        {
+          "name": "timetap_get_staff",
+          "type": "read",
+          "title": "Get scheduling staff member",
+          "description": "Read one scheduling staff member by its numeric professionalId. Selected scheduling fields only; clients, notes, form answers, private URLs and other unselected fields are omitted."
+        },
+        {
+          "name": "timetap_get_location",
+          "type": "read",
+          "title": "Get scheduling location",
+          "description": "Read one scheduling location by its numeric locationId. Selected scheduling fields only; clients, notes, form answers, private URLs and other unselected fields are omitted."
+        },
+        {
+          "name": "timetap_get_service",
+          "type": "read",
+          "title": "Get service",
+          "description": "Read one service by its numeric reasonId. Selected scheduling fields only; clients, notes, form answers, private URLs and other unselected fields are omitted."
+        },
+        {
+          "name": "timetap_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "Read one appointment by its numeric calendarId. Selected scheduling fields only; clients, notes, form answers, private URLs and other unselected fields are omitted."
+        },
+        {
+          "name": "timetap_list_appointments",
+          "type": "read",
+          "title": "List appointment schedule",
+          "description": "Read one page from GET /appointmentList/reportWithCount using an ordered YYYY-MM-DD date range (up to 93 days). Client records/contact, subject/notes, forms/custom fields, payment and appointment management links are omitted. PERSONAL time-off is excluded. Local wall-clock numbers are TimeTap HHmm values, not decimal hours; UTC epoch fields are milliseconds. Count is the vendor total; request the next page until exhausted."
+        },
+        {
+          "name": "timetap_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timetap_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TimeTap tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timetap_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on TimeTap (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timetap_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TimeTap Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timetap_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Review next week's appointment schedule by location and staff.",
+        "List active services and their durations.",
+        "Show the scheduling staff working at this location.",
+        "Read this appointment's status and staff/client time zones without client notes."
+      ]
     }
   ]
 }
