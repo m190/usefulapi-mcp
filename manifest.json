@@ -94249,6 +94249,228 @@
         "What are the annual leave balances for employees 101, 102 and 103?",
         "List the payroll transactions of the default pay group for 2026-09-01."
       ]
+    },
+    {
+      "slug": "feegow",
+      "name": "Feegow",
+      "category": "healthcare",
+      "description": "Read clinic appointments, patients and finances; manage bookings and patient registration.",
+      "endpoint": "https://feegow.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "version": "1.1.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Feegow clinic"
+        }
+      ],
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Feegow API token"
+          }
+        ],
+        "hint": "The clinic's **master user** creates it in Feegow Clinic: **Configurações → Outras Configurações → API Pública → Gerar novo Token**. Use the padlock next to the token to limit what it may do (a separate token for this connection is recommended). Patient and appointment records are health data. Only connect records you are authorized to process through your chosen AI client and its LLM provider; those records, contacts and financial details can reach them. API credentials are not sent to the LLM. Tools can create, move, cancel or change appointments (potentially notifying patients through the clinic’s SMS/email/WhatsApp automation) and create or update patient registration details. No payments, clinical record changes or prescriptions are exposed. Writes are never automatically retried. Revoke the dedicated token to stop access. Billing identity uses a visible clinic CNPJ or the token; changing token permissions, units or keys may change it."
+      },
+      "tools": [
+        {
+          "name": "feegow_list_units",
+          "type": "read",
+          "title": "List units (branches)",
+          "description": "The clinic's main unit (matriz, unidade_id 0) and its branches, with trade name, CNPJ, address and contacts. Use the unit ids to filter other tools. GET /company/list-unity."
+        },
+        {
+          "name": "feegow_list_locations",
+          "type": "read",
+          "title": "List locations (rooms)",
+          "description": "Rooms/locations registered in each unit (id, name, unidade_id). The location id is needed to create appointments. GET /company/list-local."
+        },
+        {
+          "name": "feegow_list_specialties",
+          "type": "read",
+          "title": "List specialties",
+          "description": "Medical specialties offered, with their default consultation procedure ids and whether they show in online booking. GET /specialties/list."
+        },
+        {
+          "name": "feegow_list_professionals",
+          "type": "read",
+          "title": "List professionals",
+          "description": "Doctors and other professionals (names and ids), active or inactive, optionally by unit or specialty. GET /professional/list."
+        },
+        {
+          "name": "feegow_get_professional",
+          "type": "read",
+          "title": "Get professional",
+          "description": "One professional's details and specialties. GET /professional/search."
+        },
+        {
+          "name": "feegow_list_professional_insurances",
+          "type": "read",
+          "title": "List insurances a professional accepts",
+          "description": "Health insurances (convênios) accepted by one professional. GET /professional/insurance."
+        },
+        {
+          "name": "feegow_list_insurances",
+          "type": "read",
+          "title": "List insurances (convênios)",
+          "description": "All accepted health insurances with their plans. GET /insurance/list."
+        },
+        {
+          "name": "feegow_list_procedure_types",
+          "type": "read",
+          "title": "List procedure types",
+          "description": "Procedure types (consultation, exam, surgery, return...) and their ids, used by feegow_list_procedures. GET /procedures/types."
+        },
+        {
+          "name": "feegow_list_procedures",
+          "type": "read",
+          "title": "List procedures",
+          "description": "Procedures (consultations, exams...) with price IN CENTS (R$ 12.00 = 1200), duration and online-booking flag. Give a procedure type (see feegow_list_procedure_types) or one procedure id; optionally narrow by name, unit, specialty, professional, patient or price table. GET /procedures/list."
+        },
+        {
+          "name": "feegow_list_appointment_statuses",
+          "type": "read",
+          "title": "List appointment statuses",
+          "description": "Appointment status ids and names (booked, confirmed, in service, attended, no-show, cancelled...), used to filter and update appointments. GET /appoints/status."
+        },
+        {
+          "name": "feegow_list_appointment_reasons",
+          "type": "read",
+          "title": "List cancel/reschedule reasons",
+          "description": "Reasons (motivos) that cancel or reschedule an appointment can carry; the id is required by feegow_cancel_appointment and feegow_reschedule_appointment. GET /appoints/motives."
+        },
+        {
+          "name": "feegow_list_booking_channels",
+          "type": "read",
+          "title": "List booking channels",
+          "description": "Channels an appointment can be booked through (online booking, clinic...). GET /appoints/list-channel."
+        },
+        {
+          "name": "feegow_list_patient_sources",
+          "type": "read",
+          "title": "List patient sources",
+          "description": "Patient acquisition sources (origens) and their ids, used when creating a patient. GET /patient/list-sources."
+        },
+        {
+          "name": "feegow_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "Appointments in a date range (or one appointment by id), filtered by professional, patient, unit, location, specialty, channel, procedure or status. Paged: pass the previous reply's next_start. Health data: contains patient ids. GET /appoints/search."
+        },
+        {
+          "name": "feegow_get_available_schedule",
+          "type": "read",
+          "title": "Find open appointment slots",
+          "description": "Free appointment times for a specialty or a procedure between two dates, optionally for one professional, unit or insurance. Use before feegow_create_appointment. GET /appoints/available-schedule."
+        },
+        {
+          "name": "feegow_list_patients",
+          "type": "read",
+          "title": "List patients",
+          "description": "Registered patients, filtered by phone, CPF, source, birthday (dd-mm) or last-changed date. Health data (LGPD): returns names, contacts and CPF. Paged: pass the previous reply's next_offset. GET /patient/list."
+        },
+        {
+          "name": "feegow_get_patient",
+          "type": "read",
+          "title": "Get patient",
+          "description": "One patient by id or CPF: name, birth date, contacts, address, insurance. Health data (LGPD). Feegow caches reads for 5 minutes; set fresh=true right after an edit. GET /patient/search."
+        },
+        {
+          "name": "feegow_list_patient_dependents",
+          "type": "read",
+          "title": "List patient dependents",
+          "description": "Dependents registered under one patient. Health data (LGPD). GET /patient/list-dependents."
+        },
+        {
+          "name": "feegow_list_proposals",
+          "type": "read",
+          "title": "List proposals (quotes)",
+          "description": "Treatment/procedure proposals with values in REAIS (R$): for one patient, and/or created (or last changed) in a date range. Give patient_id, or both dates. GET /proposal/list."
+        },
+        {
+          "name": "feegow_list_invoices",
+          "type": "read",
+          "title": "List invoices (receivables and payables)",
+          "description": "Financial invoices (contas) in a date range: receivables (C) or payables (D), with value, description, payer/payee, invoice number and payment details. Optionally one unit, invoice or appointment. Financial data. GET /financial/list-invoice."
+        },
+        {
+          "name": "feegow_create_appointment",
+          "type": "write",
+          "title": "Create appointment",
+          "description": "WRITE: books a new appointment in the clinic's agenda (not in the past). Check feegow_get_available_schedule first; a taken slot or unknown patient is refused. Feegow may notify the patient (SMS/e-mail/WhatsApp) according to the clinic's own automation settings. valor is in CENTS and must be 0 with insurance. POST /appoints/new-appoint."
+        },
+        {
+          "name": "feegow_reschedule_appointment",
+          "type": "write",
+          "title": "Reschedule appointment",
+          "description": "WRITE: moves an existing appointment to a new date and time (the old slot is released). A reason id is required (feegow_list_appointment_reasons). Feegow may notify the patient according to the clinic's settings. POST /appoints/reschedule."
+        },
+        {
+          "name": "feegow_cancel_appointment",
+          "type": "write",
+          "title": "Cancel appointment",
+          "description": "WRITE: cancels an existing appointment (it cannot be restored through the API; book a new one instead). A reason id is required (feegow_list_appointment_reasons). Feegow may notify the patient according to the clinic's settings. POST /appoints/cancel-appoint."
+        },
+        {
+          "name": "feegow_update_appointment_status",
+          "type": "write",
+          "title": "Update appointment status",
+          "description": "WRITE: sets an appointment's status (for example confirmed, waiting, attended, no-show) and adds a note to the agenda. Status ids: feegow_list_appointment_statuses. To cancel or move an appointment use the cancel/reschedule tools. POST /appoints/statusUpdate."
+        },
+        {
+          "name": "feegow_create_patient",
+          "type": "write",
+          "title": "Create patient",
+          "description": "WRITE: registers a new patient and returns the patient_id. Feegow does not duplicate: when a patient with the same CPF and birth date (or, without a CPF, the same name plus mobile, e-mail or birth date) exists, that patient's id is returned and nothing is created. Set no_cpf=true for a patient without CPF. Health data (LGPD): only register data the patient gave the clinic. POST /patient/create."
+        },
+        {
+          "name": "feegow_update_patient",
+          "type": "write",
+          "title": "Update patient",
+          "description": "WRITE: changes a patient's registration data. Only the fields you pass are sent; they overwrite stored values. CPF can only be set when absent, never replaced after registration (vendor rejects a different existing CPF). Health data (LGPD). Feegow caches reads for 5 minutes (use fresh=true in feegow_get_patient to see the change). POST /patient/edit."
+        },
+        {
+          "name": "feegow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "feegow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Feegow tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "feegow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Feegow (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "feegow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Feegow Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run feegow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which appointments does Dr. Silva have tomorrow, and which are not yet confirmed?",
+        "Find the next free slots for a dermatology consultation this week.",
+        "Book patient 6563 with professional 10 on 2026-11-03 at 15:00.",
+        "List this month's receivable invoices."
+      ]
     }
   ]
 }
