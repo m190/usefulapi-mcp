@@ -95281,6 +95281,281 @@
         "Show our headcount by department and the hires and leavers of the last 12 months.",
         "List the applicants for the open Sales Manager position and add a note to the latest one."
       ]
+    },
+    {
+      "slug": "rex-software",
+      "name": "Rex Software",
+      "category": "crm",
+      "description": "Read contacts, listings, tenancies and tasks; create a person contact, note or reminder.",
+      "endpoint": "https://rex-software.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per Rex user and region"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Rex user and region"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Rex login email"
+          },
+          {
+            "label": "Rex password"
+          },
+          {
+            "label": "Rex region"
+          },
+          {
+            "label": "Account id (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Use an agency-invited integration user with only the privileges you need. The integration user counts toward the agency’s paid seats unless Rex grants Verified Integrator status; that status also gates sandbox access. Requested contacts, properties, tenancies, notes and tasks go to your connected AI client and its LLM provider. Credentials are encrypted. We request one-hour session tokens; activity can extend them. Password changes stop new sign-ins but existing tokens may remain valid until vendor expiry/revocation. Disconnect UsefulAPI to stop this connection. Choose the account id if you belong to multiple agencies. [Rex integration guide](https://api-docs.rexsoftware.com/article/integrations)."
+      },
+      "tools": [
+        {
+          "name": "rex_get_user_profile",
+          "type": "read",
+          "title": "Get the signed-in Rex user",
+          "description": "The Rex user this server is signed in as: user id, name, email, whether they own the account, position and default office. Good first call. POST /v1/rex/UserProfile/read."
+        },
+        {
+          "name": "rex_list_accessible_accounts",
+          "type": "read",
+          "title": "List the Rex accounts the user can access",
+          "description": "The Rex agency accounts (account_id and name) this user can sign in to. A user with several accounts picks one with the Account id field when connecting. POST /v1/rex/UserProfile/getAccessibleAccounts."
+        },
+        {
+          "name": "rex_describe_search_fields",
+          "type": "read",
+          "title": "List the search fields of a Rex service",
+          "description": "The field names a search on the given service accepts in criteria, each with its label, type and (for enums) the value list. Call this before building criteria on a field you are not sure of. Sorting (order_by) uses a separate list of sortable fields whose names can differ (for example name_last, not contact.name_last): set include_order_by to get it. POST /v1/rex/<Service>/describeSearchFields (and <Service>/describeModel for include_order_by)."
+        },
+        {
+          "name": "rex_list_value_lists",
+          "type": "read",
+          "title": "List the Rex value lists",
+          "description": "The names of Rex's value lists (the allowed ids for fields such as note types, reminder types, lead sources and property categories). Use a name with rex_get_value_list. POST /v1/rex/SystemValues/getValueCategories."
+        },
+        {
+          "name": "rex_get_value_list",
+          "type": "read",
+          "title": "Get the values of a Rex value list",
+          "description": "The allowed values (id and label) of one value list, for example property_category. The ids are what writes and criteria expect. POST /v1/rex/SystemValues/getCategoryValues."
+        },
+        {
+          "name": "rex_autocomplete_contacts",
+          "type": "read",
+          "title": "Find contacts by name",
+          "description": "Quick lookup of contacts by (part of) a name: returns the best matches with id, name, email and phone. Use the id with rex_get_contact. POST /v1/rex/Contacts/autocomplete."
+        },
+        {
+          "name": "rex_autocomplete_listings",
+          "type": "read",
+          "title": "Find listings by address",
+          "description": "Quick lookup of listings by (part of) an address: returns the best matches with listing id and address. Use the id with rex_get_listing. POST /v1/rex/Listings/autocomplete."
+        },
+        {
+          "name": "rex_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search contacts (people and companies). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: contact.name_full, contact.name_first, contact.name_last, contact.email_address, contact.phone_number, contact.type, contact.tags, contact.interest_level, contact.last_contacted_date, system_modtime. To find someone by name, rex_autocomplete_contacts is simpler. POST /v1/rex/Contacts/search."
+        },
+        {
+          "name": "rex_search_listings",
+          "type": "read",
+          "title": "Search listings",
+          "description": "Search listings (properties for sale or rent). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: listing.system_listing_state (for example \"current\"), listing.system_publication_status, listing.price_match, listing.listing_agent_id, listing.listing_category_id, property.adr_suburb_or_town, property.adr_postcode, property.adr_street_name, property.attr_bedrooms. To find a listing by address, rex_autocomplete_listings is simpler. POST /v1/rex/Listings/search."
+        },
+        {
+          "name": "rex_search_properties",
+          "type": "read",
+          "title": "Search properties",
+          "description": "Search properties (the physical addresses behind listings, appraisals and tenancies). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: property.system_search_key, property.adr_suburb_or_town, property.adr_postcode, property.adr_street_name, property.attr_bedrooms, property.attr_bathrooms. POST /v1/rex/Properties/search."
+        },
+        {
+          "name": "rex_search_leads",
+          "type": "read",
+          "title": "Search leads",
+          "description": "Search leads (enquiries from portals, the website and email). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: lead.contact_id, lead.listing_id, lead.property_id, lead.assignee_id, lead.lead_source_id, lead.lead_status_id, lead.system_completed_time, system_ctime. POST /v1/rex/Leads/search."
+        },
+        {
+          "name": "rex_search_appraisals",
+          "type": "read",
+          "title": "Search appraisals",
+          "description": "Search appraisals (listing presentations / market appraisals). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: appraisal_date, appraisal_state, appraisal_type_id, agent_id, property_id, listing_id, pipeline_stage_id, expected_close_date, price_asking. POST /v1/rex/Appraisals/search."
+        },
+        {
+          "name": "rex_search_tenancies",
+          "type": "read",
+          "title": "Search tenancies",
+          "description": "Search tenancies (property management leases). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: id, property_id, system_record_state, lease_current_expiry, crt.contact_id. POST /v1/rex/Tenancies/search."
+        },
+        {
+          "name": "rex_search_reminders",
+          "type": "read",
+          "title": "Search reminders and tasks",
+          "description": "Search reminders (follow-up tasks) linked to contacts, properties and listings. Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: reminder_date, system_completed_time, remindee_user_id, contact_id, property_id, listing_id, reminder_type_id, priority_id. Open reminders have no system_completed_time (type is, value Null). POST /v1/rex/Reminders/search."
+        },
+        {
+          "name": "rex_search_appointments",
+          "type": "read",
+          "title": "Search appointments",
+          "description": "Search appointments (calendar items such as inspections and meetings). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). The searchable fields follow Reminders (reminder_date, remindee_user_id, contact_id, property_id, listing_id). Call rex_describe_search_fields with service Appointments for the full list. POST /v1/rex/Appointments/search."
+        },
+        {
+          "name": "rex_search_notes",
+          "type": "read",
+          "title": "Search notes",
+          "description": "Search notes recorded against contacts and properties. Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: system_ctime, system_created_user_id, id. Call rex_describe_search_fields with service Notes for related contact and property fields. POST /v1/rex/Notes/search."
+        },
+        {
+          "name": "rex_search_deals",
+          "type": "read",
+          "title": "Search deals",
+          "description": "Search deals (the sales pipeline). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: deal.deal_state, deal.expected_close_date, deal.archive_date, deal.tags, deal.description. POST /v1/rex/Deals/search."
+        },
+        {
+          "name": "rex_search_activities",
+          "type": "read",
+          "title": "Search activities",
+          "description": "Search activities (the log of calls, emails and other actions on records). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: parent_object_type, parent_object_id, type_id, system_ctime, system_created_user_id. POST /v1/rex/Activities/search."
+        },
+        {
+          "name": "rex_search_listing_events",
+          "type": "read",
+          "title": "Search listing events",
+          "description": "Search listing events (open homes and inspections). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Call rex_describe_search_fields with service ListingEvents for the searchable fields. POST /v1/rex/ListingEvents/search."
+        },
+        {
+          "name": "rex_search_users",
+          "type": "read",
+          "title": "Search users",
+          "description": "Search the users (staff) of the agency account. Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Useful fields: first_name, last_name, email, status, user_group_id. User ids are used elsewhere as agent, assignee and remindee ids. POST /v1/rex/AccountUsers/search."
+        },
+        {
+          "name": "rex_search_campaigns",
+          "type": "read",
+          "title": "Search campaigns",
+          "description": "Search campaigns (nurture and marketing campaigns with their members). Filters (criteria) combine with AND; results are paged with offset/limit (next_offset says where to continue). Call rex_describe_search_fields with service Campaigns for the searchable fields. POST /v1/rex/Campaigns/search."
+        },
+        {
+          "name": "rex_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "One contact by id (names, emails, phones, addresses, tags, relationships and the related properties and listings). The id comes from a search or autocomplete. POST /v1/rex/Contacts/read."
+        },
+        {
+          "name": "rex_get_listing",
+          "type": "read",
+          "title": "Get a listing",
+          "description": "One listing by id (state, price, agents, the property with its attributes, images, related contacts and events). The id comes from a search or autocomplete. POST /v1/rex/Listings/read."
+        },
+        {
+          "name": "rex_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "One property by id (address, attributes (bedrooms, land area and so on), features, owners and the property's history). The id comes from a search or autocomplete. POST /v1/rex/Properties/read."
+        },
+        {
+          "name": "rex_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "One lead by id (contact, source, status, assignee and the original enquiry). The id comes from a search or autocomplete. POST /v1/rex/Leads/read."
+        },
+        {
+          "name": "rex_get_appraisal",
+          "type": "read",
+          "title": "Get an appraisal",
+          "description": "One appraisal by id (date, state, agents, property, price expectations and commission estimate). The id comes from a search or autocomplete. POST /v1/rex/Appraisals/read."
+        },
+        {
+          "name": "rex_get_tenancy",
+          "type": "read",
+          "title": "Get a tenancy",
+          "description": "One tenancy by id (property, tenants, lease dates and rent). The id comes from a search or autocomplete. POST /v1/rex/Tenancies/read."
+        },
+        {
+          "name": "rex_get_note",
+          "type": "read",
+          "title": "Get a note",
+          "description": "One note by id (text, type and the contacts and properties it is linked to). The id comes from a search or autocomplete. POST /v1/rex/Notes/read."
+        },
+        {
+          "name": "rex_get_deal",
+          "type": "read",
+          "title": "Get a deal",
+          "description": "One deal by id (state, value, parties and expected close date). The id comes from a search or autocomplete. POST /v1/rex/Deals/read."
+        },
+        {
+          "name": "rex_get_reminder",
+          "type": "read",
+          "title": "Get a reminder",
+          "description": "One reminder by id (description, date, remindee, completion state and linked records). The id comes from a search or autocomplete. POST /v1/rex/Reminders/read."
+        },
+        {
+          "name": "rex_create_contact",
+          "type": "write",
+          "title": "Create a person contact",
+          "description": "WRITE: create a new person contact in Rex with a name and optionally one email and one phone. Search first (rex_autocomplete_contacts) to avoid duplicates. Not retried. Returns the new contact id. POST /v1/rex/Contacts/create."
+        },
+        {
+          "name": "rex_create_note",
+          "type": "write",
+          "title": "Create a note",
+          "description": "WRITE: add a note to one or more contacts and/or properties (for example after a call or an open home). Not retried. Returns the new note id. POST /v1/rex/Notes/create."
+        },
+        {
+          "name": "rex_create_reminder",
+          "type": "write",
+          "title": "Create a reminder",
+          "description": "WRITE: create a follow-up reminder (task) due on a date, optionally linked to a contact, property or listing and assigned to a user (default: Rex's default remindee). Not retried. Returns the new reminder id. POST /v1/rex/Reminders/create."
+        },
+        {
+          "name": "rex_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "rex_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Rex Software tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "rex_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Rex Software (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "rex_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Rex Software Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run rex_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the contact named Smith and show me their details and last notes.",
+        "List my current listings in Subiaco with their prices.",
+        "Which leads came in this week and who are they assigned to?",
+        "Add a note to contact 123 that I called about the appraisal, and remind me on Friday to follow up."
+      ]
     }
   ]
 }
