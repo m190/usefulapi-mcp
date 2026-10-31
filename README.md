@@ -521,6 +521,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Taleez](servers/taleez/) | hr | 29 | OAuth | [servers/taleez/](servers/taleez/) |
 | [Desk365](servers/desk365/) | support | 17 | OAuth | [servers/desk365/](servers/desk365/) |
 | [RemoteLock](servers/remotelock/) | property-management | 24 | OAuth | [servers/remotelock/](servers/remotelock/) |
+| [LingoHub](servers/lingohub/) | localization | 18 | OAuth | [servers/lingohub/](servers/lingohub/) |
+| [MarketTime](servers/markettime/) | commerce | 22 | OAuth | [servers/markettime/](servers/markettime/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

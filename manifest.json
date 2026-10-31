@@ -90210,6 +90210,333 @@
         "Who has access to the front door lock right now?",
         "Deactivate the access code of the contractor who finished yesterday."
       ]
+    },
+    {
+      "slug": "lingohub",
+      "name": "LingoHub",
+      "category": "localization",
+      "description": "MCP server for LingoHub — localization projects, resources, exports and repository pushes.",
+      "endpoint": "https://lingohub.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API key"
+        }
+      ],
+      "version": "1.0.2",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Lingohub API key"
+          }
+        ],
+        "hint": "Create it in Lingohub → workspace menu → **Administration → API keys** → Create a new API key (workspace owners and admins only), then copy it right away: it is shown only once. Give it only the permissions you want an AI to have (View only is enough for reading). Use a dedicated key for this UsefulAPI connection. Requested project text, resource files and context-image metadata pass to your chosen AI client and its LLM provider; connect only content you are authorized to share. When requested, tools create projects or exports, upload or delete resources/context images, and push changes to a configured repository. Revoke or disable this key in LingoHub to stop vendor access. Billing is per key; rotating it starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "lingohub_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List every Lingohub project this API key can see (owned and shared, across workspaces). Each entry has the title, its links and the workspace_url + project_url slugs that every other tool needs. GET /v1/projects."
+        },
+        {
+          "name": "lingohub_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "One project: title, description, owner email, configured locales (project_locales), timestamps and links. GET /v1/{workspace_url}/projects/{project_url}."
+        },
+        {
+          "name": "lingohub_get_project_status",
+          "type": "read",
+          "title": "Get project file status",
+          "description": "Translation status of one project: each resource file with per-locale segment counts (NOT_TRANSLATED, DRAFT, TRANSLATED, APPROVED, ...), failing quality checks, the export formats it supports and whether a Git repository is connected and can be pushed to. GET .../projects/{project_url}/status."
+        },
+        {
+          "name": "lingohub_get_workspace_status",
+          "type": "read",
+          "title": "Get workspace translation status",
+          "description": "Translation progress of every project in one workspace: title, app URL, total segment count and per-locale counts by status (NOT_TRANSLATED, DRAFT, TRANSLATED, PREFILLED, APPROVED). GET /v1/{workspace_url}/projects/status."
+        },
+        {
+          "name": "lingohub_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "WRITE: create a new localization project in a workspace (needs settings-management permission on the key). Returns the new project with its links. It adds a project and changes nothing existing; repeating the call can create a second project. POST /v1/{workspace_url}/projects."
+        },
+        {
+          "name": "lingohub_list_resources",
+          "type": "read",
+          "title": "List resource files",
+          "description": "List a project's resource files: name, locale and links (including a download link). GET .../projects/{project_url}/resources."
+        },
+        {
+          "name": "lingohub_download_resource",
+          "type": "read",
+          "title": "Download resource file",
+          "description": "Download one resource file as text, in one language. file_name is the file name as list_resources shows it (the folder goes in `path`). Long files are cut at 40000 characters (truncated: true); use request_export for a full copy. GET .../projects/{project_url}/resources/{file_name}."
+        },
+        {
+          "name": "lingohub_upload_resource_file",
+          "type": "write",
+          "title": "Upload resource file",
+          "description": "WRITE: upload one text resource file (JSON, properties, XLIFF, PO, ...) into a project. The language comes from the file name or from `language`. The import flags decide whether existing segments are changed or deactivated: with updating or deactivation on, translations already in Lingohub can be overwritten or switched off, so state the flags you want. Never retried. POST .../projects/{project_url}/resources."
+        },
+        {
+          "name": "lingohub_delete_resource",
+          "type": "write",
+          "title": "Delete resource file",
+          "description": "WRITE, DESTRUCTIVE: delete a resource container: the source-language file AND all its target-language files with their translations. file_name and path must address the source-language file. This cannot be undone through the API. Never retried. DELETE .../projects/{project_url}/resources/{file_name}."
+        },
+        {
+          "name": "lingohub_request_export",
+          "type": "write",
+          "title": "Request export",
+          "description": "Start an asynchronous export of a project's resource files as a ZIP. It creates an export job and changes no project data. Returns the export id; poll get_export until its status is SUCCESS to get the download URL. Without filters it exports every file and language. POST .../projects/{project_url}/exports."
+        },
+        {
+          "name": "lingohub_get_export",
+          "type": "read",
+          "title": "Get export status",
+          "description": "Status of an export started with request_export: overall and per-file status (NEW, SCHEDULED, PROCESSING, SUCCESS, SKIPPED, ERROR), error details and, when done, the pre-signed download URL of the ZIP. GET .../projects/{project_url}/exports/{export_id}."
+        },
+        {
+          "name": "lingohub_list_context_images",
+          "type": "read",
+          "title": "List context images",
+          "description": "List the context images (screenshots that show translators where a text is used) of a project, with connected-segment counts and processing status. Paginated; page is zero-based. GET .../projects/{project_url}/contextImages."
+        },
+        {
+          "name": "lingohub_delete_context_image",
+          "type": "write",
+          "title": "Delete context image",
+          "description": "WRITE, DESTRUCTIVE: delete one context image and its connections to text segments. Never retried. DELETE .../projects/{project_url}/contextImages/{image_id}."
+        },
+        {
+          "name": "lingohub_push_to_repository",
+          "type": "write",
+          "title": "Push translations to repository",
+          "description": "WRITE: push the project's resource files to its linked Git repository (GitHub, GitLab, Bitbucket or Azure DevOps; the connection must already exist). Depending on push_type this commits to a branch or opens a pull request, so it changes the user's repository. Never retried. POST .../projects/{project_url}/push."
+        },
+        {
+          "name": "lingohub_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lingohub_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Lingohub tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "lingohub_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Lingohub (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "lingohub_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Lingohub Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lingohub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the localization projects my LingoHub key can access.",
+        "Which locales still need translations in this project?",
+        "List the resource files in this localization project.",
+        "Request an export of the current translations."
+      ]
+    },
+    {
+      "slug": "markettime",
+      "name": "MarketTime",
+      "category": "commerce",
+      "description": "MCP server for MarketTime — wholesale orders, customers, catalog and shipment tracking.",
+      "endpoint": "https://markettime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Rep Group or Manufacturer account"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Rep Group or Manufacturer ID"
+          },
+          {
+            "label": "MarketTime API key"
+          }
+        ],
+        "hint": "Rep Group and Manufacturer users with an **Elite subscription** can generate a dedicated key under **Billing & Payment → API Key → Generate Key**. It is displayed only once. The ID is the one that starts with R (Rep Group, like R123) or M (Manufacturer, like M123). Requested wholesale customer, order, catalog and commission records pass to your chosen AI client and its LLM provider. When requested, tools can create a customer or add shipment/tracking information to an order; they do not charge cards or refund payments. Regenerate the key in MarketTime to stop vendor access. Billing follows the verified Rep Group or Manufacturer ID; rotating its key keeps that identity."
+      },
+      "tools": [
+        {
+          "name": "markettime_list_manufacturers",
+          "type": "read",
+          "title": "List manufacturers",
+          "description": "List the manufacturers (brands) connected to this account: id, name, email, city, category, connection date. Sort fields: name (default), manufacturerID, connectionDate, dateAdded, dateModified, city. GET /manufacturers."
+        },
+        {
+          "name": "markettime_get_manufacturer",
+          "type": "read",
+          "title": "Get manufacturer",
+          "description": "One manufacturer's details by its id (like M123). GET /manufacturers/{id}."
+        },
+        {
+          "name": "markettime_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "Search wholesale orders (for the newest first use sort_field orderDate with sort_direction desc). Convenience filters: status (the manufacturer's order status, e.g. NEW, SENT, SHIPPED), rep_group_status (Rep Group accounts only), po_number, customer_name (contains), manufacturer_id, customer_id, ordered_from/ordered_to (order date), modified_since. Order lines are left out unless include_details is true (they make replies large; use markettime_list_order_details for the lines of one order). Card tokens are never returned. POST /orders/get."
+        },
+        {
+          "name": "markettime_list_order_details",
+          "type": "read",
+          "title": "List order lines",
+          "description": "List order lines (item, quantity, unit price) across orders or for one order (order_id). Filters: order dates, statuses, manufacturer, PO number, unit price range. GET /orders/orderdetails."
+        },
+        {
+          "name": "markettime_get_order_changes_history",
+          "type": "read",
+          "title": "Get order changes history",
+          "description": "The audit trail of one order: who changed what and when (Rep Group accounts). POST /orders/{orderId}/orderChangesHistory/get (a read-only search)."
+        },
+        {
+          "name": "markettime_list_order_shipments",
+          "type": "read",
+          "title": "List order shipments",
+          "description": "Shipment and tracking records of one order (tracking number, link, carrier, ship date, invoice). GET /orders/{orderId}/trackingdetails/get."
+        },
+        {
+          "name": "markettime_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (retailers/buyers) with name, email, address, status (ACTIVE, INACTIVE, LEAD), customer number and salesperson. Filters: name (contains), state, status, modified_since. The customers' own API keys are never returned. POST /customers/get."
+        },
+        {
+          "name": "markettime_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer's full record by id (like B123): addresses, contacts, ship-to locations, terms, pricing method. Their API key is never returned. GET /customers/{id}."
+        },
+        {
+          "name": "markettime_list_customer_contacts",
+          "type": "read",
+          "title": "List customer contacts",
+          "description": "The contact people of one customer (name, email, phone, title). GET /customers/{id}/contacts."
+        },
+        {
+          "name": "markettime_list_customer_ship_to_locations",
+          "type": "read",
+          "title": "List customer ship-to locations",
+          "description": "The ship-to locations of one customer (name, address, account number). GET /customers/{id}/shiptolocations."
+        },
+        {
+          "name": "markettime_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "Search the product catalog: item number, name, prices, case quantity, stock, UPC, categories, images. Filters: name (contains), item_number, manufacturer_id, modified_since. POST /items/get."
+        },
+        {
+          "name": "markettime_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One catalog item by its numeric record id (the recordID/itemID in item lists). GET /items/{itemID}."
+        },
+        {
+          "name": "markettime_list_item_inventory",
+          "type": "read",
+          "title": "List item inventory",
+          "description": "Stock levels per item: quantity available, quantity on the water, next available date, availability flag. Sort fields: itemNumber, nextAvailableDate, qtyAvailable, isAvailable. GET /items/inventory."
+        },
+        {
+          "name": "markettime_list_item_pricing",
+          "type": "read",
+          "title": "List item pricing",
+          "description": "Pricing detail per item (unit price, retail price, price codes, discounts). GET /items/pricing."
+        },
+        {
+          "name": "markettime_list_salespersons",
+          "type": "read",
+          "title": "List salespersons",
+          "description": "List the Rep Group's salespeople (name, abbreviation, status, ids). Rep Group accounts only. POST /salespersons/get."
+        },
+        {
+          "name": "markettime_list_commission_order_payments",
+          "type": "read",
+          "title": "List commission order payments",
+          "description": "Order payment and commission records (what was paid on which order, commission percent), Rep Group accounts only. Filters: order_id, modified_since, or custom filters (allowed fields: orderID, checkLogID, invoiceNumber, type, commissionPayDate, salespersonPaidID, dateAdded, dateModified). Card tokens and card data are never returned. Paged by page number. POST /commissions/orderpayments/get."
+        },
+        {
+          "name": "markettime_create_order_shipment",
+          "type": "write",
+          "title": "Create order shipment",
+          "description": "WRITE: add a shipment with tracking to an order (manufacturer accounts only). This creates a new shipment record each time it is called (it is not idempotent) and MarketTime may notify the customer of the tracking details; calling it twice makes a duplicate. Check markettime_list_order_shipments first. POST /orders/{orderId}/trackingdetails."
+        },
+        {
+          "name": "markettime_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a new customer (retailer) account record. It is not idempotent: calling it twice may create two customers, so search with markettime_list_customers by name first. Does not send an invitation by itself. POST /customers."
+        },
+        {
+          "name": "markettime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "markettime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MarketTime tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "markettime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on MarketTime (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "markettime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MarketTime Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run markettime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders came in this week and what is still unshipped?",
+        "Show the lines of the latest order from Main Street Boutique.",
+        "Which items are out of stock or low on inventory?",
+        "Add the UPS tracking number 1Z999 to order 40213."
+      ]
     }
   ]
 }
