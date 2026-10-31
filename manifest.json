@@ -91474,6 +91474,404 @@
         "Which products have a stock quantity under 5?",
         "Mark order ord_646e1f65ebcad629610675 as shipped without emailing the customer."
       ]
+    },
+    {
+      "slug": "builder-prime",
+      "name": "Builder Prime",
+      "category": "crm",
+      "description": "Read Builder Prime projects and meetings, and create or update them from chat.",
+      "endpoint": "https://builder-prime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per tenant and API key"
+        }
+      ],
+      "keyHelp": "Verification limitation: real-account authentication, reads and writes have not been tested. Published example-tenant probes return a generic JSON 400 for missing and synthetic keys. This release passed mock integration and hosted Worker tests; real-tenant verification remains outstanding.",
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Builder Prime subdomain"
+          },
+          {
+            "label": "Builder Prime Open API key"
+          }
+        ],
+        "hint": "In **Admin → Integrations → Open API → Generate New API Key**, create a dedicated key with **projects.read** for login; add meetings.read, employees.read, meetingtypes.read and meetingresults.read for those tools. Add projects.create/edit or meetings.create/edit only if you need writes. Enter just the subdomain, such as johnsfloors. Requested customer/business records pass to your chosen AI client and its LLM provider. Write tools execute immediately; ask your client to show changes and request approval. Revoke this integration key in Builder Prime to stop vendor access. Billing follows the subdomain and key together; replacing the key changes billing identity. Project lists cover changes within the past year. This is an independent integration."
+      },
+      "tools": [
+        {
+          "name": "builderprime_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "Read projects with projects.read. Pages start at 0, max100. Vendor defaults last-modified-since to one year ago and forbids older dates; this is not a complete all-history report. Response includes customer names available on projects."
+        },
+        {
+          "name": "builderprime_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Read one project and its customer/status/value fields. Requires projects.read."
+        },
+        {
+          "name": "builderprime_list_meetings",
+          "type": "read",
+          "title": "List meetings",
+          "description": "Read meetings beginning in a required date range (epoch milliseconds). Requires meetings.read; page is zero-based, limit max100."
+        },
+        {
+          "name": "builderprime_get_meeting",
+          "type": "read",
+          "title": "Get meeting",
+          "description": "Read one meeting; requires meetings.read."
+        },
+        {
+          "name": "builderprime_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "Read employees; requires employees.read. Pagination is zero-based, limit max100."
+        },
+        {
+          "name": "builderprime_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "Read one employee; requires employees.read."
+        },
+        {
+          "name": "builderprime_list_meeting_types",
+          "type": "read",
+          "title": "List meeting types",
+          "description": "Read meeting-types; requires meetingtypes.read. Pagination is zero-based, limit max100."
+        },
+        {
+          "name": "builderprime_get_meeting_type",
+          "type": "read",
+          "title": "Get meeting type",
+          "description": "Read one meeting type; requires meetingtypes.read."
+        },
+        {
+          "name": "builderprime_list_meeting_results",
+          "type": "read",
+          "title": "List meeting results",
+          "description": "Read meeting-results; requires meetingresults.read. Pagination is zero-based, limit max100."
+        },
+        {
+          "name": "builderprime_get_meeting_result",
+          "type": "read",
+          "title": "Get meeting result",
+          "description": "Read one meeting result; requires meetingresults.read."
+        },
+        {
+          "name": "builderprime_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "Create a project attached to an existing client opportunity; projects.create required. Show the exact fields to the user before calling. Executes immediately, may trigger vendor workflows."
+        },
+        {
+          "name": "builderprime_update_project",
+          "type": "write",
+          "title": "Update project",
+          "description": "Modify only supplied project fields; projects.edit required. Status names must exactly match the account. Runs immediately; status changes may trigger workflows. No deletion/archiving."
+        },
+        {
+          "name": "builderprime_create_meeting",
+          "type": "write",
+          "title": "Create meeting",
+          "description": "Create a meeting for a client opportunity. meetings.create required. Confirm dates, timezone, attendee and type before calling; writes immediately and vendor notifications may occur."
+        },
+        {
+          "name": "builderprime_update_meeting",
+          "type": "write",
+          "title": "Update meeting",
+          "description": "Reschedule or edit meeting details; meetings.edit required. Runs immediately, no separate enforced approval. Blank location clears it. Read the existing meeting to check any unchanged start/end time before changing only one date."
+        },
+        {
+          "name": "builderprime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "builderprime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Builder Prime tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "builderprime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Builder Prime (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "builderprime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Builder Prime Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run builderprime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show projects in progress and their customer names.",
+        "Which sales meetings are scheduled this week?",
+        "Show the details of project 111.",
+        "Update the status of a project after I review the changes."
+      ]
+    },
+    {
+      "slug": "servicemonster",
+      "name": "ServiceMonster",
+      "category": "crm",
+      "description": "Read ServiceMonster customers, jobs, orders and schedules, and add customer notes.",
+      "endpoint": "https://servicemonster.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per API User"
+        }
+      ],
+      "keyHelp": "Use a dedicated ServiceMonster API User, rather than a personal login. API access requires an eligible ServiceMonster plan. Real-account reads and note creation have not been tested; live invalid credentials receive the vendor's authentication rejection.",
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API User username"
+          },
+          {
+            "label": "API User password"
+          }
+        ],
+        "hint": "An administrator creates an API User in **Settings → API Users → +API User**. API access requires **Grow or Premier**. Choose **Read Only** for lookups; adding notes needs a role with note-writing permission. Your requested business/customer records pass through UsefulAPI to your chosen AI client and its LLM provider. Delete or revoke this API User in ServiceMonster to stop vendor access. Billing is per API username: changing its password keeps the same identity, but a different API User starts a separate usage/billing identity. This is an independent integration."
+      },
+      "tools": [
+        {
+          "name": "servicemonster_list_accounts",
+          "type": "read",
+          "title": "List customer accounts",
+          "description": "Customer accounts with names, contact details and account status. GET /v1/accounts; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "Jobs with account/order/route IDs, estimated times and status. GET /v1/jobs; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "Orders including estimates/invoices and available totals and balance information. GET /v1/orders; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_sites",
+          "type": "read",
+          "title": "List service sites",
+          "description": "Customer service locations and their addresses. GET /v1/sites; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "Notes attached to accounts, orders and sites. GET /v1/notes; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "Tasks; use returned fields to inspect assignments and follow-ups. GET /v1/tasks; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_routes",
+          "type": "read",
+          "title": "List routes",
+          "description": "Service routes; their IDs can filter the scheduling view. GET /v1/routes; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "Team members to resolve scheduling employee IDs. GET /v1/employees; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_list_serviceitems",
+          "type": "read",
+          "title": "List service items",
+          "description": "The company's service-item catalogue. GET /v1/serviceitems; returns one page, not all matching records."
+        },
+        {
+          "name": "servicemonster_get_account",
+          "type": "read",
+          "title": "Get one customer account",
+          "description": "Read the selected record. GET /v1/accounts/{id}."
+        },
+        {
+          "name": "servicemonster_get_job",
+          "type": "read",
+          "title": "Get one job",
+          "description": "Read the selected record. GET /v1/jobs/{id}."
+        },
+        {
+          "name": "servicemonster_get_order",
+          "type": "read",
+          "title": "Get one order",
+          "description": "Read the selected record. GET /v1/orders/{id}."
+        },
+        {
+          "name": "servicemonster_get_site",
+          "type": "read",
+          "title": "Get one service site",
+          "description": "Read the selected record. GET /v1/sites/{id}."
+        },
+        {
+          "name": "servicemonster_get_note",
+          "type": "read",
+          "title": "Get one note",
+          "description": "Read the selected record. GET /v1/notes/{id}."
+        },
+        {
+          "name": "servicemonster_get_route",
+          "type": "read",
+          "title": "Get one route",
+          "description": "Read the selected record. GET /v1/routes/{id}."
+        },
+        {
+          "name": "servicemonster_list_account_orders",
+          "type": "read",
+          "title": "List an account's orders",
+          "description": "Read one page of related records. GET /v1/accounts/{id}/orders."
+        },
+        {
+          "name": "servicemonster_list_account_sites",
+          "type": "read",
+          "title": "List an account's sites",
+          "description": "Read one page of related records. GET /v1/accounts/{id}/sites."
+        },
+        {
+          "name": "servicemonster_list_account_notes",
+          "type": "read",
+          "title": "List an account's notes",
+          "description": "Read one page of related records. GET /v1/accounts/{id}/notes."
+        },
+        {
+          "name": "servicemonster_list_account_tasks",
+          "type": "read",
+          "title": "List an account's tasks",
+          "description": "Read one page of related records. GET /v1/accounts/{id}/tasks."
+        },
+        {
+          "name": "servicemonster_list_order_jobs",
+          "type": "read",
+          "title": "List an order's jobs",
+          "description": "Read one page of related records. GET /v1/orders/{id}/jobs."
+        },
+        {
+          "name": "servicemonster_list_order_lineitems",
+          "type": "read",
+          "title": "List an order's line items",
+          "description": "Read one page of related records. GET /v1/orders/{id}/lineitems."
+        },
+        {
+          "name": "servicemonster_list_order_notes",
+          "type": "read",
+          "title": "List an order's notes",
+          "description": "Read one page of related records. GET /v1/orders/{id}/notes."
+        },
+        {
+          "name": "servicemonster_list_order_tasks",
+          "type": "read",
+          "title": "List an order's tasks",
+          "description": "Read one page of related records. GET /v1/orders/{id}/tasks."
+        },
+        {
+          "name": "servicemonster_list_job_timelogs",
+          "type": "read",
+          "title": "List a job's time logs",
+          "description": "Read one page of related records. GET /v1/jobs/{id}/timelogs."
+        },
+        {
+          "name": "servicemonster_list_site_noteactivities",
+          "type": "read",
+          "title": "List a site's note activities",
+          "description": "Read one page of related records. GET /v1/sites/{id}/noteactivities."
+        },
+        {
+          "name": "servicemonster_get_account_profile",
+          "type": "read",
+          "title": "Get customer account profile",
+          "description": "Read the account's service/order history statistics and available balance information. GET /v1/accounts/{id}/profile."
+        },
+        {
+          "name": "servicemonster_list_scheduling",
+          "type": "read",
+          "title": "Read the service schedule",
+          "description": "GET /v1/scheduling. Defaults to today through7days ahead at the vendor. Use startDate/endDate for a bounded period; dates follow the company's scheduling context. Flattened event view, optionally one route."
+        },
+        {
+          "name": "servicemonster_list_scheduleitems",
+          "type": "read",
+          "title": "Read detailed schedule items",
+          "description": "GET /v1/scheduleitems. Defaults to today through7days ahead at the vendor. Use startDate/endDate for a bounded period; dates follow the company's scheduling context. Returns each event and its associated job/activity/reminder/event details."
+        },
+        {
+          "name": "servicemonster_create_note",
+          "type": "write",
+          "title": "Add a customer, order or site note",
+          "description": "Create a note immediately (POST /v1/notes); no preview or separate confirmation is enforced. Requires an API User permitted to create notes; Read Only cannot write. Specify accountID, orderID or siteID; orderID and siteID cannot be combined. Ask the user to review the exact record and text before calling. No scheduling or messaging is performed."
+        },
+        {
+          "name": "servicemonster_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "servicemonster_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ServiceMonster tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "servicemonster_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ServiceMonster (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "servicemonster_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ServiceMonster Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run servicemonster_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the service schedule for tomorrow and the customers for each job.",
+        "Which orders still have a balance due?",
+        "Review this customer's service history and recent notes.",
+        "Add a note to the selected customer's account after I review the wording."
+      ]
     }
   ]
 }

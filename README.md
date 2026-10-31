@@ -527,6 +527,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SkuVault](servers/skuvault/) | inventory | 26 | OAuth | [servers/skuvault/](servers/skuvault/) |
 | [Talenta](servers/talenta/) | hr | 34 | OAuth | [servers/talenta/](servers/talenta/) |
 | [Shoprocket](servers/shoprocket/) | commerce | 30 | OAuth | [servers/shoprocket/](servers/shoprocket/) |
+| [Builder Prime](servers/builder-prime/) | crm | 18 | API token | [servers/builder-prime/](servers/builder-prime/) |
+| [ServiceMonster](servers/servicemonster/) | crm | 33 | API token | [servers/servicemonster/](servers/servicemonster/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
