@@ -99441,6 +99441,1750 @@
         "Show ticket sales per day for the last two weeks for my event.",
         "Which ticket types of my event are almost sold out?"
       ]
+    },
+    {
+      "slug": "stiply",
+      "name": "Stiply",
+      "category": "e-sign",
+      "description": "Read sign requests and signers; send, remind, extend and cancel sign requests in Stiply.",
+      "endpoint": "https://stiply.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Stiply Personal Access Token"
+          }
+        ],
+        "hint": "Create it in Stiply → **Settings → API** (app.stiply.nl/settings/api). Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "stiply_list_sign_requests",
+          "type": "read",
+          "title": "List sign requests",
+          "description": "List sign requests (documents sent for e-signing) with status, title, sent/expiry/signed timestamps. Filter by status (draft, published, all_signed, completed, rejected, canceled, expired, ...). Stiply API: GET /v2/sign_requests."
+        },
+        {
+          "name": "stiply_get_sign_request",
+          "type": "read",
+          "title": "Get a sign request",
+          "description": "Get one sign request by id: status, timestamps, message, reject reason, owner. Stiply API: GET /v2/sign_requests/{id}."
+        },
+        {
+          "name": "stiply_get_sign_request_by_external_key",
+          "type": "read",
+          "title": "Get a sign request by external key",
+          "description": "Find a sign request by the external_key set when it was created. Stiply API: GET /v2/sign_requests/by_key/{external_key}."
+        },
+        {
+          "name": "stiply_get_sign_request_progress",
+          "type": "read",
+          "title": "Get sign request progress",
+          "description": "Get the audit trail of a sign request: each action (sent, opened, signed, ...) with time, IP, location and email status. Stiply API: GET /v2/sign_requests/{id}/progress."
+        },
+        {
+          "name": "stiply_list_signers",
+          "type": "read",
+          "title": "List signers",
+          "description": "List the signers of a sign request with email, name, role (signer/approver/cc/dc), authentication method and sign URL. Stiply API: GET /v2/sign_requests/{id}/signers."
+        },
+        {
+          "name": "stiply_list_documents",
+          "type": "read",
+          "title": "List documents of a sign request",
+          "description": "List the documents attached to a sign request (metadata only, no file download). Stiply API: GET /v2/sign_requests/{id}/documents."
+        },
+        {
+          "name": "stiply_create_sign_request",
+          "type": "write",
+          "title": "Create and send a sign request",
+          "description": "WRITE: create a sign request and SEND it. Stiply downloads each PDF from file_urls and emails the signers at once, so confirm the signers with the user first. Stiply API: POST /v2/sign_requests."
+        },
+        {
+          "name": "stiply_send_reminder",
+          "type": "write",
+          "title": "Send a reminder",
+          "description": "WRITE: email a reminder to the signers who have not signed yet. Stiply API: POST /v2/sign_requests/{id}/actions/send_reminder."
+        },
+        {
+          "name": "stiply_extend_term",
+          "type": "write",
+          "title": "Extend the term",
+          "description": "WRITE: extend the signing term of a sign request. Stiply API: POST /v2/sign_requests/{id}/actions/extend_term."
+        },
+        {
+          "name": "stiply_cancel_sign_request",
+          "type": "write",
+          "title": "Cancel a sign request",
+          "description": "WRITE: cancel a sign request. This cannot be undone. Stiply API: POST /v2/sign_requests/{id}/actions/cancel."
+        },
+        {
+          "name": "stiply_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "stiply_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Stiply tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "stiply_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Stiply (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "stiply_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Stiply Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run stiply_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which documents are still waiting for a signature?",
+        "Show me who has not signed the rental agreement yet and send them a reminder.",
+        "List all sign requests that were rejected this month and the reason.",
+        "Extend the term of the open sign request for Acme by two weeks."
+      ]
+    },
+    {
+      "slug": "timetac",
+      "name": "TimeTac",
+      "category": "time-tracking",
+      "description": "Read hours, absences and projects; start timers, add entries, approve leave in TimeTac.",
+      "endpoint": "https://timetac.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TimeTac account name"
+          },
+          {
+            "label": "Client id"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "In TimeTac open **Account settings → API Credentials** (Manager role) and create a client. If you do not see it, ask support@timetac.com to enable the API. The credentials are used only to call the API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "timetac_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List employees (users) of the TimeTac account: id, name, department, active flag, entry/exit dates. Only work-related fields are returned (no credentials, payroll, address or birth data). TimeTac API: GET users/read."
+        },
+        {
+          "name": "timetac_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Get one employee by user id. Only work-related fields are returned (no credentials, payroll, address or birth data). TimeTac API: GET users/read?id=."
+        },
+        {
+          "name": "timetac_list_time_trackings",
+          "type": "read",
+          "title": "List time trackings",
+          "description": "List time entries (start, end, duration, task, notes, approval), newest first. Filter by user, task or approval. start_date/end_date filter the returned page only; page with offset. TimeTac API: GET timeTrackings/read."
+        },
+        {
+          "name": "timetac_current_time_trackings",
+          "type": "read",
+          "title": "Running timers",
+          "description": "List the timers that run right now (who is clocked in, on which task). TimeTac API: GET timeTrackings/current."
+        },
+        {
+          "name": "timetac_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absence and leave requests (holiday, sick leave and others) with dates, duration and approval status. from_date/to_date keep requests that overlap the range, on the returned page only. TimeTac API: GET absences/read."
+        },
+        {
+          "name": "timetac_list_absence_types",
+          "type": "read",
+          "title": "List absence types",
+          "description": "List the absence types of the account (holiday, sick leave, special leave) with their ids. TimeTac API: GET absenceTypes/read."
+        },
+        {
+          "name": "timetac_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects (task tree nodes that group tasks) with ids, deadlines and status. TimeTac API: GET projects/read."
+        },
+        {
+          "name": "timetac_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks that time can be booked on, with their project (mother_id) and status. TimeTac API: GET tasks/read."
+        },
+        {
+          "name": "timetac_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments with ids and parent departments. TimeTac API: GET departments/read."
+        },
+        {
+          "name": "timetac_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams with ids and names. TimeTac API: GET teams/read."
+        },
+        {
+          "name": "timetac_start_time_tracking",
+          "type": "write",
+          "title": "Start timer",
+          "description": "WRITE: start a timer for a user, now or at a given time. Each call can create a new running entry, so do not repeat it. TimeTac API: POST timeTrackings/start."
+        },
+        {
+          "name": "timetac_stop_time_tracking",
+          "type": "write",
+          "title": "Stop timer",
+          "description": "WRITE: stop the running timer of a user, now or at a given time. TimeTac API: PUT timeTrackings/stop."
+        },
+        {
+          "name": "timetac_create_time_tracking",
+          "type": "write",
+          "title": "Add time entry",
+          "description": "WRITE: add a finished time entry for a user. Each call creates a new entry, so do not repeat it. TimeTac API: POST timeTrackings/create."
+        },
+        {
+          "name": "timetac_create_absence",
+          "type": "write",
+          "title": "Request absence",
+          "description": "WRITE: create an absence or leave request for a user. Each call creates a new request, so do not repeat it. type_id is the category (1 holiday, 2 overtime reduction, 3 other paid leave); subtype_id picks the leave type from timetac_list_absence_types. TimeTac API: POST absences/create."
+        },
+        {
+          "name": "timetac_approve_absence",
+          "type": "write",
+          "title": "Approve absence",
+          "description": "WRITE: approve an open absence request. The employee is notified by TimeTac. TimeTac API: PUT absences/approve."
+        },
+        {
+          "name": "timetac_reject_absence",
+          "type": "write",
+          "title": "Reject absence",
+          "description": "WRITE: reject an open absence request. The employee is notified by TimeTac. TimeTac API: PUT absences/reject."
+        },
+        {
+          "name": "timetac_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timetac_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TimeTac tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timetac_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on TimeTac (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timetac_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TimeTac Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timetac_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is clocked in right now, and on which task?",
+        "Show the hours Anna booked last week, grouped by project.",
+        "Which absence requests are still open, and who must approve them?",
+        "Request two days of holiday for Max from 12 to 13 November."
+      ]
+    },
+    {
+      "slug": "gorelo",
+      "name": "Gorelo",
+      "category": "support",
+      "description": "Read tickets, devices, alerts and invoices; create tickets, add comments, log time in Gorelo.",
+      "endpoint": "https://gorelo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Gorelo API key"
+          },
+          {
+            "label": "Data region"
+          }
+        ],
+        "hint": "In Gorelo open **Settings → Integrations → Generate New Key**. A key can be scoped, so give it only the access you want. Your key is used only to call the Gorelo API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "gorelo_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the MSP's clients (customers). Good first call to find a client id. API: GET /v1/clients."
+        },
+        {
+          "name": "gorelo_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client by id with its details. API: GET /v1/clients/{clientId}."
+        },
+        {
+          "name": "gorelo_list_client_locations",
+          "type": "read",
+          "title": "List client locations",
+          "description": "List the locations (sites) of one client. API: GET /v1/clients/{clientId}/locations."
+        },
+        {
+          "name": "gorelo_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List client contacts (end users). API: GET /v1/contacts."
+        },
+        {
+          "name": "gorelo_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id. API: GET /v1/contacts/{contactId}."
+        },
+        {
+          "name": "gorelo_list_tickets",
+          "type": "read",
+          "title": "List tickets",
+          "description": "List service tickets, newest activity first, with status, priority, client, assignees and SLA. Use the list_ticket_statuses/types/priorities tools to learn the ids for filters. API: GET /v1/tickets."
+        },
+        {
+          "name": "gorelo_get_ticket",
+          "type": "read",
+          "title": "Get a ticket",
+          "description": "Get one ticket by id (uuid). API: GET /v1/tickets/{ticketId}."
+        },
+        {
+          "name": "gorelo_list_ticket_comments",
+          "type": "read",
+          "title": "List ticket comments",
+          "description": "List the comments (public replies, private notes) on a ticket. API: GET /v1/tickets/{ticketId}/comments."
+        },
+        {
+          "name": "gorelo_list_ticket_statuses",
+          "type": "read",
+          "title": "List ticket statuses",
+          "description": "List the ticket statuses (id and name) used to filter or update tickets. API: GET /v1/tickets/statuses."
+        },
+        {
+          "name": "gorelo_list_ticket_types",
+          "type": "read",
+          "title": "List ticket types",
+          "description": "List the ticket types. API: GET /v1/tickets/types."
+        },
+        {
+          "name": "gorelo_list_ticket_priorities",
+          "type": "read",
+          "title": "List ticket priorities",
+          "description": "List the ticket priorities. API: GET /v1/tickets/priorities."
+        },
+        {
+          "name": "gorelo_list_agent_assets",
+          "type": "read",
+          "title": "List managed devices",
+          "description": "List agent (RMM managed device) assets with status, OS and client. API: GET /v1/assets/agents."
+        },
+        {
+          "name": "gorelo_get_agent_asset",
+          "type": "read",
+          "title": "Get a managed device",
+          "description": "Get one managed device by id (guid). API: GET /v1/assets/agents/{agentAssetId}."
+        },
+        {
+          "name": "gorelo_get_agent_hardware",
+          "type": "read",
+          "title": "Get device hardware",
+          "description": "Get a managed device's processors, memory and disks. API: GET /v1/assets/agents/{agentAssetId}/hardware."
+        },
+        {
+          "name": "gorelo_list_agent_pending_updates",
+          "type": "read",
+          "title": "List device pending updates",
+          "description": "List the Windows updates pending on a managed device, from its last scan (no new scan starts). API: GET /v1/assets/agents/{agentAssetId}/patches/available."
+        },
+        {
+          "name": "gorelo_list_custom_assets",
+          "type": "read",
+          "title": "List custom assets",
+          "description": "List custom (non-agent) assets such as printers, switches and licences. API: GET /v1/assets/custom."
+        },
+        {
+          "name": "gorelo_list_alerts",
+          "type": "read",
+          "title": "List alerts",
+          "description": "List alerts (uptime, script, external, ...) newest first. API: GET /v1/alerts."
+        },
+        {
+          "name": "gorelo_get_alert",
+          "type": "read",
+          "title": "Get an alert",
+          "description": "Get one alert by id (guid). API: GET /v1/alerts/{alertId}."
+        },
+        {
+          "name": "gorelo_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects with status, client and lead. API: GET /v1/projects."
+        },
+        {
+          "name": "gorelo_list_project_tasks",
+          "type": "read",
+          "title": "List project tasks",
+          "description": "List the tasks of one project. API: GET /v1/projects/{projectId}/tasks."
+        },
+        {
+          "name": "gorelo_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List logged time across tickets and tasks. API: GET /v1/time-entries."
+        },
+        {
+          "name": "gorelo_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with status, totals and client. API: GET /v1/invoices."
+        },
+        {
+          "name": "gorelo_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice with its line items and attachments. API: GET /v1/invoices/{invoiceId}."
+        },
+        {
+          "name": "gorelo_list_contracts",
+          "type": "read",
+          "title": "List contracts",
+          "description": "List billing contracts with their service lines. API: GET /v1/contracts."
+        },
+        {
+          "name": "gorelo_list_users",
+          "type": "read",
+          "title": "List technicians",
+          "description": "List users (technicians) with role and status; use their ids as assignee ids. API: GET /v1/organization/users."
+        },
+        {
+          "name": "gorelo_list_groups",
+          "type": "read",
+          "title": "List technician groups",
+          "description": "List technician groups (ids are needed to create a ticket). API: GET /v1/organization/groups."
+        },
+        {
+          "name": "gorelo_create_ticket",
+          "type": "write",
+          "title": "Create a ticket",
+          "description": "WRITE: create a service ticket. Needs status_id, group_id and type_id (use gorelo_list_ticket_statuses, gorelo_list_groups, gorelo_list_ticket_types). Set send_created_email true only if the contact must get a 'ticket created' email. API: POST /v1/tickets."
+        },
+        {
+          "name": "gorelo_update_ticket",
+          "type": "write",
+          "title": "Update a ticket",
+          "description": "WRITE: change fields of a ticket (status, priority, assignee, title, tags). Only the fields you send change. Each change notifies and logs as in the app. Changing the client clears the ticket's contact and assets. API: PATCH /v1/tickets/{ticketId}."
+        },
+        {
+          "name": "gorelo_add_ticket_comment",
+          "type": "write",
+          "title": "Add a ticket comment",
+          "description": "WRITE: add a comment to a ticket's main thread. A 'public' comment is a reply the client sees and may be emailed to them; a 'private' comment is an internal note. Do not retry after an unclear error: that can post twice. API: POST /v1/tickets/{ticketId}/comments."
+        },
+        {
+          "name": "gorelo_update_alert_status",
+          "type": "write",
+          "title": "Update an alert status",
+          "description": "WRITE: dismiss an alert, restore it to New, or link it to an open ticket (status 'ticketed' needs ticket_id). The change applies to the alert's whole stack, as in the app. API: PATCH /v1/alerts/{alertId}."
+        },
+        {
+          "name": "gorelo_log_time_entry",
+          "type": "write",
+          "title": "Log time on a ticket",
+          "description": "WRITE: log work time against a ticket (or a project task). Give any two of started_on, ended_on and actual_hours (the API derives the third). Billing role, work type and billable status default from the ticket. Do not retry after an unclear error: that can log twice. API: POST /v1/time-entries."
+        },
+        {
+          "name": "gorelo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gorelo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Gorelo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gorelo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Gorelo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gorelo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Gorelo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gorelo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tickets are open and unassigned right now?",
+        "Which managed devices are offline for the client Acme?",
+        "Which invoices are overdue, and how much is owed per client?",
+        "Add a private note to ticket 1042 and log 0.5 hours on it."
+      ]
+    },
+    {
+      "slug": "locate2u",
+      "name": "Locate2u",
+      "category": "logistics",
+      "description": "Read stops, orders, trips and ratings; add notes to stops and shipments in Locate2u.",
+      "endpoint": "https://locate2u.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Locate2u Client Id"
+          },
+          {
+            "label": "Locate2u Client Secret"
+          }
+        ],
+        "hint": "In Locate2u open **Team settings → Apps** and click **+** (a Team Owner can do this). Copy the Client Secret at once: Locate2u shows it only one time. Your credentials are used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "locate2u_get_me",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Get the user that owns the connected app: name, email, role, time zone. Locate2u API: GET /users/me."
+        },
+        {
+          "name": "locate2u_get_team",
+          "type": "read",
+          "title": "Get the team",
+          "description": "Get the connected team with its settings and branding. Locate2u API: GET /team."
+        },
+        {
+          "name": "locate2u_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the drivers and staff in the team, optionally with their current location. Locate2u API: GET /team-members."
+        },
+        {
+          "name": "locate2u_get_team_member",
+          "type": "read",
+          "title": "Get a team member",
+          "description": "Get one team member by public user id. Locate2u API: GET /team-members/{publicUserId}."
+        },
+        {
+          "name": "locate2u_list_team_regions",
+          "type": "read",
+          "title": "List team regions",
+          "description": "List the regions of the team. Locate2u API: GET /team-regions."
+        },
+        {
+          "name": "locate2u_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List the team's warehouses. Locate2u API: GET /warehouses."
+        },
+        {
+          "name": "locate2u_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List all services the team offers. Locate2u API: GET /services."
+        },
+        {
+          "name": "locate2u_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the team's customers. Locate2u API: GET /customers."
+        },
+        {
+          "name": "locate2u_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers by text (name, company, email, phone). Locate2u API: GET /customers/search."
+        },
+        {
+          "name": "locate2u_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id. Locate2u API: GET /customers/{id}."
+        },
+        {
+          "name": "locate2u_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search orders by order number, purchase order number, status, payment status, customer or date. Locate2u API: GET /orders/search."
+        },
+        {
+          "name": "locate2u_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by id. Locate2u API: GET /orders/{id}."
+        },
+        {
+          "name": "locate2u_find_order",
+          "type": "read",
+          "title": "Find an order by reference",
+          "description": "Find a single order by its order number, or by a source and source reference pair. Locate2u API: GET /orders."
+        },
+        {
+          "name": "locate2u_list_orders_created",
+          "type": "read",
+          "title": "List orders created in a date range",
+          "description": "List orders created between two dates, optionally with stops and items. Locate2u API: GET /orders/created."
+        },
+        {
+          "name": "locate2u_get_stop",
+          "type": "read",
+          "title": "Get a stop",
+          "description": "Get one stop (a delivery or pickup) with status, contact, address and time window. Locate2u API: GET /stops/{id}."
+        },
+        {
+          "name": "locate2u_search_stops",
+          "type": "read",
+          "title": "Find stops by source reference",
+          "description": "Find stops by the source reference that the integration stored on them. Locate2u API: GET /stops/search."
+        },
+        {
+          "name": "locate2u_list_scheduled_stops",
+          "type": "read",
+          "title": "List scheduled stops",
+          "description": "List stops scheduled for a day (default: today in the team's zone), with paging. Locate2u API: GET /stops/scheduled."
+        },
+        {
+          "name": "locate2u_list_unassigned_stops",
+          "type": "read",
+          "title": "List unassigned stops",
+          "description": "List stops that no driver has yet. Locate2u API: GET /stops/unassigned."
+        },
+        {
+          "name": "locate2u_list_stop_notes",
+          "type": "read",
+          "title": "List notes of a stop",
+          "description": "List all notes on a stop, with attachments. Locate2u API: GET /stops/{id}/notes."
+        },
+        {
+          "name": "locate2u_get_stop_pod_answers",
+          "type": "read",
+          "title": "Get proof-of-delivery answers of a stop",
+          "description": "Get the answers a driver gave to the proof-of-delivery questions on a stop. Locate2u API: GET /stops/{id}/podquestionanswers."
+        },
+        {
+          "name": "locate2u_get_shipment",
+          "type": "read",
+          "title": "Get a shipment",
+          "description": "Get a shipment with its pickup and drop stops and items. Locate2u API: GET /shipments/{id}."
+        },
+        {
+          "name": "locate2u_list_unassigned_shipments",
+          "type": "read",
+          "title": "List unassigned shipments",
+          "description": "List shipments that no team member has yet. Locate2u API: GET /shipments/unassigned."
+        },
+        {
+          "name": "locate2u_list_shipment_notes",
+          "type": "read",
+          "title": "List notes of a shipment",
+          "description": "List all notes on a shipment. Locate2u API: GET /shipments/{id}/notes."
+        },
+        {
+          "name": "locate2u_get_team_trips_summary",
+          "type": "read",
+          "title": "Summarize the team's trips for a day",
+          "description": "Summary of every trip in the team on a day: driver, distance, time, stop counts, status. Locate2u API: GET /team/trips/{tripDate}."
+        },
+        {
+          "name": "locate2u_list_team_trips",
+          "type": "read",
+          "title": "List all trips of the team for a day",
+          "description": "All trips (assigned and unassigned) for a day, each with its driver and stops. Locate2u API: GET /trips/team/{tripDate}."
+        },
+        {
+          "name": "locate2u_get_driver_trip",
+          "type": "read",
+          "title": "Get a driver's trip for a day",
+          "description": "Get the trip of one team member on a day, optionally filtered by status. Locate2u API: GET /trips/user/{publicUserId}/{tripDate}."
+        },
+        {
+          "name": "locate2u_get_trip",
+          "type": "read",
+          "title": "Get a trip by id",
+          "description": "Get one trip by id with its stops. Locate2u API: GET /trips/id/{id}."
+        },
+        {
+          "name": "locate2u_list_runs",
+          "type": "read",
+          "title": "List runs for a day",
+          "description": "List the runs scheduled for a day, optionally for one team member, customer or run number. Locate2u API: GET /runs/{tripDate}."
+        },
+        {
+          "name": "locate2u_team_travel_statistics",
+          "type": "read",
+          "title": "Team travel statistics",
+          "description": "Distance and time driven by the team's members and asset groups over a date range. Locate2u API: GET /team/reports/travel-statistics."
+        },
+        {
+          "name": "locate2u_list_customer_ratings",
+          "type": "read",
+          "title": "List delivery ratings",
+          "description": "Delivery ratings that customers left for the team's stops over a date range. Locate2u API: GET /team/{teamId}/customer-ratings."
+        },
+        {
+          "name": "locate2u_search_items",
+          "type": "read",
+          "title": "Search inventory items",
+          "description": "Search inventory items by keyword, warehouse or status. Locate2u API: GET /items/search."
+        },
+        {
+          "name": "locate2u_get_item",
+          "type": "read",
+          "title": "Get an inventory item",
+          "description": "Get one inventory item by id. Locate2u API: GET /items/{id}."
+        },
+        {
+          "name": "locate2u_add_stop_note",
+          "type": "write",
+          "title": "Add a note to a stop",
+          "description": "WRITE: add a text note to a stop. It is visible to the team and the driver. Each call adds a new note (do not retry blindly). Locate2u API: POST /stops/{id}/notes."
+        },
+        {
+          "name": "locate2u_add_shipment_note",
+          "type": "write",
+          "title": "Add a note to a shipment",
+          "description": "WRITE: add a text note to a shipment, optionally tied to one of its stops. Each call adds a new note (do not retry blindly). Locate2u API: POST /shipments/{id}/notes."
+        },
+        {
+          "name": "locate2u_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "locate2u_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Locate2u tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "locate2u_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Locate2u (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "locate2u_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Locate2u Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run locate2u_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which stops are scheduled for tomorrow, and which of them have no driver yet?",
+        "Show me today's trips for every driver with distance and stop counts.",
+        "Find the order with purchase order number PO-1042 and tell me where it is.",
+        "Which deliveries got a low customer rating this month?"
+      ]
+    },
+    {
+      "slug": "otter-waiver",
+      "name": "Otter Waiver",
+      "category": "e-sign",
+      "description": "Read waivers, signed participants and check-ins in Otter Waiver.",
+      "endpoint": "https://otter-waiver.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "Find both in **app.ottersign.com → Settings → Account and Preferences → API keys** (use Show). They are used only to call the API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "otterwaiver_list_waivers",
+          "type": "read",
+          "title": "List waivers",
+          "description": "List the waivers of the account (title, event, status draft/active/inactive, activities, response counts). Page numbers are required by the API; the defaults are page 1 with 20 records. Filter by event name (waiver folder title) or waiver title. API: GET /waivers."
+        },
+        {
+          "name": "otterwaiver_get_waiver",
+          "type": "read",
+          "title": "Get waiver",
+          "description": "Get one waiver with its full text, settings, additional fields and signed participants. Get the id from otterwaiver_list_waivers. API: GET /waivers/{id}."
+        },
+        {
+          "name": "otterwaiver_list_latest_participants",
+          "type": "read",
+          "title": "List latest participants",
+          "description": "List the 50 most recent participants who signed a waiver: signer contact data, emergency contact, answers to extra questions, timestamps and document links. The data is personal data of the signers. API: GET /participants/latest."
+        },
+        {
+          "name": "otterwaiver_list_latest_checkins",
+          "type": "read",
+          "title": "List latest check-ins",
+          "description": "List the 50 most recent participant check-ins, with the same fields as otterwaiver_list_latest_participants (the checkedIn timestamp is set). API: GET /participants/latest/checkins."
+        },
+        {
+          "name": "otterwaiver_get_participant",
+          "type": "read",
+          "title": "Get participant",
+          "description": "Get one participant (adult or minor) by id: signer data, waiver id, timestamps, document and certificate links. Get the id from the participant lists or from a waiver. API: GET /participants/{id}."
+        },
+        {
+          "name": "otterwaiver_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "otterwaiver_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Otter Waiver tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "otterwaiver_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Otter Waiver (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "otterwaiver_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Otter Waiver Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run otterwaiver_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my waivers and tell me which ones are still in draft.",
+        "Who signed a waiver in the last few days? Show names and sign times.",
+        "Show the latest check-ins for today's activity.",
+        "Open the full text of my rafting waiver."
+      ]
+    },
+    {
+      "slug": "twice-commerce",
+      "name": "Twice Commerce",
+      "category": "rental",
+      "description": "Read orders, customers, catalog, stock and availability; add order comments in Twice Commerce.",
+      "endpoint": "https://twice-commerce.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TWICE Commerce API key"
+          }
+        ],
+        "hint": "Create it in the TWICE admin under **Settings → Integrations & API → Create key**. Pick **Limited access** and give **Read** to the areas you want to ask about (Orders, Customers, Catalog, Inventory, Locations). Add **Write** on Order details only if you want to add order comments. The key is used only to call the API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "twicecommerce_get_merchant",
+          "type": "read",
+          "title": "Get merchant profile",
+          "description": "Get the merchant account: name, country, currency, timezone, languages, plan and enabled features. Good first call. Admin API: GET /v1/admin/merchant."
+        },
+        {
+          "name": "twicecommerce_list_service_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List pickup and return locations (service locations). Use the ids to filter orders and stock items. Admin API: GET /v1/admin/service-locations/."
+        },
+        {
+          "name": "twicecommerce_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the tax rates set up for the merchant. Admin API: GET /v1/admin/taxes/."
+        },
+        {
+          "name": "twicecommerce_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags used on inventory, catalog, customers or orders. Admin API: GET /v1/admin/tags."
+        },
+        {
+          "name": "twicecommerce_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders with status, customers, line items, totals and dates. The API does not paginate this list, so the result is cut to `limit` rows (newest as returned by the API); the full count is in totalCount. Narrow it with location_ids. Admin API: GET /v1/admin/orders."
+        },
+        {
+          "name": "twicecommerce_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by id: status, customers, line items, stock items, comments, totals and pricing. Admin API: GET /v1/admin/orders/{orderId}."
+        },
+        {
+          "name": "twicecommerce_get_order_payments",
+          "type": "read",
+          "title": "Get order payments",
+          "description": "List the payment transactions of one order (needs a key with the Payments area). Admin API: GET /v1/admin/orders/{orderId}/payments."
+        },
+        {
+          "name": "twicecommerce_get_order_invoices",
+          "type": "read",
+          "title": "Get order invoices",
+          "description": "List the invoices of one order, optionally with the upcoming scheduled subscription invoices (needs a key with the Payments area). Admin API: GET /v1/admin/orders/{orderId}/invoices."
+        },
+        {
+          "name": "twicecommerce_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, with an optional text search over name and email and paging. Admin API: GET /v1/admin/customers."
+        },
+        {
+          "name": "twicecommerce_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id: contact details, addresses and type. Admin API: GET /v1/admin/customers/{customerId}."
+        },
+        {
+          "name": "twicecommerce_get_customer_orders",
+          "type": "read",
+          "title": "Get customer orders",
+          "description": "List the orders of one customer. Admin API: GET /v1/admin/customers/{customerId}/orders."
+        },
+        {
+          "name": "twicecommerce_list_catalog_items",
+          "type": "read",
+          "title": "List catalog items",
+          "description": "List catalog items (the listings customers rent, buy or subscribe to), with an optional name search and paging. Admin API: GET /v1/admin/catalog/."
+        },
+        {
+          "name": "twicecommerce_get_catalog_item",
+          "type": "read",
+          "title": "Get a catalog item",
+          "description": "Get one catalog item by id: name, status, variants, rules and pricing links. Admin API: GET /v1/admin/catalog/{id}."
+        },
+        {
+          "name": "twicecommerce_check_availability",
+          "type": "read",
+          "title": "Check availability for a period",
+          "description": "Check whether one catalog item can be booked for a date-time window (before you create an order). Dates are ISO 8601 date-times in UTC, for example 2026-11-05T09:00:00Z. Admin API: GET /v1/admin/availability/{catalogItemId}/period."
+        },
+        {
+          "name": "twicecommerce_list_discount_codes",
+          "type": "read",
+          "title": "List discount codes",
+          "description": "List discount codes with usage and validity, with paging. Admin API: GET /v1/admin/discount-codes."
+        },
+        {
+          "name": "twicecommerce_list_stock_items",
+          "type": "read",
+          "title": "List stock items",
+          "description": "List stock items (the physical units, called articles in the API), with paging. Narrow by location ids. Admin API: GET /v1/admin/articles/."
+        },
+        {
+          "name": "twicecommerce_get_stock_item",
+          "type": "read",
+          "title": "Get a stock item",
+          "description": "Get one stock item by id: SKU, condition, quantity, location and status. Admin API: GET /v1/admin/articles/{id}."
+        },
+        {
+          "name": "twicecommerce_list_skus",
+          "type": "read",
+          "title": "List SKUs",
+          "description": "List SKUs (the product definitions that stock items belong to), with paging. Admin API: GET /v1/admin/skus."
+        },
+        {
+          "name": "twicecommerce_get_sku",
+          "type": "read",
+          "title": "Get a SKU",
+          "description": "Get one SKU by id. Admin API: GET /v1/admin/skus/{skuId}."
+        },
+        {
+          "name": "twicecommerce_add_order_comment",
+          "type": "write",
+          "title": "Add a comment to an order",
+          "description": "WRITE: add a comment to an order (needs a key with Write access to Order details). Each call adds a new comment; do not repeat a call that succeeded. Admin API: POST /v1/admin/orders/{orderId}/comments."
+        },
+        {
+          "name": "twicecommerce_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "twicecommerce_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Twice Commerce tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "twicecommerce_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Twice Commerce (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "twicecommerce_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Twice Commerce Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run twicecommerce_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which rental orders start this week, and at which location?",
+        "Is the cargo bike listing free from 5 to 9 November?",
+        "Show me the orders and payments of the customer Anna Virtanen.",
+        "Which stock items are at the Helsinki location, and in what condition?"
+      ]
+    },
+    {
+      "slug": "moego",
+      "name": "MoeGo",
+      "category": "scheduling",
+      "description": "Read customers, pets, appointments, orders and reports; add customer notes in MoeGo.",
+      "endpoint": "https://moego.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MoeGo API key"
+          }
+        ],
+        "hint": "MoeGo issues API keys through your Customer Success Manager. Ask them for an API key (the Secret). The key is used only to call the MoeGo API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "moego_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the companies the API key can access. Call first: it returns the obfuscated company ids that every other tool needs. API: POST /v1/companies:list."
+        },
+        {
+          "name": "moego_get_company",
+          "type": "read",
+          "title": "Get a company",
+          "description": "Get one company (name, country, time zone). API: GET /v1/companies/{id}."
+        },
+        {
+          "name": "moego_list_businesses",
+          "type": "read",
+          "title": "List businesses (locations)",
+          "description": "List the business locations of a company, with address and contact data. API: POST /v1/businesses:list."
+        },
+        {
+          "name": "moego_get_business",
+          "type": "read",
+          "title": "Get a business (location)",
+          "description": "Get one business location by obfuscated id. API: GET /v1/businesses/{id}."
+        },
+        {
+          "name": "moego_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List pet-parent customers of a company. Filter by phone number or by last update time. API: POST /v1/customers:list."
+        },
+        {
+          "name": "moego_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer with contact data, addresses, notes, tags and preferences. API: GET /v1/customers/{id}."
+        },
+        {
+          "name": "moego_list_customer_notes",
+          "type": "read",
+          "title": "List customer notes",
+          "description": "List the staff notes on a customer. API: POST /v1/customers/{id}/notes:list."
+        },
+        {
+          "name": "moego_list_customer_tags",
+          "type": "read",
+          "title": "List customer tags",
+          "description": "List the tags on a customer. API: POST /v1/customers/{id}/tags:list."
+        },
+        {
+          "name": "moego_list_pets",
+          "type": "read",
+          "title": "List pets",
+          "description": "List pets of a company. Filter by owner ids or last update time. API: POST /v1/pets:list."
+        },
+        {
+          "name": "moego_list_customer_pets",
+          "type": "read",
+          "title": "List pets of a customer",
+          "description": "List the pets of one customer. API: POST /v1/customers/{customerId}/pets:list."
+        },
+        {
+          "name": "moego_get_pet",
+          "type": "read",
+          "title": "Get a pet",
+          "description": "Get one pet (breed, weight, vaccinations, vet, behavior, codes, notes). API: GET /v1/customers/{customerId}/pets/{id}."
+        },
+        {
+          "name": "moego_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments of a company. Filter by start time range, status, customers, pets. Times are RFC 3339. API: POST /v1/appointments:list."
+        },
+        {
+          "name": "moego_get_appointment",
+          "type": "read",
+          "title": "Get an appointment",
+          "description": "Get one appointment with its pets, services, staff, times and amounts. API: GET /v1/appointments/{id}."
+        },
+        {
+          "name": "moego_list_appointment_notes",
+          "type": "read",
+          "title": "List appointment notes",
+          "description": "List the notes of one appointment. API: POST /v1/appointments/notes:list."
+        },
+        {
+          "name": "moego_list_blocks",
+          "type": "read",
+          "title": "List time blocks",
+          "description": "List blocked (not bookable) time slots such as staff days off. API: POST /v1/blocks:list."
+        },
+        {
+          "name": "moego_get_booking_availability",
+          "type": "read",
+          "title": "Get online booking availability",
+          "description": "Get the dates and times that clients can book online for a location. Read only: it books nothing. API: POST /v1/online_booking/availability."
+        },
+        {
+          "name": "moego_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders (invoices) with status and amounts. Filter by status or last update time. API: POST /v1/orders:list."
+        },
+        {
+          "name": "moego_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order with its totals, tips, tax and discounts. API: GET /v1/orders/{id}."
+        },
+        {
+          "name": "moego_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments of a company, optionally for given orders. API: POST /v1/payments:list."
+        },
+        {
+          "name": "moego_get_payment",
+          "type": "read",
+          "title": "Get a payment",
+          "description": "Get one payment with method, status, fees and refunds. API: GET /v1/payment/{id}."
+        },
+        {
+          "name": "moego_list_discounts",
+          "type": "read",
+          "title": "List discount codes",
+          "description": "List the discount codes of a company. API: POST /v1/discounts:list."
+        },
+        {
+          "name": "moego_list_retail_products",
+          "type": "read",
+          "title": "List retail products",
+          "description": "List retail products for sale. API: POST /v1/retail/products:list."
+        },
+        {
+          "name": "moego_list_memberships",
+          "type": "read",
+          "title": "List membership plans",
+          "description": "List membership plans. Filter by name. API: POST /v1/memberships:list."
+        },
+        {
+          "name": "moego_list_membership_subscriptions",
+          "type": "read",
+          "title": "List membership subscriptions",
+          "description": "List customer membership subscriptions. API: POST /v1/memberships/subscriptions:list."
+        },
+        {
+          "name": "moego_list_packages",
+          "type": "read",
+          "title": "List customer packages",
+          "description": "List prepaid service packages and their usage, optionally for given customers. API: POST /v1/packages:list."
+        },
+        {
+          "name": "moego_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List sales leads (potential customers). API: POST /v1/leads:list."
+        },
+        {
+          "name": "moego_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead. API: GET /v1/leads/{id}."
+        },
+        {
+          "name": "moego_list_agreements",
+          "type": "read",
+          "title": "List agreements",
+          "description": "List agreement templates (contracts and waivers) of a company. API: POST /v1/agreements:list."
+        },
+        {
+          "name": "moego_list_reports",
+          "type": "read",
+          "title": "List reports",
+          "description": "List the business reports that exist for a company (ids for moego_fetch_report_data). API: POST /v1/reports:list."
+        },
+        {
+          "name": "moego_fetch_report_data",
+          "type": "read",
+          "title": "Fetch report data",
+          "description": "Fetch the table data of one report for a time period. API: POST /v1/reports/data:fetch."
+        },
+        {
+          "name": "moego_append_customer_note",
+          "type": "write",
+          "title": "Add a customer note",
+          "description": "WRITE: add one staff note to a customer profile. It adds a new note on every call and does not replace or delete notes. Do not retry after a timeout: check moego_list_customer_notes first. API: POST /v1/customers/{id}/notes."
+        },
+        {
+          "name": "moego_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "moego_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MoeGo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "moego_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on MoeGo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "moego_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MoeGo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run moego_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which appointments do we have tomorrow, and which pets are coming?",
+        "Show the customers that we added in the last 30 days.",
+        "Which orders from this week are not paid yet?",
+        "Add a note to this customer: prefers a short cut on the legs."
+      ]
+    },
+    {
+      "slug": "craftboxx",
+      "name": "Craftboxx",
+      "category": "project-management",
+      "description": "Read employees, assignments, timesheets and absences; create customers and projects in Craftboxx.",
+      "endpoint": "https://craftboxx.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Craftboxx email"
+          },
+          {
+            "label": "Craftboxx password"
+          }
+        ],
+        "hint": "Use the login of a Craftboxx Planner employee. The server has the same permissions as that employee. The password is used once to get an access token and is not stored. Only the token is kept."
+      },
+      "tools": [
+        {
+          "name": "craftboxx_get_company",
+          "type": "read",
+          "title": "Get my company",
+          "description": "Get the company of the signed-in account (name, address, contact data). Craftboxx API: GET /my/company."
+        },
+        {
+          "name": "craftboxx_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (name, email, phone, group, skills, inactive flag). Craftboxx API: GET /employees."
+        },
+        {
+          "name": "craftboxx_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by id. Craftboxx API: GET /employees/{id}."
+        },
+        {
+          "name": "craftboxx_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (name, customer number, info). Craftboxx API: GET /customers."
+        },
+        {
+          "name": "craftboxx_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id. Craftboxx API: GET /customers/{id}."
+        },
+        {
+          "name": "craftboxx_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects (title, project number, customer, sales volume). Craftboxx API: GET /projects."
+        },
+        {
+          "name": "craftboxx_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one project by id. Craftboxx API: GET /projects/{id}."
+        },
+        {
+          "name": "craftboxx_list_assignments",
+          "type": "read",
+          "title": "List assignments",
+          "description": "List assignments (planned jobs/appointments: title, project, start, end, state, planned time). Filter by date range or employee. Craftboxx API: GET /assignments."
+        },
+        {
+          "name": "craftboxx_get_assignment",
+          "type": "read",
+          "title": "Get an assignment",
+          "description": "Get one assignment by id. Craftboxx API: GET /assignments/{id}."
+        },
+        {
+          "name": "craftboxx_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "List timesheets (employee, start, end, working time, break time). Craftboxx API: GET /timesheets."
+        },
+        {
+          "name": "craftboxx_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absences such as holiday or sick leave (employee, type, start, end). Craftboxx API: GET /absences."
+        },
+        {
+          "name": "craftboxx_list_absence_types",
+          "type": "read",
+          "title": "List absence types",
+          "description": "List absence reasons (holiday, sick, ...). Craftboxx API: GET /absences/types."
+        },
+        {
+          "name": "craftboxx_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List articles in the material catalog (name, manufacturer, unit price, VAT rate). Craftboxx API: GET /articles."
+        },
+        {
+          "name": "craftboxx_list_documentations",
+          "type": "read",
+          "title": "List documentations",
+          "description": "List job documentations (reports written on assignments: title, state, type, author). Craftboxx API: GET /documentations."
+        },
+        {
+          "name": "craftboxx_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "WRITE: create a new customer. Each call creates a new record (not idempotent). Craftboxx API: POST /customers."
+        },
+        {
+          "name": "craftboxx_create_project",
+          "type": "write",
+          "title": "Create a project",
+          "description": "WRITE: create a new project for an existing customer. Each call creates a new record (not idempotent). Craftboxx API: POST /projects."
+        },
+        {
+          "name": "craftboxx_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "craftboxx_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Craftboxx tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "craftboxx_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Craftboxx (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "craftboxx_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Craftboxx Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run craftboxx_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which assignments are planned for next week, and who works on each?",
+        "Show the timesheets of all employees for last month.",
+        "Who is absent tomorrow?",
+        "Create a customer 'Mueller GmbH' and a project 'Bathroom renovation' for it."
+      ]
+    },
+    {
+      "slug": "traffit",
+      "name": "Traffit",
+      "category": "hr",
+      "description": "Read candidates, jobs, stages and clients; add notes to candidates in Traffit.",
+      "endpoint": "https://traffit.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Traffit account"
+          },
+          {
+            "label": "Integration client id"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Scopes (space separated)",
+            "optional": true
+          }
+        ],
+        "hint": "In Traffit open **Settings → Integration with the Traffit API**, click **+ Add client**, tick the scopes you want (API V2), then **Generate Client Secret**. The client id has the form youraccount_clientname. Type the same scopes below. Your secret is used only to call the API for you and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "traffit_list_candidates",
+          "type": "read",
+          "title": "List candidates",
+          "description": "List candidates in the ATS with paging, filters (e.g. created_at, name, lastname) and sort. Returns total_count and items. Scope: employee. GET /employees/."
+        },
+        {
+          "name": "traffit_get_candidate",
+          "type": "read",
+          "title": "Get a candidate",
+          "description": "Get one candidate by id with contact data, status, files list and custom fields. Scope: employee. GET /employees/{id}."
+        },
+        {
+          "name": "traffit_get_candidate_tags",
+          "type": "read",
+          "title": "Get candidate tags",
+          "description": "List the tags of one candidate. Scope: employee. GET /employees/{id}/tags."
+        },
+        {
+          "name": "traffit_get_candidate_jobs",
+          "type": "read",
+          "title": "Get candidate jobs",
+          "description": "List the jobs (recruitments) a candidate takes part in. Scope: employee. GET /employees/{id}/recruitments."
+        },
+        {
+          "name": "traffit_get_candidate_activities",
+          "type": "read",
+          "title": "Get candidate activities",
+          "description": "List the activity history of one candidate (notes, stage moves, mails). Scope: employee. GET /employees/{id}/activities."
+        },
+        {
+          "name": "traffit_get_candidate_files",
+          "type": "read",
+          "title": "Get candidate files",
+          "description": "List the files (file names and upload dates) of one candidate. Scope: employee. GET /employees/{id}/files."
+        },
+        {
+          "name": "traffit_get_candidate_sources",
+          "type": "read",
+          "title": "Get candidate sources",
+          "description": "List where one candidate came from (source records). Scope: source. GET /sources/employees/{id}."
+        },
+        {
+          "name": "traffit_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (recruitments) with paging, filters and sort. Scope: recruitment. GET /recruitments/."
+        },
+        {
+          "name": "traffit_get_job",
+          "type": "read",
+          "title": "Get a job",
+          "description": "Get one job (recruitment) by id with client, responsible people, status and custom fields. Scope: recruitment. GET /recruitments/{id}."
+        },
+        {
+          "name": "traffit_list_job_candidates",
+          "type": "read",
+          "title": "List candidates of a job",
+          "description": "List the candidates attached to one job. Scope: recruitment. GET /recruitments/{id}/employees."
+        },
+        {
+          "name": "traffit_list_job_states",
+          "type": "read",
+          "title": "List job stages",
+          "description": "List the pipeline stages (states) of one job. Scope: recruitment. GET /recruitments/{id}/states."
+        },
+        {
+          "name": "traffit_get_job_stage_counts",
+          "type": "read",
+          "title": "Count candidates per stage",
+          "description": "Count the candidates in each stage of one job. Scope: recruitment. GET /recruitments/{id}/states/counter."
+        },
+        {
+          "name": "traffit_list_stage_candidates",
+          "type": "read",
+          "title": "List candidates in a job stage",
+          "description": "List the candidates that are now in one stage of one job. Get stage ids from traffit_list_job_states. Scope: recruitment. GET /recruitments/{job}/states/{state}/employees."
+        },
+        {
+          "name": "traffit_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List client companies (CRM) with paging, filters and sort. Scope: client. GET /clients/."
+        },
+        {
+          "name": "traffit_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client company by id. Scope: client. GET /clients/{id}."
+        },
+        {
+          "name": "traffit_list_contacts",
+          "type": "read",
+          "title": "List client contacts",
+          "description": "List contact people (crm_persons) of client companies. Scope: crm_person. GET /crm_persons/."
+        },
+        {
+          "name": "traffit_get_contact",
+          "type": "read",
+          "title": "Get a client contact",
+          "description": "Get one contact person by id. Scope: crm_person. GET /crm_persons/{id}."
+        },
+        {
+          "name": "traffit_list_crm_activities",
+          "type": "read",
+          "title": "List CRM activities",
+          "description": "List CRM activities (calls, meetings, notes on clients and contacts). Scope: crm_activity. GET /crm_activities/."
+        },
+        {
+          "name": "traffit_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List users of the Traffit account with their groups and permission groups. Scope: user. GET /users/."
+        },
+        {
+          "name": "traffit_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one Traffit user by id. Scope: user. GET /users/{id}."
+        },
+        {
+          "name": "traffit_list_talent_pools",
+          "type": "read",
+          "title": "List talent pools",
+          "description": "List talent pools (named groups of candidates). Scope: talent. GET /talents."
+        },
+        {
+          "name": "traffit_list_sources",
+          "type": "read",
+          "title": "List sources",
+          "description": "List candidate sources (job boards, referrals). Scope: source. GET /sources."
+        },
+        {
+          "name": "traffit_get_workflow",
+          "type": "read",
+          "title": "Get a workflow",
+          "description": "Get one recruitment workflow by id with its stages. Scope: dictionary. GET /workflows/{id}."
+        },
+        {
+          "name": "traffit_add_candidate_note",
+          "type": "write",
+          "title": "Add a note to a candidate",
+          "description": "WRITE: add a text note to one candidate's activity history. Each call adds a new note, so do not repeat a call that succeeded. Scope: employee. POST /employees/{id}/notes."
+        },
+        {
+          "name": "traffit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "traffit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Traffit tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "traffit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Traffit (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "traffit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Traffit Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run traffit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which candidates applied to our open jobs in the last 7 days?",
+        "How many candidates are in each stage of the Senior Developer job?",
+        "Show the activity history of candidate 123 and add a note that I called them.",
+        "List our client companies and the contact people for each."
+      ]
     }
   ]
 }

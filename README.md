@@ -570,6 +570,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ThinkReservations](servers/thinkreservations/) | property-management | 15 | API token | [servers/thinkreservations/](servers/thinkreservations/) |
 | [Gripp](servers/gripp/) | project-management | 18 | API token | [servers/gripp/](servers/gripp/) |
 | [Universe](servers/universe/) | ecommerce | 13 | OAuth | [servers/universe/](servers/universe/) |
+| [Stiply](servers/stiply/) | e-sign | 14 | API token | [servers/stiply/](servers/stiply/) |
+| [TimeTac](servers/timetac/) | time-tracking | 20 | API token | [servers/timetac/](servers/timetac/) |
+| [Gorelo](servers/gorelo/) | support | 35 | API token | [servers/gorelo/](servers/gorelo/) |
+| [Locate2u](servers/locate2u/) | logistics | 38 | API token | [servers/locate2u/](servers/locate2u/) |
+| [Otter Waiver](servers/otter-waiver/) | e-sign | 9 | API token | [servers/otter-waiver/](servers/otter-waiver/) |
+| [Twice Commerce](servers/twice-commerce/) | rental | 24 | API token | [servers/twice-commerce/](servers/twice-commerce/) |
+| [MoeGo](servers/moego/) | scheduling | 35 | API token | [servers/moego/](servers/moego/) |
+| [Craftboxx](servers/craftboxx/) | project-management | 20 | API token | [servers/craftboxx/](servers/craftboxx/) |
+| [Traffit](servers/traffit/) | hr | 28 | API token | [servers/traffit/](servers/traffit/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
