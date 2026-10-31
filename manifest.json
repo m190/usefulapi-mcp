@@ -91872,6 +91872,429 @@
         "Review this customer's service history and recent notes.",
         "Add a note to the selected customer's account after I review the wording."
       ]
+    },
+    {
+      "slug": "ezrentout",
+      "name": "EZRentOut",
+      "category": "rental",
+      "description": "MCP server for EZRentOut — rental orders, assets, customers, inventory and work orders.",
+      "endpoint": "https://ezrentout.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company API token"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "EZRentOut subdomain"
+          },
+          {
+            "label": "EZRentOut access token"
+          }
+        ],
+        "hint": "The subdomain is the part before **.ezrentout.com** in the address you sign in at. The token comes from EZRentOut → **Settings**: the account owner enables API access (for paying accounts) and generates the access token. Your token must permit listing saved custom reports; login checks report metadata only, without exporting a report. Requested rental, asset, customer and report data passes to your chosen AI client and its LLM provider. When requested, tools create customers and orders, book/rent out/return orders, add assets or charges, record payments, add comments, and manage work orders. Recorded payments do not charge cards. Booking, rent-out and return may email customers according to your account settings. Regenerate the token in EZRentOut to stop vendor access. Billing is per company token; rotating it starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "ezrentout_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List all rental orders (25 per page) with status, customer and dates. Paged: add 1 to page for the next one. GET /baskets.api."
+        },
+        {
+          "name": "ezrentout_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "One order by its order number: customer, status, dates, line items (order_line_items), sub-rent items, totals and payments. GET /baskets/<ORDER#>.api."
+        },
+        {
+          "name": "ezrentout_get_order_history",
+          "type": "read",
+          "title": "Get an order's in/out history",
+          "description": "The check-out / check-in history of one order. GET /baskets/<ORDER#>/history.api."
+        },
+        {
+          "name": "ezrentout_list_payment_options",
+          "type": "read",
+          "title": "List payment options",
+          "description": "The payment options (cash, check, ...) that ezrentout_record_order_payment accepts. GET /payment_options.api."
+        },
+        {
+          "name": "ezrentout_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "All pricing coupons of the company. GET /pricing_coupons.api."
+        },
+        {
+          "name": "ezrentout_list_customers",
+          "type": "read",
+          "title": "List or filter customers",
+          "description": "List customers (25 per page). Optional filter: email, category, taxed, non_taxed, inactive_customers, subscribed_emails, not_subscribed_emails, checked_out_orders, completed_orders, account_name. email, category, account_name and completed_orders (for example \"> 50\") need filter_val. GET /customers.api."
+        },
+        {
+          "name": "ezrentout_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "One customer by id: name, email, phone, addresses, status, custom fields. GET /customers/<CUSTOMER_ID>.api."
+        },
+        {
+          "name": "ezrentout_search_member_by_email",
+          "type": "read",
+          "title": "Find a customer or contact by email",
+          "description": "Look up the customer, business contact or business that has an email address. GET /api/members/search_by_email.api."
+        },
+        {
+          "name": "ezrentout_list_businesses",
+          "type": "read",
+          "title": "List or filter businesses",
+          "description": "List business customers (20 per page). Optional filter: all, active_businesses, inactive_businesses, checked_out_orders, active_customers, completed_orders (completed_orders needs filter_val, for example \"> 50\"). GET /businesses.api."
+        },
+        {
+          "name": "ezrentout_get_business",
+          "type": "read",
+          "title": "Get a business",
+          "description": "One business customer by id. GET /businesses/<BUSINESS#>.api."
+        },
+        {
+          "name": "ezrentout_list_business_contacts",
+          "type": "read",
+          "title": "List business contacts",
+          "description": "List the contact persons of business customers (25 per page). GET /contacts.api."
+        },
+        {
+          "name": "ezrentout_get_business_contact",
+          "type": "read",
+          "title": "Get a business contact",
+          "description": "One business contact by id. GET /contacts/<CONTACT_ID>.api."
+        },
+        {
+          "name": "ezrentout_list_customer_addresses",
+          "type": "read",
+          "title": "List a customer's addresses",
+          "description": "The shipping/billing addresses of one customer. GET /customers/<CUSTOMER_ID>/shipping_addresses.api."
+        },
+        {
+          "name": "ezrentout_list_business_addresses",
+          "type": "read",
+          "title": "List a business's addresses",
+          "description": "The shipping/billing addresses of one business. GET /businesses/<BUSINESS#>/shipping_addresses.api."
+        },
+        {
+          "name": "ezrentout_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List fixed assets (the individually tracked rental items, 25 per page) with group, location and status. GET /assets.api."
+        },
+        {
+          "name": "ezrentout_filter_assets",
+          "type": "read",
+          "title": "Filter assets by status",
+          "description": "Assets by a status filter. status: available, assets_being_serviced, availability_range, checked_out (= currently rented out), group, location, overdue, possessions_of, possessions_of_email, reserved, product_model_number, items_in_order, reservation_starting_today, retired, update_time. Most filters need filter_param_val (a group or location id, a user id, an email, a model number, an order number; for availability_range two dates joined by ~). Not needed for available, checked_out, overdue, reserved, retired. GET /assets/filter.api."
+        },
+        {
+          "name": "ezrentout_search_assets",
+          "type": "read",
+          "title": "Search assets",
+          "description": "Search by asset name (3+ characters), or # followed by the item number, or @ followed by the identification number. GET /search.api (facet FixedAsset)."
+        },
+        {
+          "name": "ezrentout_get_asset",
+          "type": "read",
+          "title": "Get an asset",
+          "description": "One fixed asset by its asset number: details, group, location, status, rental prices, optionally service details and custom fields. GET /assets/<ASSET#>.api."
+        },
+        {
+          "name": "ezrentout_get_asset_history",
+          "type": "read",
+          "title": "Get an asset's history",
+          "description": "The check-in/check-out and change history of one asset (5 entries per page). GET /assets/<ASSET#>/history_paginate.api."
+        },
+        {
+          "name": "ezrentout_get_asset_booked_dates",
+          "type": "read",
+          "title": "Get an item's booked dates",
+          "description": "The dates on which an asset, inventory item or asset stock is booked or reserved. GET /assets/<ASSET#>/booked_dates.api."
+        },
+        {
+          "name": "ezrentout_list_asset_comments",
+          "type": "read",
+          "title": "List an asset's comments",
+          "description": "The comments on one item (25 per page), optionally by one user. GET /assets/<ASSET#>/comments.api."
+        },
+        {
+          "name": "ezrentout_list_assets_in_service",
+          "type": "read",
+          "title": "List assets in service",
+          "description": "Assets currently in maintenance (25 per page), optionally only one service type or state. GET /assets/filter.api?for_service=true&status=assets_being_serviced."
+        },
+        {
+          "name": "ezrentout_list_inventory",
+          "type": "read",
+          "title": "List inventory items",
+          "description": "List inventory (consumable items tracked by quantity, 25 per page). GET /inventory.api."
+        },
+        {
+          "name": "ezrentout_get_inventory_item",
+          "type": "read",
+          "title": "Get an inventory item",
+          "description": "One inventory item by item number, with its stock. GET /inventory/<ASSET#>.api."
+        },
+        {
+          "name": "ezrentout_search_inventory",
+          "type": "read",
+          "title": "Search inventory",
+          "description": "Search inventory items by name, #<item number> or @<identification number>. GET /search.api (facet VolatileAsset)."
+        },
+        {
+          "name": "ezrentout_get_inventory_history",
+          "type": "read",
+          "title": "Get an inventory item's stock history",
+          "description": "The stock movements (added, sold, transferred) of one inventory item. GET /inventory/<ASSET#>/history.api."
+        },
+        {
+          "name": "ezrentout_get_quantity_by_location",
+          "type": "read",
+          "title": "Get an item's quantity at a location",
+          "description": "The stock of an inventory or asset-stock item at one location. GET /locations/get_quantity_by_location.api."
+        },
+        {
+          "name": "ezrentout_list_asset_stock",
+          "type": "read",
+          "title": "List asset stock items",
+          "description": "List asset stock (bulk items tracked by quantity per location, 25 per page). GET /stock_assets.api."
+        },
+        {
+          "name": "ezrentout_get_asset_stock",
+          "type": "read",
+          "title": "Get an asset stock item",
+          "description": "One asset stock item by number. GET /stock_assets/<AssetStock#>.api."
+        },
+        {
+          "name": "ezrentout_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The company's users (staff/admins, 25 per page). Filter by email, employee_identification_number or status (filter_val: active, inactive, login, non_login, all). GET /members.api."
+        },
+        {
+          "name": "ezrentout_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "One user by id. GET /members/<USER_ID>.api."
+        },
+        {
+          "name": "ezrentout_get_user_checked_out_items",
+          "type": "read",
+          "title": "Get the items checked out to a user",
+          "description": "The assets currently checked out to one user (a read; the vendor API uses PUT for this lookup). PUT /members/<USER_ID>/checked_out_items.api?page=N with item_type in the form body."
+        },
+        {
+          "name": "ezrentout_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "The company's locations (25 per page); status all, active or inactive. GET /locations/get_line_item_locations.api."
+        },
+        {
+          "name": "ezrentout_get_location",
+          "type": "read",
+          "title": "Get a location",
+          "description": "One location by id. GET /locations/<LOCATION#>.api."
+        },
+        {
+          "name": "ezrentout_get_location_quantities",
+          "type": "read",
+          "title": "Get the stock at a location",
+          "description": "The quantity of every asset, asset-stock and inventory item at one location. GET /locations/<LOCATION#>/quantities_by_asset_ids.api."
+        },
+        {
+          "name": "ezrentout_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "The asset groups (categories, 25 per page) with their items. GET /assets/classification_view.api."
+        },
+        {
+          "name": "ezrentout_list_subgroups",
+          "type": "read",
+          "title": "List subgroups",
+          "description": "All subgroups, or those of one group. GET /groups/get_sub_groups.api."
+        },
+        {
+          "name": "ezrentout_list_bundles",
+          "type": "read",
+          "title": "List bundles",
+          "description": "Bundles (items rented together, 25 per page). GET /bundles.api."
+        },
+        {
+          "name": "ezrentout_get_bundle",
+          "type": "read",
+          "title": "Get a bundle",
+          "description": "One bundle by id, with its items. GET /bundles/<BUNDLE#>.api."
+        },
+        {
+          "name": "ezrentout_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "The company's vendors/suppliers (25 per page). GET /assets/vendors.api."
+        },
+        {
+          "name": "ezrentout_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "The custom fields defined for items (names and ids). GET /assets/custom_attributes.api."
+        },
+        {
+          "name": "ezrentout_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "All purchase orders. GET /purchase_orders.api."
+        },
+        {
+          "name": "ezrentout_get_purchase_order",
+          "type": "read",
+          "title": "Get a purchase order",
+          "description": "One purchase order with its items. GET /purchase_orders/<PO#>.api."
+        },
+        {
+          "name": "ezrentout_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "Maintenance work orders (25 per page), optionally by status filter (open, in_progess [sic, as the vendor spells it], review_pending, complete) or by work order type. GET /tasks.api."
+        },
+        {
+          "name": "ezrentout_get_work_order",
+          "type": "read",
+          "title": "Get a work order",
+          "description": "One work order by number. GET /tasks/<Work_Order#>.api."
+        },
+        {
+          "name": "ezrentout_list_work_order_types",
+          "type": "read",
+          "title": "List work order types",
+          "description": "The work order types of the company. GET /task_types.api."
+        },
+        {
+          "name": "ezrentout_list_custom_reports",
+          "type": "read",
+          "title": "List saved reports",
+          "description": "The saved custom reports (id, name, description). GET /reports/list_custom_reports.api."
+        },
+        {
+          "name": "ezrentout_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer (a person who rents). First and last name are required. Does not create an order. POST /customers.api."
+        },
+        {
+          "name": "ezrentout_create_order",
+          "type": "write",
+          "title": "Create an order",
+          "description": "Create a new rental order (a draft until it is booked or rented out) for a customer, optionally with assets and dates. If the customer belongs to several businesses, pass business_id. Does not rent anything out and does not charge. POST /baskets.api."
+        },
+        {
+          "name": "ezrentout_add_assets_to_order",
+          "type": "write",
+          "title": "Add assets to an order",
+          "description": "Add assets (or bundles as <id>-b) to an existing order. PATCH /baskets/<ORDER#>/update_basket_from_show.api."
+        },
+        {
+          "name": "ezrentout_book_order",
+          "type": "write",
+          "title": "Book an order",
+          "description": "Reserve an order's assets for a period (books the order). EZRentOut may notify the customer according to the account's settings. PATCH /baskets/<ORDER#>/reservation.api."
+        },
+        {
+          "name": "ezrentout_add_order_custom_entry",
+          "type": "write",
+          "title": "Add a custom charge to an order",
+          "description": "Add a custom line (a named amount, for example a delivery fee) to an order; it raises the order total. Not possible on sold, void, completed or cancelled orders. POST /baskets/<ORDER#>/custom_entries.api."
+        },
+        {
+          "name": "ezrentout_record_order_payment",
+          "type": "write",
+          "title": "Record a payment on an order",
+          "description": "Record a payment received for an order (a prepayment). It records the amount in EZRentOut; it does not charge a card (credit card payments are not supported by the API). Use a payment_method_name from ezrentout_list_payment_options. PATCH /baskets/<ORDER#>/charge_pre_payment.api."
+        },
+        {
+          "name": "ezrentout_rent_out_order",
+          "type": "write",
+          "title": "Rent out an order (check out)",
+          "description": "Check an order out: its assets go to the customer and the rental clock and billing start. EZRentOut may email the customer according to the account's settings. Give rentout_date and return_date, or use_current_datetime. PATCH /baskets/<ORDER#>/checkout.api."
+        },
+        {
+          "name": "ezrentout_return_order",
+          "type": "write",
+          "title": "Return an order (check in)",
+          "description": "Check an order in: the customer returned the assets, rental billing ends and the assets become available again. Give return_date (and return_time), or use_current_datetime to return now. Returns the whole order (no partial returns, late fees or payment here; use ezrentout_record_order_payment). EZRentOut may email the customer according to the account's settings. PATCH /baskets/<ORDER#>/checkin.api."
+        },
+        {
+          "name": "ezrentout_add_asset_comment",
+          "type": "write",
+          "title": "Add a comment to an item",
+          "description": "Add a comment to an asset, asset stock or inventory item. POST /assets/<ASSET#>/comments.api."
+        },
+        {
+          "name": "ezrentout_create_work_order",
+          "type": "write",
+          "title": "Create a maintenance work order",
+          "description": "Create a work order with a title, type and due date, optionally for assets. By default the linked assets are marked unavailable (mark_items_unavailable). POST /tasks.api."
+        },
+        {
+          "name": "ezrentout_start_work_order",
+          "type": "write",
+          "title": "Start a work order",
+          "description": "Mark a work order in progress. PATCH /tasks/<Work_Order#>/mark_in_progress.api."
+        },
+        {
+          "name": "ezrentout_complete_work_order",
+          "type": "write",
+          "title": "Complete a work order",
+          "description": "Mark a work order complete; its assets may become available again. PATCH /tasks/<Work_Order#>/mark_complete.api."
+        },
+        {
+          "name": "ezrentout_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ezrentout_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the EZRentOut tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ezrentout_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on EZRentOut (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ezrentout_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's EZRentOut Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ezrentout_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which rental assets are overdue right now, and who has them?",
+        "Show every order that is currently rented out.",
+        "Which assets are available next week?",
+        "Create a customer for Maria Lopez and start a draft order with asset 14."
+      ]
     }
   ]
 }

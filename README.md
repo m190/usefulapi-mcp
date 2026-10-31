@@ -529,6 +529,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Shoprocket](servers/shoprocket/) | commerce | 30 | OAuth | [servers/shoprocket/](servers/shoprocket/) |
 | [Builder Prime](servers/builder-prime/) | crm | 18 | API token | [servers/builder-prime/](servers/builder-prime/) |
 | [ServiceMonster](servers/servicemonster/) | crm | 33 | API token | [servers/servicemonster/](servers/servicemonster/) |
+| [EZRentOut](servers/ezrentout/) | rental | 63 | OAuth | [servers/ezrentout/](servers/ezrentout/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
