@@ -94078,6 +94078,177 @@
         "Move tomorrow's 10am appointment to 2pm and tell the customer.",
         "Add an internal note to the order for 123 Main St: gate code 4821."
       ]
+    },
+    {
+      "slug": "jisr",
+      "name": "Jisr",
+      "category": "productivity",
+      "description": "Read employees, attendance, leave and payroll; create employee records and import device punches.",
+      "endpoint": "https://jisr.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "version": "1.1.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Jisr organization"
+        }
+      ],
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hosting region"
+          },
+          {
+            "label": "Organization slug"
+          },
+          {
+            "label": "Open API key"
+          },
+          {
+            "label": "Open API secret"
+          }
+        ],
+        "hint": "In Jisr an administrator opens the **Open API** settings, creates a key, picks which APIs it may call (grant only what you need: payroll and financial data are separate permissions) and copies the key and **secret** (the secret is shown only once). The slug is the first part of your Jisr address (`abcd` for abcd.jisr.net). Choose Saudi cloud if your Jisr address ends in .jisr.net.sa. Use scoped credentials you authorize for this connection. Requested HR, attendance, payroll, bank/IBAN and identity records pass to your chosen AI client and its LLM provider; API credentials are not sent to the LLM. Choose only data you are authorized to process in that AI service. Tools can register employees (sending invitations) and submit device attendance punches, which may affect payroll. No salary payment or journal posting tools are exposed. Employee monthly payables requires vendor enablement. Revoke the API key in Jisr to stop access; already minted vendor sessions may remain valid until expiry."
+      },
+      "tools": [
+        {
+          "name": "jisr_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the organization's employees (active by default) with code, names (English/Arabic), job title, department, business unit, employment type, line manager, joining date and status. Filter by active/inactive status, creation date and joining, termination or deletion date ranges. If the API key also has the 'Get Employee Financial Info' / 'Accounting Info' permissions, Jisr adds salary, bank (IBAN) and accounting fields: sensitive HR data. GET /openapi/v1/employees."
+        },
+        {
+          "name": "jisr_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "One employee's profile by id (UUID from jisr_list_employees): names, code, gender, marital status, phone, emails, date of birth, passport/ID number, address, line manager, department, business unit, employment type, location, nationality and contract. GET /openapi/v1/employees/basic_info?id=."
+        },
+        {
+          "name": "jisr_get_employee_financial_info",
+          "type": "read",
+          "title": "Get employee financial info",
+          "description": "One employee's financial details by id: salary components and bank account (IBAN). Sensitive payroll data; needs the 'Get Employee Financial Info' permission on the API key. GET /openapi/v1/employees/financial_info?id=."
+        },
+        {
+          "name": "jisr_list_lookup",
+          "type": "read",
+          "title": "List lookup values",
+          "description": "List one of the organization's lookup tables: departments, employment_types, business_units, locations, nationalities or outsourcing_companies, with their ids and English/Arabic names. Use the ids when creating an employee. GET /openapi/v1/lookups/{table}."
+        },
+        {
+          "name": "jisr_list_attendance_summary",
+          "type": "read",
+          "title": "List attendance summary",
+          "description": "Attendance summary per employee for a date range (default: the current month): total working hours, late arrival, early departure, extra and approved overtime, absence days and records. Filter by one employee or by active/inactive status. GET /openapi/v1/attendance/summary."
+        },
+        {
+          "name": "jisr_list_attendance_punches",
+          "type": "read",
+          "title": "List attendance punches",
+          "description": "List raw clock-in/out punches that were received from punch devices, either the ones that were processed successfully or the ones that failed, in a time window (Jisr's default: the last hour). Each punch has id, punch_time, employee_code, terminal_sn and clocking_id. GET /openapi/v1/attendance_logs."
+        },
+        {
+          "name": "jisr_get_annual_leave_balances",
+          "type": "read",
+          "title": "Get annual leave balances",
+          "description": "Annual leave balance summaries per employee (all employees, or only the given employee codes, at most 100). Only the annual leave type is supported by Jisr. GET /openapi/v1/employee_leaves/summary."
+        },
+        {
+          "name": "jisr_list_paygroups",
+          "type": "read",
+          "title": "List pay groups",
+          "description": "List the organization's pay groups (id and name). The pay group id is needed for payroll and accrual queries. GET /openapi/v1/paygroups."
+        },
+        {
+          "name": "jisr_list_payroll_transactions",
+          "type": "read",
+          "title": "List payroll transactions",
+          "description": "Payroll transactions per employee for one settlement type. type 'payrun' (the regular payroll) needs pay_period and paygroup_id; 'final_settlements', 'vacations_settlements' and 'out_off_payroll_transactions' need a from/to date range. Optionally filter by employee ids or transaction type ids (jisr_list_gl_transaction_types). Sensitive payroll data. GET /openapi/v1/payroll_transactions."
+        },
+        {
+          "name": "jisr_list_accrual_transactions",
+          "type": "read",
+          "title": "List accrual transactions",
+          "description": "Accruals per employee for a confirmed pay period: vacations, end_of_service or tickets_provision (amount, vacation days). Sensitive payroll data. GET /openapi/v1/accrual_transactions."
+        },
+        {
+          "name": "jisr_get_employee_monthly_payables",
+          "type": "read",
+          "title": "Get employee monthly payables",
+          "description": "One employee's payables for a month: net salary, earnings, additions and deductions with breakdowns. Only available to organizations Jisr has whitelisted for this API. Sensitive payroll data. GET /openapi/v1/employee_monthly_payables."
+        },
+        {
+          "name": "jisr_list_gl_transaction_types",
+          "type": "read",
+          "title": "List transaction types",
+          "description": "List the payroll (GL) transaction types: id, category (allowances, loan types...), English/Arabic name and status. Use the ids to filter jisr_list_payroll_transactions. GET /openapi/v1/gl_transaction_types."
+        },
+        {
+          "name": "jisr_list_audit_events",
+          "type": "read",
+          "title": "List audit events",
+          "description": "The organization's audit trail: who did what and when (module, feature, action, actor, success). Filter by module, event name, event type and a time range. GET /openapi/v1/audit_events."
+        },
+        {
+          "name": "jisr_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks registered for the organization: name, endpoint host, method, status. Authentication data, custom header values and the endpoint's path and query (they can hold secrets) are hidden. Read-only; this server does not create or change webhooks. GET /openapi/v1/webhooks."
+        },
+        {
+          "name": "jisr_create_employee",
+          "type": "write",
+          "title": "Create employee",
+          "description": "WRITE: register a new employee in Jisr (they are invited to the system by email). Not reversible through this server: there is no delete tool. Get department_id, employment_type_id, location_id and nationality_id from jisr_list_lookup first. Names need at least two parts. POST /openapi/v1/employees."
+        },
+        {
+          "name": "jisr_create_attendance_punches",
+          "type": "write",
+          "title": "Import attendance punches",
+          "description": "WRITE: send a batch of raw clock-in/out punches (at most 100) from a punch device into Jisr attendance. Jisr processes them asynchronously; check the result with jisr_list_attendance_punches. Each punch carries the unique id its device generated; do not invent ids. POST /openapi/v1/attendance_logs."
+        },
+        {
+          "name": "jisr_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "jisr_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Jisr tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "jisr_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Jisr (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "jisr_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Jisr Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run jisr_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who joined the company this month?",
+        "Show last month's attendance summary: who was late or absent the most?",
+        "What are the annual leave balances for employees 101, 102 and 103?",
+        "List the payroll transactions of the default pay group for 2026-09-01."
+      ]
     }
   ]
 }

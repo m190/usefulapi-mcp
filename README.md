@@ -539,6 +539,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [currencylayer](servers/currencylayer/) | Finance | 9 | OAuth | [servers/currencylayer/](servers/currencylayer/) |
 | [ReciPal](servers/recipal/) | Food & Beverage | 34 | OAuth | [servers/recipal/](servers/recipal/) |
 | [Aryeo](servers/aryeo/) | real-estate | 28 | OAuth | [servers/aryeo/](servers/aryeo/) |
+| [Jisr](servers/jisr/) | productivity | 20 | OAuth | [servers/jisr/](servers/jisr/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
