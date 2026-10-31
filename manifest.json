@@ -94758,6 +94758,109 @@
         "Check the latest stock updates for a project.",
         "Mark an order shipped with the confirmed carrier and tracking code."
       ]
+    },
+    {
+      "slug": "deconetwork",
+      "name": "DecoNetwork",
+      "category": "ecommerce",
+      "description": "Read production orders, mark orders produced or shipped, and add internal notes.",
+      "endpoint": "https://deconetwork.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "version": "1.1.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per DecoNetwork site"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per DecoNetwork site"
+        }
+      ],
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "DecoNetwork site"
+          },
+          {
+            "label": "Staff username"
+          },
+          {
+            "label": "Staff password"
+          }
+        ],
+        "hint": "The site is the first part of your DecoNetwork address (`https://**yourshop**.secure-decoration.com`). DecoNetwork has no API token: the API signs in with a staff login. Create a dedicated staff account in Admin → Account → Staff Accounts (it needs administrator access), and an administrator must turn on the API in Admin → Apps Store (Data Management API). The API is part of the Enterprise plan. Use a customer account with Enterprise API access and the Order Management API enabled. Vendor charges are separate. This initial release offers five order tools; supplier catalog/product tools and document/media links are unavailable. Requested order, customer contact/address, pricing and production data pass to your chosen AI client and LLM provider; staff credentials do not. Status tools change live production/shipping records and can email customers when explicitly requested. Credentials are sent to your DecoNetwork site using its documented username/password API, including HTTPS query parameters on order searches. Requests are never automatically retried; check DecoNetwork after an uncertain write. Disable the dedicated staff account or change its password to stop access. Site supplies usage and billing identity. Only connect data and designs you may process with your AI service."
+      },
+      "tools": [
+        {
+          "name": "deconetwork_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search DecoNetwork orders by date ordered, date due, date shipped, date invoiced or date modified (each a from/to range) and/or invoice number. Conditions are ANDed; with no filter the last 30 days of orders (by date ordered) are returned. Returns a compact summary per order: invoice number (order_id), job name, order and payment status in words, dates, amounts, billing and ship-to contact, shipping method, tracking numbers and line items. Use deconetwork_get_order for everything on one order. order_status narrows the page after it is fetched (the vendor has no documented status filter), so it must be combined with a date range or invoice number; page with next_offset. Max 100 rows per call; total and next_offset page through the rest. GET /api/json/manage_orders/find."
+        },
+        {
+          "name": "deconetwork_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by invoice number with everything the API holds: all line items with decoration views/areas/processes, fields and sizes, team names, payments, refunds, shipments with tracking and packages, notes, taxes, store, and (optional) workflow items and purchase-order data. Status codes are spelled out. Card numbers, coupons and credential-bearing document/media links are removed. Supplier catalog tools are unavailable. GET /api/json/manage_orders/find (invoice number condition)."
+        },
+        {
+          "name": "deconetwork_list_orders_due",
+          "type": "read",
+          "title": "List orders due",
+          "description": "Orders due in a date window (default: the next 7 days from today, UTC), soonest first, as compact summaries. By default cancelled, deleted and already shipped orders are left out, so the list is the work still ahead; set include_closed to see them. Use to answer 'what has to ship this week?'. GET /api/json/manage_orders/find (date due condition)."
+        },
+        {
+          "name": "deconetwork_update_order_status",
+          "type": "write",
+          "title": "Mark order produced or shipped",
+          "description": "WRITE: move a whole order, one line item or part of a line item to 'produced' or 'shipped'. Cannot be undone through the API. With new_status shipped you can store a tracking number (shipping_code). contact_customer=true makes DecoNetwork EMAIL THE CUSTOMER about the change (only when the whole order changes status); it defaults to false, so set it only when the user asked to notify the customer. Give order_line_id to change one line, plus workflow_item_id (and optionally qty) to change part of it. POST /api/json/manage_orders/update_order_status."
+        },
+        {
+          "name": "deconetwork_add_order_note",
+          "type": "write",
+          "title": "Add internal note to order",
+          "description": "WRITE: add an INTERNAL note (visible to staff, not sent to the customer) to an order, or to one line item with order_line_id. Each call adds a new note, so do not repeat it. POST /api/json/manage_orders/add_internal_note."
+        },
+        {
+          "name": "deconetwork_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "deconetwork_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the DecoNetwork tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "deconetwork_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on DecoNetwork (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "deconetwork_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's DecoNetwork Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run deconetwork_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are due to ship in the next 7 days?",
+        "Show me order INV1234 with its line items and tracking.",
+        "List the orders placed this week that are awaiting artwork.",
+        "Mark order INV1234 as shipped with tracking number 1Z999 and add a note about the carrier."
+      ]
     }
   ]
 }
