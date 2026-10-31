@@ -92295,6 +92295,561 @@
         "Which assets are available next week?",
         "Create a customer for Maria Lopez and start a draft order with asset 14."
       ]
+    },
+    {
+      "slug": "jurnal",
+      "name": "Mekari Jurnal",
+      "category": "accounting",
+      "description": "MCP server for Mekari Jurnal — company accounting, sales, purchases and customer/vendor creation.",
+      "endpoint": "https://jurnal.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per active company"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "Create the credentials in the Mekari Developer dashboard ([developers.mekari.com](https://developers.mekari.com/dashboard/applications)): **Create Application**, pick your company and the Jurnal scopes you want to allow, then copy the Client ID and Client Secret. If your dashboard is empty, ask Jurnal support to enable Mekari Developer access. Credentials belong to one company. Include the Get Current Active Company permission for login and only the other scopes you need. Requested customer, vendor, invoice, expense and financial-report data passes to your chosen AI client and its LLM provider. Two write tools create customer or vendor records; no accounting transaction, payment or refund is posted. Revoke or delete this application in Mekari Developer to stop vendor access. Billing follows the verified active company ID and stays stable when a company-scoped credential is rotated. Your Jurnal plan, monthly API quota and rate limit still apply."
+      },
+      "tools": [
+        {
+          "name": "jurnal_get_current_user",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "The Jurnal user the credential acts as: id, name, email, status, owner flag and roles. GET /public/jurnal/api/v1/users/me."
+        },
+        {
+          "name": "jurnal_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "The Jurnal company (or companies) the credential belongs to: id, name, industry, address, tax number, currency settings and feature flags. GET /companies."
+        },
+        {
+          "name": "jurnal_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "Customers with display name, addresses, email, phone, tax number and receivable balance. Paged. GET /customers."
+        },
+        {
+          "name": "jurnal_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "One customer by id (from jurnal_list_customers). GET /customers/{id}."
+        },
+        {
+          "name": "jurnal_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "Vendors (suppliers) with display name, addresses, email, phone, tax number and payable balance. Paged. GET /vendors."
+        },
+        {
+          "name": "jurnal_get_vendor",
+          "type": "read",
+          "title": "Get a vendor",
+          "description": "One vendor by id (from jurnal_list_vendors). GET /vendors/{id}."
+        },
+        {
+          "name": "jurnal_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "Products and services: code, name, buy and sell prices, stock quantity, category, units, active flag. Paged. GET /products."
+        },
+        {
+          "name": "jurnal_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "One product by id (from jurnal_list_products). GET /products/{id}."
+        },
+        {
+          "name": "jurnal_list_accounts",
+          "type": "read",
+          "title": "List chart of accounts",
+          "description": "The chart of accounts: id, number, name, category, currency and balance. Not paged. Use the ids as account_id in jurnal_get_general_ledger. GET /accounts."
+        },
+        {
+          "name": "jurnal_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "One chart-of-accounts entry by id. GET /accounts/{id}."
+        },
+        {
+          "name": "jurnal_list_sales_invoices",
+          "type": "read",
+          "title": "List sales invoices",
+          "description": "Sales invoices: number, customer, dates, status, total (original_amount) and balance due (remaining). Sort by transaction_date or remaining to find recent or unpaid ones. Paged. GET /sales_invoices."
+        },
+        {
+          "name": "jurnal_get_sales_invoice",
+          "type": "read",
+          "title": "Get a sales invoice",
+          "description": "One sales invoice with its lines, taxes and payments. GET /sales_invoices/{id}."
+        },
+        {
+          "name": "jurnal_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "Sales orders with customer, dates, status and totals. Paged. GET /sales_orders."
+        },
+        {
+          "name": "jurnal_list_sales_quotes",
+          "type": "read",
+          "title": "List sales quotes",
+          "description": "Sales quotes (offers) with customer, dates, status and totals. Paged. GET /sales_quotes."
+        },
+        {
+          "name": "jurnal_list_receive_payments",
+          "type": "read",
+          "title": "List received payments",
+          "description": "Customer payments received against sales invoices. Paged. GET /receive_payments."
+        },
+        {
+          "name": "jurnal_list_purchase_invoices",
+          "type": "read",
+          "title": "List purchase invoices",
+          "description": "Purchase invoices (bills from vendors): number, vendor, dates, status, total and balance due. Paged. GET /purchase_invoices."
+        },
+        {
+          "name": "jurnal_get_purchase_invoice",
+          "type": "read",
+          "title": "Get a purchase invoice",
+          "description": "One purchase invoice with its lines, taxes and payments. GET /purchase_invoices/{id}."
+        },
+        {
+          "name": "jurnal_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "Purchase orders with vendor, dates, status and totals. Paged. GET /purchase_orders."
+        },
+        {
+          "name": "jurnal_list_purchase_payments",
+          "type": "read",
+          "title": "List purchase payments",
+          "description": "Payments made to vendors against purchase invoices. Paged. GET /purchase_payments."
+        },
+        {
+          "name": "jurnal_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "Expenses: number, date, beneficiary, status, total and balance due. Paged. GET /expenses."
+        },
+        {
+          "name": "jurnal_get_expense",
+          "type": "read",
+          "title": "Get an expense",
+          "description": "One expense with its lines. GET /expenses/{id}."
+        },
+        {
+          "name": "jurnal_list_journal_entries",
+          "type": "read",
+          "title": "List journal entries",
+          "description": "Manual journal entries (general journal). Paged. GET /journal_entries."
+        },
+        {
+          "name": "jurnal_get_journal_entry",
+          "type": "read",
+          "title": "Get a journal entry",
+          "description": "One journal entry with its debit and credit lines. GET /journal_entries/{id}."
+        },
+        {
+          "name": "jurnal_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "The company's tax rates (PPN, PPh and so on). Paged. GET /taxes."
+        },
+        {
+          "name": "jurnal_list_tags",
+          "type": "read",
+          "title": "List transaction tags",
+          "description": "Transaction tags. Not paged. GET /tags."
+        },
+        {
+          "name": "jurnal_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "Payment methods (cash, transfer and so on). Not paged. GET /payment_methods."
+        },
+        {
+          "name": "jurnal_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "Warehouses (needs a Jurnal plan with inventory). Paged. GET /warehouses."
+        },
+        {
+          "name": "jurnal_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "Product categories. Not paged. GET /product_categories."
+        },
+        {
+          "name": "jurnal_get_profit_and_loss",
+          "type": "read",
+          "title": "Get the profit and loss report",
+          "description": "Profit and loss (income statement) for a period: revenue, cost of sales, expenses and net profit by account. Dates are yyyy-mm-dd. GET /profit_and_loss."
+        },
+        {
+          "name": "jurnal_get_balance_sheet",
+          "type": "read",
+          "title": "Get the balance sheet",
+          "description": "Balance sheet as of end_date (yyyy-mm-dd, default today): assets, liabilities and equity by account. GET /balance_sheet."
+        },
+        {
+          "name": "jurnal_get_trial_balance",
+          "type": "read",
+          "title": "Get the trial balance",
+          "description": "Trial balance for a period: opening, movement and closing balance of every account. GET /trial_balance."
+        },
+        {
+          "name": "jurnal_get_cash_flow",
+          "type": "read",
+          "title": "Get the cash flow report",
+          "description": "Cash flow statement for a period (operating, investing, financing). GET /cash_flow."
+        },
+        {
+          "name": "jurnal_get_general_ledger",
+          "type": "read",
+          "title": "Get the general ledger",
+          "description": "General ledger for a period, optionally limited to some accounts (ids from jurnal_list_accounts). GET /general_ledger."
+        },
+        {
+          "name": "jurnal_get_aged_receivables",
+          "type": "read",
+          "title": "Get aged receivables",
+          "description": "Aged receivables: what customers owe, bucketed by how overdue it is. GET /aged_receivables."
+        },
+        {
+          "name": "jurnal_get_aged_payables",
+          "type": "read",
+          "title": "Get aged payables",
+          "description": "Aged payables: what is owed to vendors, bucketed by how overdue it is. GET /aged_payables."
+        },
+        {
+          "name": "jurnal_get_executive_summary",
+          "type": "read",
+          "title": "Get the executive summary",
+          "description": "Executive summary: key figures (cash, revenue, profit, receivables, payables) for the company. GET /executive_summary."
+        },
+        {
+          "name": "jurnal_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a new customer contact in Jurnal. This writes to the user's books (a customer can be archived or deleted later in Jurnal). Only display_name is required. POST /customers."
+        },
+        {
+          "name": "jurnal_create_vendor",
+          "type": "write",
+          "title": "Create a vendor",
+          "description": "Create a new vendor (supplier) contact in Jurnal. This writes to the user's books (a vendor can be archived or deleted later in Jurnal). Only display_name is required. POST /vendors."
+        },
+        {
+          "name": "jurnal_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "jurnal_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Jurnal tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "jurnal_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Jurnal (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "jurnal_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Jurnal Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run jurnal_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the profit and loss for this month.",
+        "Which sales invoices are still unpaid, largest balance first?",
+        "List my vendors and what I owe each of them.",
+        "Create a new customer called PT Maju Jaya with email finance@majujaya.example."
+      ]
+    },
+    {
+      "slug": "exaktime",
+      "name": "ExakTime / Arcoro",
+      "category": "hr",
+      "description": "MCP server for Arcoro and ExakTime — workforce data, jobs, cost codes and locations.",
+      "endpoint": "https://exaktime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per verified tenant (API key when tenant is unavailable)"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Arcoro API key"
+          }
+        ],
+        "hint": "Create it in the **Arcoro API Portal** (my.arcoro.com/api/portal; ask Arcoro support for access if you do not see it). A **read-only** key is enough for reports; a read-write key also lets the assistant create and update jobs, cost codes and locations. Use a dedicated key with only the permissions and licensed modules you need. Requested workforce, time, HR and OData benefits data passes to your chosen AI client and its LLM provider; it can include birth dates and masked tax identifiers. The six write tools create or update jobs, cost codes and locations. Revoke the key in Arcoro to stop access. Billing follows the Arcoro tenant when OData identifies it; keys without OData access use a key-based identity that changes on rotation."
+      },
+      "tools": [
+        {
+          "name": "exaktime_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (Person records of type Employee) with name, job title, department, employee id, active/inactive status and which Arcoro modules they use. Use personId with exaktime_get_employee. GET /v1/Common/Persons/Employees."
+        },
+        {
+          "name": "exaktime_list_persons",
+          "type": "read",
+          "title": "Search persons",
+          "description": "List or search Person records (employees and API users) by first name, last name, employee identifier or work email. Returns personId, names, work email, employee id, username and whether the person is a contractor or deleted. GET /v1/Common/Persons."
+        },
+        {
+          "name": "exaktime_get_person",
+          "type": "read",
+          "title": "Get person",
+          "description": "One Person record: names, contact details, address, login username and security groups. Government identifiers are not available through this server. GET /v1/Common/Persons/{personId}."
+        },
+        {
+          "name": "exaktime_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "Employment details for a person: hire/termination date, status, employment and pay type, pay rates, job code, manager, location, department, pay schedule and union. GET /v1/Common/Persons/{personId}/Employees."
+        },
+        {
+          "name": "exaktime_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List locations (job sites and offices) with address, coordinates, active flag and whether they are used for time and attendance. GET /v1/Common/Locations."
+        },
+        {
+          "name": "exaktime_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id. GET /v1/Common/Locations/{id}."
+        },
+        {
+          "name": "exaktime_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (projects) with identifier, name, active flag, dates, department, parent job and assigned locations. GET /v1/Time/Jobs."
+        },
+        {
+          "name": "exaktime_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job by id. GET /v1/Time/Jobs/{id}."
+        },
+        {
+          "name": "exaktime_list_cost_codes",
+          "type": "read",
+          "title": "List cost codes",
+          "description": "List cost codes (phases and work activities that time is booked against) with identifier, name, active flag and cost type. GET /v1/Time/CostCodes."
+        },
+        {
+          "name": "exaktime_get_cost_code",
+          "type": "read",
+          "title": "Get cost code",
+          "description": "One cost code by id. GET /v1/Time/CostCodes/{id}."
+        },
+        {
+          "name": "exaktime_list_cost_types",
+          "type": "read",
+          "title": "List cost types",
+          "description": "List cost types (groupings of cost codes, e.g. labor, equipment) with identifier, name and active flag. GET /v1/Time/CostTypes."
+        },
+        {
+          "name": "exaktime_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments with identifier, name and active flag. GET /v1/Common/Departments."
+        },
+        {
+          "name": "exaktime_list_job_codes",
+          "type": "read",
+          "title": "List job codes",
+          "description": "List job codes (positions / trades) with name, description and active flag. GET /v1/Common/JobCodes."
+        },
+        {
+          "name": "exaktime_list_pay_schedules",
+          "type": "read",
+          "title": "List pay schedules",
+          "description": "List pay schedules with frequency, first pay date, pay periods per year and the default flag. GET /v1/Payroll/PaySchedules."
+        },
+        {
+          "name": "exaktime_list_labor_classes",
+          "type": "read",
+          "title": "List labor classes",
+          "description": "List labor classes with identifier, name and active flag. GET /v1/Payroll/LaborClasses."
+        },
+        {
+          "name": "exaktime_list_rate_codes",
+          "type": "read",
+          "title": "List rate codes",
+          "description": "List payroll rate codes with identifier, name, description and whether it is the base rate. GET /v1/Payroll/RateCodes."
+        },
+        {
+          "name": "exaktime_list_time_records",
+          "type": "read",
+          "title": "List time records",
+          "description": "List time records (timecard entries: who worked, when, on which cost code and location, regular/overtime hours). Filter by work date range, person, location or cost code identifier; newest first. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwTimeRecords."
+        },
+        {
+          "name": "exaktime_list_time_punches",
+          "type": "read",
+          "title": "List time punches",
+          "description": "List raw clock punches (punch time, device type, location, network time difference). Filter by date range (UTC days), person or location; newest first. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwTimePunches."
+        },
+        {
+          "name": "exaktime_list_shifts",
+          "type": "read",
+          "title": "List scheduled shifts",
+          "description": "List scheduled shifts (employee, start/end, title, cost code, location, notes). Filter by start date range (UTC days), person or location; newest first. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwShifts."
+        },
+        {
+          "name": "exaktime_list_pay_periods",
+          "type": "read",
+          "title": "List pay periods",
+          "description": "List pay periods (id, start and end date, closed or open, type), newest first. Use the id to find approvals. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwPayPeriods."
+        },
+        {
+          "name": "exaktime_list_time_off_requests",
+          "type": "read",
+          "title": "List time off requests",
+          "description": "List time off requests (employee, plan, start/end date, hours, status, comments, manager). Filter by status, person or start-date range. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwTimeOffRequests."
+        },
+        {
+          "name": "exaktime_list_time_off_balances",
+          "type": "read",
+          "title": "List time off balances",
+          "description": "List time off balances per employee and plan (balance hours, maximum balance, manager). Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwTimeOffBalances."
+        },
+        {
+          "name": "exaktime_list_timecard_approvals",
+          "type": "read",
+          "title": "List daily timecard approvals",
+          "description": "List daily timecard approvals (work date, approval type, who approved and when, the employee). Filter by work date range or employee. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwWorkDateTimeApprovals."
+        },
+        {
+          "name": "exaktime_list_pay_period_approvals",
+          "type": "read",
+          "title": "List pay period approvals",
+          "description": "List pay period (timesheet) approvals and sign-offs: pay period, approval type, approver, time, employee, comment. Use it to see who has not yet signed off. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwPayPeriodApprovals."
+        },
+        {
+          "name": "exaktime_list_meal_break_violations",
+          "type": "read",
+          "title": "List meal break violations",
+          "description": "List meal break compliance violations (type, date, expected vs actual value) linked to a time record id. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/DwMealBreakViolations."
+        },
+        {
+          "name": "exaktime_query_odata",
+          "type": "read",
+          "title": "Query any OData entity set",
+          "description": "Read-only OData query over any Arcoro data warehouse entity set, for questions the other tools do not cover (equipment, expenses, users, time records by hour group, learning, performance, recruiting, benefits...). Entity sets start with Dw, e.g. DwUsers, DwEquipments, DwExpenses, DwCostCodes, DwLocations, DwTimeRecordByHourGroups, DwEmploymentStatusHistories. Full list: https://my.arcoro.com/api/odata ; schema: https://api.arcoro.com/odata/$metadata. $filter uses OData v4 syntax, e.g. startswith(LastName,'Sm') and IsActive eq true. Source: the read-only OData data warehouse, refreshed nightly, so today's entries may not show until tomorrow. Page with skip/next_skip. GET /odata/{EntitySet}."
+        },
+        {
+          "name": "exaktime_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "WRITE: create a job (project) that employees can book time to. Identifier must be unique. The job appears in Arcoro right away; it can be deactivated again with exaktime_update_job (there is no delete). POST /v1/Time/Jobs."
+        },
+        {
+          "name": "exaktime_update_job",
+          "type": "write",
+          "title": "Update job",
+          "description": "WRITE: change fields of an existing job (rename it, set dates, assign locations, or set is_active=false to close it). Only the fields you pass change (null clears a nullable field); the tool reads the job first and sends the full object, because Arcoro replaces the job on PUT. Two edits to the same job at the same moment can overwrite each other: run them one after the other. PUT /v1/Time/Jobs/{id}."
+        },
+        {
+          "name": "exaktime_create_cost_code",
+          "type": "write",
+          "title": "Create cost code",
+          "description": "WRITE: create a cost code (phase or work activity) that time can be booked against. The name must be unique. It can be deactivated again with exaktime_update_cost_code (there is no delete). POST /v1/Time/CostCodes."
+        },
+        {
+          "name": "exaktime_update_cost_code",
+          "type": "write",
+          "title": "Update cost code",
+          "description": "WRITE: change fields of an existing cost code (rename it, change its cost type, or set is_active=false to retire it). Only the fields you pass change; the tool reads the cost code first and sends the full object. PUT /v1/Time/CostCodes/{id}."
+        },
+        {
+          "name": "exaktime_create_location",
+          "type": "write",
+          "title": "Create location",
+          "description": "WRITE: create a location (job site or office). Add the address and/or latitude and longitude so geofencing and maps work. It can be deactivated again with exaktime_update_location (there is no delete). POST /v1/Common/Locations."
+        },
+        {
+          "name": "exaktime_update_location",
+          "type": "write",
+          "title": "Update location",
+          "description": "WRITE: change fields of an existing location (rename, move, new address, or set is_active=false to retire it). Only the fields you pass change; the tool reads the location first and sends the full object. PUT /v1/Common/Locations/{id}."
+        },
+        {
+          "name": "exaktime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "exaktime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ExakTime (Arcoro Time) tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "exaktime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ExakTime (Arcoro Time) (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "exaktime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ExakTime (Arcoro Time) Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run exaktime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who worked on the Main Street job last week and how many overtime hours did they log?",
+        "Which employees have not signed off the current pay period?",
+        "Show pending time off requests for this month.",
+        "Create a job called Riverside Phase 2 with identifier RS-2 and close the old job RS-1."
+      ]
     }
   ]
 }

@@ -530,6 +530,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Builder Prime](servers/builder-prime/) | crm | 18 | API token | [servers/builder-prime/](servers/builder-prime/) |
 | [ServiceMonster](servers/servicemonster/) | crm | 33 | API token | [servers/servicemonster/](servers/servicemonster/) |
 | [EZRentOut](servers/ezrentout/) | rental | 63 | OAuth | [servers/ezrentout/](servers/ezrentout/) |
+| [Mekari Jurnal](servers/jurnal/) | accounting | 42 | OAuth | [servers/jurnal/](servers/jurnal/) |
+| [ExakTime / Arcoro](servers/exaktime/) | hr | 36 | OAuth | [servers/exaktime/](servers/exaktime/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
