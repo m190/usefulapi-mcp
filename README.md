@@ -562,6 +562,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SMSGlobal](servers/smsglobal/) | messaging | 22 | API token | [servers/smsglobal/](servers/smsglobal/) |
 | [Givecloud](servers/givecloud/) | fundraising | 14 | API token | [servers/givecloud/](servers/givecloud/) |
 | [TimeTap](servers/timetap/) | scheduling | 13 | API token | [servers/timetap/](servers/timetap/) |
+| [CATS](servers/cats-ats/) | productivity | 38 | OAuth | [servers/cats-ats/](servers/cats-ats/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

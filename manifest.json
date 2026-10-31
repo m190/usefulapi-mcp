@@ -97987,6 +97987,277 @@
         "Show the scheduling staff working at this location.",
         "Read this appointment's status and staff/client time zones without client notes."
       ]
+    },
+    {
+      "slug": "cats-ats",
+      "name": "CATS",
+      "category": "productivity",
+      "description": "Read CATS candidates, jobs and pipelines, and make explicitly confirmed recruiting changes.",
+      "endpoint": "https://cats-ats.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per connected CATS site"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per connected CATS site"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "CATS API key"
+          }
+        ],
+        "hint": "Create it in CATS under **Settings → Administration → API** (a v3 key; old Transaction Codes do not work). Authorize UsefulAPI and your chosen AI client to process only the recruiting data you are entitled to share. Keep government IDs, health data, personal financial data and other CATS Prohibited Data out of this workflow. Use an authorized key appropriate for this workflow; the key-generation form offers no read-only scope selector. CATS documents a rolling 500 API requests per hour (the counter scope is unspecified). Writes require explicit confirmation and may cause configured account automation or webhooks. Requests are not replayed automatically. Your key is used only to call the CATS API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "cats_get_site",
+          "type": "read",
+          "title": "Get CATS site",
+          "description": "The CATS site (account) this API key belongs to: id, mode (recruiter or employer) and subdomain. GET /site."
+        },
+        {
+          "name": "cats_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the CATS users (recruiters) with id, name, title and access level. Use the ids as owner or assignee. GET /users."
+        },
+        {
+          "name": "cats_list_candidates",
+          "type": "read",
+          "title": "List candidates",
+          "description": "List candidates (personal data: name, emails, address, employer, skills, notes), one page at a time, max 100 per page. Use cats_search_candidates or cats_filter_candidates to find specific people. GET /candidates."
+        },
+        {
+          "name": "cats_get_candidate",
+          "type": "read",
+          "title": "Get candidate",
+          "description": "One candidate by id (personal data). GET /candidates/{id}."
+        },
+        {
+          "name": "cats_search_candidates",
+          "type": "read",
+          "title": "Search candidates",
+          "description": "Free-text search over candidates (name, email, skills, resume text...), paged. GET /candidates/search?query=."
+        },
+        {
+          "name": "cats_filter_candidates",
+          "type": "read",
+          "title": "Filter candidates",
+          "description": "Filter candidates by fields (read-only, although it is a POST): first_name, last_name, title, emails.primary, address.city/state/postal_code, country_code, current_employer, key_skills, notes, dates (date_created, date_modified), owner_id, is_hot... Each condition is {field, filter, value}; filters: exactly, contains, between {gte,lte}, greater_than, less_than, is_empty, geo_distance. Paged. POST /candidates/search."
+        },
+        {
+          "name": "cats_list_candidate_pipelines",
+          "type": "read",
+          "title": "List a candidate's pipelines",
+          "description": "The jobs a candidate is in the pipeline for, with rating, workflow and current status id. GET /candidates/{id}/pipelines."
+        },
+        {
+          "name": "cats_list_candidate_activities",
+          "type": "read",
+          "title": "List a candidate's activities",
+          "description": "The activity log of a candidate (calls, meetings, notes, pipeline changes), paged. GET /candidates/{id}/activities."
+        },
+        {
+          "name": "cats_list_candidate_tasks",
+          "type": "read",
+          "title": "List a candidate's tasks",
+          "description": "Tasks attached to a candidate. GET /candidates/{id}/tasks."
+        },
+        {
+          "name": "cats_list_candidate_attachments",
+          "type": "read",
+          "title": "List a candidate's attachments (metadata)",
+          "description": "File names, sizes and whether each file is a resume, for a candidate's attachments. Metadata only: file contents are never downloaded. GET /candidates/{id}/attachments."
+        },
+        {
+          "name": "cats_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List job orders with title, location, company, recruiter, status and workflow ids, dates. Paged. GET /jobs."
+        },
+        {
+          "name": "cats_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job order by id, with its description. GET /jobs/{id}."
+        },
+        {
+          "name": "cats_search_jobs",
+          "type": "read",
+          "title": "Search jobs",
+          "description": "Free-text search over job orders, paged. GET /jobs/search?query=."
+        },
+        {
+          "name": "cats_list_job_pipelines",
+          "type": "read",
+          "title": "List a job's pipeline",
+          "description": "The candidates in the pipeline of a job: pipeline id, candidate id, rating and current status id. Paged. GET /jobs/{id}/pipelines."
+        },
+        {
+          "name": "cats_list_job_statuses",
+          "type": "read",
+          "title": "List job statuses",
+          "description": "The statuses a job order can have (Active, OnHold, Closed...). GET /jobs/statuses."
+        },
+        {
+          "name": "cats_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List candidate-to-job pipelines (candidate id, job id, rating, workflow id, status id), paged. GET /pipelines."
+        },
+        {
+          "name": "cats_get_pipeline",
+          "type": "read",
+          "title": "Get pipeline",
+          "description": "One pipeline (a candidate on a job) by id. GET /pipelines/{id}."
+        },
+        {
+          "name": "cats_filter_pipelines",
+          "type": "read",
+          "title": "Filter pipelines",
+          "description": "Filter pipelines by id, candidate_id, job_id, status_id, rating, date_created or date_modified (read-only, although it is a POST). Each condition is {field, filter, value}. Paged. POST /pipelines/search."
+        },
+        {
+          "name": "cats_get_pipeline_status_history",
+          "type": "read",
+          "title": "Get pipeline status history",
+          "description": "The status changes of a pipeline over time (status, who, when). GET /pipelines/{id}/statuses."
+        },
+        {
+          "name": "cats_list_workflows",
+          "type": "read",
+          "title": "List pipeline workflows",
+          "description": "The pipeline workflows (sets of statuses such as Contacted, Interviewing, Offered). GET /pipelines/workflows."
+        },
+        {
+          "name": "cats_list_workflow_statuses",
+          "type": "read",
+          "title": "List workflow statuses",
+          "description": "The statuses of one pipeline workflow (id, title, prerequisites, triggers). Use the ids with cats_change_pipeline_status. GET /pipelines/workflows/{id}/statuses."
+        },
+        {
+          "name": "cats_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List client companies (name, address, website, owner), paged. GET /companies."
+        },
+        {
+          "name": "cats_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "One company by id. GET /companies/{id}."
+        },
+        {
+          "name": "cats_search_companies",
+          "type": "read",
+          "title": "Search companies",
+          "description": "Free-text search over companies, paged. GET /companies/search?query=."
+        },
+        {
+          "name": "cats_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List client contacts (personal data: name, title, emails, company), paged. GET /contacts."
+        },
+        {
+          "name": "cats_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "One client contact by id (personal data). GET /contacts/{id}."
+        },
+        {
+          "name": "cats_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Free-text search over client contacts, paged. GET /contacts/search?query=."
+        },
+        {
+          "name": "cats_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks (description, priority 1-5, due date, assignee, completion, the record it is about), paged. GET /tasks."
+        },
+        {
+          "name": "cats_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id. GET /tasks/{id}."
+        },
+        {
+          "name": "cats_list_activities",
+          "type": "read",
+          "title": "List activities",
+          "description": "The site-wide activity log (calls, emails logged, meetings, notes) with the record each is about, paged. GET /activities."
+        },
+        {
+          "name": "cats_add_candidate_activity",
+          "type": "write",
+          "title": "Add an activity (note) to a candidate",
+          "description": "WRITE: Requires confirm:true. log an activity (a call, meeting, note...) on a candidate's record. It only records the entry in CATS: no email/SMS-send request is made, even for type 'email' or 'text_message'. Creates a new entry each time (not idempotent). POST /candidates/{id}/activities."
+        },
+        {
+          "name": "cats_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: Requires confirm:true. create a task in CATS, optionally about a candidate, contact, company or job and assigned to a user. Creates a new task each time (not idempotent); CATS may notify the assignee. POST /tasks."
+        },
+        {
+          "name": "cats_change_pipeline_status",
+          "type": "write",
+          "title": "Move a candidate to another pipeline status",
+          "description": "WRITE: Requires confirm:true. change the status of a pipeline (move a candidate to another stage of a job's workflow, e.g. Interviewing, Offered, Rejected). Get the pipeline id from cats_list_candidate_pipelines and the status id from cats_list_workflow_statuses. Requires confirm:true. Requests that status triggers (which can e-mail people or change records) be suppressed: every trigger attached to the target status is sent with fire=false. CATS remains responsible for enforcing its trigger semantics; independently configured webhooks may still run. The change is recorded in the pipeline's status history. POST /pipelines/{id}/status."
+        },
+        {
+          "name": "cats_create_candidate",
+          "type": "write",
+          "title": "Create a candidate",
+          "description": "WRITE: Requires confirm:true. create one candidate record (personal data) with name, optional contact details and notes. Refuses when CATS finds a duplicate (check_duplicate=true, the default). Creates a new record each time (not idempotent); no email-send request is made to the candidate and no login is created. POST /candidates."
+        },
+        {
+          "name": "cats_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cats_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the CATS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cats_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on CATS (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cats_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's CATS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cats_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the latest candidates, one page at a time.",
+        "Show the jobs in the recruiting pipeline.",
+        "Summarize the activity history for candidate 123.",
+        "Create a follow-up task after I confirm its details."
+      ]
     }
   ]
 }
