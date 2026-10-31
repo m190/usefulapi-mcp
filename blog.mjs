@@ -8,6 +8,8 @@
 //   date: 2026-10-26                                    (YYYY-MM-DD, not in the future, one post per day)
 //   products: rotacloud                                 (1+ live server slugs, space- or comma-separated)
 //   ---
+// Titles name the workflow and a supported AI assistant. Rotate Claude, ChatGPT and Cursor across posts
+// rather than repeatedly using the same assistant; check the most recent titles before choosing one.
 //   Markdown body: ## and ### headings, paragraphs, "- " and "1. " lists, "> " prompt quotes, ``` code blocks,
 //   inline `code`, **bold** and [links](https://... or /path/). No raw HTML: everything is escaped.
 //   A `code` span that looks like a tool name (a_b) must be a tool of one of the post's products.

@@ -1,5 +1,5 @@
 ---
-title: Get a hiring overview from Recruitee
+title: Review your Recruitee hiring pipeline in ChatGPT
 description: Use Claude or ChatGPT to review a Recruitee job, candidate stages, recruiter notes, upcoming interviews and open tasks before your hiring meeting.
 date: 2026-10-31
 products: recruitee
