@@ -25031,7 +25031,7 @@
           "name": "buildium_list_work_orders",
           "type": "read",
           "title": "List work orders",
-          "description": "List work orders with title, status, priority, due date, vendor, amount, line items, linked task and bill ids. Filter by entity, status, priority, task type, unit, vendor, assignee, dates, amount, billed flag or title. Buildium: GET /v1/workorders."
+          "description": "List work orders with title, status, priority, due date, vendor, amount, line items, linked task and bill ids. Filter by entity, status, priority, task type, unit, vendor, assignee, dates, amount, billed flag or title. Supply entity_type with entity_id (Rental for a property); statuses refer to the associated task. Dates must be YYYY-MM-DD, and each from value must be at most its to value. Buildium: GET /v1/workorders."
         },
         {
           "name": "buildium_get_work_order",
@@ -25055,7 +25055,7 @@
           "name": "buildium_list_bills",
           "type": "read",
           "title": "List bills",
-          "description": "List vendor bills (accounts payable) with dates, memo, vendor, linked work order, reference number, approval status and lines. Read-only. Buildium: GET /v1/bills."
+          "description": "List vendor bills (accounts payable) with dates, memo, vendor, linked work order, reference number, approval status and lines. Read-only. Supply entity_type with entity_id (Rental for a property). paid_date_from/to filter the payment date, not the bill or due date, and must be YYYY-MM-DD with from at most to. For sorting use bill fields such as Date, DueDate, PaidDate or Id. Buildium: GET /v1/bills."
         },
         {
           "name": "buildium_list_gl_accounts",
@@ -25118,7 +25118,7 @@
           "description": "Cancel the caller's Buildium Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run buildium_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.30.2",
+      "version": "1.30.3",
       "login": {
         "kind": "key",
         "fields": [
@@ -96288,6 +96288,199 @@
         "Show the answers of the latest 'Site Safety Check' entries.",
         "Which tasks assigned to Maria are still open?",
         "Create a task for tom@example.com to fill out the 'Timesheet' form, due tomorrow."
+      ]
+    },
+    {
+      "slug": "sorry-app",
+      "name": "Sorry",
+      "category": "monitoring",
+      "description": "Read status pages and incidents; make confirmed public changes and manage individual subscribers.",
+      "endpoint": "https://sorry-app.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per connected Sorry API token"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per connected Sorry API token"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Sorry API token"
+          }
+        ],
+        "hint": "Create a user-specific token at app.sorryapp.com → My Account → API Tokens. The token is encrypted for authorized API calls. Requested status records and subscriber contact details reach your selected AI client/LLM provider; webhook URLs and credentials are redacted. Status writes are public even with publish=false; publish=true additionally requests subscriber/integration broadcasts and SMS charges may apply. Explicit confirmation is required. No operation is automatically replayed: check Sorry after an uncertain write. Revoke the token in Sorry to stop access; disconnect UsefulAPI to stop this connection. Usage and billing are tied to this token: rotating it creates a new UsefulAPI identity. Cancel the old UsefulAPI plan before rotation or contact support to arrange a transfer. Vendor subscriptions, quotas and charges remain separate."
+      },
+      "tools": [
+        {
+          "name": "sorryapp_list_pages",
+          "type": "read",
+          "title": "List status pages",
+          "description": "List the status pages the API token's user can access: id, name, state (operational/degraded/...), timezone, locale, support contacts, notification channels. The id is the page_id every other tool takes. Sorry: GET /v1/pages."
+        },
+        {
+          "name": "sorryapp_get_page",
+          "type": "read",
+          "title": "Get status page",
+          "description": "Get one status page, optionally with related resources embedded (brand, components, custom_domain, notices, notices.updates, theme). Sorry: GET /v1/pages/{page_id}?include=..."
+        },
+        {
+          "name": "sorryapp_list_components",
+          "type": "read",
+          "title": "List components",
+          "description": "List a status page's components (the parts of your service shown on the page): id, name, description, state (operational/degraded/partially-degraded), position, parent_id. Sorry: GET /v1/pages/{page_id}/components."
+        },
+        {
+          "name": "sorryapp_get_component",
+          "type": "read",
+          "title": "Get component",
+          "description": "Get one component of a status page. Sorry: GET /v1/pages/{page_id}/components/{component_id}."
+        },
+        {
+          "name": "sorryapp_list_notices",
+          "type": "read",
+          "title": "List notices",
+          "description": "List a status page's notices (incidents = type unplanned, maintenance = type planned): id, type, state, timeline_state, subject, synopsis, began/ended times, public link. Optional filters and embedded updates/components. Sorry: GET /v1/pages/{page_id}/notices."
+        },
+        {
+          "name": "sorryapp_get_notice",
+          "type": "read",
+          "title": "Get notice",
+          "description": "Get one notice (incident or maintenance) with its state, times and public link. Sorry: GET /v1/pages/{page_id}/notices/{notice_id}."
+        },
+        {
+          "name": "sorryapp_list_notice_updates",
+          "type": "read",
+          "title": "List notice updates",
+          "description": "List the updates (timeline comments) of one notice: id, content, should_publish, public link, times. Sorry: GET /v1/pages/{page_id}/notices/{notice_id}/updates."
+        },
+        {
+          "name": "sorryapp_get_notice_update",
+          "type": "read",
+          "title": "Get notice update",
+          "description": "Get one update of a notice. Sorry: GET /v1/pages/{page_id}/notices/{notice_id}/updates/{update_id}."
+        },
+        {
+          "name": "sorryapp_list_notice_templates",
+          "type": "read",
+          "title": "List notice templates",
+          "description": "List the page's notice templates (reusable subject + opening comment for new incidents or maintenance): id, name, subject, initial_comment, optional component_id. Returns the vendor-default template page; paging controls are withheld pending a verified request contract. Sorry: GET /v1/pages/{page_id}/notice_templates."
+        },
+        {
+          "name": "sorryapp_list_update_templates",
+          "type": "read",
+          "title": "List update templates",
+          "description": "List the page's update templates (reusable text for one notice update): id, name, content, optional component_id. Returns the vendor-default template page; paging controls are withheld pending a verified request contract. Sorry: GET /v1/pages/{page_id}/update_templates."
+        },
+        {
+          "name": "sorryapp_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List a status page's subscribers (people and channels notified of notices): id, email, phone number, name, company, tags, created time. Webhook URLs of Slack/Teams subscribers are redacted. Contains personal data. Sorry: GET /v1/pages/{page_id}/subscribers."
+        },
+        {
+          "name": "sorryapp_get_subscriber",
+          "type": "read",
+          "title": "Get subscriber",
+          "description": "Get one subscriber of a status page (personal data; webhook URLs redacted). Sorry: GET /v1/pages/{page_id}/subscribers/{subscriber_id}."
+        },
+        {
+          "name": "sorryapp_list_timezones",
+          "type": "read",
+          "title": "List timezones",
+          "description": "List the timezone names Sorry accepts for a status page (name and GMT offset label). Sorry: GET /v1/timezones."
+        },
+        {
+          "name": "sorryapp_create_component",
+          "type": "write",
+          "title": "Create component",
+          "description": "WRITE: add a component to a status page. It appears on the PUBLIC status page immediately, as operational. Sorry: POST /v1/pages/{page_id}/components."
+        },
+        {
+          "name": "sorryapp_update_component",
+          "type": "write",
+          "title": "Update component",
+          "description": "WRITE: rename a component or change its description on the PUBLIC status page (overwrites the previous value). It cannot change the component's state: state follows open notices (use the notice tools). Sorry: PATCH /v1/pages/{page_id}/components/{component_id}."
+        },
+        {
+          "name": "sorryapp_create_incident",
+          "type": "write",
+          "title": "Create incident notice",
+          "description": "WRITE: open an incident (an unplanned notice) on the status page. These changes are PUBLIC on the status page, including publish=false. publish=true additionally requests delivery to subscribers and integrations (email, SMS, Slack, Teams, X); vendor SMS/notification charges may apply. Confirm the content and audience first. It marks the listed components degraded on the PUBLIC page. Starts in the investigating state. Sorry: POST /v1/pages/{page_id}/notices with type=unplanned."
+        },
+        {
+          "name": "sorryapp_create_maintenance",
+          "type": "write",
+          "title": "Create maintenance notice",
+          "description": "WRITE: schedule maintenance (a planned notice) on the status page. These changes are PUBLIC on the status page, including publish=false. publish=true additionally requests delivery to subscribers and integrations (email, SMS, Slack, Teams, X); vendor SMS/notification charges may apply. Confirm the content and audience first. Sorry: POST /v1/pages/{page_id}/notices with type=planned."
+        },
+        {
+          "name": "sorryapp_update_notice",
+          "type": "write",
+          "title": "Update notice",
+          "description": "WRITE: change a notice: its subject, state (for example resolved), affected components, schedule, and/or add a comment (an update) to its timeline. These changes are PUBLIC on the status page, including publish=false. publish=true additionally requests delivery to subscribers and integrations (email, SMS, Slack, Teams, X); vendor SMS/notification charges may apply. Confirm the content and audience first. Fields you pass overwrite the previous values. Sorry: PATCH /v1/pages/{page_id}/notices/{notice_id}."
+        },
+        {
+          "name": "sorryapp_create_notice_update",
+          "type": "write",
+          "title": "Add notice update",
+          "description": "WRITE: add one update (a comment) to a notice's timeline. It is PUBLIC on the status page, and Sorry's docs say a new update is also published to the page's configured integrations (email, SMS, Slack, Teams, X). The docs list no switch to suppress that on this endpoint, so confirm_publish=true is required; this endpoint has no exposed suppression switch. Sorry: POST /v1/pages/{page_id}/notices/{notice_id}/updates."
+        },
+        {
+          "name": "sorryapp_edit_notice_update",
+          "type": "write",
+          "title": "Edit notice update",
+          "description": "WRITE: rewrite the text of an existing notice update on the PUBLIC status page (overwrites the previous text; the old text is not kept). Sorry: PATCH /v1/pages/{page_id}/notices/{notice_id}/updates/{update_id}."
+        },
+        {
+          "name": "sorryapp_create_subscriber",
+          "type": "write",
+          "title": "Add one subscriber",
+          "description": "WRITE: add ONE subscriber (an email address and/or a phone number) to a status page. From then on that person is emailed/texted about notices published on the page, and Sorry may send them a confirmation. Add only people who asked to be notified. No bulk import. Sorry: POST /v1/pages/{page_id}/subscribers."
+        },
+        {
+          "name": "sorryapp_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sorryapp_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sorry tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sorryapp_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Sorry (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sorryapp_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sorry Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sorryapp_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the open incident notices for our status page.",
+        "Review the latest public updates for incident 77.",
+        "Find maintenance scheduled for our database components.",
+        "Draft the text for an incident, then ask me before creating its public notice."
       ]
     }
   ]
