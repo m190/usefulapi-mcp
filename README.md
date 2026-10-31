@@ -436,7 +436,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Feefo](servers/feefo/) | marketing | 9 | API token | [servers/feefo/](servers/feefo/) |
 | [inv.bg](servers/inv-bg/) | billing | 31 | API token | [servers/inv-bg/](servers/inv-bg/) |
 | [KashFlow](servers/kashflow/) | billing | 42 | API token | [servers/kashflow/](servers/kashflow/) |
-| [Papierkram](servers/papierkram/) | billing | 42 | API token | [servers/papierkram/](servers/papierkram/) |
+| [Papierkram](servers/papierkram/) | billing | 43 | API token | [servers/papierkram/](servers/papierkram/) |
 | [PaySpace](servers/payspace/) | billing | 25 | API token | [servers/payspace/](servers/payspace/) |
 | [Sapo](servers/sapo/) | ecommerce | 24 | API token | [servers/sapo/](servers/sapo/) |
 | [Sarbacane](servers/sarbacane/) | email | 23 | API token | [servers/sarbacane/](servers/sarbacane/) |
@@ -587,6 +587,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Operto](servers/operto/) | property-management | 12 | API token | [servers/operto/](servers/operto/) |
 | [Run my Accounts](servers/run-my-accounts/) | accounting | 20 | API token | [servers/run-my-accounts/](servers/run-my-accounts/) |
 | [TrekkSoft](servers/trekksoft/) | scheduling | 14 | API token | [servers/trekksoft/](servers/trekksoft/) |
+| [Reservio](servers/reservio/) | scheduling | 20 | API token | [servers/reservio/](servers/reservio/) |
+| [LeagueApps](servers/leagueapps/) | sports | 15 | API token | [servers/leagueapps/](servers/leagueapps/) |
+| [Galaxy Digital](servers/galaxy-digital/) | business-operations | 33 | API token | [servers/galaxy-digital/](servers/galaxy-digital/) |
+| [ServiceTrade](servers/servicetrade/) | business-operations | 26 | API token | [servers/servicetrade/](servers/servicetrade/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

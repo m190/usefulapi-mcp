@@ -71,6 +71,7 @@ On first connect you'll enter your **Papierkram account** (the first part of `ht
 | `papierkram_upload_voucher_document` | **write** | Upload voucher document |
 | `papierkram_create_voucher` | **write** | Create expense voucher |
 | `papierkram_pay_voucher` | **write** | Pay expense voucher |
+| `papierkram_update_voucher` | **write** | Update expense voucher |
 | `papierkram_usage_status` | meta | Usage status (free-tier meter) |
 | `papierkram_request_feature` | meta | Request a missing feature |
 | `papierkram_upgrade` | meta | Upgrade to Pro (unlimited*) |

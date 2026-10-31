@@ -75244,7 +75244,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.9.0",
+      "version": "1.10.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -75485,6 +75485,12 @@
           "type": "write",
           "title": "Pay expense voucher",
           "description": "WRITE: book a payment of an expense voucher (POST /expense/vouchers/{id}/pay), with a value and payment date or with an existing bank transaction. Without confirm it changes nothing: it reads the voucher and returns the exact request for the user to review. After approval, call again with confirm: true. A value that differs from the open amount needs difference_reason (teilzahlung = part payment, skonto = cash discount, mahnung = reminder fee, schmaelerung = reduction, sonstige = other). A repeated call books a second payment: after an error, check the voucher state with papierkram_get_voucher before retrying."
+        },
+        {
+          "name": "papierkram_update_voucher",
+          "type": "write",
+          "title": "Update expense voucher",
+          "description": "WRITE: change an existing expense voucher (PUT /expense/vouchers/{id}): title, supplier, provenance, dates, notes, flag or line items (amount, VAT rate, category). Only the fields you pass are changed. line_items REPLACES all lines of the voucher: pass the full new list. Without confirm it changes nothing: it reads the voucher and returns its current values next to the exact request for the user to review. After approval, call again with the same arguments and confirm: true. Papierkram refuses a voucher that can no longer be edited (e.g. a paid or locked one). Lines with a billing (re-invoicing) or depreciation (AfA) setting cannot be replaced here, so the tool refuses line_items for such a voucher; change those lines in Papierkram. Payments are booked with papierkram_pay_voucher. Costs 1 Papierkram API credit; the preview, and a confirmed line change, also read the voucher (1 each)."
         },
         {
           "name": "papierkram_usage_status",
@@ -102369,6 +102375,756 @@
         "Show all bookings made yesterday and the guests on each.",
         "List the guests on tomorrow's 09:00 departure with their phone numbers.",
         "Which activities are active but not bookable right now?"
+      ]
+    },
+    {
+      "slug": "reservio",
+      "name": "Reservio",
+      "category": "scheduling",
+      "description": "Check open slots, list bookings, services and staff, book appointments and group events in Reservio.",
+      "endpoint": "https://reservio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Reservio API access token"
+          },
+          {
+            "label": "Business id"
+          }
+        ],
+        "hint": "API access is part of the Reservio **Pro plan**. Ask Reservio customer care to issue an API access token for your account. They can also tell you the business id. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "reservio_get_business",
+          "type": "read",
+          "title": "Get a business",
+          "description": "Get the business profile: name, address, contact details, time zone. Reservio API: GET /businesses/{businessId}."
+        },
+        {
+          "name": "reservio_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services clients can book, with duration, price and capacity. Reservio API: GET /businesses/{businessId}/services."
+        },
+        {
+          "name": "reservio_get_service",
+          "type": "read",
+          "title": "Get a service",
+          "description": "Get one service by id. Reservio API: GET /businesses/{businessId}/services/{serviceId}."
+        },
+        {
+          "name": "reservio_list_resources",
+          "type": "read",
+          "title": "List resources (staff)",
+          "description": "List bookable resources, such as staff members or rooms. Reservio API: GET /businesses/{businessId}/resources."
+        },
+        {
+          "name": "reservio_get_resource",
+          "type": "read",
+          "title": "Get a resource",
+          "description": "Get one resource (staff member or room) by id. Reservio API: GET /businesses/{businessId}/resources/{resourceId}."
+        },
+        {
+          "name": "reservio_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List calendar events (appointments, group events, blocked time) with start, end, type and capacity. Reservio API: GET /businesses/{businessId}/events."
+        },
+        {
+          "name": "reservio_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings with client name, state, cost and linked event. Sort by -createdAt to see the newest first (Reservio has no webhooks, so polling this is the way to find new bookings). Reservio API: GET /businesses/{businessId}/bookings."
+        },
+        {
+          "name": "reservio_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List coupons (credit or visit packages). Reservio API: GET /businesses/{businessId}/coupons."
+        },
+        {
+          "name": "reservio_get_coupon",
+          "type": "read",
+          "title": "Get a coupon",
+          "description": "Get one coupon by id. Reservio API: GET /businesses/{businessId}/coupons/{couponId}."
+        },
+        {
+          "name": "reservio_list_opening_hours",
+          "type": "read",
+          "title": "List opening hours",
+          "description": "List the opening hours of the business (days and start/end in seconds from midnight). Reservio API: GET /businesses/{businessId}/opening-hours."
+        },
+        {
+          "name": "reservio_list_rosters",
+          "type": "read",
+          "title": "List rosters",
+          "description": "List staff work schedules (rosters) per resource and date. Reservio API: GET /businesses/{businessId}/rosters."
+        },
+        {
+          "name": "reservio_get_booking_slots",
+          "type": "read",
+          "title": "Get free booking slots",
+          "description": "List free time slots for a service in a date range, optionally for one resource. Use before creating a booking. Reservio API: GET /businesses/{businessId}/availability/booking-slots."
+        },
+        {
+          "name": "reservio_get_booking_days",
+          "type": "read",
+          "title": "Get bookable days",
+          "description": "For each day in a range, tell whether any slot is free for a service. Reservio API: GET /businesses/{businessId}/availability/booking-days."
+        },
+        {
+          "name": "reservio_get_event_days",
+          "type": "read",
+          "title": "Get days with open events",
+          "description": "For each day in a range, tell whether a group event is open for booking. Reservio API: GET /businesses/{businessId}/availability/event-days."
+        },
+        {
+          "name": "reservio_create_appointment_booking",
+          "type": "write",
+          "title": "Create an appointment booking",
+          "description": "WRITE: create a real appointment booking for a service at a start/end time (use a slot from reservio_get_booking_slots). Reservio may notify the client. Not safe to repeat: a second call books a second appointment. Reservio API: POST /businesses/{businessId}/bookings."
+        },
+        {
+          "name": "reservio_create_group_booking",
+          "type": "write",
+          "title": "Book a group event",
+          "description": "WRITE: book a client into an existing group event (event id from reservio_list_events). Reservio may notify the client. Not safe to repeat: a second call books a second seat. Reservio API: POST /businesses/{businessId}/bookings."
+        },
+        {
+          "name": "reservio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "reservio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Reservio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "reservio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Reservio (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "reservio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Reservio Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run reservio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which free slots do we have for a haircut next Tuesday?",
+        "List the bookings created in the last 24 hours.",
+        "Which staff members work on Friday, and what are their rosters?",
+        "Book John Doe for the 10:00 slot tomorrow."
+      ]
+    },
+    {
+      "slug": "leagueapps",
+      "name": "LeagueApps",
+      "category": "sports",
+      "description": "Read programs, schedules, teams, locations and announcements of a youth-sports site in LeagueApps.",
+      "endpoint": "https://leagueapps.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "LeagueApps site id"
+          },
+          {
+            "label": "LeagueApps Public API key"
+          }
+        ],
+        "hint": "Generate the key in the LeagueApps console: **Connect → API Settings → Generate Public API Key**. The site id is the number after sites/ in your console URL. This server reads public program data only (programs, schedules, teams, locations). The key is used only to call the API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "leagueapps_get_site",
+          "type": "read",
+          "title": "Get site info",
+          "description": "Basic information about the connected LeagueApps site: name, subdomain, time zone, URL, logo and theme colors. Public API: GET /v1/sites/{siteId}."
+        },
+        {
+          "name": "leagueapps_list_programs",
+          "type": "read",
+          "title": "List programs",
+          "description": "List programs (leagues, clubs, camps, tournaments, classes) with full details. Choose states with include_states (LIVE, UPCOMING, COMPLETED, DRAFT). Public API: GET /programs."
+        },
+        {
+          "name": "leagueapps_list_current_programs",
+          "type": "read",
+          "title": "List current programs",
+          "description": "List the programs that are open now or upcoming on the site. Good first call to see what the organization runs. Public API: GET /programs/current."
+        },
+        {
+          "name": "leagueapps_get_program",
+          "type": "read",
+          "title": "Get a program",
+          "description": "Full details of one program by id: dates, description, pricing, registration state, location. Public API: GET /programs/{programId}."
+        },
+        {
+          "name": "leagueapps_get_program_schedule",
+          "type": "read",
+          "title": "Get a program schedule",
+          "description": "The full schedule of a program: games with teams, times, locations and scores, plus events and date notes. Public API: GET /programs/{programId}/schedule."
+        },
+        {
+          "name": "leagueapps_list_program_teams",
+          "type": "read",
+          "title": "List program teams",
+          "description": "List the teams of a program with division, status and team profile URL. Public API: GET /programs/{programId}/teams."
+        },
+        {
+          "name": "leagueapps_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the fields, facilities and venues the site uses, with address and sub-locations. Public API: GET /locations."
+        },
+        {
+          "name": "leagueapps_get_location",
+          "type": "read",
+          "title": "Get a location",
+          "description": "Details of one location by id: address, coordinates and sub-locations. Public API: GET /locations/{locationId}."
+        },
+        {
+          "name": "leagueapps_list_sports",
+          "type": "read",
+          "title": "List sports",
+          "description": "List the sports that have LIVE or UPCOMING programs on the site (sports with only completed programs are not listed). Public API: GET /sports."
+        },
+        {
+          "name": "leagueapps_list_announcements",
+          "type": "read",
+          "title": "List announcements",
+          "description": "Site announcements, newest first. Public API: GET /announcements."
+        },
+        {
+          "name": "leagueapps_list_blog_posts",
+          "type": "read",
+          "title": "List blog posts",
+          "description": "Blog posts of the site, newest first, with title, summary and URL. Public API: GET /blog."
+        },
+        {
+          "name": "leagueapps_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "leagueapps_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the LeagueApps tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "leagueapps_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on LeagueApps (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "leagueapps_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's LeagueApps Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run leagueapps_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which programs are open for registration on our site right now?",
+        "Show the full game schedule for our spring soccer league.",
+        "List the teams in program 2420094 and their divisions.",
+        "Which fields and facilities do we use, and where are they?"
+      ]
+    },
+    {
+      "slug": "galaxy-digital",
+      "name": "Galaxy Digital",
+      "category": "business-operations",
+      "description": "Read volunteer needs, sign-ups, logged hours, users and agencies in Galaxy Digital.",
+      "endpoint": "https://galaxy-digital.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Site API key"
+          },
+          {
+            "label": "API user email"
+          },
+          {
+            "label": "API user password"
+          },
+          {
+            "label": "Region"
+          }
+        ],
+        "hint": "Galaxy Digital issues the site API key for your site (ask your Galaxy Digital contact or support). Use an API user with only the access you want to share. The password is stored encrypted for this connection and is used only to log in to the Galaxy Digital API for you."
+      },
+      "tools": [
+        {
+          "name": "galaxydigital_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events (agency events with dates, location and RSVP setting). API: GET /events."
+        },
+        {
+          "name": "galaxydigital_list_agencies",
+          "type": "read",
+          "title": "List agencies",
+          "description": "List the agencies (partner organizations) on the site. API: GET /agencies."
+        },
+        {
+          "name": "galaxydigital_list_needs",
+          "type": "read",
+          "title": "List volunteer needs",
+          "description": "List volunteer needs (opportunities) with title, agency, dates and volunteers needed. Filter by agency, title or status. API: GET /needs."
+        },
+        {
+          "name": "galaxydigital_list_responses",
+          "type": "read",
+          "title": "List responses",
+          "description": "List volunteer responses (sign-ups to needs) with user, need, shift and status. API: GET /responses."
+        },
+        {
+          "name": "galaxydigital_list_hours",
+          "type": "read",
+          "title": "List volunteer hours",
+          "description": "List logged volunteer hours with user, need, hours, date and approval status. API: GET /hours."
+        },
+        {
+          "name": "galaxydigital_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List site users (volunteers) with filters on status, name and email. Contains personal data: ask for only what the task needs. API: GET /users."
+        },
+        {
+          "name": "galaxydigital_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List volunteer teams. API: GET /teams."
+        },
+        {
+          "name": "galaxydigital_list_qualifications",
+          "type": "read",
+          "title": "List qualifications",
+          "description": "List qualifications that volunteers can hold. API: GET /qualifications."
+        },
+        {
+          "name": "galaxydigital_list_benchmarks",
+          "type": "read",
+          "title": "List benchmarks",
+          "description": "List the site's benchmarks (hour or activity goals). API: GET /benchmarks."
+        },
+        {
+          "name": "galaxydigital_get_event",
+          "type": "read",
+          "title": "Get an event",
+          "description": "Get one event by id with all its fields. API: GET /events/{id}."
+        },
+        {
+          "name": "galaxydigital_get_agency",
+          "type": "read",
+          "title": "Get an agency",
+          "description": "Get one agency by id with all its fields. API: GET /agencies/{id}."
+        },
+        {
+          "name": "galaxydigital_get_need",
+          "type": "read",
+          "title": "Get a volunteer need",
+          "description": "Get one need by id with all its fields. API: GET /needs/{id}."
+        },
+        {
+          "name": "galaxydigital_get_response",
+          "type": "read",
+          "title": "Get a response",
+          "description": "Get one response by id with all its fields. API: GET /responses/{id}."
+        },
+        {
+          "name": "galaxydigital_get_hour",
+          "type": "read",
+          "title": "Get a logged hour record",
+          "description": "Get one hour by id with all its fields. API: GET /hours/{id}."
+        },
+        {
+          "name": "galaxydigital_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id with all its fields. API: GET /users/{id}."
+        },
+        {
+          "name": "galaxydigital_get_team",
+          "type": "read",
+          "title": "Get a team",
+          "description": "Get one team by id with all its fields. API: GET /teams/{id}."
+        },
+        {
+          "name": "galaxydigital_get_qualification",
+          "type": "read",
+          "title": "Get a qualification",
+          "description": "Get one qualification by id with all its fields. API: GET /qualifications/{id}."
+        },
+        {
+          "name": "galaxydigital_get_benchmark",
+          "type": "read",
+          "title": "Get a benchmark",
+          "description": "Get one benchmark by id with all its fields. API: GET /benchmarks/{id}."
+        },
+        {
+          "name": "galaxydigital_list_need_responses",
+          "type": "read",
+          "title": "List responses of a need",
+          "description": "List the volunteer responses (sign-ups) of one need. API: GET /needs/{id}/responses."
+        },
+        {
+          "name": "galaxydigital_list_need_questions",
+          "type": "read",
+          "title": "List questions of a need",
+          "description": "List the custom questions that volunteers answer for one need. API: GET /needs/{id}/questions."
+        },
+        {
+          "name": "galaxydigital_list_agency_managers",
+          "type": "read",
+          "title": "List managers of an agency",
+          "description": "List the managers attached to one agency. API: GET /agencies/{id}/managers."
+        },
+        {
+          "name": "galaxydigital_list_user_agencies",
+          "type": "read",
+          "title": "List agencies a user follows",
+          "description": "List the agencies that one user has fanned (follows). API: GET /users/{id}/agencies."
+        },
+        {
+          "name": "galaxydigital_list_qualification_users",
+          "type": "read",
+          "title": "List users with a qualification",
+          "description": "List the users who hold one qualification. API: GET /qualifications/{id}/users."
+        },
+        {
+          "name": "galaxydigital_list_benchmark_users",
+          "type": "read",
+          "title": "List users with a benchmark",
+          "description": "List the users who have one benchmark. API: GET /benchmarks/{id}/users."
+        },
+        {
+          "name": "galaxydigital_list_causes",
+          "type": "read",
+          "title": "List causes",
+          "description": "List the causes available on the site. API: GET /causes."
+        },
+        {
+          "name": "galaxydigital_list_interests",
+          "type": "read",
+          "title": "List interests",
+          "description": "List the interests available on the site. API: GET /interests."
+        },
+        {
+          "name": "galaxydigital_list_impact_areas",
+          "type": "read",
+          "title": "List impact areas",
+          "description": "List the impact areas available on the site. API: GET /impacts."
+        },
+        {
+          "name": "galaxydigital_list_clusters",
+          "type": "read",
+          "title": "List clusters",
+          "description": "List the clusters available on the site. API: GET /clusters."
+        },
+        {
+          "name": "galaxydigital_list_registration_questions",
+          "type": "read",
+          "title": "List registration questions",
+          "description": "List the custom registration questions of the site. API: GET /questions/registration."
+        },
+        {
+          "name": "galaxydigital_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "galaxydigital_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Galaxy Digital tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "galaxydigital_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Galaxy Digital (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "galaxydigital_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Galaxy Digital Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run galaxydigital_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which volunteer needs are open right now, and how many volunteers does each still need?",
+        "Show the responses to our food bank shift and who signed up.",
+        "How many volunteer hours were logged and approved this month?",
+        "Find the volunteer with this email address and list their qualifications."
+      ]
+    },
+    {
+      "slug": "servicetrade",
+      "name": "ServiceTrade",
+      "category": "business-operations",
+      "description": "Read jobs, appointments, deficiencies, invoices and assets, and add comments in ServiceTrade.",
+      "endpoint": "https://servicetrade.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ServiceTrade client id"
+          },
+          {
+            "label": "ServiceTrade client secret"
+          }
+        ],
+        "hint": "In ServiceTrade, an administrator creates API credentials (OAuth2 client credentials, type **customer**). The credentials act with the permissions of their user. We never ask for a ServiceTrade username or password. The secret is used only to call the API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "servicetrade_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (service calls, inspections, installs) with status, type, customer, location, owner, due date and estimated price. Filter by status, type, location, customer, technician, due or completion dates. ServiceTrade API: GET /job."
+        },
+        {
+          "name": "servicetrade_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List customer service locations (sites) with address, company, status and tags. ServiceTrade API: GET /location."
+        },
+        {
+          "name": "servicetrade_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List companies (customers, vendors, contractors) with city, state and status. ServiceTrade API: GET /company."
+        },
+        {
+          "name": "servicetrade_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List scheduled appointments (technician visits) with time window, job, location and assigned technicians. ServiceTrade API: GET /appointment."
+        },
+        {
+          "name": "servicetrade_list_service_requests",
+          "type": "read",
+          "title": "List service requests",
+          "description": "List service requests (the work items to perform on a job, with description, service line and window). ServiceTrade API: GET /servicerequest."
+        },
+        {
+          "name": "servicetrade_list_deficiencies",
+          "type": "read",
+          "title": "List deficiencies",
+          "description": "List deficiencies (problems found during inspections, such as fire or life-safety defects) with severity, status and asset. ServiceTrade API: GET /deficiency."
+        },
+        {
+          "name": "servicetrade_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List assets (equipment such as extinguishers, panels, pumps) at customer locations with type, status and name. ServiceTrade API: GET /asset."
+        },
+        {
+          "name": "servicetrade_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "List quotes with status, customer, location, total and expiry. ServiceTrade API: GET /quote."
+        },
+        {
+          "name": "servicetrade_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with status, customer, job, totals, due date and paid state. ServiceTrade API: GET /invoice."
+        },
+        {
+          "name": "servicetrade_list_contracts",
+          "type": "read",
+          "title": "List contracts",
+          "description": "List service contracts and agreements with customer, location, review date and active state. ServiceTrade API: GET /contract."
+        },
+        {
+          "name": "servicetrade_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List users (technicians, sales staff, office staff and customer contacts) with company and status. ServiceTrade API: GET /user."
+        },
+        {
+          "name": "servicetrade_list_comments",
+          "type": "read",
+          "title": "List comments",
+          "description": "List comments on one record. Pass the entity type number and the record id (Asset 2, Job 3, Invoice 6, Quote 9, Deficiency 10, Location 11). ServiceTrade API: GET /comment."
+        },
+        {
+          "name": "servicetrade_get_job",
+          "type": "read",
+          "title": "Get a job",
+          "description": "Get one job by id with customer, location, owner, appointments summary, dates and price. ServiceTrade API: GET /job/{id}."
+        },
+        {
+          "name": "servicetrade_get_location",
+          "type": "read",
+          "title": "Get a location",
+          "description": "Get one customer location by id with address, contacts and status. ServiceTrade API: GET /location/{id}."
+        },
+        {
+          "name": "servicetrade_get_company",
+          "type": "read",
+          "title": "Get a company",
+          "description": "Get one company by id. ServiceTrade API: GET /company/{id}."
+        },
+        {
+          "name": "servicetrade_get_appointment",
+          "type": "read",
+          "title": "Get an appointment",
+          "description": "Get one appointment by id with window, technicians and job. ServiceTrade API: GET /appointment/{id}."
+        },
+        {
+          "name": "servicetrade_get_deficiency",
+          "type": "read",
+          "title": "Get a deficiency",
+          "description": "Get one deficiency by id with severity, status, asset and reporting job. ServiceTrade API: GET /deficiency/{id}."
+        },
+        {
+          "name": "servicetrade_get_asset",
+          "type": "read",
+          "title": "Get an asset",
+          "description": "Get one asset by id with type, location and status. ServiceTrade API: GET /asset/{id}."
+        },
+        {
+          "name": "servicetrade_get_quote",
+          "type": "read",
+          "title": "Get a quote",
+          "description": "Get one quote by id with status, line items and totals. ServiceTrade API: GET /quote/{id}."
+        },
+        {
+          "name": "servicetrade_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice by id with status, items and totals. ServiceTrade API: GET /invoice/{id}."
+        },
+        {
+          "name": "servicetrade_whoami",
+          "type": "read",
+          "title": "Show the connected credential",
+          "description": "Show which ServiceTrade account, company, user and timezone the connected credential belongs to. ServiceTrade API: GET /oauth2/userinfo."
+        },
+        {
+          "name": "servicetrade_add_comment",
+          "type": "write",
+          "title": "Add a comment to a record",
+          "description": "WRITE: add a new comment to a job, asset, invoice, quote, deficiency or location. Each call creates one more comment (not idempotent: do not retry blindly). ServiceTrade API: POST /comment."
+        },
+        {
+          "name": "servicetrade_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "servicetrade_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ServiceTrade tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "servicetrade_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ServiceTrade (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "servicetrade_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ServiceTrade Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run servicetrade_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which jobs are overdue this week, and at which locations?",
+        "List the open deficiencies at our biggest customer's sites, worst severity first.",
+        "Which invoices from the last 30 days are still unpaid?",
+        "Show the appointments for technician 123 tomorrow."
       ]
     }
   ]
