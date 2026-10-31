@@ -54,6 +54,32 @@ agreement and for authorizing the AI client and provider you choose to receive r
 query details. Your API key is not sent to your AI client or LLM provider. No API account, licence,
 redistribution right or vendor endorsement is transferred or claimed.
 
+### ipapi.is API connections
+
+When you connect ipapi.is with your own ipapi.is account and API key, you appoint usefulapi under
+these written Terms as your contractor for the lookups you request, as contemplated by sections 2.2
+and 2.3 ("External Access") of the [ipapi.is Terms of Service](https://ipapi.is/terms.html). In that
+role we access ipapi.is data exclusively on your behalf and for your direct benefit, and we comply
+with the ipapi.is Terms that apply to our access to and handling of that data. We do not retain,
+cache, resell, redistribute or reuse ipapi.is data for our own benefit or for anyone else: each
+response passes through to your AI client and is not stored by usefulapi. When your connection ends,
+we hold no ipapi.is data to delete.
+
+We keep ipapi.is data and your API key confidential to at least the standard of those terms. We
+return results only to you, through the AI client you connect. We grant no third party persistent
+access to ipapi.is data. Our hosting provider (Cloudflare) runs the server and processes your
+requests and the responses transiently. Its written subscription agreement limits its use of that
+content to providing the service, and its data processing addendum applies to any personal data.
+Your API key is never sent to your AI client or LLM provider. These commitments prevail over any
+less protective provision of these Terms for ipapi.is data.
+
+You remain the ipapi.is Customer: your own plan, quota and the ipapi.is terms apply to your use,
+including the permitted purposes in section 2.2. The AI client and LLM provider you choose receive the
+IP addresses you ask about and the results on your instruction, not ours. You are responsible for
+ensuring that they meet the conditions the ipapi.is terms set for contractors and external access,
+and for their use of that data. No API account, licence, redistribution right or vendor endorsement
+is transferred or claimed.
+
 ## 3. Plans, billing, and cancellation
 
 - **Free tier:** up to the stated monthly call limit. **Paid plans** (Pro) are billed via
