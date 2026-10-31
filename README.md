@@ -525,6 +525,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MarketTime](servers/markettime/) | commerce | 22 | OAuth | [servers/markettime/](servers/markettime/) |
 | [Getfly CRM](servers/getfly-crm/) | crm | 33 | OAuth | [servers/getfly-crm/](servers/getfly-crm/) |
 | [SkuVault](servers/skuvault/) | inventory | 26 | OAuth | [servers/skuvault/](servers/skuvault/) |
+| [Talenta](servers/talenta/) | hr | 34 | OAuth | [servers/talenta/](servers/talenta/) |
+| [Shoprocket](servers/shoprocket/) | commerce | 30 | OAuth | [servers/shoprocket/](servers/shoprocket/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

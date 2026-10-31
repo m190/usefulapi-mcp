@@ -91000,6 +91000,480 @@
         "Which purchase orders are still open, and from which suppliers?",
         "Where in the warehouse is SKU ABC-123 stored, and how many are available?"
       ]
+    },
+    {
+      "slug": "talenta",
+      "name": "Talenta",
+      "category": "hr",
+      "description": "MCP server for Talenta — read employee, attendance, leave, payroll and recruitment data.",
+      "endpoint": "https://talenta.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per company and environment"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID (HMAC username)"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "In the [Mekari Developer Center](https://developers.mekari.com/) open the Talenta product, create an application and copy its **Client ID** and **Client Secret** (the company owner must request API access first: see the [Talenta HMAC guide](https://help-center.talenta.co/hc/en-us/articles/11617708664473-How-to-Set-Talenta-s-HMAC-API-Access)). When you create the application, tick the permission scopes of the data you want to use, including **Get All Employee v3**, which this login checks. Use a dedicated application with only the needed scopes; Payroll access can be unchecked and Talenta also offers field masking. Requested employee, payroll, bank, tax, family and recruitment data passes to your chosen AI client and its LLM provider; connect only where your company policy permits this disclosure. These tools only read data. Revoke or delete the HMAC application in Mekari Developer Center to stop access. Billing follows the verified company and environment; rotating credentials keeps that identity."
+      },
+      "tools": [
+        {
+          "name": "talenta_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees of the company (Talenta Data API v3) with name, employee id, email, branch, organization, job position, employment status, join/resign dates and more. Filter by user ids, email, branch, organization, job position, job level, employment status, or join/created/modified dates. `include` adds sub-objects (approval line, family, education, payroll info, custom fields); use it sparingly, it slows the call. Contains personal data. GET /v3/employees."
+        },
+        {
+          "name": "talenta_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "One employee by Talenta user id: personal data, employment, family, education, payroll info, custom fields and access role. Contains personal data. GET /v2/employee/{user_id}."
+        },
+        {
+          "name": "talenta_get_employment_info",
+          "type": "read",
+          "title": "Get employment info",
+          "description": "Employment details of one employee (branch, class, grade, job, contract and probation dates, approval line). Give exactly one of user_id, employee_id or email. GET /v3/employee/employment-info."
+        },
+        {
+          "name": "talenta_list_family_info",
+          "type": "read",
+          "title": "List employee family members",
+          "description": "Family members of one employee (name, relationship, birth date, marital status, ID number). Contains personal data. Give exactly one of user_id or employee_id. GET /v3/employee/family-info."
+        },
+        {
+          "name": "talenta_list_formal_education",
+          "type": "read",
+          "title": "List employee formal education",
+          "description": "Formal education history of one employee (degree, institution, major, years, score). Give exactly one of user_id or employee_id. GET /v3/employee/formal-education."
+        },
+        {
+          "name": "talenta_get_company_info",
+          "type": "read",
+          "title": "Get company info",
+          "description": "The company's profile: name, address, phone, email, BPJS and tax numbers. GET /v2/company/{company_id}/info."
+        },
+        {
+          "name": "talenta_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List the company's branches with address, province and tax details. Use the ids to filter employees. GET /v2/company/{company_id}/branch."
+        },
+        {
+          "name": "talenta_list_organizations",
+          "type": "read",
+          "title": "List organizations",
+          "description": "List the company's organizations (departments) with parent organization and branch. GET /v2/company/{company_id}/organization."
+        },
+        {
+          "name": "talenta_list_job_positions",
+          "type": "read",
+          "title": "List job positions",
+          "description": "List the company's job positions with level, parent position, branch and status. GET /v3/company/{company_id}/job-positions."
+        },
+        {
+          "name": "talenta_list_job_levels",
+          "type": "read",
+          "title": "List job levels",
+          "description": "List the company's job levels with code, status and employee count. GET /v3/company/job-levels."
+        },
+        {
+          "name": "talenta_list_employment_statuses",
+          "type": "read",
+          "title": "List employment statuses",
+          "description": "List the company's employment statuses (permanent, contract, ...) with ids for employee filters. The company is selected by the HMAC credentials. GET /v2/company/me/employment-status."
+        },
+        {
+          "name": "talenta_list_time_off_requests",
+          "type": "read",
+          "title": "List time off requests",
+          "description": "Time off (leave) requests of the company in a date range, optionally for one user or one status. GET /v2/time-off."
+        },
+        {
+          "name": "talenta_time_off_balance_history",
+          "type": "read",
+          "title": "Time off balance history",
+          "description": "Per-employee time off balances over a period: beginning balance, taken, adjustment, expired, carry forward, ending balance, per policy. GET /v3/time-off/balance-history."
+        },
+        {
+          "name": "talenta_time_off_balance_log",
+          "type": "read",
+          "title": "Time off balance log",
+          "description": "The log of time off balance changes (requests, adjustments, expiries) per employee and policy. GET /v3/time-off/balance-log."
+        },
+        {
+          "name": "talenta_attendance_summary",
+          "type": "read",
+          "title": "Attendance summary for a day",
+          "description": "The attendance summary of all employees for one day: schedule, shift, clock in/out, breaks, overtime, time off. Filter by branch, organization, job level/position, or clock-in/out status (early, late, none). GET /v3/attendance/summary-report."
+        },
+        {
+          "name": "talenta_list_live_attendance",
+          "type": "read",
+          "title": "List live attendance of an employee",
+          "description": "Live attendance records (check-in/out time, location, schedule) of one employee in a date range. GET /v3/live-attendance."
+        },
+        {
+          "name": "talenta_list_schedules",
+          "type": "read",
+          "title": "List employee schedules",
+          "description": "The current work schedule (shift pattern) of each employee, filterable by schedule name, branch and organization. GET /v3/schedule."
+        },
+        {
+          "name": "talenta_list_overtime_requests",
+          "type": "read",
+          "title": "List overtime requests",
+          "description": "Overtime requests in a date range (at most one year), with employee, date, duration, compensation type and status. GET /v3/overtime/request."
+        },
+        {
+          "name": "talenta_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "Company timesheet entries (activity, duration, task, assignee) in a date range. GET /v3/timesheet."
+        },
+        {
+          "name": "talenta_list_payroll_info",
+          "type": "read",
+          "title": "List employee payroll info",
+          "description": "Payroll setup of the company's employees: tax status (PTKP), NPWP, BPJS numbers, bank account. Sensitive payroll and bank data. Filter by status, branch, organization, job position, employment status, job level, user ids or modified date. GET /v3/payroll."
+        },
+        {
+          "name": "talenta_get_payroll_report",
+          "type": "read",
+          "title": "Get monthly payroll report",
+          "description": "Company-wide payroll summary (salary detail) for one month. Sensitive payroll data. Optional filters by payment method, branch, organization, job level. GET /v3/payroll/report."
+        },
+        {
+          "name": "talenta_list_reimbursements",
+          "type": "read",
+          "title": "List reimbursement requests",
+          "description": "Reimbursement requests of the company with employee, policy, amount and approval/disbursement status. Filter by employee, status, policy or request date. GET /v3/reimbursement."
+        },
+        {
+          "name": "talenta_list_reprimands",
+          "type": "read",
+          "title": "List reprimands",
+          "description": "Reprimand letters (SP 1/2/3 or custom) with the employee, dates and status. GET /v3/reprimand."
+        },
+        {
+          "name": "talenta_list_employee_transfers",
+          "type": "read",
+          "title": "List employee transfers",
+          "description": "Employee transfer and promotion requests with employee, type, effective date and approval status. GET /v3/employee-transfer."
+        },
+        {
+          "name": "talenta_list_delegations",
+          "type": "read",
+          "title": "List delegations",
+          "description": "Approval/admin/time-off delegations between employees with dates and type. GET /v3/delegations."
+        },
+        {
+          "name": "talenta_list_jobs",
+          "type": "read",
+          "title": "List recruitment jobs",
+          "description": "Job openings of the company, newest first. Filter by keyword, branch, job position, or only those live on the career page. GET /v3/recruitment/jobs."
+        },
+        {
+          "name": "talenta_get_job",
+          "type": "read",
+          "title": "Get recruitment job",
+          "description": "One job opening in full, with its hiring stages and custom questions. GET /v3/recruitment/jobs/{job_id}."
+        },
+        {
+          "name": "talenta_list_candidates",
+          "type": "read",
+          "title": "List candidates",
+          "description": "Candidate applications of the company, newest first. Search by name, filter by application date. Contains personal data. GET /v3/recruitment/candidates."
+        },
+        {
+          "name": "talenta_get_candidate",
+          "type": "read",
+          "title": "Get candidate application",
+          "description": "One candidate application with personal data, education and work experience. Contains personal data (ID numbers, address, salary). GET /v3/recruitment/candidates/{job_application_id}."
+        },
+        {
+          "name": "talenta_list_hiring_stages",
+          "type": "read",
+          "title": "Hiring pipeline counts",
+          "description": "For each job opening, how many candidates sit in each pipeline phase (screening, assessment, interview, job offer). GET /v3/recruitment/hiring-stages."
+        },
+        {
+          "name": "talenta_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "talenta_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Talenta tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "talenta_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Talenta (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "talenta_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Talenta Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run talenta_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who joined the company this month, and in which branch?",
+        "Which employees have not clocked in today?",
+        "Show pending time off requests for next week.",
+        "How many candidates are in each stage of our open jobs?"
+      ]
+    },
+    {
+      "slug": "shoprocket",
+      "name": "Shoprocket",
+      "category": "commerce",
+      "description": "MCP server for Shoprocket — orders, products, customers, store stats and discount codes.",
+      "endpoint": "https://shoprocket.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Shoprocket store"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store Secret Key"
+          }
+        ],
+        "hint": "Find it in the Shoprocket dashboard under **Settings → API keys**. Use the **secret** key (`sr_live_sk_…` for your live store, `sr_test_sk_…` for test data), not the publishable key. Requested store, order, customer and catalog data passes to your chosen AI client and its LLM provider. When requested, tools create or update products, categories and customers, create discount codes, and change order payment or fulfillment status. Status changes do not charge or refund a card, but can return stock; customer emails are sent only with send_email enabled. Revoke or regenerate this key in Shoprocket to stop vendor access. Billing follows the verified store ID, so rotating its key keeps that identity."
+      },
+      "tools": [
+        {
+          "name": "shoprocket_get_store",
+          "type": "read",
+          "title": "Get store",
+          "description": "The Shoprocket store this key belongs to: name, address, environment (test or live), paused state, currencies and languages, setup status. The store's API keys are never returned. GET /v1/store/details."
+        },
+        {
+          "name": "shoprocket_get_store_stats",
+          "type": "read",
+          "title": "Get store stats",
+          "description": "Sales statistics for a date range, compared with the previous period: orders, revenue, visitors, abandoned carts, conversion rate, average order value, a daily sales graph, regions, sources and popular products. GET /v1/store/stats."
+        },
+        {
+          "name": "shoprocket_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List or search orders with totals, customer, addresses, payment and fulfillment status, discounts, line items and shipping. Filter by payment status, fulfillment status, payment method, customer ids, amount range, sale/discount use or free text. GET /v1/orders."
+        },
+        {
+          "name": "shoprocket_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id (ord_..., not the #number shown in the dashboard): totals, customer, billing and shipping address, payment and fulfillment status, discounts, line items and tracking. GET /v1/orders/{id}."
+        },
+        {
+          "name": "shoprocket_update_order_status",
+          "type": "write",
+          "title": "Update order status",
+          "description": "WRITE: change an order's payment status and/or fulfillment status (for example mark it shipped or paid). Shoprocket needs both values, so a value you leave out is read from the order first and kept. With send_email true Shoprocket EMAILS THE CUSTOMER an order update (optionally with custom_text); the default is no email. Cancelling can return the items to stock (release_stock). POST /v1/orders/{id}."
+        },
+        {
+          "name": "shoprocket_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products with price, SKU, stock quantity, categories, images, variants (skus) and status. Search by text, filter by category slugs, product ids or slugs, and sort. GET /v1/products."
+        },
+        {
+          "name": "shoprocket_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id (prod_...): description, price, SKU, stock, dimensions, categories, media, variants (skus), add-ons. GET /v1/products/{id}."
+        },
+        {
+          "name": "shoprocket_create_product",
+          "type": "write",
+          "title": "Create product",
+          "description": "WRITE: create a product in the store (visible to shoppers unless status is 0). A name and at least one category (name or slug) are required. Does not create duplicates by itself: calling twice creates two products. Variants and add-ons are not set by this tool. PUT /v1/products."
+        },
+        {
+          "name": "shoprocket_update_product",
+          "type": "write",
+          "title": "Update product",
+          "description": "WRITE: change a product's fields (price, stock quantity, description, status...). Shoprocket requires the name on every update, so pass the current name to keep it. Only the fields you pass are sent. POST /v1/products/{id}."
+        },
+        {
+          "name": "shoprocket_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List product categories with id, name and slug. GET /v1/categories."
+        },
+        {
+          "name": "shoprocket_get_category",
+          "type": "read",
+          "title": "Get category",
+          "description": "One category by id (cat_...); with expand_products also the products in it. GET /v1/categories/{id}."
+        },
+        {
+          "name": "shoprocket_create_category",
+          "type": "write",
+          "title": "Create category",
+          "description": "WRITE: create a product category (optionally assigning existing products). Calling twice with the same name may create a duplicate or be refused by Shoprocket. PUT /v1/categories."
+        },
+        {
+          "name": "shoprocket_update_category",
+          "type": "write",
+          "title": "Update category",
+          "description": "WRITE: rename a category, change its slug, or set the products in it. Only the fields you pass are sent. POST /v1/categories/{id}."
+        },
+        {
+          "name": "shoprocket_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers with name, email, phone, company, tax number, country and marketing opt-in. GET /v1/customers."
+        },
+        {
+          "name": "shoprocket_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id (cus_...). GET /v1/customers/{id}."
+        },
+        {
+          "name": "shoprocket_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: add a customer record (it does not email the customer). marketing_subscribed records newsletter consent: set it to true only if the customer actually opted in. PUT /v1/customers."
+        },
+        {
+          "name": "shoprocket_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: change a customer's email, name, phone, company, tax number or newsletter consent. Only the fields you pass are sent. Set marketing_subscribed true only if the customer actually opted in. POST /v1/customers/{id}."
+        },
+        {
+          "name": "shoprocket_list_discount_codes",
+          "type": "read",
+          "title": "List discount codes",
+          "description": "List discount codes with type, value, what they apply to, usage limit and count, minimum order, dates and status. GET /v1/discount-codes."
+        },
+        {
+          "name": "shoprocket_get_discount_code",
+          "type": "read",
+          "title": "Get discount code",
+          "description": "One discount code by id (ofr_...). GET /v1/discount-codes/{id}."
+        },
+        {
+          "name": "shoprocket_create_discount_code",
+          "type": "write",
+          "title": "Create discount code",
+          "description": "WRITE: create a live discount code that shoppers can use at checkout and that reduces the store's revenue. Type fixed or percentage needs coupon_value; free_shipping does not. Use usage_limit and dates to bound it. Calling twice creates two codes. PUT /v1/discount-codes."
+        },
+        {
+          "name": "shoprocket_list_automatic_discounts",
+          "type": "read",
+          "title": "List automatic discounts",
+          "description": "List automatic discounts (applied at checkout without a code) with type, value, conditions, dates and status. GET /v1/automatic-discounts."
+        },
+        {
+          "name": "shoprocket_list_sales",
+          "type": "read",
+          "title": "List sale promotions",
+          "description": "List sale promotions (price reductions on products) with type, value, what they apply to, dates and status. GET /v1/sale-promotions."
+        },
+        {
+          "name": "shoprocket_list_shipping_methods",
+          "type": "read",
+          "title": "List shipping methods",
+          "description": "List the store's shipping methods and rates. GET /v1/shippings."
+        },
+        {
+          "name": "shoprocket_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the store's tax rules. GET /v1/taxes."
+        },
+        {
+          "name": "shoprocket_list_zones",
+          "type": "read",
+          "title": "List shipping zones",
+          "description": "List the store's shipping zones (the regions it ships to). GET /v1/zones."
+        },
+        {
+          "name": "shoprocket_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List the store's payment gateways (Stripe, PayPal, manual...) and whether they are enabled. Gateway credentials are never returned. GET /v1/payment-methods."
+        },
+        {
+          "name": "shoprocket_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shoprocket_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Shoprocket tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shoprocket_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Shoprocket (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shoprocket_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Shoprocket Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shoprocket_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are paid but not yet shipped?",
+        "How did my store do last week compared with the week before?",
+        "Which products have a stock quantity under 5?",
+        "Mark order ord_646e1f65ebcad629610675 as shipped without emailing the customer."
+      ]
     }
   ]
 }
