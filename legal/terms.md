@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 30 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 31 October 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -36,6 +36,23 @@ standard. Your API credentials are not disclosed to your AI client or LLM provid
 transfer your API licence. These commitments prevail over any less protective provision of these
 Terms for Extensiv confidential information. You remain responsible for your API entitlement and
 authorization to send your own records to the AI client and provider you choose.
+
+### currencylayer API connections
+
+When you connect currencylayer, you appoint usefulapi under these written Terms as your outsourcing
+provider solely for your own internal business operations, as permitted by section 2(a) of the
+[APILayer Master SaaS Subscription Agreement](https://www.ideracorp.com/~/media/IderaInc/Files/APILayer/Apilayer%20Master%20Software%20as%20a%20Service%20Subscription%20Agreement%20SaaS%20082523ns%20FORM).
+We agree to abide by that agreement as applicable to this role, including its restrictions on use and
+disclosure and the confidentiality duties in section 9. We use your key only for your requested
+connection and disclose protected confidential information only to providers who need it for that
+work and are bound in writing to the required confidentiality standard. These commitments prevail
+over any less protective provision of these Terms for APILayer confidential information.
+
+You must use a paid currencylayer subscription that permits commercial use and comply with your
+subscription's scope and quota. You remain responsible for our authorized use under your vendor
+agreement and for authorizing the AI client and provider you choose to receive requested rates and
+query details. Your API key is not sent to your AI client or LLM provider. No API account, licence,
+redistribution right or vendor endorsement is transferred or claimed.
 
 ## 3. Plans, billing, and cancellation
 
