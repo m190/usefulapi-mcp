@@ -93622,6 +93622,252 @@
         "Show the USD to GBP rate on 2026-10-01.",
         "Convert 100 USD to EUR using my enabled currencylayer plan."
       ]
+    },
+    {
+      "slug": "recipal",
+      "name": "ReciPal",
+      "category": "Food & Beverage",
+      "description": "Read recipes, nutrition and inventory, manage ingredients and costs, and render ReciPal labels.",
+      "endpoint": "https://recipal.usefulapi.io/mcp",
+      "auth": "oauth",
+      "transport": "streamable-http",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per ReciPal API key"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ReciPal API key"
+          }
+        ],
+        "hint": "Find it in ReciPal under **Account Settings** (API access). API access needs a paid ReciPal subscription, and the key works for that one account. Use a key you authorize for this connection. Recipes, formulations, costs, nutrition, labels and stock records you request pass to your chosen AI client and its LLM provider; the API key is not sent to the LLM. When requested, tools create or change recipes, ingredient lines, ingredients and costs, remove recipe lines, and start label renders. Changes can affect derived labels in other recipes. Review nutrition and allergens before using labels on products. Every request, including login and render-status checks, spends vendor quota and is never retried. Inventory needs the vendor inventory plan. Revoke or reset the key in ReciPal to stop access; a new key starts a new usage/billing identity."
+      },
+      "tools": [
+        {
+          "name": "recipal_list_recipes",
+          "type": "read",
+          "title": "List recipes",
+          "description": "List your recipes (products) with yield, servings, cost per batch/package and the headline per-serving nutrition (calories, fat, sodium, carbohydrate, protein). Sorted by last update by default. Set full=true for the complete object with every nutrient. Pages of up to 20; a page with fewer rows is the last. GET /recipes."
+        },
+        {
+          "name": "recipal_get_recipe",
+          "type": "read",
+          "title": "Get recipe",
+          "description": "One recipe in full: yield, servings, packages, allergens, costs (ingredient + packaging/labor/overhead), ingredient list, tags, primary label path and the complete per-serving nutrition. GET /recipes/{id}."
+        },
+        {
+          "name": "recipal_list_recipe_ingredients",
+          "type": "read",
+          "title": "List recipe ingredients",
+          "description": "The formula of one recipe: every recipe ingredient line with ingredient id, name, quantity, unit, waste %, total grams and the display name per label language. Use the line ids with recipal_update_recipe_ingredient. GET /recipes/{id}/recipe_ingredients."
+        },
+        {
+          "name": "recipal_get_recipe_ingredient",
+          "type": "read",
+          "title": "Get recipe ingredient",
+          "description": "One ingredient line of a recipe, including units_and_grams (the units you can use for it, each with its weight in grams). GET /recipes/{recipe_id}/recipe_ingredients/{id}."
+        },
+        {
+          "name": "recipal_list_ingredients",
+          "type": "read",
+          "title": "List ingredients",
+          "description": "List your own ingredients (custom and subrecipe ingredients) with allergens, units and headline nutrition per 100 g. Set full=true for every nutrient. Archived ones are hidden unless asked for. GET /ingredients."
+        },
+        {
+          "name": "recipal_get_ingredient",
+          "type": "read",
+          "title": "Get ingredient",
+          "description": "One ingredient in full (yours or a public one): allergens, ingredient-list text, custom units, and every nutrient per 100 grams. GET /ingredients/{id}."
+        },
+        {
+          "name": "recipal_list_ingredient_costs",
+          "type": "read",
+          "title": "List costs of an ingredient",
+          "description": "The cost history of one ingredient: effective date, quantity, unit, price and shipping per entry (the entry with the latest effective_at not in the future is the active one). GET /ingredients/{id}/ingredient_costs."
+        },
+        {
+          "name": "recipal_list_current_ingredient_costs",
+          "type": "read",
+          "title": "List current ingredient costs",
+          "description": "The currently active cost of every ingredient (one entry per ingredient): price, shipping, quantity and unit. GET /ingredient_costs."
+        },
+        {
+          "name": "recipal_get_ingredient_cost",
+          "type": "read",
+          "title": "Get ingredient cost",
+          "description": "One ingredient cost entry by id. GET /ingredient_costs/{id}."
+        },
+        {
+          "name": "recipal_get_label",
+          "type": "read",
+          "title": "Get label",
+          "description": "A recipe's saved nutrition-facts label settings (format, which rows show, styling) plus the computed nutrition claims (e.g. Fat Free) and ingredient list per language. The token is the last part of the recipe's primary_label path (/api/v1/labels/{token}). Optionally compute claims and ingredient list for another format. GET /labels/{token}."
+        },
+        {
+          "name": "recipal_start_label_render",
+          "type": "write",
+          "title": "Start label render",
+          "description": "WRITE (render job): start rendering a recipe's nutrition label as a PDF or PNG and return the render status with a token. Always asynchronous: poll recipal_get_label_render_status with the token until status is ready, then give the user the temporary download url. Each account may run 5 renders in parallel. GET /recipes/{id}/label.pdf|label.png?async=true."
+        },
+        {
+          "name": "recipal_get_label_render_status",
+          "type": "read",
+          "title": "Get label render status",
+          "description": "Status of a label render started with recipal_start_label_render: waiting, processing, ready or error. When ready, url is a temporary presigned download link. Poll about once a second; each poll counts toward the weekly request limit. GET /recipes/label_renders/{token}."
+        },
+        {
+          "name": "recipal_list_inventories",
+          "type": "read",
+          "title": "List raw-material inventory",
+          "description": "Raw-material (ingredient) stock rows: quantity on hand, weeks remaining, daily consumption, quantity on order, reorder risk (safe, warning, critical), reorder level and the on-hand value. Needs an inventory plan (otherwise 403 INVENTORY_PLAN_REQUIRED). By default sorted by weeks remaining, lowest first. GET /inventories."
+        },
+        {
+          "name": "recipal_get_inventory",
+          "type": "read",
+          "title": "Get raw-material inventory row",
+          "description": "One raw-material stock row by id (quantity, unit, weeks remaining, reorder guideline, on-hand value). Needs an inventory plan. GET /inventories/{id}."
+        },
+        {
+          "name": "recipal_list_inventory_tags",
+          "type": "read",
+          "title": "List ingredient tags",
+          "description": "Ingredient tags in use with the number of ingredients carrying each, most used first. Use them to filter recipal_list_inventories. Needs an inventory plan. GET /inventories/tags."
+        },
+        {
+          "name": "recipal_list_finished_goods",
+          "type": "read",
+          "title": "List finished goods inventory",
+          "description": "Finished-goods stock rows: recipe, quantity on hand, unit, total packages, lot-code settings, case/pallet sizes and the on-hand value. Needs an inventory plan. GET /finished_goods."
+        },
+        {
+          "name": "recipal_get_finished_good",
+          "type": "read",
+          "title": "Get finished goods row",
+          "description": "One finished-goods stock row by id. Needs an inventory plan. GET /finished_goods/{id}."
+        },
+        {
+          "name": "recipal_list_finished_good_tags",
+          "type": "read",
+          "title": "List recipe tags",
+          "description": "Recipe tags in use with the number of recipes carrying each, most used first. Use them to filter recipal_list_finished_goods. Needs an inventory plan. GET /finished_goods/tags."
+        },
+        {
+          "name": "recipal_create_recipe",
+          "type": "write",
+          "title": "Create recipe",
+          "description": "WRITE: create a new, empty recipe (add ingredient lines with recipal_add_recipe_ingredient, or use recipal_create_recipe_from_ingredients to do both at once). All fields are optional. Creates a record in your ReciPal account; it counts against the plan's recipe allowance. POST /recipes."
+        },
+        {
+          "name": "recipal_update_recipe",
+          "type": "write",
+          "title": "Update recipe",
+          "description": "WRITE: change fields of one recipe; fields you leave out stay unchanged. package_yield_quantity \"default\" sets the package weight to the total weight of the current ingredients (no moisture loss accounted for); ingredient_list \"default\" rebuilds the label ingredient list in descending weight order. Changes labels and costs of this recipe. Tags cannot be set here. PUT /recipes/{id}."
+        },
+        {
+          "name": "recipal_scale_recipe",
+          "type": "write",
+          "title": "Copy or scale recipe",
+          "description": "WRITE: create a NEW recipe as a copy of an existing one, with every ingredient quantity and the yield multiplied by scale_amount (1 = plain copy; per-serving nutrition stays the same; scaling down cannot take packages below 1). Costs and tags carry over. The original is not changed. Without a name the copy is called \"<name> (copy)\" or \"<name> <n>x\". POST /recipes/{id}/scale."
+        },
+        {
+          "name": "recipal_create_recipe_from_ingredients",
+          "type": "write",
+          "title": "Create recipe with ingredients",
+          "description": "WRITE: create a new recipe and its ingredient lines in one call. ingredients lists ingredient ids with the weight of each in grams. Optional yield, servings and packaging fields as in recipal_create_recipe. Creates a record in your ReciPal account. POST /recipes/shortcut."
+        },
+        {
+          "name": "recipal_create_subrecipe",
+          "type": "write",
+          "title": "Turn recipe into subrecipe",
+          "description": "WRITE: turn a recipe into an ingredient (a subrecipe) with its nutrition, costing and ingredient list, so it can be used inside other recipes. Later changes to the recipe flow through to the ingredient. Fails if the recipe is empty. Returns the new ingredient. POST /recipes/{id}/create_subrecipe."
+        },
+        {
+          "name": "recipal_add_recipe_ingredient",
+          "type": "write",
+          "title": "Add ingredient to recipe",
+          "description": "WRITE: add an ingredient line to a recipe, by unit and quantity (the unit must be one the ingredient offers, e.g. \"1 cup\" or \"1 gram\"; see units_and_grams from recipal_get_recipe_ingredient or valid_units from recipal_get_ingredient) or directly by total_grams (overrides unit and quantity). Changes the recipe's nutrition, label and cost. POST /recipes/{id}/recipe_ingredients."
+        },
+        {
+          "name": "recipal_update_recipe_ingredient",
+          "type": "write",
+          "title": "Update recipe ingredient amount",
+          "description": "WRITE: change the AMOUNT of one ingredient line in a recipe (unit, quantity, waste or total_grams; total_grams overrides unit and quantity). It cannot swap the ingredient: remove the line and add another instead. Changes the recipe's nutrition, label and cost. PUT /recipes/{recipe_id}/recipe_ingredients/{id}."
+        },
+        {
+          "name": "recipal_remove_recipe_ingredient",
+          "type": "write",
+          "title": "Remove ingredient from recipe",
+          "description": "WRITE (destructive): permanently remove one ingredient line from a recipe. It cannot be undone, but the same ingredient can be added back (with recipal_add_recipe_ingredient). Changes the recipe's nutrition, label and cost. The ingredient itself is not deleted. DELETE /recipes/{recipe_id}/recipe_ingredients/{id}."
+        },
+        {
+          "name": "recipal_create_ingredient",
+          "type": "write",
+          "title": "Create ingredient",
+          "description": "WRITE: create a custom ingredient (private to your account) with its nutrition facts. For a food ingredient give nutrition_unit and nutrition_quantity (the serving the nutrients are entered for, e.g. 1 cup; for units beyond gram/oz/lb/kg add them in measures first) and all required nutrients. food and non_food cannot be changed later. Non-food items: set food=false and non_food to labor, packaging, safety, other_hourly or other_fixed. POST /ingredients."
+        },
+        {
+          "name": "recipal_update_ingredient",
+          "type": "write",
+          "title": "Update ingredient",
+          "description": "WRITE: change fields of one of YOUR ingredients (public ingredients cannot be edited); fields you leave out stay unchanged. If nutrition_unit, nutrition_quantity or their measure change, nutrients you do not pass are rescaled to keep the same amount per serving. measures REPLACES the whole list of custom units, so send them all. Setting archived true hides the ingredient from lists; false restores it. The change flows into every recipe using the ingredient. PUT /ingredients/{id}."
+        },
+        {
+          "name": "recipal_create_ingredient_cost",
+          "type": "write",
+          "title": "Add ingredient cost",
+          "description": "WRITE: add a price for an ingredient that becomes active on effective_at (the active cost is the one with the latest effective_at not after the date; one cost per ingredient per date). price and shipping are per quantity x unit. Changes the cost of every recipe using the ingredient from that date. Not allowed for subrecipe ingredients. POST /ingredient_costs."
+        },
+        {
+          "name": "recipal_update_ingredient_cost",
+          "type": "write",
+          "title": "Update ingredient cost",
+          "description": "WRITE: change an existing ingredient cost entry (date, unit, quantity, price, shipping); fields you leave out stay unchanged. Changes recipe costs that depend on it. Not allowed for subrecipe ingredients. PUT /ingredient_costs/{id}."
+        },
+        {
+          "name": "recipal_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "recipal_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ReciPal tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "recipal_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ReciPal (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "recipal_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ReciPal Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run recipal_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my recipes contain milk or tree nuts?",
+        "Copy my Granola Bar recipe, scale it 5x and call it Granola Bar Batch.",
+        "Which raw materials will run out within three weeks?",
+        "Raise the cost of butter to $4.20 per lb from next Monday."
+      ]
     }
   ]
 }

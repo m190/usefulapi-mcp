@@ -537,6 +537,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [NeverBounce](servers/neverbounce/) | email | 12 | OAuth | [servers/neverbounce/](servers/neverbounce/) |
 | [SuperPhone](servers/superphone/) | messaging | 21 | OAuth | [servers/superphone/](servers/superphone/) |
 | [currencylayer](servers/currencylayer/) | Finance | 9 | OAuth | [servers/currencylayer/](servers/currencylayer/) |
+| [ReciPal](servers/recipal/) | Food & Beverage | 34 | OAuth | [servers/recipal/](servers/recipal/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
