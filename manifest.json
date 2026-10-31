@@ -90556,6 +90556,450 @@
         "Which items are out of stock or low on inventory?",
         "Add the UPS tracking number 1Z999 to order 40213."
       ]
+    },
+    {
+      "slug": "getfly-crm",
+      "name": "Getfly CRM",
+      "category": "crm",
+      "description": "MCP server for Getfly CRM — customers, opportunities, orders, tickets and tasks.",
+      "endpoint": "https://getfly-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Getfly company"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Getfly CRM address"
+          },
+          {
+            "label": "Getfly API key"
+          }
+        ],
+        "hint": "Your address is the part before **.getflycrm.com**. An admin finds the API key in Getfly CRM → **Settings → Integration → Other software integration → Getfly API Key**. Use a dedicated integration key where your account permits it. Requested customer, contact, opportunity, order, ticket and task data passes to your chosen AI client and its LLM provider. When requested, tools can create or update customer records, create opportunities or change their stages and comments, create tickets and create or complete tasks. Getfly may notify assigned users or followers. Disable or regenerate the API key in Getfly to stop vendor access; regenerating the company key also disconnects its other integrations. Billing follows the verified Getfly company address; rotating its key keeps that identity."
+      },
+      "tools": [
+        {
+          "name": "getfly_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the Getfly CRM users (employees): user id, name, department, email, phone. Use the user_name (login name) for the recipient/manager arguments of the create tools. Filters: user_id, contact_name, email, contact_mobile, valid (1 = active users). GET /api/v6.1/users."
+        },
+        {
+          "name": "getfly_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user by id or by login name (exactly one of user_id and user_username). GET /api/v6.1/user."
+        },
+        {
+          "name": "getfly_list_accounts",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (accounts, i.e. companies or individuals) with code, name, phone, email, address, type, source, relationship, manager, total revenue and contacts. Filters: id, account_code, account_name, phone_office, email, account_type, account_source, relation_id, industry, billing_address_street, created_at, updated_at (gte/lte/between), account_manager (user id), sale_order_status. Newest first. GET /api/v6/accounts."
+        },
+        {
+          "name": "getfly_get_account",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by its customer code (account_code, e.g. KH/2025/000001): full profile with contacts, custom fields, type, source, industry, manager and revenue. GET /api/v6.1/account?account_code=."
+        },
+        {
+          "name": "getfly_create_account",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: Create a new customer (account) in Getfly CRM. The customer code must be unique (leave it out to let Getfly generate one). Type, source, industry, relationship, country, province, district and ward are given by NAME and must match the names configured in Getfly. Optionally adds one primary contact. Creating records may trigger the workflows and notifications set up in the CRM. POST /api/v6.1/account."
+        },
+        {
+          "name": "getfly_update_account",
+          "type": "write",
+          "title": "Update customer",
+          "description": "WRITE: Update fields of an existing customer, found by its current customer code. Send only the fields to change. Names (relationship, country, province...) must match those configured in Getfly. Contacts and the type/source/industry lists are not editable here. PUT /api/v6.1/account."
+        },
+        {
+          "name": "getfly_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List sales campaigns (opportunity pipelines): campaign code and name, responsible user, lock state, related users and the pipeline stages (status ids and names). GET /api/v6.1/campaigns."
+        },
+        {
+          "name": "getfly_get_campaign_stages",
+          "type": "read",
+          "title": "Get campaign stages",
+          "description": "The pipeline stages of one campaign (status id, name and how many opportunities are in each). Pass exactly one of campaign_id and campaign_code. GET /api/v6.1/campaign/status."
+        },
+        {
+          "name": "getfly_list_opportunities",
+          "type": "read",
+          "title": "List opportunities",
+          "description": "List sales opportunities (deals in a campaign pipeline) with code, name, stage, probability, handler, customer and campaign. Filter by campaign with the campaign_code argument. GET /api/v6.1/opportunities."
+        },
+        {
+          "name": "getfly_get_opportunity",
+          "type": "read",
+          "title": "Get opportunity",
+          "description": "One opportunity by its code (e.g. CH2284): stage, probability, handler, customer and campaign. GET /api/v6.1/opportunity."
+        },
+        {
+          "name": "getfly_list_opportunity_comments",
+          "type": "read",
+          "title": "List opportunity comments",
+          "description": "The discussion (comments) on an opportunity: author, text and time. GET /api/v6.1/opportunity/{id}/comments."
+        },
+        {
+          "name": "getfly_create_opportunity",
+          "type": "write",
+          "title": "Create opportunity",
+          "description": "WRITE: Create a sales opportunity in a campaign for a customer and assign it to a user. Creates (or links) the customer and contact from the details given. The assigned user and the campaign rules may be notified by Getfly. POST /api/v6.1/opportunity."
+        },
+        {
+          "name": "getfly_move_opportunity_stage",
+          "type": "write",
+          "title": "Move opportunity to a pipeline stage",
+          "description": "WRITE: Move an opportunity to another stage of its campaign pipeline, without changing anything else. Identify the opportunity by code (or id) and the campaign by code (or id); the new stage by name (or status id) from getfly_get_campaign_stages. Won/lost/cancelled results are not set here. PUT /api/v6.1/opportunity/stage."
+        },
+        {
+          "name": "getfly_add_opportunity_comment",
+          "type": "write",
+          "title": "Add opportunity comment",
+          "description": "WRITE: Post a comment in the discussion of an opportunity, as the given user. Other users following the opportunity may be notified. POST /api/v6.1/opportunity/{id}/comments."
+        },
+        {
+          "name": "getfly_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services with code, name, category, unit, retail/wholesale/online price, sale price, VAT and dates. GET /api/v6.1/products."
+        },
+        {
+          "name": "getfly_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by its code (e.g. SP.00192): prices, unit, category, VAT, variants and custom fields. GET /api/v6.1/product."
+        },
+        {
+          "name": "getfly_list_sale_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders with code, customer, amounts, discount, VAT, status, payment status, assigned user and line items. Filters: id, order_date, created_at, updated_at (eq, gte, lte, between). Newest first. GET /api/v6.1/sale_orders."
+        },
+        {
+          "name": "getfly_get_sale_order",
+          "type": "read",
+          "title": "Get sales order",
+          "description": "One sales order by its order code: status, payment status, amounts, customer, line items, shipping info and custom fields. Add payment_periods to fields to include the payment schedule. GET /api/v6.1/sale_order."
+        },
+        {
+          "name": "getfly_list_tickets",
+          "type": "read",
+          "title": "List support tickets",
+          "description": "List support tickets with code, title, content, category, customer and custom fields. GET /api/v6.1/tickets."
+        },
+        {
+          "name": "getfly_get_ticket",
+          "type": "read",
+          "title": "Get support ticket",
+          "description": "One support ticket by its ticket code. GET /api/v6.1/ticket."
+        },
+        {
+          "name": "getfly_list_ticket_comments",
+          "type": "read",
+          "title": "List ticket comments",
+          "description": "The discussion (comments) on a support ticket: author, text and time. GET /api/v6.1/ticket/{id}/comments."
+        },
+        {
+          "name": "getfly_list_ticket_categories",
+          "type": "read",
+          "title": "List ticket categories",
+          "description": "The support ticket categories (id and name). Use a name as cate_name when creating a ticket. GET /api/v6.1/ticket/categories."
+        },
+        {
+          "name": "getfly_list_ticket_statuses",
+          "type": "read",
+          "title": "List ticket statuses",
+          "description": "The support ticket statuses (id and name). Use a name as status_name when creating a ticket. GET /api/v6.1/ticket/status."
+        },
+        {
+          "name": "getfly_create_ticket",
+          "type": "write",
+          "title": "Create support ticket",
+          "description": "WRITE: Create a support ticket, optionally for a customer. Category and status are given by NAME and must match the names configured in Getfly (getfly_list_ticket_categories, getfly_list_ticket_statuses). The content may contain HTML. Getfly may notify the support team. POST /api/v6.1/ticket."
+        },
+        {
+          "name": "getfly_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks with code, name, start/end time, status, progress, assignee, project and related customers. GET /api/v6.1/tasks."
+        },
+        {
+          "name": "getfly_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by its task code: status, progress, assignee, project, dates and custom fields. GET /api/v6.1/task."
+        },
+        {
+          "name": "getfly_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: Create a task, optionally in a project, assigned to a user and linked to a customer. Project and task type are given by NAME and must exist in Getfly; users by login name. The assignee may be notified by Getfly. POST /api/v6.1/task."
+        },
+        {
+          "name": "getfly_complete_task",
+          "type": "write",
+          "title": "Complete task",
+          "description": "WRITE: Mark a task as completed, by its task code. POST /api/v6.1/task/complete."
+        },
+        {
+          "name": "getfly_list_funds",
+          "type": "read",
+          "title": "List funds",
+          "description": "List the cash/bank funds (accounts for receipts and payments) with id, name, parent, level and financial account. GET /api/v6.1/funds."
+        },
+        {
+          "name": "getfly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "getfly_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Getfly CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "getfly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Getfly CRM (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "getfly_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Getfly CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run getfly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customers were added to Getfly CRM this week?",
+        "Show the open opportunities in my main sales campaign and their stages.",
+        "List my sales orders from last month that are still unpaid.",
+        "Create a task for Linh to call customer KH/2025/000123 tomorrow."
+      ]
+    },
+    {
+      "slug": "skuvault",
+      "name": "SkuVault",
+      "category": "inventory",
+      "description": "MCP server for SkuVault — products, inventory, sales, purchase orders and stock adjustments.",
+      "endpoint": "https://skuvault.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per SkuVault account"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SkuVault tenant token"
+          },
+          {
+            "label": "SkuVault user token"
+          }
+        ],
+        "hint": "Find both in SkuVault under **Admin → Integrations**, or request them with SkuVault's getTokens API call (your login email and password; this server never asks for your password). Use an enabled dedicated user with only the permissions this integration needs. Requested inventory, product, sales and purchase-order data passes to your chosen AI client and its LLM provider. When requested, three write tools add stock, remove stock or set the quantity at a warehouse location; these change inventory records. Disable that user to stop its API access, or revoke/regenerate its tokens using SkuVault's controls. Billing follows the tenant token: rotating only the user token keeps the identity; replacing the tenant token starts a new usage and billing identity."
+      },
+      "tools": [
+        {
+          "name": "skuvault_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List the regular warehouses (Id and Code). The numeric Id is what the stock tools and skuvault_list_transactions need. SkuVault throttles this call to 1 per minute. POST /inventory/getWarehouses."
+        },
+        {
+          "name": "skuvault_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the locations in enabled warehouses with warehouse, location code, parent location/container and total quantity. Heavy throttling (5/min). POST /inventory/getLocations."
+        },
+        {
+          "name": "skuvault_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (not kits) with description, cost, prices, brand, supplier, classification, reorder point and quantities (on hand, available, pending, picked, incoming...). Filter by SKU or code, or by modification time. Alternate SKUs come back as separate rows (IsAlternateSKU) unless you filter. Heavy throttling (5/min). POST /products/getProducts."
+        },
+        {
+          "name": "skuvault_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product (not a kit) by SKU or by code: details plus all quantities (on hand, available, pending, picked, incoming, in stock). Give exactly one of sku or code. Light throttling (20/min). POST /products/getProduct."
+        },
+        {
+          "name": "skuvault_list_kits",
+          "type": "read",
+          "title": "List kits",
+          "description": "List kits with their component lines, optional available quantity and cost. Needs a modified-time window (defaults to all time). The page size is not documented: keep following `next` until a page comes back empty. Heavy throttling (5/min). POST /products/getKits."
+        },
+        {
+          "name": "skuvault_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "List the brands created in SkuVault (Name, IsEnabled), 1,000 per page. Heavy throttling (5/min). POST /products/getBrands."
+        },
+        {
+          "name": "skuvault_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List the suppliers in the account (Name, IsEnabled), 10,000 per page. Heavy throttling (5/min). POST /products/getSuppliers."
+        },
+        {
+          "name": "skuvault_list_classifications",
+          "type": "read",
+          "title": "List classifications",
+          "description": "List product classifications and their named attributes, 1,000 per page. Heavy throttling (5/min). POST /products/getClassifications."
+        },
+        {
+          "name": "skuvault_get_inventory_by_location",
+          "type": "read",
+          "title": "Get inventory by location",
+          "description": "Where each product is stored: per SKU (or code) the locations with warehouse code, quantity and whether the location is a reserve location. Filter by SKUs or by codes (not both). Heavy throttling (5/min). POST /inventory/getInventoryByLocation."
+        },
+        {
+          "name": "skuvault_get_available_quantities",
+          "type": "read",
+          "title": "Get available quantities",
+          "description": "Sellable (available) quantity per SKU across all warehouses, with last-modified time. Use modified_after to see only what changed. Heavy throttling (5/min). POST /inventory/getAvailableQuantities."
+        },
+        {
+          "name": "skuvault_get_item_quantities",
+          "type": "read",
+          "title": "Get item quantities",
+          "description": "Product quantities per SKU: total on hand, available, held, pending and picked. Filter by product codes or modification time. Heavy throttling (5/min). POST /inventory/getItemQuantities."
+        },
+        {
+          "name": "skuvault_get_warehouse_quantities",
+          "type": "read",
+          "title": "Get warehouse quantities",
+          "description": "SKUs and quantities held in one warehouse. Get the warehouse id from skuvault_list_warehouses. Heavy throttling (5/min). POST /inventory/getWarehouseItemQuantities."
+        },
+        {
+          "name": "skuvault_list_transactions",
+          "type": "read",
+          "title": "List inventory transactions",
+          "description": "Inventory transaction history (adds, removes, picks, creates) with user, SKU, quantity before/after, location, reason, note and the sale it belongs to. The date range may span at most 7 days. Filter by user email, warehouse id, type, reasons or sale id. Heavy throttling (5/min). POST /inventory/getTransactions."
+        },
+        {
+          "name": "skuvault_list_sales",
+          "type": "read",
+          "title": "List sales by status",
+          "description": "List sales (orders) that are ReadyToShip (default) or Pending, or look up specific sales by order id (then status is ignored): items, kits, shipping and contact info, totals. Not paged by the vendor. Heavy throttling (5/min). POST /sales/getSales."
+        },
+        {
+          "name": "skuvault_list_sales_by_date",
+          "type": "read",
+          "title": "List sales by date",
+          "description": "Sales within a date range, by sale date or by last-modified date: items, kits, fulfillment/processed quantities, shipping, contact info and totals. The date range may span at most 7 days. The most common way to pull orders. Heavy throttling (5/min). POST /sales/getSalesByDate."
+        },
+        {
+          "name": "skuvault_list_sold_items",
+          "type": "read",
+          "title": "List sold items",
+          "description": "Items sold in a date range: date, SKU, quantity and total price per line, optionally breaking kits into components and including transfer sales. The date range may span at most 14 days. Heavy throttling (5/min). POST /sales/getSoldItems."
+        },
+        {
+          "name": "skuvault_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders with supplier, dates, status, payment status, costs and line items (SKU, quantity, received quantity). By default completed POs are left out: set status Completed to see them. Specific PO numbers override the date and status filters. 10,000 per page. Heavy throttling (5/min). POST /purchaseorders/getPOs."
+        },
+        {
+          "name": "skuvault_list_po_receives",
+          "type": "read",
+          "title": "List purchase order receives",
+          "description": "Purchase-order receiving history: what was received (SKU, quantity, location, user, dates) followed by quantity corrections. Filter by warehouse codes, PO numbers or received time. Heavy throttling (5/min). POST /purchaseorders/getReceivesHistory."
+        },
+        {
+          "name": "skuvault_list_integrations",
+          "type": "read",
+          "title": "List sales channel accounts",
+          "description": "List the enabled sales-channel accounts (Amazon, ChannelAdvisor, Shopify...): Id, LongId, Name and Type. Severe throttling (1/min). POST /integration/getIntegrations."
+        },
+        {
+          "name": "skuvault_add_stock",
+          "type": "write",
+          "title": "Add stock",
+          "description": "WRITE: add quantity of a product to a warehouse location (a transaction in SkuVault's history; every call adds again, so do not retry blindly). The transaction reason must already exist in SkuVault. Serialized or lotted products need serial numbers / a scanned lot code. Moderate throttling (10/min). POST /inventory/addItem."
+        },
+        {
+          "name": "skuvault_remove_stock",
+          "type": "write",
+          "title": "Remove stock",
+          "description": "WRITE: remove quantity of a product from a warehouse location (a transaction in SkuVault's history; every call removes again, so do not retry blindly). The transaction reason must already exist in SkuVault. Serialized products need serial numbers. Moderate throttling (10/min). POST /inventory/removeItem."
+        },
+        {
+          "name": "skuvault_set_stock_quantity",
+          "type": "write",
+          "title": "Set stock quantity",
+          "description": "WRITE: set the exact quantity of a product at one warehouse location, overwriting what is there (running it again with the same values changes nothing more). Use skuvault_get_inventory_by_location first to see the current quantity. Moderate throttling (10/min). POST /inventory/setItemQuantity."
+        },
+        {
+          "name": "skuvault_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "skuvault_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SkuVault tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "skuvault_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on SkuVault (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "skuvault_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SkuVault Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run skuvault_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which SKUs are below their reorder point?",
+        "Show the sales that are ready to ship and what is in stock for them.",
+        "Which purchase orders are still open, and from which suppliers?",
+        "Where in the warehouse is SKU ABC-123 stored, and how many are available?"
+      ]
     }
   ]
 }
