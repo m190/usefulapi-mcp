@@ -95556,6 +95556,205 @@
         "Which leads came in this week and who are they assigned to?",
         "Add a note to contact 123 that I called about the appraisal, and remind me on Friday to follow up."
       ]
+    },
+    {
+      "slug": "shipcloud",
+      "name": "Shipcloud",
+      "category": "shipping",
+      "description": "Track shipments and quote shipping; prepare shipments, buy labels and request carrier pickups.",
+      "endpoint": "https://shipcloud.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per Shipcloud customer"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Shipcloud customer"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "shipcloud API key"
+          }
+        ],
+        "hint": "In Shipcloud click your email address → API Key. Use the sandbox key for tests; a live key can buy labels and request billable carrier pickups. Only connect a key whose use you authorize and control under UsefulAPI’s terms and your processing instructions. The key is encrypted. Requested shipping addresses, orders and tracking reach your AI client/provider. Revoke the key in Shipcloud to stop access; disconnect UsefulAPI to stop this connection. Label purchases require explicit confirmation; after a timeout, check Shipcloud before repeating. Reference checks reduce duplicates but cannot prevent simultaneous purchases across Worker instances. Vendor plans, carrier eligibility and charges are separate. Billing follows customer number, so sandbox/live keys and rotations normally retain the same subscription."
+      },
+      "tools": [
+        {
+          "name": "shipcloud_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The shipcloud user behind this API key: id, email, customer number, plan, and the ENVIRONMENT of the key (production = real labels and charges, sandbox = free test labels). Check this before creating labels. GET /me."
+        },
+        {
+          "name": "shipcloud_list_carriers",
+          "type": "read",
+          "title": "List carriers",
+          "description": "The carriers this account can use, each with its services, package types, additional services and label formats per service. Use the values when creating shipments. GET /carriers."
+        },
+        {
+          "name": "shipcloud_get_default_address",
+          "type": "read",
+          "title": "Get a default address",
+          "description": "One of the account's saved default addresses: shipping (the default sender), returns (the default recipient of return shipments) or invoice (the invoice address). GET /default_shipping_address, /default_returns_address or /invoice_address."
+        },
+        {
+          "name": "shipcloud_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments (newest first as shipcloud returns them) with carrier, service, price, tracking number, tracking URL, label URL, addresses and tracking events. Filters can be combined. Paged: pass the previous reply's next_page. shipcloud sends no totals, so next_page is a guess (a full page suggests more). GET /shipments."
+        },
+        {
+          "name": "shipcloud_get_shipment",
+          "type": "read",
+          "title": "Get shipment",
+          "description": "One shipment by id: addresses, packages with tracking events, price, label URL, tracking URL. Sandbox shipments have no tracking events and price 0. GET /shipments/{id}."
+        },
+        {
+          "name": "shipcloud_get_shipment_quote",
+          "type": "read",
+          "title": "Quote a shipment price",
+          "description": "What shipcloud would charge for a shipment (price in EUR excl. VAT). Read-only: nothing is created and nothing is charged. Only works for carrier contracts owned by shipcloud. Use it before shipcloud_create_shipment_with_label. POST /shipment_quotes."
+        },
+        {
+          "name": "shipcloud_create_prepared_shipment",
+          "type": "write",
+          "title": "Create a prepared shipment (no label)",
+          "description": "WRITE: save a shipment in shipcloud WITHOUT buying a label (create_shipping_label=false). Nothing is charged and no carrier is contacted; a prepared shipment can be deleted any time. Returns the shipment id. To buy the label use shipcloud_create_shipment_with_label. POST /shipments."
+        },
+        {
+          "name": "shipcloud_create_shipment_with_label",
+          "type": "write",
+          "title": "Buy a shipping label (costs money)",
+          "description": "WRITE, COSTS MONEY: create a shipment AND buy its shipping label at the carrier (create_shipping_label=true). With a LIVE key this charges the shipcloud account (price in EUR excl. VAT; get it first from shipcloud_get_shipment_quote) and creates a real label; with the sandbox key it is free and fake. A label can only be cancelled before the carrier's cut-off (about 17:00-20:00) with shipcloud_delete_shipment. The request is sent ONCE and never retried: if it times out or fails with a server error, the label may still exist, so check shipcloud_list_shipments with the same reference_number before trying again. An existing-label lookup and same-instance guard reduce duplicates but are not atomic or global: simultaneous requests across Worker instances can buy duplicate labels. Serialize purchases for each reference and check shipcloud after an uncertain result. Requires confirm=true after the user agreed to the purchase; give a unique reference_number. Shipments needing customs papers are not supported here. POST /shipments."
+        },
+        {
+          "name": "shipcloud_delete_shipment",
+          "type": "write",
+          "title": "Delete a shipment / cancel its label",
+          "description": "WRITE, DESTRUCTIVE: delete a shipment. A prepared shipment (no label) can be deleted any time. For a shipment with a label, shipcloud cancels the label only before the carrier's cut-off (about 17:00-20:00); afterwards it fails. Cannot be undone. Requires confirm=true after the user agreed. DELETE /shipments/{id}."
+        },
+        {
+          "name": "shipcloud_list_trackers",
+          "type": "read",
+          "title": "List trackers",
+          "description": "List trackers: shipments created OUTSIDE shipcloud that shipcloud tracks by the carrier's tracking number (only for your own carrier contracts), with status and tracking events. GET /trackers."
+        },
+        {
+          "name": "shipcloud_get_tracker",
+          "type": "read",
+          "title": "Get tracker",
+          "description": "One tracker by id, with status and tracking events. GET /trackers/{id}."
+        },
+        {
+          "name": "shipcloud_create_tracker",
+          "type": "write",
+          "title": "Track a shipment by its tracking number",
+          "description": "WRITE: have shipcloud track a parcel that was NOT created with shipcloud, by the carrier's tracking number (only for your own carrier contracts; carriers dhl, dpd, gls, ups). Creates a tracker; no label, no shipping charge. POST /trackers."
+        },
+        {
+          "name": "shipcloud_list_pickup_requests",
+          "type": "read",
+          "title": "List pickup requests",
+          "description": "List carrier pickup requests with carrier, pickup time window, address and the shipments included. GET /pickup_requests."
+        },
+        {
+          "name": "shipcloud_get_pickup_request",
+          "type": "read",
+          "title": "Get pickup request",
+          "description": "One pickup request by id. GET /pickup_requests/{id}."
+        },
+        {
+          "name": "shipcloud_create_pickup_request",
+          "type": "write",
+          "title": "Request a carrier pickup",
+          "description": "WRITE: order a carrier (dpd, gls, hermes or ups) to pick up parcels at an address in a time window. A real request goes to the carrier and cannot be cancelled through this server; carriers may bill pickups. Without `shipment_ids` the carrier collects all shipments not yet picked up; return shipments cannot be picked up. Requires confirm=true after the user agreed. POST /pickup_requests."
+        },
+        {
+          "name": "shipcloud_find_dropoff_locations",
+          "type": "read",
+          "title": "Find pickup and drop-off points",
+          "description": "Search a carrier's parcel shops, lockers and drop-off points near an address or coordinates (opening hours, distance). Give an address (street, zip_code, city, country) or latitude + longitude. GET /pickup_dropoff_locations."
+        },
+        {
+          "name": "shipcloud_list_addresses",
+          "type": "read",
+          "title": "List saved addresses",
+          "description": "List the address book (saved addresses with ids usable as `to` / `from`). Filter by any field. Paged. GET /addresses."
+        },
+        {
+          "name": "shipcloud_get_address",
+          "type": "read",
+          "title": "Get saved address",
+          "description": "One saved address by id. GET /addresses/{id}."
+        },
+        {
+          "name": "shipcloud_create_address",
+          "type": "write",
+          "title": "Save an address",
+          "description": "WRITE: save an address in the shipcloud address book (no shipment, no cost). Returns its id. It cannot be removed through this server. POST /addresses."
+        },
+        {
+          "name": "shipcloud_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders sent to shipcloud (order data with line items, used by the Return Portal and linked to shipments by order_id). GET /orders."
+        },
+        {
+          "name": "shipcloud_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id, with delivery address and line items. GET /orders/{id}."
+        },
+        {
+          "name": "shipcloud_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks configured in the account: target URL, subscribed event types, deactivated flag. Credentials of a webhook are never shown. GET /webhooks."
+        },
+        {
+          "name": "shipcloud_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shipcloud_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the shipcloud tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shipcloud_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on shipcloud (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shipcloud_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's shipcloud Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shipcloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Track our recent shipments and show delayed parcels.",
+        "Find a saved customer address before preparing a shipment.",
+        "Quote a shipment before I decide whether to buy its label.",
+        "Show the carrier pickup requests for our warehouse."
+      ]
     }
   ]
 }
