@@ -1,5 +1,5 @@
 ---
-title: Prepare a Recruitee hiring handover in Claude
+title: Review your Recruitee hiring pipeline in Claude
 description: Use Claude or ChatGPT to review a Recruitee job, candidate stages, recruiter notes, upcoming interviews and open tasks before your hiring meeting.
 date: 2026-10-31
 products: recruitee
@@ -8,14 +8,14 @@ You can ask Claude or ChatGPT to prepare a hiring handover from Recruitee: find 
 
 ## Which prompt do I start with?
 
-> Prepare a read-only handover for our Customer Success Manager role. For each qualified candidate, show their current stage, upcoming interviews this week, open tasks and a short summary of existing recruiter notes. Include candidate IDs, flag missing information and say whether you checked all matching candidates.
+> Show the candidates for our Customer Success Manager role, their current stage, and any interviews this week.
 
 Replace the example with a role you manage. Include its location or department when several jobs have the same title, and specify your timezone for interview dates.
 
 ## What does the AI read, step by step?
 
 1. It finds the role with `recruitee_list_offers` and opens it with `recruitee_get_offer`. Recruitee calls jobs "offers" in its API; these are job records, not employment offer letters.
-2. It uses `recruitee_list_candidates` with the selected job ID and qualified filter, then opens the relevant profiles with `recruitee_get_candidate`. A candidate can belong to several jobs, so the handover should use their placement on this role.
+2. It uses `recruitee_list_candidates` with the selected job ID, then opens the relevant profiles with `recruitee_get_candidate`. A candidate can belong to several jobs, so the handover should use their placement on this role.
 3. It reads existing team notes with `recruitee_list_candidate_notes`. If you ask for interview feedback too, it can read `recruitee_list_evaluations` and distinguish recorded feedback from its own summary.
 4. It checks `recruitee_list_interview_events` for each candidate within your date range and `recruitee_list_tasks` for their incomplete tasks.
 5. It assembles the handover with the current stage, scheduled interviews and outstanding follow-ups, keeping missing information visible.
