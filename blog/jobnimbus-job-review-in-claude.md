@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT to prepare a JobNimbus job handover: find the proj
 
 ## Which prompt do I start with?
 
-> Find the Oak Street roofing job. If several jobs match, show their names and addresses and ask me to choose. Summarize the selected job's status, sales rep, open tasks with their dates and assignees, and recent notes. Suggest the next follow-up and draft a note for my review. Do not create or change anything yet.
+> Show the Oak Street roofing job's status, open tasks and recent notes. Draft a short follow-up for my review.
 
 Replace the example with a job you are authorized to access. Include its address or customer name when the project name alone is ambiguous.
 

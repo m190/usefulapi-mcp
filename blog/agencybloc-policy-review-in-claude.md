@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT to prepare an AgencyBloc client review: find the i
 
 ## Which prompt do I start with?
 
-> Find the individual named Maria Lopez. If more than one record matches, ask me which one to use. Summarize her policies, carriers, effective dates and renewal dates, then show recent notes and open activities. Draft a short follow-up note for my review. Do not save anything yet.
+> Show Maria Lopez's policies, renewal dates and recent notes. Draft a short follow-up for my review.
 
 Use a client you are authorized to work with. A name can match several records, so give the assistant an email address or another distinguishing detail when needed.
 
