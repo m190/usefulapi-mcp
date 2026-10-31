@@ -567,6 +567,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TextUs](servers/textus/) | messaging | 28 | API token | [servers/textus/](servers/textus/) |
 | [DoorLoop](servers/doorloop/) | property-management | 25 | API token | [servers/doorloop/](servers/doorloop/) |
 | [HDPhotoHub](servers/hdphotohub/) | real-estate | 24 | API token | [servers/hdphotohub/](servers/hdphotohub/) |
+| [ThinkReservations](servers/thinkreservations/) | property-management | 15 | API token | [servers/thinkreservations/](servers/thinkreservations/) |
+| [Gripp](servers/gripp/) | project-management | 18 | API token | [servers/gripp/](servers/gripp/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
