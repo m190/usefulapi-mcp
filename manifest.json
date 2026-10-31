@@ -92850,6 +92850,402 @@
         "Show pending time off requests for this month.",
         "Create a job called Riverside Phase 2 with identifier RS-2 and close the old job RS-1."
       ]
+    },
+    {
+      "slug": "smarthr",
+      "name": "SmartHR",
+      "category": "hr",
+      "description": "MCP server for SmartHR — employees, departments, dependents and employee invitations.",
+      "endpoint": "https://smarthr.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per SmartHR tenant"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SmartHR subdomain"
+          },
+          {
+            "label": "SmartHR access token"
+          }
+        ],
+        "hint": "The subdomain is the first part of your SmartHR address (`https://**yourcompany**.smarthr.jp`). An authorized administrator or responsible user issues a dedicated access token in **Common settings → External system integration → Access tokens**; copy it when it is shown, it cannot be displayed again. The token acts with its own permissions and can be revoked there at any time. If your tenant restricts API access by IP address, it must allow this service. Use only the read/write permissions you need. Requested employee, dependent and organizational data passes to your chosen AI client and its LLM provider. Employee/dependent outputs exclude bank, insurance, salary and identification-image fields. Write tools create/update employees and departments or add dependents; inviting an employee sends an email. Revoke this token in SmartHR to stop vendor access. Billing follows your tenant subdomain and survives token rotation."
+      },
+      "tools": [
+        {
+          "name": "smarthr_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (従業員) of the SmartHR tenant, with filters: free-text name/department/position search, status (employed, absent, retired), employee number, employment type, department, position, hire and resignation date ranges. Returns a compact record per employee; use `fields` for more. Sensitive data (bank accounts, insurance numbers, residence cards, salary, ID images) is never returned."
+        },
+        {
+          "name": "smarthr_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee (従業員) by id. Returns a compact record; use `fields` for more (address, phone, birth date, custom fields, contract dates). Sensitive data is never returned."
+        },
+        {
+          "name": "smarthr_list_dependents",
+          "type": "read",
+          "title": "List an employee's dependents",
+          "description": "List the dependents (家族情報) registered for one employee: name, relation, birth date, living arrangement and support status. Pension numbers, income and documents are not returned."
+        },
+        {
+          "name": "smarthr_list_maternity_childcare_leaves",
+          "type": "read",
+          "title": "List an employee's maternity and childcare leaves",
+          "description": "List the maternity and childcare leave records (産休育休) of one employee: expected birth, leave start/end and scheduled return dates. Bank, insurance and memo data are not returned."
+        },
+        {
+          "name": "smarthr_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments (部署) with their hierarchy (parent, children), code and company."
+        },
+        {
+          "name": "smarthr_get_department",
+          "type": "read",
+          "title": "Get a department",
+          "description": "Get one department (部署) by id, with its parent and children."
+        },
+        {
+          "name": "smarthr_list_positions",
+          "type": "read",
+          "title": "List positions",
+          "description": "List positions / job titles (役職) with their rank and code."
+        },
+        {
+          "name": "smarthr_list_employment_types",
+          "type": "read",
+          "title": "List employment types",
+          "description": "List employment types (雇用形態), e.g. full-timer, part-timer, contract worker, with their ids for filtering and writes."
+        },
+        {
+          "name": "smarthr_list_grades",
+          "type": "read",
+          "title": "List grades",
+          "description": "List grades (等級) with their rank."
+        },
+        {
+          "name": "smarthr_list_job_categories",
+          "type": "read",
+          "title": "List job categories",
+          "description": "List job categories (職種)."
+        },
+        {
+          "name": "smarthr_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the companies (会社) of the tenant: name, code, corporate number, address, phone."
+        },
+        {
+          "name": "smarthr_list_business_establishments",
+          "type": "read",
+          "title": "List business establishments",
+          "description": "List business establishments (事業所): name, social insurance and labor insurance registration data, company."
+        },
+        {
+          "name": "smarthr_list_employee_custom_fields",
+          "type": "read",
+          "title": "List employee custom field definitions",
+          "description": "List the definitions of the tenant's custom employee fields (カスタム従業員項目): name, type and, for dropdowns, the choices. Use them to read the values in custom_fields."
+        },
+        {
+          "name": "smarthr_list_dependent_relations",
+          "type": "read",
+          "title": "List dependent relations",
+          "description": "List the relation types for dependents (続柄: spouse, child, parent...) with their ids, needed by smarthr_create_dependent."
+        },
+        {
+          "name": "smarthr_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List SmartHR users (login accounts): email, administrator flag, role, linked employee, and the invitation status (created, opened, accepted, answered). Use it to find the administrator id for smarthr_invite_employee."
+        },
+        {
+          "name": "smarthr_list_employee_input_forms",
+          "type": "read",
+          "title": "List employee input forms",
+          "description": "List the employee information collection forms (従業員情報収集フォーム) that an invitation can use."
+        },
+        {
+          "name": "smarthr_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the configured webhooks (target URL, which employee and dependent events notify). Read-only; secret tokens and the query string of the target URL are never shown."
+        },
+        {
+          "name": "smarthr_create_employee",
+          "type": "write",
+          "title": "Create an employee",
+          "description": "WRITE: Register a new employee (従業員) in SmartHR. Nothing is sent to the employee; to invite them to fill in their own data use smarthr_invite_employee afterwards. Only the fields you give are set. The tenant plan may cap the number of employees (error plan_limit_exceeded). Returns the created employee as a compact record."
+        },
+        {
+          "name": "smarthr_update_employee",
+          "type": "write",
+          "title": "Update an employee",
+          "description": "WRITE: Change fields of one existing employee (partial update: only the fields you give change; others stay). Typical uses: set the status to absent or retired with the resignation date, correct a name, email or phone, move the employee to other departments (department_ids replaces the current list), change positions. SmartHR does not allow clearing a name that is already filled in. Returns the updated employee as a compact record."
+        },
+        {
+          "name": "smarthr_create_department",
+          "type": "write",
+          "title": "Create a department",
+          "description": "WRITE: Create a department (部署). Give the parent department id to nest it. Returns the created department."
+        },
+        {
+          "name": "smarthr_update_department",
+          "type": "write",
+          "title": "Update a department",
+          "description": "WRITE: Rename or move one department (partial update: only the fields you give change). Returns the updated department."
+        },
+        {
+          "name": "smarthr_create_dependent",
+          "type": "write",
+          "title": "Create a dependent",
+          "description": "WRITE: Register a dependent (家族情報) for an employee. Needs the relation id from smarthr_list_dependent_relations. Returns the created dependent without pension number, income or documents."
+        },
+        {
+          "name": "smarthr_invite_employee",
+          "type": "write",
+          "title": "Invite an employee by email",
+          "description": "WRITE, SENDS AN EMAIL: Invite an employee to SmartHR. SmartHR emails the address stored on the employee (the employee must have one) an invitation to create their login and, with an input form, to fill in their own data. Asking again re-sends it (and updates the invited address if it changed). An employee who already accepted cannot be invited again. Confirm with the user before calling."
+        },
+        {
+          "name": "smarthr_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "smarthr_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SmartHR tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "smarthr_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on SmartHR (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "smarthr_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SmartHR Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run smarthr_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who joined the company in the last 30 days and which department are they in?",
+        "List all employees on leave or retired this year.",
+        "How many employees does each department have?",
+        "Register a new employee Taro Yamada, hired on 2026-11-01, in the Sales department."
+      ]
+    },
+    {
+      "slug": "abra-flexi",
+      "name": "ABRA Flexi",
+      "category": "accounting",
+      "description": "MCP server for ABRA Flexi — accounting, contacts, stock and draft-checked invoice creation.",
+      "endpoint": "https://abra-flexi.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per cloud instance and company"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ABRA Flexi Cloud instance"
+          },
+          {
+            "label": "Company id"
+          },
+          {
+            "label": "API user name"
+          },
+          {
+            "label": "API user password"
+          }
+        ],
+        "hint": "The instance is the first part of your cloud address (`https://**yourname**.flexibee.eu`); the company id is the part after `/c/` (for example `https://yourname.flexibee.eu/c/**acme_s_r_o_**`). Create a dedicated user for this connection in ABRA Flexi (as ABRA recommends for every integration); the **Přístup k API** service must be active (Nastavení → Licence a předplatné). Only ABRA Flexi Cloud instances on flexibee.eu are supported. Use a dedicated REST API user restricted to this company and the permissions you need. Requested accounting, customer, stock and bank data passes to your chosen AI client and its LLM provider. Three write tools create or update contacts and create issued invoices; an invoice may be booked or affect stock according to its document type. Use dry_run to validate before saving. This server does not send invoices, execute payments or delete records. Disable this API user or change its password in Flexi to stop vendor access. Billing follows the verified instance/company and survives password rotation. Your vendor API quota and possible overage fees still apply."
+      },
+      "tools": [
+        {
+          "name": "abraflexi_get_company",
+          "type": "read",
+          "title": "Get the company",
+          "description": "Show the ABRA Flexi company the login points to (name, company id, state). Use it to check the connection."
+        },
+        {
+          "name": "abraflexi_list_evidences",
+          "type": "read",
+          "title": "List evidences",
+          "description": "List the evidences (tables) of the company with their Czech path and name, for example faktura-vydana = issued invoices, adresar = address book, cenik = price list. Use a path from here as 'evidence' in abraflexi_list_records / abraflexi_get_record (only business evidences are readable there)."
+        },
+        {
+          "name": "abraflexi_list_issued_invoices",
+          "type": "read",
+          "title": "List issued invoices (sales invoices to customers)",
+          "description": "List issued invoices (sales invoices to customers), newest first by default, filtered by payment status, customer/supplier code, dates or text. Money fields: sumCelkem = total, zbyvaUhradit = still to pay (in the company currency), the *Men fields are in the document currency. Returns total, next_start for paging. Pass 'fields' for other properties."
+        },
+        {
+          "name": "abraflexi_get_issued_invoice",
+          "type": "read",
+          "title": "Get an issued invoice",
+          "description": "Get one issued invoice with all its fields and its line items. Pass the numeric id (from the list) or an identifier such as code:<number>."
+        },
+        {
+          "name": "abraflexi_list_received_invoices",
+          "type": "read",
+          "title": "List received invoices (bills from suppliers)",
+          "description": "List received invoices (bills from suppliers), newest first by default, filtered by payment status, customer/supplier code, dates or text. Money fields: sumCelkem = total, zbyvaUhradit = still to pay (in the company currency), the *Men fields are in the document currency. Returns total, next_start for paging. Pass 'fields' for other properties."
+        },
+        {
+          "name": "abraflexi_get_received_invoice",
+          "type": "read",
+          "title": "Get an received invoice",
+          "description": "Get one received invoice with all its fields and its line items. Pass the numeric id (from the list) or an identifier such as code:<number>."
+        },
+        {
+          "name": "abraflexi_list_contacts",
+          "type": "read",
+          "title": "List or search contacts",
+          "description": "List or search the address book (adresar): customers and suppliers with code (kod), name, company id (ic), VAT id (dic), e-mail, phone and address. The code from here identifies the customer in invoices."
+        },
+        {
+          "name": "abraflexi_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one address-book entry with all its fields. Pass the numeric id (from abraflexi_list_contacts) or code:<kod>."
+        },
+        {
+          "name": "abraflexi_list_products",
+          "type": "read",
+          "title": "List or search products",
+          "description": "List or search the price list (cenik): products and services with code, name, EAN, prices (without and with VAT), purchase price and whether they are stocked."
+        },
+        {
+          "name": "abraflexi_list_stock_cards",
+          "type": "read",
+          "title": "List stock cards",
+          "description": "List stock cards (skladova-karta): the quantity on hand (stavMJ), reserved (rezervMJ) and available (dostupMj) per product and warehouse, with min/max limits and average price."
+        },
+        {
+          "name": "abraflexi_list_stock_movements",
+          "type": "read",
+          "title": "List stock movements",
+          "description": "List stock movements (skladovy-pohyb: receipts, issues, transfers), newest first by default, filtered by warehouse or dates."
+        },
+        {
+          "name": "abraflexi_list_bank_movements",
+          "type": "read",
+          "title": "List bank movements",
+          "description": "List bank movements (banka: bank statement lines, incoming and outgoing payments), newest first by default, filtered by dates, bank account, variable symbol or text. sumCelkem is the amount; typPohybuK says incoming or outgoing."
+        },
+        {
+          "name": "abraflexi_list_cash_movements",
+          "type": "read",
+          "title": "List cash movements",
+          "description": "List cash desk movements (pokladni-pohyb: cash receipts and payouts), newest first by default, filtered by dates, cash desk, variable symbol or text. sumCelkem is the amount; typPohybuK says incoming or outgoing."
+        },
+        {
+          "name": "abraflexi_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders: direction 'received' = customer orders (objednavka-prijata, default), 'issued' = purchase orders to suppliers (objednavka-vydana). Newest first by default."
+        },
+        {
+          "name": "abraflexi_list_records",
+          "type": "read",
+          "title": "List records of an evidence",
+          "description": "List records of any business evidence (invoice types, bank accounts, warehouses, cost centres, currencies, ledger entries, price-list items, ...) with an optional filter in ABRA Flexi's filter language, for example filter \"zbyvaUhradit > 0 and datSplat < now()\" or \"kod = 'ABC'\". Operators: = <> < <= > >= like, like similar (ignores diacritics), begins, ends, between, in, and, or, not; dates as 2026-01-31. Without 'fields' the vendor's summary fields are returned."
+        },
+        {
+          "name": "abraflexi_get_record",
+          "type": "read",
+          "title": "Get a record of an evidence",
+          "description": "Get one record of any business evidence with all its fields (detail full), by numeric id or identifier such as code:ABC. Field names are the vendor's Czech property names."
+        },
+        {
+          "name": "abraflexi_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "WRITE: create a new address-book entry (customer or supplier) in ABRA Flexi. It only adds a record; nothing is sent. Use dry_run first to see the result without saving. Check abraflexi_list_contacts first so you do not create a duplicate."
+        },
+        {
+          "name": "abraflexi_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "WRITE: change fields of an existing address-book entry (only the fields you pass are changed). The entry must exist (a wrong id is an error, nothing is created). This overwrites the current values. Use dry_run first to check."
+        },
+        {
+          "name": "abraflexi_create_issued_invoice",
+          "type": "write",
+          "title": "Create an issued invoice",
+          "description": "WRITE: create an issued invoice (faktura-vydana) with line items in ABRA Flexi. The invoice is saved as a normal document with the next number of its series, and ABRA Flexi may account it automatically according to the settings of the chosen invoice type; this tool does NOT send it, mark it paid or e-mail it. Use dry_run first to see the computed totals and validation errors without saving. Find document_type_code with abraflexi_list_records (evidence typ-faktury-vydane) and customer_code with abraflexi_list_contacts."
+        },
+        {
+          "name": "abraflexi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "abraflexi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ABRA Flexi tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "abraflexi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ABRA Flexi (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "abraflexi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ABRA Flexi Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run abraflexi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my issued invoices are overdue, and for which customers?",
+        "Show the bank movements of this month and match them to open invoices by variable symbol.",
+        "Which products have 5 or fewer units left in stock?",
+        "Create a new customer entry for Acme s.r.o. in Brno."
+      ]
     }
   ]
 }

@@ -532,6 +532,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [EZRentOut](servers/ezrentout/) | rental | 63 | OAuth | [servers/ezrentout/](servers/ezrentout/) |
 | [Mekari Jurnal](servers/jurnal/) | accounting | 42 | OAuth | [servers/jurnal/](servers/jurnal/) |
 | [ExakTime / Arcoro](servers/exaktime/) | hr | 36 | OAuth | [servers/exaktime/](servers/exaktime/) |
+| [SmartHR](servers/smarthr/) | hr | 27 | OAuth | [servers/smarthr/](servers/smarthr/) |
+| [ABRA Flexi](servers/abra-flexi/) | accounting | 23 | OAuth | [servers/abra-flexi/](servers/abra-flexi/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
