@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT to prepare an AgencyBloc client review: find the i
 
 ## Which prompt do I start with?
 
-> Show Maria Lopez's policies, renewal dates and recent notes. Draft a short follow-up for my review.
+> Show Maria Lopez's policies and renewal dates. Which ones renew in the next 30 days?
 
 Use a client you are authorized to work with. A name can match several records, so give the assistant an email address or another distinguishing detail when needed.
 
