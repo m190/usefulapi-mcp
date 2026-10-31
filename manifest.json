@@ -96150,6 +96150,145 @@
         "Find the subscriber with the email jane@example.com and list her subscriptions and orders.",
         "Skip the next billing of subscription 41 and send the payment link for subscription 57."
       ]
+    },
+    {
+      "slug": "forms-on-fire",
+      "name": "Forms On Fire / Appenate",
+      "category": "forms",
+      "description": "Read mobile forms, entries, users and tasks; create confirmed draft or sent tasks for field workers.",
+      "endpoint": "https://forms-on-fire.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per platform and organization"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per platform and organization"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Account platform"
+          },
+          {
+            "label": "CompanyId"
+          },
+          {
+            "label": "IntegrationKey"
+          }
+        ],
+        "hint": "Select the platform that hosts your account, then copy CompanyId and an API key from Organization Setup. Prefer a restricted user-level key with only needed permissions. Your key is encrypted for authorized calls; requested forms, entries, users and task data reaches your chosen AI client/LLM provider. Revoke the key in the vendor dashboard to stop access; disconnect UsefulAPI to end this connection. Creating a task requires explicit confirmation; drafts are the default, and send_immediate=true notifies the worker. No operation is automatically replayed: check the platform after an uncertain result. Vendor API eligibility, quotas and subscriptions remain separate. Billing follows platform plus company, normally including key rotation."
+      },
+      "tools": [
+        {
+          "name": "formsonfire_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List the forms (screens) in the organization with id, name, version and status. Use a form id with formsonfire_get_form or formsonfire_search_entries. GET /screen/form/search."
+        },
+        {
+          "name": "formsonfire_get_form",
+          "type": "read",
+          "title": "Get form definition",
+          "description": "One form's definition: name, version, status and its fields (names and types, which are the names to use for prefilled answers). Give the form's id (GUID) or its external id. GET /screen/form."
+        },
+        {
+          "name": "formsonfire_search_entries",
+          "type": "read",
+          "title": "Search form entries",
+          "description": "Search submitted form entries (the completed forms your team sent in): who filled them, when, where (GPS) and every answer. Filter by form id or external id, version and a date range (by received time, or complete time via order_by). Returns the page of Entries with TotalRows. GET /formentry/search."
+        },
+        {
+          "name": "formsonfire_search_tasks",
+          "type": "read",
+          "title": "Search tasks",
+          "description": "Search tasks (jobs assigned to field workers, each with one or more activities such as filling out a form): status, assignee, due time, activities and history. Filter by assignee, status, name, task template and date range. Returns the page of Tasks with TotalRows. GET /task/search."
+        },
+        {
+          "name": "formsonfire_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by its id (GUID), with activities and history. GET /task."
+        },
+        {
+          "name": "formsonfire_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: create a task for a field worker with one form to fill out, optionally with prefilled answers. By default it remains a draft; send_immediate=true sends it and notifies the worker. Identify the worker by email, user id or external id (list_users). The form is identified by its external id (formsonfire_get_form shows field names for the prefilled answers). Requires confirm=true and a due time. Not idempotent: calling twice creates two tasks. POST /task."
+        },
+        {
+          "name": "formsonfire_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the organization's users (field workers and admins): name, email, status, groups, website role and last activity. Passwords and keys are never returned. GET /user/search."
+        },
+        {
+          "name": "formsonfire_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "One user by id (GUID): name, status, groups, folders, role and registered devices. GET /user."
+        },
+        {
+          "name": "formsonfire_list_groups",
+          "type": "read",
+          "title": "List user groups",
+          "description": "List user groups with their id, name and member user ids. Filter by name or external id. Returns UserGroups with TotalRows. GET /usergroup/search."
+        },
+        {
+          "name": "formsonfire_list_data_sources",
+          "type": "read",
+          "title": "List data sources",
+          "description": "List the data sources (lookup tables that feed dropdowns and prefill in forms, such as customers, sites or products): id, external id, name and row count. Use formsonfire_get_data_source for the rows. GET /datasource/search."
+        },
+        {
+          "name": "formsonfire_get_data_source",
+          "type": "read",
+          "title": "Get data source",
+          "description": "One data source by id (GUID) or external id: its column headers, TotalRows and (with return_rows) a page of rows. Rows are only returned when return_rows is true; page through them with page_no. GET /datasource."
+        },
+        {
+          "name": "formsonfire_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "formsonfire_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Forms On Fire tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "formsonfire_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Forms On Fire (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "formsonfire_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Forms On Fire Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run formsonfire_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many inspection forms were submitted this week, and by whom?",
+        "Show the answers of the latest 'Site Safety Check' entries.",
+        "Which tasks assigned to Maria are still open?",
+        "Create a task for tom@example.com to fill out the 'Timesheet' form, due tomorrow."
+      ]
     }
   ]
 }
