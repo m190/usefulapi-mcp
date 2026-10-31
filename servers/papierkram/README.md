@@ -66,6 +66,11 @@ On first connect you'll enter your **Papierkram account** (the first part of `ht
 | `papierkram_create_time_entry` | **write** | Create time entry |
 | `papierkram_create_proposition` | **write** | Create product or service |
 | `papierkram_create_invoice` | **write** | Create draft invoice |
+| `papierkram_get_voucher_pdf` | read | Get voucher PDF |
+| `papierkram_get_voucher_document` | read | Get voucher document |
+| `papierkram_upload_voucher_document` | **write** | Upload voucher document |
+| `papierkram_create_voucher` | **write** | Create expense voucher |
+| `papierkram_pay_voucher` | **write** | Pay expense voucher |
 | `papierkram_usage_status` | meta | Usage status (free-tier meter) |
 | `papierkram_request_feature` | meta | Request a missing feature |
 | `papierkram_upgrade` | meta | Upgrade to Pro (unlimited*) |

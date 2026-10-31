@@ -75244,7 +75244,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.9.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -75455,6 +75455,36 @@
           "type": "write",
           "title": "Create draft invoice",
           "description": "WRITE: create a DRAFT outgoing invoice (state draft; it is NOT finalized or sent, and gets no invoice number until the user completes it in Papierkram). Needs a payment term id (papierkram_list_payment_terms) and at least one line item. Use papierkram_list_invoices afterwards to check it. Costs Papierkram API credits (a create 10, an invoice 50; the monthly quota is limited)."
+        },
+        {
+          "name": "papierkram_get_voucher_pdf",
+          "type": "read",
+          "title": "Get voucher PDF",
+          "description": "Get the PDF that Papierkram makes for one expense voucher (GET /expense/vouchers/{id}/pdf). The API reference does not say whether it embeds the uploaded receipt; for the original uploaded file use papierkram_get_voucher_document. Returns the PDF as an embedded file (up to 3 MB)."
+        },
+        {
+          "name": "papierkram_get_voucher_document",
+          "type": "read",
+          "title": "Get voucher document",
+          "description": "Get an original file uploaded to an expense voucher (a receipt PDF or image), so its content can be read. Reads the voucher (papierkram_get_voucher) and fetches documents[].uri. Images come back as images, PDFs as an embedded file (up to 3 MB). The API has no documented download for one document: if Papierkram does not serve the file to an API token, the tool says so; then use papierkram_get_voucher_pdf. Files that are not yet attached to a voucher (the upload inbox) are not reachable through the Papierkram API."
+        },
+        {
+          "name": "papierkram_upload_voucher_document",
+          "type": "write",
+          "title": "Upload voucher document",
+          "description": "WRITE: attach a file (receipt PDF or image) to an existing expense voucher (POST /expense/vouchers/{id}/documents). The file is given as base64, up to 3 MB. Check papierkram_get_voucher first: a repeated upload attaches the file twice. Costs 10 Papierkram API credits."
+        },
+        {
+          "name": "papierkram_create_voucher",
+          "type": "write",
+          "title": "Create expense voucher",
+          "description": "WRITE: book an expense voucher (Beleg) in Papierkram, e.g. from a receipt. Papierkram books it at once (state unpaid, no draft), so this tool works in two steps. Without confirm it creates nothing: it returns the exact request and possible duplicates (same document date, creditor and total) for the user to review. After the user approves, call again with the same arguments and confirm: true. Then attach the file with papierkram_upload_voucher_document and record a payment with papierkram_pay_voucher. Asset categories that need a depreciation (AfA) setting must be finished in Papierkram. Costs 50 Papierkram API credits; each duplicate check reads 1."
+        },
+        {
+          "name": "papierkram_pay_voucher",
+          "type": "write",
+          "title": "Pay expense voucher",
+          "description": "WRITE: book a payment of an expense voucher (POST /expense/vouchers/{id}/pay), with a value and payment date or with an existing bank transaction. Without confirm it changes nothing: it reads the voucher and returns the exact request for the user to review. After approval, call again with confirm: true. A value that differs from the open amount needs difference_reason (teilzahlung = part payment, skonto = cash discount, mahnung = reminder fee, schmaelerung = reduction, sonstige = other). A repeated call books a second payment: after an error, check the voucher state with papierkram_get_voucher before retrying."
         },
         {
           "name": "papierkram_usage_status",
