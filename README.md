@@ -591,6 +591,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [LeagueApps](servers/leagueapps/) | sports | 15 | API token | [servers/leagueapps/](servers/leagueapps/) |
 | [Galaxy Digital](servers/galaxy-digital/) | business-operations | 33 | API token | [servers/galaxy-digital/](servers/galaxy-digital/) |
 | [ServiceTrade](servers/servicetrade/) | business-operations | 26 | API token | [servers/servicetrade/](servers/servicetrade/) |
+| [eGestor](servers/egestor/) | business-operations | 22 | API token | [servers/egestor/](servers/egestor/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
