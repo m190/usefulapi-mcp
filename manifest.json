@@ -101185,6 +101185,1191 @@
         "Show the activity history of candidate 123 and add a note that I called them.",
         "List our client companies and the contact people for each."
       ]
+    },
+    {
+      "slug": "quipu",
+      "name": "Quipu",
+      "category": "accounting",
+      "description": "Read contacts, invoices and book entries; create contacts and draft invoices in Quipu.",
+      "endpoint": "https://quipu.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Quipu API client ID"
+          },
+          {
+            "label": "Quipu API client secret"
+          },
+          {
+            "label": "Quipu account slug"
+          }
+        ],
+        "hint": "Create the API credentials in Quipu → **Settings → API**. The account slug is the first part of your Quipu URL (getquipu.com/**slug**/...). Your credentials are used only to call the Quipu API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "quipu_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (clients and suppliers) of the Quipu account. Filter by kind, tax id, country, email or free text."
+        },
+        {
+          "name": "quipu_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one contact by id, with its totals of paid and unpaid incomes and expenses."
+        },
+        {
+          "name": "quipu_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices (issued and received). Filter by kind, period, operation date, payment status or contact. Totals and PDF links are in the attributes."
+        },
+        {
+          "name": "quipu_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one invoice by id. Income invoices include download_pdf_url and ephemeral_open_download_pdf_url (a temporary PDF link)."
+        },
+        {
+          "name": "quipu_list_book_entries",
+          "type": "read",
+          "title": "List book entries",
+          "description": "List all book entries (invoices, tickets and other accounting entries) in one list. Filter by type, kind, period, dates, payment status or contact."
+        },
+        {
+          "name": "quipu_list_numbering_series",
+          "type": "read",
+          "title": "List numbering series",
+          "description": "List invoice numbering series (prefixes). Use a series id when you create a draft invoice."
+        },
+        {
+          "name": "quipu_list_accounting_categories",
+          "type": "read",
+          "title": "List accounting categories",
+          "description": "List accounting categories (chart of accounts groups). Filter by kind, prefix or active state."
+        },
+        {
+          "name": "quipu_list_accounting_subcategories",
+          "type": "read",
+          "title": "List accounting subcategories",
+          "description": "List accounting subcategories, optionally for one accounting category."
+        },
+        {
+          "name": "quipu_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "Create a contact (client or supplier). WRITE: it adds a record to the Quipu account. A tax id is needed before you invoice the contact."
+        },
+        {
+          "name": "quipu_update_contact",
+          "type": "write",
+          "title": "Update contact",
+          "description": "Update fields of one contact. WRITE: it changes the record; only the fields you send change."
+        },
+        {
+          "name": "quipu_create_draft_invoice",
+          "type": "write",
+          "title": "Create draft invoice",
+          "description": "Create a DRAFT income invoice for a contact. WRITE: it adds a draft to Quipu. It sends no issue date or number, so Quipu does not issue or register the invoice; finalize it in the Quipu app."
+        },
+        {
+          "name": "quipu_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "quipu_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Quipu tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "quipu_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Quipu (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "quipu_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Quipu Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run quipu_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my invoices are unpaid or overdue, and how much do I owe in total?",
+        "How much did I invoice in the second quarter of 2026, with VAT and IRPF retention?",
+        "Create a client contact for Acme S.L. with its NIF and email.",
+        "Make a draft invoice for Acme for 10 hours of consulting at 80 euros plus 21% VAT."
+      ]
+    },
+    {
+      "slug": "idosell",
+      "name": "IdoSell",
+      "category": "ecommerce",
+      "description": "Search orders, products, stock, customers and returns; set order status in IdoSell.",
+      "endpoint": "https://idosell.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "IdoSell panel address"
+          },
+          {
+            "label": "IdoSell Admin API key"
+          }
+        ],
+        "hint": "Create the key in your IdoSell panel under **Administration → API → Access keys to Admin API**. Give it only the permissions you need (read orders, products, customers). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone. The panel limits calls to about 60 per minute and may block an address that sends more for a few minutes (see Administration → Security and filters to allow addresses)."
+      },
+      "tools": [
+        {
+          "name": "idosell_get_shop_config",
+          "type": "read",
+          "title": "Get shop configuration",
+          "description": "Get the panel configuration: owner company data, languages, base currency, warehouses (stocks) and shops with their ids. Good first call to learn shop ids and warehouse ids. API: GET /system/config."
+        },
+        {
+          "name": "idosell_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search orders by status, date range, customer, order ids or serial numbers. Returns order details with products, payments, dispatch data and the customer. Read-only (a POST search). API: POST /orders/orders/search."
+        },
+        {
+          "name": "idosell_get_orders",
+          "type": "read",
+          "title": "Get orders by id",
+          "description": "Get orders by order ids or serial numbers (give at least one). Use idosell_search_orders for filters. API: GET /orders/orders."
+        },
+        {
+          "name": "idosell_list_order_statuses",
+          "type": "read",
+          "title": "List order statuses",
+          "description": "List the order statuses configured in the panel, with their ids and names. API: GET /orders/statuses."
+        },
+        {
+          "name": "idosell_get_order_packages",
+          "type": "read",
+          "title": "Get order parcels",
+          "description": "Get the parcels (shipments) of orders: courier, tracking numbers and status. API: GET /orders/packages."
+        },
+        {
+          "name": "idosell_search_products",
+          "type": "read",
+          "title": "Search products",
+          "description": "Search products by text, code, availability, visibility or promotion. Returns prices, stock summary, images and categories. Read-only (a POST search). API: POST /products/products/search."
+        },
+        {
+          "name": "idosell_get_product_stocks",
+          "type": "read",
+          "title": "Get product stock levels",
+          "description": "Get stock quantities per warehouse and size for products. API: GET /products/stocks."
+        },
+        {
+          "name": "idosell_list_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List the product categories of the shop with ids and names. API: GET /products/categories."
+        },
+        {
+          "name": "idosell_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "List the brands (producers) of the shop with ids and names. API: GET /products/brands."
+        },
+        {
+          "name": "idosell_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Find customer accounts by text (name, e-mail, login), ids or active state. Returns contact data, addresses, balances and consents. API: GET /clients/clients."
+        },
+        {
+          "name": "idosell_list_returns",
+          "type": "read",
+          "title": "List returns",
+          "description": "List returns issued for orders, filterable by order serial number, return id or status id. API: GET /returns/returns."
+        },
+        {
+          "name": "idosell_list_couriers",
+          "type": "read",
+          "title": "List couriers",
+          "description": "List the couriers available for a country, and whether each one handles pickup points. API: GET /couriers/couriers."
+        },
+        {
+          "name": "idosell_set_order_status",
+          "type": "write",
+          "title": "Set order status",
+          "description": "WRITE: change the status of one order (for example to packed, ready or canceled). Setting the same status again has no further effect. The panel may send customer e-mails for some status changes. API: PUT /orders/orders."
+        },
+        {
+          "name": "idosell_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "idosell_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the IdoSell tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "idosell_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on IdoSell (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "idosell_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's IdoSell Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run idosell_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the orders from the last 7 days that wait for payment.",
+        "Which products are out of stock in the main warehouse?",
+        "Find the customer with e-mail anna@example.com and list their orders.",
+        "Which orders are packed but have no parcel number yet?"
+      ]
+    },
+    {
+      "slug": "kledo",
+      "name": "Kledo",
+      "category": "accounting",
+      "description": "Read invoices, bills, contacts, bank balances and financial reports in Kledo.",
+      "endpoint": "https://kledo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Kledo subdomain"
+          },
+          {
+            "label": "Personal Access Token"
+          }
+        ],
+        "hint": "The subdomain is the first part of your Kledo address (company.app.kledo.com). Create the token in Kledo → **Pengaturan → Integrasi → API Key** → Tambah; Kledo shows it once. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "kledo_list_invoices",
+          "type": "read",
+          "title": "List sales invoices",
+          "description": "List sales invoices with contact, dates, amounts and status. Supports due-date and amount filters. Kledo API: GET /finance/invoices."
+        },
+        {
+          "name": "kledo_get_invoice",
+          "type": "read",
+          "title": "Get a sales invoice",
+          "description": "Get one sales invoice with its line items, payments and contact. Kledo API: GET /finance/invoices/{id}."
+        },
+        {
+          "name": "kledo_list_quotes",
+          "type": "read",
+          "title": "List sales quotes",
+          "description": "List sales quotes (penawaran). Kledo API: GET /finance/quotes."
+        },
+        {
+          "name": "kledo_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders. Kledo API: GET /finance/orders."
+        },
+        {
+          "name": "kledo_list_purchase_invoices",
+          "type": "read",
+          "title": "List purchase invoices",
+          "description": "List purchase invoices (vendor bills) with amounts and status. Kledo API: GET /finance/purchaseInvoices."
+        },
+        {
+          "name": "kledo_get_purchase_invoice",
+          "type": "read",
+          "title": "Get a purchase invoice",
+          "description": "Get one purchase invoice with its line items. Kledo API: GET /finance/purchaseInvoices/{id}."
+        },
+        {
+          "name": "kledo_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List recorded expenses (biaya). Kledo API: GET /finance/expenses."
+        },
+        {
+          "name": "kledo_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customers, vendors and other contacts with receivable/payable totals when requested. Kledo API: GET /finance/contacts."
+        },
+        {
+          "name": "kledo_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact with address, phone, email and (optionally) stats. Kledo API: GET /finance/contacts/{id}."
+        },
+        {
+          "name": "kledo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services with prices; optionally with stock per warehouse. Kledo API: GET /finance/products."
+        },
+        {
+          "name": "kledo_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "Get one product or service with prices and settings. Kledo API: GET /finance/products/{id}."
+        },
+        {
+          "name": "kledo_list_accounts",
+          "type": "read",
+          "title": "List chart of accounts",
+          "description": "List accounts of the chart of accounts, optionally with balances. Kledo API: GET /finance/accounts."
+        },
+        {
+          "name": "kledo_get_bank_balances",
+          "type": "read",
+          "title": "Get bank balances",
+          "description": "Get the balance of every cash and bank account. Kledo API: GET /finance/bank/balances."
+        },
+        {
+          "name": "kledo_list_bank_transactions",
+          "type": "read",
+          "title": "List bank transactions",
+          "description": "List bank transactions (money in, money out, transfers). Kledo API: GET /finance/bankTrans."
+        },
+        {
+          "name": "kledo_report_profit_loss",
+          "type": "read",
+          "title": "Profit and loss report",
+          "description": "Profit and loss (laba rugi) for a period. Kledo API: GET /reportings/profitLoss."
+        },
+        {
+          "name": "kledo_report_balance_sheet",
+          "type": "read",
+          "title": "Balance sheet report",
+          "description": "Balance sheet (neraca) as of a date. Kledo API: GET /reportings/balanceSheet."
+        },
+        {
+          "name": "kledo_report_trial_balance",
+          "type": "read",
+          "title": "Trial balance report",
+          "description": "Trial balance for a period. Kledo API: GET /reportings/trialBalance."
+        },
+        {
+          "name": "kledo_report_cash_flow",
+          "type": "read",
+          "title": "Cash flow report",
+          "description": "Cash flow statement for a period (direct or indirect method). Kledo API: GET /reportings/cashFlow."
+        },
+        {
+          "name": "kledo_report_aged_receivable",
+          "type": "read",
+          "title": "Aged receivable report",
+          "description": "Unpaid customer invoices grouped by age. Kledo API: GET /reportings/agedReceivable."
+        },
+        {
+          "name": "kledo_report_aged_payable",
+          "type": "read",
+          "title": "Aged payable report",
+          "description": "Unpaid vendor bills grouped by age. Kledo API: GET /reportings/agedPayable."
+        },
+        {
+          "name": "kledo_report_executive_summary",
+          "type": "read",
+          "title": "Executive summary report",
+          "description": "Executive summary (revenue, cost, cash, receivables) for a month. Kledo API: GET /reportings/executiveSummary."
+        },
+        {
+          "name": "kledo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kledo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Kledo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kledo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Kledo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kledo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Kledo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kledo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales invoices are overdue, and how much does each customer owe?",
+        "Show the profit and loss report for this year, month by month.",
+        "What is the balance of each of our bank accounts?",
+        "List the vendor bills due in the next 14 days."
+      ]
+    },
+    {
+      "slug": "limoexpress",
+      "name": "LimoExpress",
+      "category": "business-operations",
+      "description": "Read bookings, clients, invoices, pricing; confirm bookings and mark invoices paid in LimoExpress.",
+      "endpoint": "https://limoexpress.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "LimoExpress API token"
+          }
+        ],
+        "hint": "Find it in LimoExpress → **Advanced settings**. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "limoexpress_list_vehicles",
+          "type": "read",
+          "title": "List vehicles",
+          "description": "List the fleet vehicles of the organisation. GET /api/integration/vehicles."
+        },
+        {
+          "name": "limoexpress_list_vehicle_classes",
+          "type": "read",
+          "title": "List vehicle classes",
+          "description": "List vehicle classes (for example sedan, van). Class ids are used for pricing. GET /api/integration/vehicle-classes."
+        },
+        {
+          "name": "limoexpress_list_subcontractors",
+          "type": "read",
+          "title": "List subcontractors",
+          "description": "List subcontractors (partner operators) of the organisation. GET /api/integration/subcontractors."
+        },
+        {
+          "name": "limoexpress_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events defined in the organisation. GET /api/integration/events."
+        },
+        {
+          "name": "limoexpress_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (customers and organisations) with contact details. GET /api/integration/clients."
+        },
+        {
+          "name": "limoexpress_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with their paid status. GET /api/integration/invoices."
+        },
+        {
+          "name": "limoexpress_list_booking_offers",
+          "type": "read",
+          "title": "List booking offers",
+          "description": "List booking offers (quotes sent to clients). GET /api/integration/booking-offers."
+        },
+        {
+          "name": "limoexpress_list_passengers",
+          "type": "read",
+          "title": "List passengers",
+          "description": "List passengers. The records contain personal data. GET /api/integration/passengers."
+        },
+        {
+          "name": "limoexpress_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List users (staff and drivers) of the organisation. GET /api/integration/users."
+        },
+        {
+          "name": "limoexpress_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expenses recorded in the organisation. GET /api/integration/expenses."
+        },
+        {
+          "name": "limoexpress_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List payment methods. Ids are used to filter bookings. GET /api/integration/payment-methods."
+        },
+        {
+          "name": "limoexpress_list_all_currencies",
+          "type": "read",
+          "title": "List all currencies",
+          "description": "List every currency the platform supports. GET /api/integration/all-currencies."
+        },
+        {
+          "name": "limoexpress_list_countries",
+          "type": "read",
+          "title": "List countries",
+          "description": "List countries known to the platform. GET /api/integration/countries."
+        },
+        {
+          "name": "limoexpress_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings of the organisation. Filter by pickup time range (yyyy-mm-dd hh:mm:ss), status, type, payment method, vehicle or client id. GET /api/integration/bookings."
+        },
+        {
+          "name": "limoexpress_list_booking_types",
+          "type": "read",
+          "title": "List booking types",
+          "description": "List booking types. GET /api/integration/booking-types."
+        },
+        {
+          "name": "limoexpress_list_booking_statuses",
+          "type": "read",
+          "title": "List booking statuses",
+          "description": "List booking statuses (ids for the status filter). GET /api/integration/booking-statuses."
+        },
+        {
+          "name": "limoexpress_list_organisation_currencies",
+          "type": "read",
+          "title": "List organisation currencies",
+          "description": "List the currencies enabled for the organisation. GET /api/integration/currencies."
+        },
+        {
+          "name": "limoexpress_get_pricing",
+          "type": "read",
+          "title": "Get trip pricing",
+          "description": "Get the price for a trip from coordinates, optionally for one vehicle class and currency. Give the destination coordinates, or a distance when there is no destination. GET /api/integration/pricing."
+        },
+        {
+          "name": "limoexpress_list_discount_vouchers",
+          "type": "read",
+          "title": "List discount vouchers",
+          "description": "List discount vouchers, optionally for one currency. GET /api/integration/discount-vouchers."
+        },
+        {
+          "name": "limoexpress_get_extra_fees_pricing",
+          "type": "read",
+          "title": "Get extra fees pricing",
+          "description": "Get the extra fees for one vehicle class and currency. GET /api/integration/extra-fees-pricing/{currencyId}/{vehicleClassId}."
+        },
+        {
+          "name": "limoexpress_mark_booking_as_confirmed",
+          "type": "write",
+          "title": "Mark booking as confirmed",
+          "description": "WRITE: set one booking to the confirmed status. Use limoexpress_list_bookings to find the id. POST /api/integration/mark-booking-as-confirmed."
+        },
+        {
+          "name": "limoexpress_mark_invoice_as_paid",
+          "type": "write",
+          "title": "Mark invoice as paid",
+          "description": "WRITE: record one invoice as paid. This changes the accounting state. Use limoexpress_list_invoices to find the id. POST /api/integration/invoices/mark-as-paid."
+        },
+        {
+          "name": "limoexpress_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "limoexpress_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the LimoExpress tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "limoexpress_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on LimoExpress (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "limoexpress_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's LimoExpress Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run limoexpress_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which bookings have a pickup tomorrow, and which of them are not confirmed yet?",
+        "List the unpaid invoices and the client for each one.",
+        "What is the price for a trip from the airport to the city centre in an executive van?",
+        "Confirm booking 97822c0c-6bda-4949-b83c-d0f38692ef3d."
+      ]
+    },
+    {
+      "slug": "qashier",
+      "name": "Qashier",
+      "category": "payments",
+      "description": "Read checkout sessions; create payment links, expire sessions and refund payments in Qashier.",
+      "endpoint": "https://qashier.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Qashier API key"
+          }
+        ],
+        "hint": "Find it in your Qashier Dashboard under **API keys**. Your key is used only to call the Qashier API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "qashier_list_checkout_sessions",
+          "type": "read",
+          "title": "List checkout sessions",
+          "description": "List online payment Checkout Sessions, newest first, with status (open/complete/expired), payment status, amount in cents, refunds and receipt number. Cursor pagination: pass starting_after with the last id. GET /checkout/sessions."
+        },
+        {
+          "name": "qashier_get_checkout_session",
+          "type": "read",
+          "title": "Get checkout session",
+          "description": "Get one Checkout Session by id: status, payment status, payment method, amount in cents, checkout url and refunds. GET /checkout/sessions/{id}."
+        },
+        {
+          "name": "qashier_create_checkout_session",
+          "type": "write",
+          "title": "Create checkout session",
+          "description": "WRITE: create a payment Checkout Session for ONE item and return its payment url. It charges nothing until the customer pays at that url. Amount is in cents (SGD 12.50 = 1250). POST /checkout/sessions."
+        },
+        {
+          "name": "qashier_expire_checkout_session",
+          "type": "write",
+          "title": "Expire checkout session",
+          "description": "WRITE: expire an OPEN Checkout Session so the customer can no longer pay it. It fails if the session is not open. POST /checkout/sessions/{id}/expire."
+        },
+        {
+          "name": "qashier_refund_payment",
+          "type": "write",
+          "title": "Refund payment",
+          "description": "WRITE, MONEY: refund a paid Checkout Session to the customer's original payment method. Omit amount for a full refund; amount is in cents. The refund runs asynchronously (status pending). This call has no idempotency key, so do NOT retry it: check qashier_get_checkout_session first. POST /refund."
+        },
+        {
+          "name": "qashier_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "qashier_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Qashier tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "qashier_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Qashier (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "qashier_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Qashier Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run qashier_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my open Qashier checkout sessions.",
+        "Was the checkout session for last night's order paid?",
+        "Create a payment link for SGD 25.00.",
+        "Refund half of the payment on checkout session cs_123."
+      ]
+    },
+    {
+      "slug": "operto",
+      "name": "Operto",
+      "category": "property-management",
+      "description": "Read properties, reservations, guest access codes, smart locks and thermostats in Operto.",
+      "endpoint": "https://operto.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Operto API key"
+          },
+          {
+            "label": "Operto API secret"
+          }
+        ],
+        "hint": "Operto issues the API key and secret to your organization. If you have none, ask Operto (your Client Success contact) for API access. Your credentials are used only to call the API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "operto_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List the properties (units) in your Operto account with their Operto id, partner_id, name and subscription state. Good first call: the ids feed the other tools. Operto API: GET /v2/partners/properties."
+        },
+        {
+          "name": "operto_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Get one property by id, including its details and current room status (for example clean-available, guest-checking-in, cleaning-started). Operto API: GET /v2/partners/properties/{property_id}."
+        },
+        {
+          "name": "operto_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "List the reservations of one property: status, check-in and check-out time, guest name, phone, email and door codes. Contains personal guest data. Operto API: GET /v2/partners/properties/{property_id}/reservations."
+        },
+        {
+          "name": "operto_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "Get one reservation by id: status, dates, guest contact data and the guest access and checkout codes. Contains personal guest data. Operto API: GET /v2/partners/reservations/{reservation_id}."
+        },
+        {
+          "name": "operto_list_locks",
+          "type": "read",
+          "title": "List locks of a property",
+          "description": "List the smart locks of one property with name, battery level, locked state and device_id. Read only: this tool does not open or close a lock. Operto API: GET /v2/partners/properties/{property_id}/locks."
+        },
+        {
+          "name": "operto_list_thermostats",
+          "type": "read",
+          "title": "List all thermostats",
+          "description": "List every smart thermostat in your organization with its property, type (for example EcoBee, Tado) and online status. Operto API: GET /v2/partners/thermostats."
+        },
+        {
+          "name": "operto_list_property_thermostats",
+          "type": "read",
+          "title": "List thermostats of a property",
+          "description": "List the smart thermostats of one property with type and online status. Operto API: GET /v2/partners/properties/{property_id}/thermostats."
+        },
+        {
+          "name": "operto_get_thermostat",
+          "type": "read",
+          "title": "Get a thermostat",
+          "description": "Get one thermostat by id: online status, current temperature in Fahrenheit and Celsius, and any active hold. Operto API: GET /v2/partners/thermostats/{thermostat_id}."
+        },
+        {
+          "name": "operto_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "operto_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Operto tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "operto_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Operto (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "operto_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Operto Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run operto_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my properties have a guest checking in today?",
+        "Show the reservations for my Willow Drive property and the guest access codes.",
+        "Which smart locks have a low battery?",
+        "Which thermostats are offline right now?"
+      ]
+    },
+    {
+      "slug": "run-my-accounts",
+      "name": "Run my Accounts",
+      "category": "accounting",
+      "description": "Read customers, invoices, vendor bills, trial balance and ledger transactions in Run my Accounts.",
+      "endpoint": "https://run-my-accounts.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client name"
+          },
+          {
+            "label": "API key"
+          }
+        ],
+        "hint": "Create the API key in Run my Accounts (API key page). The client name is your client (Mandant) name. The server only reads data. Your key is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "runmyaccounts_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List all customers (debtors) with number, name, address, contact and bank data. API: GET /customers."
+        },
+        {
+          "name": "runmyaccounts_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Get one customer by customer number. API: GET /customers/{customernumber}."
+        },
+        {
+          "name": "runmyaccounts_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List customer invoices. Filter by status (OPEN, PAID, OVERDUE), date range and customer number. API: GET /invoices."
+        },
+        {
+          "name": "runmyaccounts_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one customer invoice with its customer and line items. API: GET /invoices/{invoice_number}."
+        },
+        {
+          "name": "runmyaccounts_list_invoice_payments",
+          "type": "read",
+          "title": "List payments of an invoice",
+          "description": "List the payments booked against one customer invoice. API: GET /invoices/{invoice_number}/payments."
+        },
+        {
+          "name": "runmyaccounts_list_payments_since",
+          "type": "read",
+          "title": "List incoming payments not processed since a time",
+          "description": "List incoming invoice payments that were not marked as processed after a time stamp. This tool only reads: it never marks a payment as processed. API: GET /invoices/payment_list?processed=."
+        },
+        {
+          "name": "runmyaccounts_list_parts",
+          "type": "read",
+          "title": "List parts",
+          "description": "List parts (articles) with number, description, unit, price and account numbers. API: GET /parts."
+        },
+        {
+          "name": "runmyaccounts_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List vendors (creditors). Sort by id, name, vendornumber or score (add asc or desc) and search by name. API: GET /vendors."
+        },
+        {
+          "name": "runmyaccounts_list_vendor_invoices",
+          "type": "read",
+          "title": "List vendor invoices",
+          "description": "List vendor invoices (payables) with status, amounts, paid amount and vendor. API: GET /payables."
+        },
+        {
+          "name": "runmyaccounts_get_vendor_invoice",
+          "type": "read",
+          "title": "Get vendor invoice",
+          "description": "Get one vendor invoice by invoice number. API: GET /payables/{invoice_number}."
+        },
+        {
+          "name": "runmyaccounts_list_vendor_invoice_payments",
+          "type": "read",
+          "title": "List payments of a vendor invoice",
+          "description": "List the payments booked against one vendor invoice. API: GET /payables/{invoice_number}/payments."
+        },
+        {
+          "name": "runmyaccounts_list_charts",
+          "type": "read",
+          "title": "List chart of accounts",
+          "description": "List the chart of accounts. Optionally filter by account type. API: GET /charts."
+        },
+        {
+          "name": "runmyaccounts_trial_balance",
+          "type": "read",
+          "title": "Trial balance",
+          "description": "Get account balances (trial balance, version 2). Use x as a wildcard in accno (15xx = 1500 to 1599). Income statement accounts need from and to. API: GET /gl/v2/saldo."
+        },
+        {
+          "name": "runmyaccounts_list_account_transactions",
+          "type": "read",
+          "title": "List transactions in an account",
+          "description": "List ledger transactions of one account or a wildcard pattern (x matches any digit, use x for all accounts). API: GET /charts/{accno}/transactions."
+        },
+        {
+          "name": "runmyaccounts_list_departments",
+          "type": "read",
+          "title": "List cost and profit centers",
+          "description": "List departments (cost and profit centers). API: GET /departments."
+        },
+        {
+          "name": "runmyaccounts_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects. API: GET /projects."
+        },
+        {
+          "name": "runmyaccounts_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "runmyaccounts_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Run my Accounts tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "runmyaccounts_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Run my Accounts (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "runmyaccounts_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Run my Accounts Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run runmyaccounts_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customer invoices are overdue, and what is the total per customer?",
+        "Show the trial balance for the income statement from January to now.",
+        "List all open vendor invoices and who we still need to pay.",
+        "What were the transactions in account 1020 last month?"
+      ]
+    },
+    {
+      "slug": "trekksoft",
+      "name": "TrekkSoft",
+      "category": "scheduling",
+      "description": "Read activities, bookings, guests and open departures in TrekkSoft.",
+      "endpoint": "https://trekksoft.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TrekkSoft client id"
+          },
+          {
+            "label": "TrekkSoft client secret"
+          }
+        ],
+        "hint": "TrekkSoft issues the key pair for your account: ask **api@trekksoft.com**. We use it only to call the API on your behalf and to derive a private account id. It is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "trekksoft_list_activities",
+          "type": "read",
+          "title": "List activities",
+          "description": "List the tours and activities of your TrekkSoft account, with filters for merchant, category, title, active and bookable state. TrekkSoft API: GET /activities."
+        },
+        {
+          "name": "trekksoft_get_activity",
+          "type": "read",
+          "title": "Get an activity",
+          "description": "Get one activity by id: description, schedule, price categories and settings. TrekkSoft API: GET /activities/{activityId}."
+        },
+        {
+          "name": "trekksoft_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List recent bookings. Filter by merchant, user email, free text, booking date, activity date, or changes since a time. TrekkSoft API: GET /bookings."
+        },
+        {
+          "name": "trekksoft_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Get one booking by id: activity, guests, prices, payments and status. TrekkSoft API: GET /bookings/{id}."
+        },
+        {
+          "name": "trekksoft_list_guests",
+          "type": "read",
+          "title": "List guests",
+          "description": "List guests (participants) with filters for booking, trip departure, phone, name and cancellation. TrekkSoft API: GET /guests."
+        },
+        {
+          "name": "trekksoft_get_guest",
+          "type": "read",
+          "title": "Get a guest",
+          "description": "Get one guest by id, including booking link and check-in state. TrekkSoft API: GET /guest/{id}."
+        },
+        {
+          "name": "trekksoft_list_availabilities",
+          "type": "read",
+          "title": "List availabilities",
+          "description": "List departures with free seats across activities, for a date range. TrekkSoft API: GET /availabilities."
+        },
+        {
+          "name": "trekksoft_list_activity_availabilities",
+          "type": "read",
+          "title": "List availabilities of one activity",
+          "description": "List departures with free seats for one activity. TrekkSoft API: GET /activities/{activityId}/availabilities."
+        },
+        {
+          "name": "trekksoft_list_merchants",
+          "type": "read",
+          "title": "List merchants",
+          "description": "List the merchants your key pair can access. TrekkSoft API: GET /merchants."
+        },
+        {
+          "name": "trekksoft_list_shop_items",
+          "type": "read",
+          "title": "List shop items",
+          "description": "List shop items (extras sold with activities), filterable by merchant, category and active state. TrekkSoft API: GET /shop/items."
+        },
+        {
+          "name": "trekksoft_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "trekksoft_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TrekkSoft tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "trekksoft_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on TrekkSoft (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "trekksoft_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TrekkSoft Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run trekksoft_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tours have free seats next weekend?",
+        "Show all bookings made yesterday and the guests on each.",
+        "List the guests on tomorrow's 09:00 departure with their phone numbers.",
+        "Which activities are active but not bookable right now?"
+      ]
     }
   ]
 }

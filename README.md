@@ -579,6 +579,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MoeGo](servers/moego/) | scheduling | 35 | API token | [servers/moego/](servers/moego/) |
 | [Craftboxx](servers/craftboxx/) | project-management | 20 | API token | [servers/craftboxx/](servers/craftboxx/) |
 | [Traffit](servers/traffit/) | hr | 28 | API token | [servers/traffit/](servers/traffit/) |
+| [Quipu](servers/quipu/) | accounting | 15 | API token | [servers/quipu/](servers/quipu/) |
+| [IdoSell](servers/idosell/) | ecommerce | 17 | API token | [servers/idosell/](servers/idosell/) |
+| [Kledo](servers/kledo/) | accounting | 25 | API token | [servers/kledo/](servers/kledo/) |
+| [LimoExpress](servers/limoexpress/) | business-operations | 26 | API token | [servers/limoexpress/](servers/limoexpress/) |
+| [Qashier](servers/qashier/) | payments | 9 | API token | [servers/qashier/](servers/qashier/) |
+| [Operto](servers/operto/) | property-management | 12 | API token | [servers/operto/](servers/operto/) |
+| [Run my Accounts](servers/run-my-accounts/) | accounting | 20 | API token | [servers/run-my-accounts/](servers/run-my-accounts/) |
+| [TrekkSoft](servers/trekksoft/) | scheduling | 14 | API token | [servers/trekksoft/](servers/trekksoft/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
