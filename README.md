@@ -541,6 +541,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Aryeo](servers/aryeo/) | real-estate | 28 | OAuth | [servers/aryeo/](servers/aryeo/) |
 | [Jisr](servers/jisr/) | productivity | 20 | OAuth | [servers/jisr/](servers/jisr/) |
 | [Feegow](servers/feegow/) | healthcare | 30 | OAuth | [servers/feegow/](servers/feegow/) |
+| [Stamped](servers/stamped/) | ecommerce | 15 | OAuth | [servers/stamped/](servers/stamped/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
