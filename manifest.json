@@ -93868,6 +93868,216 @@
         "Which raw materials will run out within three weeks?",
         "Raise the cost of butter to $4.20 per lb from next Monday."
       ]
+    },
+    {
+      "slug": "aryeo",
+      "name": "Aryeo",
+      "category": "real-estate",
+      "description": "Manage real-estate media orders, appointments, listings, customers and tasks in Aryeo.",
+      "endpoint": "https://aryeo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "version": "1.1.0",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per Aryeo account"
+        }
+      ],
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Aryeo API key"
+          }
+        ],
+        "hint": "Create it in Aryeo under **Settings → Developer** (API keys). The key acts with the permissions of the user who created it. Use a token you authorize for this integration. Requested orders, property and media links, customer contact details, team schedules and task records pass to your chosen AI client and its LLM provider; the API key is not sent to the LLM. Tools can replace internal notes, cancel or reschedule appointments (with your explicit notification choice), create customers (possibly emailing invitations), and create or complete tasks. No payments or refunds are exposed. Requests are never automatically retried. Revoke or regenerate the token in Developer Settings to stop access. Billing identity uses the owner when available; key, owner or permission changes can start a new identity. Respect the rights attached to media before sharing it."
+      },
+      "tools": [
+        {
+          "name": "aryeo_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List the orders of your Aryeo company (newest first by default), with payment status, fulfillment status, totals and links. Filter by search text (address or customer), payment/fulfillment status, appointment date range, tags or assigned users. GET /orders."
+        },
+        {
+          "name": "aryeo_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by id: customer, address, status, totals, payment and invoice links. Add include=items,appointments,listing,customer for the line items and visits. GET /orders/{id}."
+        },
+        {
+          "name": "aryeo_update_order_notes",
+          "type": "write",
+          "title": "Update order notes",
+          "description": "REPLACE the internal notes of an order (visible to your team only, not to the customer). The whole note is overwritten: read the order first and send the full new text. An empty string clears the notes. PUT /orders/{id}/notes."
+        },
+        {
+          "name": "aryeo_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments (shoots/visits), by default the SCHEDULED ones, newest start first. Filter by upcoming/past, status, a start-time window or the assigned users. Use include=order,order.address,users to see where and who. GET /appointments."
+        },
+        {
+          "name": "aryeo_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "One appointment by id: status, start/end, duration, assigned users and items. GET /appointments/{id}."
+        },
+        {
+          "name": "aryeo_cancel_appointment",
+          "type": "write",
+          "title": "Cancel appointment",
+          "description": "CANCEL an appointment. With notify=true Aryeo sends a cancellation notice to the order's customer (an email/message to a third party); with notify=false nobody is told. Cancelling can trigger fees or free the slot for other bookings. PUT /appointments/{id}/cancel."
+        },
+        {
+          "name": "aryeo_reschedule_appointment",
+          "type": "write",
+          "title": "Reschedule appointment",
+          "description": "MOVE an appointment to a new start and end time. With notify=true Aryeo sends a reschedule notice to the order's customer (a message to a third party). Check availability first (aryeo_list_available_timeslots). PUT /appointments/{id}/reschedule."
+        },
+        {
+          "name": "aryeo_list_available_timeslots",
+          "type": "read",
+          "title": "List available timeslots",
+          "description": "Bookable timeslots for ONE day (in the given timezone) for a proposed or existing appointment. Give either appointment_id, or duration + interval (minutes). Optionally restrict to users and tie it to an order. GET /scheduling/available-timeslots."
+        },
+        {
+          "name": "aryeo_list_available_dates",
+          "type": "read",
+          "title": "List available dates",
+          "description": "Days that still have availability for a proposed or existing appointment: give a start/end range or a timeframe, plus either appointment_id or duration + interval (minutes). GET /scheduling/available-dates."
+        },
+        {
+          "name": "aryeo_list_listings",
+          "type": "read",
+          "title": "List listings",
+          "description": "List the property listings of your Aryeo company (address, status, price, bedrooms, delivery status, thumbnails). Filter by search text, address, listing agent, status, price/size ranges or delivery status. GET /listings."
+        },
+        {
+          "name": "aryeo_get_listing",
+          "type": "read",
+          "title": "Get listing",
+          "description": "One listing by id: address, status, price, lot/building details, agents. Add include=images,videos,orders.appointments for media and visits. GET /listings/{id}."
+        },
+        {
+          "name": "aryeo_get_listing_stats",
+          "type": "read",
+          "title": "Get listing statistics",
+          "description": "Viewing statistics of a listing's property website (visits, views). GET /listings/{id}/stats."
+        },
+        {
+          "name": "aryeo_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List your customers (the agents, brokerages and teams who order from you) with contact details and balances. Filter by name, email, email domain, phone or search text. GET /customers."
+        },
+        {
+          "name": "aryeo_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Create a customer (an agent or brokerage that can place orders) in your Aryeo company from an owner name and email. Look the email up with aryeo_list_customers first to avoid duplicates. Aryeo may email the new customer an invitation. POST /customers."
+        },
+        {
+          "name": "aryeo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List your services/products (main products and add-ons) with type, active state and variants. Inactive products are hidden unless include_inactive is true. GET /products."
+        },
+        {
+          "name": "aryeo_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List the product categories (use the ids to filter aryeo_list_products). GET /product-categories."
+        },
+        {
+          "name": "aryeo_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List discount coupons (name, percent or amount off, active state, times redeemed). GET /coupons."
+        },
+        {
+          "name": "aryeo_list_order_forms",
+          "type": "read",
+          "title": "List order forms",
+          "description": "List your order forms (the public booking forms customers use), with title, URL and scheduling settings. GET /order-forms."
+        },
+        {
+          "name": "aryeo_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List your company's team members (photographers and staff) with role, status, service-provider flag and permissions. Each member has two ids: the member `id` (for aryeo_list_team_member_events and as the task assignee company_team_member_id) and `company_user.id` (the USER id, for the user_ids filters of orders, appointments, timeslots and dates). company_user is included by default. GET /company-team-members."
+        },
+        {
+          "name": "aryeo_list_team_member_events",
+          "type": "read",
+          "title": "List team member calendar",
+          "description": "A team member's calendar between two moments: appointments, blocks, external events and buffers. Use aryeo_list_team_members for the id. GET /company-team-members/{id}/events."
+        },
+        {
+          "name": "aryeo_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks (to-dos such as editing or delivery steps) with assignee, due date and completion state. GET /tasks."
+        },
+        {
+          "name": "aryeo_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id. GET /tasks/{id}."
+        },
+        {
+          "name": "aryeo_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "Create a task, optionally with a description, due date and an assignee (a company team member id). POST /tasks."
+        },
+        {
+          "name": "aryeo_complete_task",
+          "type": "write",
+          "title": "Complete task",
+          "description": "Mark a task completed (now, or at the given time). PUT /tasks/{id}/complete."
+        },
+        {
+          "name": "aryeo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "aryeo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Aryeo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "aryeo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Aryeo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "aryeo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Aryeo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run aryeo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are still unpaid, and for which customers?",
+        "What shoots are scheduled this week and who is assigned to each?",
+        "Move tomorrow's 10am appointment to 2pm and tell the customer.",
+        "Add an internal note to the order for 123 Main St: gate code 4821."
+      ]
     }
   ]
 }
