@@ -552,6 +552,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Recurpay](servers/recurpay/) | ecommerce | 22 | OAuth | [servers/recurpay/](servers/recurpay/) |
 | [Forms On Fire / Appenate](servers/forms-on-fire/) | forms | 15 | OAuth | [servers/forms-on-fire/](servers/forms-on-fire/) |
 | [Sorry](servers/sorry-app/) | monitoring | 25 | OAuth | [servers/sorry-app/](servers/sorry-app/) |
+| [Workfeed](servers/workfeed/) | scheduling | 21 | API token | [servers/workfeed/](servers/workfeed/) |
+| [Smartplan](servers/smartplan/) | scheduling | 18 | API token | [servers/smartplan/](servers/smartplan/) |
+| [Quinyx](servers/quinyx/) | hr | 14 | API token | [servers/quinyx/](servers/quinyx/) |
+| [RepairDesk](servers/repairdesk/) | business-operations | 21 | API token | [servers/repairdesk/](servers/repairdesk/) |
+| [Shop Boss](servers/shop-boss/) | business-operations | 19 | API token | [servers/shop-boss/](servers/shop-boss/) |
+| [ConstructionOnline](servers/constructiononline/) | project-management | 10 | API token | [servers/constructiononline/](servers/constructiononline/) |
+| [Text Request](servers/text-request/) | messaging | 23 | API token | [servers/text-request/](servers/text-request/) |
+| [SMSGlobal](servers/smsglobal/) | messaging | 22 | API token | [servers/smsglobal/](servers/smsglobal/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
