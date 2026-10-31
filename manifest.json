@@ -98288,6 +98288,758 @@
         "Summarize the activity history for candidate 123.",
         "Create a follow-up task after I confirm its details."
       ]
+    },
+    {
+      "slug": "gladly",
+      "name": "Gladly",
+      "category": "support",
+      "description": "Find customers, read conversations, items and tasks; add internal notes in Gladly.",
+      "endpoint": "https://gladly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Gladly organization"
+          },
+          {
+            "label": "Agent email"
+          },
+          {
+            "label": "Gladly API token"
+          }
+        ],
+        "hint": "Create the token in Gladly → **Settings → API → Create API token**. The agent needs the API User permission. The token is used only to call the Gladly API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "gladly_get_organization",
+          "type": "read",
+          "title": "Get the organization",
+          "description": "Get metadata about the Gladly organization: id, name, login domain, time zone, URL. Gladly API: GET /api/v1/organization."
+        },
+        {
+          "name": "gladly_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List the agents (support users) with id, name and email address. Gladly API: GET /api/v1/agents."
+        },
+        {
+          "name": "gladly_get_agent",
+          "type": "read",
+          "title": "Get an agent",
+          "description": "Get one agent profile by id. Gladly API: GET /api/v1/agents/{agentId}."
+        },
+        {
+          "name": "gladly_list_inboxes",
+          "type": "read",
+          "title": "List inboxes",
+          "description": "List the inboxes with id, name and disabled state. Gladly API: GET /api/v1/inboxes."
+        },
+        {
+          "name": "gladly_get_inbox",
+          "type": "read",
+          "title": "Get an inbox",
+          "description": "Get the metadata of one inbox by id. Gladly API: GET /api/v1/inboxes/{inboxId}."
+        },
+        {
+          "name": "gladly_list_topics",
+          "type": "read",
+          "title": "List topics",
+          "description": "List the conversation topics (id, name, parentId, disabled). Use it to turn the topicIds of a conversation into names. Gladly API: GET /api/v1/topics."
+        },
+        {
+          "name": "gladly_list_audiences",
+          "type": "read",
+          "title": "List audiences",
+          "description": "List the audiences used to target answers (id, name). Gladly API: GET /api/v1/audiences."
+        },
+        {
+          "name": "gladly_find_customers",
+          "type": "read",
+          "title": "Find customers",
+          "description": "Find customer profiles by EXACTLY ONE identifier: email, phone number (E.164, for example +16505551987) or externalCustomerId. Returns at most 50 profiles, newest update first. Gladly API: GET /api/v1/customer-profiles."
+        },
+        {
+          "name": "gladly_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer profile by id: name, emails, phones, address, custom attributes. Gladly API: GET /api/v1/customer-profiles/{customerId}."
+        },
+        {
+          "name": "gladly_list_customer_conversations",
+          "type": "read",
+          "title": "List conversations of a customer",
+          "description": "List the conversations of one customer, oldest first (at most 100; the reply says if it was cut). Each has topics, status and assignee. Gladly API: GET /api/v1/customers/{customerId}/conversations."
+        },
+        {
+          "name": "gladly_get_conversation",
+          "type": "read",
+          "title": "Get a conversation",
+          "description": "Get the metadata of one conversation: assignee, inbox, topics, custom attributes, status. A merged conversation returns the surviving one. Gladly API: GET /api/v1/conversations/{conversationId}."
+        },
+        {
+          "name": "gladly_list_conversation_items",
+          "type": "read",
+          "title": "List the timeline of a conversation",
+          "description": "List the timeline items of a conversation (messages, emails, calls, notes), oldest first, at most 1000. Gladly API: GET /api/v1/conversations/{conversationId}/items."
+        },
+        {
+          "name": "gladly_get_conversation_item",
+          "type": "read",
+          "title": "Get a conversation item",
+          "description": "Get one conversation item (message, email, note, call) by id. Gladly API: GET /api/v1/conversation-items/{itemId}."
+        },
+        {
+          "name": "gladly_list_customer_tasks",
+          "type": "read",
+          "title": "List tasks of a customer",
+          "description": "List the tasks of one customer, newest first (at most 2000), optionally only OPEN or CLOSED. Gladly API: GET /api/v1/customers/{customerId}/tasks."
+        },
+        {
+          "name": "gladly_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one task by id: body, assignee, due date, status, topics. Gladly API: GET /api/v1/tasks/{taskId}."
+        },
+        {
+          "name": "gladly_add_conversation_note",
+          "type": "write",
+          "title": "Add an internal note to a conversation",
+          "description": "WRITE: add an internal note to a conversation. The note is for agents only; the customer does not see it. Each call adds a NEW note, so do not repeat a call that succeeded. Gladly API: POST /api/v1/conversations/{conversationId}/notes."
+        },
+        {
+          "name": "gladly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gladly_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Gladly tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gladly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Gladly (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gladly_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Gladly Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gladly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the customer with the email jane@example.com and show her last 5 conversations.",
+        "Show the full timeline of conversation 9BcE2O0DQ2ynGHRmk9FeoA.",
+        "Which tasks are still open for this customer?",
+        "Add an internal note to this conversation: customer asked for a refund call back."
+      ]
+    },
+    {
+      "slug": "textus",
+      "name": "TextUs",
+      "category": "messaging",
+      "description": "Read texts, contacts, campaigns and opt-outs; send SMS, add contacts and notes in TextUs.",
+      "endpoint": "https://textus.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TextUs API token"
+          }
+        ],
+        "hint": "In TextUs open your user icon → **Profile → Advanced user settings → API Tokens**, then click **Create Token**. A token has the same access as your user and can send real text messages. Delete the token in TextUs at any time to revoke access."
+      },
+      "tools": [
+        {
+          "name": "textus_get_profile",
+          "type": "read",
+          "title": "Get my profile",
+          "description": "Get the profile of the user who owns the API token, including account memberships and roles. TextUs API: GET /profile."
+        },
+        {
+          "name": "textus_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List the TextUs accounts the user belongs to, with phone numbers and role. Most other tools need an account `slug` from here. TextUs API: GET /accounts."
+        },
+        {
+          "name": "textus_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "Get one account by slug: name, phone numbers, type and links. TextUs API: GET /accounts/{account}."
+        },
+        {
+          "name": "textus_list_account_users",
+          "type": "read",
+          "title": "List account users",
+          "description": "List the users who belong to an account. TextUs API: GET /{account}/users."
+        },
+        {
+          "name": "textus_list_contacts",
+          "type": "read",
+          "title": "List or search contacts",
+          "description": "List contacts of an account in alphabetical order. Use `q` to search by name or phone number. Pass a saved `contact_filter` slug for a saved view (default `all`). TextUs API: GET /{account}/contact_filters/{filter}/contacts."
+        },
+        {
+          "name": "textus_list_contact_filters",
+          "type": "read",
+          "title": "List contact filters",
+          "description": "List the saved contact filters (views) of an account. TextUs API: GET /{account}/contact_filters."
+        },
+        {
+          "name": "textus_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get all known data about one contact: name, phone numbers, custom data and tags. TextUs API: GET /contacts/{contact}."
+        },
+        {
+          "name": "textus_list_contact_notes",
+          "type": "read",
+          "title": "List contact notes",
+          "description": "List the notes users wrote about a contact. TextUs API: GET /contacts/{contact}/notes."
+        },
+        {
+          "name": "textus_list_conversation_filters",
+          "type": "read",
+          "title": "List conversation filters",
+          "description": "List the conversation filters (inbox views such as unread, mine, closed) of an account, with unread counts. TextUs API: GET /{account}/conversation_filters."
+        },
+        {
+          "name": "textus_list_conversations",
+          "type": "read",
+          "title": "List or search conversations",
+          "description": "List conversations in an inbox view, newest message first. Use filter `search` with `q` (a phone number or text) to find a conversation. TextUs API: GET /{account}/conversation_filters/{filter}/conversations."
+        },
+        {
+          "name": "textus_get_conversation",
+          "type": "read",
+          "title": "Get a conversation",
+          "description": "Get one conversation: contact, assigned users, state and last message. TextUs API: GET /conversations/{conversation}."
+        },
+        {
+          "name": "textus_get_conversation_timeline",
+          "type": "read",
+          "title": "Get conversation timeline",
+          "description": "Get the messages and events of a conversation, newest first. Messages include direction, body and delivery state. TextUs API: GET /conversations/{conversation}/timeline."
+        },
+        {
+          "name": "textus_get_conversation_stats",
+          "type": "read",
+          "title": "Get conversation stats",
+          "description": "Get stats for one conversation: start time, engagement grade and outbound delivery percentage. TextUs API: GET /conversations/{conversation}/stats."
+        },
+        {
+          "name": "textus_list_campaign_filters",
+          "type": "read",
+          "title": "List campaign filters",
+          "description": "List the campaign views of an account (for example mine, all). TextUs API: GET /{account}/campaign_filters."
+        },
+        {
+          "name": "textus_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns (bulk messages) in a campaign view, ordered by scheduled time, with title, body and state. TextUs API: GET /{account}/campaign_filters/{filter}/campaigns."
+        },
+        {
+          "name": "textus_get_campaign",
+          "type": "read",
+          "title": "Get a campaign",
+          "description": "Get one campaign: message body, state, schedule and recipient counts. TextUs API: GET /campaigns/{campaign}."
+        },
+        {
+          "name": "textus_get_campaign_analytics",
+          "type": "read",
+          "title": "Get campaign analytics",
+          "description": "Get aggregated statistics (campaigns sent, recipients, delivery) for all campaigns of an account. TextUs API: GET /{account}/campaigns/analytics."
+        },
+        {
+          "name": "textus_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List contact groups in a group folder (`mine` or account groups). Use `q` to search group names. TextUs API: GET /{account}/group_filters/{filter}/groups."
+        },
+        {
+          "name": "textus_list_group_contacts",
+          "type": "read",
+          "title": "List group contacts",
+          "description": "List the contacts that belong to a group. TextUs API: GET /groups/{group}/contacts."
+        },
+        {
+          "name": "textus_list_opt_outs",
+          "type": "read",
+          "title": "List opt-outs",
+          "description": "List phone numbers that opted out of messages for an account. Use `q` for a partial search (3 digits or more). TextUs API: GET /{account}/opt_outs."
+        },
+        {
+          "name": "textus_list_saved_replies",
+          "type": "read",
+          "title": "List saved replies",
+          "description": "List the canned message bodies a user saved. TextUs API: GET /users/{user}/saved_replies."
+        },
+        {
+          "name": "textus_send_message",
+          "type": "write",
+          "title": "Send a text message",
+          "description": "WRITE: sends a REAL SMS from the account's number to one or more recipients. It cannot be undone and is never retried. Show the user the recipients and text first, then call with confirm=true. TextUs API: POST /{account}/messages."
+        },
+        {
+          "name": "textus_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "WRITE: creates a new contact in an account. TextUs API: POST /{account}/contacts."
+        },
+        {
+          "name": "textus_add_contact_note",
+          "type": "write",
+          "title": "Add a contact note",
+          "description": "WRITE: adds an internal note to a contact. The contact does not see it. TextUs API: POST /contacts/{contact}/notes."
+        },
+        {
+          "name": "textus_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "textus_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TextUs tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "textus_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on TextUs (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "textus_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TextUs Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run textus_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the unread conversations in my TextUs inbox.",
+        "Find the conversation with +1 303 555 1234 and summarize the last 10 messages.",
+        "How did my last campaign perform? Show delivery and reply counts.",
+        "Which phone numbers opted out in the last batch?"
+      ]
+    },
+    {
+      "slug": "doorloop",
+      "name": "DoorLoop",
+      "category": "property-management",
+      "description": "Read DoorLoop properties, units, leases, tenants and payments; create tasks and task updates.",
+      "endpoint": "https://doorloop.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "DoorLoop API key"
+          }
+        ],
+        "hint": "Find it in DoorLoop → company **Settings → Zapier & API Keys**. The key's role decides what this server can read or change. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "doorloop_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "Get the DoorLoop user that created this API key. Good first call to confirm the connection. DoorLoop API: GET /users/me."
+        },
+        {
+          "name": "doorloop_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List properties (buildings) with address, class and portfolio. DoorLoop API: GET /properties."
+        },
+        {
+          "name": "doorloop_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Get one property by id. DoorLoop API: GET /properties/{propertyId}."
+        },
+        {
+          "name": "doorloop_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List rental units with rent, bedrooms and status. Without filter_active the API returns active units only. DoorLoop API: GET /units."
+        },
+        {
+          "name": "doorloop_get_unit",
+          "type": "read",
+          "title": "Get a unit",
+          "description": "Get one unit by id. DoorLoop API: GET /units/{unitId}."
+        },
+        {
+          "name": "doorloop_list_leases",
+          "type": "read",
+          "title": "List leases",
+          "description": "List leases with dates, rent, status and outstanding balance. Use calculatedStatus or situation to find at-risk or late leases. DoorLoop API: GET /leases."
+        },
+        {
+          "name": "doorloop_get_lease",
+          "type": "read",
+          "title": "Get a lease",
+          "description": "Get one lease by id. DoorLoop API: GET /leases/{leaseId}."
+        },
+        {
+          "name": "doorloop_list_lease_tenants",
+          "type": "read",
+          "title": "List lease tenants",
+          "description": "List tenants joined to their leases, with move-in and move-out dates. Best way to map tenants to leases. DoorLoop API: GET /leases/tenants."
+        },
+        {
+          "name": "doorloop_list_tenants",
+          "type": "read",
+          "title": "List tenants",
+          "description": "List tenants and prospects with contact details. DoorLoop API: GET /tenants."
+        },
+        {
+          "name": "doorloop_get_tenant",
+          "type": "read",
+          "title": "Get a tenant",
+          "description": "Get one tenant by id. DoorLoop API: GET /tenants/{tenantId}."
+        },
+        {
+          "name": "doorloop_list_lease_payments",
+          "type": "read",
+          "title": "List lease payments",
+          "description": "List rent payments received on leases. DoorLoop API: GET /lease-payments."
+        },
+        {
+          "name": "doorloop_list_lease_charges",
+          "type": "read",
+          "title": "List lease charges",
+          "description": "List charges (rent, fees, late fees) billed on leases. Use totalBalanceGreaterThan to find unpaid charges. DoorLoop API: GET /lease-charges."
+        },
+        {
+          "name": "doorloop_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks, work orders, tenant requests and owner requests. DoorLoop API: GET /tasks."
+        },
+        {
+          "name": "doorloop_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one task by id. DoorLoop API: GET /tasks/{taskId}."
+        },
+        {
+          "name": "doorloop_list_owners",
+          "type": "read",
+          "title": "List owners",
+          "description": "List property owners. DoorLoop API: GET /owners."
+        },
+        {
+          "name": "doorloop_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List maintenance vendors. DoorLoop API: GET /vendors."
+        },
+        {
+          "name": "doorloop_list_portfolios",
+          "type": "read",
+          "title": "List portfolios",
+          "description": "List portfolios (property groups). DoorLoop API: GET /property-groups."
+        },
+        {
+          "name": "doorloop_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List DoorLoop users of the company. DoorLoop API: GET /users."
+        },
+        {
+          "name": "doorloop_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List chart-of-accounts entries. DoorLoop API: GET /accounts."
+        },
+        {
+          "name": "doorloop_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "WRITE: create a task in DoorLoop. INTERNAL_TASK needs requested_by_user, TENANT_REQUEST needs requested_by_tenant, OWNER_REQUEST needs requested_by_owner, WORK_ORDER needs assigned_to_vendor. Notifications are off unless you set them. Each call creates a new task. DoorLoop API: POST /tasks."
+        },
+        {
+          "name": "doorloop_post_task_update",
+          "type": "write",
+          "title": "Post an update on a task",
+          "description": "WRITE: post a message on an existing task and optionally change its status, priority, due date or assignees. Each call adds a new update. Notifications are off unless you set them. DoorLoop API: POST /tasks/update."
+        },
+        {
+          "name": "doorloop_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "doorloop_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the DoorLoop tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "doorloop_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on DoorLoop (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "doorloop_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's DoorLoop Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run doorloop_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tenants have an outstanding balance above $500, and on which leases?",
+        "List all leases that end in the next 60 days.",
+        "Show open work orders for our Maple Street property.",
+        "Create a task for the maintenance team to inspect unit 4B."
+      ]
+    },
+    {
+      "slug": "hdphotohub",
+      "name": "HDPhotoHub",
+      "category": "real-estate",
+      "description": "Manage HDPhotoHub sites, clients, orders and media for real estate photography.",
+      "endpoint": "https://hdphotohub.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "HDPhotoHub API key"
+          }
+        ],
+        "hint": "Find it in HDPhotoHub → **Business → Webhooks & API**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hdphotohub_get_brand",
+          "type": "read",
+          "title": "Get brand",
+          "description": "Get the business (brand) the API key belongs to: id and name. API: GET /brand."
+        },
+        {
+          "name": "hdphotohub_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List clients and team members, optionally filtered by email or name. API: GET /users."
+        },
+        {
+          "name": "hdphotohub_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id or email. Pass uid or email. API: GET /user."
+        },
+        {
+          "name": "hdphotohub_list_user_transactions",
+          "type": "read",
+          "title": "List user transactions",
+          "description": "List the transactions of a user, optionally within a date range. API: GET /user/transactions."
+        },
+        {
+          "name": "hdphotohub_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List property sites, filtered by user id, user email or an address search string. API: GET /sites."
+        },
+        {
+          "name": "hdphotohub_get_site",
+          "type": "read",
+          "title": "Get a site",
+          "description": "Get one property site with its status, purchase state, users and all media items (download URL, type, order). API: GET /site."
+        },
+        {
+          "name": "hdphotohub_get_media",
+          "type": "read",
+          "title": "Get a media item",
+          "description": "Get one media item (photo, video, floor plan) by id. API: GET /media."
+        },
+        {
+          "name": "hdphotohub_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders, optionally for one site or one user. Orders carry totals, balance due, tasks and payments. API: GET /orders."
+        },
+        {
+          "name": "hdphotohub_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by id with tasks, taxes, payments and invoice URL. API: GET /order."
+        },
+        {
+          "name": "hdphotohub_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List groups (brokerages and teams), optionally filtered by name. API: GET /groups."
+        },
+        {
+          "name": "hdphotohub_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "Get one group by id. API: GET /group."
+        },
+        {
+          "name": "hdphotohub_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the configured webhooks. API: GET /webhooks."
+        },
+        {
+          "name": "hdphotohub_get_webhook",
+          "type": "read",
+          "title": "Get a webhook",
+          "description": "Get one webhook by id. API: GET /webhook."
+        },
+        {
+          "name": "hdphotohub_list_webhook_events",
+          "type": "read",
+          "title": "List webhook events",
+          "description": "List the available webhook event types and payload options. API: GET /webhook/events."
+        },
+        {
+          "name": "hdphotohub_create_site",
+          "type": "write",
+          "title": "Create a site",
+          "description": "WRITE: create a new property site for a user. Not idempotent: a repeat call creates a second site. API: POST /site."
+        },
+        {
+          "name": "hdphotohub_update_site",
+          "type": "write",
+          "title": "Update a site",
+          "description": "WRITE: update fields of an existing property site. Only the fields you pass change. API: PUT /site."
+        },
+        {
+          "name": "hdphotohub_set_site_status",
+          "type": "write",
+          "title": "Set site status",
+          "description": "WRITE: set a site to active, inactive or archived. This does not purchase the site. API: PUT /site/status."
+        },
+        {
+          "name": "hdphotohub_set_site_media_order",
+          "type": "write",
+          "title": "Set media order",
+          "description": "WRITE: set the sort order of the media of a site. Pass media ids in the wanted order. API: PUT /site/mediaorder."
+        },
+        {
+          "name": "hdphotohub_update_media",
+          "type": "write",
+          "title": "Update a media item",
+          "description": "WRITE: update name, description, type, visibility, highlight or branding of one media item. API: PUT /media."
+        },
+        {
+          "name": "hdphotohub_upsert_user",
+          "type": "write",
+          "title": "Create or update a user",
+          "description": "WRITE: create a user (no uid) or update one (uid or email of an existing user). API: PUT /user."
+        },
+        {
+          "name": "hdphotohub_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hdphotohub_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the HDPhotoHub tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hdphotohub_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on HDPhotoHub (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hdphotohub_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's HDPhotoHub Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hdphotohub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my clients have a site with an unpaid balance?",
+        "List all sites for agent jane@example.com and show their status.",
+        "Show the orders for site 12345 with the total and balance due.",
+        "Reorder the media of site 12345 so the hero photo comes first."
+      ]
     }
   ]
 }

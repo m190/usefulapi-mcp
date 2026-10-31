@@ -563,6 +563,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Givecloud](servers/givecloud/) | fundraising | 14 | API token | [servers/givecloud/](servers/givecloud/) |
 | [TimeTap](servers/timetap/) | scheduling | 13 | API token | [servers/timetap/](servers/timetap/) |
 | [CATS](servers/cats-ats/) | productivity | 38 | OAuth | [servers/cats-ats/](servers/cats-ats/) |
+| [Gladly](servers/gladly/) | support | 20 | API token | [servers/gladly/](servers/gladly/) |
+| [TextUs](servers/textus/) | messaging | 28 | API token | [servers/textus/](servers/textus/) |
+| [DoorLoop](servers/doorloop/) | property-management | 25 | API token | [servers/doorloop/](servers/doorloop/) |
+| [HDPhotoHub](servers/hdphotohub/) | real-estate | 24 | API token | [servers/hdphotohub/](servers/hdphotohub/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
