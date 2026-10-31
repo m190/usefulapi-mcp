@@ -105,7 +105,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Modern Treasury](servers/modern-treasury/) | payment-operations | 21 | API token | [servers/modern-treasury/](servers/modern-treasury/) |
 | [NexHealth](servers/nexhealth/) | healthcare | 20 | API token | [servers/nexhealth/](servers/nexhealth/) |
 | [Nomic Atlas](servers/nomic-atlas/) | ai-infra | 13 | API token | [servers/nomic-atlas/](servers/nomic-atlas/) |
-| [Northflank](servers/northflank/) | devops | 21 | API token | [servers/northflank/](servers/northflank/) |
+| [Northflank](servers/northflank/) | devops | 24 | API token | [servers/northflank/](servers/northflank/) |
 | [NPPES NPI Registry](servers/nppes-npi-registry/) | health-data | 8 | API token | [servers/nppes-npi-registry/](servers/nppes-npi-registry/) |
 | [Numeral](servers/numeral/) | tax | 15 | API token | [servers/numeral/](servers/numeral/) |
 | [Nylas](servers/nylas/) | email | 19 | API token | [servers/nylas/](servers/nylas/) |

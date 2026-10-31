@@ -33,6 +33,9 @@ On first connect you'll paste your Northflank API token. It's validated, stored 
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `northflank_list_repositories` | read | List connected GitHub repositories |
+| `northflank_list_plans` | read | List deployment plans |
+| `northflank_create_combined_service` | **write** | Create GitHub build and deployment service (incurs charges) |
 | `northflank_list_projects` | read | List projects |
 | `northflank_get_project` | read | Get project |
 | `northflank_list_services` | read | List services |
