@@ -548,6 +548,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TalentHR](servers/talenthr/) | hr | 33 | OAuth | [servers/talenthr/](servers/talenthr/) |
 | [Rex Software](servers/rex-software/) | crm | 37 | OAuth | [servers/rex-software/](servers/rex-software/) |
 | [Shipcloud](servers/shipcloud/) | shipping | 26 | OAuth | [servers/shipcloud/](servers/shipcloud/) |
+| [A-Cube](servers/acube/) | accounting | 28 | OAuth | [servers/acube/](servers/acube/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

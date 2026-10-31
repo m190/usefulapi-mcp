@@ -95755,6 +95755,223 @@
         "Quote a shipment before I decide whether to buy its label.",
         "Show the carrier pickup requests for our warehouse."
       ]
+    },
+    {
+      "slug": "acube",
+      "name": "A-Cube",
+      "category": "accounting",
+      "description": "Read Italian invoices, receipts and SDI notices; validate, prepare and submit agreed drafts.",
+      "endpoint": "https://acube.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0",
+          "scope": "per A-Cube account"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per A-Cube account"
+        }
+      ],
+      "version": "1.1.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "A-Cube account email"
+          },
+          {
+            "label": "A-Cube account password"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "Use your authorized A-Cube API account and choose sandbox or production. Production Italy API access must already be enabled and permit this hosted connection under your vendor contract; vendor charges are separate. Your password is sent to A-Cube only for this login and is not stored. We retain only the encrypted vendor JWT, valid for up to24hours; reconnect when it expires or is revoked. Requested fiscal invoices, tax identifiers and receipts reach your connected AI client/provider. Connect only data you are authorized to process there. Production draft submission is a legal act and may be billed; it requires explicit confirmation. A-Cube acceptance does not prove SDI delivery: inspect invoice notifications. No operation is automatically replayed; check A-Cube after an uncertain write. Disconnect UsefulAPI to stop this connection; an issued JWT may remain valid until vendor expiry or revocation."
+      },
+      "tools": [
+        {
+          "name": "acube_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "Sent and received Italian e-invoices (SDI) of the account: uuid, invoice number and date, document type (TD01...), sender and recipient, amounts, marking and notification status. Filter by date, number, document type, party name or VAT number. GET /invoices."
+        },
+        {
+          "name": "acube_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "One invoice by uuid: metadata plus the FatturaPA JSON payload (parties, lines, VAT, payment), or the XML file sent to the SDI. GET /invoices/{uuid}."
+        },
+        {
+          "name": "acube_list_invoice_notifications",
+          "type": "read",
+          "title": "List an invoice's SDI notifications",
+          "description": "The SDI notifications of one invoice (delivery receipt RC, rejection NS, outcome NE, failed delivery MC, deadline expiry DT...), with their type, date and status: how you tell whether an invoice was delivered or rejected. GET /invoices/{uuid}/notifications."
+        },
+        {
+          "name": "acube_get_notification",
+          "type": "read",
+          "title": "Get an SDI notification",
+          "description": "One SDI notification by uuid, with its payload. GET /notifications/{uuid}."
+        },
+        {
+          "name": "acube_get_invoice_stats",
+          "type": "read",
+          "title": "Get invoice statistics",
+          "description": "Counters of invoices and notifications for a year (annual; monthly or daily detail only if A-Cube activated it), for the whole account or one fiscal id. GET /invoices/stats/{year}."
+        },
+        {
+          "name": "acube_list_draft_invoices",
+          "type": "read",
+          "title": "List draft invoices",
+          "description": "Draft invoices that were created but not yet sent to the SDI. Same filters as acube_list_invoices. GET /invoices/draft."
+        },
+        {
+          "name": "acube_get_draft_invoice",
+          "type": "read",
+          "title": "Get a draft invoice",
+          "description": "One draft invoice by uuid, with its FatturaPA JSON content. GET /invoices/draft/{uuid}."
+        },
+        {
+          "name": "acube_validate_invoice",
+          "type": "read",
+          "title": "Validate an invoice (no save)",
+          "description": "Checks an invoice against the FatturaPA rules without creating or sending anything; returns the validation result or A-Cube's errors. POST /invoices/validate."
+        },
+        {
+          "name": "acube_create_draft_invoice",
+          "type": "write",
+          "title": "Create a draft invoice",
+          "description": "WRITE: saves a new invoice as a DRAFT in A-Cube. Nothing is sent to the SDI until acube_send_draft_invoice. Not idempotent: calling it twice creates two drafts. Validate first with acube_validate_invoice. POST /invoices/draft."
+        },
+        {
+          "name": "acube_send_draft_invoice",
+          "type": "write",
+          "title": "Send a draft invoice to the SDI",
+          "description": "WRITE: accepts a draft and transmits it to the Sistema di Interscambio. This is a legal act: a sent e-invoice cannot be recalled (only corrected with a credit note) and may be billed by A-Cube. Without confirm: true it only returns the draft for review. Show the draft to the user and get their explicit OK first. POST /invoices/draft/{uuid}/send."
+        },
+        {
+          "name": "acube_delete_draft_invoice",
+          "type": "write",
+          "title": "Delete a draft invoice",
+          "description": "WRITE: permanently deletes a draft invoice (a draft only: a sent invoice answers 409). Without confirm: true it only returns the draft. DELETE /invoices/draft/{uuid}."
+        },
+        {
+          "name": "acube_list_receipts",
+          "type": "read",
+          "title": "List electronic receipts",
+          "description": "Electronic commercial receipts (scontrini) with number, date, status, type (sale, void, return) and totals. GET /receipts."
+        },
+        {
+          "name": "acube_get_receipt",
+          "type": "read",
+          "title": "Get an electronic receipt",
+          "description": "One electronic receipt by uuid: type, status, number, date, total and links to voiding or returned receipts (no line items: use acube_get_receipt_details). GET /receipts/{uuid}."
+        },
+        {
+          "name": "acube_get_receipt_details",
+          "type": "read",
+          "title": "Get electronic receipt details",
+          "description": "The line items and VAT, discount and taxable totals of one electronic receipt. GET /receipts/{uuid}/details."
+        },
+        {
+          "name": "acube_list_business_registry_configurations",
+          "type": "read",
+          "title": "List business registry configurations",
+          "description": "The businesses (fiscal ids) set up on the account, with which services are on: customer invoices, supplier invoices, receipts, signature, legal storage. GET /business-registry-configurations."
+        },
+        {
+          "name": "acube_get_business_registry_configuration",
+          "type": "read",
+          "title": "Get a business registry configuration",
+          "description": "One business by fiscal id: name, email, enabled services and its webhook configurations. GET /business-registry-configurations/{fiscalId}."
+        },
+        {
+          "name": "acube_list_webhooks",
+          "type": "read",
+          "title": "List webhook configurations",
+          "description": "The webhooks (events and target URLs) configured on the account. Authentication keys and tokens are never returned. GET /api-configurations."
+        },
+        {
+          "name": "acube_list_numbering_sequences",
+          "type": "read",
+          "title": "List numbering sequences",
+          "description": "The invoice numbering sequences (name, year, last number). GET /numbering-sequences."
+        },
+        {
+          "name": "acube_get_current_numbering_sequence",
+          "type": "read",
+          "title": "Get the current numbering sequence",
+          "description": "The sequence now in use for a sequence name. Its number is the LAST number used: the next invoice gets that number plus one. GET /numbering-sequences/current/{name}."
+        },
+        {
+          "name": "acube_list_jobs",
+          "type": "read",
+          "title": "List background jobs",
+          "description": "Background jobs (invoice, report and zip downloads, F24 and daily receipt report downloads) with status ready, started, completed or error. GET /jobs."
+        },
+        {
+          "name": "acube_get_job",
+          "type": "read",
+          "title": "Get a background job",
+          "description": "One background job by uuid with its status and result. GET /jobs/{uuid}."
+        },
+        {
+          "name": "acube_verify_fiscal_id",
+          "type": "read",
+          "title": "Check a fiscal id",
+          "description": "Checks whether a codice fiscale or partita IVA is valid. GET /verify/fiscal-id/{id}."
+        },
+        {
+          "name": "acube_verify_company",
+          "type": "read",
+          "title": "Look up an Italian company",
+          "description": "Basic registry data of an Italian company by VAT number (name, address, status), optionally with the split-payment check. GET /verify/company/{id}."
+        },
+        {
+          "name": "acube_get_recipient_code",
+          "type": "read",
+          "title": "Get the SDI recipient code",
+          "description": "The account's 7-character SDI recipient code (codice destinatario), the address customers put on invoices they send to you. GET /users/me/recipient-code."
+        },
+        {
+          "name": "acube_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "acube_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the A-Cube tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "acube_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on A-Cube (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "acube_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's A-Cube Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run acube_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices did we send in September, and have the SDI delivery receipts arrived?",
+        "Show the SDI notifications of invoice number 2026/118: was it delivered or rejected?",
+        "List my draft invoices and show me the oldest one before I send it.",
+        "Check whether the VAT number 12345678901 is valid and look up the company."
+      ]
     }
   ]
 }
