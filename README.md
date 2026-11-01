@@ -678,6 +678,50 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Paydirt](servers/paydirt/) | time-tracking | 20 | API token | [servers/paydirt/](servers/paydirt/) |
 | [ManyChat](servers/manychat/) | messaging | 19 | API token | [servers/manychat/](servers/manychat/) |
 | [Mention](servers/mention/) | marketing | 15 | API token | [servers/mention/](servers/mention/) |
+| [Price2Spy](servers/price2spy/) | ecommerce | 12 | API token | [servers/price2spy/](servers/price2spy/) |
+| [Asset Panda](servers/asset-panda/) | inventory | 16 | API token | [servers/asset-panda/](servers/asset-panda/) |
+| [Zigaflow](servers/zigaflow/) | business-operations | 35 | API token | [servers/zigaflow/](servers/zigaflow/) |
+| [Parsio](servers/parsio/) | document-ai | 16 | API token | [servers/parsio/](servers/parsio/) |
+| [Roadmunk](servers/roadmunk/) | project-management | 18 | API token | [servers/roadmunk/](servers/roadmunk/) |
+| [Disqus](servers/disqus/) | communications | 18 | API token | [servers/disqus/](servers/disqus/) |
+| [Botpress](servers/botpress/) | chat | 23 | API token | [servers/botpress/](servers/botpress/) |
+| [Teamdeck](servers/teamdeck/) | project-management | 20 | API token | [servers/teamdeck/](servers/teamdeck/) |
+| [Klipfolio](servers/klipfolio/) | analytics | 17 | API token | [servers/klipfolio/](servers/klipfolio/) |
+| [Nozbe Teams](servers/nozbe-teams/) | productivity | 20 | API token | [servers/nozbe-teams/](servers/nozbe-teams/) |
+| [Viral Loops](servers/viral-loops/) | marketing | 15 | API token | [servers/viral-loops/](servers/viral-loops/) |
+| [iSpring Learn](servers/ispring-learn/) | education | 18 | API token | [servers/ispring-learn/](servers/ispring-learn/) |
+| [Happily.ai](servers/happily-ai/) | hr | 12 | API token | [servers/happily-ai/](servers/happily-ai/) |
+| [Ceipal](servers/ceipal/) | hr | 28 | API token | [servers/ceipal/](servers/ceipal/) |
+| [Enboarder](servers/enboarder/) | hr | 19 | API token | [servers/enboarder/](servers/enboarder/) |
+| [ButterCMS](servers/buttercms/) | devtools | 19 | API token | [servers/buttercms/](servers/buttercms/) |
+| [Sello](servers/sello/) | ecommerce | 25 | API token | [servers/sello/](servers/sello/) |
+| [Protime](servers/protime/) | time-tracking | 16 | API token | [servers/protime/](servers/protime/) |
+| [SingleOps](servers/singleops/) | business-operations | 8 | API token | [servers/singleops/](servers/singleops/) |
+| [Docupilot](servers/docupilot/) | documents | 12 | API token | [servers/docupilot/](servers/docupilot/) |
+| [TeamGantt](servers/teamgantt/) | project-management | 18 | API token | [servers/teamgantt/](servers/teamgantt/) |
+| [webinar.net](servers/webinar-net/) | marketing | 15 | API token | [servers/webinar-net/](servers/webinar-net/) |
+| [BigMarker](servers/bigmarker/) | marketing | 19 | API token | [servers/bigmarker/](servers/bigmarker/) |
+| [Members.dev](servers/members-dev/) | membership | 27 | API token | [servers/members-dev/](servers/members-dev/) |
+| [Papaya Global](servers/papaya-global/) | payment-operations | 12 | API token | [servers/papaya-global/](servers/papaya-global/) |
+| [Prisync](servers/prisync/) | ecommerce | 17 | API token | [servers/prisync/](servers/prisync/) |
+| [Web3Forms](servers/web3forms/) | forms | 8 | API token | [servers/web3forms/](servers/web3forms/) |
+| [Customer Thermometer](servers/customer-thermometer/) | forms-surveys | 14 | API token | [servers/customer-thermometer/](servers/customer-thermometer/) |
+| [StatusCast](servers/statuscast/) | monitoring | 14 | API token | [servers/statuscast/](servers/statuscast/) |
+| [Mintsoft](servers/mintsoft/) | logistics | 26 | API token | [servers/mintsoft/](servers/mintsoft/) |
+| [Simplecast](servers/simplecast/) | video-hosting | 20 | API token | [servers/simplecast/](servers/simplecast/) |
+| [Captivate](servers/captivate/) | video-hosting | 21 | API token | [servers/captivate/](servers/captivate/) |
+| [YouTube Data](servers/youtube-data/) | video-hosting | 13 | API token | [servers/youtube-data/](servers/youtube-data/) |
+| [Wellknown](servers/wellknown/) | scheduling | 11 | API token | [servers/wellknown/](servers/wellknown/) |
+| [BigTime](servers/bigtime/) | time-tracking | 28 | API token | [servers/bigtime/](servers/bigtime/) |
+| [Catalog Machine](servers/catalog-machine/) | commerce | 13 | API token | [servers/catalog-machine/](servers/catalog-machine/) |
+| [SignRequest](servers/signrequest/) | esignature | 18 | API token | [servers/signrequest/](servers/signrequest/) |
+| [SpyFu](servers/spyfu/) | marketing | 23 | API token | [servers/spyfu/](servers/spyfu/) |
+| [Statuspage](servers/statuspage/) | monitoring | 19 | API token | [servers/statuspage/](servers/statuspage/) |
+| [Buy Me a Coffee](servers/buy-me-a-coffee/) | membership | 10 | API token | [servers/buy-me-a-coffee/](servers/buy-me-a-coffee/) |
+| [Telegram](servers/telegram/) | messaging | 13 | API token | [servers/telegram/](servers/telegram/) |
+| [Hotjar](servers/hotjar/) | analytics | 7 | API token | [servers/hotjar/](servers/hotjar/) |
+| [Beamer](servers/beamer/) | communications | 20 | API token | [servers/beamer/](servers/beamer/) |
+| [Gavel](servers/gavel/) | documents | 8 | API token | [servers/gavel/](servers/gavel/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
