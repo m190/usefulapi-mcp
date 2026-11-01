@@ -600,7 +600,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MaidCentral](servers/maidcentral/) | business-operations | 24 | API token | [servers/maidcentral/](servers/maidcentral/) |
 | [CentreCareOS](servers/centrecareos/) | childcare-administration | 28 | API token | [servers/centrecareos/](servers/centrecareos/) |
 | [Setora](servers/setora/) | scheduling | 14 | API token | [servers/setora/](servers/setora/) |
-| [GoTable](servers/gotable/) | Food & Beverage | 25 | API token | [servers/gotable/](servers/gotable/) |
+| [GoTable](servers/gotable/) | scheduling | 25 | API token | [servers/gotable/](servers/gotable/) |
 | [Janitorial Manager](servers/janitorial-manager/) | business-operations | 24 | API token | [servers/janitorial-manager/](servers/janitorial-manager/) |
 | [Quarterwise](servers/quarterwise/) | tax | 9 | API token | [servers/quarterwise/](servers/quarterwise/) |
 | [Enerflo](servers/enerflo/) | crm | 24 | API token | [servers/enerflo/](servers/enerflo/) |
@@ -638,6 +638,19 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Rotageek](servers/rotageek/) | scheduling | 19 | API token | [servers/rotageek/](servers/rotageek/) |
 | [Go2Clock](servers/go2clock/) | time-tracking | 14 | API token | [servers/go2clock/](servers/go2clock/) |
 | [Timebutler](servers/timebutler/) | time-tracking | 24 | API token | [servers/timebutler/](servers/timebutler/) |
+| [Chronicle Online](servers/chronicle-online/) | time-tracking | 19 | API token | [servers/chronicle-online/](servers/chronicle-online/) |
+| [ArborNote](servers/arbornote/) | project-management | 20 | API token | [servers/arbornote/](servers/arbornote/) |
+| [ServiceMinder](servers/serviceminder/) | crm | 18 | API token | [servers/serviceminder/](servers/serviceminder/) |
+| [HolidayPitches](servers/holidaypitches/) | scheduling | 11 | API token | [servers/holidaypitches/](servers/holidaypitches/) |
+| [webCRM](servers/webcrm/) | crm | 25 | API token | [servers/webcrm/](servers/webcrm/) |
+| [TalentLyft](servers/talentlyft/) | hr | 18 | API token | [servers/talentlyft/](servers/talentlyft/) |
+| [Nembol](servers/nembol/) | commerce | 21 | API token | [servers/nembol/](servers/nembol/) |
+| [GoDataFeed](servers/godatafeed/) | commerce | 15 | API token | [servers/godatafeed/](servers/godatafeed/) |
+| [BSS B2B Solution](servers/bss-b2b-solution/) | ecommerce | 15 | API token | [servers/bss-b2b-solution/](servers/bss-b2b-solution/) |
+| [Samita](servers/sami-wholesale-pricing-b2b/) | ecommerce | 8 | API token | [servers/sami-wholesale-pricing-b2b/](servers/sami-wholesale-pricing-b2b/) |
+| [Freshly Inventory](servers/freshly-inventory/) | inventory | 12 | API token | [servers/freshly-inventory/](servers/freshly-inventory/) |
+| [AssetTiger](servers/assettiger/) | inventory | 21 | API token | [servers/assettiger/](servers/assettiger/) |
+| [Caisy](servers/caisy/) | no-code-database | 8 | API token | [servers/caisy/](servers/caisy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
