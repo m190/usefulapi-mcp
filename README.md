@@ -606,6 +606,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Enerflo](servers/enerflo/) | crm | 24 | API token | [servers/enerflo/](servers/enerflo/) |
 | [Aurora Solar](servers/aurora-solar/) | business-operations | 32 | API token | [servers/aurora-solar/](servers/aurora-solar/) |
 | [HERO Software](servers/hero-software/) | business-operations | 9 | API token | [servers/hero-software/](servers/hero-software/) |
+| [Artesa](servers/artesa/) | scheduling | 22 | API token | [servers/artesa/](servers/artesa/) |
+| [Inzetrooster](servers/inzetrooster/) | scheduling | 6 | API token | [servers/inzetrooster/](servers/inzetrooster/) |
+| [MemberSuite](servers/membersuite/) | membership | 11 | API token | [servers/membersuite/](servers/membersuite/) |
+| [OpenWater](servers/openwater/) | fundraising | 15 | API token | [servers/openwater/](servers/openwater/) |
+| [MemberRun](servers/memberrun/) | membership | 25 | API token | [servers/memberrun/](servers/memberrun/) |
+| [eventOne](servers/eventone/) | scheduling | 24 | API token | [servers/eventone/](servers/eventone/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
