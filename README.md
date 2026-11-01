@@ -622,6 +622,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Silvasoft](servers/silvasoft/) | accounting | 13 | API token | [servers/silvasoft/](servers/silvasoft/) |
 | [AFAS Software](servers/afas-software/) | business-operations | 7 | API token | [servers/afas-software/](servers/afas-software/) |
 | [billey](servers/billey/) | accounting | 15 | API token | [servers/billey/](servers/billey/) |
+| [AdminPulse](servers/adminpulse/) | accounting-practice | 19 | API token | [servers/adminpulse/](servers/adminpulse/) |
+| [Progenda](servers/progenda/) | scheduling | 16 | API token | [servers/progenda/](servers/progenda/) |
+| [Facturalia](servers/facturalia/) | billing | 8 | API token | [servers/facturalia/](servers/facturalia/) |
+| [eyworks](servers/eyworks/) | childcare-administration | 12 | API token | [servers/eyworks/](servers/eyworks/) |
+| [WeFile](servers/wefile/) | tax | 16 | API token | [servers/wefile/](servers/wefile/) |
+| [Climatools](servers/climatools/) | crm | 12 | API token | [servers/climatools/](servers/climatools/) |
+| [EffectConnect](servers/effectconnect/) | ecommerce | 18 | API token | [servers/effectconnect/](servers/effectconnect/) |
+| [ChannelEngine](servers/channelengine/) | commerce | 19 | API token | [servers/channelengine/](servers/channelengine/) |
+| [Lengow](servers/lengow/) | ecommerce | 9 | API token | [servers/lengow/](servers/lengow/) |
+| [CCV Shop](servers/ccv-shop/) | ecommerce | 17 | API token | [servers/ccv-shop/](servers/ccv-shop/) |
+| [Channel Pilot Pro](servers/channel-pilot-pro/) | commerce | 9 | API token | [servers/channel-pilot-pro/](servers/channel-pilot-pro/) |
+| [Webshipper](servers/webshipper/) | shipping | 13 | API token | [servers/webshipper/](servers/webshipper/) |
+| [Cezanne HR](servers/cezanne-hr/) | hr | 11 | API token | [servers/cezanne-hr/](servers/cezanne-hr/) |
+| [Rotageek](servers/rotageek/) | scheduling | 19 | API token | [servers/rotageek/](servers/rotageek/) |
+| [Go2Clock](servers/go2clock/) | time-tracking | 14 | API token | [servers/go2clock/](servers/go2clock/) |
+| [Timebutler](servers/timebutler/) | time-tracking | 24 | API token | [servers/timebutler/](servers/timebutler/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
