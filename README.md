@@ -597,6 +597,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ipapi.is](servers/ipapi-is/) | security | 7 | API token | [servers/ipapi-is/](servers/ipapi-is/) |
 | [Emailchef](servers/emailchef/) | email-marketing | 47 | API token | [servers/emailchef/](servers/emailchef/) |
 | [bookingkit](servers/bookingkit/) | scheduling | 18 | API token | [servers/bookingkit/](servers/bookingkit/) |
+| [MaidCentral](servers/maidcentral/) | business-operations | 24 | API token | [servers/maidcentral/](servers/maidcentral/) |
+| [CentreCareOS](servers/centrecareos/) | childcare-administration | 28 | API token | [servers/centrecareos/](servers/centrecareos/) |
+| [Setora](servers/setora/) | scheduling | 14 | API token | [servers/setora/](servers/setora/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
