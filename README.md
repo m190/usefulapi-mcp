@@ -666,6 +666,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FeedB](servers/feedb/) | forms-surveys | 5 | API token | [servers/feedb/](servers/feedb/) |
 | [Timesheets.com](servers/timesheets-com/) | time-tracking | 26 | API token | [servers/timesheets-com/](servers/timesheets-com/) |
 | [Demio](servers/demio/) | marketing | 10 | API token | [servers/demio/](servers/demio/) |
+| [Cerebras](servers/cerebras/) | ai-infra | 7 | API token | [servers/cerebras/](servers/cerebras/) |
+| [Kantata](servers/kantata/) | project-management | 16 | API token | [servers/kantata/](servers/kantata/) |
+| [solidtime](servers/solidtime/) | time-tracking | 16 | API token | [servers/solidtime/](servers/solidtime/) |
+| [Plaky](servers/plaky/) | project-management | 24 | API token | [servers/plaky/](servers/plaky/) |
+| [SmartRecruiters](servers/smartrecruiters/) | hr | 13 | API token | [servers/smartrecruiters/](servers/smartrecruiters/) |
+| [Academy of Mine](servers/academy-of-mine/) | education | 16 | API token | [servers/academy-of-mine/](servers/academy-of-mine/) |
+| [Sapling HR](servers/sapling-hr/) | hr | 8 | API token | [servers/sapling-hr/](servers/sapling-hr/) |
+| [Snipe-IT](servers/snipe-it/) | inventory | 23 | API token | [servers/snipe-it/](servers/snipe-it/) |
+| [Quickbase](servers/quickbase/) | no-code-database | 18 | API token | [servers/quickbase/](servers/quickbase/) |
+| [Paydirt](servers/paydirt/) | time-tracking | 20 | API token | [servers/paydirt/](servers/paydirt/) |
+| [ManyChat](servers/manychat/) | messaging | 19 | API token | [servers/manychat/](servers/manychat/) |
+| [Mention](servers/mention/) | marketing | 15 | API token | [servers/mention/](servers/mention/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
