@@ -612,6 +612,16 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [OpenWater](servers/openwater/) | fundraising | 15 | API token | [servers/openwater/](servers/openwater/) |
 | [MemberRun](servers/memberrun/) | membership | 25 | API token | [servers/memberrun/](servers/memberrun/) |
 | [eventOne](servers/eventone/) | scheduling | 24 | API token | [servers/eventone/](servers/eventone/) |
+| [BailaYa](servers/bailaya/) | scheduling | 28 | API token | [servers/bailaya/](servers/bailaya/) |
+| [Spryng](servers/spryng/) | messaging | 10 | API token | [servers/spryng/](servers/spryng/) |
+| [MyParcel](servers/myparcel/) | shipping | 14 | API token | [servers/myparcel/](servers/myparcel/) |
+| [ServiceBridge](servers/servicebridge/) | business-operations | 30 | API token | [servers/servicebridge/](servers/servicebridge/) |
+| [BlueFolder](servers/bluefolder/) | business-operations | 21 | API token | [servers/bluefolder/](servers/bluefolder/) |
+| [SugarWOD](servers/sugarwod/) | membership | 19 | API token | [servers/sugarwod/](servers/sugarwod/) |
+| [Equicty](servers/equicty/) | business-operations | 6 | API token | [servers/equicty/](servers/equicty/) |
+| [Silvasoft](servers/silvasoft/) | accounting | 13 | API token | [servers/silvasoft/](servers/silvasoft/) |
+| [AFAS Software](servers/afas-software/) | business-operations | 7 | API token | [servers/afas-software/](servers/afas-software/) |
+| [billey](servers/billey/) | accounting | 15 | API token | [servers/billey/](servers/billey/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
