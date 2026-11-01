@@ -600,6 +600,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MaidCentral](servers/maidcentral/) | business-operations | 24 | API token | [servers/maidcentral/](servers/maidcentral/) |
 | [CentreCareOS](servers/centrecareos/) | childcare-administration | 28 | API token | [servers/centrecareos/](servers/centrecareos/) |
 | [Setora](servers/setora/) | scheduling | 14 | API token | [servers/setora/](servers/setora/) |
+| [GoTable](servers/gotable/) | Food & Beverage | 25 | API token | [servers/gotable/](servers/gotable/) |
+| [Janitorial Manager](servers/janitorial-manager/) | business-operations | 24 | API token | [servers/janitorial-manager/](servers/janitorial-manager/) |
+| [Quarterwise](servers/quarterwise/) | tax | 9 | API token | [servers/quarterwise/](servers/quarterwise/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

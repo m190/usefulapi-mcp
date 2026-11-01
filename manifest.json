@@ -104645,6 +104645,486 @@
         "Find the client with phone +447700900123 and show the booking SET-A1B2C3.",
         "Book Alex Carter for a haircut with Kai tomorrow at 10:00."
       ]
+    },
+    {
+      "slug": "gotable",
+      "name": "GoTable",
+      "category": "Food & Beverage",
+      "description": "Read availability, reservations, guests; create, change, cancel bookings; add notes in GoTable.",
+      "endpoint": "https://gotable.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "GoTable API key"
+          }
+        ],
+        "hint": "Create a restaurant key in GoTable → your restaurant → **Integrations**. Or create an account key (all your restaurants) in your personal account → **Settings**. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "gotable_list_restaurants",
+          "type": "read",
+          "title": "List restaurants",
+          "description": "List the restaurants this API key can access (id, name, address, time zone, currency). Call this first: every other tool needs a restaurant_id. GoTable API: GET /api/v1/restaurants."
+        },
+        {
+          "name": "gotable_get_restaurant",
+          "type": "read",
+          "title": "Get a restaurant",
+          "description": "Get one restaurant by id. GoTable API: GET /api/v1/restaurants/{restaurant_id}."
+        },
+        {
+          "name": "gotable_list_accounts",
+          "type": "read",
+          "title": "List accounts of a restaurant",
+          "description": "List the staff accounts that have access to a restaurant (id, name, e-mail). The account id is the author_id that gotable_create_reservation_note needs. GoTable API: GET /api/v1/restaurants/{restaurant_id}/accounts."
+        },
+        {
+          "name": "gotable_get_availability",
+          "type": "read",
+          "title": "Get availability",
+          "description": "Get the real-time availability of a restaurant per date: closed flag and the time slots with the minimum and maximum party size. The range is capped at 3 months after `from`. GoTable API: GET /api/v1/restaurants/{restaurant_id}/availability."
+        },
+        {
+          "name": "gotable_get_offer_availability",
+          "type": "read",
+          "title": "Get availability of an offer",
+          "description": "Get the availability per date of one offer (for example a tasting menu). GoTable API: GET /api/v1/restaurants/{restaurant_id}/offers/{offer_id}/availability."
+        },
+        {
+          "name": "gotable_list_offers",
+          "type": "read",
+          "title": "List offers",
+          "description": "List the offers of a restaurant (deposit per guest, visibility, booking window, translations). GoTable API: GET /api/v1/restaurants/{restaurant_id}/offers."
+        },
+        {
+          "name": "gotable_get_offer",
+          "type": "read",
+          "title": "Get an offer",
+          "description": "Get one offer by id. GoTable API: GET /api/v1/restaurants/{restaurant_id}/offers/{offer_id}."
+        },
+        {
+          "name": "gotable_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "Search the reservations of a restaurant. `query` mixes free text with filters: fields type, offer_id, date, time, starts_at, ends_at, state, party_size, guest_name, guest_email, guest_telephone, comments, duration_in_minutes; operators <= < >= > != = == : ~ !: !~. Example: \"John date>=2026-10-19 state=confirmed party_size=2\". States: pending, rejected, confirmed, checked_in, checked_out, cancelled, expired, reconfirmed, skipped and others. GoTable API: GET /api/v1/restaurants/{restaurant_id}/reservations."
+        },
+        {
+          "name": "gotable_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "Get one reservation with state, guest data, tables, payment and notes. GoTable API: GET /api/v1/restaurants/{restaurant_id}/reservations/{reservation_id}."
+        },
+        {
+          "name": "gotable_list_reservation_notes",
+          "type": "read",
+          "title": "List notes of a reservation",
+          "description": "List the internal notes of a reservation. GoTable API: GET /api/v1/restaurants/{restaurant_id}/reservations/{reservation_id}/notes."
+        },
+        {
+          "name": "gotable_list_guests",
+          "type": "read",
+          "title": "List guests",
+          "description": "Search the guests of a restaurant. `query` mixes free text with filters: fields name, email, telephone, last_visit, visits, reservations; operators <= < >= > != = == : ~ !: !~. Example: \"visits>=5\". GoTable API: GET /api/v1/restaurants/{restaurant_id}/guests."
+        },
+        {
+          "name": "gotable_get_guest",
+          "type": "read",
+          "title": "Get a guest",
+          "description": "Get one guest with visits, last visit, diets, allergies and tags. GoTable API: GET /api/v1/restaurants/{restaurant_id}/guests/{guest_id}."
+        },
+        {
+          "name": "gotable_list_tables",
+          "type": "read",
+          "title": "List tables",
+          "description": "List the tables of a restaurant (label, section, minimum and maximum party size). GoTable API: GET /api/v1/restaurants/{restaurant_id}/tables."
+        },
+        {
+          "name": "gotable_list_combinations",
+          "type": "read",
+          "title": "List table combinations",
+          "description": "List the table combinations of a restaurant (groups of tables that seat one larger party). GoTable API: GET /api/v1/restaurants/{restaurant_id}/combinations."
+        },
+        {
+          "name": "gotable_list_reviews",
+          "type": "read",
+          "title": "List reviews",
+          "description": "List the guest reviews of a restaurant (rating, text, state). Needs the `reviews` feature in the GoTable plan; else the API returns an error. GoTable API: GET /api/v1/restaurants/{restaurant_id}/reviews."
+        },
+        {
+          "name": "gotable_create_reservation",
+          "type": "write",
+          "title": "Create a reservation",
+          "description": "WRITE: create a reservation as the restaurant (skips most availability checks, so check gotable_get_availability first). Needs date and time, or type WalkIn for a guest at the door. By default GoTable e-mails and texts the guest: set skip_email / skip_sms to stop that. Not idempotent: a repeat call creates a second reservation. GoTable API: POST /api/v1/restaurants/{restaurant_id}/reservations."
+        },
+        {
+          "name": "gotable_update_reservation",
+          "type": "write",
+          "title": "Update a reservation",
+          "description": "WRITE: change the details of a reservation (date, time, party size, guest data, comments, duration, tables). Send only the fields to change. GoTable API: PUT /api/v1/restaurants/{restaurant_id}/reservations/{reservation_id}."
+        },
+        {
+          "name": "gotable_cancel_reservation",
+          "type": "write",
+          "title": "Cancel a reservation",
+          "description": "WRITE: cancel a reservation as the restaurant. By default GoTable e-mails and texts the guest: set skip_email / skip_sms to stop that. GoTable API: POST /api/v1/restaurants/{restaurant_id}/reservations/{reservation_id}/cancel."
+        },
+        {
+          "name": "gotable_create_reservation_note",
+          "type": "write",
+          "title": "Add a note to a reservation",
+          "description": "WRITE: add an internal note to a reservation. author_id is a staff account id (from gotable_list_accounts). Not idempotent. GoTable API: POST /api/v1/restaurants/{restaurant_id}/reservations/{reservation_id}/notes."
+        },
+        {
+          "name": "gotable_create_guest",
+          "type": "write",
+          "title": "Create a guest",
+          "description": "WRITE: add a guest to the guest book of a restaurant. Not idempotent. GoTable API: POST /api/v1/restaurants/{restaurant_id}/guests."
+        },
+        {
+          "name": "gotable_update_guest",
+          "type": "write",
+          "title": "Update a guest",
+          "description": "WRITE: change the name, e-mail, telephone or marketing consent of a guest. Send only the fields to change. GoTable API: PATCH /api/v1/restaurants/{restaurant_id}/guests/{guest_id}."
+        },
+        {
+          "name": "gotable_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gotable_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoTable tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gotable_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on GoTable (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gotable_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoTable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gotable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tables are free for 4 guests this Saturday evening?",
+        "List all confirmed reservations for tomorrow with the guest comments and allergies.",
+        "Which guests visited us 5 times or more but not in the last 3 months?",
+        "Move the reservation of Mr. Jansen to 19:30 and add a note about a birthday cake."
+      ]
+    },
+    {
+      "slug": "janitorial-manager",
+      "name": "Janitorial Manager",
+      "category": "business-operations",
+      "description": "Read work orders, QC inspections, time punches, payroll, scans and customers in Janitorial Manager.",
+      "endpoint": "https://janitorial-manager.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Janitorial Manager username"
+          },
+          {
+            "label": "Janitorial Manager password"
+          },
+          {
+            "label": "Company client secret"
+          }
+        ],
+        "hint": "Ask your Janitorial Manager account manager or customer support for the company **client secret** (it enables the open API). Use an active Janitorial Manager user. Your details are used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "janitorialmanager_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (the end customers of the cleaning company) with paging, search and change-date filters. API: GET /GetCustomers."
+        },
+        {
+          "name": "janitorialmanager_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id, with contact and location details. API: GET /GetCustomerDetails."
+        },
+        {
+          "name": "janitorialmanager_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (the cleaning company's client accounts) with paging, search and change-date filters. API: GET /GetClients."
+        },
+        {
+          "name": "janitorialmanager_get_location",
+          "type": "read",
+          "title": "Get a location",
+          "description": "Get one location (cleaning site) by id, with address and service instructions. API: GET /GetLocationDetails."
+        },
+        {
+          "name": "janitorialmanager_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List properties (buildings or sites). API: GET /GetProperties."
+        },
+        {
+          "name": "janitorialmanager_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (cleaners and staff) with paging, search and change-date filters. API: GET /GetEmployees."
+        },
+        {
+          "name": "janitorialmanager_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by id. API: GET /GetEmployeeDetail."
+        },
+        {
+          "name": "janitorialmanager_list_employee_punches",
+          "type": "read",
+          "title": "List employee punches",
+          "description": "List employee time punches (clock in and out) for a date range. API: GET /GetEmployeePunches."
+        },
+        {
+          "name": "janitorialmanager_get_payroll",
+          "type": "read",
+          "title": "Get payroll",
+          "description": "Get payroll data for a date range, optionally for one employee, client or customer. API: GET /GetPayroll."
+        },
+        {
+          "name": "janitorialmanager_list_quality_controls",
+          "type": "read",
+          "title": "List quality control inspections",
+          "description": "List quality control (QC) inspections with paging and filters. API: GET /GetQCs."
+        },
+        {
+          "name": "janitorialmanager_get_quality_control",
+          "type": "read",
+          "title": "Get a quality control inspection",
+          "description": "Get one QC inspection by reference number, with scores and notes. API: GET /GetQCDetail."
+        },
+        {
+          "name": "janitorialmanager_list_areas",
+          "type": "read",
+          "title": "List areas",
+          "description": "List areas (rooms or zones inside a location). API: GET /GetAreas."
+        },
+        {
+          "name": "janitorialmanager_list_area_types",
+          "type": "read",
+          "title": "List area types",
+          "description": "List area types, optionally by title. API: GET /GetAreaTypes."
+        },
+        {
+          "name": "janitorialmanager_list_area_scans",
+          "type": "read",
+          "title": "List area scans",
+          "description": "List area scans (barcode or tag scans that prove an area was visited). API: GET /GetAreaScans."
+        },
+        {
+          "name": "janitorialmanager_list_employee_scans",
+          "type": "read",
+          "title": "List employee scans",
+          "description": "List employee scans (an employee's scan at an area). API: GET /GetEmployeeScans."
+        },
+        {
+          "name": "janitorialmanager_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders with paging and filters (status, type, billable, completion date). API: GET /GetWOs."
+        },
+        {
+          "name": "janitorialmanager_get_work_order",
+          "type": "read",
+          "title": "Get a work order",
+          "description": "Get one work order by id, with its full detail. API: GET /GetWODetail."
+        },
+        {
+          "name": "janitorialmanager_list_supply_orders",
+          "type": "read",
+          "title": "List supply orders",
+          "description": "List supply orders (cleaning supplies ordered for sites). API: GET /GetSupplyOrders."
+        },
+        {
+          "name": "janitorialmanager_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers with paging, search and change-date filters. API: GET /GetSuppliers."
+        },
+        {
+          "name": "janitorialmanager_get_supplier",
+          "type": "read",
+          "title": "Get a supplier",
+          "description": "Get one supplier by id. API: GET /GetSupplierDetail."
+        },
+        {
+          "name": "janitorialmanager_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "janitorialmanager_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Janitorial Manager tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "janitorialmanager_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Janitorial Manager (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "janitorialmanager_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Janitorial Manager Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run janitorialmanager_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which work orders were completed this week, and which are still open?",
+        "Show the latest quality control inspections for our biggest customer.",
+        "List employee punches for last Friday and tell me who worked the most hours.",
+        "Which areas had no scan yesterday?"
+      ]
+    },
+    {
+      "slug": "quarterwise",
+      "name": "Quarterwise",
+      "category": "tax",
+      "description": "Read properties, HMRC categories and transactions; add income and expenses in Quarterwise.",
+      "endpoint": "https://quarterwise.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Quarterwise API key"
+          }
+        ],
+        "hint": "Create it in the Quarterwise app under **Account → API access** (Pro plan). The key starts with `qw_live_` and is shown once. It is used only to call the API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "quarterwise_get_account",
+          "type": "read",
+          "title": "Get account and API capabilities",
+          "description": "Show which Quarterwise account the key belongs to, its plan (free, pro, expat, firm) and what the API can do. HMRC submission is always false: filing is done in the app. API: GET /api/v1/me."
+        },
+        {
+          "name": "quarterwise_list_sources",
+          "type": "read",
+          "title": "List properties and businesses",
+          "description": "List the income sources on the account: UK properties, overseas properties and self-employment businesses, with id, type, share percent, role (owner or sharer) and transaction count. The id is the input of the transaction tools. API: GET /api/v1/sources."
+        },
+        {
+          "name": "quarterwise_list_categories",
+          "type": "read",
+          "title": "List HMRC category keys",
+          "description": "List the valid income and expense category keys (HMRC field names) per source type. Keys differ by type, so check them before adding transactions. API: GET /api/v1/categories."
+        },
+        {
+          "name": "quarterwise_list_transactions",
+          "type": "read",
+          "title": "List transactions of a source",
+          "description": "List income and expense entries of one property or business, optionally in a date range. Amounts are in pence. Returns nextCursor: pass it as cursor to get the next page. API: GET /api/v1/sources/{id}/transactions."
+        },
+        {
+          "name": "quarterwise_add_transactions",
+          "type": "write",
+          "title": "Add transactions to a source (write)",
+          "description": "WRITE: add 1 to 100 income or expense entries to a property or business ledger. Each entry needs a unique externalRef: re-posting the same ref adds nothing, so a retry is safe. Entries without a category go to the review queue in the app. Never submits anything to HMRC. API: POST /api/v1/sources/{id}/transactions."
+        },
+        {
+          "name": "quarterwise_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "quarterwise_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Quarterwise tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "quarterwise_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Quarterwise (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "quarterwise_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Quarterwise Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run quarterwise_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my rental properties and businesses in Quarterwise.",
+        "Show all expenses of my Brookfield Road property since 6 April.",
+        "Which HMRC category keys can I use for an overseas property?",
+        "Add these 12 rent payments from my spreadsheet to my flat's ledger."
+      ]
     }
   ]
 }
