@@ -724,6 +724,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Gavel](servers/gavel/) | documents | 8 | API token | [servers/gavel/](servers/gavel/) |
 | [Motion](servers/motion/) | project-management | 11 | API token | [servers/motion/](servers/motion/) |
 | [Chatwoot](servers/chatwoot/) | support | 22 | API token | [servers/chatwoot/](servers/chatwoot/) |
+| [AcademyOcean](servers/academyocean/) | education | 21 | API token | [servers/academyocean/](servers/academyocean/) |
+| [Searchanise](servers/searchanise/) | ecommerce | 10 | API token | [servers/searchanise/](servers/searchanise/) |
+| [ShippingEasy](servers/shippingeasy/) | shipping | 10 | API token | [servers/shippingeasy/](servers/shippingeasy/) |
+| [Mailshake](servers/mailshake/) | email-marketing | 24 | API token | [servers/mailshake/](servers/mailshake/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
