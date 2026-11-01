@@ -603,6 +603,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [GoTable](servers/gotable/) | Food & Beverage | 25 | API token | [servers/gotable/](servers/gotable/) |
 | [Janitorial Manager](servers/janitorial-manager/) | business-operations | 24 | API token | [servers/janitorial-manager/](servers/janitorial-manager/) |
 | [Quarterwise](servers/quarterwise/) | tax | 9 | API token | [servers/quarterwise/](servers/quarterwise/) |
+| [Enerflo](servers/enerflo/) | crm | 24 | API token | [servers/enerflo/](servers/enerflo/) |
+| [Aurora Solar](servers/aurora-solar/) | business-operations | 32 | API token | [servers/aurora-solar/](servers/aurora-solar/) |
+| [HERO Software](servers/hero-software/) | business-operations | 9 | API token | [servers/hero-software/](servers/hero-software/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
