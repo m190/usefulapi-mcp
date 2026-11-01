@@ -651,6 +651,21 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Freshly Inventory](servers/freshly-inventory/) | inventory | 12 | API token | [servers/freshly-inventory/](servers/freshly-inventory/) |
 | [AssetTiger](servers/assettiger/) | inventory | 21 | API token | [servers/assettiger/](servers/assettiger/) |
 | [Caisy](servers/caisy/) | no-code-database | 8 | API token | [servers/caisy/](servers/caisy/) |
+| [Formspark](servers/formspark/) | forms | 12 | API token | [servers/formspark/](servers/formspark/) |
+| [Formcrafts](servers/formcrafts/) | forms | 10 | API token | [servers/formcrafts/](servers/formcrafts/) |
+| [ExpenseIn](servers/expensein/) | Finance | 25 | API token | [servers/expensein/](servers/expensein/) |
+| [Qoblex](servers/qoblex/) | inventory | 18 | API token | [servers/qoblex/](servers/qoblex/) |
+| [Microkeeper](servers/microkeeper/) | hr | 15 | API token | [servers/microkeeper/](servers/microkeeper/) |
+| [QuotaPath](servers/quotapath/) | crm | 16 | API token | [servers/quotapath/](servers/quotapath/) |
+| [TrueContext](servers/truecontext/) | forms | 19 | API token | [servers/truecontext/](servers/truecontext/) |
+| [Ziflow](servers/ziflow/) | project-management | 19 | API token | [servers/ziflow/](servers/ziflow/) |
+| [UseResponse](servers/useresponse/) | support | 26 | API token | [servers/useresponse/](servers/useresponse/) |
+| [Userlike](servers/userlike/) | chat | 17 | API token | [servers/userlike/](servers/userlike/) |
+| [SatisMeter](servers/satismeter/) | forms-surveys | 10 | API token | [servers/satismeter/](servers/satismeter/) |
+| [StatusPage.me](servers/statuspage-me/) | monitoring | 18 | API token | [servers/statuspage-me/](servers/statuspage-me/) |
+| [FeedB](servers/feedb/) | forms-surveys | 5 | API token | [servers/feedb/](servers/feedb/) |
+| [Timesheets.com](servers/timesheets-com/) | time-tracking | 26 | API token | [servers/timesheets-com/](servers/timesheets-com/) |
+| [Demio](servers/demio/) | marketing | 10 | API token | [servers/demio/](servers/demio/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
