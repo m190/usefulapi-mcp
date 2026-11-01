@@ -722,6 +722,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Hotjar](servers/hotjar/) | analytics | 7 | API token | [servers/hotjar/](servers/hotjar/) |
 | [Beamer](servers/beamer/) | communications | 20 | API token | [servers/beamer/](servers/beamer/) |
 | [Gavel](servers/gavel/) | documents | 8 | API token | [servers/gavel/](servers/gavel/) |
+| [Motion](servers/motion/) | project-management | 11 | API token | [servers/motion/](servers/motion/) |
+| [Chatwoot](servers/chatwoot/) | support | 22 | API token | [servers/chatwoot/](servers/chatwoot/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
