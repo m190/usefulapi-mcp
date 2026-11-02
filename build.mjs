@@ -141,13 +141,13 @@ h1{font-size:32px;letter-spacing:-.02em;margin:0}
 .card h2{font-size:16px;margin:0 0 4px}.card b{color:var(--fg)}
 .lead{color:var(--muted);font-size:14px;margin:0}
 ol{margin:8px 0 0;padding-left:18px}li{margin:7px 0}
-.url{display:block;margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13.5px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.url{display:block;margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13.5px ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
 .copywrap{position:relative;margin-top:8px}
 .copy{position:absolute;right:8px;padding:3px 9px;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer}
 .copy:hover{color:var(--accent);border-color:var(--accent)}.copy.ok{color:#12873f;border-color:#12873f}
 @media (prefers-color-scheme:dark){.copy.ok{color:#5fd68a;border-color:#5fd68a}}
 .copywrap.line .copy{top:50%;transform:translateY(-50%)}.copywrap.block .copy{top:8px}
-pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
 .chip{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted)}
 .chip.live{color:#12873f}@media (prefers-color-scheme:dark){.chip.live{color:#5fd68a}}
@@ -159,6 +159,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 table th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:0 12px 8px 0;border-bottom:1px solid var(--border)}
 table td{padding:10px 12px 10px 0;border-bottom:1px solid var(--border);vertical-align:top}
 table tr:last-child td{border-bottom:0}
+.tools td:first-child{white-space:nowrap}.tools code{font-size:12.5px}
 .tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em;background:var(--chip);color:var(--muted)}
 .tag.write{color:#b4530a;background:#fbeae0}.tag.read{color:#12873f;background:#e7f5ec}.tag.meta{color:var(--accent);background:var(--chip)}
 @media (prefers-color-scheme:dark){.tag.write{color:#f0a978;background:#2a1a10}.tag.read{color:#5fd68a;background:#12241a}}
@@ -182,18 +183,22 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
-@media (max-width:560px){table td{overflow-wrap:anywhere}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 // Product page only: the facts bar, the client tabs, the closed tool list.
 const PAGE_CSS = `
+:root{--accent:#0f766e;--on-accent:#fff}
+@media (prefers-color-scheme:dark){:root{--accent:#14b8a6;--on-accent:#0f0f11}}
+.url,pre.code{word-break:normal;overflow-wrap:anywhere}
+.btn{color:var(--on-accent)!important}
 .facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
 .facts .f{color:var(--muted)}.facts .f b{color:var(--fg)}.facts .f a{color:var(--accent)}
-.cta{display:inline-block;padding:10px 18px;border-radius:10px;background:var(--accent);color:#fff!important;text-decoration:none;font-weight:600;font-size:15px}
+.cta{display:inline-block;padding:10px 18px;border-radius:10px;background:var(--accent);color:var(--on-accent)!important;text-decoration:none;font-weight:600;font-size:15px}
 .cta:hover{filter:brightness(1.08)}
 .lead-in{color:var(--muted);margin:-4px 0 14px;font-size:15px}
 .need{margin-bottom:16px}.need h3{font-size:16px;margin:0 0 8px}
 .tabs{display:none;flex-wrap:wrap;gap:6px;margin:0 0 12px}.js .tabs{display:flex}
 .tabs button{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--fg);cursor:pointer}
-.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .panels{display:grid;gap:12px}.panel[hidden]{display:none}
 .panel>h3{font-size:16px;margin:0 0 4px}.panel>h3 .for{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}.js .panel>h3{display:none}
@@ -212,6 +217,13 @@ function pick(c,save,focus){bs.forEach(function(b){var on=b.getAttribute("data-c
 var saved=null;try{saved=localStorage.getItem("ua-client");}catch(e){}
 document.documentElement.classList.add("js");pick(bs.some(function(b){return b.getAttribute("data-c")===saved;})?saved:bs[0].getAttribute("data-c"));
 bs.forEach(function(b,i){b.addEventListener("click",function(){pick(b.getAttribute("data-c"),true);});b.addEventListener("keydown",function(e){var d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(!d)return;e.preventDefault();pick(bs[(i+d+bs.length)%bs.length].getAttribute("data-c"),true,true);});});})();</script>`;
+// Tool descriptions end with the vendor route ("REST: GET /x.", "(GET /x)."): only for developers, so the page drops a
+// last sentence that is only an optional short label and routes, or a closing parenthetical of routes. Prose stays.
+const ROUTE_M = "(?:GET|POST|PUT|PATCH|DELETE)", ROUTE_P = "\\/[^\\s(),;]*";
+const ROUTE_RE = `${ROUTE_M}\\s+${ROUTE_P}(?:\\s*(?:,|and|or|then|\\+|/)\\s*(?:${ROUTE_M}\\s+)?${ROUTE_P})*`;
+const ROUTE_LABEL_WORD = "[A-Za-z][\\w:-]*(?:\\.[\\w:-]+)*"; // "Re:amaze", "JSON:API", "v2.1": a dot only inside a word
+const ROUTE_SENTENCE = new RegExp(`(^|(?<!\\b[A-Za-z])\\.)\\s+(?:${ROUTE_LABEL_WORD}(?:\\s+${ROUTE_LABEL_WORD}){0,3}:\\s+)?${ROUTE_RE}\\.?\\s*$`);
+const ROUTE_PAREN = new RegExp(`\\s+\\(${ROUTE_RE}\\)(\\.?)\\s*$`);
 // A URL that wraps only after "." and "/" (<wbr> adds no text, so Copy still copies the plain URL).
 const wrapUrl = (u) => esc(u).replace(/([./])(?=[^/])/g, "$1<wbr>");
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
@@ -397,7 +409,7 @@ ${copyLine(urlShown)}
   const cards = live ? `<div class="tabs" role="tablist" aria-label="Your AI client">${clients.map((x) =>
     `<button type="button" role="tab" id="tab-${x.c}" aria-controls="p-${x.c}" data-c="${x.c}">${x.label}</button>`).join("")}</div>
 <div class="panels">${clients.map((x) =>
-    `<div class="card panel" role="tabpanel" id="p-${x.c}" aria-labelledby="tab-${x.c}" data-c="${x.c}"><h3>${x.label}${x.for ? ` <span class="for">${x.for}</span>` : ""}</h3>
+    `<div class="card panel" role="tabpanel" tabindex="0" id="p-${x.c}" aria-labelledby="tab-${x.c}" data-c="${x.c}"><h3>${x.label}${x.for ? ` <span class="for">${x.for}</span>` : ""}</h3>
 ${x.html}</div>`).join("\n")}</div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
   const facts = `<div class="facts">${live ? `<a class="cta" href="#connect">Connect ${name}</a>` : chip("launching soon")}` +
@@ -405,13 +417,13 @@ ${x.html}</div>`).join("\n")}</div>` : `<div class="card"><h2>Launching soon</h2
     `<span class="f">${toolCount(s)} tools</span></div>`;
 
   // All tools in one closed section, grouped by what they do. The "GET /path." suffix is for developers only.
-  const plainDesc = (d) => String(d || "").replace(/\s*\b(?:GET|POST|PUT|PATCH|DELETE)\s+\/\S*\.?\s*$/, "").trim();
+  const plainDesc = (d) => String(d || "").replace(ROUTE_SENTENCE, "$1").replace(ROUTE_PAREN, "$1").trim();
   const toolItem = (t) => {
     const d = plainDesc(t.description);
     return `<li><b>${esc(t.title)}</b><code class="tn">${esc(t.name)}</code>${d && d !== t.title ? `<div class="tdesc">${esc(d)}</div>` : ""}</li>`;
   };
-  const TOOL_GROUPS = [["read", "Read only"], ["write", "Changes data"], ["meta", "Your usefulapi plan"]];
-  const groupOfTool = (t) => (TOOL_GROUPS.some(([k]) => k === t.type) ? t.type : "read");
+  const TOOL_GROUPS = [["read", "Read only"], ["write", "Changes data"], ["meta", "Your usefulapi plan"], ["other", "Other tools"]];
+  const groupOfTool = (t) => (TOOL_GROUPS.some(([k]) => k === t.type) ? t.type : "other");
   const toolsSection = (s.tools || []).length
     ? `<h2 class="sec">Tools <span class="n">${s.tools.length}</span></h2>
 <details class="all"><summary>Show all ${s.tools.length} tools <span class="n">(the AI picks them for you)</span></summary>
