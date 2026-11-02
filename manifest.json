@@ -125530,6 +125530,1229 @@
         "Show the stock and price of the product with barcode 8690000000001.",
         "Mark order 5012 as shipped with tracking number 1234567890."
       ]
+    },
+    {
+      "slug": "zadarma",
+      "name": "Zadarma",
+      "category": "communications",
+      "description": "Read balance, tariffs, SIP and PBX status and call logs; send SMS in Zadarma.",
+      "endpoint": "https://zadarma.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API key (user key)"
+          },
+          {
+            "label": "Secret key"
+          }
+        ],
+        "hint": "Find both at **my.zadarma.com → API**. Your keys are used only to sign calls to Zadarma on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zadarma_get_balance",
+          "type": "read",
+          "title": "Get account balance",
+          "description": "Get the current account balance and its currency. Good first call to check the account works. Zadarma API: GET /v1/info/balance/."
+        },
+        {
+          "name": "zadarma_get_tariff",
+          "type": "read",
+          "title": "Get price plan",
+          "description": "Get the account's current price plan (tariff). Zadarma API: GET /v1/tariff/."
+        },
+        {
+          "name": "zadarma_get_call_price",
+          "type": "read",
+          "title": "Get call rate for a number",
+          "description": "Get the per-minute call rate in the account's price plan for one phone number (destination, prefix and currency). Zadarma API: GET /v1/info/price/."
+        },
+        {
+          "name": "zadarma_list_sip_numbers",
+          "type": "read",
+          "title": "List SIP numbers",
+          "description": "List the SIP numbers (IDs, names and status) on the account. Zadarma API: GET /v1/sip/."
+        },
+        {
+          "name": "zadarma_get_sip_status",
+          "type": "read",
+          "title": "Get SIP number status",
+          "description": "Check whether one SIP number is online. Zadarma API: GET /v1/sip/{sip}/status/."
+        },
+        {
+          "name": "zadarma_list_pbx_extensions",
+          "type": "read",
+          "title": "List PBX extensions",
+          "description": "List the extensions of the cloud PBX (number, name and settings). Zadarma API: GET /v1/pbx/internal/."
+        },
+        {
+          "name": "zadarma_get_pbx_extension_status",
+          "type": "read",
+          "title": "Get PBX extension status",
+          "description": "Check whether one PBX extension is online. Zadarma API: GET /v1/pbx/internal/{pbxsip}/status/."
+        },
+        {
+          "name": "zadarma_list_virtual_numbers",
+          "type": "read",
+          "title": "List virtual numbers",
+          "description": "List the virtual (direct) phone numbers rented on the account. Zadarma API: GET /v1/direct_numbers/."
+        },
+        {
+          "name": "zadarma_get_call_statistics",
+          "type": "read",
+          "title": "Get call statistics",
+          "description": "Get the call log for a period, optionally for one SIP number. Limited to 3 calls per minute per user: do not poll it. For live PBX data, use webhooks instead. Zadarma API: GET /v1/statistics/."
+        },
+        {
+          "name": "zadarma_get_call_recording_link",
+          "type": "read",
+          "title": "Get call recording link",
+          "description": "Get a temporary download link for a call recording. Give the call_id (from the recording file name) or the pbx_call_id. Zadarma API: GET /v1/pbx/record/request/."
+        },
+        {
+          "name": "zadarma_list_sms_templates",
+          "type": "read",
+          "title": "List SMS templates",
+          "description": "List the SMS templates on the account, by category. Zadarma API: GET /v1/sms/templates/."
+        },
+        {
+          "name": "zadarma_send_sms",
+          "type": "write",
+          "title": "Send SMS",
+          "description": "Send an SMS to up to 10 phone numbers. This sends real messages and uses account balance; each send is billed. It is not retried, so check the result before sending again. Zadarma API: POST /v1/sms/send/."
+        },
+        {
+          "name": "zadarma_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zadarma_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zadarma tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zadarma_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Zadarma (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zadarma_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zadarma Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zadarma_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What is my Zadarma balance, and what is my current price plan?",
+        "Which SIP numbers on my account are online right now?",
+        "How much does a call to +44 20 3769 1880 cost on my plan?",
+        "Send an SMS to +442037691880 saying the office closes at 5 pm."
+      ]
+    },
+    {
+      "slug": "spedire",
+      "name": "SpedirePRO",
+      "category": "shipping",
+      "description": "Get quotes, track shipments, create labels and book pickups in SpedirePRO.",
+      "endpoint": "https://spedire.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SpedirePRO API key"
+          }
+        ],
+        "hint": "Find the key in SpedirePRO → **IMPOSTAZIONI → App e Integrazioni → API**. The API must be enabled for your account first. Your key is used only to call the SpedirePRO API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "spedire_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Return the SpedirePRO account name, email, wallet credit (credits_amount) and creation date. Also confirms the API key works. GET /v1/me."
+        },
+        {
+          "name": "spedire_get_wallet_movements",
+          "type": "read",
+          "title": "Wallet movements",
+          "description": "List wallet credit movements (top-ups, shipment charges, refunds), newest first. GET /v1/wallet."
+        },
+        {
+          "name": "spedire_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments with status, tracker, sender, receiver, courier and price. Filter by any reference, status or archived flag. GET /v1/shipments-list."
+        },
+        {
+          "name": "spedire_get_shipment",
+          "type": "read",
+          "title": "Get a shipment",
+          "description": "Get one shipment by reference, tracker, order_reference or merchant_reference (give one). Returns status, exception_code, sender, receiver, courier and price. POST /v1/shipment (read only)."
+        },
+        {
+          "name": "spedire_get_shipment_events",
+          "type": "read",
+          "title": "Shipment events",
+          "description": "List the webhook event history of one shipment (status changes sent to your webhook). Give reference or tracker. POST /v1/shipment/webhooks (read only)."
+        },
+        {
+          "name": "spedire_get_label_url",
+          "type": "read",
+          "title": "Get label download URL",
+          "description": "Return a download URL (url, expire) for the shipping label PDF of a shipment. Creates no new label. POST /v1/get-label (read only)."
+        },
+        {
+          "name": "spedire_get_quotes",
+          "type": "read",
+          "title": "Get shipping quotes",
+          "description": "Return courier rates for a route and parcels (from, to, packages, optional insurance protection_amount). Creates no shipment. POST /v1/get-quotes."
+        },
+        {
+          "name": "spedire_list_couriers",
+          "type": "read",
+          "title": "List couriers",
+          "description": "List the couriers enabled for the account, with their alias (the value for create_shipment courier), service info, mockable and pickup_type. GET /v1/couriers."
+        },
+        {
+          "name": "spedire_lookup_postcode",
+          "type": "read",
+          "title": "Resolve postcode",
+          "description": "Look up a postcode in a country to check address data before creating a shipment. GET /v1/geo/{country}/{postcode}."
+        },
+        {
+          "name": "spedire_find_drop_off_points",
+          "type": "read",
+          "title": "Find drop-off points",
+          "description": "Search lockers and post offices near a city or postcode. direction sender = pickup side (ritiro), receiver = delivery side (consegna). Points come back in the raw format that create_shipment expects. POST /v1/drop-off-points (read only)."
+        },
+        {
+          "name": "spedire_get_drop_off_point",
+          "type": "read",
+          "title": "Get a drop-off point",
+          "description": "Return one drop-off point by vendor and point_id (from spedire_find_drop_off_points). POST /v1/drop-off-by-id (read only)."
+        },
+        {
+          "name": "spedire_create_shipment",
+          "type": "write",
+          "title": "Create a shipment",
+          "description": "Create a shipment and its label with a courier. This is a real booking: it charges the account wallet credit (amount in the reply) and cannot be undone by this tool. Get the courier alias from spedire_list_couriers and rates from spedire_get_quotes first. Pass drop-off points exactly as spedire_find_drop_off_points returned them. POST /v1/create-label."
+        },
+        {
+          "name": "spedire_correct_address",
+          "type": "write",
+          "title": "Correct shipment addresses",
+          "description": "Correct the sender and receiver addresses of a shipment, for example one with address error status E. Send both full addresses. POST /v1/shipment/patch."
+        },
+        {
+          "name": "spedire_book_pickup",
+          "type": "write",
+          "title": "Book a courier pickup",
+          "description": "Book a courier pickup on one date for a list of shipment references. The courier collects the parcels at the sender address. POST /v1/book-pickup."
+        },
+        {
+          "name": "spedire_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spedire_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SpedirePRO tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "spedire_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on SpedirePRO (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "spedire_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SpedirePRO Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run spedire_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my shipments are still in transit, and which were delivered this week?",
+        "What does it cost to send a 2 kg parcel from Rome to Milan? Compare the couriers.",
+        "Find the InPost lockers near postcode 20121 in Milan.",
+        "Show the status history of the shipment with tracker code 1Z999AA10123456784."
+      ]
+    },
+    {
+      "slug": "slottable",
+      "name": "Slottable",
+      "category": "scheduling",
+      "description": "Read contacts, slot types, rosters, bookings and webhooks in Slottable.",
+      "endpoint": "https://slottable.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Slottable company API token"
+          }
+        ],
+        "hint": "Find it in Slottable → **Integrations & API** (company settings). Your token is used only to call the API on your behalf and to read your company id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "slottable_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the company's contacts (name, email, phone, address, subscription flag). Slottable API: GET /api/v1/companies/{company_id}/contacts."
+        },
+        {
+          "name": "slottable_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id. Slottable API: GET /api/v1/companies/{company_id}/contacts/{id}."
+        },
+        {
+          "name": "slottable_list_slot_types",
+          "type": "read",
+          "title": "List slot types",
+          "description": "List the company's slot types (bookable services or events: name, duration, price, payment and cancellation rules). Good first call. Slottable API: GET /api/v1/companies/{company_id}/slot-types."
+        },
+        {
+          "name": "slottable_get_slot_type",
+          "type": "read",
+          "title": "Get a slot type",
+          "description": "Get one slot type by id, including its default duration, price and booking rules. Slottable API: GET /api/v1/companies/{company_id}/slot-types/{id}."
+        },
+        {
+          "name": "slottable_list_slot_type_instances",
+          "type": "read",
+          "title": "List slot type instances",
+          "description": "List the dated slots (instances) of one slot type: datetime, duration, total slots, price and publish state. Slottable API: GET /api/v1/companies/{company_id}/slot-types/{slot_type_id}/slot-type-instances."
+        },
+        {
+          "name": "slottable_get_slot_type_instance",
+          "type": "read",
+          "title": "Get a slot type instance",
+          "description": "Get one dated slot (instance) of a slot type. Slottable API: GET /api/v1/companies/{company_id}/slot-types/{slot_type_id}/slot-type-instances/{id}."
+        },
+        {
+          "name": "slottable_list_slot_type_instance_roster",
+          "type": "read",
+          "title": "List a slot's roster",
+          "description": "List the contacts on the roster of one dated slot (who is registered for it). Slottable API: GET /api/v1/companies/{company_id}/slot-types/{slot_type_id}/slot-type-instances/{slot_type_instance_id}/contacts."
+        },
+        {
+          "name": "slottable_list_slot_type_instance_bookings",
+          "type": "read",
+          "title": "List a slot's bookings",
+          "description": "List the bookings made for one dated slot (booking id, token, cancellation time). For who is on the slot, use slottable_list_slot_type_instance_roster. Slottable API: GET /api/v1/companies/{company_id}/slot-types/{slot_type_id}/slot-type-instances/{slot_type_instance_id}/bookings."
+        },
+        {
+          "name": "slottable_list_latest_booking_contacts",
+          "type": "read",
+          "title": "List latest booking contacts",
+          "description": "List the most recent booking contacts across the company's slots, with their contact details. Slottable API: GET /api/v1/companies/{company_id}/latest-booking-contacts."
+        },
+        {
+          "name": "slottable_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the company's webhook subscriptions (target URL, model, events, filter). Slottable API: GET /api/v1/companies/{company_id}/webhooks."
+        },
+        {
+          "name": "slottable_get_webhook",
+          "type": "read",
+          "title": "Get a webhook",
+          "description": "Get one webhook subscription by id. Slottable API: GET /api/v1/companies/{company_id}/webhooks/{id}."
+        },
+        {
+          "name": "slottable_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "slottable_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Slottable tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "slottable_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Slottable (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "slottable_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Slottable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run slottable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which slot types do we offer, and what do they cost?",
+        "Show the upcoming slots for our workshop and who is on each roster.",
+        "List the latest booking contacts and their email addresses.",
+        "Which webhooks are set up for our company?"
+      ]
+    },
+    {
+      "slug": "scrada",
+      "name": "Scrada",
+      "category": "accounting",
+      "description": "Read journals, cash books and Peppol documents; record payments in Scrada.",
+      "endpoint": "https://scrada.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Scrada company ID"
+          },
+          {
+            "label": "Scrada API key"
+          },
+          {
+            "label": "Scrada API password"
+          }
+        ],
+        "hint": "Create the key in Scrada's web client → **Settings → API Keys**. The company ID is the GUID of the company that owns the key. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "scrada_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "Get the Scrada company that the API key belongs to: name, active flag and settings."
+        },
+        {
+          "name": "scrada_list_journals",
+          "type": "read",
+          "title": "List journals",
+          "description": "List all journals (daily receipts books) of the company, with their settings."
+        },
+        {
+          "name": "scrada_get_journal",
+          "type": "read",
+          "title": "Get journal",
+          "description": "Get one journal by its ID."
+        },
+        {
+          "name": "scrada_list_journal_lines",
+          "type": "read",
+          "title": "List journal lines",
+          "description": "List the booked lines of a journal, from every source, sorted by marker. Returns __next and __marker: keep calling with afterMarker until __next is null. Use fromDate and tillDate (yyyy-mm-dd) to limit the period."
+        },
+        {
+          "name": "scrada_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List the payment methods that belong to one journal."
+        },
+        {
+          "name": "scrada_list_vat_categories",
+          "type": "read",
+          "title": "List VAT categories",
+          "description": "List the VAT categories that belong to one journal."
+        },
+        {
+          "name": "scrada_list_vat_periods",
+          "type": "read",
+          "title": "List VAT periods",
+          "description": "List all VAT periods of the company."
+        },
+        {
+          "name": "scrada_list_cash_books",
+          "type": "read",
+          "title": "List cash books",
+          "description": "List all cash books (bank accounts and cash registers) of the company."
+        },
+        {
+          "name": "scrada_get_cash_book",
+          "type": "read",
+          "title": "Get cash book",
+          "description": "Get one cash book by its ID."
+        },
+        {
+          "name": "scrada_list_transaction_types",
+          "type": "read",
+          "title": "List transaction types",
+          "description": "List the transaction types (booking categories) of one cash book."
+        },
+        {
+          "name": "scrada_list_sales_invoice_journals",
+          "type": "read",
+          "title": "List sales invoice journals",
+          "description": "List all sales invoice journals of the company, including inactive ones."
+        },
+        {
+          "name": "scrada_get_sales_invoice_journal",
+          "type": "read",
+          "title": "Get sales invoice journal",
+          "description": "Get one sales invoice journal by its ID."
+        },
+        {
+          "name": "scrada_get_sales_invoice_send_status",
+          "type": "read",
+          "title": "Get sales invoice send status",
+          "description": "Get the send status of a sales invoice that was created through the API."
+        },
+        {
+          "name": "scrada_add_sales_invoice_payment",
+          "type": "write",
+          "title": "Add sales invoice payment",
+          "description": "Record a payment on an existing final sales invoice. It updates the invoice payment status but is not booked to a journal or cash book. Not safe to repeat: each call adds another payment. A positive amount settles the invoice; a negative amount reverses a settlement."
+        },
+        {
+          "name": "scrada_list_pos_receipts",
+          "type": "read",
+          "title": "List POS receipts",
+          "description": "List POS receipts of the company, sorted by marker. Returns __next and __marker: keep calling with afterMarker until __next is null. A receipt can reappear when it changes, so match on receiptID."
+        },
+        {
+          "name": "scrada_peppol_lookup",
+          "type": "read",
+          "title": "Look up a Peppol participant",
+          "description": "Search the Peppol network for a participant. The id has two parts joined by a colon: the scheme code and the value, for example 0208:0793904121 (0208 is the Belgian enterprise number scheme)."
+        },
+        {
+          "name": "scrada_list_unconfirmed_peppol_documents",
+          "type": "read",
+          "title": "List unconfirmed Peppol documents",
+          "description": "List inbound Peppol documents that are not confirmed yet (metadata only, up to 100 per call). Confirmed documents leave the list, so confirm each processed document to see the next ones."
+        },
+        {
+          "name": "scrada_get_peppol_inbound_document",
+          "type": "read",
+          "title": "Get Peppol inbound document",
+          "description": "Get one inbound Peppol document as UBL/XML (returned as text)."
+        },
+        {
+          "name": "scrada_confirm_peppol_inbound_document",
+          "type": "write",
+          "title": "Confirm Peppol inbound document",
+          "description": "Mark an inbound Peppol document as processed, so it leaves the unconfirmed list. Confirming it again is expected to change nothing."
+        },
+        {
+          "name": "scrada_get_peppol_outbound_status",
+          "type": "read",
+          "title": "Get Peppol outbound document status",
+          "description": "Get the status and delivery information of an outbound Peppol document."
+        },
+        {
+          "name": "scrada_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "scrada_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Scrada tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "scrada_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Scrada (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "scrada_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Scrada Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run scrada_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the journals of our company and show their settings.",
+        "Show all journal lines booked in March 2026, with their amounts.",
+        "Which inbound Peppol invoices are still waiting for confirmation?",
+        "Look up the Peppol participant 0208:0793904121 and show its details."
+      ]
+    },
+    {
+      "slug": "brandboom",
+      "name": "Brandboom",
+      "category": "commerce",
+      "description": "Search showrooms, products, orders, customers, invoices and shipments in Brandboom.",
+      "endpoint": "https://brandboom.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Brandboom API key"
+          }
+        ],
+        "hint": "Create it in Brandboom → **Account Settings → Integrations → API** → New API Key. A Business Plan subscription is required. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "brandboom_list_showrooms",
+          "type": "read",
+          "title": "List showrooms",
+          "description": "List the showrooms this account can access, with their showroom ids. Other tools need a showroom id. Brandboom API: GET /v3/showrooms/search."
+        },
+        {
+          "name": "brandboom_list_price_tiers",
+          "type": "read",
+          "title": "List price tiers",
+          "description": "List price tiers for the brands this account can access. Products need a price tier id. Brandboom API: GET /v3/priceTiers/search."
+        },
+        {
+          "name": "brandboom_search_products",
+          "type": "read",
+          "title": "Search products",
+          "description": "Search products with their descriptions, prices and SKUs, in one showroom and one price tier. Brandboom API: GET /v3/products/search."
+        },
+        {
+          "name": "brandboom_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search orders by id, keyword, order date, ship date or status. Brandboom API: GET /v3/orders/search."
+        },
+        {
+          "name": "brandboom_get_order_pdf",
+          "type": "read",
+          "title": "Get an order PDF link",
+          "description": "Create the PDF of one order and return a temporary download link. The file is deleted 24 hours after it is made. Brandboom API: GET /v3/orders/pdf."
+        },
+        {
+          "name": "brandboom_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers by id, keyword, customer code, type (billing or shipping) or last change date. Brandboom API: GET /v3/customers/search."
+        },
+        {
+          "name": "brandboom_search_invoices",
+          "type": "read",
+          "title": "Search invoices",
+          "description": "Search invoices in one or more showrooms, by id, order, keyword or date. Brandboom API: GET /v3/invoices/search."
+        },
+        {
+          "name": "brandboom_search_shipments",
+          "type": "read",
+          "title": "Search shipments",
+          "description": "Find shipments by shipment ids or by invoice id, optionally filtered by status. Give shipmentIDs or invoiceID. Brandboom API: GET /v3/shipments/search."
+        },
+        {
+          "name": "brandboom_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "brandboom_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Brandboom tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "brandboom_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Brandboom (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "brandboom_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Brandboom Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run brandboom_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are still open, and when do they ship?",
+        "Show me the invoices for showroom 12 from last month.",
+        "Find the products with the keyword 'linen' and their wholesale prices.",
+        "Where is shipment 4411 right now?"
+      ]
+    },
+    {
+      "slug": "wefact",
+      "name": "WeFact",
+      "category": "billing",
+      "description": "Look up customers, invoices, products and subscriptions in WeFact.",
+      "endpoint": "https://wefact.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "WeFact API key"
+          }
+        ],
+        "hint": "Find it in WeFact → **Settings → API**. The API must be switched on there. If you use the API whitelist, the usefulapi servers must be allowed, or remove the whitelist. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "wefact_list_debtors",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (debtors) with name, customer code, email and last change. Search with searchfor, pick fields with searchat, filter by customer group. WeFact action: debtor/list."
+        },
+        {
+          "name": "wefact_get_debtor",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer with address, VAT and tax number, invoice settings, payment mandate and contacts. Give identifier or debtor_code. WeFact action: debtor/show."
+        },
+        {
+          "name": "wefact_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with customer, amounts, paid and outstanding amounts, status and dates. Filter by status, search text, or invoice date and change date ranges. WeFact action: invoice/list."
+        },
+        {
+          "name": "wefact_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice with its lines, totals, paid and outstanding amounts, payment method, reminders and sent dates. Give identifier or invoice_code. WeFact action: invoice/show."
+        },
+        {
+          "name": "wefact_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services with code, name, price excluding VAT and VAT rate. Search or filter by product group. WeFact action: product/list."
+        },
+        {
+          "name": "wefact_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "Get one product with its description, price, VAT rate, price period and groups. Give identifier or product_code. WeFact action: product/show."
+        },
+        {
+          "name": "wefact_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List recurring subscriptions (abonnementen) with customer, product, price and next invoice date. Default status: active. WeFact action: subscription/list."
+        },
+        {
+          "name": "wefact_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "wefact_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the WeFact tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "wefact_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on WeFact (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "wefact_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's WeFact Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run wefact_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are still unpaid, and how much is outstanding in total?",
+        "Show me the customer with the email address info@example.com and their open invoices.",
+        "List our active subscriptions and their next invoice dates.",
+        "Which products do we sell with a 9% VAT rate?"
+      ]
+    },
+    {
+      "slug": "desktime",
+      "name": "DeskTime",
+      "category": "time-tracking",
+      "description": "Read tracked time and projects; create projects and start or stop timers in DeskTime.",
+      "endpoint": "https://desktime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "DeskTime API key"
+          }
+        ],
+        "hint": "Log in to DeskTime and open **desktime.com/app/api** to copy your key. The key acts with that user's permissions (an admin's key sees the whole company). Your key is used only to call the DeskTime API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "desktime_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "The DeskTime company account this API key belongs to: company name, work schedule (start, end, duration, working days), tracking window and account timezone. GET /company."
+        },
+        {
+          "name": "desktime_list_employees",
+          "type": "read",
+          "title": "List employees with tracking data",
+          "description": "All employees of the company with their tracked time for a day, week or month: arrived/left, online, desk, at-work, productive time, productivity and efficiency, group. Starts at `date` (default today); `period` is day (default), week or month. Returned a page at a time (employee-days, sorted by date then id). Needs an admin's key. GET /employees. This is employee monitoring (personal) data: ask for one day at a time and only what the user needs."
+        },
+        {
+          "name": "desktime_get_employee",
+          "type": "read",
+          "title": "Get employee day summary",
+          "description": "One employee's summary for one day: name, email, group, arrived/left, late, online/offline/desk/at-work/productive time (seconds), productivity and efficiency. Without projects or apps; see desktime_get_employee_projects / _apps / _full for those. GET /employee/basic. This is employee monitoring (personal) data: ask for one day at a time and only what the user needs."
+        },
+        {
+          "name": "desktime_get_employee_projects",
+          "type": "read",
+          "title": "Get employee day with projects",
+          "description": "One employee's day summary plus the projects and tasks they tracked time on that day. GET /employee/projects. This is employee monitoring (personal) data: ask for one day at a time and only what the user needs."
+        },
+        {
+          "name": "desktime_get_employee_apps",
+          "type": "read",
+          "title": "Get employee day with apps",
+          "description": "One employee's day summary plus the apps, websites and titles they used that day, with durations and productivity class. Lists longer than 200 entries are cut. GET /employee/apps. This is employee monitoring (personal) data: ask for one day at a time and only what the user needs."
+        },
+        {
+          "name": "desktime_get_employee_full",
+          "type": "read",
+          "title": "Get employee day with projects and apps",
+          "description": "One employee's day summary plus both the tracked projects/tasks and the apps/websites used that day. The largest reply: prefer the narrower tools. Lists longer than 200 entries are cut. GET /employee. This is employee monitoring (personal) data: ask for one day at a time and only what the user needs."
+        },
+        {
+          "name": "desktime_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "Active (not archived) projects of the company with their tasks: id, name, creation time and tasks. Returned a page at a time. GET /projects."
+        },
+        {
+          "name": "desktime_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "WRITE: create a new project (and optionally one task in it) in the company's DeskTime account. Not idempotent: a second call with the same name makes another project. Returns the new project's id, url and tasks. POST /create-project."
+        },
+        {
+          "name": "desktime_start_project",
+          "type": "write",
+          "title": "Start project timer",
+          "description": "WRITE: start tracking time on a project (and optionally a task) for the user the API key belongs to, by project name. This changes that user's tracked time and may switch away from the project currently running. Returns {started: true|false}. GET /start-project."
+        },
+        {
+          "name": "desktime_stop_project",
+          "type": "write",
+          "title": "Stop project timer",
+          "description": "WRITE: stop tracking time on a project (and optionally a task) for the user the API key belongs to, by project name. Returns {stopped: true|false}. GET /stop-project."
+        },
+        {
+          "name": "desktime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "desktime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the DeskTime tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "desktime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on DeskTime (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "desktime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's DeskTime Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run desktime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is working right now, and how productive has the team been today?",
+        "Show yesterday's DeskTime data for Anna: hours, productivity and the apps she used.",
+        "Which projects did the team track time on this week?",
+        "Start the project \"Website redesign\" for me."
+      ]
+    },
+    {
+      "slug": "resos",
+      "name": "resOS",
+      "category": "scheduling",
+      "description": "Read bookings, guests and availability; create, update or cancel bookings in resOS.",
+      "endpoint": "https://resos.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "resOS API key"
+          }
+        ],
+        "hint": "Create it in resOS → **Settings → API integration** (the API is a paid add-on). The key gives access to all your bookings and your guests' contact details. This server uses it only to call the resOS API on your behalf and never shows it. To disconnect, delete the key in resOS: it stops working at once."
+      },
+      "tools": [
+        {
+          "name": "resos_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings, newest or oldest first as you sort, with date, time, party size, status, the guest's name, e-mail and phone, assigned tables and custom-field answers. Filter by date range, status, party size or guest name. The comment thread and sent-message log are not included (use resos_get_booking for the thread). Pages of at most 100; pass next_skip to read on. GET /bookings."
+        },
+        {
+          "name": "resos_get_booking",
+          "type": "read",
+          "title": "Get booking",
+          "description": "One booking by id, with the guest's contact data, tables, custom fields, payment, the comment thread (guest and restaurant messages) and the internal restaurant notes. GET /bookings/{id}."
+        },
+        {
+          "name": "resos_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the restaurant's customers (guest profiles): name, e-mails, phones, city and country, tags, notes, flags, booking count and newsletter consent. The street address is not returned. Filter by name. Pages of at most 100. GET /customers."
+        },
+        {
+          "name": "resos_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer (guest profile) by id: contact data, tags, notes, flags, booking count and latest booking. GET /customers/{id}."
+        },
+        {
+          "name": "resos_list_guest_feedback",
+          "type": "read",
+          "title": "List guest feedback",
+          "description": "List guest feedback (ratings for food, service, value and atmosphere, whether they recommend, and the message). Filter by date range, or only submitted feedback. Pages of at most 100. GET /guestFeedback."
+        },
+        {
+          "name": "resos_get_guest_feedback",
+          "type": "read",
+          "title": "Get guest feedback",
+          "description": "One guest feedback entry by id. GET /guestFeedback/{id}."
+        },
+        {
+          "name": "resos_list_seating_areas",
+          "type": "read",
+          "title": "List seating areas and tables",
+          "description": "List the seating areas with their tables (id, name, minimum and maximum seats) and table combinations. Use the ids for bookings and availability. GET /tables."
+        },
+        {
+          "name": "resos_list_opening_hours",
+          "type": "read",
+          "title": "List opening hours",
+          "description": "List the opening hours: regular weekly hours (day 1 Monday to 7 Sunday) and special date-specific hours, each with id, name, open and close times and whether the restaurant is open. GET /openingHours."
+        },
+        {
+          "name": "resos_get_opening_hour",
+          "type": "read",
+          "title": "Get opening hour",
+          "description": "One opening-hour entry by id. GET /openingHours/{id}."
+        },
+        {
+          "name": "resos_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom booking fields (name, label, type, required, choices). Use the ids to read or set custom-field answers. GET /customFields."
+        },
+        {
+          "name": "resos_get_custom_field",
+          "type": "read",
+          "title": "Get custom field",
+          "description": "One custom booking field by id. GET /customFields/{id}."
+        },
+        {
+          "name": "resos_get_available_dates",
+          "type": "read",
+          "title": "Get available dates",
+          "description": "Dates in a range on which the restaurant is open for bookings (default: the next 30 days). GET /bookingFlow/dates."
+        },
+        {
+          "name": "resos_get_available_times",
+          "type": "read",
+          "title": "Get available times",
+          "description": "Booking times that are free on a date for a party size, optionally for one seating area. GET /bookingFlow/times."
+        },
+        {
+          "name": "resos_get_available_tables",
+          "type": "read",
+          "title": "Get available tables",
+          "description": "The tables and table combinations that are free for a party size in a time window (UTC). Use it before assigning tables to a booking. GET /bookingFlow/availableTables."
+        },
+        {
+          "name": "resos_create_booking",
+          "type": "write",
+          "title": "Create booking",
+          "description": "WRITE: create a booking for a guest. It is a real booking in the restaurant's book. If notify_email or notify_sms is true, resOS e-mails or texts the GUEST (a confirmation); both default to false. Date and time are in the restaurant's local timezone. Check resos_get_available_times first: resOS may refuse a slot that is full or closed. It is not retried: if the call times out, read the bookings before you try again, or you may book twice. resOS may silently throttle the same e-mail, phone or IP creating more than 10 bookings in 24 hours. POST /bookings."
+        },
+        {
+          "name": "resos_update_booking",
+          "type": "write",
+          "title": "Update booking",
+          "description": "WRITE: change fields of an existing booking: date, time, party size, tables, duration, status, or the guest's name, e-mail or phone. Only the fields you pass change. A status change or a new time can make resOS e-mail or text the GUEST (for example on approved or declined). To cancel use resos_cancel_booking. It is not retried: after a timeout read the booking again before you try again. PUT /bookings/{id}."
+        },
+        {
+          "name": "resos_cancel_booking",
+          "type": "write",
+          "title": "Cancel booking",
+          "description": "WRITE: cancel a booking (status canceled, with a canceled-at time). resOS may e-mail or text the GUEST a cancellation notice. The booking stays in resOS and can be read afterwards. Not retried: after a timeout read the booking first. PUT /bookings/{id}/cancel."
+        },
+        {
+          "name": "resos_add_booking_note",
+          "type": "write",
+          "title": "Add internal booking note",
+          "description": "WRITE: add an internal restaurant note to a booking (for example `Birthday, bring a candle`). The guest does not see it and nothing is sent. At most 50 notes per booking; notes cannot be deleted through the API. Not retried: after a timeout read the booking first, or the note may be added twice. POST /bookings/{id}/restaurantNote."
+        },
+        {
+          "name": "resos_send_booking_comment",
+          "type": "write",
+          "title": "Post booking comment to guest",
+          "description": "WRITE: post a comment from the restaurant on a booking's guest thread. The guest can see it. If send_notification is true, resOS e-mails or texts the GUEST the message now: you must choose true or false. At most 25 comments per booking and 5 per minute. Cannot be deleted through the API. Not retried: after a timeout read the booking first, or the guest may get it twice. POST /bookings/{id}/comment."
+        },
+        {
+          "name": "resos_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "resos_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the resOS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "resos_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on resOS (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "resos_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's resOS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run resos_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which bookings do we have tonight, and for how many guests?",
+        "Are there free tables for 4 people on Friday at 19:30?",
+        "Book a table for 2 on Saturday at 20:00 for Jan de Vries.",
+        "Show the latest guest feedback with a low rating."
+      ]
+    },
+    {
+      "slug": "getform",
+      "name": "Getform",
+      "category": "forms",
+      "description": "Read form submissions and submit new entries in Getform.",
+      "endpoint": "https://getform.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Getform API token"
+          },
+          {
+            "label": "Form id (to check the token)"
+          }
+        ],
+        "hint": "Create the token in Getform → **Account → API Tokens → Create Token**. The form id is the last part of your form's endpoint URL (`forminit.com/f/<form id>`); we use it only to check the token. Reading submissions through the API needs a paid Getform plan. Your token is used only to call the Getform API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "getform_list_submissions",
+          "type": "read",
+          "title": "List form submissions",
+          "description": "List the submissions of one Getform (Forminit) form, one page at a time: id, date, status (open/closed/spam) and every submitted answer (sender name/email/phone and fields). This is personal data: use query, a small size, or include_answers=false when you need less. Needs a paid Getform plan (the read API). GET /v1/forms/{formId}."
+        },
+        {
+          "name": "getform_submit_form",
+          "type": "write",
+          "title": "Submit a form entry",
+          "description": "WRITE: create ONE new submission on a Getform (Forminit) form, as if a visitor had filled it in. The form's own workflow then runs: notification emails, autoresponder to the sender's email, webhooks, Slack, Google Sheets. It counts against the plan's monthly submissions and can not be undone from here. Use it only when the user asked for a submission, and with the data the user gave. Never retried. POST /f/{formId}. Returns only the new submission's id and date."
+        },
+        {
+          "name": "getform_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "getform_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Getform tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "getform_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Getform (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "getform_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Getform Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run getform_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the latest 10 submissions of my contact form.",
+        "Which form submissions came in this week, and what did people ask about?",
+        "Find the submission from info@example.com."
+      ]
     }
   ]
 }

@@ -742,6 +742,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Shopper Approved](servers/shopper-approved/) | marketing | 11 | API token | [servers/shopper-approved/](servers/shopper-approved/) |
 | [Tharstern](servers/tharstern/) | business-operations | 23 | API token | [servers/tharstern/](servers/tharstern/) |
 | [Ticimax](servers/ticimax/) | ecommerce | 21 | API token | [servers/ticimax/](servers/ticimax/) |
+| [Zadarma](servers/zadarma/) | communications | 16 | API token | [servers/zadarma/](servers/zadarma/) |
+| [SpedirePRO](servers/spedire/) | shipping | 18 | API token | [servers/spedire/](servers/spedire/) |
+| [Slottable](servers/slottable/) | scheduling | 15 | API token | [servers/slottable/](servers/slottable/) |
+| [Scrada](servers/scrada/) | accounting | 24 | API token | [servers/scrada/](servers/scrada/) |
+| [Brandboom](servers/brandboom/) | commerce | 12 | API token | [servers/brandboom/](servers/brandboom/) |
+| [WeFact](servers/wefact/) | billing | 11 | API token | [servers/wefact/](servers/wefact/) |
+| [DeskTime](servers/desktime/) | time-tracking | 14 | API token | [servers/desktime/](servers/desktime/) |
+| [resOS](servers/resos/) | scheduling | 23 | API token | [servers/resos/](servers/resos/) |
+| [Getform](servers/getform/) | forms | 6 | API token | [servers/getform/](servers/getform/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
