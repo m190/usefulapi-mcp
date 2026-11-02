@@ -127131,6 +127131,134 @@
         "List my open tasks for today.",
         "Move the lead 'Acme renewal' to the Won stage and set its value to 4500."
       ]
+    },
+    {
+      "slug": "livewebinar",
+      "name": "LiveWebinar",
+      "category": "video-hosting",
+      "description": "Read webinars, sessions, registrants and polls; create scheduled webinars in LiveWebinar.",
+      "endpoint": "https://livewebinar.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your webinars, sessions, registrants and polls, and can create a scheduled webinar when you ask it to. You can revoke access any time in your LiveWebinar account settings."
+      },
+      "tools": [
+        {
+          "name": "livewebinar_get_account",
+          "type": "read",
+          "title": "Get my account",
+          "description": "Return the signed-in LiveWebinar user (profile, package and sub-user count). Good first call to confirm the connection. LiveWebinar API: GET /api/me."
+        },
+        {
+          "name": "livewebinar_list_webinars",
+          "type": "read",
+          "title": "List webinars",
+          "description": "List the webinar rooms (widgets) of the signed-in account: name, type, start date, duration, status. The reply is the API's default page. LiveWebinar API: GET /api/widgets."
+        },
+        {
+          "name": "livewebinar_get_webinar",
+          "type": "read",
+          "title": "Get a webinar",
+          "description": "Return one webinar room (widget) by its id, with its start date, duration, timezone and room links. LiveWebinar API: GET /api/widgets/{widget_id}."
+        },
+        {
+          "name": "livewebinar_list_sessions",
+          "type": "read",
+          "title": "List webinar sessions",
+          "description": "List the sessions (live runs) of one webinar: start and end times, active state, participant counts. LiveWebinar API: GET /api/widgets/{widget_id}/sessions."
+        },
+        {
+          "name": "livewebinar_list_session_participants",
+          "type": "read",
+          "title": "List session participants",
+          "description": "List who joined one session of a webinar: names, roles and online state. Personal data: only ask for it when the user needs it. LiveWebinar API: GET /api/widgets/{widget_id}/sessions/{session_id}/participants."
+        },
+        {
+          "name": "livewebinar_list_registrants",
+          "type": "read",
+          "title": "List registrants",
+          "description": "List the people who registered for one webinar, with their registration form answers. Personal data: only ask for it when the user needs it. LiveWebinar API: GET /api/widgets/{widget_id}/registrants."
+        },
+        {
+          "name": "livewebinar_get_registrant",
+          "type": "read",
+          "title": "Get a registrant",
+          "description": "Return one registrant of a webinar by id, with the registration form answers. Personal data. LiveWebinar API: GET /api/widgets/{widget_id}/registrants/{registrant_id}."
+        },
+        {
+          "name": "livewebinar_list_polls",
+          "type": "read",
+          "title": "List webinar polls",
+          "description": "List the polls of one webinar with their questions and active poll session. LiveWebinar API: GET /api/widgets/{widget_id}/polls."
+        },
+        {
+          "name": "livewebinar_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List the registration and lead forms of the account. LiveWebinar API: GET /api/forms."
+        },
+        {
+          "name": "livewebinar_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks the account has set up, with their target URLs and events. LiveWebinar API: GET /api/webhooks."
+        },
+        {
+          "name": "livewebinar_create_webinar",
+          "type": "write",
+          "title": "Create a scheduled webinar",
+          "description": "Create a new scheduled webinar in the signed-in account. Call it only when the user asks for a new webinar. start_date is local time in the given timezone. LiveWebinar API: POST /api/widgets."
+        },
+        {
+          "name": "livewebinar_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "livewebinar_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the LiveWebinar tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "livewebinar_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on LiveWebinar (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "livewebinar_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's LiveWebinar Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run livewebinar_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which webinars do I have scheduled this month?",
+        "How many people registered for my next webinar?",
+        "Who joined the last session of my onboarding webinar?",
+        "Create a scheduled webinar for Thursday at 10:00 Warsaw time, 60 minutes long."
+      ]
     }
   ]
 }

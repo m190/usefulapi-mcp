@@ -754,6 +754,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zenamu](servers/zenamu/) | scheduling | 12 | API token | [servers/zenamu/](servers/zenamu/) |
 | [Retainful](servers/retainful/) | email-marketing | 11 | API token | [servers/retainful/](servers/retainful/) |
 | [Kommo](servers/kommo/) | crm | 18 | API token | [servers/kommo/](servers/kommo/) |
+| [LiveWebinar](servers/livewebinar/) | video-hosting | 15 | OAuth | [servers/livewebinar/](servers/livewebinar/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
