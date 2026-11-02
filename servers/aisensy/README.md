@@ -46,6 +46,7 @@ On first connect you'll paste your AiSensy **Project API key** and **project id*
 | `aisensy_get_contact` | read | Get contact |
 | `aisensy_create_contact` | **write** | Create contact |
 | `aisensy_update_contact` | **write** | Update contact |
+| `aisensy_upsert_contacts` | **write** | Create or update contacts in bulk |
 | `aisensy_get_message` | read | Get message |
 | `aisensy_send_campaign_message` | **write** | Send campaign message |
 | `aisensy_send_message` | **write** | Send WhatsApp message |
