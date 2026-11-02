@@ -1,7 +1,7 @@
 ---
 title: Catch up on open Re:amaze conversations from Claude or ChatGPT
 description: Ask Claude or ChatGPT which Re:amaze support conversations are still open, read their messages, and get a short summary of what each customer needs.
-date: 2026-11-02
+date: 2026-11-01
 products: re-amaze
 ---
 You can ask Claude or ChatGPT to go through your open Re:amaze support conversations, read the messages in each one, and tell you what each customer is waiting for. Add `https://re-amaze.usefulapi.io/mcp` as a connector, then ask in plain words.
