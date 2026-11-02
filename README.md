@@ -728,6 +728,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Searchanise](servers/searchanise/) | ecommerce | 10 | API token | [servers/searchanise/](servers/searchanise/) |
 | [ShippingEasy](servers/shippingeasy/) | shipping | 10 | API token | [servers/shippingeasy/](servers/shippingeasy/) |
 | [Mailshake](servers/mailshake/) | email-marketing | 24 | API token | [servers/mailshake/](servers/mailshake/) |
+| [Fiken](servers/fiken/) | accounting | 35 | OAuth | [servers/fiken/](servers/fiken/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
