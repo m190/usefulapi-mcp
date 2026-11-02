@@ -141,13 +141,13 @@ h1{font-size:32px;letter-spacing:-.02em;margin:0}
 .card h2{font-size:16px;margin:0 0 4px}.card b{color:var(--fg)}
 .lead{color:var(--muted);font-size:14px;margin:0}
 ol{margin:8px 0 0;padding-left:18px}li{margin:7px 0}
-.url{display:block;margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13.5px ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
+.url{display:block;margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13.5px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
 .copywrap{position:relative;margin-top:8px}
 .copy{position:absolute;right:8px;padding:3px 9px;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer}
 .copy:hover{color:var(--accent);border-color:var(--accent)}.copy.ok{color:#12873f;border-color:#12873f}
 @media (prefers-color-scheme:dark){.copy.ok{color:#5fd68a;border-color:#5fd68a}}
 .copywrap.line .copy{top:50%;transform:translateY(-50%)}.copywrap.block .copy{top:8px}
-pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+pre.code{margin:0;padding:11px 62px 11px 13px;background:var(--chip);border:1px solid var(--border);border-radius:8px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
 .chip{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted)}
 .chip.live{color:#12873f}@media (prefers-color-scheme:dark){.chip.live{color:#5fd68a}}
@@ -159,7 +159,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 table th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:0 12px 8px 0;border-bottom:1px solid var(--border)}
 table td{padding:10px 12px 10px 0;border-bottom:1px solid var(--border);vertical-align:top}
 table tr:last-child td{border-bottom:0}
-.tools td:first-child{white-space:nowrap}.tools code{font-size:12.5px}
 .tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em;background:var(--chip);color:var(--muted)}
 .tag.write{color:#b4530a;background:#fbeae0}.tag.read{color:#12873f;background:#e7f5ec}.tag.meta{color:var(--accent);background:var(--chip)}
 @media (prefers-color-scheme:dark){.tag.write{color:#f0a978;background:#2a1a10}.tag.read{color:#5fd68a;background:#12241a}}
@@ -183,7 +182,38 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
-@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+@media (max-width:560px){table td{overflow-wrap:anywhere}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+// Product page only: the facts bar, the client tabs, the closed tool list.
+const PAGE_CSS = `
+.facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
+.facts .f{color:var(--muted)}.facts .f b{color:var(--fg)}.facts .f a{color:var(--accent)}
+.cta{display:inline-block;padding:10px 18px;border-radius:10px;background:var(--accent);color:#fff!important;text-decoration:none;font-weight:600;font-size:15px}
+.cta:hover{filter:brightness(1.08)}
+.lead-in{color:var(--muted);margin:-4px 0 14px;font-size:15px}
+.need{margin-bottom:16px}.need h3{font-size:16px;margin:0 0 8px}
+.tabs{display:none;flex-wrap:wrap;gap:6px;margin:0 0 12px}.js .tabs{display:flex}
+.tabs button{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panels{display:grid;gap:12px}.panel[hidden]{display:none}
+.panel>h3{font-size:16px;margin:0 0 4px}.panel>h3 .for{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}.js .panel>h3{display:none}
+.use .chg{display:inline-block;margin-top:10px}
+details.all{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:0 18px}
+details.all>summary{cursor:pointer;padding:14px 0;font-weight:600}
+details.all>summary .n{color:var(--muted);font-weight:400}
+.tgroup{margin:4px 0 14px}.tgroup h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin:10px 0 4px}
+.tlist{list-style:none;margin:0;padding:0}.tlist li{margin:0;padding:10px 0;border-top:1px solid var(--border);font-size:14px}
+.tlist code.tn{color:var(--muted);font-size:12px;margin-left:8px;background:none;padding:0}
+@media (max-width:560px){.facts{font-size:14px}.tlist code.tn{display:block;margin:2px 0 0}}`;
+// The client tabs: without JavaScript every panel shows (crawlers, AI answer engines); with it, one panel at a time,
+// the reader's last choice first (localStorage, optional).
+const TABS_JS = `<script>(function(){var bar=document.querySelector(".tabs");if(!bar)return;var bs=[].slice.call(bar.querySelectorAll("[role=tab]")),ps=[].slice.call(document.querySelectorAll(".panel"));
+function pick(c,save,focus){bs.forEach(function(b){var on=b.getAttribute("data-c")===c;b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;if(on&&focus)b.focus();});ps.forEach(function(p){p.hidden=p.getAttribute("data-c")!==c;});if(save){try{localStorage.setItem("ua-client",c);}catch(e){}}}
+var saved=null;try{saved=localStorage.getItem("ua-client");}catch(e){}
+document.documentElement.classList.add("js");pick(bs.some(function(b){return b.getAttribute("data-c")===saved;})?saved:bs[0].getAttribute("data-c"));
+bs.forEach(function(b,i){b.addEventListener("click",function(){pick(b.getAttribute("data-c"),true);});b.addEventListener("keydown",function(e){var d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(!d)return;e.preventDefault();pick(bs[(i+d+bs.length)%bs.length].getAttribute("data-c"),true,true);});});})();</script>`;
+// A URL that wraps only after "." and "/" (<wbr> adds no text, so Copy still copies the plain URL).
+const wrapUrl = (u) => esc(u).replace(/([./])(?=[^/])/g, "$1<wbr>");
 const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.addEventListener("click",function(){var el=b.parentElement.querySelector(".url,pre");navigator.clipboard.writeText((el.textContent||"").trim()).then(function(){var o=b.textContent;b.textContent="Copied";b.classList.add("ok");setTimeout(function(){b.textContent=o;b.classList.remove("ok");},1200);}).catch(function(){});});}</script>`;
 // Custom work (professional services): one page, contact by email only, no prices on the site.
 const SERVICES_PATH = "/services/";
@@ -243,20 +273,19 @@ function setupSection(s) {
   else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
   const optional = opt.length ? `<p>Optional: ${andList(opt.map((l) => `<b>${esc(l)}</b>`))}.</p>` : "";
   const help = [s.keyHelp, s.login?.hint].filter(Boolean).map((h) => `<p>${hintHtml(h)}</p>`).join("");
-  return `<h2 class="sec">Before you connect</h2>\n<div class="card prose">${patientDataNote(s)}${lead}${optional}${help}<p>${noHeaderText(s)}</p></div>`;
+  return `<div class="card prose need"><h3>Before you connect</h3>${patientDataNote(s)}${lead}${optional}${help}</div>`;
 }
 // "What you can do": the jobs this server does, each with the tools that do it (content/<slug>.json).
 function useCasesSection(s) {
   const c = CONTENT.get(s.slug);
   if (!c) return "";
   const use = (u) => `<div class="card use"><h3>${esc(u.title)}</h3><p>${esc(u.text)}</p>` +
-    `<p class="via">${u.changes ? "Changes data · " : ""}${u.tools.map((t) => `<code>${esc(t)}</code>`).join(" ")}</p></div>`;
-  return `<h2 class="sec">What you can do with ${esc(s.name)} in Claude and ChatGPT</h2>\n<div class="uses">${c.useCases.map(use).join("")}</div>`;
+    `${u.changes ? `<span class="tag write chg">Changes data</span>` : ""}</div>`;
+  return `<h2 class="sec">What you can do with ${esc(s.name)} in Claude and ChatGPT</h2>\n<p class="lead-in">For ${esc(c.audience)}.</p>\n<div class="uses">${c.useCases.map(use).join("")}</div>`;
 }
 function examplesSection(s) {
   if (!(s.examples || []).length) return "";
-  return `<h2 class="sec">Example prompts</h2>\n<ul class="prompts">${s.examples.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>\n` +
-    `<p class="hint">Turn on the ${esc(s.name)} connector, then ask in plain words. The AI picks the tools.</p>`;
+  return `<h2 class="sec">What can I ask?</h2>\n<p class="lead-in">Turn on the ${esc(s.name)} connector, then ask in plain words. The AI picks the tools.</p>\n<ul class="prompts">${s.examples.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
 }
 // Generic FAQ, built only from facts in the manifest (tools, login kind, pricing). Returns [{q, a}] with `a` as HTML.
 function faqFor(s) {
@@ -321,64 +350,75 @@ const OPENAI_MCP_GUIDE = "https://help.openai.com/en/articles/12584461-connectin
 function productPage(s) {
   const live = s.status === "live";
   const authStep = authStepFor(s);
-  const name = esc(s.name), endpoint = esc(s.endpoint);
+  const name = esc(s.name), urlShown = wrapUrl(s.endpoint);
   const copyLine = (text) => `<div class="copywrap line"><span class="url">${text}</span><button class="copy" type="button">Copy</button></div>`;
   const copyBlock = (text) => `<div class="copywrap block"><pre class="code">${text}</pre><button class="copy" type="button">Copy</button></div>`;
   // One-click install links. Cursor: base64 of the server config. VS Code: the vscode.dev redirect to vscode:mcp/install.
   const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(s.slug)}&config=${Buffer.from(JSON.stringify({ url: s.endpoint })).toString("base64")}`;
   const vscodeLink = `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(s.slug)}&config=${encodeURIComponent(JSON.stringify({ type: "http", url: s.endpoint }))}`;
-  const cards = live ? `<div class="grid">
-<div class="card"><h2>Claude <span class="for">claude.ai · Desktop</span></h2>
-<ol><li>Open <b>Customize → Connectors</b>, then click <b>+ Add → Add custom connector</b>.</li>
-<li>Enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(endpoint)}</li>
+  // One panel per client, shown as tabs (TABS_JS).
+  const clients = [
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Open <b>Customize → Connectors</b>, then click <b>+ Add → Add custom connector</b>.</li>
+<li>Enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(urlShown)}</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
-<p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p></div>
-<div class="card"><h2>Claude Code</h2>
-<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
-${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${endpoint}`)}</div>
-<div class="card"><h2>Cursor</h2>
-<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
+<p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p>` },
+    { c: "chatgpt", label: "ChatGPT", for: "chatgpt.com", html: `<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
+<li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(urlShown)}</li>
+<li>${authStepFor(s, "ChatGPT")}.</li>
+<li>In Plugins, install <b>${name}</b>, then choose it in a chat.</li></ol>
+<p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p>` },
+    { c: "claude-code", label: "Claude Code", html: `<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
+${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}` },
+    { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
 ${copyBlock(`{
   "mcpServers": {
     "${esc(s.slug)}": {
-      "url": "${endpoint}"
+      "url": "${urlShown}"
     }
   }
-}`)}</div>
-<div class="card"><h2>VS Code</h2>
-<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a> or add this to <code>.vscode/mcp.json</code>:</p>
+}`)}` },
+    { c: "vscode", label: "VS Code", html: `<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a> or add this to <code>.vscode/mcp.json</code>:</p>
 ${copyBlock(`{
   "servers": {
     "${esc(s.slug)}": {
       "type": "http",
-      "url": "${endpoint}"
+      "url": "${urlShown}"
     }
   }
-}`)}</div>
-<div class="card"><h2>ChatGPT <span class="for">chatgpt.com</span></h2>
-<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
-<li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(endpoint)}</li>
-<li>${authStepFor(s, "ChatGPT")}.</li>
-<li>In Plugins, install <b>${name}</b>, then choose it in a chat.</li></ol>
-<p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p></div>
-<div class="card"><h2>Codex</h2>
-<p class="lead">Run these commands. The second one opens the login page:</p>
-${copyLine(`codex mcp add ${esc(s.slug)} --url ${endpoint}`)}
-${copyLine(`codex mcp login ${esc(s.slug)}`)}</div>
-</div>
-<p class="hint">Other MCP clients (Windsurf, Cline, Zed and more): add the URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser. Do not add an <code>Authorization</code> header: see <a href="#setup">Before you connect</a>.</p>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
+}`)}` },
+    { c: "codex", label: "Codex", html: `<p class="lead">Run these commands. The second one opens the login page:</p>
+${copyLine(`codex mcp add ${esc(s.slug)} --url ${urlShown}`)}
+${copyLine(`codex mcp login ${esc(s.slug)}`)}` },
+    { c: "other", label: "Other clients", html: `<p class="lead">Windsurf, Cline, Zed and other MCP clients: add this URL as a remote MCP server (Streamable HTTP). The client then opens the login page in your browser.</p>
+${copyLine(urlShown)}
+<p class="lead small">${noHeaderText(s)}</p>` },
+  ];
+  const cards = live ? `<div class="tabs" role="tablist" aria-label="Your AI client">${clients.map((x) =>
+    `<button type="button" role="tab" id="tab-${x.c}" aria-controls="p-${x.c}" data-c="${x.c}">${x.label}</button>`).join("")}</div>
+<div class="panels">${clients.map((x) =>
+    `<div class="card panel" role="tabpanel" id="p-${x.c}" aria-labelledby="tab-${x.c}" data-c="${x.c}"><h3>${x.label}${x.for ? ` <span class="for">${x.for}</span>` : ""}</h3>
+${x.html}</div>`).join("\n")}</div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
-  const chips = `<div class="chips">${live ? chip("live", "live") : chip("launching soon")}${chip(`${toolCount(s)} tools`)}${ft ? chip(`Free ${esc(ft.limit)}`) : ""}${pt ? chip(`Pro ${esc(priceText(pt))}`) : ""}</div>`;
+  const facts = `<div class="facts">${live ? `<a class="cta" href="#connect">Connect ${name}</a>` : chip("launching soon")}` +
+    `${ft ? `<span class="f"><b>Free</b> ${esc(ft.limit)}</span>` : ""}${pt ? `<span class="f"><b>Pro</b> ${esc(priceText(pt))} · <a href="#pricing">pricing</a></span>` : ""}` +
+    `<span class="f">${toolCount(s)} tools</span></div>`;
 
-  const tagOf = (t) => `<span class="tag ${t.type}">${t.type}</span>`;
-  const toolRow = (t) =>
-    `<tr><td><code>${esc(t.name)}</code></td><td>${tagOf(t)}</td><td><div class="tname">${esc(t.title)}</div>` +
-    `${t.description && t.description !== t.title ? `<div class="tdesc">${esc(t.description)}</div>` : ""}</td></tr>`;
+  // All tools in one closed section, grouped by what they do. The "GET /path." suffix is for developers only.
+  const plainDesc = (d) => String(d || "").replace(/\s*\b(?:GET|POST|PUT|PATCH|DELETE)\s+\/\S*\.?\s*$/, "").trim();
+  const toolItem = (t) => {
+    const d = plainDesc(t.description);
+    return `<li><b>${esc(t.title)}</b><code class="tn">${esc(t.name)}</code>${d && d !== t.title ? `<div class="tdesc">${esc(d)}</div>` : ""}</li>`;
+  };
+  const TOOL_GROUPS = [["read", "Read only"], ["write", "Changes data"], ["meta", "Your usefulapi plan"]];
+  const groupOfTool = (t) => (TOOL_GROUPS.some(([k]) => k === t.type) ? t.type : "read");
   const toolsSection = (s.tools || []).length
     ? `<h2 class="sec">Tools <span class="n">${s.tools.length}</span></h2>
-<table class="tools"><thead><tr><th>Tool</th><th>Type</th><th>What it does</th></tr></thead>
-<tbody>${s.tools.map(toolRow).join("")}</tbody></table>`
+<details class="all"><summary>Show all ${s.tools.length} tools <span class="n">(the AI picks them for you)</span></summary>
+${TOOL_GROUPS.map(([type, label]) => {
+      const list = s.tools.filter((t) => groupOfTool(t) === type);
+      return list.length ? `<div class="tgroup"><h3>${label} · ${list.length}</h3><ul class="tlist">${list.map(toolItem).join("")}</ul></div>` : "";
+    }).join("")}</details>`
     : "";
   const priceRow = (p) =>
     `<tr><td>${esc(p.plan)}${p.scope ? `<span class="scope">${esc(p.scope)}</span>` : ""}</td>` +
@@ -410,13 +450,14 @@ ${fairUseNote}${billingNote}`
     : "";
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="${categoryPath(g)}">${esc(g)}</a></nav>
 <div class="brand">${MARK}<h1>${esc(s.name)} MCP server</h1></div>
-<p class="sub">${esc(s.description)}${CONTENT.has(s.slug) ? ` For ${esc(CONTENT.get(s.slug).audience)}.` : ""} Hosted by <strong>usefulapi</strong> — connect from Claude, ChatGPT, Cursor, or any MCP client.</p>
-<div id="connect">${cards}</div>
-${chips}
-${live && CONTENT.has(s.slug) ? `<div id="uses">${useCasesSection(s)}</div>\n` : ""}${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
+<p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong>: connect it to Claude, ChatGPT, Cursor or any MCP client.</p>
+${facts}
 ${live ? examplesSection(s) : ""}
-${live && postsFor(s).length ? `<h2 class="sec">Guides</h2>\n${postList(postsFor(s))}\n` : ""}${live ? toolsSection : ""}
-${pricingSection}
+${live && CONTENT.has(s.slug) ? `<div id="uses">${useCasesSection(s)}</div>\n` : ""}<h2 class="sec" id="connect">How do I connect ${esc(s.name)}?</h2>
+${live ? `<div id="setup">${setupSection(s)}</div>` : ""}
+${cards}
+${live && postsFor(s).length ? `<h2 class="sec">Guides</h2>\n${postList(postsFor(s))}\n` : ""}<div id="pricing">${pricingSection}</div>
+${live ? toolsSection : ""}
 ${live ? faqSection(faq) : ""}
 ${hint}
 <p class="hint">Need a tool this server does not have, or a connection to another system? <a href="${SERVICES_PATH}">We build custom integrations and MCP servers</a>.</p>
@@ -460,8 +501,8 @@ ${FOOTER}`;
 <title>${esc(title)}</title>
 ${headMeta({ title, desc, url })}
 ${ld.map(jsonLd).join("\n")}
-<style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
+<style>${PRODUCT_CSS}${PAGE_CSS}</style></head>
+<body><div class="wrap">${body}</div>${COPY_JS}${live ? TABS_JS : ""}</body></html>`;
 }
 
 // Category landing pages (/category/<group>/): crawlable internal-linking hubs, one per browse group.
@@ -630,7 +671,7 @@ function servicesPage() {
 <ul>
 <li><strong>A new MCP server</strong> for a tool that is not in our catalog, including the API of your own product.</li>
 <li><strong>Extra tools on an existing server</strong> for a workflow of your own, for example a bulk change with a preview, or a report that combines several API calls.</li>
-<li><strong>Custom integrations and connectors</strong> between your systems, also without AI: data syncs, webhooks, internal APIs, and connectors for platforms such as Alteryx.</li>
+<li><strong>Custom integrations and connectors</strong> between your systems, also without AI: data syncs, webhooks, internal APIs, and connectors for other platforms.</li>
 <li><strong>AI assistant setups</strong> for your team: Claude, ChatGPT, Cursor or another MCP client, connected to the tools you use.</li>
 <li><strong>Private deployments</strong>: a server for your company only. Tell us your hosting, region and data-handling requirements, and we confirm what is possible before we agree the scope.</li>
 <li><strong>Maintenance</strong>: we keep an integration working when the vendor changes its API.</li>
