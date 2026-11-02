@@ -66,6 +66,7 @@ On first connect you'll enter your **Papierkram account** (the first part of `ht
 | `papierkram_create_time_entry` | **write** | Create time entry |
 | `papierkram_create_proposition` | **write** | Create product or service |
 | `papierkram_create_invoice` | **write** | Create draft invoice |
+| `papierkram_create_estimate` | **write** | Create draft estimate |
 | `papierkram_get_voucher_pdf` | read | Get voucher PDF |
 | `papierkram_get_voucher_document` | read | Get voucher document |
 | `papierkram_upload_voucher_document` | **write** | Upload voucher document |
