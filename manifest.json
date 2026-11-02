@@ -123316,6 +123316,2220 @@
         "What are my bank balances today?",
         "Create an invoice draft for a customer with these lines."
       ]
+    },
+    {
+      "slug": "apilo",
+      "name": "Apilo",
+      "category": "commerce",
+      "description": "Read orders, shipments, products and stock; set order status, notes and stock quantity in Apilo.",
+      "endpoint": "https://apilo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Apilo address"
+          },
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          },
+          {
+            "label": "Authorization code"
+          }
+        ],
+        "hint": "In Apilo open **Administracja -> Klucze API Apilo -> Nowa aplikacja** and create an application with the access you want to give. Apilo then shows the **instance address**, the **Client ID**, the **Client Secret** and a single-use **authorization code** (valid for 3 hours): paste them here right away. The connection works for 21 days (Apilo's access token lifetime); after that, connect again with a new code. Your details are used only to call your own Apilo account and are never shown to anyone; the Client Secret is not stored."
+      },
+      "tools": [
+        {
+          "name": "apilo_whoami",
+          "type": "read",
+          "title": "Get API key info",
+          "description": "The Apilo API key (application) this connection uses: client id, name and the date it is valid to. GET /rest/api/whoami/."
+        },
+        {
+          "name": "apilo_get_map",
+          "type": "read",
+          "title": "Get lookup table",
+          "description": "Apilo's id lookup tables, each a list of { id, key, name, description }: `status` (order statuses, for apilo_list_orders and apilo_update_order_status), `payment` (payment types), `carrier`, `carrier_account`, `platform` (sales channels and their accounts), `tag`, `document` (document types), `shipment_status`. GET /rest/api/orders/<table>/map/."
+        },
+        {
+          "name": "apilo_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List or search orders (all connected marketplaces and shops), with items, customer address and totals. Filter by date, status, payment, sales channel, carrier, email or phone. Status, payment, carrier and platform ids come from apilo_get_map. Page with limit/offset (reply has totalCount and next_offset). GET /rest/api/orders/."
+        },
+        {
+          "name": "apilo_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order in full: status, payment, items (SKU, EAN, price, quantity), customer/delivery/invoice addresses, payments, notes, discounts, carrier and sales channel. GET /rest/api/orders/{id}/."
+        },
+        {
+          "name": "apilo_list_order_notes",
+          "type": "read",
+          "title": "List order notes",
+          "description": "The notes of an order (internal notes and customer messages), with type 1 = customer message, 2 = internal note. GET /rest/api/orders/{id}/note/."
+        },
+        {
+          "name": "apilo_list_order_documents",
+          "type": "read",
+          "title": "List order documents",
+          "description": "The documents attached to an order (invoices, receipts, labels). GET /rest/api/orders/{id}/documents/."
+        },
+        {
+          "name": "apilo_list_order_shipments",
+          "type": "read",
+          "title": "List order shipments",
+          "description": "The shipments created for an order (Apilo id and carrier's id). GET /rest/api/orders/{id}/shipment/."
+        },
+        {
+          "name": "apilo_get_shipment",
+          "type": "read",
+          "title": "Get order shipment",
+          "description": "One shipment of an order with its details. GET /rest/api/orders/{id}/shipment/{shipment}/."
+        },
+        {
+          "name": "apilo_list_shipment_tracking",
+          "type": "read",
+          "title": "List shipment tracking",
+          "description": "Tracking status of shipments (status, status date and description, received date and days in transit), filtered by carrier account, post date, received date or status. Page with limit/offset (reply has totalCount and next_offset). GET /rest/api/shipping/shipment/tracking/."
+        },
+        {
+          "name": "apilo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List warehouse products with SKU, EAN, name, stock quantity, prices, tax and location. Filter by id, SKU, name, EAN or status. GET /rest/api/warehouse/product/."
+        },
+        {
+          "name": "apilo_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One warehouse product by Apilo id. GET /rest/api/warehouse/product/{id}/."
+        },
+        {
+          "name": "apilo_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "Product categories with id, name and parent ids. GET /rest/api/warehouse/category/."
+        },
+        {
+          "name": "apilo_list_locations",
+          "type": "read",
+          "title": "List warehouse locations",
+          "description": "Warehouse locations (shelves, bins) with id, name and code. GET /rest/api/warehouse/location/."
+        },
+        {
+          "name": "apilo_list_finance_documents",
+          "type": "read",
+          "title": "List accounting documents",
+          "description": "Accounting documents (invoices, receipts, corrections) with number, amounts, currency and dates. Filter by type and invoice date. GET /rest/api/finance/documents/."
+        },
+        {
+          "name": "apilo_update_order_status",
+          "type": "write",
+          "title": "Update order status",
+          "description": "WRITE: set an order's status (id from apilo_get_map status). Apilo may run its own automations on a status change (emails, marketplace updates, shipping). Setting the current status changes nothing. PUT /rest/api/orders/{id}/status/."
+        },
+        {
+          "name": "apilo_add_order_note",
+          "type": "write",
+          "title": "Add internal order note",
+          "description": "WRITE: add an INTERNAL note to an order (never a message to the customer). Not idempotent: calling twice adds two notes. POST /rest/api/orders/{id}/note/."
+        },
+        {
+          "name": "apilo_set_product_stock",
+          "type": "write",
+          "title": "Set product stock quantity",
+          "description": "WRITE: set the stock quantity of one warehouse product to an absolute number (it replaces the current quantity, so read it with apilo_get_product first if unsure). Apilo may push the new quantity to connected marketplaces. PATCH /rest/api/warehouse/product/."
+        },
+        {
+          "name": "apilo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "apilo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Apilo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "apilo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Apilo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "apilo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Apilo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run apilo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders came in today and are still unpaid?",
+        "Show order AL231100017 with its items and delivery address.",
+        "Which products have a stock quantity below 5?",
+        "Add an internal note to order AL231100017: customer asked for a later delivery."
+      ]
+    },
+    {
+      "slug": "clicktime",
+      "name": "ClickTime",
+      "category": "time-tracking",
+      "description": "Read jobs, timesheets and reports; log time, update entries and submit timesheets in ClickTime.",
+      "endpoint": "https://clicktime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ClickTime API token"
+          }
+        ],
+        "hint": "Find it in ClickTime: sign in, open **My Preferences**, then the **Authentication Token** tab. The token acts with your own permissions (a Manager or Admin token also unlocks company reports and users). Your token is used only to call the ClickTime API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "clicktime_get_me",
+          "type": "read",
+          "title": "Get my user",
+          "description": "The ClickTime user this API token belongs to: id, name, email, security level (Standard, Manager, Admin), division, default task, approvers and timesheet preferences. The API token itself is never returned. GET /Me."
+        },
+        {
+          "name": "clicktime_get_company",
+          "type": "read",
+          "title": "Get company settings",
+          "description": "Company configuration: name, currency, week start, timesheet model, how the company names jobs/clients/tasks, restriction methods, and which optional modules are on (Expenses, TimeOffAccruals, SubJob phases). Call this first before using expense, time-off-request or phase tools. GET /Company."
+        },
+        {
+          "name": "clicktime_list_jobs",
+          "type": "read",
+          "title": "List jobs (projects)",
+          "description": "List the jobs (projects) the token's user can log time to, by name, with job number, client, dates and active state. Use the ids to log time or filter entries. GET /Me/Jobs."
+        },
+        {
+          "name": "clicktime_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job (project) by id: name, number, client, start/end dates, active state. GET /Me/Jobs/{jobID}."
+        },
+        {
+          "name": "clicktime_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the clients the token's user can see, with client number, short name and active state. GET /Me/Clients."
+        },
+        {
+          "name": "clicktime_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List the tasks (work categories) the token's user can log time against, with task code and active state. When the company restricts tasks per job, use clicktime_list_job_task_controls instead. GET /Me/Tasks."
+        },
+        {
+          "name": "clicktime_list_job_task_controls",
+          "type": "read",
+          "title": "List valid job and task pairs",
+          "description": "The (job, task) combinations the user may log time on. Only valid when the company's TaskRestrictionMethod is 'byjob' (see clicktime_get_company); otherwise ClickTime answers 403. Active rows only unless filtered. GET /Me/Jobs/TaskControls."
+        },
+        {
+          "name": "clicktime_list_job_phases",
+          "type": "read",
+          "title": "List job phases",
+          "description": "The phases (sub-jobs, level 1) defined on a job. Needs the company's SubJob/phases module (see clicktime_get_company). Use the phase id when logging time on a phased job. GET /Me/Jobs/{jobID}/JobPhase."
+        },
+        {
+          "name": "clicktime_list_time_entries",
+          "type": "read",
+          "title": "List my time entries",
+          "description": "List the token user's time entries, newest first: date, hours, job, task, comment, start/end time. Filter by one day (entry_date), a date range (start_date + end_date), job or task. Only days with logged time appear. Add verbose to get job/client names and the billable flag. GET /Me/TimeEntries."
+        },
+        {
+          "name": "clicktime_get_time_entry",
+          "type": "read",
+          "title": "Get time entry",
+          "description": "One of the user's time entries by id, with hours, comment, date, job, task, phase and custom fields. GET /Me/TimeEntries/{timeEntryID}."
+        },
+        {
+          "name": "clicktime_list_timesheets",
+          "type": "read",
+          "title": "List my timesheets",
+          "description": "List the user's timesheets (pay periods), newest first, with period dates, status (Open, Waiting, Approved, Rejected, Locked...), total hours and who submitted or approved. GET /Me/Timesheets."
+        },
+        {
+          "name": "clicktime_get_timesheet_by_date",
+          "type": "read",
+          "title": "Get timesheet covering a date",
+          "description": "The user's timesheet whose period contains a given day: period dates, status, day totals and the general actions (Submit, UndoSubmit...). GET /Me/Timesheets/{date}."
+        },
+        {
+          "name": "clicktime_list_timesheet_actions",
+          "type": "read",
+          "title": "List actions available on my timesheet",
+          "description": "The status actions the user can take right now on the timesheet covering a date (Submit, UndoSubmit...). Check this before clicktime_submit_timesheet. GET /Me/Timesheets/{date}/Actions."
+        },
+        {
+          "name": "clicktime_list_time_off_types",
+          "type": "read",
+          "title": "List time off types and balances",
+          "description": "The time off types the user can take (vacation, sick...) with CurrentBalance, accrual and whether approval is required. Use for balance questions. GET /Me/TimeOffTypes."
+        },
+        {
+          "name": "clicktime_list_time_off",
+          "type": "read",
+          "title": "List my time off",
+          "description": "Time off the user has taken or booked, newest first: date, hours, type, notes. Not requests or balances. GET /Me/TimeOff."
+        },
+        {
+          "name": "clicktime_list_time_off_requests",
+          "type": "read",
+          "title": "List my time off requests",
+          "description": "The user's time off requests with status and dates. Needs the company's TimeOffAccruals module (see clicktime_get_company). GET /Me/TimeOffRequests."
+        },
+        {
+          "name": "clicktime_list_expense_sheets",
+          "type": "read",
+          "title": "List my expense sheets",
+          "description": "The user's expense sheets with status, total and reimbursable amount, paid flag. Needs the company's Expenses module (see clicktime_get_company). GET /Me/ExpenseSheets."
+        },
+        {
+          "name": "clicktime_list_expense_items",
+          "type": "read",
+          "title": "List my expense items",
+          "description": "The user's expense items: date, type, amount, description, job, billable flag, sheet. Receipt images are not fetched. Needs the Expenses module. GET /Me/ExpenseItems."
+        },
+        {
+          "name": "clicktime_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List people in the company with name, email, security level, division, approvers and active state. Needs a Manager or Admin token (others get 403). Cost and billing rates are included for Admins. GET /Users."
+        },
+        {
+          "name": "clicktime_time_report",
+          "type": "read",
+          "title": "Time report (company-wide)",
+          "description": "Company-wide time entries (what the Time report shows): date, user, job, client, task, hours, billable flag, rates. Filter by date range, user, job, client, task, division or billable. Needs an Admin, or a Manager allowed to run company reports. Up to 2500 rows per page. GET /Reports/Time."
+        },
+        {
+          "name": "clicktime_time_summary",
+          "type": "read",
+          "title": "Time summary (grouped)",
+          "description": "Hours, billable hours, billings and cost totals grouped by Job, Task, User, Month, Date or WorkType (several groupings combine, for example Job + User). Needs a Manager or Admin token. ClickTime requires at least one of job_id, user_id or task_id as a filter. GET /Reports/TimeSummary."
+        },
+        {
+          "name": "clicktime_create_time_entry",
+          "type": "write",
+          "title": "Log time",
+          "description": "WRITE: log a time entry on the token user's own timesheet. Needs job_id and hours; task_id falls back to the user's default task; date defaults to today. Creates a NEW entry each call (not idempotent) and fails on a locked or submitted timesheet. Confirm date, hours, job, task and comment with the user first. POST /Me/TimeEntries."
+        },
+        {
+          "name": "clicktime_update_time_entry",
+          "type": "write",
+          "title": "Update time entry",
+          "description": "WRITE: change one of the user's own time entries (hours, comment, job, task, start/end time, break). Only the fields you pass change; the date cannot be changed. Overwrites the previous values; a locked timesheet rejects it. Show the current and new values to the user first. PATCH /Me/TimeEntries/{timeEntryID}."
+        },
+        {
+          "name": "clicktime_submit_timesheet",
+          "type": "write",
+          "title": "Submit or recall my timesheet",
+          "description": "WRITE: submit the user's timesheet covering a date for approval (action Submit), or recall it (UndoSubmit). Submitting locks the entries and notifies the approver; confirm with the user first. Check the available actions with clicktime_list_timesheet_actions first. POST /Me/Timesheets/{date}/Actions."
+        },
+        {
+          "name": "clicktime_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: create a client. Needs an Admin, or a Manager allowed to add clients. Creates a NEW client each call (not idempotent); check clicktime_list_clients first to avoid duplicates. POST /Clients."
+        },
+        {
+          "name": "clicktime_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "WRITE: create a job (project) under a client. Needs an Admin, or a Manager allowed to add jobs. Creates a NEW job each call (not idempotent); check clicktime_list_jobs first to avoid duplicates. POST /Jobs."
+        },
+        {
+          "name": "clicktime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "clicktime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ClickTime tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "clicktime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ClickTime (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "clicktime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ClickTime Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run clicktime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many hours did I log last week, and on which jobs?",
+        "Log 2 hours on the Website Redesign job for today with the comment 'client call'.",
+        "Which timesheets of mine are still open or rejected?",
+        "Show total hours and billings per job for October (manager or admin token)."
+      ]
+    },
+    {
+      "slug": "coursebox",
+      "name": "Coursebox",
+      "category": "education",
+      "description": "Create courses, sections and lessons, fill lessons with AI, and publish courses in Coursebox.",
+      "endpoint": "https://coursebox.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Coursebox portal"
+          },
+          {
+            "label": "Coursebox Open API key"
+          }
+        ],
+        "hint": "Find the key in Coursebox → **Settings → Integrations → Open API** (a Super Admin sees it; the Open API is an add-on on Pro + LMS and included on Enterprise). The portal name is the first part of your address, for example myportal in myportal.coursebox.ai. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "coursebox_get_course_structure",
+          "type": "read",
+          "title": "Get course structure",
+          "description": "Read the sections (blocks) of a course, each with its lessons (activities), in order. Use it to find section and lesson ids. API: GET /api/Blocks with a filter on courseId."
+        },
+        {
+          "name": "coursebox_create_course",
+          "type": "write",
+          "title": "Create course",
+          "description": "WRITE. Create an empty draft course and return it with its id. The key's user becomes owner and admin. Counts toward the plan's course limit (over the limit the call fails with 403). API: POST /api/Courses/createCourse."
+        },
+        {
+          "name": "coursebox_update_course",
+          "type": "write",
+          "title": "Update course details",
+          "description": "WRITE. Change course details. Only the fields you send change. Editing a published course goes live at once. API: POST /api/Courses/updateAttributes."
+        },
+        {
+          "name": "coursebox_create_section",
+          "type": "write",
+          "title": "Create section",
+          "description": "WRITE. Add a section (module) to a course and return its id. Create sections in order: position 0, 1, 2. API: POST /api/Courses/{courseId}/blocks."
+        },
+        {
+          "name": "coursebox_rename_section",
+          "type": "write",
+          "title": "Rename section",
+          "description": "WRITE. Rename a section (module). API: PATCH /api/Blocks/{sectionId}."
+        },
+        {
+          "name": "coursebox_delete_section",
+          "type": "write",
+          "title": "Delete section",
+          "description": "DESTRUCTIVE. Delete a section and all of its lessons. This cannot be undone. API: DELETE /api/Blocks/{sectionId}."
+        },
+        {
+          "name": "coursebox_create_lesson",
+          "type": "write",
+          "title": "Create lesson",
+          "description": "WRITE. Add an empty lesson to the end of a section and return its id. Fill it afterwards with coursebox_edit_lesson_with_ai. API: POST /api/Blocks/createActivity."
+        },
+        {
+          "name": "coursebox_move_lesson",
+          "type": "write",
+          "title": "Move lesson",
+          "description": "WRITE. Move a lesson to a position inside its section (0 = first). API: POST /api/Blocks/{sectionId}/activity-position."
+        },
+        {
+          "name": "coursebox_delete_lesson",
+          "type": "write",
+          "title": "Delete lesson",
+          "description": "DESTRUCTIVE. Delete a lesson with its content, quiz and assignment. This cannot be undone. API: POST /api/Activities/deleteActivity."
+        },
+        {
+          "name": "coursebox_edit_lesson_with_ai",
+          "type": "write",
+          "title": "Edit lesson with AI",
+          "description": "WRITE (AI, not idempotent). Fill or change ONE lesson from a plain-language instruction. Coursebox's own AI writes text, layouts, images, video, translations, quizzes and assignments, and saves them. Send one lesson per call and put any exact text or exact quiz questions in the message. Check assistantMessage: the AI may ask a question. A call can take up to 5 minutes. Limit: 30 requests per minute per user. API: POST /api/Activities/editPageContentAgentic."
+        },
+        {
+          "name": "coursebox_publish_course",
+          "type": "write",
+          "title": "Publish course",
+          "description": "WRITE. Publish a draft course. join_status \"public\" lets anyone on the portal join. \"private\" lets learners join only when enrolled or invited. Edits after publishing go live at once. Coursebox emails the course owner a confirmation. API: POST /api/Courses/publish."
+        },
+        {
+          "name": "coursebox_unpublish_course",
+          "type": "write",
+          "title": "Unpublish course",
+          "description": "WRITE. Return a published course to draft, so learners cannot see it. API: POST /api/Courses/unpublish."
+        },
+        {
+          "name": "coursebox_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "coursebox_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Coursebox tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "coursebox_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Coursebox (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "coursebox_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Coursebox Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run coursebox_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Create a draft course called Intro to Bookkeeping with 3 modules and 2 lessons in each.",
+        "Show the sections and lessons of my course.",
+        "Write the first lesson for new small-business owners and add a 5-question quiz.",
+        "Publish my course so that learners can join it."
+      ]
+    },
+    {
+      "slug": "defontana",
+      "name": "Defontana",
+      "category": "accounting",
+      "description": "Read sales, purchases, stock, receivables and accounting vouchers in Defontana.",
+      "endpoint": "https://defontana.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client code"
+          },
+          {
+            "label": "Company code"
+          },
+          {
+            "label": "User"
+          },
+          {
+            "label": "Password"
+          }
+        ],
+        "hint": "The client and company codes are assigned by Defontana (your account manager or Postventa). Use a **dedicated integration user**: every new Defontana login replaces the earlier token of the same user, so signing in here signs out other integrations that use that user. The server only reads data; it never issues documents or accounting entries. Credentials are used only to call the Defontana API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "defontana_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "The Defontana company the login belongs to: id, name, tax id (legalCode), website and e-mail. GET /Company."
+        },
+        {
+          "name": "defontana_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the Defontana company (name, phone, e-mail, tax id, user id). GET /User/List."
+        },
+        {
+          "name": "defontana_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the company's clients (customers): tax id (legalCode), name, address, e-mail, payment condition, price list, seller, active flag. Filter by tax id or name. GET /sale/GetClients."
+        },
+        {
+          "name": "defontana_search_client_by_legal_code",
+          "type": "read",
+          "title": "Search client by tax id",
+          "description": "Look up one client by tax id (RUT): name, taxpayer type, business line, region, province and commune. GET /Sale/SearchClientByLegalCode."
+        },
+        {
+          "name": "defontana_get_client_credit",
+          "type": "read",
+          "title": "Get client credit",
+          "description": "A client's credit position: credit amount, pending balance and the overdue-amount limit. GET /Accounting/GetClientCredit."
+        },
+        {
+          "name": "defontana_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the company's products (articles): code, name, unit, currency, sell price and stock. Filter by code, name or state. GET /sale/GetProducts."
+        },
+        {
+          "name": "defontana_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the company's service items: code, description, sell price, unit and unit cost. GET /Sale/GetServices."
+        },
+        {
+          "name": "defontana_list_sellers",
+          "type": "read",
+          "title": "List sellers",
+          "description": "List the sales people (vendedores): code and name. GET /sale/GetSellers."
+        },
+        {
+          "name": "defontana_list_shops",
+          "type": "read",
+          "title": "List shops",
+          "description": "List the points of sale (locales): code, description, address, business code and default storage. GET /sale/GetShops."
+        },
+        {
+          "name": "defontana_list_storages",
+          "type": "read",
+          "title": "List storages",
+          "description": "List the storages (bodegas): code, description, whether sales are allowed and the active flag. GET /sale/GetStorages."
+        },
+        {
+          "name": "defontana_get_storage_stock",
+          "type": "read",
+          "title": "Get storage stock",
+          "description": "Stock per product in one storage (bodega), with the price-list prices. Get storage codes from defontana_list_storages. GET /Sale/GetStorageStock."
+        },
+        {
+          "name": "defontana_list_payment_conditions",
+          "type": "read",
+          "title": "List payment conditions",
+          "description": "The payment conditions (condiciones de pago): code, name, type, number of dues and days between payments. GET /Sale/GetPaymentConditions."
+        },
+        {
+          "name": "defontana_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "The taxes the company uses (for example IVA): code, name, value and type. GET /Sale/GetTaxes."
+        },
+        {
+          "name": "defontana_list_sales",
+          "type": "read",
+          "title": "List sales documents",
+          "description": "Sales documents (invoices, receipts, credit notes) issued between two dates, with client, seller, lines, net/exempt totals, tax and total. Optionally one document type. GET /Sale/GetSalebyDate."
+        },
+        {
+          "name": "defontana_get_sale",
+          "type": "read",
+          "title": "Get sales document",
+          "description": "One sales document by document type and folio number: client, lines, totals, tax, attached documents and accounting voucher. GET /sale/GetSale."
+        },
+        {
+          "name": "defontana_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "Customer orders (pedidos) created between two dates: number, creation date and client. Use defontana_get_order for the detail. GET /Order/List."
+        },
+        {
+          "name": "defontana_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One customer order by number: client, seller, shop, lines, discounts and totals. GET /Order/Get."
+        },
+        {
+          "name": "defontana_list_purchases",
+          "type": "read",
+          "title": "List purchase documents",
+          "description": "Purchase documents (supplier invoices) between two dates: provider, document type and number, total, emission date, SII status and whether it is integrated. Optionally one SII document code (33, 34, ...). GET /Purchase/List."
+        },
+        {
+          "name": "defontana_get_purchase",
+          "type": "read",
+          "title": "Get purchase document",
+          "description": "One purchase document by provider code, document type and number, with lines and totals. GET /Purchase/Get."
+        },
+        {
+          "name": "defontana_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "Purchase orders (órdenes de compra) between two dates: provider, status, emission date, totals, series and number. Filter by provider name or tax id, or by status. GET /PurchaseOrder/List."
+        },
+        {
+          "name": "defontana_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "One purchase order by number (and series, if the company uses series): provider, lines, taxes and totals. GET /PurchaseOrder/Get."
+        },
+        {
+          "name": "defontana_list_providers",
+          "type": "read",
+          "title": "List providers",
+          "description": "List the company's providers (suppliers): tax id, name, address, contact data and the active flag. Filter by tax id or name. GET /PurchaseOrder/GetProviders."
+        },
+        {
+          "name": "defontana_get_account_plan",
+          "type": "read",
+          "title": "Get chart of accounts",
+          "description": "The chart of accounts (plan de cuentas) as a tree: account code, description and the related IFRS account. GET /Accounting/GetAccountPlan."
+        },
+        {
+          "name": "defontana_list_vouchers",
+          "type": "read",
+          "title": "List accounting vouchers",
+          "description": "Accounting vouchers (comprobantes) with type, fiscal year, date, entry date, user and number. Filter by type, fiscal year, date range, entering user or number range. Use defontana_get_voucher for the lines. GET /Accounting/GetVoucherList."
+        },
+        {
+          "name": "defontana_get_voucher",
+          "type": "read",
+          "title": "Get accounting voucher",
+          "description": "One accounting voucher with its header and every line (account, debit, credit, file id, document, business center, classifiers). GET /Accounting/GetVoucher."
+        },
+        {
+          "name": "defontana_get_business_center",
+          "type": "read",
+          "title": "Get business center",
+          "description": "One business center (centro de negocio) by code: description, active and postable flags. GET /Accounting/GetBusinessCenter."
+        },
+        {
+          "name": "defontana_list_receivables",
+          "type": "read",
+          "title": "List documents to collect",
+          "description": "Open (unpaid) sales documents of one client: document type, series, number, due date and amount. The client is the file id, usually the tax id. GET /Accounting/GetDocumentsToPay."
+        },
+        {
+          "name": "defontana_list_payables",
+          "type": "read",
+          "title": "List documents to pay",
+          "description": "Open (unpaid) purchase documents of one provider: document type, series, number, due date and amount. The provider is the file id, usually the tax id. GET /Accounting/GetPurchaseDocumentsToPay."
+        },
+        {
+          "name": "defontana_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "defontana_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Defontana tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "defontana_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Defontana (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "defontana_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Defontana Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run defontana_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the sales documents issued in September 2026 and total them by client.",
+        "Which supplier invoices are still unpaid for provider 76.123.456-7?",
+        "How much stock of product 10001 is there in each storage?",
+        "Show accounting voucher EGRESO 1 of fiscal year 2026."
+      ]
+    },
+    {
+      "slug": "engagedly",
+      "name": "Engagedly",
+      "category": "hr",
+      "description": "Read employees, learning progress, certificates and recognition in Engagedly.",
+      "endpoint": "https://engagedly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Engagedly Client Key"
+          },
+          {
+            "label": "Engagedly Secret Key"
+          }
+        ],
+        "hint": "A Site Administrator creates both keys in Engagedly under **Integrations → Engagedly API**. Engagedly shows the Secret Key only once. The keys carry the rights of the person who made them. We use them only to call the API for you."
+      },
+      "tools": [
+        {
+          "name": "engagedly_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List employees with name, email, status, title, employee id and manager data. Filter by email. Use include to embed primary_reporter or direct_reports. API: GET /beta/users."
+        },
+        {
+          "name": "engagedly_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id, with profile fields and optional related data. API: GET /beta/users/{id}."
+        },
+        {
+          "name": "engagedly_get_user_permissions",
+          "type": "read",
+          "title": "Get user permissions",
+          "description": "Get the permissions of one user. API: GET /beta/users/{id}/permissions."
+        },
+        {
+          "name": "engagedly_list_user_attributes",
+          "type": "read",
+          "title": "List user attributes",
+          "description": "List the system and custom user attributes of the organization (keys, data types, options, mandatory flag). API: GET /beta/user-attributes."
+        },
+        {
+          "name": "engagedly_list_block_reason_codes",
+          "type": "read",
+          "title": "List block reason codes",
+          "description": "List the reason codes that Engagedly uses when it blocks a user. API: GET /beta/users/block-reason-codes."
+        },
+        {
+          "name": "engagedly_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments of the organization. API: GET /beta/departments."
+        },
+        {
+          "name": "engagedly_get_department",
+          "type": "read",
+          "title": "Get department",
+          "description": "Get one department by id. API: GET /beta/departments/{id}."
+        },
+        {
+          "name": "engagedly_list_businesses",
+          "type": "read",
+          "title": "List businesses",
+          "description": "List business units of the organization. API: GET /beta/businesses."
+        },
+        {
+          "name": "engagedly_get_business",
+          "type": "read",
+          "title": "Get business",
+          "description": "Get one business by id. API: GET /beta/businesses/{id}."
+        },
+        {
+          "name": "engagedly_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List locations of the organization. API: GET /beta/locations."
+        },
+        {
+          "name": "engagedly_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "Get one location by id. API: GET /beta/locations/{id}."
+        },
+        {
+          "name": "engagedly_list_job_titles",
+          "type": "read",
+          "title": "List job titles",
+          "description": "List job titles of the organization. API: GET /beta/job_titles."
+        },
+        {
+          "name": "engagedly_get_job_title",
+          "type": "read",
+          "title": "Get job title",
+          "description": "Get one job title by id. API: GET /beta/job_titles/{id}."
+        },
+        {
+          "name": "engagedly_list_permissions",
+          "type": "read",
+          "title": "List permissions",
+          "description": "List the permissions that exist in the organization. API: GET /beta/permissions."
+        },
+        {
+          "name": "engagedly_list_praises",
+          "type": "read",
+          "title": "List public praises",
+          "description": "List public praises (recognition posts) between employees. API: GET /beta/activities/praises."
+        },
+        {
+          "name": "engagedly_list_learning_resources",
+          "type": "read",
+          "title": "List learning resources",
+          "description": "List courses and playlists with filters (title text, type, language, provider, level, tags, duration, certified, archived, short code). Each item has an id and a short_code. API: GET /beta/learning/resources."
+        },
+        {
+          "name": "engagedly_get_learning_resource_contents",
+          "type": "read",
+          "title": "Get learning resource contents",
+          "description": "Get the content hierarchy (sections and items) of one course or playlist. API: GET /beta/learning/resources/{id}/contents."
+        },
+        {
+          "name": "engagedly_get_learner_report",
+          "type": "read",
+          "title": "Get learner report",
+          "description": "Report of learner progress per course or playlist. Filter by resource ids or types. API: GET /beta/learning/learner_reports."
+        },
+        {
+          "name": "engagedly_list_certificates",
+          "type": "read",
+          "title": "List certificates",
+          "description": "List certificates awarded to employees (name, authority, validity dates). Filter by user, term, dates or status. API: GET /beta/certificates."
+        },
+        {
+          "name": "engagedly_get_certificate",
+          "type": "read",
+          "title": "Get a certificate",
+          "description": "Get one certificate by id. API: GET /beta/certificates/{id}."
+        },
+        {
+          "name": "engagedly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "engagedly_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Engagedly tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "engagedly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Engagedly (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "engagedly_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Engagedly Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run engagedly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List all departments and how many people work in each.",
+        "Who reports to Adam Smith?",
+        "Which certificates expire in the next 90 days?",
+        "Show the learner progress for our onboarding course."
+      ]
+    },
+    {
+      "slug": "goaffpro",
+      "name": "GoAffPro",
+      "category": "marketing",
+      "description": "Read affiliates, orders, payouts and traffic; set affiliate status and add coupons in GoAffPro.",
+      "endpoint": "https://goaffpro.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "GoAffPro API key"
+          }
+        ],
+        "hint": "Find it in the GoAffPro admin: **Settings → Advanced → API Keys → New API Key**. The key is used only to call the API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "goaffpro_list_affiliates",
+          "type": "read",
+          "title": "List affiliates",
+          "description": "List the affiliates of the program with status, ref code, coupon, group and contact fields. GET /admin/affiliates. Answer: { affiliates: [] }."
+        },
+        {
+          "name": "goaffpro_search_affiliates",
+          "type": "read",
+          "title": "Search affiliates",
+          "description": "Search affiliates by a keyword in name, ref_code, email or coupon. GET /admin/affiliates/search. Answer: a list of affiliates."
+        },
+        {
+          "name": "goaffpro_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders that are tied to affiliates, with total, commission, status (approved or rejected) and the date. GET /admin/orders. Answer: { orders: [] }."
+        },
+        {
+          "name": "goaffpro_list_rewards",
+          "type": "read",
+          "title": "List rewards",
+          "description": "List rewards (bonuses) given to affiliates. GET /admin/rewards. Answer: { rewards: [] }."
+        },
+        {
+          "name": "goaffpro_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List the payment history to affiliates (amount, method, date). GET /admin/payments. Answer: { payments: [] }."
+        },
+        {
+          "name": "goaffpro_list_payment_requests",
+          "type": "read",
+          "title": "List payment requests",
+          "description": "List payment requests that affiliates made from their dashboard. GET /admin/payments/requests. Answer: { PaymentRequests: [] }."
+        },
+        {
+          "name": "goaffpro_get_pending_payouts",
+          "type": "read",
+          "title": "Get pending payouts",
+          "description": "Show the amount due to each affiliate up to a date. GET /admin/payments/pending. Answer: { pending: [{ affiliate_id, amount }], upto }."
+        },
+        {
+          "name": "goaffpro_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List the transaction log (commission credits, payouts, balances) per affiliate. GET /admin/transactions. Answer: { transactions, count, limit, offset }."
+        },
+        {
+          "name": "goaffpro_list_traffic",
+          "type": "read",
+          "title": "List affiliate traffic",
+          "description": "List visits that affiliate links sent to the store (landing page, referrer, time). GET /admin/traffic. Answer: { traffic: [] }. Max limit 1000."
+        },
+        {
+          "name": "goaffpro_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List the coupon codes that are assigned to affiliates. GET /admin/coupons. Answer: { coupons: [] }."
+        },
+        {
+          "name": "goaffpro_list_groups",
+          "type": "read",
+          "title": "List affiliate groups",
+          "description": "List affiliate groups and their commission settings. GET /admin/groups. Answer: { groups: [] }."
+        },
+        {
+          "name": "goaffpro_list_special_commissions",
+          "type": "read",
+          "title": "List special commission rates",
+          "description": "List the special commission rates set for products and collections. GET /admin/commissions. Answer: { commissions: [] }."
+        },
+        {
+          "name": "goaffpro_list_connections",
+          "type": "read",
+          "title": "List affiliate-customer connections",
+          "description": "List the links between affiliates and customers. GET /admin/connections."
+        },
+        {
+          "name": "goaffpro_set_affiliate_status",
+          "type": "write",
+          "title": "Set affiliate status",
+          "description": "WRITE: approve, reject or set to pending one affiliate. The affiliate may get an email from GoAffPro. PATCH /admin/affiliates/{id}."
+        },
+        {
+          "name": "goaffpro_add_affiliate_coupon",
+          "type": "write",
+          "title": "Add a coupon to an affiliate",
+          "description": "WRITE: add a discount coupon code to one affiliate. This changes the store discounts. A repeat call can create a second coupon. POST /admin/affiliates/{id}/coupons."
+        },
+        {
+          "name": "goaffpro_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "goaffpro_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoAffPro tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "goaffpro_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on GoAffPro (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "goaffpro_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoAffPro Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run goaffpro_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which affiliates are waiting for approval in my GoAffPro program?",
+        "Show the orders and commission of my top affiliate this month.",
+        "How much do I owe each affiliate right now?",
+        "List the payment requests that affiliates sent and are still open."
+      ]
+    },
+    {
+      "slug": "ipdata",
+      "name": "ipdata",
+      "category": "data-enrichment",
+      "description": "Look up location, network, company and threat data for IP addresses and ASNs in ipdata.",
+      "endpoint": "https://ipdata.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ipdata API key"
+          },
+          {
+            "label": "Endpoint"
+          }
+        ],
+        "hint": "**A paid ipdata plan is required**: ipdata does not allow free-tier keys in commercial products such as this server. Find your key in your [ipdata dashboard](https://dashboard.ipdata.co/). **Every lookup uses one request of your daily ipdata quota** (a bulk lookup uses one per address). If the key has a host whitelist, remove it: this server calls ipdata from Cloudflare addresses. Your key is used only to call the ipdata API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "ipdata_lookup_ip",
+          "type": "read",
+          "title": "Look up an IP address",
+          "description": "Geolocation and network data for one IP address: city, region, country, continent, coordinates, postal code, time zone, currency, languages, mobile carrier, ASN, plus company and threat data where the key's plan includes them. Pass `fields` to get only some of it. The reply also carries `count`, the requests this key made in the last 24 hours. GET /{ip}. Uses 1 request of the key's daily ipdata quota and is never retried."
+        },
+        {
+          "name": "ipdata_get_threat",
+          "type": "read",
+          "title": "Get threat data for an IP address",
+          "description": "Threat profile of one IP address: is_tor, is_proxy, is_anonymous, is_datacenter, is_known_attacker, is_known_abuser, is_threat, is_bogon, is_icloud_relay and the blocklists it appears on. Business and Enterprise plans also get is_vpn and reputation scores (vpn, proxy, threat and trust, 0-100). GET /{ip}/threat. Uses 1 request of the key's daily ipdata quota and is never retried."
+        },
+        {
+          "name": "ipdata_get_asn_for_ip",
+          "type": "read",
+          "title": "Get the ASN of an IP address",
+          "description": "The autonomous system that announces one IP address: AS number, organisation name, domain, network route and usage type (hosting, isp, edu, gov, mil, business). GET /{ip}/asn. Uses 1 request of the key's daily ipdata quota and is never retried."
+        },
+        {
+          "name": "ipdata_get_company",
+          "type": "read",
+          "title": "Get the company behind an IP address",
+          "description": "The end-user organisation that a network is assigned to: name, domain, network prefix and usage type. Needs the ipdata Startup plan or higher. GET /{ip}/company. Uses 1 request of the key's daily ipdata quota and is never retried."
+        },
+        {
+          "name": "ipdata_lookup_asn",
+          "type": "read",
+          "title": "Look up an AS number",
+          "description": "Details of one autonomous system: organisation, domain, usage type, IPv4 and IPv6 prefixes, number of IPs, registry, country, allocation date, status, and upstream, downstream and peer AS numbers. GET /AS{number}. Uses 1 request of the key's daily ipdata quota and is never retried."
+        },
+        {
+          "name": "ipdata_bulk_lookup",
+          "type": "read",
+          "title": "Look up many IP addresses",
+          "description": "Look up up to 100 IP addresses in one call (paid ipdata plans only). Duplicates are removed first. Replies are a list in the same order, one entry per address. Each address uses 1 request of the daily quota (100 addresses = 100 requests). Use `fields` to keep the reply small. POST /bulk. The call is never retried."
+        },
+        {
+          "name": "ipdata_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ipdata_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ipdata tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ipdata_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ipdata (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ipdata_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ipdata Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ipdata_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Where is the IP address 8.8.8.8 located, and which network does it belong to?",
+        "Is 185.220.101.1 a known Tor exit node or a threat?",
+        "Which company owns the IP address 17.253.144.10?",
+        "Show the details of AS13335."
+      ]
+    },
+    {
+      "slug": "kolay-ik",
+      "name": "Kolay IK",
+      "category": "hr",
+      "description": "Read employees, leave and payroll; create leave, time records and events in Kolay IK.",
+      "endpoint": "https://kolay-ik.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Kolay IK API token"
+          }
+        ],
+        "hint": "Create it in Kolay IK under **Ayarlar → Geliştirici Ayarları → API Token Oluştur**. Give the token only the scopes you need (and an expiry date if you like) and leave the IP allowlist empty. Never paste your Kolay IK password here. HR data is personal data: the token acts with its scopes on your employees' records, and it is used only to call the Kolay IK API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "kolayik_get_me",
+          "type": "read",
+          "title": "Get the token's user",
+          "description": "The Kolay IK user the API token belongs to: id, name, email, work email. A cheap check that the connection works. GET /v2/profile/me."
+        },
+        {
+          "name": "kolayik_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List employees (id, first and last name), 60 per page. By default only active employees; set status to terminated for people who left. Search by name with q. Filter by hire date (active people) or termination date (terminated people). The reply has total, currentPage and lastPage; request the next page with page. POST /v2/person/list (a read)."
+        },
+        {
+          "name": "kolayik_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "Full profile of one employee: contact data, employment dates, contract, units, compensation and custom data fields. National id numbers and bank numbers are removed. GET /v2/person/view/{id}."
+        },
+        {
+          "name": "kolayik_get_person_summary",
+          "type": "read",
+          "title": "Get a person summary",
+          "description": "Short profile of one employee: name, contact data, current units (company, location, department, position) and manager. GET /v2/person/view-summary/{id}."
+        },
+        {
+          "name": "kolayik_get_person_leave_balances",
+          "type": "read",
+          "title": "Get leave balances",
+          "description": "Leave entitlement of one employee per leave type: earned, used, carried over and unused days. GET /v2/person/leave-status/{id}."
+        },
+        {
+          "name": "kolayik_list_person_trainings",
+          "type": "read",
+          "title": "List a person's trainings",
+          "description": "Trainings assigned to one employee. GET /v2/person/list-trainings/{id}."
+        },
+        {
+          "name": "kolayik_list_person_fields",
+          "type": "read",
+          "title": "List person data fields",
+          "description": "The custom data fields a person can have (fieldToken, type, category). Use the fieldToken in kolayik_update_person and kolayik_create_person. GET /v2/person/show-available-data-fields."
+        },
+        {
+          "name": "kolayik_list_units",
+          "type": "read",
+          "title": "List organization units",
+          "description": "The organization tree: unit types (company, branch, department, position ...) and their items with ids. GET /v2/unit/show-unit-tree."
+        },
+        {
+          "name": "kolayik_list_approval_processes",
+          "type": "read",
+          "title": "List approval processes",
+          "description": "The approval chains configured in the account (leave, expense and similar), with their steps and approvers. Filter by name or by a person in the steps. GET /v2/approval-process/list."
+        },
+        {
+          "name": "kolayik_list_leaves",
+          "type": "read",
+          "title": "List leave records",
+          "description": "List leave (time off) records, newest data first as the vendor orders them. Filter by status, a date range or one person. Each record has the leave type, dates, person, replacement, status (approved/waiting/rejected) and used days. GET /v2/leave/list."
+        },
+        {
+          "name": "kolayik_get_leave",
+          "type": "read",
+          "title": "Get a leave record",
+          "description": "One leave record with type, dates, return date, comment, person, replacement person, status and used days. GET /v2/leave/view/{id}."
+        },
+        {
+          "name": "kolayik_create_leave",
+          "type": "write",
+          "title": "Create a leave record",
+          "description": "WRITE: records leave for an employee and deducts the used days from their balance. The vendor may approve it immediately, and it is visible to the employee and their manager. Find the leave type id in an existing leave record (kolayik_list_leaves) or the person's balances (kolayik_get_person_leave_balances). Not idempotent: a second call creates a second record. POST /v2/leave/create."
+        },
+        {
+          "name": "kolayik_list_timelogs",
+          "type": "read",
+          "title": "List timelogs",
+          "description": "List time records (work hours, overtime) with person, start and end, minutes used, status and type. Filter by person, type, status and date range. The reply has searchCount, totalCount, page and limit. POST /v2/timelog/list (a read)."
+        },
+        {
+          "name": "kolayik_get_timelog",
+          "type": "read",
+          "title": "Get a timelog",
+          "description": "One time record by id. GET /v2/timelog/view/{id}."
+        },
+        {
+          "name": "kolayik_create_timelog",
+          "type": "write",
+          "title": "Create a timelog",
+          "description": "WRITE: adds a time record (work hours or overtime) for an employee. With status approved it counts immediately (overtime may flow into payroll); with waiting it enters the approval process. Not idempotent: a second call creates a second record. POST /v2/timelog/create."
+        },
+        {
+          "name": "kolayik_delete_timelog",
+          "type": "write",
+          "title": "Delete a timelog",
+          "description": "WRITE (destructive): permanently deletes one time record. This cannot be undone. DELETE /v2/timelog/delete/{id}."
+        },
+        {
+          "name": "kolayik_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List employee transactions (expenses, advance payments, bonuses, overtime pay, deductions) with amount, currency, status, paid flag and items. Filter by person, type, status, paid and date range. POST /v2/transaction/list (a read)."
+        },
+        {
+          "name": "kolayik_get_transaction",
+          "type": "read",
+          "title": "Get a transaction",
+          "description": "One transaction (expense, advance, bonus ...) with its items. GET /v2/transaction/view/{id}."
+        },
+        {
+          "name": "kolayik_list_expense_categories",
+          "type": "read",
+          "title": "List expense categories",
+          "description": "Expense categories of the account (for example taxi, meals), optionally filtered by title or enabled state. GET /v2/expense/list-categories."
+        },
+        {
+          "name": "kolayik_list_payrolls",
+          "type": "read",
+          "title": "List payroll periods",
+          "description": "Payroll runs of a year: id, period, number of employees, payslips created, errors and total employer cost. Needs a token with the payroll:list scope. Use the id with kolayik_get_payroll_sheet. GET /v2/payroll/list."
+        },
+        {
+          "name": "kolayik_get_payroll_sheet",
+          "type": "read",
+          "title": "Get a payroll sheet",
+          "description": "The full payroll sheet (carsaf bordro) of one payroll run: every employee's gross, net, tax and insurance columns. This is sensitive salary data of all employees (or the filtered ones). Needs a token with the payroll-sheet:view scope. Filter by name, status, salary period, insurance, tax, expense center or units. POST /v2/payroll-sheet/view/{id} (a read)."
+        },
+        {
+          "name": "kolayik_list_events",
+          "type": "read",
+          "title": "List calendar events",
+          "description": "List company calendar events (meetings, holidays) with title, start, end and comment. Filter by text and date range. The reply has searchCount, totalCount, page and limit. GET /v2/event/list."
+        },
+        {
+          "name": "kolayik_get_event",
+          "type": "read",
+          "title": "Get a calendar event",
+          "description": "One calendar event. GET /v2/event/view/{id}."
+        },
+        {
+          "name": "kolayik_create_event",
+          "type": "write",
+          "title": "Create a calendar event",
+          "description": "WRITE: adds an event to the company calendar, visible to the employees who see it. Not idempotent. POST /v2/event/create."
+        },
+        {
+          "name": "kolayik_update_event",
+          "type": "write",
+          "title": "Update a calendar event",
+          "description": "WRITE: changes the title, times or comment of a calendar event (the vendor requires title, start and end). PUT /v2/event/update/{id}."
+        },
+        {
+          "name": "kolayik_delete_event",
+          "type": "write",
+          "title": "Delete a calendar event",
+          "description": "WRITE (destructive): permanently deletes one calendar event. This cannot be undone. DELETE /v2/event/delete/{id}."
+        },
+        {
+          "name": "kolayik_list_trainings",
+          "type": "read",
+          "title": "List trainings",
+          "description": "List the trainings defined in the account. Filter by title text. The reply has searchCount, totalCount, page and limit. GET /v2/training/list."
+        },
+        {
+          "name": "kolayik_get_training",
+          "type": "read",
+          "title": "Get a training",
+          "description": "One training with its details. GET /v2/training/view/{id}."
+        },
+        {
+          "name": "kolayik_create_person",
+          "type": "write",
+          "title": "Create a person",
+          "description": "WRITE: adds a new employee (only first and last name are required). Creates a real HR record that may send the person an invitation, depending on the account settings. Not idempotent: calling it twice creates a duplicate. Further data goes in data_fields (see kolayik_list_person_fields). POST /v2/person/create."
+        },
+        {
+          "name": "kolayik_update_person",
+          "type": "write",
+          "title": "Update a person",
+          "description": "WRITE: changes basic data of one employee; only the fields you pass change. Pass null for an optional field to clear it. Further data goes in data_fields (see kolayik_list_person_fields). Changes the HR record immediately. PUT /v2/person/update."
+        },
+        {
+          "name": "kolayik_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kolayik_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Kolay IK tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kolayik_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Kolay IK (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kolayik_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Kolay IK Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kolayik_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on leave next week?",
+        "How many days of annual leave does Ayse Yilmaz have left?",
+        "List the overtime records still waiting for approval this month.",
+        "Add a calendar event for the all-hands meeting on Friday at 15:00."
+      ]
+    },
+    {
+      "slug": "pubmed-ncbi-e-utilities",
+      "name": "NCBI PubMed",
+      "category": "knowledge-base",
+      "description": "Search PubMed, read abstracts and summaries, and find similar articles in NCBI PubMed.",
+      "endpoint": "https://pubmed-ncbi-e-utilities.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "NCBI API key"
+          }
+        ],
+        "hint": "Create the key in your NCBI account: **Settings → API Key Management**. It is used only to call NCBI on your behalf; it is never shown to anyone, and it sets your own request limit (10 requests per second)."
+      },
+      "tools": [
+        {
+          "name": "pubmed_search",
+          "type": "read",
+          "title": "Search PubMed",
+          "description": "Search PubMed with the same query syntax as the PubMed search box (fields, MeSH terms, boolean operators). Returns the total hit count and a list of PMIDs; use pubmed_summary or pubmed_fetch_abstracts on the PMIDs. E-utilities: esearch.fcgi?db=pubmed."
+        },
+        {
+          "name": "pubmed_summary",
+          "type": "read",
+          "title": "Get article summaries",
+          "description": "Get short metadata for up to 100 PubMed articles by PMID: title, authors, journal, publication date, DOI and PubMed Central ID. Does not return abstracts (use pubmed_fetch_abstracts). E-utilities: esummary.fcgi?db=pubmed."
+        },
+        {
+          "name": "pubmed_fetch_abstracts",
+          "type": "read",
+          "title": "Get abstracts",
+          "description": "Get the citation and abstract text for up to 20 PubMed articles by PMID, as plain text. Keep the PMID and journal when you cite an article. E-utilities: efetch.fcgi?db=pubmed&rettype=abstract."
+        },
+        {
+          "name": "pubmed_related",
+          "type": "read",
+          "title": "Find related articles",
+          "description": "List PubMed articles that are similar to one article (PubMed's 'similar articles' links), by PMID. Returns the linked PMIDs; use pubmed_summary for their details. E-utilities: elink.fcgi?dbfrom=pubmed&cmd=neighbor."
+        },
+        {
+          "name": "pubmed_database_info",
+          "type": "read",
+          "title": "PubMed database info",
+          "description": "Show PubMed's current record count, last update time and the search field codes (for example TIAB or AU) that pubmed_search accepts. E-utilities: einfo.fcgi?db=pubmed."
+        },
+        {
+          "name": "pubmed_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pubmed_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the NCBI PubMed tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pubmed_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on NCBI PubMed (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pubmed_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's NCBI PubMed Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run pubmed_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the 10 most recent PubMed articles on GLP-1 agonists and kidney outcomes.",
+        "Give me the abstracts for PMIDs 31978945 and 32015507 with journal and year.",
+        "What articles are similar to PMID 31978945?",
+        "How many PubMed records were published about semaglutide in 2025?"
+      ]
+    },
+    {
+      "slug": "returnlogic",
+      "name": "ReturnLogic",
+      "category": "ecommerce",
+      "description": "Read returns, orders and products; flag returns and mark items received in ReturnLogic.",
+      "endpoint": "https://returnlogic.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ReturnLogic API token"
+          }
+        ],
+        "hint": "In ReturnLogic open **Settings → Applications → Private** and generate a token. It stays valid until you revoke it there. Your token is used only to call the ReturnLogic API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "returnlogic_list_rmas",
+          "type": "read",
+          "title": "List returns (RMAs)",
+          "description": "List return merchandise authorizations (RMAs, i.e. customer returns) with workflow status, return type (refund, exchange, warranty, giftcard), items, customer email and order. Filter by status, type, reason, email, order, date range, flags or 'requires action'. GET /v1/rmas."
+        },
+        {
+          "name": "returnlogic_count_rmas",
+          "type": "read",
+          "title": "Count returns (RMAs)",
+          "description": "Count RMAs matching the same filters as returnlogic_list_rmas (for example how many returns are Requested or require action). GET /v1/rmas/count."
+        },
+        {
+          "name": "returnlogic_get_rma",
+          "type": "read",
+          "title": "Get return (RMA)",
+          "description": "One RMA by id: status, comments, order link, shopper and warehouse addresses, items with quantities, reasons, approval/receipt state, labels and timeline. GET /v1/rmas/{rlRmaId}."
+        },
+        {
+          "name": "returnlogic_get_rma_item_type_history",
+          "type": "read",
+          "title": "Get return type history of an RMA item",
+          "description": "The history of return-type changes (e.g. refund changed to exchange) of one RMA item. GET /v1/rmas/{rlRmaItemId}/returntypehistory."
+        },
+        {
+          "name": "returnlogic_get_rma_metafields",
+          "type": "read",
+          "title": "Get RMA metafields",
+          "description": "Custom metafields (key, value, reportable) stored on an RMA. GET /v1/rmas/{rlRmaId}/metafields."
+        },
+        {
+          "name": "returnlogic_get_rma_item_metafields",
+          "type": "read",
+          "title": "Get RMA item metafields",
+          "description": "Custom metafields stored on one item of an RMA. GET /v1/rmas/{rlRmaId}/items/{rlRmaItemId}/metafields."
+        },
+        {
+          "name": "returnlogic_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders known to ReturnLogic (synced from the store) with items, customer, amounts and statuses. Filter by order number/name, email, date range or financial status. GET /v1/orders."
+        },
+        {
+          "name": "returnlogic_count_orders",
+          "type": "read",
+          "title": "Count orders",
+          "description": "Count orders matching the same filters as returnlogic_list_orders. GET /v1/orders/count."
+        },
+        {
+          "name": "returnlogic_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by ReturnLogic order id (rlOrderId) with its line items, addresses and statuses. GET /v1/orders/{rlOrderId}."
+        },
+        {
+          "name": "returnlogic_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, or find one by email or external customer id. GET /v1/customers/list."
+        },
+        {
+          "name": "returnlogic_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by ReturnLogic customer id (rlCustomerId). GET /v1/customers/{rlCustomerId}."
+        },
+        {
+          "name": "returnlogic_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products with their variants (SKUs, barcodes). Filter by SKU, category id, status or external (store) product ids. GET /v1/products."
+        },
+        {
+          "name": "returnlogic_count_products",
+          "type": "read",
+          "title": "Count products",
+          "description": "Count products matching a SKU, category or status filter. GET /v1/products/count."
+        },
+        {
+          "name": "returnlogic_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by ReturnLogic product id (rlProductId) with its variants. GET /v1/products/{rlProductId}."
+        },
+        {
+          "name": "returnlogic_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List product categories (used for return rules). Search by name or external category ids. GET /v1/productCategories."
+        },
+        {
+          "name": "returnlogic_flag_rma",
+          "type": "write",
+          "title": "Flag an RMA",
+          "description": "WRITE: flag an RMA so the team can filter for it, with an optional comment. A flag cannot be removed afterwards. It sends nothing to the customer. POST /v1/rmas/{rlRmaId}/flag."
+        },
+        {
+          "name": "returnlogic_mark_rma_items_received",
+          "type": "write",
+          "title": "Mark RMA items received",
+          "description": "WRITE: record the warehouse receipt of one or more RMA items (received true/false, optional disposition code that must already exist in ReturnLogic). When every item is received the RMA becomes Received, and if the store uses Automated Processing for Received, the RMA may then be processed automatically (refund, exchange or gift card issued, and the customer notified by ReturnLogic). Use only on the operator's instruction. PUT /v1/rmas/{rlRmaId}/fulfillment."
+        },
+        {
+          "name": "returnlogic_add_rma_metafields",
+          "type": "write",
+          "title": "Add RMA metafields",
+          "description": "WRITE: add custom metafields (key/value notes or reference numbers) to an RMA. A key can be used once per RMA. 'reportable' true makes the field visible on RMAs and reports; false keeps it API-only. Nothing is sent to the customer. POST /v1/rmas/{rlRmaId}/metafields."
+        },
+        {
+          "name": "returnlogic_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "returnlogic_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ReturnLogic tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "returnlogic_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on ReturnLogic (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "returnlogic_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ReturnLogic Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run returnlogic_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which returns are waiting for my action right now?",
+        "Show me all refund returns requested this week and their reasons.",
+        "Look up the return for order #1042 and tell me what has been received.",
+        "Flag RMA 5120 with the comment 'customer called, damaged item'."
+      ]
+    },
+    {
+      "slug": "shopper-approved",
+      "name": "Shopper Approved",
+      "category": "marketing",
+      "description": "Read seller and product reviews and rating statistics in Shopper Approved.",
+      "endpoint": "https://shopper-approved.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Site ID"
+          },
+          {
+            "label": "API token"
+          }
+        ],
+        "hint": "Find both in your Shopper Approved dashboard under your name → **Settings** (also on the API Docs page). They are used only to call the API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "shopperapproved_list_reviews",
+          "type": "read",
+          "title": "List seller reviews",
+          "description": "List the store's seller (service) reviews: review ID, date, reviewer name, rating, comment and media. Results are for the customer's own use. Shopper Approved API: GET /reviews/{siteid}."
+        },
+        {
+          "name": "shopperapproved_get_review",
+          "type": "read",
+          "title": "Get a review by order ID",
+          "description": "Get one seller review by the order ID that was sent with the order. Shopper Approved API: GET /reviews/{siteid}/{reviewid}."
+        },
+        {
+          "name": "shopperapproved_list_product_reviews",
+          "type": "read",
+          "title": "List product reviews",
+          "description": "List product reviews for the whole store, newest data by date range. Shopper Approved API: GET /products/reviews/{siteid}."
+        },
+        {
+          "name": "shopperapproved_get_product_reviews",
+          "type": "read",
+          "title": "Get reviews for one product",
+          "description": "Get the reviews of one product. A parent ID returns the reviews of all products with that parent ID. Shopper Approved API: GET /products/reviews/{siteid}/{productid}."
+        },
+        {
+          "name": "shopperapproved_get_review_stats",
+          "type": "read",
+          "title": "Get seller review statistics",
+          "description": "Get the aggregate statistics of the store's seller reviews (totals and average rating). Shopper Approved API: GET /aggregates/reviews/{siteid}."
+        },
+        {
+          "name": "shopperapproved_get_product_stats",
+          "type": "read",
+          "title": "Get product review statistics",
+          "description": "Get the total number of product reviews, and the review count and rating of each product. Shopper Approved API: GET /aggregates/products/{siteid}."
+        },
+        {
+          "name": "shopperapproved_get_product_stat",
+          "type": "read",
+          "title": "Get statistics for one product",
+          "description": "Get the review count and rating of one product. Shopper Approved API: GET /aggregates/products/{siteid}/{productid}."
+        },
+        {
+          "name": "shopperapproved_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shopperapproved_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Shopper Approved tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shopperapproved_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Shopper Approved (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shopperapproved_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Shopper Approved Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shopperapproved_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show all 1-star and 2-star seller reviews from the last 30 days.",
+        "What is our average seller rating and how many reviews do we have?",
+        "Which products have the most reviews, and which have the lowest rating?",
+        "Find the review for order 137645133."
+      ]
+    },
+    {
+      "slug": "tharstern",
+      "name": "Tharstern",
+      "category": "business-operations",
+      "description": "Read jobs, estimates, orders, invoices, stock and prices in Tharstern.",
+      "endpoint": "https://tharstern.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Tharstern user email"
+          },
+          {
+            "label": "Tharstern password"
+          }
+        ],
+        "hint": "Your password is sent once to Tharstern to get an API token. Only the token is kept, and the password is never stored. The token is sent as the **Authentication** header."
+      },
+      "tools": [
+        {
+          "name": "tharstern_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List or search customers, with optional delivery addresses and custom fields. Use dbTimeStamp to sync changes. Tharstern API: GET /api/customers."
+        },
+        {
+          "name": "tharstern_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers, optionally by id, code or tax registration number. Tharstern API: GET /api/suppliers."
+        },
+        {
+          "name": "tharstern_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "Search estimates (quotes) by reference, customer, dates, status or custom status. Tharstern API: GET /api/estimates."
+        },
+        {
+          "name": "tharstern_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "Search production jobs by number, customer, dates and progress flags (completed, delivered, invoiced). Tharstern API: GET /api/jobs."
+        },
+        {
+          "name": "tharstern_list_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "Search sales orders by number, customer, dates or status. Tharstern API: GET /api/orders."
+        },
+        {
+          "name": "tharstern_list_delivery_notes",
+          "type": "read",
+          "title": "List delivery notes",
+          "description": "Search delivery notes by number, order, job, status or last change date. Tharstern API: GET /api/deliverynotes."
+        },
+        {
+          "name": "tharstern_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List sales invoices by number, job, order, customer or date range. Tharstern API: GET /api/invoices."
+        },
+        {
+          "name": "tharstern_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders filtered by status. Tharstern API: GET /api/purchaseorders."
+        },
+        {
+          "name": "tharstern_list_products",
+          "type": "read",
+          "title": "List products and stock",
+          "description": "Search the product inventory, including stock balances and optionally locations. Tharstern API: GET /api/products."
+        },
+        {
+          "name": "tharstern_get_product_price",
+          "type": "read",
+          "title": "Get product price",
+          "description": "Get the price of one product for a quantity, optionally for one customer. Tharstern API: GET /api/products/{id}/pricing."
+        },
+        {
+          "name": "tharstern_list_stock_locations",
+          "type": "read",
+          "title": "List stock locations",
+          "description": "List stock locations, optionally with their contents. Tharstern API: GET /api/data/stock/locations."
+        },
+        {
+          "name": "tharstern_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "Search projects by number, customer, title or required date. Tharstern API: GET /api/projects."
+        },
+        {
+          "name": "tharstern_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks, optionally open only, and filter by assignee, customer or project. Tharstern API: GET /api/tasks."
+        },
+        {
+          "name": "tharstern_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes, optionally for one module (for example Jobs or SalesOrders) and date range. Tharstern API: GET /api/notes."
+        },
+        {
+          "name": "tharstern_list_operators",
+          "type": "read",
+          "title": "List operators",
+          "description": "List shop-floor operators, optionally by department. Tharstern API: GET /api/operators."
+        },
+        {
+          "name": "tharstern_list_working_operations",
+          "type": "read",
+          "title": "List working operations",
+          "description": "List operations that operators are working on now or worked on, by job, resource or operator. Tharstern API: GET /api/workingoperations."
+        },
+        {
+          "name": "tharstern_list_milestones",
+          "type": "read",
+          "title": "List milestone definitions",
+          "description": "List all job milestone definitions, to read milestone names and values. Tharstern API: GET /api/milestones."
+        },
+        {
+          "name": "tharstern_list_currencies",
+          "type": "read",
+          "title": "List currencies",
+          "description": "List the currencies defined on the Tharstern system. Tharstern API: GET /api/data/currencies."
+        },
+        {
+          "name": "tharstern_get_licence",
+          "type": "read",
+          "title": "Get licence details",
+          "description": "Get the Tharstern licence: version, company name, number of users and operators, expiry and enabled modules. Tharstern API: GET /api/options/licencedetails."
+        },
+        {
+          "name": "tharstern_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tharstern_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tharstern tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tharstern_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Tharstern (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tharstern_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tharstern Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run tharstern_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which jobs are due this week, and which of them are not yet finished?",
+        "Show the estimates created this month that are still waiting for a decision.",
+        "What is the price of product 1042 for a quantity of 500?",
+        "Which purchase orders are still open with our suppliers?"
+      ]
+    },
+    {
+      "slug": "ticimax",
+      "name": "Ticimax",
+      "category": "ecommerce",
+      "description": "Read orders, products, stock and members; update order status and invoice numbers in Ticimax.",
+      "endpoint": "https://ticimax.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store address"
+          },
+          {
+            "label": "WS code (UyeKodu)"
+          }
+        ],
+        "hint": "Create the code in your Ticimax admin panel under **Ayarlar → WS Yetki Kodu Yönetimi → Yeni Ekle**. Give it the permissions you want the AI to have (reading orders, products and members; changing order status and invoice numbers is optional) and leave the IP restriction empty, because requests come from shared servers. The store address is your shop's web address, for example www.yourstore.com. The code is used only to call your store's Ticimax web service on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "ticimax_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List or search the store's orders, newest first: customer, totals, status, payment status, shipping company and tracking number, delivery and invoice address. Filter by status, payment status/type, customer (member id or phone), order number, invoice or tracking number, and creation or update date. Line items and payments are only included when asked for (include_items / include_payments; they make replies much larger, so use a small limit). SOAP SiparisServis.SelectSiparis."
+        },
+        {
+          "name": "ticimax_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by its internal order id, with line items, payments, shipping and invoice details. SOAP SiparisServis.SelectSiparis (filtered to one id)."
+        },
+        {
+          "name": "ticimax_list_order_items",
+          "type": "read",
+          "title": "List order line items",
+          "description": "The line items of one order: product, stock code, barcode, quantity, price, VAT, status and shipping tracking per line. An empty list can also mean that the WS code may not read orders. SOAP SiparisServis.SelectSiparisUrun."
+        },
+        {
+          "name": "ticimax_list_order_payments",
+          "type": "read",
+          "title": "List order payments",
+          "description": "The payments of one order: type, amount, instalments, bank, approval state and date. An empty list can also mean that the WS code may not read orders. SOAP SiparisServis.SelectSiparisOdeme."
+        },
+        {
+          "name": "ticimax_list_order_shipments",
+          "type": "read",
+          "title": "List order shipments",
+          "description": "The shipping packages of one order: carrier, tracking number and link, packed products, date. An empty list can also mean that the order has no package yet or that the WS code may not read orders. SOAP SiparisServis.SelectSiparisKargoPaket."
+        },
+        {
+          "name": "ticimax_list_order_statuses",
+          "type": "read",
+          "title": "List order statuses",
+          "description": "The store's order status names and numbers (the values behind order_status). SOAP SiparisServis.SelectSiparisDurumlari."
+        },
+        {
+          "name": "ticimax_list_payment_types",
+          "type": "read",
+          "title": "List payment types",
+          "description": "The store's payment type names and numbers (the values behind payment_type). SOAP SiparisServis.SelectOdemeTipleri."
+        },
+        {
+          "name": "ticimax_update_order_status",
+          "type": "write",
+          "title": "Update order status",
+          "description": "WRITE: move an order forward in the fulfilment flow (the current status is read first; going back, or moving a cancelled, returned or delivered order, is refused): Onaylandi (approved), Paketleniyor (packing), TedarikEdiliyor (being supplied), KargoyaVerildi (shipped; add the tracking number and link) or TeslimEdildi (delivered). Ticimax applies its normal side effects (stock, shipping, customer e-mail only if notify_customer is true). Cancelling, returning, refunding and deleting orders are not offered. SOAP SiparisServis.SetSiparisDurum."
+        },
+        {
+          "name": "ticimax_set_invoice_number",
+          "type": "write",
+          "title": "Set order invoice number",
+          "description": "WRITE: record the invoice number of an order (replaces a previous one). SOAP SiparisServis.SetFaturaNo."
+        },
+        {
+          "name": "ticimax_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List or search product cards with their variants (stock code, barcode, price, discounted price, VAT, stock per variant), category, brand, supplier, images and page URL. Marketplace settings and price-group copies are left out and long descriptions are cut. Filter by status, barcode, stock code, category, brand, supplier, discount, stock level and dates. SOAP UrunServis.SelectUrun."
+        },
+        {
+          "name": "ticimax_count_products",
+          "type": "read",
+          "title": "Count products",
+          "description": "How many products match the filters (same filters as ticimax_list_products). SOAP UrunServis.SelectUrunCount."
+        },
+        {
+          "name": "ticimax_list_variants",
+          "type": "read",
+          "title": "List product variants (stock and prices)",
+          "description": "List variants (the sellable units: size, colour...) with stock code, barcode, stock quantity, price, discounted price, VAT and options. Look one up by barcode or stock code, list the variants of a product card, or find recently changed stock. SOAP UrunServis.SelectVaryasyon."
+        },
+        {
+          "name": "ticimax_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "The store's product categories (id, parent id, name, page URL, active, sort order), or one category by id. SOAP UrunServis.SelectKategori."
+        },
+        {
+          "name": "ticimax_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "The store's product brands (id, name, page URL, active), or one brand by id. SOAP UrunServis.SelectMarka."
+        },
+        {
+          "name": "ticimax_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "The store's suppliers (id, name, e-mail, active), or one supplier by id. SOAP UrunServis.SelectTedarikci."
+        },
+        {
+          "name": "ticimax_list_members",
+          "type": "read",
+          "title": "List members (customers)",
+          "description": "List the store's registered members (customers): name, e-mail, phone, city, member type, registration and last login date, e-mail/SMS consent. Filter by e-mail, phone, member id, customer code, status, shopping history, city and registration date. Passwords are never returned. An empty list can also mean that the WS code may not read members. Personal data: use only what the task needs. SOAP UyeServis.SelectUyeler."
+        },
+        {
+          "name": "ticimax_list_member_addresses",
+          "type": "read",
+          "title": "List member addresses",
+          "description": "The saved delivery/invoice addresses of one member (recipient, address, city, postal code, company and tax details). An empty list can also mean that the WS code may not read members. Personal data: use only what the task needs. SOAP UyeServis.SelectUyeAdres."
+        },
+        {
+          "name": "ticimax_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ticimax_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Ticimax tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ticimax_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Ticimax (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ticimax_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Ticimax Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ticimax_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders from the last 7 days are paid but not yet shipped?",
+        "How many products in my store are out of stock?",
+        "Show the stock and price of the product with barcode 8690000000001.",
+        "Mark order 5012 as shipped with tracking number 1234567890."
+      ]
     }
   ]
 }

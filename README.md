@@ -729,6 +729,19 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ShippingEasy](servers/shippingeasy/) | shipping | 10 | API token | [servers/shippingeasy/](servers/shippingeasy/) |
 | [Mailshake](servers/mailshake/) | email-marketing | 24 | API token | [servers/mailshake/](servers/mailshake/) |
 | [Fiken](servers/fiken/) | accounting | 35 | OAuth | [servers/fiken/](servers/fiken/) |
+| [Apilo](servers/apilo/) | commerce | 21 | API token | [servers/apilo/](servers/apilo/) |
+| [ClickTime](servers/clicktime/) | time-tracking | 30 | API token | [servers/clicktime/](servers/clicktime/) |
+| [Coursebox](servers/coursebox/) | education | 16 | API token | [servers/coursebox/](servers/coursebox/) |
+| [Defontana](servers/defontana/) | accounting | 32 | API token | [servers/defontana/](servers/defontana/) |
+| [Engagedly](servers/engagedly/) | hr | 24 | API token | [servers/engagedly/](servers/engagedly/) |
+| [GoAffPro](servers/goaffpro/) | marketing | 19 | API token | [servers/goaffpro/](servers/goaffpro/) |
+| [ipdata](servers/ipdata/) | data-enrichment | 10 | API token | [servers/ipdata/](servers/ipdata/) |
+| [Kolay IK](servers/kolay-ik/) | hr | 34 | API token | [servers/kolay-ik/](servers/kolay-ik/) |
+| [NCBI PubMed](servers/pubmed-ncbi-e-utilities/) | knowledge-base | 9 | API token | [servers/pubmed-ncbi-e-utilities/](servers/pubmed-ncbi-e-utilities/) |
+| [ReturnLogic](servers/returnlogic/) | ecommerce | 22 | API token | [servers/returnlogic/](servers/returnlogic/) |
+| [Shopper Approved](servers/shopper-approved/) | marketing | 11 | API token | [servers/shopper-approved/](servers/shopper-approved/) |
+| [Tharstern](servers/tharstern/) | business-operations | 23 | API token | [servers/tharstern/](servers/tharstern/) |
+| [Ticimax](servers/ticimax/) | ecommerce | 21 | API token | [servers/ticimax/](servers/ticimax/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
