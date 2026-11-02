@@ -126753,6 +126753,384 @@
         "Which form submissions came in this week, and what did people ask about?",
         "Find the submission from info@example.com."
       ]
+    },
+    {
+      "slug": "zenamu",
+      "name": "Zenamu",
+      "category": "scheduling",
+      "description": "List classes, workshops and clients; grant passes or credits to clients in Zenamu.",
+      "endpoint": "https://zenamu.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Zenamu public API key (zen_pub_…)"
+          },
+          {
+            "label": "Zenamu secret API key (zen_live_…)"
+          }
+        ],
+        "hint": "Find both keys in Zenamu admin → **Settings → General info → API keys**. The secret key needs the Ultimate plan. Your secret key also identifies your account here, so keep it private. Keys are used only to call the API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zenamu_list_classes",
+          "type": "read",
+          "title": "List classes",
+          "description": "List the published schedule of the studio for a date range (YYYY-MM-DD, studio time zone, max 366 days). Returns classes and course sessions (read eventType), with times, lecturerIds, locationId, pricing options and seat capacity when requested. Canceled events are included with isCanceled=true. Zenamu API: GET /v1/classes."
+        },
+        {
+          "name": "zenamu_list_workshops",
+          "type": "read",
+          "title": "List workshops",
+          "description": "List the studio's public workshops (standalone events such as retreats and intensives) for a date range (YYYY-MM-DD, max 366 days). Each workshop has its own address and pricing. Canceled workshops are excluded. Zenamu API: GET /v1/workshops."
+        },
+        {
+          "name": "zenamu_list_lecturers",
+          "type": "read",
+          "title": "List lecturers",
+          "description": "List the studio's lecturers with name, photo and bio. Use it to turn the lecturerIds from classes and workshops into names. Contact details are never returned. Zenamu API: GET /v1/lecturers."
+        },
+        {
+          "name": "zenamu_list_places",
+          "type": "read",
+          "title": "List places",
+          "description": "List the studio's physical locations with name and address. Use it to turn the locationId from classes into an address. Archived places are excluded. Zenamu API: GET /v1/places."
+        },
+        {
+          "name": "zenamu_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List every active client of the studio with contact details, credit and entry-pass balances, pass balances per pass group, make-up sessions and booking totals. Returns personal data. Needs the secret key and the Ultimate plan. Archived and blocked clients are excluded. Zenamu API: GET /v1/clients."
+        },
+        {
+          "name": "zenamu_list_pass_groups",
+          "type": "read",
+          "title": "List pass groups",
+          "description": "List the studio's entry-pass groups (active and archived) with their id, name and state. Use an id as passGroupId when granting passes. Needs the secret key and the Ultimate plan. Zenamu API: GET /v1/pass-groups."
+        },
+        {
+          "name": "zenamu_grant_credits",
+          "type": "write",
+          "title": "Grant credits to a client",
+          "description": "WRITE: adds credits to one client's account and returns the new balance. Changes what the client owes or holds. Not idempotent: a retry after an unclear failure can grant twice, so check the balance first with zenamu_list_clients. sendEmail=true emails the client. Zenamu API: POST /v1/clients/{clientId}/credits."
+        },
+        {
+          "name": "zenamu_grant_passes",
+          "type": "write",
+          "title": "Grant entry passes to a client",
+          "description": "WRITE: adds entry passes to one client's account in a pass group and returns the new balance in that group. Changes what the client holds. Not idempotent: a retry after an unclear failure can grant twice, so check the balance first with zenamu_list_clients. Omit passGroupId for the studio's default group. sendEmail=true emails the client. Zenamu API: POST /v1/clients/{clientId}/passes."
+        },
+        {
+          "name": "zenamu_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zenamu_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zenamu tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zenamu_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Zenamu (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zenamu_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zenamu Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zenamu_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What classes do we have next week, and which are canceled?",
+        "Which lecturers are teaching the workshops this month?",
+        "Show me the clients with the lowest entry-pass balances.",
+        "Grant 3 entry passes to client 123 with no email, in our 10-entry pass group."
+      ]
+    },
+    {
+      "slug": "retainful",
+      "name": "Retainful",
+      "category": "email-marketing",
+      "description": "List contacts and lists; create contacts, add them to lists and record events in Retainful.",
+      "endpoint": "https://retainful.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Retainful API key"
+          }
+        ],
+        "hint": "Find it in Retainful → **Integrations** → your app → **Create API key**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "retainful_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (profiles) in the Retainful organization, one page at a time, with consent status and source. Retainful API: GET /customer."
+        },
+        {
+          "name": "retainful_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one contact (profile) by its Retainful id (contactUUID), with its attributes. Retainful API: GET /customer/{id}."
+        },
+        {
+          "name": "retainful_list_lists",
+          "type": "read",
+          "title": "List lists and segments",
+          "description": "List the lists and segments in the organization with their ids. Use the id as list_id in retainful_add_contact_to_list. Retainful API: GET /contact-groups."
+        },
+        {
+          "name": "retainful_get_list",
+          "type": "read",
+          "title": "Get list",
+          "description": "Get one list or segment by its id. Retainful API: GET /contact-groups/{id}."
+        },
+        {
+          "name": "retainful_upsert_contact",
+          "type": "write",
+          "title": "Create or update contact",
+          "description": "WRITE: create a contact, or update it when the email or phone already exists. Does not add anyone to a list. email_opt_in is required: it sets marketing consent, so send SUBSCRIBED only with real consent. Needs email or phone. Retainful API: POST /customer/create."
+        },
+        {
+          "name": "retainful_add_contact_to_list",
+          "type": "write",
+          "title": "Add contact to list",
+          "description": "WRITE: create or update a contact by email and add them to a list in one call. A list can start an automation. email_opt_in is required: an existing contact is set to SUBSCRIBED when it is omitted here. Retainful API: POST /contact-groups/{listId}/contacts."
+        },
+        {
+          "name": "retainful_track_event",
+          "type": "write",
+          "title": "Track event",
+          "description": "WRITE: record one event on a contact's timeline. Automations triggered by the event can email the contact. Reuse the same unique_identifier only for a retry of the same real occurrence (a repeat does not trigger automations again); use a new one for each new occurrence. Event data must be flat: strings, numbers, or booleans. Retainful API: POST /events."
+        },
+        {
+          "name": "retainful_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "retainful_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Retainful tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "retainful_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Retainful (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "retainful_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Retainful Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run retainful_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the 20 newest contacts in Retainful and whether they opted in to email.",
+        "Which lists and segments do we have, and what are their ids?",
+        "Add jane@example.com to the 'Trial started' list with email consent.",
+        "Record a 'Subscription Renewed' event for contact 01K8J5M02QYPEJE5YN3V944ZY9 with amount 49."
+      ]
+    },
+    {
+      "slug": "kommo",
+      "name": "Kommo",
+      "category": "crm",
+      "description": "List leads, contacts, companies and tasks; create and update leads in Kommo.",
+      "endpoint": "https://kommo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Kommo account subdomain"
+          },
+          {
+            "label": "Kommo long-lived token"
+          }
+        ],
+        "hint": "Create the token in Kommo → **Settings → Integrations**: open a private integration, then **Keys and scopes** → **Generate long-lived token**. Only an account administrator can create it. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "kommo_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Get the Kommo account: id, subdomain, country, currency and the current user id. Good first call to confirm the connection. GET /api/v4/account."
+        },
+        {
+          "name": "kommo_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the lead pipelines with their stages (status ids, names, sort order). Use it to find the pipeline_id and status_id values for lead filters and writes. GET /api/v4/leads/pipelines."
+        },
+        {
+          "name": "kommo_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the account with their ids, names, emails and roles. Use it to find responsible_user_id values. GET /api/v4/users."
+        },
+        {
+          "name": "kommo_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom fields of leads, contacts or companies (ids, names, types, enum options). Use it to find field ids before writing values. GET /api/v4/{entity}/custom_fields."
+        },
+        {
+          "name": "kommo_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List deals (leads) with price, stage, pipeline, responsible user and timestamps. Filter by text, pipeline, owner or the update window. One request per call. GET /api/v4/leads."
+        },
+        {
+          "name": "kommo_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "Get one lead by id, with optional embedded data (contacts, loss_reason, source). GET /api/v4/leads/{id}."
+        },
+        {
+          "name": "kommo_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (people) with their names, custom fields (email, phone) and responsible user. One request per call. GET /api/v4/contacts."
+        },
+        {
+          "name": "kommo_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one contact by id, with optional embedded data (leads, companies). GET /api/v4/contacts/{id}."
+        },
+        {
+          "name": "kommo_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List companies (organisations) with their names, custom fields and responsible user. One request per call. GET /api/v4/companies."
+        },
+        {
+          "name": "kommo_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "Get one company by id, with optional embedded data (contacts, leads). GET /api/v4/companies/{id}."
+        },
+        {
+          "name": "kommo_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List follow-up tasks, optionally only open ones, for one user or one linked entity. One request per call. GET /api/v4/tasks."
+        },
+        {
+          "name": "kommo_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List the notes (comments, calls, status changes) of one lead, contact or company. One request per call. GET /api/v4/{entity}/{id}/notes."
+        },
+        {
+          "name": "kommo_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "Create one lead (deal) in a pipeline stage. Creates a new record on every call: it does not check for duplicates. POST /api/v4/leads."
+        },
+        {
+          "name": "kommo_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "Change one lead: name, value, pipeline, stage or owner. Only the given fields change. Repeating the same call gives the same result. PATCH /api/v4/leads/{id}."
+        },
+        {
+          "name": "kommo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kommo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Kommo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kommo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro (unlimited*)",
+          "description": "Get Pro: unlimited tool calls (fair use limit: 10,000 a month) on Kommo (the free tier caps monthly usage). Plans: \"monthly\" — $9/month; \"yearly\" — $90/year (2 months free). Cancel any time: Pro then runs to the end of the paid period, so it also suits a one-time job. *A fair use limit applies. For heavy use (near Pro's limit): \"plus\" or \"plus_yearly\" — Pro+, $39/month or $390/year, unlimited tool calls (fair use limit: 100,000 a month); an existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Otherwise returns a short link to open in your browser (it opens Stripe Checkout); after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kommo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Kommo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kommo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open deals are in our sales pipeline, and what is the total value by stage?",
+        "Show the contacts and companies that were updated this week.",
+        "List my open tasks for today.",
+        "Move the lead 'Acme renewal' to the Won stage and set its value to 4500."
+      ]
     }
   ]
 }

@@ -751,6 +751,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [DeskTime](servers/desktime/) | time-tracking | 14 | API token | [servers/desktime/](servers/desktime/) |
 | [resOS](servers/resos/) | scheduling | 23 | API token | [servers/resos/](servers/resos/) |
 | [Getform](servers/getform/) | forms | 6 | API token | [servers/getform/](servers/getform/) |
+| [Zenamu](servers/zenamu/) | scheduling | 12 | API token | [servers/zenamu/](servers/zenamu/) |
+| [Retainful](servers/retainful/) | email-marketing | 11 | API token | [servers/retainful/](servers/retainful/) |
+| [Kommo](servers/kommo/) | crm | 18 | API token | [servers/kommo/](servers/kommo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
