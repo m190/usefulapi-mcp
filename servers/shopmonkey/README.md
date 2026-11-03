@@ -48,6 +48,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_list_purchase_orders` | read | List purchase orders |
 | `shopmonkey_get_purchase_order` | read | Get a purchase order |
 | `shopmonkey_get_order` | read | Get one order |
+| `shopmonkey_list_order_files` | read | List an order's files |
+| `shopmonkey_get_order_file` | read | Get an order file |
 | `shopmonkey_find_order_by_number` | read | Find an order by its number |
 | `shopmonkey_list_order_services` | read | List an order's services |
 | `shopmonkey_search_appointments` | read | Search appointments |
