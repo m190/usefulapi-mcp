@@ -43,7 +43,7 @@ On first connect you provide your **Brandboom API key** (Account Settings → In
 | `brandboom_search_shipments` | read | Search shipments |
 | `brandboom_usage_status` | meta | Usage status (free-tier meter) |
 | `brandboom_request_feature` | meta | Request a missing feature |
-| `brandboom_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `brandboom_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `brandboom_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -40,7 +40,7 @@ On first connect you'll enter your **Feefo App Key Client ID, Secret and merchan
 | `feefo_reply_to_review` | **write** | Reply to a Feefo review |
 | `feefo_usage_status` | meta | Usage status (free-tier meter) |
 | `feefo_request_feature` | meta | Request a missing feature |
-| `feefo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `feefo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `feefo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

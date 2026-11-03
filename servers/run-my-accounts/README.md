@@ -51,7 +51,7 @@ On first connect you provide your **client name** (your Mandant name) and an **A
 | `runmyaccounts_list_projects` | read | List projects |
 | `runmyaccounts_usage_status` | meta | Usage status (free-tier meter) |
 | `runmyaccounts_request_feature` | meta | Request a missing feature |
-| `runmyaccounts_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `runmyaccounts_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `runmyaccounts_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

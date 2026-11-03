@@ -59,7 +59,7 @@ On first connect you provide your **admin email**, the **API password** and the 
 | `ceipal_get_user` | read | Get user |
 | `ceipal_usage_status` | meta | Usage status (free-tier meter) |
 | `ceipal_request_feature` | meta | Request a missing feature |
-| `ceipal_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ceipal_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ceipal_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

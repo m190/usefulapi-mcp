@@ -51,7 +51,7 @@ Create a dedicated client ID and secret for UsefulAPI in your bol Seller Dashboa
 | `bol_get_process_status` | read | Get a process status |
 | `bol_usage_status` | meta | Usage status (free-tier meter) |
 | `bol_request_feature` | meta | Request a missing feature |
-| `bol_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bol_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bol_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

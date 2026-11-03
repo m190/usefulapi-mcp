@@ -52,7 +52,7 @@ On first connect you'll paste your AiSensy **Project API key** and **project id*
 | `aisensy_send_message` | **write** | Send WhatsApp message |
 | `aisensy_usage_status` | meta | Usage status (free-tier meter) |
 | `aisensy_request_feature` | meta | Request a missing feature |
-| `aisensy_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `aisensy_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `aisensy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

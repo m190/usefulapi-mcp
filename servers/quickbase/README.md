@@ -49,7 +49,7 @@ On first connect you provide your **Quickbase realm** (the part before .quickbas
 | `quickbase_upsert_records` | **write** | Insert or update records |
 | `quickbase_usage_status` | meta | Usage status (free-tier meter) |
 | `quickbase_request_feature` | meta | Request a missing feature |
-| `quickbase_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `quickbase_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `quickbase_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

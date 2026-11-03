@@ -42,7 +42,7 @@ On first connect you provide a **HolidayPitches API key** (Admin → API Keys; t
 | `holidaypitches_update_booking_status` | **write** | Update a booking status |
 | `holidaypitches_usage_status` | meta | Usage status (free-tier meter) |
 | `holidaypitches_request_feature` | meta | Request a missing feature |
-| `holidaypitches_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `holidaypitches_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `holidaypitches_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

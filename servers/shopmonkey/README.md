@@ -82,7 +82,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `shopmonkey_delete_part` | **write** | Remove a part line |
 | `shopmonkey_usage_status` | meta | Usage status (free-tier meter) |
 | `shopmonkey_request_feature` | meta | Request a missing feature |
-| `shopmonkey_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `shopmonkey_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `shopmonkey_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

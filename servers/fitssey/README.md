@@ -48,7 +48,7 @@ Connect a dedicated Fitssey API key and Studio UUID. Read-only tools cover studi
 | `fitssey_get_active_passes_report` | read | Get active passes report |
 | `fitssey_usage_status` | meta | Usage status (free-tier meter) |
 | `fitssey_request_feature` | meta | Request a missing feature |
-| `fitssey_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `fitssey_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `fitssey_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

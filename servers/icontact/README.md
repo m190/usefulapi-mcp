@@ -55,7 +55,7 @@ On first connect you'll enter your **iContact application id, username and API p
 | `icontact_list_custom_fields` | read | List custom fields |
 | `icontact_usage_status` | meta | Usage status (free-tier meter) |
 | `icontact_request_feature` | meta | Request a missing feature |
-| `icontact_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `icontact_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `icontact_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -63,7 +63,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `exaktime_update_location` | **write** | Update location |
 | `exaktime_usage_status` | meta | Usage status (free-tier meter) |
 | `exaktime_request_feature` | meta | Request a missing feature |
-| `exaktime_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `exaktime_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `exaktime_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

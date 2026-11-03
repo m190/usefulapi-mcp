@@ -57,7 +57,7 @@ On first connect you provide the **Timesheets.com API key** and the **authorizat
 | `timesheets_get_server_reference` | read | Get server reference data |
 | `timesheets_usage_status` | meta | Usage status (free-tier meter) |
 | `timesheets_request_feature` | meta | Request a missing feature |
-| `timesheets_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `timesheets_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `timesheets_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

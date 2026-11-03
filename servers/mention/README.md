@@ -46,7 +46,7 @@ On first connect you provide a **Mention access token**, which you find in the a
 | `mention_list_shares` | read | List alert shares |
 | `mention_usage_status` | meta | Usage status (free-tier meter) |
 | `mention_request_feature` | meta | Request a missing feature |
-| `mention_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `mention_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `mention_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

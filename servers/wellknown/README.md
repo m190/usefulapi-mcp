@@ -42,7 +42,7 @@ On first connect you provide a **Wellknown venue API key** that starts with wk_ 
 | `wellknown_replace_blocks` | **write** | Replace blocked times |
 | `wellknown_usage_status` | meta | Usage status (free-tier meter) |
 | `wellknown_request_feature` | meta | Request a missing feature |
-| `wellknown_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `wellknown_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `wellknown_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

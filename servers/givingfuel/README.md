@@ -50,7 +50,7 @@ On first connect you'll paste your GivingFuel **API key** (create it in your Giv
 | `givingfuel_delete_coupon` | **write** | Delete coupon |
 | `givingfuel_usage_status` | meta | Usage status (free-tier meter) |
 | `givingfuel_request_feature` | meta | Request a missing feature |
-| `givingfuel_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `givingfuel_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `givingfuel_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

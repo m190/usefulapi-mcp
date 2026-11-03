@@ -47,7 +47,7 @@ On first connect you provide your **tenant name**, the **environment** and the *
 | `protime_get_person` | read | Get person |
 | `protime_usage_status` | meta | Usage status (free-tier meter) |
 | `protime_request_feature` | meta | Request a missing feature |
-| `protime_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `protime_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `protime_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

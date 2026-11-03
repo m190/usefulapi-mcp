@@ -49,7 +49,7 @@ On first connect you provide a **Roadmunk API access token** and your **region**
 | `roadmunk_update_milestone` | **write** | Update a milestone (WRITE) |
 | `roadmunk_usage_status` | meta | Usage status (free-tier meter) |
 | `roadmunk_request_feature` | meta | Request a missing feature |
-| `roadmunk_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `roadmunk_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `roadmunk_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

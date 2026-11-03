@@ -53,7 +53,7 @@ On first connect you provide your **eGestor personal token** (eGestor → Config
 | `egestor_get_company` | read | Get company data |
 | `egestor_usage_status` | meta | Usage status (free-tier meter) |
 | `egestor_request_feature` | meta | Request a missing feature |
-| `egestor_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `egestor_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `egestor_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

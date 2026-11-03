@@ -42,7 +42,7 @@ Connect your existing TimeTap account using the credentials described below.
 | `timetap_list_appointments` | read | List appointment schedule |
 | `timetap_usage_status` | meta | Usage status (free-tier meter) |
 | `timetap_request_feature` | meta | Request a missing feature |
-| `timetap_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `timetap_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `timetap_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

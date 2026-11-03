@@ -44,7 +44,7 @@ On first connect you provide a **Catalog Machine API key** (Catalog Machine → 
 | `catalogmachine_get_import_job` | read | Get an import job |
 | `catalogmachine_usage_status` | meta | Usage status (free-tier meter) |
 | `catalogmachine_request_feature` | meta | Request a missing feature |
-| `catalogmachine_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `catalogmachine_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `catalogmachine_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

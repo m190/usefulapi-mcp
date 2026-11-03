@@ -64,7 +64,7 @@ On first connect you'll paste your Bidsketch **API token** (an Admin user create
 | `bidsketch_get_template` | read | Get a proposal template |
 | `bidsketch_usage_status` | meta | Usage status (free-tier meter) |
 | `bidsketch_request_feature` | meta | Request a missing feature |
-| `bidsketch_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bidsketch_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bidsketch_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

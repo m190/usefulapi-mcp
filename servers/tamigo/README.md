@@ -43,7 +43,7 @@ On first connect you'll enter your Tamigo **application name** and **application
 | `tamigo_upload_daily_revenue` | **write** | Upload daily revenue |
 | `tamigo_usage_status` | meta | Usage status (free-tier meter) |
 | `tamigo_request_feature` | meta | Request a missing feature |
-| `tamigo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `tamigo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `tamigo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -59,7 +59,7 @@ On first connect you'll paste your Precoro **API key**, the **login email** of t
 | `precoro_create_supplier` | **write** | Create a supplier |
 | `precoro_usage_status` | meta | Usage status (free-tier meter) |
 | `precoro_request_feature` | meta | Request a missing feature |
-| `precoro_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `precoro_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `precoro_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

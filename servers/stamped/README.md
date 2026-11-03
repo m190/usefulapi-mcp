@@ -40,7 +40,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `stamped_list_loyalty_activities` | read | List loyalty activities |
 | `stamped_usage_status` | meta | Usage status (free-tier meter) |
 | `stamped_request_feature` | meta | Request a missing feature |
-| `stamped_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `stamped_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `stamped_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

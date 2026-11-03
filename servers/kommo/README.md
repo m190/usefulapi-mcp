@@ -49,7 +49,7 @@ On first connect you provide your **account subdomain** (the `yourcompany` part 
 | `kommo_update_lead` | **write** | Update lead |
 | `kommo_usage_status` | meta | Usage status (free-tier meter) |
 | `kommo_request_feature` | meta | Request a missing feature |
-| `kommo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `kommo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `kommo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

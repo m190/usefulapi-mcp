@@ -59,7 +59,7 @@ On first connect you enter an **API key id and API secret** (CentreCareOS → AP
 | `centrecareos_daily_report_summary` | read | Daily report summary |
 | `centrecareos_usage_status` | meta | Usage status (free-tier meter) |
 | `centrecareos_request_feature` | meta | Request a missing feature |
-| `centrecareos_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `centrecareos_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `centrecareos_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

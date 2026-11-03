@@ -51,7 +51,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `shipcloud_list_webhooks` | read | List webhooks |
 | `shipcloud_usage_status` | meta | Usage status (free-tier meter) |
 | `shipcloud_request_feature` | meta | Request a missing feature |
-| `shipcloud_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `shipcloud_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `shipcloud_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

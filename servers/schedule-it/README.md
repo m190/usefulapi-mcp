@@ -50,7 +50,7 @@ On first connect you'll enter your Schedule it **account number**, login name an
 | `scheduleit_list_label_groups` | read | List label groups |
 | `scheduleit_usage_status` | meta | Usage status (free-tier meter) |
 | `scheduleit_request_feature` | meta | Request a missing feature |
-| `scheduleit_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `scheduleit_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `scheduleit_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

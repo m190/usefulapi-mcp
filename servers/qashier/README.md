@@ -40,7 +40,7 @@ On first connect you provide your **Qashier API key** (Qashier Dashboard → API
 | `qashier_refund_payment` | **write** | Refund payment |
 | `qashier_usage_status` | meta | Usage status (free-tier meter) |
 | `qashier_request_feature` | meta | Request a missing feature |
-| `qashier_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `qashier_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `qashier_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

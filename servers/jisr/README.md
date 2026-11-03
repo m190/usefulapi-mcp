@@ -47,7 +47,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `jisr_create_attendance_punches` | **write** | Import attendance punches |
 | `jisr_usage_status` | meta | Usage status (free-tier meter) |
 | `jisr_request_feature` | meta | Request a missing feature |
-| `jisr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `jisr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `jisr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

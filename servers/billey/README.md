@@ -46,7 +46,7 @@ On first connect you provide a **billey personal access token** (your book's Set
 | `billey_list_time_entries` | read | List time entries |
 | `billey_usage_status` | meta | Usage status (free-tier meter) |
 | `billey_request_feature` | meta | Request a missing feature |
-| `billey_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `billey_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `billey_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

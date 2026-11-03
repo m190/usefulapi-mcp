@@ -50,7 +50,7 @@ Connect with your Workfeed credentials using the hosted authorization flow.
 | `workfeed_update_shift` | **write** | Update a confirmed shift |
 | `workfeed_usage_status` | meta | Usage status (free-tier meter) |
 | `workfeed_request_feature` | meta | Request a missing feature |
-| `workfeed_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `workfeed_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `workfeed_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

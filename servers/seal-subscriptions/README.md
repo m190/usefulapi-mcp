@@ -62,7 +62,7 @@ On first connect you'll paste your Seal Subscriptions **API token** (the Seal ap
 | `sealsubscriptions_append_rule_product_variants` | **write** | Add products to subscription rule |
 | `sealsubscriptions_usage_status` | meta | Usage status (free-tier meter) |
 | `sealsubscriptions_request_feature` | meta | Request a missing feature |
-| `sealsubscriptions_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sealsubscriptions_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sealsubscriptions_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

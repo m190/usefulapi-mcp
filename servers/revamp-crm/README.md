@@ -54,7 +54,7 @@ On first connect you'll enter the email you sign in to Revamp CRM with and that 
 | `revampcrm_mark_deal_lost` | **write** | Mark deal lost |
 | `revampcrm_usage_status` | meta | Usage status (free-tier meter) |
 | `revampcrm_request_feature` | meta | Request a missing feature |
-| `revampcrm_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `revampcrm_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `revampcrm_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

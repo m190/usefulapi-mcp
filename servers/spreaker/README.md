@@ -48,7 +48,7 @@ On first connect you sign in to Spreaker and approve access. The server validate
 | `spreaker_update_episode` | **write** | Update episode details |
 | `spreaker_usage_status` | meta | Usage status (free-tier meter) |
 | `spreaker_request_feature` | meta | Request a missing feature |
-| `spreaker_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `spreaker_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `spreaker_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

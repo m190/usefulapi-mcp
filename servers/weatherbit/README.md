@@ -45,7 +45,7 @@ Connect with a Weatherbit API key from a paid commercial-use subscription. Indiv
 | `weatherbit_energy_history` | read | Historical energy weather |
 | `weatherbit_usage_status` | meta | Usage status (free-tier meter) |
 | `weatherbit_request_feature` | meta | Request a missing feature |
-| `weatherbit_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `weatherbit_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `weatherbit_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

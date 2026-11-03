@@ -45,7 +45,7 @@ On first connect you'll paste your Lalamove **API key** and API secret and choos
 | `lalamove_change_driver` | **write** | Change driver |
 | `lalamove_usage_status` | meta | Usage status (free-tier meter) |
 | `lalamove_request_feature` | meta | Request a missing feature |
-| `lalamove_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `lalamove_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `lalamove_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

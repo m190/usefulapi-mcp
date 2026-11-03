@@ -48,7 +48,7 @@ On first connect you provide a **Klipfolio API key** (Klipfolio → My Profile, 
 | `klipfolio_refresh_datasource_instance` | **write** | Refresh a data source instance |
 | `klipfolio_usage_status` | meta | Usage status (free-tier meter) |
 | `klipfolio_request_feature` | meta | Request a missing feature |
-| `klipfolio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `klipfolio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `klipfolio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

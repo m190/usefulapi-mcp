@@ -60,7 +60,7 @@ On first connect you'll paste your Cyberimpact **API token** (Developers → API
 | `cyberimpact_create_mailing` | **write** | Schedule mailing |
 | `cyberimpact_usage_status` | meta | Usage status (free-tier meter) |
 | `cyberimpact_request_feature` | meta | Request a missing feature |
-| `cyberimpact_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `cyberimpact_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `cyberimpact_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

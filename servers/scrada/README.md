@@ -55,7 +55,7 @@ On first connect you provide your **Scrada company ID**, **API key** and **API p
 | `scrada_get_peppol_outbound_status` | read | Get Peppol outbound document status |
 | `scrada_usage_status` | meta | Usage status (free-tier meter) |
 | `scrada_request_feature` | meta | Request a missing feature |
-| `scrada_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `scrada_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `scrada_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

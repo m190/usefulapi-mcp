@@ -51,7 +51,7 @@ Use your plenty ID and the username and password of a dedicated back end user wi
 | `plentymarkets_update_order_status` | **write** | Change an order's status |
 | `plentymarkets_usage_status` | meta | Usage status (free-tier meter) |
 | `plentymarkets_request_feature` | meta | Request a missing feature |
-| `plentymarkets_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `plentymarkets_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `plentymarkets_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

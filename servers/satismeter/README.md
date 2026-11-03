@@ -41,7 +41,7 @@ On first connect you provide your **SatisMeter project API key** and your **Sati
 | `satismeter_get_survey_statistics` | read | Get survey statistics |
 | `satismeter_usage_status` | meta | Usage status (free-tier meter) |
 | `satismeter_request_feature` | meta | Request a missing feature |
-| `satismeter_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `satismeter_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `satismeter_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

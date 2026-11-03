@@ -53,7 +53,7 @@ Connect your Arthur account through OAuth and enter its Entity ID from Settings 
 | `arthur_add_task_note` | **write** | Add note to maintenance task |
 | `arthur_usage_status` | meta | Usage status (free-tier meter) |
 | `arthur_request_feature` | meta | Request a missing feature |
-| `arthur_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `arthur_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `arthur_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

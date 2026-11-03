@@ -57,7 +57,7 @@ On first connect you'll paste your AgencyBloc **API SID** and **API key** (from 
 | `agencybloc_create_note` | **write** | Add note |
 | `agencybloc_usage_status` | meta | Usage status (free-tier meter) |
 | `agencybloc_request_feature` | meta | Request a missing feature |
-| `agencybloc_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `agencybloc_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `agencybloc_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

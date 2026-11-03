@@ -46,7 +46,7 @@ On first connect you provide a **Hotel ID** and a **Restricted API key** (ThinkR
 | `thinkreservations_get_availability` | read | Get availability and prices |
 | `thinkreservations_usage_status` | meta | Usage status (free-tier meter) |
 | `thinkreservations_request_feature` | meta | Request a missing feature |
-| `thinkreservations_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `thinkreservations_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `thinkreservations_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

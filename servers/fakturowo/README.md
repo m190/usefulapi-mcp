@@ -42,7 +42,7 @@ Connect with your Fakturowo API key from Konto and, if needed, the account-speci
 | `fakturowo_set_document_payment_status` | **write** | Set document payment status |
 | `fakturowo_usage_status` | meta | Usage status (free-tier meter) |
 | `fakturowo_request_feature` | meta | Request a missing feature |
-| `fakturowo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `fakturowo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `fakturowo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

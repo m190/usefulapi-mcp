@@ -52,7 +52,7 @@ On first connect you'll paste your WaiverFile **API key** and **Site ID** (Waive
 | `waiverfile_create_event_category` | **write** | Create an event category |
 | `waiverfile_usage_status` | meta | Usage status (free-tier meter) |
 | `waiverfile_request_feature` | meta | Request a missing feature |
-| `waiverfile_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `waiverfile_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `waiverfile_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -46,7 +46,7 @@ On first connect you provide your **LeagueApps site id** (the number after sites
 | `leagueapps_list_blog_posts` | read | List blog posts |
 | `leagueapps_usage_status` | meta | Usage status (free-tier meter) |
 | `leagueapps_request_feature` | meta | Request a missing feature |
-| `leagueapps_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `leagueapps_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `leagueapps_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

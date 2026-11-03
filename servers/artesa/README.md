@@ -53,7 +53,7 @@ On first connect you provide an **Artesa API key** (Artesa → **Settings**; an 
 | `artesa_list_roles` | read | List roles |
 | `artesa_usage_status` | meta | Usage status (free-tier meter) |
 | `artesa_request_feature` | meta | Request a missing feature |
-| `artesa_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `artesa_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `artesa_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -41,7 +41,7 @@ On first connect you provide your **API key** and **API secret**, found in Shipp
 | `shippingeasy_cancel_order` | **write** | Cancel an order |
 | `shippingeasy_usage_status` | meta | Usage status (free-tier meter) |
 | `shippingeasy_request_feature` | meta | Request a missing feature |
-| `shippingeasy_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `shippingeasy_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `shippingeasy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

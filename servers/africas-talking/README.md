@@ -45,7 +45,7 @@ On first connect you'll enter your Africa's Talking app **username** and **API k
 | `africastalking_get_voice_queue_status` | read | Get voice queue status |
 | `africastalking_usage_status` | meta | Usage status (free-tier meter) |
 | `africastalking_request_feature` | meta | Request a missing feature |
-| `africastalking_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `africastalking_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `africastalking_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

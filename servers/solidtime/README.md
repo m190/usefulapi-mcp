@@ -47,7 +47,7 @@ On first connect you provide a **solidtime API token**, which you create under P
 | `solidtime_create_time_entry` | **write** | Log a time entry |
 | `solidtime_usage_status` | meta | Usage status (free-tier meter) |
 | `solidtime_request_feature` | meta | Request a missing feature |
-| `solidtime_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `solidtime_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `solidtime_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

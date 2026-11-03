@@ -51,7 +51,7 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `parsley_record_waste_leftover` | **write** | Record waste and leftover |
 | `parsley_usage_status` | meta | Usage status (free-tier meter) |
 | `parsley_request_feature` | meta | Request a missing feature |
-| `parsley_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `parsley_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `parsley_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

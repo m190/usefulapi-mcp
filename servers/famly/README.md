@@ -45,7 +45,7 @@ Create a scoped, expiring API token in Famly’s Manage API tokens settings and 
 | `famly_list_employee_checkins` | read | List employee check-ins |
 | `famly_usage_status` | meta | Usage status (free-tier meter) |
 | `famly_request_feature` | meta | Request a missing feature |
-| `famly_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `famly_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `famly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

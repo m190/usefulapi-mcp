@@ -57,7 +57,7 @@ On first connect you provide a **ServiceTrade client id** and **client secret** 
 | `servicetrade_add_comment` | **write** | Add a comment to a record |
 | `servicetrade_usage_status` | meta | Usage status (free-tier meter) |
 | `servicetrade_request_feature` | meta | Request a missing feature |
-| `servicetrade_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `servicetrade_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `servicetrade_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

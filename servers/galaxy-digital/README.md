@@ -64,7 +64,7 @@ On first connect you provide your **Site API key**, the **API user email and pas
 | `galaxydigital_list_registration_questions` | read | List registration questions |
 | `galaxydigital_usage_status` | meta | Usage status (free-tier meter) |
 | `galaxydigital_request_feature` | meta | Request a missing feature |
-| `galaxydigital_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `galaxydigital_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `galaxydigital_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -57,7 +57,7 @@ On first connect you provide your **UseResponse subdomain** (the acme part of ac
 | `useresponse_create_comment` | **write** | Add a comment |
 | `useresponse_usage_status` | meta | Usage status (free-tier meter) |
 | `useresponse_request_feature` | meta | Request a missing feature |
-| `useresponse_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `useresponse_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `useresponse_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

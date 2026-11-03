@@ -56,7 +56,7 @@ On first connect you'll enter your PaySpace API **Client ID** and **Client Secre
 | `payspace_list_records` | read | List records of another entity |
 | `payspace_usage_status` | meta | Usage status (free-tier meter) |
 | `payspace_request_feature` | meta | Request a missing feature |
-| `payspace_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `payspace_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `payspace_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

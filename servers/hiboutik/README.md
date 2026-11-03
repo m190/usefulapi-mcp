@@ -66,7 +66,7 @@ On first connect you'll enter your **Hiboutik account name, user email and API k
 | `hiboutik_set_sale_comment` | **write** | Set sale comment |
 | `hiboutik_usage_status` | meta | Usage status (free-tier meter) |
 | `hiboutik_request_feature` | meta | Request a missing feature |
-| `hiboutik_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `hiboutik_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `hiboutik_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

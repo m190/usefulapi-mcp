@@ -62,7 +62,7 @@ On first connect you will paste your **Spoke Phone credentials**. They are valid
 | `spokephone_delete_phonebook_contact` | **write** | Delete a phonebook contact |
 | `spokephone_usage_status` | meta | Usage status (free-tier meter) |
 | `spokephone_request_feature` | meta | Request a missing feature |
-| `spokephone_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `spokephone_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `spokephone_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

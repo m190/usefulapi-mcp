@@ -41,7 +41,7 @@ Choose sandbox or live and use the matching Prodigi Print API v4 key from your d
 | `prodigi_get_spine_width` | read | Get book spine width |
 | `prodigi_usage_status` | meta | Usage status (free-tier meter) |
 | `prodigi_request_feature` | meta | Request a missing feature |
-| `prodigi_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `prodigi_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `prodigi_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

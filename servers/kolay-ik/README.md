@@ -65,7 +65,7 @@ On first connect you provide your **Kolay IK API token**, created in Kolay IK un
 | `kolayik_update_person` | **write** | Update a person |
 | `kolayik_usage_status` | meta | Usage status (free-tier meter) |
 | `kolayik_request_feature` | meta | Request a missing feature |
-| `kolayik_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `kolayik_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `kolayik_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

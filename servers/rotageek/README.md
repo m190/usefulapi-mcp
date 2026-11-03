@@ -50,7 +50,7 @@ On first connect you provide the **Rotageek API username** and **API user passwo
 | `rotageek_list_payroll_codes` | read | List payroll codes |
 | `rotageek_usage_status` | meta | Usage status (free-tier meter) |
 | `rotageek_request_feature` | meta | Request a missing feature |
-| `rotageek_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `rotageek_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `rotageek_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

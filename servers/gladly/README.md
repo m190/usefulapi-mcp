@@ -51,7 +51,7 @@ On first connect you provide your **Gladly organization**, an **agent email** an
 | `gladly_add_conversation_note` | **write** | Add an internal note to a conversation |
 | `gladly_usage_status` | meta | Usage status (free-tier meter) |
 | `gladly_request_feature` | meta | Request a missing feature |
-| `gladly_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `gladly_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `gladly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

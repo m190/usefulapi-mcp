@@ -49,7 +49,7 @@ On first connect you provide a **Client ID** and a **Client Secret**, and your *
 | `ispringlearn_get_enrollment` | read | Get enrollment |
 | `ispringlearn_usage_status` | meta | Usage status (free-tier meter) |
 | `ispringlearn_request_feature` | meta | Request a missing feature |
-| `ispringlearn_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ispringlearn_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ispringlearn_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

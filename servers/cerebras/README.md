@@ -38,7 +38,7 @@ On first connect you provide a **Cerebras API key**, which you create under API 
 | `cerebras_chat_completion` | read | Chat completion |
 | `cerebras_usage_status` | meta | Usage status (free-tier meter) |
 | `cerebras_request_feature` | meta | Request a missing feature |
-| `cerebras_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `cerebras_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `cerebras_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

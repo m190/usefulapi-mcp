@@ -47,7 +47,7 @@ Connect with your Smartplan credentials using the hosted authorization flow.
 | `smartplan_get_absence` | read | Get absence |
 | `smartplan_usage_status` | meta | Usage status (free-tier meter) |
 | `smartplan_request_feature` | meta | Request a missing feature |
-| `smartplan_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `smartplan_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `smartplan_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -40,7 +40,7 @@ Connect your own Rackbeat credentials through the hosted sign-in page.
 | `rackbeat_customers` | read | Search Rackbeat customers |
 | `rackbeat_usage_status` | meta | Usage status (free-tier meter) |
 | `rackbeat_request_feature` | meta | Request a missing feature |
-| `rackbeat_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `rackbeat_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `rackbeat_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

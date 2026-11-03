@@ -50,7 +50,7 @@ On first connect you provide your **Ziflow API key** (View Profile → API Key).
 | `ziflow_resolve_comment` | **write** | Resolve or reopen a comment |
 | `ziflow_usage_status` | meta | Usage status (free-tier meter) |
 | `ziflow_request_feature` | meta | Request a missing feature |
-| `ziflow_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ziflow_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ziflow_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

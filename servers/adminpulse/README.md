@@ -50,7 +50,7 @@ On first connect you provide an **AdminPulse API key** (in AdminPulse under My p
 | `adminpulse_list_documents` | read | List documents |
 | `adminpulse_usage_status` | meta | Usage status (free-tier meter) |
 | `adminpulse_request_feature` | meta | Request a missing feature |
-| `adminpulse_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `adminpulse_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `adminpulse_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

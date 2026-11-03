@@ -45,7 +45,7 @@ On first connect you'll paste your Chatra **public** and **secret API keys** (Ch
 | `chatra_delete_pushed_message` | **write** | Delete pushed message |
 | `chatra_usage_status` | meta | Usage status (free-tier meter) |
 | `chatra_request_feature` | meta | Request a missing feature |
-| `chatra_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `chatra_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `chatra_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

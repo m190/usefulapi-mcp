@@ -62,7 +62,7 @@ Use a dedicated ServiceMonster API User, rather than a personal login. API acces
 | `servicemonster_create_note` | **write** | Add a customer, order or site note |
 | `servicemonster_usage_status` | meta | Usage status (free-tier meter) |
 | `servicemonster_request_feature` | meta | Request a missing feature |
-| `servicemonster_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `servicemonster_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `servicemonster_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

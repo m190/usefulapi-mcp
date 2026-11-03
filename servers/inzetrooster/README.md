@@ -37,7 +37,7 @@ On first connect you provide an **Inzetrooster account name** (the part after **
 | `inzetrooster_list_groups` | read | List groups |
 | `inzetrooster_usage_status` | meta | Usage status (free-tier meter) |
 | `inzetrooster_request_feature` | meta | Request a missing feature |
-| `inzetrooster_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `inzetrooster_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `inzetrooster_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

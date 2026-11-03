@@ -39,7 +39,7 @@ On first connect you provide an **API user email** and an **API token**. Email s
 | `singleops_create_lead` | **write** | Create a lead |
 | `singleops_usage_status` | meta | Usage status (free-tier meter) |
 | `singleops_request_feature` | meta | Request a missing feature |
-| `singleops_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `singleops_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `singleops_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

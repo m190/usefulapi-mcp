@@ -50,7 +50,7 @@ On first connect you provide a **ManyChat Account Public API key**, which you fi
 | `manychat_send_flow` | **write** | Start a flow for a subscriber |
 | `manychat_usage_status` | meta | Usage status (free-tier meter) |
 | `manychat_request_feature` | meta | Request a missing feature |
-| `manychat_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `manychat_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `manychat_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

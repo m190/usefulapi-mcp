@@ -54,7 +54,7 @@ Connect with the client ID, client secret and organization ID from Administratio
 | `propertyware_add_task_comment` | **write** | Add task comment |
 | `propertyware_usage_status` | meta | Usage status (free-tier meter) |
 | `propertyware_request_feature` | meta | Request a missing feature |
-| `propertyware_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `propertyware_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `propertyware_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

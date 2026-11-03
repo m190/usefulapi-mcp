@@ -42,7 +42,7 @@ On first connect you provide your **Retainful API key**, created in Retainful un
 | `retainful_track_event` | **write** | Track event |
 | `retainful_usage_status` | meta | Usage status (free-tier meter) |
 | `retainful_request_feature` | meta | Request a missing feature |
-| `retainful_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `retainful_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `retainful_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

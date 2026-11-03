@@ -59,7 +59,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `sakari_list_autoresponders` | read | List autoresponders |
 | `sakari_usage_status` | meta | Usage status (free-tier meter) |
 | `sakari_request_feature` | meta | Request a missing feature |
-| `sakari_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sakari_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sakari_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

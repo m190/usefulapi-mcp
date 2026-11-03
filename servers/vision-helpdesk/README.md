@@ -56,7 +56,7 @@ Every write requires explicit confirmation. Ticket creation and replies disable 
 | `vision_add_ticket_tag` | **write** | Add tag to ticket |
 | `vision_usage_status` | meta | Usage status (free-tier meter) |
 | `vision_request_feature` | meta | Request a missing feature |
-| `vision_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `vision_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `vision_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

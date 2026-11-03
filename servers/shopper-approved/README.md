@@ -42,7 +42,7 @@ On first connect you provide your **Site ID** and **API token**, both found in y
 | `shopperapproved_get_product_stat` | read | Get statistics for one product |
 | `shopperapproved_usage_status` | meta | Usage status (free-tier meter) |
 | `shopperapproved_request_feature` | meta | Request a missing feature |
-| `shopperapproved_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `shopperapproved_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `shopperapproved_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

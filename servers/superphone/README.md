@@ -48,7 +48,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `superphone_send_message` | **write** | Send a text message |
 | `superphone_usage_status` | meta | Usage status (free-tier meter) |
 | `superphone_request_feature` | meta | Request a missing feature |
-| `superphone_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `superphone_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `superphone_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

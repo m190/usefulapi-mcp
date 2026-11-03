@@ -72,7 +72,7 @@ You can remove the access any time in Teamleader Focus. One subscription covers 
 | `teamleader_add_time_tracking` | **write** | Add tracked time |
 | `teamleader_usage_status` | meta | Usage status (free-tier meter) |
 | `teamleader_request_feature` | meta | Request a missing feature |
-| `teamleader_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `teamleader_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `teamleader_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -58,7 +58,7 @@ On first connect you'll paste the **client ID** and **client secret** of a GoCan
 | `gocanvas_mark_dispatch_received` | **write** | Mark a GoCanvas dispatch as received |
 | `gocanvas_usage_status` | meta | Usage status (free-tier meter) |
 | `gocanvas_request_feature` | meta | Request a missing feature |
-| `gocanvas_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `gocanvas_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `gocanvas_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

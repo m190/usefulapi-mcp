@@ -37,7 +37,7 @@ Connect with a ScrapeOwl API key. Page retrieval can consume vendor credits and 
 | `scrapeowl_render_page` | **write** | Render page HTML |
 | `scrapeowl_usage_status` | meta | Usage status (free-tier meter) |
 | `scrapeowl_request_feature` | meta | Request a missing feature |
-| `scrapeowl_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `scrapeowl_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `scrapeowl_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -54,7 +54,7 @@ On first connect you provide a **Personal Access Token** (Botpress → Profile s
 | `botpress_search_files` | read | Search files |
 | `botpress_usage_status` | meta | Usage status (free-tier meter) |
 | `botpress_request_feature` | meta | Request a missing feature |
-| `botpress_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `botpress_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `botpress_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -61,7 +61,7 @@ On first connect you provide your **API User ID** and **API User password** (Ser
 | `servicebridge_add_activity_note` | **write** | Add activity note |
 | `servicebridge_usage_status` | meta | Usage status (free-tier meter) |
 | `servicebridge_request_feature` | meta | Request a missing feature |
-| `servicebridge_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `servicebridge_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `servicebridge_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

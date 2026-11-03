@@ -41,7 +41,7 @@ On first connect you'll paste your MoonClerk **API key** (in MoonClerk under Set
 | `moonclerk_get_payment` | read | Get payment |
 | `moonclerk_usage_status` | meta | Usage status (free-tier meter) |
 | `moonclerk_request_feature` | meta | Request a missing feature |
-| `moonclerk_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `moonclerk_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `moonclerk_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

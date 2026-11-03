@@ -60,7 +60,7 @@ Clio. One subscription covers one Clio user in one firm.
 | `clio_create_calendar_entry` | **write** | Create a calendar entry |
 | `clio_usage_status` | meta | Usage status (free-tier meter) |
 | `clio_request_feature` | meta | Request a missing feature |
-| `clio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `clio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `clio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

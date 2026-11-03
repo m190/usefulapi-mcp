@@ -40,7 +40,7 @@ On first connect you provide a **Quarterwise API key**. Create it in the Quarter
 | `quarterwise_add_transactions` | **write** | Add transactions to a source (write) |
 | `quarterwise_usage_status` | meta | Usage status (free-tier meter) |
 | `quarterwise_request_feature` | meta | Request a missing feature |
-| `quarterwise_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `quarterwise_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `quarterwise_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

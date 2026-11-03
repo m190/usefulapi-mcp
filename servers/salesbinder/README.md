@@ -40,7 +40,7 @@ Connect your own SalesBinder credentials through the hosted sign-in page.
 | `salesbinder_list_sales_orders` | read | Find SalesBinder sales orders |
 | `salesbinder_usage_status` | meta | Usage status (free-tier meter) |
 | `salesbinder_request_feature` | meta | Request a missing feature |
-| `salesbinder_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `salesbinder_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `salesbinder_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

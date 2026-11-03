@@ -41,7 +41,7 @@ On first connect you provide your **Demio API key** and your **Demio API secret*
 | `demio_register_attendee` | **write** | Register attendee |
 | `demio_usage_status` | meta | Usage status (free-tier meter) |
 | `demio_request_feature` | meta | Request a missing feature |
-| `demio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `demio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `demio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

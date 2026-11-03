@@ -66,7 +66,7 @@ On first connect you provide a **Gorelo API key** and your **data region** (Gore
 | `gorelo_log_time_entry` | **write** | Log time on a ticket |
 | `gorelo_usage_status` | meta | Usage status (free-tier meter) |
 | `gorelo_request_feature` | meta | Request a missing feature |
-| `gorelo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `gorelo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `gorelo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -48,7 +48,7 @@ On first connect you'll paste your Robly **API ID** and **API Key** (My Account,
 | `robly_rename_sub_list` | **write** | Rename sub list |
 | `robly_usage_status` | meta | Usage status (free-tier meter) |
 | `robly_request_feature` | meta | Request a missing feature |
-| `robly_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `robly_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `robly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

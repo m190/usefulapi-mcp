@@ -52,7 +52,7 @@ On first connect you'll paste your Pobuca Connect **API key** (Settings → Data
 | `pobuca_list_custom_fields` | read | List custom fields |
 | `pobuca_usage_status` | meta | Usage status (free-tier meter) |
 | `pobuca_request_feature` | meta | Request a missing feature |
-| `pobuca_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `pobuca_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `pobuca_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

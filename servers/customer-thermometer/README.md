@@ -45,7 +45,7 @@ On first connect you provide your **Customer Thermometer API key** and the **key
 | `customerthermometer_get_comments` | read | Get response comments |
 | `customerthermometer_usage_status` | meta | Usage status (free-tier meter) |
 | `customerthermometer_request_feature` | meta | Request a missing feature |
-| `customerthermometer_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `customerthermometer_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `customerthermometer_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

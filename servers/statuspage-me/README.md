@@ -49,7 +49,7 @@ On first connect you provide a **StatusPage.me personal API key** (create it in 
 | `statuspageme_update_maintenance` | **write** | Update a maintenance window |
 | `statuspageme_usage_status` | meta | Usage status (free-tier meter) |
 | `statuspageme_request_feature` | meta | Request a missing feature |
-| `statuspageme_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `statuspageme_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `statuspageme_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -52,7 +52,7 @@ Connect with your WuBook ZaK property API key from Settings â†’ Configurations â
 | `wubook_get_customer` | read | Get customer (guest) |
 | `wubook_usage_status` | meta | Usage status (free-tier meter) |
 | `wubook_request_feature` | meta | Request a missing feature |
-| `wubook_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `wubook_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `wubook_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

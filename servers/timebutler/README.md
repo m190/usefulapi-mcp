@@ -55,7 +55,7 @@ On first connect you provide a **Timebutler personal access token** (it starts w
 | `timebutler_create_absence_request` | **write** | Request absence |
 | `timebutler_usage_status` | meta | Usage status (free-tier meter) |
 | `timebutler_request_feature` | meta | Request a missing feature |
-| `timebutler_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `timebutler_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `timebutler_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

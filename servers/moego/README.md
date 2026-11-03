@@ -66,7 +66,7 @@ On first connect you provide your **MoeGo API key** (the Secret; MoeGo issues it
 | `moego_append_customer_note` | **write** | Add a customer note |
 | `moego_usage_status` | meta | Usage status (free-tier meter) |
 | `moego_request_feature` | meta | Request a missing feature |
-| `moego_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `moego_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `moego_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

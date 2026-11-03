@@ -56,7 +56,7 @@ Sign in with Bokio and choose the company to connect. Approve access in Bokio to
 | `bokio_reverse_journal_entry` | **write** | Reverse a journal entry (IRREVERSIBLE) |
 | `bokio_usage_status` | meta | Usage status (free-tier meter) |
 | `bokio_request_feature` | meta | Request a missing feature |
-| `bokio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bokio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bokio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

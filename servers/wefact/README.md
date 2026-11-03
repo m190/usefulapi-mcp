@@ -42,7 +42,7 @@ On first connect you provide your **WeFact API key** (Settings → API; the API 
 | `wefact_list_subscriptions` | read | List subscriptions |
 | `wefact_usage_status` | meta | Usage status (free-tier meter) |
 | `wefact_request_feature` | meta | Request a missing feature |
-| `wefact_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `wefact_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `wefact_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

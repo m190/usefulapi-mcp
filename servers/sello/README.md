@@ -56,7 +56,7 @@ On first connect you provide a **Sello API key** (Sello → Account settings →
 | `sello_update_product_quantity` | **write** | Update product stock |
 | `sello_usage_status` | meta | Usage status (free-tier meter) |
 | `sello_request_feature` | meta | Request a missing feature |
-| `sello_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sello_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sello_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

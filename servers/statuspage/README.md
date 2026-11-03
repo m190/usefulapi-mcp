@@ -50,7 +50,7 @@ On first connect you provide a **Statuspage API key** (Statuspage → user menu 
 | `statuspage_update_incident` | **write** | Update an incident |
 | `statuspage_usage_status` | meta | Usage status (free-tier meter) |
 | `statuspage_request_feature` | meta | Request a missing feature |
-| `statuspage_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `statuspage_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `statuspage_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

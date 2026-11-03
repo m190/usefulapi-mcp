@@ -44,7 +44,7 @@ On first connect you sign in to **Universe** and approve access. The server stor
 | `universe_event_sales_by_day` | read | Event sales by day |
 | `universe_usage_status` | meta | Usage status (free-tier meter) |
 | `universe_request_feature` | meta | Request a missing feature |
-| `universe_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `universe_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `universe_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -50,7 +50,7 @@ On first connect you'll pick the environment (production or sandbox) and paste y
 | `stuart_mark_order_ready` | **write** | Signal that an order is ready for pickup |
 | `stuart_usage_status` | meta | Usage status (free-tier meter) |
 | `stuart_request_feature` | meta | Request a missing feature |
-| `stuart_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `stuart_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `stuart_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

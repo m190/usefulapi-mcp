@@ -55,7 +55,7 @@ On first connect you enter the **username and password of a MaidCentral API user
 | `maidcentral_add_utm_data` | **write** | Add UTM data to a lead |
 | `maidcentral_usage_status` | meta | Usage status (free-tier meter) |
 | `maidcentral_request_feature` | meta | Request a missing feature |
-| `maidcentral_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `maidcentral_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `maidcentral_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

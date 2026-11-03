@@ -43,7 +43,7 @@ On first connect you provide your **Climatools API key** (in Climatools under In
 | `climatools_create_relation` | **write** | Create a relation |
 | `climatools_usage_status` | meta | Usage status (free-tier meter) |
 | `climatools_request_feature` | meta | Request a missing feature |
-| `climatools_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `climatools_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `climatools_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

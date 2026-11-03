@@ -48,7 +48,7 @@ Connect with a SendPost account or sub-account API key for the matching read-onl
 | `sendpost_list_suppressions` | read | List SendPost suppressed recipients |
 | `sendpost_usage_status` | meta | Usage status (free-tier meter) |
 | `sendpost_request_feature` | meta | Request a missing feature |
-| `sendpost_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sendpost_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sendpost_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

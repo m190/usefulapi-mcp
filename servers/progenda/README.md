@@ -47,7 +47,7 @@ On first connect you provide your **Progenda user e-mail address** and a **Proge
 | `progenda_update_appointment` | **write** | Update an appointment |
 | `progenda_usage_status` | meta | Usage status (free-tier meter) |
 | `progenda_request_feature` | meta | Request a missing feature |
-| `progenda_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `progenda_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `progenda_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

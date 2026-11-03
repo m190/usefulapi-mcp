@@ -47,7 +47,7 @@ On first connect you'll paste your CustomCat **API key** (the CustomCat app → 
 | `customcat_cancel_order` | **write** | Cancel an order |
 | `customcat_usage_status` | meta | Usage status (free-tier meter) |
 | `customcat_request_feature` | meta | Request a missing feature |
-| `customcat_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `customcat_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `customcat_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -49,7 +49,7 @@ On first connect you provide your **Disqus application secret key** (disqus.com/
 | `disqus_open_thread` | **write** | Open thread |
 | `disqus_usage_status` | meta | Usage status (free-tier meter) |
 | `disqus_request_feature` | meta | Request a missing feature |
-| `disqus_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `disqus_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `disqus_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

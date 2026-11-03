@@ -55,7 +55,7 @@ On first connect you provide a **TWICE Commerce API key** (TWICE admin → Setti
 | `twicecommerce_add_order_comment` | **write** | Add a comment to an order |
 | `twicecommerce_usage_status` | meta | Usage status (free-tier meter) |
 | `twicecommerce_request_feature` | meta | Request a missing feature |
-| `twicecommerce_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `twicecommerce_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `twicecommerce_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

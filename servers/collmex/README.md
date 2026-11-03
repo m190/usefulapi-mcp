@@ -48,7 +48,7 @@ Connect your Collmex account using the credentials described on the login page.
 | `collmex_create_address` | **write** | Create address-book entry |
 | `collmex_usage_status` | meta | Usage status (free-tier meter) |
 | `collmex_request_feature` | meta | Request a missing feature |
-| `collmex_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `collmex_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `collmex_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

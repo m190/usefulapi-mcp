@@ -52,7 +52,7 @@ Sign in with your SOS Inventory company account and approve access. The connecti
 | `sosinventory_create_purchase_order` | **write** | Create purchase order |
 | `sosinventory_usage_status` | meta | Usage status (free-tier meter) |
 | `sosinventory_request_feature` | meta | Request a missing feature |
-| `sosinventory_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sosinventory_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sosinventory_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

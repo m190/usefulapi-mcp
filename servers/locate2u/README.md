@@ -69,7 +69,7 @@ On first connect you provide the **Client Id** and **Client Secret** of an app (
 | `locate2u_add_shipment_note` | **write** | Add a note to a shipment |
 | `locate2u_usage_status` | meta | Usage status (free-tier meter) |
 | `locate2u_request_feature` | meta | Request a missing feature |
-| `locate2u_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `locate2u_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `locate2u_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

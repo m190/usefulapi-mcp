@@ -58,7 +58,7 @@ On first connect you'll enter your Vision6 **REST API endpoint** and a REST-comp
 | `vision6_send_transactional` | **write** | Send a transactional email or SMS |
 | `vision6_usage_status` | meta | Usage status (free-tier meter) |
 | `vision6_request_feature` | meta | Request a missing feature |
-| `vision6_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `vision6_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `vision6_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

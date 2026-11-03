@@ -39,7 +39,7 @@ On first connect you provide a **Web3Forms Submissions API key** (Web3Forms → 
 | `web3forms_create_submission` | **write** | Create a submission |
 | `web3forms_usage_status` | meta | Usage status (free-tier meter) |
 | `web3forms_request_feature` | meta | Request a missing feature |
-| `web3forms_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `web3forms_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `web3forms_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

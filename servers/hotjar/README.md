@@ -38,7 +38,7 @@ On first connect you provide a **Hotjar API Client ID** and a **Client Secret** 
 | `hotjar_list_survey_responses` | read | List survey responses |
 | `hotjar_usage_status` | meta | Usage status (free-tier meter) |
 | `hotjar_request_feature` | meta | Request a missing feature |
-| `hotjar_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `hotjar_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `hotjar_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -59,7 +59,7 @@ On first connect you'll enter your CiviCRM **site address** (e.g. https://crm.ex
 | `civicrm_register_participant` | **write** | Register participant |
 | `civicrm_usage_status` | meta | Usage status (free-tier meter) |
 | `civicrm_request_feature` | meta | Request a missing feature |
-| `civicrm_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `civicrm_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `civicrm_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

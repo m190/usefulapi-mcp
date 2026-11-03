@@ -49,7 +49,7 @@ On first connect you provide your **TalentLyft Access token** (profile icon → 
 | `talentlyft_move_application_to_stage` | **write** | Move an application to a stage |
 | `talentlyft_usage_status` | meta | Usage status (free-tier meter) |
 | `talentlyft_request_feature` | meta | Request a missing feature |
-| `talentlyft_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `talentlyft_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `talentlyft_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

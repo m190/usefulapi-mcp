@@ -52,7 +52,7 @@ On first connect you will paste your **Semble API token** and choose Production 
 | `semble_create_patient` | **write** | Create a patient (WRITE) |
 | `semble_usage_status` | meta | Usage status (free-tier meter) |
 | `semble_request_feature` | meta | Request a missing feature |
-| `semble_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `semble_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `semble_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -61,7 +61,7 @@ On first connect you provide your **ClickTime API token**, found in ClickTime un
 | `clicktime_create_job` | **write** | Create job |
 | `clicktime_usage_status` | meta | Usage status (free-tier meter) |
 | `clicktime_request_feature` | meta | Request a missing feature |
-| `clicktime_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `clicktime_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `clicktime_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

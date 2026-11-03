@@ -49,7 +49,7 @@ Sign in with a Hub Planner API key. Use a Read Only key for queries or a Read & 
 | `hubplanner_create_client` | **write** | Create client |
 | `hubplanner_usage_status` | meta | Usage status (free-tier meter) |
 | `hubplanner_request_feature` | meta | Request a missing feature |
-| `hubplanner_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `hubplanner_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `hubplanner_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

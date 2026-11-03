@@ -52,7 +52,7 @@ On first connect you provide your **store address** (for example `www.yourstore.
 | `ticimax_list_member_addresses` | read | List member addresses |
 | `ticimax_usage_status` | meta | Usage status (free-tier meter) |
 | `ticimax_request_feature` | meta | Request a missing feature |
-| `ticimax_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ticimax_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ticimax_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

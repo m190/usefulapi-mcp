@@ -54,7 +54,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `smarthr_invite_employee` | **write** | Invite an employee by email |
 | `smarthr_usage_status` | meta | Usage status (free-tier meter) |
 | `smarthr_request_feature` | meta | Request a missing feature |
-| `smarthr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `smarthr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `smarthr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

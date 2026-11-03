@@ -53,7 +53,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `skuvault_set_stock_quantity` | **write** | Set stock quantity |
 | `skuvault_usage_status` | meta | Usage status (free-tier meter) |
 | `skuvault_request_feature` | meta | Request a missing feature |
-| `skuvault_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `skuvault_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `skuvault_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -55,7 +55,7 @@ On first connect you provide an **Enerflo API key** (an admin finds it in Enerfl
 | `enerflo_add_lead` | **write** | Add a lead |
 | `enerflo_usage_status` | meta | Usage status (free-tier meter) |
 | `enerflo_request_feature` | meta | Request a missing feature |
-| `enerflo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `enerflo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `enerflo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -52,7 +52,7 @@ On first connect you provide your **Apilo address** (`<account>.apilo.com`), **C
 | `apilo_set_product_stock` | **write** | Set product stock quantity |
 | `apilo_usage_status` | meta | Usage status (free-tier meter) |
 | `apilo_request_feature` | meta | Request a missing feature |
-| `apilo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `apilo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `apilo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

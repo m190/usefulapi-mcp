@@ -38,7 +38,7 @@ On first connect you will paste your **Ticketsauce Client ID and Client Secret**
 | `ticketsauce_list_checkin_ids` | read | List ticket check-in ids |
 | `ticketsauce_usage_status` | meta | Usage status (free-tier meter) |
 | `ticketsauce_request_feature` | meta | Request a missing feature |
-| `ticketsauce_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ticketsauce_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ticketsauce_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

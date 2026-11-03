@@ -50,7 +50,7 @@ On first connect you provide the **API Key ID** and the **API Key Secret** (an a
 | `truecontext_fetch_data_source` | **write** | Fetch a data source now |
 | `truecontext_usage_status` | meta | Usage status (free-tier meter) |
 | `truecontext_request_feature` | meta | Request a missing feature |
-| `truecontext_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `truecontext_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `truecontext_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

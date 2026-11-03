@@ -37,7 +37,7 @@ Connect your own ViralSweep credentials through the hosted sign-in page.
 | `viralsweep_list_winners` | read | Read ViralSweep winners |
 | `viralsweep_usage_status` | meta | Usage status (free-tier meter) |
 | `viralsweep_request_feature` | meta | Request a missing feature |
-| `viralsweep_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `viralsweep_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `viralsweep_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

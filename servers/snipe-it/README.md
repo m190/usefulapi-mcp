@@ -54,7 +54,7 @@ On first connect you provide your **Snipe-IT address** (for example https://asse
 | `snipeit_checkin_hardware` | **write** | Check in an asset |
 | `snipeit_usage_status` | meta | Usage status (free-tier meter) |
 | `snipeit_request_feature` | meta | Request a missing feature |
-| `snipeit_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `snipeit_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `snipeit_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

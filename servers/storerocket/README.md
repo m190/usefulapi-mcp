@@ -41,7 +41,7 @@ On first connect you'll paste a StoreRocket **API token** (create it at storeroc
 | `storerocket_update_location` | **write** | Update location |
 | `storerocket_usage_status` | meta | Usage status (free-tier meter) |
 | `storerocket_request_feature` | meta | Request a missing feature |
-| `storerocket_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `storerocket_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `storerocket_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -47,7 +47,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `recurpay_update_subscription_coupon` | **write** | Add or remove a subscription coupon |
 | `recurpay_usage_status` | meta | Usage status (free-tier meter) |
 | `recurpay_request_feature` | meta | Request a missing feature |
-| `recurpay_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `recurpay_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `recurpay_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -53,7 +53,7 @@ On first connect you provide your **ReturnLogic API token**, generated in Return
 | `returnlogic_add_rma_metafields` | **write** | Add RMA metafields |
 | `returnlogic_usage_status` | meta | Usage status (free-tier meter) |
 | `returnlogic_request_feature` | meta | Request a missing feature |
-| `returnlogic_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `returnlogic_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `returnlogic_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -48,7 +48,7 @@ Connect your Bookafy account using the credentials described on the login page.
 | `bookafy_list_webhooks` | read | List webhook subscriptions |
 | `bookafy_usage_status` | meta | Usage status (free-tier meter) |
 | `bookafy_request_feature` | meta | Request a missing feature |
-| `bookafy_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bookafy_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bookafy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

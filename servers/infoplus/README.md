@@ -43,7 +43,7 @@ Connect your own Infoplus credentials through the hosted sign-in page.
 | `infoplus_get_asn` | read | Read an Infoplus asn |
 | `infoplus_usage_status` | meta | Usage status (free-tier meter) |
 | `infoplus_request_feature` | meta | Request a missing feature |
-| `infoplus_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `infoplus_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `infoplus_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

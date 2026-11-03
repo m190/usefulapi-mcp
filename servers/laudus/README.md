@@ -71,7 +71,7 @@ On first connect you will enter your **company RUT** and the **user name and pas
 | `laudus_create_customer` | **write** | Create a customer |
 | `laudus_usage_status` | meta | Usage status (free-tier meter) |
 | `laudus_request_feature` | meta | Request a missing feature |
-| `laudus_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `laudus_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `laudus_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -45,7 +45,7 @@ On first connect you provide your **Go2Clock API key** (in Go2Clock under Settin
 | `go2clock_create_rota` | **write** | Create rota shifts |
 | `go2clock_usage_status` | meta | Usage status (free-tier meter) |
 | `go2clock_request_feature` | meta | Request a missing feature |
-| `go2clock_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `go2clock_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `go2clock_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

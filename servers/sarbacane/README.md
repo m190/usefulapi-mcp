@@ -50,7 +50,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `sarbacane_set_campaign_list` | **write** | Attach a contact list to a draft campaign |
 | `sarbacane_usage_status` | meta | Usage status (free-tier meter) |
 | `sarbacane_request_feature` | meta | Request a missing feature |
-| `sarbacane_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sarbacane_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sarbacane_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

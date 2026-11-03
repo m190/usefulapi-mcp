@@ -62,7 +62,7 @@ Sign in with EasyStore and authorize UsefulAPI. Customer information passes to y
 | `easystore_update_customer` | **write** | Update customer |
 | `easystore_usage_status` | meta | Usage status (free-tier meter) |
 | `easystore_request_feature` | meta | Request a missing feature |
-| `easystore_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `easystore_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `easystore_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

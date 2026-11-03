@@ -39,7 +39,7 @@ On first connect you provide your **Sapling subdomain** (the part before .saplin
 | `sapling_list_tasks` | read | List tasks |
 | `sapling_usage_status` | meta | Usage status (free-tier meter) |
 | `sapling_request_feature` | meta | Request a missing feature |
-| `sapling_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sapling_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sapling_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

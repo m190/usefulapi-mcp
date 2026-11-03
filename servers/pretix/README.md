@@ -55,7 +55,7 @@ Attendee data passes to your chosen AI client. Revoke access under pretix user s
 | `pretix_checkin_position` | **write** | Check in a ticket |
 | `pretix_usage_status` | meta | Usage status (free-tier meter) |
 | `pretix_request_feature` | meta | Request a missing feature |
-| `pretix_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `pretix_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `pretix_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -56,7 +56,7 @@ On first connect you'll paste your Smartrr **API access token** (Shopify admin â
 | `smartrr_retry_bill` | **write** | Retry a failed bill |
 | `smartrr_usage_status` | meta | Usage status (free-tier meter) |
 | `smartrr_request_feature` | meta | Request a missing feature |
-| `smartrr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `smartrr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `smartrr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

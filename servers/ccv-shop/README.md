@@ -48,7 +48,7 @@ On first connect you provide your **CCV Shop shop name**, **API key** and **API 
 | `ccvshop_get_user` | read | Get a customer |
 | `ccvshop_usage_status` | meta | Usage status (free-tier meter) |
 | `ccvshop_request_feature` | meta | Request a missing feature |
-| `ccvshop_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ccvshop_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ccvshop_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

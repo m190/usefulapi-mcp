@@ -44,7 +44,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `desk365_get_kb_article` | read | Get knowledge base article |
 | `desk365_usage_status` | meta | Usage status (free-tier meter) |
 | `desk365_request_feature` | meta | Request a missing feature |
-| `desk365_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `desk365_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `desk365_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

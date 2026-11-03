@@ -51,7 +51,7 @@ On first connect you provide a **Nozbe API token** (Nozbe → API tokens). Turn 
 | `nozbeteams_create_comment` | **write** | Add a comment to a task |
 | `nozbeteams_usage_status` | meta | Usage status (free-tier meter) |
 | `nozbeteams_request_feature` | meta | Request a missing feature |
-| `nozbeteams_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `nozbeteams_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `nozbeteams_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

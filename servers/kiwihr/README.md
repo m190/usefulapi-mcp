@@ -65,7 +65,7 @@ On first connect you'll paste your kiwiHR (Tellent HR) company **API key** (crea
 | `kiwihr_create_journey` | **write** | Create journey |
 | `kiwihr_usage_status` | meta | Usage status (free-tier meter) |
 | `kiwihr_request_feature` | meta | Request a missing feature |
-| `kiwihr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `kiwihr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `kiwihr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

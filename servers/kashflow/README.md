@@ -73,7 +73,7 @@ On first connect you'll enter your **KashFlow username and password** (or the se
 | `kashflow_get_kpis` | read | Get KPIs |
 | `kashflow_usage_status` | meta | Usage status (free-tier meter) |
 | `kashflow_request_feature` | meta | Request a missing feature |
-| `kashflow_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `kashflow_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `kashflow_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

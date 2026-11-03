@@ -43,7 +43,7 @@ On first connect you provide your **public API key** (`zen_pub_…`) and your **
 | `zenamu_grant_passes` | **write** | Grant entry passes to a client |
 | `zenamu_usage_status` | meta | Usage status (free-tier meter) |
 | `zenamu_request_feature` | meta | Request a missing feature |
-| `zenamu_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `zenamu_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `zenamu_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

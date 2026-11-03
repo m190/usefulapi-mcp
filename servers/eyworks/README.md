@@ -43,7 +43,7 @@ On first connect you provide your **eyworks tenant**, **Client ID** and **Client
 | `eyworks_get_availability` | read | Get nursery availability |
 | `eyworks_usage_status` | meta | Usage status (free-tier meter) |
 | `eyworks_request_feature` | meta | Request a missing feature |
-| `eyworks_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `eyworks_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `eyworks_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

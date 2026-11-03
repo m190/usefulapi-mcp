@@ -41,7 +41,7 @@ On first connect you provide the **Public API key (search)** and the **Private k
 | `searchanise_delete_page` | **write** | Delete a page from the search index |
 | `searchanise_usage_status` | meta | Usage status (free-tier meter) |
 | `searchanise_request_feature` | meta | Request a missing feature |
-| `searchanise_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `searchanise_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `searchanise_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

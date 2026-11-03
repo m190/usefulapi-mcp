@@ -57,7 +57,7 @@ The 20 product tools read customers, suppliers, products, sales documents, recei
 | `toconline_list_sales_document_lines` | read | List sales document lines |
 | `toconline_usage_status` | meta | Usage status (free-tier meter) |
 | `toconline_request_feature` | meta | Request a missing feature |
-| `toconline_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `toconline_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `toconline_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

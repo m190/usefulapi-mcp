@@ -63,7 +63,7 @@ On first connect you'll paste your DialMyCalls **API key** (log in, then API Inf
 | `dialmycalls_get_incoming_text` | read | Get an incoming text |
 | `dialmycalls_usage_status` | meta | Usage status (free-tier meter) |
 | `dialmycalls_request_feature` | meta | Request a missing feature |
-| `dialmycalls_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `dialmycalls_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `dialmycalls_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

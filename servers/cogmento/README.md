@@ -59,7 +59,7 @@ On first connect you will paste your **Cogmento API token**. It is validated, st
 | `cogmento_update_record_field` | **write** | Update one field of a record |
 | `cogmento_usage_status` | meta | Usage status (free-tier meter) |
 | `cogmento_request_feature` | meta | Request a missing feature |
-| `cogmento_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `cogmento_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `cogmento_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

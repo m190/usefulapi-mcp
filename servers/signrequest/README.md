@@ -49,7 +49,7 @@ On first connect you provide a **SignRequest team API token** (SignRequest → T
 | `signrequest_resend_signrequest_email` | **write** | Resend signature request e-mail |
 | `signrequest_usage_status` | meta | Usage status (free-tier meter) |
 | `signrequest_request_feature` | meta | Request a missing feature |
-| `signrequest_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `signrequest_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `signrequest_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

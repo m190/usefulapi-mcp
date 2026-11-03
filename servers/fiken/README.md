@@ -66,7 +66,7 @@ On first connect you sign in to Fiken and approve access for the companies you c
 | `fiken_send_invoice` | **write** | Send an invoice to the customer (IRREVERSIBLE) |
 | `fiken_usage_status` | meta | Usage status (free-tier meter) |
 | `fiken_request_feature` | meta | Request a missing feature |
-| `fiken_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `fiken_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `fiken_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

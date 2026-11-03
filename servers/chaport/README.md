@@ -49,7 +49,7 @@ On first connect you'll paste your Chaport **REST API access token** (Chaport â†
 | `chaport_list_webhooks` | read | List webhooks |
 | `chaport_usage_status` | meta | Usage status (free-tier meter) |
 | `chaport_request_feature` | meta | Request a missing feature |
-| `chaport_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `chaport_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `chaport_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

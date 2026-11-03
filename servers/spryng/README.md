@@ -41,7 +41,7 @@ On first connect you provide a **Spryng REST API key** (Spryng portal → Your P
 | `spryng_cancel_message` | **write** | Cancel scheduled message |
 | `spryng_usage_status` | meta | Usage status (free-tier meter) |
 | `spryng_request_feature` | meta | Request a missing feature |
-| `spryng_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `spryng_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `spryng_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

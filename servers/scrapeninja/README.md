@@ -35,7 +35,7 @@ Connect with a subscribed APIRoad or RapidAPI key. Connecting requires explicit 
 | `scrapeninja_render_page` | **write** | Render a page with ScrapeNinja |
 | `scrapeninja_usage_status` | meta | Usage status (free-tier meter) |
 | `scrapeninja_request_feature` | meta | Request a missing feature |
-| `scrapeninja_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `scrapeninja_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `scrapeninja_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

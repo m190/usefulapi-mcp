@@ -46,7 +46,7 @@ On first connect you provide your **Quipu API client ID and client secret** (Qui
 | `quipu_create_draft_invoice` | **write** | Create draft invoice |
 | `quipu_usage_status` | meta | Usage status (free-tier meter) |
 | `quipu_request_feature` | meta | Request a missing feature |
-| `quipu_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `quipu_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `quipu_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

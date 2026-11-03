@@ -36,7 +36,7 @@ Connect your own IPDetective credentials through the hosted sign-in page.
 | `ipdetective_lookup_batch` | read | Investigate a batch of IP addresses |
 | `ipdetective_usage_status` | meta | Usage status (free-tier meter) |
 | `ipdetective_request_feature` | meta | Request a missing feature |
-| `ipdetective_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ipdetective_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ipdetective_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -39,7 +39,7 @@ Connect your own BounceBan credentials through the hosted sign-in page.
 | `bounceban_bulk_results` | read | Read one page of BounceBan bulk results |
 | `bounceban_usage_status` | meta | Usage status (free-tier meter) |
 | `bounceban_request_feature` | meta | Request a missing feature |
-| `bounceban_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bounceban_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bounceban_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

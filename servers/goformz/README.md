@@ -56,7 +56,7 @@ On first connect you will paste your **GoFormz Client ID and Client Secret**. Th
 | `goformz_update_datasource_row` | **write** | Update a data source row |
 | `goformz_usage_status` | meta | Usage status (free-tier meter) |
 | `goformz_request_feature` | meta | Request a missing feature |
-| `goformz_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `goformz_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `goformz_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

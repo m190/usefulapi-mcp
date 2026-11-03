@@ -54,7 +54,7 @@ On first connect you provide your **resOS API key** (Settings → API integratio
 | `resos_send_booking_comment` | **write** | Post booking comment to guest |
 | `resos_usage_status` | meta | Usage status (free-tier meter) |
 | `resos_request_feature` | meta | Request a missing feature |
-| `resos_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `resos_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `resos_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

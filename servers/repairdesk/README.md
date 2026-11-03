@@ -50,7 +50,7 @@ Connect with your RepairDesk credentials using the hosted authorization flow.
 | `repairdesk_add_internal_ticket_note` | **write** | Add an internal ticket note |
 | `repairdesk_usage_status` | meta | Usage status (free-tier meter) |
 | `repairdesk_request_feature` | meta | Request a missing feature |
-| `repairdesk_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `repairdesk_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `repairdesk_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -44,7 +44,7 @@ On first connect you provide a **YouTube Data API key** (Google Cloud Console â†
 | `youtube_list_video_categories` | read | List video categories |
 | `youtube_usage_status` | meta | Usage status (free-tier meter) |
 | `youtube_request_feature` | meta | Request a missing feature |
-| `youtube_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `youtube_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `youtube_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -56,7 +56,7 @@ On first connect you will paste your **Bukku access token and company subdomain*
 | `bukku_create_sales_invoice` | **write** | Create sales invoice |
 | `bukku_usage_status` | meta | Usage status (free-tier meter) |
 | `bukku_request_feature` | meta | Request a missing feature |
-| `bukku_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bukku_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bukku_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -63,7 +63,7 @@ On first connect you'll enter your **Hiveage account subdomain and API key** (Hi
 | `hiveage_send_estimate` | **write** | Send estimate by email |
 | `hiveage_usage_status` | meta | Usage status (free-tier meter) |
 | `hiveage_request_feature` | meta | Request a missing feature |
-| `hiveage_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `hiveage_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `hiveage_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

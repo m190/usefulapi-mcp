@@ -69,7 +69,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `jurnal_create_vendor` | **write** | Create a vendor |
 | `jurnal_usage_status` | meta | Usage status (free-tier meter) |
 | `jurnal_request_feature` | meta | Request a missing feature |
-| `jurnal_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `jurnal_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `jurnal_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -46,7 +46,7 @@ On first connect you sign in to LiveWebinar and approve access. No keys go in co
 | `livewebinar_create_webinar` | **write** | Create a scheduled webinar |
 | `livewebinar_usage_status` | meta | Usage status (free-tier meter) |
 | `livewebinar_request_feature` | meta | Request a missing feature |
-| `livewebinar_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `livewebinar_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `livewebinar_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

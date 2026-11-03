@@ -43,7 +43,7 @@ On first connect you provide a **Client ID** and a **Client Secret** (Price2Spy 
 | `price2spy_list_price_buckets` | read | List price buckets |
 | `price2spy_usage_status` | meta | Usage status (free-tier meter) |
 | `price2spy_request_feature` | meta | Request a missing feature |
-| `price2spy_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `price2spy_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `price2spy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

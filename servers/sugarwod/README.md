@@ -50,7 +50,7 @@ On first connect you provide a **SugarWOD API key** (the gym owner creates it at
 | `sugarwod_get_barbell_lift` | read | Get a barbell lift |
 | `sugarwod_usage_status` | meta | Usage status (free-tier meter) |
 | `sugarwod_request_feature` | meta | Request a missing feature |
-| `sugarwod_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sugarwod_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sugarwod_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

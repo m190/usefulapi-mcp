@@ -51,7 +51,7 @@ On first connect you provide your **Craftboxx email** and **password** of a Craf
 | `craftboxx_create_project` | **write** | Create a project |
 | `craftboxx_usage_status` | meta | Usage status (free-tier meter) |
 | `craftboxx_request_feature` | meta | Request a missing feature |
-| `craftboxx_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `craftboxx_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `craftboxx_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

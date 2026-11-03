@@ -39,7 +39,7 @@ Connect your own MailerCheck credentials through the hosted sign-in page.
 | `mailercheck_verification_result` | read | Read MailerCheck email verification result |
 | `mailercheck_usage_status` | meta | Usage status (free-tier meter) |
 | `mailercheck_request_feature` | meta | Request a missing feature |
-| `mailercheck_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `mailercheck_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `mailercheck_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

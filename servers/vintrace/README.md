@@ -69,7 +69,7 @@ On first connect you'll enter your vintrace **login URL** (the address you sign 
 | `vintrace_deactivate_booking` | **write** | Deactivate a fruit booking |
 | `vintrace_usage_status` | meta | Usage status (free-tier meter) |
 | `vintrace_request_feature` | meta | Request a missing feature |
-| `vintrace_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `vintrace_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `vintrace_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

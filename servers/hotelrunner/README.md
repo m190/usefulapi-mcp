@@ -43,7 +43,7 @@ On first connect you'll enter the **HR_ID** and **TOKEN** of a HotelRunner app (
 | `hotelrunner_update_reservation_state` | **write** | Confirm or cancel a reservation |
 | `hotelrunner_usage_status` | meta | Usage status (free-tier meter) |
 | `hotelrunner_request_feature` | meta | Request a missing feature |
-| `hotelrunner_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `hotelrunner_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `hotelrunner_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -45,7 +45,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `upper_share_route_to_drivers` | **write** | Share route to drivers |
 | `upper_usage_status` | meta | Usage status (free-tier meter) |
 | `upper_request_feature` | meta | Request a missing feature |
-| `upper_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `upper_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `upper_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

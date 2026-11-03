@@ -44,7 +44,7 @@ On first connect you provide a **Telegram bot token** (open @BotFather in Telegr
 | `telegram_delete_message` | **write** | Delete a message |
 | `telegram_usage_status` | meta | Usage status (free-tier meter) |
 | `telegram_request_feature` | meta | Request a missing feature |
-| `telegram_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `telegram_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `telegram_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

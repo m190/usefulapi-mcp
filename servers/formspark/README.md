@@ -43,7 +43,7 @@ On first connect you provide a **Formspark API token** (Formspark â†’ Account â†
 | `formspark_update_form` | **write** | Update a form |
 | `formspark_usage_status` | meta | Usage status (free-tier meter) |
 | `formspark_request_feature` | meta | Request a missing feature |
-| `formspark_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `formspark_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `formspark_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

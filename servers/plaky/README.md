@@ -55,7 +55,7 @@ On first connect you provide a **Plaky API key**, which you find or create under
 | `plaky_set_comment_reactions` | **write** | Set your reactions on a comment |
 | `plaky_usage_status` | meta | Usage status (free-tier meter) |
 | `plaky_request_feature` | meta | Request a missing feature |
-| `plaky_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `plaky_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `plaky_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

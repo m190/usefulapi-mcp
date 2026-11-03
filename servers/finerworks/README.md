@@ -55,7 +55,7 @@ Add only the URL. Do not add an `Authorization` header or an API key to the clie
 | `finerworks_validate_address` | read | Validate address |
 | `finerworks_usage_status` | meta | Usage status (free-tier meter) |
 | `finerworks_request_feature` | meta | Request a missing feature |
-| `finerworks_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `finerworks_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `finerworks_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -47,7 +47,7 @@ Verification limitation: real-account authentication, reads and writes have not 
 | `builderprime_update_meeting` | **write** | Update meeting |
 | `builderprime_usage_status` | meta | Usage status (free-tier meter) |
 | `builderprime_request_feature` | meta | Request a missing feature |
-| `builderprime_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `builderprime_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `builderprime_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

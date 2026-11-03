@@ -78,7 +78,7 @@ On first connect you provide the **Consumer Key** and **Consumer Secret** of an 
 | `emailchef_send_sms` | **write** | Send SMS |
 | `emailchef_usage_status` | meta | Usage status (free-tier meter) |
 | `emailchef_request_feature` | meta | Request a missing feature |
-| `emailchef_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `emailchef_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `emailchef_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

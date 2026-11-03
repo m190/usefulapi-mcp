@@ -51,7 +51,7 @@ Connect with your SMSGlobal credentials using the hosted authorization flow.
 | `smsglobal_get_sender_id` | read | Get a sender ID |
 | `smsglobal_usage_status` | meta | Usage status (free-tier meter) |
 | `smsglobal_request_feature` | meta | Request a missing feature |
-| `smsglobal_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `smsglobal_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `smsglobal_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

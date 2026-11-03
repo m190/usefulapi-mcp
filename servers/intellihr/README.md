@@ -57,7 +57,7 @@ On first connect you'll enter your intelliHR **tenant name** (acme for acme.inte
 | `intellihr_create_extended_leave` | **write** | Create extended leave |
 | `intellihr_usage_status` | meta | Usage status (free-tier meter) |
 | `intellihr_request_feature` | meta | Request a missing feature |
-| `intellihr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `intellihr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `intellihr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -52,7 +52,7 @@ On first connect you'll paste your Enginemailer **API key** (in Enginemailer ope
 | `enginemailer_check_transactional_report_export` | read | Check transactional report export |
 | `enginemailer_usage_status` | meta | Usage status (free-tier meter) |
 | `enginemailer_request_feature` | meta | Request a missing feature |
-| `enginemailer_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `enginemailer_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `enginemailer_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

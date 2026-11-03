@@ -70,7 +70,7 @@ Connect with the Client ID and Client Secret from Settings → API in Plutio, pl
 | `plutio_add_invoice_items` | **write** | Add invoice line items |
 | `plutio_usage_status` | meta | Usage status (free-tier meter) |
 | `plutio_request_feature` | meta | Request a missing feature |
-| `plutio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `plutio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `plutio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

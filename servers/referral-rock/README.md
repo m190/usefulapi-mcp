@@ -50,7 +50,7 @@ On first connect you'll paste your Referral Rock **public** and **private API ke
 | `referralrock_record_customer` | **write** | Record a customer purchase |
 | `referralrock_usage_status` | meta | Usage status (free-tier meter) |
 | `referralrock_request_feature` | meta | Request a missing feature |
-| `referralrock_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `referralrock_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `referralrock_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

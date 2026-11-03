@@ -52,7 +52,7 @@ On first connect you provide a **Nembol API key** (Settings → Developers, crea
 | `nembol_mark_order_shipped` | **write** | Mark an order shipped |
 | `nembol_usage_status` | meta | Usage status (free-tier meter) |
 | `nembol_request_feature` | meta | Request a missing feature |
-| `nembol_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `nembol_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `nembol_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

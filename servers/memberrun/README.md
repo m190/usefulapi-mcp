@@ -56,7 +56,7 @@ On first connect you provide a **MemberRun API key** (an association admin creat
 | `memberrun_cancel_event_registration` | **write** | Cancel an event registration |
 | `memberrun_usage_status` | meta | Usage status (free-tier meter) |
 | `memberrun_request_feature` | meta | Request a missing feature |
-| `memberrun_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `memberrun_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `memberrun_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

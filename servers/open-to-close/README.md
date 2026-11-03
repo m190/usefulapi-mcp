@@ -53,7 +53,7 @@ Generate an API token in the Open To Close Apps & API Dashboard. Usage and billi
 | `opentoclose_add_property_note` | **write** | Add property note |
 | `opentoclose_usage_status` | meta | Usage status (free-tier meter) |
 | `opentoclose_request_feature` | meta | Request a missing feature |
-| `opentoclose_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `opentoclose_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `opentoclose_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

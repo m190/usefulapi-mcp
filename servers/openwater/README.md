@@ -46,7 +46,7 @@ On first connect you provide your **OpenWater domain** (for example yourorg.secu
 | `openwater_list_funds` | read | List funds |
 | `openwater_usage_status` | meta | Usage status (free-tier meter) |
 | `openwater_request_feature` | meta | Request a missing feature |
-| `openwater_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `openwater_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `openwater_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

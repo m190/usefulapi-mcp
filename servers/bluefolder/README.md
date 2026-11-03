@@ -52,7 +52,7 @@ On first connect you provide your **BlueFolder API token** (BlueFolder → Setti
 | `bluefolder_add_customer_comment` | **write** | Add a customer comment |
 | `bluefolder_usage_status` | meta | Usage status (free-tier meter) |
 | `bluefolder_request_feature` | meta | Request a missing feature |
-| `bluefolder_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bluefolder_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bluefolder_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

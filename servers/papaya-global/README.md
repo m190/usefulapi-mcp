@@ -43,7 +43,7 @@ On first connect you provide an **API key** and a **client secret** for your **e
 | `papayaglobal_get_payment` | read | Get a payment |
 | `papayaglobal_usage_status` | meta | Usage status (free-tier meter) |
 | `papayaglobal_request_feature` | meta | Request a missing feature |
-| `papayaglobal_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `papayaglobal_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `papayaglobal_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

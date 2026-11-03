@@ -47,7 +47,7 @@ On first connect you provide a **Kantata OX OAuth token**, which you copy from S
 | `kantata_log_time` | **write** | Log time |
 | `kantata_usage_status` | meta | Usage status (free-tier meter) |
 | `kantata_request_feature` | meta | Request a missing feature |
-| `kantata_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `kantata_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `kantata_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

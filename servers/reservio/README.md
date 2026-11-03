@@ -51,7 +51,7 @@ On first connect you provide a **Reservio API access token** and your **Business
 | `reservio_create_group_booking` | **write** | Book a group event |
 | `reservio_usage_status` | meta | Usage status (free-tier meter) |
 | `reservio_request_feature` | meta | Request a missing feature |
-| `reservio_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `reservio_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `reservio_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

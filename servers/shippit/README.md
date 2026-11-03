@@ -47,7 +47,7 @@ On first connect you'll paste your Shippit **API key** and choose the environmen
 | `shippit_cancel_order` | **write** | Cancel order |
 | `shippit_usage_status` | meta | Usage status (free-tier meter) |
 | `shippit_request_feature` | meta | Request a missing feature |
-| `shippit_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `shippit_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `shippit_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

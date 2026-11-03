@@ -43,7 +43,7 @@ On first connect you provide a **Happily.ai API key** (my.happily.ai/integration
 | `happily_send_recognition` | **write** | Send recognition (gives coins) |
 | `happily_usage_status` | meta | Usage status (free-tier meter) |
 | `happily_request_feature` | meta | Request a missing feature |
-| `happily_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `happily_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `happily_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

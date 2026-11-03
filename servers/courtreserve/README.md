@@ -56,7 +56,7 @@ Connect your CourtReserve credentials to access your account through usefulapi.
 | `courtreserve_list_league_sessions` | read | List league sessions |
 | `courtreserve_usage_status` | meta | Usage status (free-tier meter) |
 | `courtreserve_request_feature` | meta | Request a missing feature |
-| `courtreserve_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `courtreserve_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `courtreserve_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

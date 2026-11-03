@@ -56,7 +56,7 @@ On first connect you'll paste your Awtomic **API key** (in the Awtomic Subscript
 | `awtomic_send_payment_update_email` | **write** | Email customer to update payment method |
 | `awtomic_usage_status` | meta | Usage status (free-tier meter) |
 | `awtomic_request_feature` | meta | Request a missing feature |
-| `awtomic_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `awtomic_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `awtomic_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -55,7 +55,7 @@ On first connect you will paste your **Appointedd credentials**. They are valida
 | `appointedd_cancel_booking_customer` | **write** | Cancel customer on booking |
 | `appointedd_usage_status` | meta | Usage status (free-tier meter) |
 | `appointedd_request_feature` | meta | Request a missing feature |
-| `appointedd_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `appointedd_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `appointedd_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

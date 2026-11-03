@@ -75,7 +75,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `sellsy_create_task` | **write** | Create a task |
 | `sellsy_usage_status` | meta | Usage status (free-tier meter) |
 | `sellsy_request_feature` | meta | Request a missing feature |
-| `sellsy_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `sellsy_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `sellsy_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

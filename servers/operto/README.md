@@ -43,7 +43,7 @@ On first connect you provide your **Operto API key and API secret**. Operto issu
 | `operto_get_thermostat` | read | Get a thermostat |
 | `operto_usage_status` | meta | Usage status (free-tier meter) |
 | `operto_request_feature` | meta | Request a missing feature |
-| `operto_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `operto_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `operto_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

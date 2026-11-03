@@ -40,7 +40,7 @@ On first connect you provide the **Client ID** and **Client Secret** (app.otters
 | `otterwaiver_get_participant` | read | Get participant |
 | `otterwaiver_usage_status` | meta | Usage status (free-tier meter) |
 | `otterwaiver_request_feature` | meta | Request a missing feature |
-| `otterwaiver_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `otterwaiver_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `otterwaiver_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

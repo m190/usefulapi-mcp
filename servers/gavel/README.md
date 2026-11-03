@@ -39,7 +39,7 @@ On first connect you provide your **Gavel subdomain** and a **Gavel API key** (G
 | `gavel_list_session_documents` | read | List session documents |
 | `gavel_usage_status` | meta | Usage status (free-tier meter) |
 | `gavel_request_feature` | meta | Request a missing feature |
-| `gavel_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `gavel_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `gavel_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -55,7 +55,7 @@ On first connect you provide an **eventOne personal access token** (eventOne acc
 | `eventone_list_messages` | read | List push messages |
 | `eventone_usage_status` | meta | Usage status (free-tier meter) |
 | `eventone_request_feature` | meta | Request a missing feature |
-| `eventone_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `eventone_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `eventone_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -52,7 +52,7 @@ On first connect you provide the **AcademyOcean Client ID** and **AcademyOcean C
 | `academyocean_check_learner_invites` | read | Check learner invitations |
 | `academyocean_usage_status` | meta | Usage status (free-tier meter) |
 | `academyocean_request_feature` | meta | Request a missing feature |
-| `academyocean_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `academyocean_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `academyocean_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

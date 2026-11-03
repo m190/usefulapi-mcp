@@ -52,7 +52,7 @@ On first connect you will paste your **Evenium API key**. It is validated, store
 | `evenium_list_event_part_registrations` | read | List session registrations |
 | `evenium_usage_status` | meta | Usage status (free-tier meter) |
 | `evenium_request_feature` | meta | Request a missing feature |
-| `evenium_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `evenium_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `evenium_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

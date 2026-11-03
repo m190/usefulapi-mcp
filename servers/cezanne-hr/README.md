@@ -42,7 +42,7 @@ On first connect you provide the **client ID** and **client secret** of an Autho
 | `cezannehr_read_table` | read | Read a table |
 | `cezannehr_usage_status` | meta | Usage status (free-tier meter) |
 | `cezannehr_request_feature` | meta | Request a missing feature |
-| `cezannehr_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `cezannehr_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `cezannehr_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

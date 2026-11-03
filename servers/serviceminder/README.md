@@ -49,7 +49,7 @@ On first connect you provide a **ServiceMinder API key** (Control Panel → API 
 | `serviceminder_create_task` | **write** | Create task |
 | `serviceminder_usage_status` | meta | Usage status (free-tier meter) |
 | `serviceminder_request_feature` | meta | Request a missing feature |
-| `serviceminder_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `serviceminder_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `serviceminder_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

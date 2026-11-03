@@ -43,7 +43,7 @@ Connect with your Quinyx credentials using the hosted authorization flow.
 | `quinyx_get_agreement` | read | Get agreement |
 | `quinyx_usage_status` | meta | Usage status (free-tier meter) |
 | `quinyx_request_feature` | meta | Request a missing feature |
-| `quinyx_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `quinyx_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `quinyx_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

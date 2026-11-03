@@ -48,7 +48,7 @@ On first connect you provide your **Userlike API token** (Dashboard → API). Th
 | `userlike_set_operator_away` | **write** | Set operator away status |
 | `userlike_usage_status` | meta | Usage status (free-tier meter) |
 | `userlike_request_feature` | meta | Request a missing feature |
-| `userlike_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `userlike_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `userlike_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

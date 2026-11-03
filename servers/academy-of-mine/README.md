@@ -47,7 +47,7 @@ On first connect you provide your **academy domain** (for example academy.yoursi
 | `academyofmine_list_portals` | read | List portals |
 | `academyofmine_usage_status` | meta | Usage status (free-tier meter) |
 | `academyofmine_request_feature` | meta | Request a missing feature |
-| `academyofmine_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `academyofmine_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `academyofmine_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

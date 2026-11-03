@@ -43,7 +43,7 @@ Connect your existing Givecloud account using the credentials described below.
 | `givecloud_get_post` | read | Get a feed post |
 | `givecloud_usage_status` | meta | Usage status (free-tier meter) |
 | `givecloud_request_feature` | meta | Request a missing feature |
-| `givecloud_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `givecloud_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `givecloud_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

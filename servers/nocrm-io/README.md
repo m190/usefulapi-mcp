@@ -59,7 +59,7 @@ On first connect you'll enter your noCRM.io **account name** (acme for acme.nocr
 | `nocrm_add_lead_to_client_folder` | **write** | Add lead to client folder |
 | `nocrm_usage_status` | meta | Usage status (free-tier meter) |
 | `nocrm_request_feature` | meta | Request a missing feature |
-| `nocrm_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `nocrm_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `nocrm_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

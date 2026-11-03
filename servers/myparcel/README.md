@@ -45,7 +45,7 @@ On first connect you provide a **MyParcel API key** (MyParcel backoffice → Sho
 | `myparcel_delete_shipments` | **write** | Delete shipments |
 | `myparcel_usage_status` | meta | Usage status (free-tier meter) |
 | `myparcel_request_feature` | meta | Request a missing feature |
-| `myparcel_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `myparcel_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `myparcel_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

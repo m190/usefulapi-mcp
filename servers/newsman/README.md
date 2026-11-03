@@ -59,7 +59,7 @@ On first connect you will paste your **NewsMAN Authorization token**. It is vali
 | `newsman_remove_subscriber_from_segment` | **write** | Remove a subscriber from a segment |
 | `newsman_usage_status` | meta | Usage status (free-tier meter) |
 | `newsman_request_feature` | meta | Request a missing feature |
-| `newsman_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `newsman_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `newsman_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

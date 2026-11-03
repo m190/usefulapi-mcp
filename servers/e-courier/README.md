@@ -46,7 +46,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `ecourier_list_payments` | read | List payments |
 | `ecourier_usage_status` | meta | Usage status (free-tier meter) |
 | `ecourier_request_feature` | meta | Request a missing feature |
-| `ecourier_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ecourier_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ecourier_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

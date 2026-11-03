@@ -55,7 +55,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `aryeo_complete_task` | **write** | Complete task |
 | `aryeo_usage_status` | meta | Usage status (free-tier meter) |
 | `aryeo_request_feature` | meta | Request a missing feature |
-| `aryeo_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `aryeo_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `aryeo_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

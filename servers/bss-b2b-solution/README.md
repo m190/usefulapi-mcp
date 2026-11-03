@@ -46,7 +46,7 @@ On first connect you provide your **store domain** (`your-store.myshopify.com`) 
 | `bssb2b_set_registration_status` | **write** | Approve or reject wholesale applicants |
 | `bssb2b_usage_status` | meta | Usage status (free-tier meter) |
 | `bssb2b_request_feature` | meta | Request a missing feature |
-| `bssb2b_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bssb2b_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bssb2b_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

@@ -55,7 +55,7 @@ On first connect you provide your **Janitorial Manager username**, **password** 
 | `janitorialmanager_get_supplier` | read | Get a supplier |
 | `janitorialmanager_usage_status` | meta | Usage status (free-tier meter) |
 | `janitorialmanager_request_feature` | meta | Request a missing feature |
-| `janitorialmanager_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `janitorialmanager_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `janitorialmanager_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

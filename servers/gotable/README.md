@@ -56,7 +56,7 @@ On first connect you provide a **GoTable API key**. Create a restaurant key in G
 | `gotable_update_guest` | **write** | Update a guest |
 | `gotable_usage_status` | meta | Usage status (free-tier meter) |
 | `gotable_request_feature` | meta | Request a missing feature |
-| `gotable_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `gotable_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `gotable_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

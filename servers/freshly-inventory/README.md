@@ -43,7 +43,7 @@ On first connect you provide your **Freshly API key** (Preferences → API keys 
 | `freshly_remove_batch_assignment` | **write** | Remove batch assignment from order line |
 | `freshly_usage_status` | meta | Usage status (free-tier meter) |
 | `freshly_request_feature` | meta | Request a missing feature |
-| `freshly_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `freshly_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `freshly_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

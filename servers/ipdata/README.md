@@ -41,7 +41,7 @@ On first connect you provide your **ipdata API key**, found in your [ipdata dash
 | `ipdata_bulk_lookup` | read | Look up many IP addresses |
 | `ipdata_usage_status` | meta | Usage status (free-tier meter) |
 | `ipdata_request_feature` | meta | Request a missing feature |
-| `ipdata_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `ipdata_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `ipdata_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

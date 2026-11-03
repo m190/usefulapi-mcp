@@ -46,7 +46,7 @@ On first connect you provide the **campaign secret API token** (campaign editor 
 | `viralloops_list_given_rewards` | read | List given rewards |
 | `viralloops_usage_status` | meta | Usage status (free-tier meter) |
 | `viralloops_request_feature` | meta | Request a missing feature |
-| `viralloops_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `viralloops_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `viralloops_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

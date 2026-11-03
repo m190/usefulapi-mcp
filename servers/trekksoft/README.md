@@ -45,7 +45,7 @@ On first connect you provide your **API client id and client secret**. TrekkSoft
 | `trekksoft_list_shop_items` | read | List shop items |
 | `trekksoft_usage_status` | meta | Usage status (free-tier meter) |
 | `trekksoft_request_feature` | meta | Request a missing feature |
-| `trekksoft_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `trekksoft_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `trekksoft_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

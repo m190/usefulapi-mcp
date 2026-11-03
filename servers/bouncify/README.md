@@ -38,7 +38,7 @@ Connect your own Bouncify credentials through the hosted sign-in page.
 | `bouncify_bulk_status` | read | Read Bouncify bulk status |
 | `bouncify_usage_status` | meta | Usage status (free-tier meter) |
 | `bouncify_request_feature` | meta | Request a missing feature |
-| `bouncify_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `bouncify_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `bouncify_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.

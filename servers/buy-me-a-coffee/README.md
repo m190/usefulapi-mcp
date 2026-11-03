@@ -41,7 +41,7 @@ On first connect you provide a **Buy Me a Coffee access token** (developer dashb
 | `buymeacoffee_get_extra_purchase` | read | Get an Extras purchase |
 | `buymeacoffee_usage_status` | meta | Usage status (free-tier meter) |
 | `buymeacoffee_request_feature` | meta | Request a missing feature |
-| `buymeacoffee_upgrade` | meta | Upgrade to Pro (unlimited*) |
+| `buymeacoffee_upgrade` | meta | Upgrade to Pro or Pro+ |
 | `buymeacoffee_cancel_subscription` | meta | Cancel the Pro subscription |
 
 `read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
