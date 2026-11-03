@@ -71,6 +71,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `sellsy_create_individual` | **write** | Create an individual |
 | `sellsy_create_contact` | **write** | Create a contact |
 | `sellsy_create_opportunity` | **write** | Create an opportunity |
+| `sellsy_move_opportunity` | **write** | Move an opportunity to another step |
 | `sellsy_create_comment` | **write** | Add a comment (note) |
 | `sellsy_create_task` | **write** | Create a task |
 | `sellsy_usage_status` | meta | Usage status (free-tier meter) |
