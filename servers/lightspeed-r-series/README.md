@@ -41,6 +41,7 @@ access any time from your Lightspeed Retail account settings. One subscription c
 | `lightspeedrseries_list_items` | read | List items |
 | `lightspeedrseries_get_item` | read | Get an item |
 | `lightspeedrseries_list_inventory` | read | List inventory levels |
+| `lightspeedrseries_list_inventory_log` | read | List inventory history |
 | `lightspeedrseries_list_categories` | read | List categories |
 | `lightspeedrseries_list_sales` | read | List sales |
 | `lightspeedrseries_get_sale` | read | Get a sale |
