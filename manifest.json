@@ -127527,6 +127527,1662 @@
         "Where do the listeners of my newest episode come from?",
         "Change the description of my latest episode."
       ]
+    },
+    {
+      "slug": "proofhub",
+      "name": "ProofHub",
+      "category": "project-management",
+      "description": "Read projects, tasks, comments, people and time entries; create tasks and comments in ProofHub.",
+      "endpoint": "https://proofhub.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ProofHub company"
+          },
+          {
+            "label": "ProofHub API key"
+          }
+        ],
+        "hint": "Your company is the part before **.proofhub.com** in your address. Find your key under your profile menu → **API access** (the official docs also describe 5 clicks on the profile picture). The key acts as your user, so the assistant sees only what you can see."
+      },
+      "tools": [
+        {
+          "name": "proofhub_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List all projects in the ProofHub account the key belongs to. Start here to find project ids. GET /projects."
+        },
+        {
+          "name": "proofhub_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Get one project by id: name, status, dates and the people on it. GET /projects/{project_id}."
+        },
+        {
+          "name": "proofhub_list_todolists",
+          "type": "read",
+          "title": "List to-do lists",
+          "description": "List the to-do lists (task lists) of one project. GET /projects/{project_id}/todolists."
+        },
+        {
+          "name": "proofhub_list_tasks",
+          "type": "read",
+          "title": "List tasks in a to-do list",
+          "description": "List the tasks of one to-do list with title, assignees, labels, dates and completion. GET /projects/{project_id}/todolists/{todolist_id}/tasks."
+        },
+        {
+          "name": "proofhub_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "Get one task with its description, dates, assignees, labels and progress. GET /projects/{project_id}/todolists/{todolist_id}/tasks/{task_id}."
+        },
+        {
+          "name": "proofhub_list_task_comments",
+          "type": "read",
+          "title": "List task comments",
+          "description": "List the comments on one task. GET /projects/{project_id}/todolists/{todolist_id}/tasks/{task_id}/comments."
+        },
+        {
+          "name": "proofhub_search_all_tasks",
+          "type": "read",
+          "title": "Search tasks across projects",
+          "description": "List tasks across the whole account, filtered by project, label or completion. Paged: when the reply has more records, call again with a higher start. GET /alltodo."
+        },
+        {
+          "name": "proofhub_list_topics",
+          "type": "read",
+          "title": "List discussion topics",
+          "description": "List the discussion topics of one project. GET /projects/{project_id}/topics."
+        },
+        {
+          "name": "proofhub_list_labels",
+          "type": "read",
+          "title": "List labels",
+          "description": "List the task labels of the account. Use the ids in task filters. GET /labels."
+        },
+        {
+          "name": "proofhub_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List the people (users) of the account with their roles and emails. GET /people."
+        },
+        {
+          "name": "proofhub_get_person",
+          "type": "read",
+          "title": "Get person",
+          "description": "Get one person by id. GET /people/{person_id}."
+        },
+        {
+          "name": "proofhub_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List logged time entries across the account, paged. When the reply is full, call again with a higher start. GET /alltime."
+        },
+        {
+          "name": "proofhub_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "Create a task in a to-do list. Writes to the account. Each call makes a new task, so do not retry blindly. POST /projects/{project_id}/todolists/{todolist_id}/tasks."
+        },
+        {
+          "name": "proofhub_set_task_completed",
+          "type": "write",
+          "title": "Mark task complete or open",
+          "description": "Mark one task completed (true) or open again (false). Setting the same value twice is harmless. PUT /projects/{project_id}/todolists/{todolist_id}/tasks/{task_id}."
+        },
+        {
+          "name": "proofhub_add_task_comment",
+          "type": "write",
+          "title": "Add task comment",
+          "description": "Post a comment on one task, as the key's user. Each call posts a new comment, so do not retry blindly. POST /projects/{project_id}/todolists/{todolist_id}/tasks/{task_id}/comments."
+        },
+        {
+          "name": "proofhub_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "proofhub_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ProofHub tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "proofhub_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ProofHub (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "proofhub_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ProofHub Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run proofhub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which tasks in our Website Redesign project are overdue?",
+        "List the open tasks assigned to Maria across all projects.",
+        "Create a task 'Send final invoice' in the Finance to-do list, due on 2026-11-30.",
+        "Mark task 1234 in the Launch list as complete."
+      ]
+    },
+    {
+      "slug": "ascora",
+      "name": "Ascora",
+      "category": "business-operations",
+      "description": "Read customers, quotes, jobs, bookings and price list; create quotes, jobs and bookings in Ascora.",
+      "endpoint": "https://ascora.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Ascora API key"
+          }
+        ],
+        "hint": "Find it in Ascora under **Administration -> API Settings -> Generate New API Key**, then copy it. Generating a new key disconnects anything using the previous one. Your key is used only to call the Ascora API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "ascora_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "Search Ascora customers (sites and billing customers): id, number, name, contact, email, phone, addresses, on-hold flags, customer type, lead source, billing customer and assigned user. GET /Customers/Customers."
+        },
+        {
+          "name": "ascora_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One Ascora customer by id (GUID from ascora_list_customers), including custom fields. GET /Customers/Customer/{id}."
+        },
+        {
+          "name": "ascora_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Search contacts across all customers by name, email or phone. GET /Customers/Contacts."
+        },
+        {
+          "name": "ascora_list_customer_contacts",
+          "type": "read",
+          "title": "List contacts of a customer",
+          "description": "All contacts of one customer, with role and default-contact flag. GET /Customers/GetContactsForCustomer/{customerId}."
+        },
+        {
+          "name": "ascora_list_supplies",
+          "type": "read",
+          "title": "List supplies (price list)",
+          "description": "Search the inventory price list: materials and services with part number, description, cost, sell price ex/inc tax, supplier, categories and reorder flags. Use the supply id to add items to quotes. GET /Inventory/Supplies."
+        },
+        {
+          "name": "ascora_list_kits",
+          "type": "read",
+          "title": "List kits",
+          "description": "Search kits (bundles of supplies and labour) with part number, description, markup, sell price and pricing method. GET /Inventory/Kits."
+        },
+        {
+          "name": "ascora_list_categories",
+          "type": "read",
+          "title": "List inventory categories",
+          "description": "Inventory categories (Category 1 or 2, top-level or sub-categories) used to filter supplies and kits. GET /Inventory/Categories."
+        },
+        {
+          "name": "ascora_list_labour_roles",
+          "type": "read",
+          "title": "List labour roles",
+          "description": "Labour roles with their hourly rate ex tax, ordered by name. Use the role id to add labour to a quote. GET /Quotes/LabourRoles."
+        },
+        {
+          "name": "ascora_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "Search quotes: number, name, status, date, totals ex/inc tax, pricing method, job type and site/billing customer. Status defaults to OPEN (in progress or sent) when omitted. GET /Quotes/Quotes."
+        },
+        {
+          "name": "ascora_get_quote",
+          "type": "read",
+          "title": "Get quote",
+          "description": "One quote by its full number (e.g. Q57): status, dates, totals, pricing method, addresses, job type, customers and custom fields. GET /Quotes/Quote/{quoteNumber}."
+        },
+        {
+          "name": "ascora_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "Search jobs: number, name, status, totals, pricing method, job type, site/billing customer, secondary status and pipeline phase. Status defaults to OPEN when omitted. GET /Jobs/Jobs."
+        },
+        {
+          "name": "ascora_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "One job by its full number (e.g. J112): status, dates, totals, pricing method, job type, customers, secondary status and pipeline phase. A deleted job reads as not found. GET /Jobs/Job/{jobNumber}."
+        },
+        {
+          "name": "ascora_get_job_labour",
+          "type": "read",
+          "title": "Get job labour",
+          "description": "Labour lines on a job: role, hours, hourly rate, totals, staff member, chargeable and invoiced flags. GET /Jobs/JobLabour/{jobNumber}."
+        },
+        {
+          "name": "ascora_get_job_timesheets",
+          "type": "read",
+          "title": "Get job timesheets",
+          "description": "Timesheet entries on a job: staff member, start/end, hours, meal break and payroll-sent flag (pay and cost rates are not returned). GET /Jobs/JobTimesheets/{jobNumber}."
+        },
+        {
+          "name": "ascora_list_bookings",
+          "type": "read",
+          "title": "List bookings (schedule)",
+          "description": "Search the schedule: bookings of jobs, quotes and activities with staff member, start/end, notes, arrival window and the job or quote they belong to. Archived bookings are excluded unless include_archived. GET /Bookings/Bookings."
+        },
+        {
+          "name": "ascora_get_booking",
+          "type": "read",
+          "title": "Get booking",
+          "description": "One booking by id: type, times (local and UTC), staff member, job/quote/activity, customers, address, notes, arrival window, rates and reminder flags. GET /Bookings/Booking/{bookingId}."
+        },
+        {
+          "name": "ascora_list_activity_types",
+          "type": "read",
+          "title": "List activity types",
+          "description": "Activity types that non-job bookings (training, leave-style activities, etc.) can be made with. GET /Bookings/ActivityTypes."
+        },
+        {
+          "name": "ascora_list_users",
+          "type": "read",
+          "title": "List staff users",
+          "description": "Staff users of the Ascora company (archived users excluded): id, name, email, mobile, job title, team, scheduler group, licence and access flags. Pay rates are not returned. GET /Users/Users."
+        },
+        {
+          "name": "ascora_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "Search suppliers by name, supplier number or exact business number (ABN). GET /Suppliers/Suppliers."
+        },
+        {
+          "name": "ascora_list_supplier_invoices",
+          "type": "read",
+          "title": "List supplier invoices",
+          "description": "Search supplier invoices and credit notes: supplier, dates, tracking number, lines and totals. GET /SupplierInvoices/SupplierInvoices."
+        },
+        {
+          "name": "ascora_create_enquiry",
+          "type": "write",
+          "title": "Create enquiry (lead)",
+          "description": "WRITE: create a new enquiry (lead) in Ascora. Every call creates another enquiry (not idempotent; Ascora allows 500 enquiries an hour per company), so do not repeat it. Needs at least a name, company, email, phone or mobile. POST /Enquiry."
+        },
+        {
+          "name": "ascora_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "WRITE: create a new customer (site or billing) in Ascora. Always creates a new record (it never updates an existing customer), so search with ascora_list_customers first to avoid duplicates. A customer type or lead source name that does not exist is created. POST /Customers/Customer."
+        },
+        {
+          "name": "ascora_add_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: add a note to an enquiry, job, quote, invoice or customer (the entity must already exist). Notes cannot be edited or removed through this server, and every call adds another note. POST /Notes/Note."
+        },
+        {
+          "name": "ascora_create_quote",
+          "type": "write",
+          "title": "Create quote",
+          "description": "WRITE: create a new quote (status In Progress; it is NOT sent to the customer) for a site customer, optionally with supplies, kits and labour from the price list. Ids that Ascora cannot find are skipped silently when creating, so check the totals in the reply. Every call creates another quote. POST /Quotes/Quote."
+        },
+        {
+          "name": "ascora_update_quote_status",
+          "type": "write",
+          "title": "Update quote status",
+          "description": "WRITE: change a quote's status to IN-PROGRESS, SENT-TO-CUSTOMER, LOST or WON. WON converts the quote into a new Job (the same as ascora_convert_quote_to_job; a second WON returns the existing job). Ascora's reference documents only a status change, not an email to the customer. POST /Quotes/UpdateStatus."
+        },
+        {
+          "name": "ascora_convert_quote_to_job",
+          "type": "write",
+          "title": "Convert quote to job",
+          "description": "WRITE: convert a quote into a Job (what Convert to Job does in Ascora): supplies, labour, notes, bookings and attachments carry over and the quote is marked converted. Never forces a new job: a variation quote is added onto its original job, a quote whose job still exists is reconnected to it, and a quote already converted is refused with a message naming the existing job. Specify the parent quote number, not a section. POST /Quotes/ConvertToJob."
+        },
+        {
+          "name": "ascora_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "WRITE: create a new job for a site customer (it never updates an existing job). Every call creates another job; add work with a quote or in Ascora. The job is not booked and nothing is sent to the customer. POST /Jobs/Job."
+        },
+        {
+          "name": "ascora_create_booking",
+          "type": "write",
+          "title": "Create booking",
+          "description": "WRITE: schedule staff on a job or a quote (give exactly one of job_number / quote_number). One booking is created per staff member and the job or quote moves to Booked; the bookings show on the Scheduler and the staff mobile apps, and Ascora's own reminder settings may notify the customer or staff. Repeating the identical request returns the existing booking. By default a clash with another booking or leave refuses the whole request (reject_conflicts). POST /Bookings/Booking."
+        },
+        {
+          "name": "ascora_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ascora_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Ascora tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ascora_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Ascora (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ascora_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Ascora Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ascora_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which quotes have been sent to customers but not yet accepted?",
+        "Show me the jobs that are completed but not yet invoiced.",
+        "Who is booked on the schedule next week?",
+        "Create a quote for customer Acme Plumbing with two hours of the Standard labour role."
+      ]
+    },
+    {
+      "slug": "daftra",
+      "name": "Daftra",
+      "category": "accounting",
+      "description": "Read clients, invoices, expenses and suppliers; create clients, invoices and expenses in Daftra.",
+      "endpoint": "https://daftra.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Daftra subdomain"
+          },
+          {
+            "label": "Daftra API key"
+          }
+        ],
+        "hint": "In Daftra open **Settings -> API -> API Keys**, click **Generate API key** and give it a name. Your subdomain is the first part of your Daftra address (acme for acme.daftra.com). The key sees the whole account with its owner's rights; in the key's **Roles** you can limit it to the entities you want to share. Your key is used only to call your own Daftra account and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "daftra_get_site_info",
+          "type": "read",
+          "title": "Get account info",
+          "description": "The Daftra account this API key belongs to: id, business name, subdomain, country, timezone, date format, default currency and subscription expiry. Check the date format and currency here before creating records. GET /site_info."
+        },
+        {
+          "name": "daftra_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (customers), 20 per page by default. Search by name, number, email or phone with `keywords`. Each item is wrapped in a `Client` object. GET /clients."
+        },
+        {
+          "name": "daftra_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "One client by id (contact details, balance settings, currency, address). GET /clients/{id}."
+        },
+        {
+          "name": "daftra_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List sales invoices (and debit notes), most recent first. Filter by client, payment status, dates or free text. By default each item has the header and client; set recursive=1 for line items, payments and taxes. GET /invoices."
+        },
+        {
+          "name": "daftra_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "One standard invoice by id with line items, payments, taxes, custom fields and client. Other document types (estimate, credit note) answer 404. GET /invoices/{id}."
+        },
+        {
+          "name": "daftra_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates (quotes), most recent first. Filter by client, status, dates or free text. GET /estimates."
+        },
+        {
+          "name": "daftra_get_estimate",
+          "type": "read",
+          "title": "Get estimate",
+          "description": "One estimate (quote) by id with line items, taxes and client. GET /estimates/{id}."
+        },
+        {
+          "name": "daftra_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List payments recorded against invoices, most recent first. Opening-balance and client-credit payments are excluded. GET /invoice_payments."
+        },
+        {
+          "name": "daftra_list_client_payments",
+          "type": "read",
+          "title": "List client payments",
+          "description": "List payments received from clients, most recent first. Opening-balance and client-credit payments are excluded. GET /client_payments."
+        },
+        {
+          "name": "daftra_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services (name, code, price, stock) ordered by name. Search by name, code, barcode or tag with `keywords`. Each item is a `Product` object. GET /products."
+        },
+        {
+          "name": "daftra_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "One product by id with images and categories. GET /products/{id}."
+        },
+        {
+          "name": "daftra_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List product categories with their parent category. GET /product_categories."
+        },
+        {
+          "name": "daftra_list_stores",
+          "type": "read",
+          "title": "List stores (warehouses)",
+          "description": "List stores (warehouses) the key's user may view. Use the ids to filter stock transactions. GET /stores."
+        },
+        {
+          "name": "daftra_list_stock_transactions",
+          "type": "read",
+          "title": "List stock transactions",
+          "description": "List processed stock movements (in, out, transfers), most recent first. Filter by product, store or date range. GET /stock_transactions."
+        },
+        {
+          "name": "daftra_list_treasuries",
+          "type": "read",
+          "title": "List treasuries and bank accounts",
+          "description": "List treasuries and bank accounts the key's user may view, with balances. Use the ids when recording expenses. GET /treasuries."
+        },
+        {
+          "name": "daftra_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expenses (money out), most recent first, with amount, vendor, category and treasury. Filter by dates, amount, category, vendor or status. GET /expenses."
+        },
+        {
+          "name": "daftra_get_expense",
+          "type": "read",
+          "title": "Get expense",
+          "description": "One expense by id. GET /expenses/{id}."
+        },
+        {
+          "name": "daftra_list_incomes",
+          "type": "read",
+          "title": "List incomes",
+          "description": "List incomes (money in that is not an invoice payment), most recent first. Same filters as expenses. GET /incomes."
+        },
+        {
+          "name": "daftra_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the taxes configured for the account (name, rate, active). Use the ids as tax1/tax2 on invoice lines. All taxes come in one reply. GET /taxes."
+        },
+        {
+          "name": "daftra_list_purchase_invoices",
+          "type": "read",
+          "title": "List purchase invoices",
+          "description": "List purchase invoices (bills from suppliers), most recent first. Search by supplier or filter by payment status. GET /purchase_invoices."
+        },
+        {
+          "name": "daftra_get_purchase_invoice",
+          "type": "read",
+          "title": "Get purchase invoice",
+          "description": "One purchase invoice by id with line items, supplier, taxes and payments. GET /purchase_invoices/{id}."
+        },
+        {
+          "name": "daftra_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers. Filter by name, address, postal code, country or status. GET /suppliers."
+        },
+        {
+          "name": "daftra_get_supplier",
+          "type": "read",
+          "title": "Get supplier",
+          "description": "One supplier by id. GET /suppliers/{id}."
+        },
+        {
+          "name": "daftra_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes recorded against clients, invoices, estimates, purchase invoices, staff, suppliers, products and work orders: text, the record it belongs to (item_type + item_id), author, follow-up status. GET /notes."
+        },
+        {
+          "name": "daftra_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "WRITE: create a client (customer). Only business_name is required. Without an email the client is created as offline (no email sending). Returns the new client's id and client_number. POST /clients."
+        },
+        {
+          "name": "daftra_update_client",
+          "type": "write",
+          "title": "Update client",
+          "description": "WRITE: change fields of an existing client. Partial update: only the fields you pass change; business_name cannot be emptied. PUT /clients/{id}."
+        },
+        {
+          "name": "daftra_create_supplier",
+          "type": "write",
+          "title": "Create supplier",
+          "description": "WRITE: create a supplier. business_name is required; email is required unless is_offline is true. Returns the new supplier's id. POST /suppliers."
+        },
+        {
+          "name": "daftra_create_expense",
+          "type": "write",
+          "title": "Create expense",
+          "description": "WRITE: record an expense (money out of a treasury). amount and date are required; the treasury defaults to the primary one and the currency to the account currency. Pass unique_id so a retry cannot create it twice. Returns the new expense id and number. POST /expenses."
+        },
+        {
+          "name": "daftra_create_invoice",
+          "type": "write",
+          "title": "Create invoice",
+          "description": "WRITE: create a sales invoice for a client with line items. It is saved as a DRAFT unless you pass draft=false; a final invoice posts to the books and stock. Returns the new invoice id. POST /invoices."
+        },
+        {
+          "name": "daftra_add_note",
+          "type": "write",
+          "title": "Add note",
+          "description": "WRITE: add a note to a client, invoice, estimate, purchase invoice, supplier, product, staff member or work order. The note is private unless share_with_partner is true. POST /notes/{type}/{id}."
+        },
+        {
+          "name": "daftra_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "daftra_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Daftra tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "daftra_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Daftra (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "daftra_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Daftra Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run daftra_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are overdue and who owes me the most?",
+        "Show the expenses I recorded this month by category.",
+        "Create a client named Nile Trading with email accounts@niletrading.example.",
+        "Which products are low on stock in my main warehouse?"
+      ]
+    },
+    {
+      "slug": "ecellar",
+      "name": "eCellar",
+      "category": "winery-production",
+      "description": "Read orders, customers, club and stock; add tracking, mark shipped and adjust stock in eCellar.",
+      "endpoint": "https://ecellar.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "eXchange username"
+          },
+          {
+            "label": "eXchange password"
+          }
+        ],
+        "hint": "eCellar issues these API credentials on request: contact eCellar support (the eXchange REST API, see exchange.ecellar-api.com/v1/docs). They are sent as HTTP Basic auth to exchange.ecellar-api.com only. Ask for a user with only the access you want to give. Your login is stored encrypted and used only to call the eCellar API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "ecellar_get_reference_data",
+          "type": "read",
+          "title": "Get reference data",
+          "description": "Lookup lists of the winery's eCellar account: brands = brands (brand_key + name); locations = locations (location_id, name, timezone); customer_types = customer types; customer_sources = customer sources; customer_tags = customer tags; order_tags = order tags (tag groups and tags); reservation_types = reservation types; terminals = POS terminals; billing_statuses = billing statuses (enum values for the orders filter billing_statuses); purchase_statuses = order statuses (enum values for the orders filter purchase_statuses); purchase_sources = order sources (Web, POS, club, phone...); carriers = carriers (enum values for ecellar_add_order_tracking carrier_enum); payment_types = payment types; card_types = card types; note_types = customer note types; product_availabilities = product availabilities; product_statuses = product statuses; reservation_statuses = reservation statuses; fulfillment_companies = fulfillment companies; state_codes = state codes; country_codes = country codes. Use brands first: the brand_key values filter orders, club tiers, events and reservations. GET /client/* or /types/*."
+        },
+        {
+          "name": "ecellar_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Customers (club members and buyers) with contact details, type, source, tags, email consent and default addresses. Personal data: use only what the task needs. POST /customers."
+        },
+        {
+          "name": "ecellar_search_addresses",
+          "type": "read",
+          "title": "Search customer addresses",
+          "description": "Customer billing and shipping addresses. POST /addresses."
+        },
+        {
+          "name": "ecellar_search_notes",
+          "type": "read",
+          "title": "Search customer notes",
+          "description": "Notes on customer records (type, text, dates). POST /notes."
+        },
+        {
+          "name": "ecellar_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Orders (web, POS, club and phone) with totals, status, billing and shipping details, and their lines, payments, tracking records and tags. Statuses are the enum values from ecellar_get_reference_data purchase_statuses / billing_statuses. Contains customer personal data. POST /orders."
+        },
+        {
+          "name": "ecellar_search_order_lines",
+          "type": "read",
+          "title": "Search order lines",
+          "description": "Order lines (product, SKU, quantity, price, discount, tax) across orders. POST /orders/lines."
+        },
+        {
+          "name": "ecellar_search_order_payments",
+          "type": "read",
+          "title": "Search order payments",
+          "description": "Order payments (amount, type, billing status, dates, card brand, last digits and expiry; no card numbers). POST /orders/payments."
+        },
+        {
+          "name": "ecellar_search_order_trackings",
+          "type": "read",
+          "title": "Search order tracking records",
+          "description": "Carrier tracking records of orders (carrier, tracking number, shipped and delivered dates). POST /orders/trackings."
+        },
+        {
+          "name": "ecellar_search_products",
+          "type": "read",
+          "title": "Search products",
+          "description": "Products (wines and merchandise): name, SKU, price, vintage-related fields, categories and inventory SKUs. POST /products."
+        },
+        {
+          "name": "ecellar_search_product_categories",
+          "type": "read",
+          "title": "Search product categories",
+          "description": "Product categories (tree: parent_category_id, category_id, name). POST /products/categories."
+        },
+        {
+          "name": "ecellar_get_inventory_counts",
+          "type": "read",
+          "title": "Get inventory counts",
+          "description": "Current inventory per SKU and location: on_hand, on_hold, invoiced and available. Filter by SKUs and/or locations (ids or names from ecellar_get_reference_data locations); with no filter every SKU and location is returned. POST /inventory/counts."
+        },
+        {
+          "name": "ecellar_search_club_subscriptions",
+          "type": "read",
+          "title": "Search club subscriptions",
+          "description": "Wine club subscriptions of customers: tier, signup/cancel/hold dates, billing and shipping address, card brand, last digits and expiry (no card numbers). POST /subscriptions."
+        },
+        {
+          "name": "ecellar_search_club_tiers",
+          "type": "read",
+          "title": "Search club tiers",
+          "description": "Wine club tiers (id, name, description, brand). POST /club/tiers."
+        },
+        {
+          "name": "ecellar_search_club_events",
+          "type": "read",
+          "title": "Search club events",
+          "description": "Club events / shipments (name, date, ship group, tier, pickup location, product totals, remix window). POST /club/events."
+        },
+        {
+          "name": "ecellar_search_reservations",
+          "type": "read",
+          "title": "Search reservations",
+          "description": "Tasting-room and experience reservations (party, times, status, host, notes, contact phone and email). POST /reservations."
+        },
+        {
+          "name": "ecellar_mark_order_shipped",
+          "type": "write",
+          "title": "Mark order shipped",
+          "description": "WRITE: set the shipped date and status of ONE order, to be used when ALL its packages have shipped. eCellar refuses it unless the order status is EXPORTED, HOLD_SHIP, SHIPPED, TO_PICKUP or UNSHIPPED, the date is not before the order date, and the date matches the latest tracking ship date. Check the order and its tracking records first. PATCH /order/{order_id}/shipped."
+        },
+        {
+          "name": "ecellar_mark_order_delivered",
+          "type": "write",
+          "title": "Mark order delivered",
+          "description": "WRITE: set the delivered date and status of ONE order, to be used when ALL its packages were delivered. eCellar refuses it unless the order status is DELIVERED or SHIPPED and the date matches the latest tracking delivered date. PATCH /order/{order_id}/delivered."
+        },
+        {
+          "name": "ecellar_add_order_tracking",
+          "type": "write",
+          "title": "Add order tracking record",
+          "description": "WRITE: add a carrier tracking record (carrier + tracking number, optional shipped/delivered dates) to ONE order. Adds a record each call; a duplicate tracking number on the same order is refused by eCellar. Get carrier_enum from ecellar_get_reference_data carriers. POST /order/{order_id}/tracking."
+        },
+        {
+          "name": "ecellar_adjust_inventory_count",
+          "type": "write",
+          "title": "Adjust inventory count",
+          "description": "WRITE: change the on-hand count of ONE SKU at ONE location by a signed amount (+12 adds, -3 removes; it is a delta, not a new total, so repeating it repeats the change). Pass location_id or location_name; eCellar refuses an unknown or ambiguous location, a SKU that is not at that location, or a result below zero. Check ecellar_get_inventory_counts first. PATCH /inventory/counts/{SKU}."
+        },
+        {
+          "name": "ecellar_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ecellar_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the eCellar tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ecellar_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for eCellar (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ecellar_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's eCellar Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ecellar_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which club members signed up in the last 30 days, and which tier did each join?",
+        "List this week's unshipped web orders with their shipping states.",
+        "How many bottles of each SKU are available at the Tasting Room right now?",
+        "Add UPS tracking number 1Z999 to order 4521 and mark it shipped today."
+      ]
+    },
+    {
+      "slug": "briox",
+      "name": "Briox",
+      "category": "accounting",
+      "description": "Read invoices, journals and accounts; create customers, items and unposted invoices in Briox.",
+      "endpoint": "https://briox.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Country of your Briox account"
+          },
+          {
+            "label": "Account ID"
+          },
+          {
+            "label": "Authentication token"
+          }
+        ],
+        "hint": "Briox must first register you as an API developer: email apisupport@briox.se. Then in Briox open **Admin → Users**, click the gear next to your user, scroll to **Application Token** and generate an Authentication token (it works once). The Account ID is the long number in parentheses next to the company name under **Your Account**. They are used only to call the Briox API on your behalf and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "briox_get_company_info",
+          "type": "read",
+          "title": "Get the company information",
+          "description": "The Briox company the connection belongs to: name, address, bank details, organization number and more. Good first call. GET /company/info."
+        },
+        {
+          "name": "briox_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (custno, name, address, e-mail, phone, company number, active flag). Paged: pass next_page as page. GET /customer."
+        },
+        {
+          "name": "briox_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers (supplierno, name, address, e-mail, company number). Paged: pass next_page as page. GET /supplier."
+        },
+        {
+          "name": "briox_list_customer_invoices",
+          "type": "read",
+          "title": "List customer invoices",
+          "description": "List customer (sales) invoices with total, saldo (open amount), invoice and due date, customer. Filter by date range, status (for example overdue, unsettled, finalpayed) and type. Paged: pass next_page as page. GET /customerinvoice."
+        },
+        {
+          "name": "briox_list_supplier_invoices",
+          "type": "read",
+          "title": "List supplier invoices",
+          "description": "List supplier (purchase) invoices with total, saldo, payment status, invoice and payment date, supplier. Filter by date range. Paged: pass next_page as page. GET /supplierinvoice."
+        },
+        {
+          "name": "briox_list_items",
+          "type": "read",
+          "title": "List items (articles)",
+          "description": "List items (products and services) with description, unit, type, prices, VAT rate and stock. Paged: pass next_page as page. GET /item."
+        },
+        {
+          "name": "briox_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "One customer with addresses, payment terms, VAT number, delivery methods and defaults. GET /customer/{id}."
+        },
+        {
+          "name": "briox_get_supplier",
+          "type": "read",
+          "title": "Get a supplier",
+          "description": "One supplier with addresses, bank details, payment terms and defaults. GET /supplier/{id}."
+        },
+        {
+          "name": "briox_get_customer_invoice",
+          "type": "read",
+          "title": "Get a customer invoice",
+          "description": "One customer invoice with rows, totals, saldo, payment and reminder state. GET /customerinvoice/{id}."
+        },
+        {
+          "name": "briox_get_supplier_invoice",
+          "type": "read",
+          "title": "Get a supplier invoice",
+          "description": "One supplier invoice with rows, totals, payment status, linked files and deviations. GET /supplierinvoice/{id}."
+        },
+        {
+          "name": "briox_get_item",
+          "type": "read",
+          "title": "Get an item (article)",
+          "description": "One item (article) with prices, VAT rate, accounts, stock and supplier data. GET /item/{id}."
+        },
+        {
+          "name": "briox_list_accounts",
+          "type": "read",
+          "title": "List accounts (chart of accounts)",
+          "description": "List ledger accounts with description, VAT code, active flag and incoming balance for a financial year. Paged: pass next_page as page. GET /account."
+        },
+        {
+          "name": "briox_list_financial_years",
+          "type": "read",
+          "title": "List financial years",
+          "description": "List the financial years (id, from and to date, accounting method). The id is the financial year argument of the journal tools. GET /financialyear."
+        },
+        {
+          "name": "briox_list_journal_series",
+          "type": "read",
+          "title": "List journal (voucher) series",
+          "description": "List the journal series of a financial year (for example A, B). GET /journal/series/{financialyear}."
+        },
+        {
+          "name": "briox_list_journals",
+          "type": "read",
+          "title": "List journals (vouchers)",
+          "description": "List journal entries (vouchers with their debit/credit rows) of a financial year, optionally of one series and a date range. Paged: pass next_page as page. GET /journal/{financialyear}[/{series}]."
+        },
+        {
+          "name": "briox_get_journal",
+          "type": "read",
+          "title": "Get a journal (voucher)",
+          "description": "One journal entry with all its debit/credit rows. GET /journal/{financialyear}/{series}/{id}."
+        },
+        {
+          "name": "briox_get_bank_account_balances",
+          "type": "read",
+          "title": "Get bank account balances",
+          "description": "The balances of the company's bank accounts. GET /bank/accountbalance."
+        },
+        {
+          "name": "briox_list_vat_codes",
+          "type": "read",
+          "title": "List VAT codes",
+          "description": "List VAT codes with description and percentage. GET /vatcode."
+        },
+        {
+          "name": "briox_list_payment_terms",
+          "type": "read",
+          "title": "List payment terms",
+          "description": "List payment terms (the ids usable on customers and invoices). GET /payment/term."
+        },
+        {
+          "name": "briox_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects with leader, status, dates and customers. Paged: pass next_page as page. GET /project."
+        },
+        {
+          "name": "briox_list_cost_centers",
+          "type": "read",
+          "title": "List cost centers",
+          "description": "List cost centers (code, text, active). Paged: pass next_page as page. GET /costcenter."
+        },
+        {
+          "name": "briox_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders, optionally by date range and status. Paged: pass next_page as page. GET /salesorder."
+        },
+        {
+          "name": "briox_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer in Briox (the customer number custno is assigned by you; use a free number). Creates a new record; it never changes an existing one. POST /customer."
+        },
+        {
+          "name": "briox_create_item",
+          "type": "write",
+          "title": "Create an item (article)",
+          "description": "Create an item (a product or service) in Briox. Prices are set in Briox afterwards. Creates a new record only. POST /item."
+        },
+        {
+          "name": "briox_create_customer_invoice",
+          "type": "write",
+          "title": "Create an unposted customer invoice",
+          "description": "Create a customer invoice that is NOT posted (post=false): it is saved for review and the user posts and sends it in Briox. Needs an existing customer and at least one row. POST /customerinvoice."
+        },
+        {
+          "name": "briox_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "briox_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Briox tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "briox_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Briox (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "briox_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Briox Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run briox_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my customer invoices are overdue, and how much is open in total?",
+        "List my supplier invoices from this month.",
+        "Show the voucher entries of the last financial year for account 1930.",
+        "Create an unposted invoice for customer 1023 with two rows."
+      ]
+    },
+    {
+      "slug": "expenseondemand",
+      "name": "ExpenseOnDemand",
+      "category": "accounting",
+      "description": "Read exports, payroll totals and users; add, update or deactivate employees in ExpenseOnDemand.",
+      "endpoint": "https://expenseondemand.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API subscription key (Ocp-Apim-Subscription-Key)"
+          },
+          {
+            "label": "ClientID"
+          },
+          {
+            "label": "ClientKey (primary or secondary)"
+          }
+        ],
+        "hint": "Create the subscription key on the ExpenseOnDemand developer portal (developer.expenseondemand.com) and subscribe to the products you need. Find the ClientID and ClientKey in the ExpenseOnDemand app for the subscription. Your values are used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "expenseondemand_export_accounting",
+          "type": "read",
+          "title": "Export accounting data",
+          "description": "Fetch approved expense data for an accounting integration, filtered by report, date range, category, claimant, cost centre, grade and payment type. Reads data only; the POST carries the filter body. Accounting API: POST /accounting/api/AccountingExport."
+        },
+        {
+          "name": "expenseondemand_get_payroll_export",
+          "type": "read",
+          "title": "Get payroll export",
+          "description": "Get the total approved expense amount per employee for payroll: name, email, expense count and total amount. Accounting API: GET /accounting/api/PayrollExport."
+        },
+        {
+          "name": "expenseondemand_list_export_templates",
+          "type": "read",
+          "title": "List export templates",
+          "description": "List the export report types configured for the subscription, with their report ids and fields. Use a reportId as exportReportId in expenseondemand_export_accounting. Meta API: GET /meta/api/GetExportTemplates."
+        },
+        {
+          "name": "expenseondemand_list_expense_categories",
+          "type": "read",
+          "title": "List expense categories",
+          "description": "List the expense categories of the subscription with id, name, active flag and base category id. Meta API: GET /meta/api/GetExpenseCategoriesForOrganisation."
+        },
+        {
+          "name": "expenseondemand_list_grades",
+          "type": "read",
+          "title": "List grades",
+          "description": "List the employee grades of the subscription with id, name and active flag. Meta API: GET /meta/api/GetGradesForOrganisation."
+        },
+        {
+          "name": "expenseondemand_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the customers of the subscription with id, name, codes and active flag. Customer API: GET /customer/api/GetCustomersForOrganisation."
+        },
+        {
+          "name": "expenseondemand_add_customer",
+          "type": "write",
+          "title": "Add a customer",
+          "description": "Add a customer to the subscription. The id is generated by ExpenseOnDemand. Creates a new record each call. Customer API: POST /customer/api/AddCustomerForSubscription."
+        },
+        {
+          "name": "expenseondemand_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Update an existing customer by id. Send every field you want to keep: the vendor may clear fields you leave out, so read the record first with expenseondemand_list_customers. Customer API: POST /customer/api/UpdateCustomerForSubscription."
+        },
+        {
+          "name": "expenseondemand_list_cost_centres",
+          "type": "read",
+          "title": "List cost centres",
+          "description": "List the cost centres of the subscription with id, name, codes and active flag. Cost Centre API: GET /costCentre/api/GetCostCentresForOrganisation."
+        },
+        {
+          "name": "expenseondemand_add_cost_centre",
+          "type": "write",
+          "title": "Add a cost centre",
+          "description": "Add a cost centre to the subscription. The id is generated by ExpenseOnDemand. Creates a new record each call. Cost Centre API: POST /costCentre/api/AddCostCentreForSubscription."
+        },
+        {
+          "name": "expenseondemand_update_cost_centre",
+          "type": "write",
+          "title": "Update a cost centre",
+          "description": "Update an existing cost centre by id. Send every field you want to keep: the vendor may clear fields you leave out, so read the record first with expenseondemand_list_cost_centres. Cost Centre API: POST /costCentre/api/UpdateCostCentreForSubscription."
+        },
+        {
+          "name": "expenseondemand_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users (employees) of the subscription with email, name, status (1 Active, 2 Inactive, 3 NotInvited, 4 Pending, 5 Deleted), role and approver email. Users API: GET /users/api/GetUsersForOrganisation."
+        },
+        {
+          "name": "expenseondemand_add_employee",
+          "type": "write",
+          "title": "Invite an employee",
+          "description": "Add an employee to the subscription. ExpenseOnDemand treats the new employee as invited. Creates a record each call, so check expenseondemand_list_users first. Users API: POST /users/api/AddEmployee."
+        },
+        {
+          "name": "expenseondemand_update_employee",
+          "type": "write",
+          "title": "Update an employee",
+          "description": "Update an existing employee, identified by email. Send every field you want to keep: the vendor may clear fields you leave out, so read the record first with expenseondemand_list_users. Users API: POST /users/api/UpdateEmployee."
+        },
+        {
+          "name": "expenseondemand_deactivate_employee",
+          "type": "write",
+          "title": "Deactivate an employee",
+          "description": "Deactivate an employee by email, so they can no longer submit or approve expenses. Users API: POST /users/api/DeactivateEmployee."
+        },
+        {
+          "name": "expenseondemand_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "expenseondemand_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ExpenseOnDemand tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "expenseondemand_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ExpenseOnDemand (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "expenseondemand_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ExpenseOnDemand Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run expenseondemand_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which expense claims were approved this month, grouped by cost centre?",
+        "Export last week's new accounting items for report 12.",
+        "Add a new employee, Sam Lee, as a Claimant with approver manager@acme.com.",
+        "Show the payroll totals per employee for this month."
+      ]
+    },
+    {
+      "slug": "carelinelive",
+      "name": "CareLineLive",
+      "category": "hr",
+      "description": "Read carers, teams, leave and visit rounds; update carer payroll codes in CareLineLive.",
+      "endpoint": "https://carelinelive.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment address"
+          },
+          {
+            "label": "Personal access token"
+          }
+        ],
+        "hint": "The address is the part before **.carelinelive.app** in your CareLineLive web address. Create the token in CareLineLive under **Accounts → API tokens → Add personal access token**. The API must be enabled for your environment: ask CareLineLive support if it is not. The token gets your user's permissions. It is shown only once, so copy it before you close the page. Your details are used only to call your own environment and are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "carelinelive_list_carers",
+          "type": "read",
+          "title": "List carers",
+          "description": "List carers (care workers) in the CareLineLive environment, with their contract, team and employment fields. Filters are partial matches; not_on_leave excludes carers on leave in a period. CareLineLive API: GET /api/v2/carers."
+        },
+        {
+          "name": "carelinelive_get_carer",
+          "type": "read",
+          "title": "Get carer",
+          "description": "Show one carer by id, with optional related resources. CareLineLive API: GET /api/v2/carers/{carer}."
+        },
+        {
+          "name": "carelinelive_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (people receiving care) with their details and status. CareLineLive API: GET /api/v2/clients."
+        },
+        {
+          "name": "carelinelive_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "Show one client by id, with optional related resources. CareLineLive API: GET /api/v2/clients/{client}."
+        },
+        {
+          "name": "carelinelive_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List office users (accounts that sign in to CareLineLive). CareLineLive API: GET /api/v2/users."
+        },
+        {
+          "name": "carelinelive_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Show one office user by id. CareLineLive API: GET /api/v2/users/{user}."
+        },
+        {
+          "name": "carelinelive_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams (branches or groups of carers and clients) in the environment. CareLineLive API: GET /api/v2/teams."
+        },
+        {
+          "name": "carelinelive_list_visit_rounds",
+          "type": "read",
+          "title": "List visit rounds",
+          "description": "List visit rounds (planned visit runs for carers). CareLineLive API: GET /api/v2/visit-rounds."
+        },
+        {
+          "name": "carelinelive_list_leaves",
+          "type": "read",
+          "title": "List leave",
+          "description": "List carer leave records (holiday and other absences). CareLineLive API: GET /api/v2/leaves."
+        },
+        {
+          "name": "carelinelive_list_incidents",
+          "type": "read",
+          "title": "List incidents",
+          "description": "List recorded incidents (care events that need follow-up). CareLineLive API: GET /api/v2/incidents."
+        },
+        {
+          "name": "carelinelive_list_public_holidays",
+          "type": "read",
+          "title": "List public holidays",
+          "description": "List the public holidays set up for the environment. CareLineLive API: GET /api/v2/public-holidays."
+        },
+        {
+          "name": "carelinelive_list_work_patterns",
+          "type": "read",
+          "title": "List work patterns",
+          "description": "List the work patterns (standard weekly hours) used to plan carer contracts. CareLineLive API: GET /api/v2/work-patterns."
+        },
+        {
+          "name": "carelinelive_list_permissions",
+          "type": "read",
+          "title": "List permissions",
+          "description": "List the permissions in the environment, so you can see what the access token can read. CareLineLive API: GET /api/v2/permissions."
+        },
+        {
+          "name": "carelinelive_update_carer",
+          "type": "write",
+          "title": "Update carer payroll details",
+          "description": "Change a carer's payroll number, payroll department code or cost centre code. Only the fields you send change; sending the same values again has no further effect. Other carer fields are not changed by this tool. CareLineLive API: PATCH /api/v2/carers/{carer}."
+        },
+        {
+          "name": "carelinelive_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "carelinelive_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the CareLineLive tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "carelinelive_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for CareLineLive (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "carelinelive_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's CareLineLive Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run carelinelive_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which carers are on leave next week?",
+        "Show me the carers whose payroll number starts with 1042, and their teams.",
+        "List the clients in our East team, page by page.",
+        "Set the cost centre code for carer 12345 to CC-NORTH."
+      ]
+    },
+    {
+      "slug": "myonlinestore",
+      "name": "MyOnlineStore",
+      "category": "ecommerce",
+      "description": "Read orders, articles, customers, discount codes and newsletter subscribers in MyOnlineStore.",
+      "endpoint": "https://myonlinestore.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MyOnlineStore store token"
+          }
+        ],
+        "hint": "In your shop backend open **Settings → API → Add new token** and copy the token. It is used only to call the MyOnlineStore API for your shop, and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "myonlinestore_get_store",
+          "type": "read",
+          "title": "Get store details",
+          "description": "Get the shop's own details: name, primary domain, currency, default and active languages, prices-include-tax setting and business models. Good first call to check the connection. GET /v1/store."
+        },
+        {
+          "name": "myonlinestore_list_shipping_methods",
+          "type": "read",
+          "title": "List shipping methods",
+          "description": "List the shipping methods the shop offers: display name, countries served, default flag and the free-shipping threshold. GET /v1/shipping/methods."
+        },
+        {
+          "name": "myonlinestore_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List the shop's articles (products) with name, SKU, price and stock. Filter by ids, uuids or created/changed dates. GET /v1/articles."
+        },
+        {
+          "name": "myonlinestore_get_article",
+          "type": "read",
+          "title": "Get an article",
+          "description": "Get one article (product) by its id. Set use_url_id to true when the id is the one shown in the article page URL. GET /v1/articles/{article_id}."
+        },
+        {
+          "name": "myonlinestore_count_articles",
+          "type": "read",
+          "title": "Count articles",
+          "description": "Count the shop's articles, optionally within a created or changed date range. GET /v1/articles/count."
+        },
+        {
+          "name": "myonlinestore_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List the shop's categories with title, parent, visibility and sort order. Set as_tree to get the nested tree. GET /v1/categories."
+        },
+        {
+          "name": "myonlinestore_get_category",
+          "type": "read",
+          "title": "Get a category",
+          "description": "Get one category by id: title, content, SEO fields, parent and sorting. GET /v1/categories/{category_id}."
+        },
+        {
+          "name": "myonlinestore_list_category_articles",
+          "type": "read",
+          "title": "List articles in a category",
+          "description": "List the articles that belong to one category. GET /v1/categories/{category_id}/articles."
+        },
+        {
+          "name": "myonlinestore_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the shop's customers. Search with q (name, email or similar). Set embed to address to include addresses. GET /v1/customers. Contains personal data."
+        },
+        {
+          "name": "myonlinestore_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id. Contains personal data. GET /v1/customers/{customerId}."
+        },
+        {
+          "name": "myonlinestore_list_customer_addresses",
+          "type": "read",
+          "title": "List a customer's addresses",
+          "description": "List the saved addresses of one customer. Contains personal data. GET /v1/customers/{customerId}/addresses."
+        },
+        {
+          "name": "myonlinestore_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders with status, date, currency, discount code and payment status. Filter by order date, status, status change, customer email or customer id. GET /v1/orders. Contains personal data."
+        },
+        {
+          "name": "myonlinestore_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by its order number: status, dates, currency, discount code, payment status and the price block. Contains personal data. GET /v1/orders/{order_number}."
+        },
+        {
+          "name": "myonlinestore_count_orders",
+          "type": "read",
+          "title": "Count orders",
+          "description": "Count orders, optionally filtered by order date, status or status change. GET /v1/orders/count."
+        },
+        {
+          "name": "myonlinestore_list_order_payments",
+          "type": "read",
+          "title": "List an order's payments",
+          "description": "List the payments recorded on one order. GET /v1/orders/{order_number}/payments."
+        },
+        {
+          "name": "myonlinestore_list_discount_codes",
+          "type": "read",
+          "title": "List discount codes",
+          "description": "List the shop's discount codes: the code, percentage or fixed discount, validity dates and active flag. Filter by active state or validity. GET /v1/discountcodes."
+        },
+        {
+          "name": "myonlinestore_get_discount_code",
+          "type": "read",
+          "title": "Get a discount code",
+          "description": "Get one discount code by its code text: discount values, validity dates, minimum order rules and single-use flag. GET /v1/discountcodes/{code}."
+        },
+        {
+          "name": "myonlinestore_list_newsletter_subscribers",
+          "type": "read",
+          "title": "List newsletter subscribers",
+          "description": "List newsletter subscribers with their activation state and dates. Filter by activation or created/changed dates. GET /v1/newsletter/subscribers. Contains personal data."
+        },
+        {
+          "name": "myonlinestore_get_newsletter_subscriber",
+          "type": "read",
+          "title": "Get a newsletter subscriber",
+          "description": "Get one newsletter subscriber by email address. Contains personal data. GET /v1/newsletter/subscribers/{email}."
+        },
+        {
+          "name": "myonlinestore_count_newsletter_subscribers",
+          "type": "read",
+          "title": "Count newsletter subscribers",
+          "description": "Count newsletter subscribers, optionally filtered by activation or created/changed dates. GET /v1/newsletter/subscribers/count."
+        },
+        {
+          "name": "myonlinestore_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "myonlinestore_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MyOnlineStore tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "myonlinestore_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for MyOnlineStore (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "myonlinestore_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MyOnlineStore Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run myonlinestore_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many orders did my shop get this week, and what is their total?",
+        "Which articles are out of stock or changed in the last 7 days?",
+        "Show me the discount codes that are still active.",
+        "List the newsletter subscribers who signed up this month."
+      ]
+    },
+    {
+      "slug": "jostle",
+      "name": "Jostle",
+      "category": "productivity",
+      "description": "Read tasks, comments, users and presets; create and update tasks and post comments in Jostle.",
+      "endpoint": "https://jostle.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Jostle Tasks API token"
+          }
+        ],
+        "hint": "In Jostle, open **Tasks** and create an API token there. Your user needs Tasks API access from a system administrator first. The token acts as your user. It is used only to call the Jostle API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "jostle_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users in the Jostle instance with their id, username and display name. Use the id or username when you create or update a task. Jostle API: GET /v2/people."
+        },
+        {
+          "name": "jostle_list_presets",
+          "type": "read",
+          "title": "List presets",
+          "description": "List the Jostle list presets (named groups of users for assignees or collaborators). Use a preset id when you create a task. Jostle API: GET /v2/people/list-presets."
+        },
+        {
+          "name": "jostle_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one task by id: title, description, due date, assignee, collaborators, completion status and comment count. The token user must be the assignee or a collaborator. Jostle API: GET /v2/tasks/task/{id}."
+        },
+        {
+          "name": "jostle_list_task_comments",
+          "type": "read",
+          "title": "List task comments",
+          "description": "List the comments on a task, newest page first, with paging. Jostle API: GET /v2/tasks/task/{id}/comments."
+        },
+        {
+          "name": "jostle_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task in the Tasks of one assignee. Give the assignee as userId, username or employeeId, and optional collaborators or a preset. Due dates are saved in Eastern Standard Time. Jostle API: POST /v2/tasks."
+        },
+        {
+          "name": "jostle_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Change a task with JSON Patch operations (RFC 6902). Allowed paths: /title, /description, /dueDate, /assignee, /collaborators, /completionStatus. Jostle API: PATCH /v2/tasks/task/{id}."
+        },
+        {
+          "name": "jostle_add_task_comment",
+          "type": "write",
+          "title": "Comment on a task",
+          "description": "Add a comment to a task as the token user. Comments are visible to everyone who can see the task. Jostle API: POST /v2/tasks/task/{id}/comment."
+        },
+        {
+          "name": "jostle_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "jostle_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Jostle tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "jostle_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Jostle (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "jostle_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Jostle Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run jostle_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the title, due date and assignee of task 12345.",
+        "Create a task for sam.k to review the holiday rota, due 4 December 2026.",
+        "Add a comment to task 12345 saying the supplier invoice is approved.",
+        "List the users in this Jostle instance with their usernames."
+      ]
     }
   ]
 }

@@ -757,6 +757,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [LiveWebinar](servers/livewebinar/) | video-hosting | 15 | OAuth | [servers/livewebinar/](servers/livewebinar/) |
 | [Patreon](servers/patreon/) | membership | 11 | OAuth | [servers/patreon/](servers/patreon/) |
 | [Spreaker](servers/spreaker/) | analytics | 17 | OAuth | [servers/spreaker/](servers/spreaker/) |
+| [ProofHub](servers/proofhub/) | project-management | 19 | API token | [servers/proofhub/](servers/proofhub/) |
+| [Ascora](servers/ascora/) | business-operations | 32 | API token | [servers/ascora/](servers/ascora/) |
+| [Daftra](servers/daftra/) | accounting | 34 | API token | [servers/daftra/](servers/daftra/) |
+| [eCellar](servers/ecellar/) | winery-production | 23 | API token | [servers/ecellar/](servers/ecellar/) |
+| [Briox](servers/briox/) | accounting | 29 | API token | [servers/briox/](servers/briox/) |
+| [ExpenseOnDemand](servers/expenseondemand/) | accounting | 19 | API token | [servers/expenseondemand/](servers/expenseondemand/) |
+| [CareLineLive](servers/carelinelive/) | hr | 18 | API token | [servers/carelinelive/](servers/carelinelive/) |
+| [MyOnlineStore](servers/myonlinestore/) | ecommerce | 24 | API token | [servers/myonlinestore/](servers/myonlinestore/) |
+| [Jostle](servers/jostle/) | productivity | 11 | API token | [servers/jostle/](servers/jostle/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
