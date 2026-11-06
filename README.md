@@ -519,7 +519,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Extensiv](servers/extensiv/) | inventory | 20 | OAuth | [servers/extensiv/](servers/extensiv/) |
 | [Zenfulfillment](servers/zenfulfillment/) | shipping | 13 | OAuth | [servers/zenfulfillment/](servers/zenfulfillment/) |
 | [Taleez](servers/taleez/) | hr | 29 | OAuth | [servers/taleez/](servers/taleez/) |
-| [Desk365](servers/desk365/) | support | 17 | OAuth | [servers/desk365/](servers/desk365/) |
+| [Desk365](servers/desk365/) | support | 18 | OAuth | [servers/desk365/](servers/desk365/) |
 | [RemoteLock](servers/remotelock/) | property-management | 24 | OAuth | [servers/remotelock/](servers/remotelock/) |
 | [LingoHub](servers/lingohub/) | localization | 18 | OAuth | [servers/lingohub/](servers/lingohub/) |
 | [MarketTime](servers/markettime/) | commerce | 22 | OAuth | [servers/markettime/](servers/markettime/) |
@@ -658,7 +658,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Microkeeper](servers/microkeeper/) | hr | 15 | API token | [servers/microkeeper/](servers/microkeeper/) |
 | [QuotaPath](servers/quotapath/) | crm | 16 | API token | [servers/quotapath/](servers/quotapath/) |
 | [TrueContext](servers/truecontext/) | forms | 19 | API token | [servers/truecontext/](servers/truecontext/) |
-| [Ziflow](servers/ziflow/) | project-management | 19 | API token | [servers/ziflow/](servers/ziflow/) |
+| [Ziflow](servers/ziflow/) | project-management | 21 | API token | [servers/ziflow/](servers/ziflow/) |
 | [UseResponse](servers/useresponse/) | support | 26 | API token | [servers/useresponse/](servers/useresponse/) |
 | [Userlike](servers/userlike/) | chat | 17 | API token | [servers/userlike/](servers/userlike/) |
 | [SatisMeter](servers/satismeter/) | forms-surveys | 10 | API token | [servers/satismeter/](servers/satismeter/) |

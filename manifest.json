@@ -76920,7 +76920,7 @@
         "Show the properties that went under offer this month in my main branch.",
         "Add a note to this vendor: asked for a revaluation in March."
       ],
-      "version": "1.12.3",
+      "version": "1.12.4",
       "login": {
         "kind": "key",
         "fields": [
@@ -76974,13 +76974,13 @@
           "name": "street_list_landlords",
           "type": "read",
           "title": "List landlords",
-          "description": "List landlords (people letting a property). Newest first as Street orders them; page with page and page_size. GET /landlords."
+          "description": "List landlords (people letting a property). Newest first as Street orders them; page with page and page_size. GET /landlords. The public Street Open API does not expose bank-detail presence or masked account digits. Bank details are unknown through this API; do not treat an absent field as missing bank details."
         },
         {
           "name": "street_get_landlord",
           "type": "read",
           "title": "Get landlord",
-          "description": "One landlord by UUID, with the related records you ask for in include. GET /landlords/{id}."
+          "description": "One landlord by UUID, with the related records you ask for in include. GET /landlords/{id}. The public Street Open API does not expose bank-detail presence or masked account digits. Bank details are unknown through this API; do not treat an absent field as missing bank details."
         },
         {
           "name": "street_list_tenants",
@@ -89989,7 +89989,7 @@
           "scope": "per helpdesk subdomain"
         }
       ],
-      "version": "1.6.3",
+      "version": "1.7.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -90000,9 +90000,15 @@
             "label": "Desk365 API key"
           }
         ],
-        "hint": "The subdomain is the part before **.desk365.io** in your helpdesk address. Find the API key in Desk365 → **Settings → Integrations → API** (the API is part of the Standard, Plus and Premium plans). This hosted connection is read-only. Requested ticket conversations (including private notes), contact and company details, time entries and knowledge-base records pass to your chosen AI client and its LLM provider. Connect only records you are authorized to share. Regenerate or revoke the key in Desk365 to stop vendor access. Billing follows this helpdesk subdomain; rotating its key keeps that identity."
+        "hint": "The subdomain is the part before **.desk365.io** in your helpdesk address. Find the API key in Desk365 → **Settings → Integrations → API** (the API is part of the Standard, Plus and Premium plans). This hosted connection reads helpdesk records and can update a ticket's status after confirmation; status changes may trigger helpdesk notifications and automations. Requested ticket conversations (including private notes), contact and company details, time entries and knowledge-base records pass to your chosen AI client and its LLM provider. Connect only records you are authorized to share. Regenerate or revoke the key in Desk365 to stop vendor access. Billing follows this helpdesk subdomain; rotating its key keeps that identity."
       },
       "tools": [
+        {
+          "name": "desk365_set_ticket_status",
+          "type": "write",
+          "title": "Set ticket status",
+          "description": "WRITE: change only a ticket's status by its ticket number, including closing or resolving it. Supply the exact status name configured in the helpdesk (for example Resolved or Closed); no priority, assignee or other fields are changed. Desk365 may run status automations and send notifications. Pass confirm=true after the user approved the ticket and destination status. PUT /v3/tickets/update?ticket_number=... with only {status}."
+        },
         {
           "name": "desk365_list_tickets",
           "type": "read",
@@ -112931,7 +112937,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.2.3",
+      "version": "1.3.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -112942,6 +112948,18 @@
         "hint": "Find it in Ziflow → **View Profile → API Key**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
       },
       "tools": [
+        {
+          "name": "ziflow_create_proof",
+          "type": "write",
+          "title": "Create proof from file or video URLs",
+          "description": "WRITE: import files/videos into new Ziflow proofs from URLs Ziflow can download (including signed URLs or S3 with a configured credentials nickname). Local file bytes are not accepted by this API: upload them to approved storage first. Set approver/commenter permissions per stage and include owner_email as a reviewer in at least one stage. Multiple sources create a batch unless combine=true (combining depends on the Ziflow plan). Processing is asynchronous; use ziflow_get_proof to check completion. May email reviewers after processing; suppress_all_emails=true disables proof emails. Not idempotent: never automatically repeat creation after an uncertain result. POST /proofs."
+        },
+        {
+          "name": "ziflow_add_reviewers",
+          "type": "write",
+          "title": "Add approvers or commenters to a stage",
+          "description": "WRITE: add reviewers to an existing proof stage, with explicit approver (comment + decision) or commenter (comment only) permissions. Neither grants management or sharing rights. May notify reviewers. Does not move reviewers out of other stages. Get proof/stage IDs with ziflow_get_proof. Not idempotent; do not automatically retry. POST /proofs/{proof_id}/stages/{stage_id}/reviewers."
+        },
         {
           "name": "ziflow_list_proofs",
           "type": "read",

@@ -33,6 +33,8 @@ On first connect you provide your **Ziflow API key** (View Profile → API Key).
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `ziflow_create_proof` | **write** | Create proof from file or video URLs |
+| `ziflow_add_reviewers` | **write** | Add approvers or commenters to a stage |
 | `ziflow_list_proofs` | read | List proofs |
 | `ziflow_get_proof` | read | Get a proof |
 | `ziflow_search_proofs` | read | Search proofs |
