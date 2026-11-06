@@ -129830,6 +129830,243 @@
         "Show the company objectives for this quarter and their progress.",
         "Add a plan item for next week: prepare the Q4 review deck."
       ]
+    },
+    {
+      "slug": "agencyzoom",
+      "name": "AgencyZoom",
+      "category": "crm",
+      "description": "Read leads, customers, policies and tasks; add notes, tasks and leads in AgencyZoom.",
+      "endpoint": "https://agencyzoom.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.7.4",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AgencyZoom e-mail"
+          },
+          {
+            "label": "AgencyZoom password"
+          }
+        ],
+        "hint": "This uses AgencyZoom’s documented REST email/password login; its Zapier key/secret is a separate connector. Prefer a dedicated authorized user with only the access you need and employee-directory permission. Your credentials are encrypted in your connection. Leads, policy details, notes and tasks returned by tools are sent to your connected AI provider. Disable the user or change its password to stop new logins; an already issued JWT may remain valid until it expires or AgencyZoom revokes it. Disconnect UsefulAPI to stop this connection. The API allows 120 calls/minute. [API reference](https://api.agencyzoom.com/openapi/)."
+      },
+      "tools": [
+        {
+          "name": "agencyzoom_search_leads",
+          "type": "read",
+          "title": "Search leads",
+          "description": "Search sales leads in AgencyZoom with filters; returns name, contact details, status, pipeline stage, source, assigned producer, quoted and sold premium (in cents) and dates, paged. Names, e-mail and phone match by prefix. Use agencyzoom_list_pipelines for workflow/stage ids and agencyzoom_list_employees for producer ids. POST /v1/api/leads/list."
+        },
+        {
+          "name": "agencyzoom_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id with full details: contact data, address, status, stage, source, assigned producer and CSR, premiums (cents), dates and custom fields. GET /v1/api/leads/{leadId}."
+        },
+        {
+          "name": "agencyzoom_get_lead_notes",
+          "type": "read",
+          "title": "Get lead notes",
+          "description": "The activity notes of a lead: type (note, e-mail, creation...), date, author, title and body. GET /v1/api/leads/{leadId}/notes."
+        },
+        {
+          "name": "agencyzoom_get_lead_tasks",
+          "type": "read",
+          "title": "Get lead tasks",
+          "description": "The tasks linked to a lead (open, done, cancelled) with due date, assignees and notes. GET /v1/api/leads/{leadId}/tasks."
+        },
+        {
+          "name": "agencyzoom_get_lead_opportunities",
+          "type": "read",
+          "title": "Get lead opportunities",
+          "description": "The opportunities (quoted lines of business) of a lead: carrier, product line, premium, items, status and property address. GET /v1/api/leads/{leadId}/opportunities."
+        },
+        {
+          "name": "agencyzoom_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers (clients with at least one written policy) with filters; returns contact details, address, source, agent and a policy summary, paged. First/last name match partially. POST /v1/api/customers."
+        },
+        {
+          "name": "agencyzoom_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "One customer by id with full details: contact data, address, source, agent, CSR, custom fields and policy summary. GET /v1/api/customers/{customerId}."
+        },
+        {
+          "name": "agencyzoom_get_customer_policies",
+          "type": "read",
+          "title": "Get customer policies",
+          "description": "The policies written through AgencyZoom for a customer: type, carrier, policy number, premium (cents), items, sold/effective/expiry dates, agent, CSR and status (0 cancelled, 1 active, 3 upcoming, 4 renewed, 10-13 active variants). GET /v1/api/customers/{customerId}/policies."
+        },
+        {
+          "name": "agencyzoom_get_customer_tasks",
+          "type": "read",
+          "title": "Get customer tasks",
+          "description": "The tasks linked to a customer (open, done, cancelled) with due date, assignees and notes. GET /v1/api/customers/{customerId}/tasks."
+        },
+        {
+          "name": "agencyzoom_search_tasks",
+          "type": "read",
+          "title": "Search tasks",
+          "description": "Search tasks across the agency: by status (open/completed), assignee, period (today, past due, next week...), type and creation date; returns title, due date, assignees, linked customer or lead and notes, paged. POST /v1/api/tasks/list."
+        },
+        {
+          "name": "agencyzoom_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "One task by id: title, status, due date, assignees, notes and the customer or lead it belongs to. GET /v1/api/tasks/{taskId}."
+        },
+        {
+          "name": "agencyzoom_search_service_tickets",
+          "type": "read",
+          "title": "Search service tickets",
+          "description": "Search service tickets (client service requests) by household name, status, category, priority, policy number and created/completed dates, paged. POST /v1/api/serviceTicket/service-tickets/list."
+        },
+        {
+          "name": "agencyzoom_get_sales_summary",
+          "type": "read",
+          "title": "Get sales summary",
+          "description": "The dashboard sales summary for the agency or one producer: goals, month-to-date and today's sales, trending, and daily premium/revenue/items/policies for the period. Amounts are in cents. Read-only (a POST in AgencyZoom). POST /v1/api/dashboard-data/sales-data."
+        },
+        {
+          "name": "agencyzoom_list_pipelines",
+          "type": "read",
+          "title": "List pipelines and stages",
+          "description": "The sales (lead) or service pipelines with their stages and ids. Needed to create leads or service tickets and to move a lead between stages. GET /v1/api/pipelines-and-stages."
+        },
+        {
+          "name": "agencyzoom_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "The agency's employees: id, name, e-mail, phone, whether producer, active or owner. Use the ids to assign leads and tasks. GET /v1/api/employees."
+        },
+        {
+          "name": "agencyzoom_list_lead_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "The lead sources (id, name, category, whether sales from it count as sales). GET /v1/api/lead-sources."
+        },
+        {
+          "name": "agencyzoom_list_carriers",
+          "type": "read",
+          "title": "List carriers",
+          "description": "The insurance carriers configured in the agency (id, name, standard carrier code). GET /v1/api/carriers."
+        },
+        {
+          "name": "agencyzoom_list_product_lines",
+          "type": "read",
+          "title": "List product lines",
+          "description": "The policy types / product lines (id, name, category, standard product line code), for policy filters. GET /v1/api/product-lines."
+        },
+        {
+          "name": "agencyzoom_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "The tags defined in the agency (id, name). GET /v1/api/tags."
+        },
+        {
+          "name": "agencyzoom_list_service_ticket_options",
+          "type": "read",
+          "title": "List service ticket categories and priorities",
+          "description": "The service ticket categories and priorities (id, name), needed to create a service ticket. GET /v1/api/service-categories and GET /v1/api/service-priorities."
+        },
+        {
+          "name": "agencyzoom_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "WRITE: create a new sales lead in a pipeline stage. AgencyZoom requires the pipeline and stage (agencyzoom_list_pipelines), first name, e-mail, lead source, assigned producer and country. Creating a lead can trigger the agency's own automations (assignment, tasks, e-mails) in AgencyZoom. Not idempotent: calling twice creates two leads, so search first (agencyzoom_search_leads by e-mail or phone). POST /v1/api/leads/create."
+        },
+        {
+          "name": "agencyzoom_add_lead_note",
+          "type": "write",
+          "title": "Add lead note",
+          "description": "WRITE: add a note to a lead's activity feed (visible to the agency's users; AgencyZoom does not send it to the customer). Not idempotent: calling twice adds two notes. POST /v1/api/leads/{leadId}/notes."
+        },
+        {
+          "name": "agencyzoom_add_customer_note",
+          "type": "write",
+          "title": "Add customer note",
+          "description": "WRITE: add a note to a customer's activity feed (visible to the agency's users; AgencyZoom does not send it to the customer). Not idempotent: calling twice adds two notes. POST /v1/api/customers/{customerId}/notes."
+        },
+        {
+          "name": "agencyzoom_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "WRITE: create a task (to-do, call, e-mail or meeting) linked to a lead or customer, optionally assigned to an employee. The assignee may be notified by AgencyZoom. Link it with lead_id or customer_id (or contact_email, which AgencyZoom matches to a lead or customer). Not idempotent: calling twice creates two tasks. POST /v1/api/tasks."
+        },
+        {
+          "name": "agencyzoom_complete_task",
+          "type": "write",
+          "title": "Complete task",
+          "description": "WRITE: mark a task as completed. Repeated calls may repeat notifications or automations; undo with agencyzoom_reopen_task. PUT /v1/api/tasks/{taskId}/completed."
+        },
+        {
+          "name": "agencyzoom_reopen_task",
+          "type": "write",
+          "title": "Reopen task",
+          "description": "WRITE: reopen a completed task, optionally with a comment. Repeated calls may repeat notifications or automations. PUT /v1/api/tasks/{taskId}/reopened."
+        },
+        {
+          "name": "agencyzoom_move_lead_stage",
+          "type": "write",
+          "title": "Move lead to a stage",
+          "description": "WRITE: move an active lead (a status check refuses leads already won, lost or x-dated) to another stage of a lead pipeline (workflow_id and workflow_stage_id from agencyzoom_list_pipelines). The lead stays active: it does not mark the lead won, lost or x-dated. Moving into a stage can trigger the agency's automations. The read and update are not atomic: a concurrent status change can be overwritten and reactivate a lead. Do not use while another process changes the same lead. Automations may repeat on repeated calls. PUT /v1/api/leads/{leadId}/stage."
+        },
+        {
+          "name": "agencyzoom_create_service_ticket",
+          "type": "write",
+          "title": "Create service ticket",
+          "description": "WRITE: open a service ticket for a customer in a service pipeline stage. Needs the pipeline and stage (agencyzoom_list_pipelines with type 'service'), a priority and a category (agencyzoom_list_service_ticket_options). The assigned CSR may be notified, and the agency's service automations can run. Not idempotent: calling twice opens two tickets. POST /v1/api/serviceTicket/service-tickets/create."
+        },
+        {
+          "name": "agencyzoom_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "agencyzoom_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AgencyZoom tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "agencyzoom_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for AgencyZoom (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "agencyzoom_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AgencyZoom Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run agencyzoom_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the new leads from this week and who they are assigned to.",
+        "Which tasks are past due and who owns them?",
+        "Find the customer Maria Lopez and list her active policies.",
+        "Add a note to lead 48213 that the quote was sent, and create a call task for Friday."
+      ]
     }
   ]
 }
