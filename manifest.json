@@ -129201,6 +129201,140 @@
         "Add a comment to task 12345 saying the supplier invoice is approved.",
         "List the users in this Jostle instance with their usernames."
       ]
+    },
+    {
+      "slug": "goto-webinar",
+      "name": "GoTo Webinar",
+      "category": "marketing",
+      "description": "Read webinars, registrants and attendees; register people and schedule webinars in GoTo Webinar.",
+      "endpoint": "https://goto-webinar.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your webinars, sessions, registrants, attendees, panelists and recordings, and can register a person for a webinar or schedule a new webinar when you ask it to. You can revoke access any time in GoTo → My Account → Apps and connections."
+      },
+      "tools": [
+        {
+          "name": "goto_webinar_list_webinars",
+          "type": "read",
+          "title": "List webinars",
+          "description": "List the organizer's webinars that start in a date range (default: now to 90 days ahead). Good first call to find a webinar key. GET /organizers/{organizerKey}/webinars."
+        },
+        {
+          "name": "goto_webinar_get_webinar",
+          "type": "read",
+          "title": "Get webinar",
+          "description": "Get one webinar: subject, times, time zone, registration URL, registrant count and limit. GET /organizers/{organizerKey}/webinars/{webinarKey}."
+        },
+        {
+          "name": "goto_webinar_list_sessions",
+          "type": "read",
+          "title": "List webinar sessions",
+          "description": "List the sessions of one webinar (a series or sequence has several). GET /organizers/{organizerKey}/webinars/{webinarKey}/sessions."
+        },
+        {
+          "name": "goto_webinar_get_performance",
+          "type": "read",
+          "title": "Get webinar performance",
+          "description": "Get attendance and engagement figures for all sessions of one webinar. GET /organizers/{organizerKey}/webinars/{webinarKey}/performance."
+        },
+        {
+          "name": "goto_webinar_list_registrants",
+          "type": "read",
+          "title": "List registrants",
+          "description": "List the registrants of one webinar with their status (WAITING, APPROVED or DENIED). Use goto_webinar_get_registrant for all fields. GET /organizers/{organizerKey}/webinars/{webinarKey}/registrants."
+        },
+        {
+          "name": "goto_webinar_get_registrant",
+          "type": "read",
+          "title": "Get registrant",
+          "description": "Get one registrant with all captured fields and the join URL. GET /organizers/{organizerKey}/webinars/{webinarKey}/registrants/{registrantKey}."
+        },
+        {
+          "name": "goto_webinar_list_registration_fields",
+          "type": "read",
+          "title": "List registration fields",
+          "description": "List the registration form fields of one webinar: required flag and allowed values, including custom fields. GET /organizers/{organizerKey}/webinars/{webinarKey}/registrants/fields."
+        },
+        {
+          "name": "goto_webinar_create_registrant",
+          "type": "write",
+          "title": "Register a person for a webinar",
+          "description": "Register one person for a scheduled webinar. GoTo sends the person a confirmation email unless the organizer turned that off. Needs a GoTo Webinar plan that allows registration. POST /organizers/{organizerKey}/webinars/{webinarKey}/registrants. Not retried."
+        },
+        {
+          "name": "goto_webinar_list_attendees",
+          "type": "read",
+          "title": "List attendees",
+          "description": "List the people who attended any session of one webinar. GET /organizers/{organizerKey}/webinars/{webinarKey}/attendees."
+        },
+        {
+          "name": "goto_webinar_list_panelists",
+          "type": "read",
+          "title": "List panelists",
+          "description": "List the panelists (presenters) of one webinar. GET /organizers/{organizerKey}/webinars/{webinarKey}/panelists."
+        },
+        {
+          "name": "goto_webinar_list_recordings",
+          "type": "read",
+          "title": "List recordings",
+          "description": "List the recording assets of one webinar. GET /webinars/{webinarKey}/recordingAssets."
+        },
+        {
+          "name": "goto_webinar_create_webinar",
+          "type": "write",
+          "title": "Schedule a webinar",
+          "description": "Schedule one single-session webinar for the organizer. Times are ISO 8601 UTC. Creates a visible webinar; it does not send registrant emails. POST /organizers/{organizerKey}/webinars. Not retried."
+        },
+        {
+          "name": "goto_webinar_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "goto_webinar_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoTo Webinar tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "goto_webinar_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for GoTo Webinar (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "goto_webinar_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoTo Webinar Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run goto_webinar_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which webinars do I have scheduled for the next two weeks?",
+        "How many people registered for the product launch webinar, and how many are approved?",
+        "Show the attendance and engagement figures for last week's customer webinar.",
+        "Register jane@example.com for the Q4 partner webinar as Jane Doe."
+      ]
     }
   ]
 }

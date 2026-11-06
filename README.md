@@ -766,6 +766,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [CareLineLive](servers/carelinelive/) | hr | 18 | API token | [servers/carelinelive/](servers/carelinelive/) |
 | [MyOnlineStore](servers/myonlinestore/) | ecommerce | 24 | API token | [servers/myonlinestore/](servers/myonlinestore/) |
 | [Jostle](servers/jostle/) | productivity | 11 | API token | [servers/jostle/](servers/jostle/) |
+| [GoTo Webinar](servers/goto-webinar/) | marketing | 16 | OAuth | [servers/goto-webinar/](servers/goto-webinar/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
