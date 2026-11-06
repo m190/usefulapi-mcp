@@ -131097,6 +131097,113 @@
         "Find open 60-minute slots for Dr. Albert next week.",
         "Show patient 8's communication log for the last month."
       ]
+    },
+    {
+      "slug": "bedrijfsrooster",
+      "name": "Bedrijfsrooster",
+      "category": "scheduling",
+      "description": "Read employees, contracts, timetable shifts, availability and reports in Bedrijfsrooster.",
+      "endpoint": "https://bedrijfsrooster.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "This server reads your company's configuration, employees, contracts, timetable, reports and availability. Every tool is read-only: it changes nothing in Bedrijfsrooster. Personal details (birthday, email, address) come back only when you ask for them. It can see only what the Connect user can see. You can revoke access any time in Bedrijfsrooster.",
+        "customerClient": true,
+        "appHint": "In Bedrijfsrooster, a company owner creates a Connect user for this app (developers.bedrijfsrooster.nl, create a customer API user). Register the redirect URI **https://bedrijfsrooster.usefulapi.io/callback**, then enter the client ID and secret on the login page. The secret is stored encrypted and is used only to sign you in and refresh your Bedrijfsrooster access."
+      },
+      "tools": [
+        {
+          "name": "bedrijfsrooster_get_configuration",
+          "type": "read",
+          "title": "Get company configuration",
+          "description": "Get the company this access token belongs to: its id and name, its group, and its locations, departments, functions and shift types. Call this first. The ids it returns are the filters for the other tools. Bedrijfsrooster API: GET /configuration."
+        },
+        {
+          "name": "bedrijfsrooster_list_users",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees (CompanyUsers) with an active or future employment in the company, optionally within a period. Set extendedDetails only when the user asks for personal details: it adds birthday, email and address. Bedrijfsrooster API: GET /users."
+        },
+        {
+          "name": "bedrijfsrooster_list_contracts",
+          "type": "read",
+          "title": "List employment contracts",
+          "description": "List the contracts between the company and its employees that are active at the snapshot date or within a period. Bedrijfsrooster API: GET /contracts."
+        },
+        {
+          "name": "bedrijfsrooster_list_timetable",
+          "type": "read",
+          "title": "List timetable shifts",
+          "description": "List the shifts of the company timetable: scheduled work shifts, availability, relief (vacation, days off) and non-attendance (sick days, no-shows). Choose which kinds to include with the shifts* flags. The reply is paged: use pageIndex (from 1) and itemsPerPage (1 to 1000), or disablePaging for a single reply. Bedrijfsrooster API: GET /timetable."
+        },
+        {
+          "name": "bedrijfsrooster_get_report",
+          "type": "read",
+          "title": "Get a finished report",
+          "description": "Get the stored result of one finished Bedrijfsrooster report by its reportId, for example the relief hours balance. A report that is still running returns HTTP 409 with its percentage_complete: call again later. Needs the company:reports:read integration permission. Bedrijfsrooster API: GET /reports."
+        },
+        {
+          "name": "bedrijfsrooster_get_availability",
+          "type": "read",
+          "title": "Get availability",
+          "description": "Get the availability (beschikbaarheid) per date, for each employee (companyUser) or each function (companyFunction). Use periodStart and periodEnd together, within one month (up to 31 days). Needs the company:availability:read integration permission. Bedrijfsrooster API: GET /availability."
+        },
+        {
+          "name": "bedrijfsrooster_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bedrijfsrooster_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bedrijfsrooster tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bedrijfsrooster_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Bedrijfsrooster (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bedrijfsrooster_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bedrijfsrooster Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bedrijfsrooster_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on the timetable next week?",
+        "Which employees have an availability gap on Friday?",
+        "List the employment contracts that are active today.",
+        "Show the finished relief hours report for report 42."
+      ]
     }
   ]
 }
