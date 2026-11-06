@@ -772,6 +772,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [AgencyZoom](servers/agencyzoom/) | crm | 32 | API token | [servers/agencyzoom/](servers/agencyzoom/) |
 | [Molzait](servers/molzait/) | scheduling | 17 | API token | [servers/molzait/](servers/molzait/) |
 | [TreePlotter](servers/treeplotter/) | maps | 21 | API token | [servers/treeplotter/](servers/treeplotter/) |
+| [StatusHub](servers/statushub/) | monitoring | 18 | API token | [servers/statushub/](servers/statushub/) |
+| [WebinarKit](servers/webinarkit/) | marketing | 9 | API token | [servers/webinarkit/](servers/webinarkit/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

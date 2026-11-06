@@ -130391,6 +130391,257 @@
         "Show the field names for the trees layer before we add a new tree.",
         "Create a service request at these coordinates for a broken park bench."
       ]
+    },
+    {
+      "slug": "statushub",
+      "name": "StatusHub",
+      "category": "monitoring",
+      "description": "Read status pages, services, incidents and uptime; create draft incidents and updates in StatusHub.",
+      "endpoint": "https://statushub.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "StatusHub account subdomain"
+          },
+          {
+            "label": "StatusHub region"
+          },
+          {
+            "label": "StatusHub API key"
+          }
+        ],
+        "hint": "The subdomain is the first part of your StatusHub address, for example `acme` in `acme.app.statushub.io`. Create the API key in your StatusHub account. Write tools create incidents and updates as drafts that subscribers do not see, and they do not notify subscribers, unless you ask otherwise. Your key is used only to call the StatusHub API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "statushub_list_hubs",
+          "type": "read",
+          "title": "List status pages",
+          "description": "List the status pages (hubs) this API key can see, with their subdomain. Call this first to find the subdomain that other tools need. Management API: GET /hubs."
+        },
+        {
+          "name": "statushub_get_hub",
+          "type": "read",
+          "title": "Get a status page",
+          "description": "Get one status page: name, subdomain, type, custom domain and product URL. Management API: GET /hubs/{subdomain}."
+        },
+        {
+          "name": "statushub_get_status_counters",
+          "type": "read",
+          "title": "Get service status counters",
+          "description": "Count the services on a status page by current condition: up, degraded-performance and down. Good first call for \"is anything broken now?\". Management API: GET /hubs/{subdomain}/status/counters."
+        },
+        {
+          "name": "statushub_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services (components) on a status page, with their group and name. Management API: GET /hubs/{subdomain}/services."
+        },
+        {
+          "name": "statushub_get_service_statuses",
+          "type": "read",
+          "title": "Get a service's status history",
+          "description": "Show the status changes of one service on a status page. Use the service id from statushub_list_services. Management API: GET /hubs/{subdomain}/status/services/{service_id}."
+        },
+        {
+          "name": "statushub_list_incidents",
+          "type": "read",
+          "title": "List incidents",
+          "description": "List the incidents on a status page, newest first by default. Filter by time range, affected service ids or service status. Management API: GET /hubs/{subdomain}/incidents."
+        },
+        {
+          "name": "statushub_get_incident",
+          "type": "read",
+          "title": "Get an incident",
+          "description": "Get one incident: title, author, start and end time, and flags. Management API: GET /hubs/{subdomain}/incidents/{incident_id}."
+        },
+        {
+          "name": "statushub_list_incident_updates",
+          "type": "read",
+          "title": "List incident updates",
+          "description": "List the updates posted on one incident (investigating, identified, monitoring, resolved). Management API: GET /hubs/{subdomain}/incidents/{incident_id}/incident_updates."
+        },
+        {
+          "name": "statushub_list_maintenances",
+          "type": "read",
+          "title": "List maintenance events",
+          "description": "List planned maintenance events on a status page. Filter by draft state, time range or affected services. Management API: GET /hubs/{subdomain}/maintenances."
+        },
+        {
+          "name": "statushub_get_maintenance",
+          "type": "read",
+          "title": "Get a maintenance event",
+          "description": "Get one maintenance event: title, start and end time, and affected services. Management API: GET /hubs/{subdomain}/maintenances/{maintenance_id}."
+        },
+        {
+          "name": "statushub_get_uptime",
+          "type": "read",
+          "title": "Get status page uptime",
+          "description": "Get the uptime percentage of a whole status page for a date range (at most 18 months). Management API: GET /hubs/{subdomain}/uptime."
+        },
+        {
+          "name": "statushub_get_service_uptime",
+          "type": "read",
+          "title": "Get service uptime",
+          "description": "Get the uptime percentage of one service for a date range (at most 18 months). Management API: GET /hubs/{subdomain}/uptime/services/{service_id}."
+        },
+        {
+          "name": "statushub_create_incident",
+          "type": "write",
+          "title": "Create an incident",
+          "description": "Create an incident with its first update. The incident starts as a draft (not shown on the status page) and subscribers are not notified, unless you set state and silent. Management API: POST /hubs/{subdomain}/incidents."
+        },
+        {
+          "name": "statushub_create_incident_update",
+          "type": "write",
+          "title": "Post an incident update",
+          "description": "Post a new update on an incident (investigating, identified, monitoring or resolved). It starts as a draft and subscribers are not notified, unless you set state and silent. A title that differs from the incident's current title RENAMES the incident. Management API: POST /hubs/{subdomain}/incidents/{incident_id}/incident_updates."
+        },
+        {
+          "name": "statushub_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "statushub_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the StatusHub tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "statushub_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for StatusHub (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "statushub_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's StatusHub Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run statushub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which services on our status page are down or degraded right now?",
+        "List the incidents from the last 30 days and how long each one lasted.",
+        "Create a draft incident for the payments service with status down, without notifying subscribers.",
+        "What was the uptime of our API service in October?"
+      ]
+    },
+    {
+      "slug": "webinarkit",
+      "name": "WebinarKit",
+      "category": "marketing",
+      "description": "Read webinars, their dates, series, meetings and white-label sub-accounts in WebinarKit.",
+      "endpoint": "https://webinarkit.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "WebinarKit API key"
+          }
+        ],
+        "hint": "Find it in WebinarKit → **Settings** (API key). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "webinarkit_list_webinars",
+          "type": "read",
+          "title": "List webinars",
+          "description": "List the webinars on the account with their ids and titles. Good first call to find a webinar id. WebinarKit API: GET /api/webinars."
+        },
+        {
+          "name": "webinarkit_get_webinar_dates",
+          "type": "read",
+          "title": "Get webinar dates",
+          "description": "List the scheduled dates and times of one webinar. WebinarKit API: GET /api/webinar/dates/{id}."
+        },
+        {
+          "name": "webinarkit_list_series",
+          "type": "read",
+          "title": "List webinar series",
+          "description": "List the webinar series on the account (groups of related webinars). WebinarKit API: GET /api/series."
+        },
+        {
+          "name": "webinarkit_list_meetings",
+          "type": "read",
+          "title": "List meetings",
+          "description": "List the meetings on the account. WebinarKit API: GET /api/meetings."
+        },
+        {
+          "name": "webinarkit_get_account",
+          "type": "read",
+          "title": "Get a white-label sub-account",
+          "description": "Get one white-label sub-account by its email address. Only for white-label accounts. WebinarKit API: GET /api/account?email=."
+        },
+        {
+          "name": "webinarkit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "webinarkit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the WebinarKit tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "webinarkit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for WebinarKit (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "webinarkit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's WebinarKit Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run webinarkit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which webinars do we have scheduled, and when is each one?",
+        "List our webinar series and meetings.",
+        "Show the dates of the webinar with id 123456."
+      ]
     }
   ]
 }
