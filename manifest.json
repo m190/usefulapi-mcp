@@ -129335,6 +129335,501 @@
         "Show the attendance and engagement figures for last week's customer webinar.",
         "Register jane@example.com for the Q4 partner webinar as Jane Doe."
       ]
+    },
+    {
+      "slug": "fieldedge",
+      "name": "FieldEdge",
+      "category": "business-operations",
+      "description": "Read work orders, customers and invoices; create customers, notes and work orders in FieldEdge.",
+      "endpoint": "https://fieldedge.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Tenant ID"
+          }
+        ],
+        "hint": "In the **FieldEdge Marketplace** (partners.fieldedge.com) open **Apps**, choose your internal app and copy the Client ID and (Copy Secret) the Client Secret; if you have no account there yet, request access with the onboarding form. The Tenant ID is shown in the FieldEdge web portal. Create an app just for this connection, so you can revoke it at any time, and give it only the scopes you need (the read scopes are enough to look things up). The credentials are used only to get FieldEdge access tokens and call the Open API on your behalf; they are never shown to anyone. Customer and work order data contain your customers' personal data."
+      },
+      "tools": [
+        {
+          "name": "fieldedge_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders (jobs) of the company with status, service address, customer, primary technician and linked invoice. Filters combine with AND; assigned=false cannot be combined with primary_tech_id. Needs scope workorders:read. GET /open-api/v1/work-orders."
+        },
+        {
+          "name": "fieldedge_get_work_order",
+          "type": "read",
+          "title": "Get a work order",
+          "description": "One work order: status, assignments, service address, task, tags and linked invoice. Needs scope workorders:read. GET /open-api/v1/work-orders/{work_order_id}."
+        },
+        {
+          "name": "fieldedge_search_work_orders_by_address",
+          "type": "read",
+          "title": "Find work orders at an address",
+          "description": "Work orders at a service address, most recent first, each with its customer's name. All of address_line_1, city, state and postal_code are required. Needs scope workorders:read. GET /open-api/v1/work-orders/search/by-address."
+        },
+        {
+          "name": "fieldedge_list_work_order_assignments",
+          "type": "read",
+          "title": "List a work order's technician assignments",
+          "description": "Technician assignments (schedule, status) on one work order. Needs scope workorders:read. GET /open-api/v1/work-orders/{workOrderId}/assignments."
+        },
+        {
+          "name": "fieldedge_search_customers",
+          "type": "read",
+          "title": "Search customers",
+          "description": "Search customers (personal data). With no filter all customers are listed. Needs scope customers:read. GET /open-api/v1/customers/search."
+        },
+        {
+          "name": "fieldedge_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "One customer (or job location) by id, with contact details and address (personal data). The reply says whether the record is a job or a billing customer. Needs scope customers:read. GET /open-api/v1/customers/id/{customer_id}."
+        },
+        {
+          "name": "fieldedge_get_customer_by_phone",
+          "type": "read",
+          "title": "Find a customer by phone number",
+          "description": "The customer with this phone number (personal data). Needs scope customers:read. GET /open-api/v1/customer/{phone}."
+        },
+        {
+          "name": "fieldedge_search_customers_by_address",
+          "type": "read",
+          "title": "Find customers at an address",
+          "description": "Customers at a street address (personal data). address_line_1, city, state and postal_code are required. Needs scope customers:read. GET /open-api/v1/customers/by-address."
+        },
+        {
+          "name": "fieldedge_list_customer_notes",
+          "type": "read",
+          "title": "List a customer's notes",
+          "description": "Notes on a customer record, newest first by default. Needs scope customers:read. GET /open-api/v1/customers/{customerId}/notes."
+        },
+        {
+          "name": "fieldedge_list_customer_attachments",
+          "type": "read",
+          "title": "List a customer's file attachments",
+          "description": "File attachments on a customer record, each with the blob URL to view or download it. Needs scope customers:read. GET /open-api/v1/customers/{customerId}/attachments."
+        },
+        {
+          "name": "fieldedge_list_tags",
+          "type": "read",
+          "title": "List customer tags",
+          "description": "Reusable customer tags of the account. Needs scope customers:read. GET /open-api/v1/tags."
+        },
+        {
+          "name": "fieldedge_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "Invoices by invoice date, without line items (use fieldedge_get_invoice for those). Needs scope invoices:read. GET /open-api/v1/invoices."
+        },
+        {
+          "name": "fieldedge_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "One invoice with its line items; the invoice id equals its work order id. Needs scope invoices:read. GET /open-api/v1/invoices/{invoice_id}."
+        },
+        {
+          "name": "fieldedge_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "Quotes, without line items (use fieldedge_get_quote for those). Prefer class_id over class_name. Needs scope workorders:read. GET /open-api/v1/quotes."
+        },
+        {
+          "name": "fieldedge_get_quote",
+          "type": "read",
+          "title": "Get a quote",
+          "description": "One quote with its line items; the quote id equals its work order id. Needs scope workorders:read. GET /open-api/v1/quotes/{quote_id}."
+        },
+        {
+          "name": "fieldedge_list_agreements",
+          "type": "read",
+          "title": "List service agreements",
+          "description": "Service agreements (recurring maintenance contracts) with plan, dates and customer. Needs scope workorders:read. GET /open-api/v1/agreements."
+        },
+        {
+          "name": "fieldedge_get_agreement",
+          "type": "read",
+          "title": "Get a service agreement",
+          "description": "One service agreement by id. Needs scope workorders:read. GET /open-api/v1/agreements/{agreement_id}."
+        },
+        {
+          "name": "fieldedge_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "Employees (technicians, dispatchers, CSRs, admins). Needs scope employees:read. GET /open-api/v1/employees."
+        },
+        {
+          "name": "fieldedge_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "One employee record. Needs scope employees:read. GET /open-api/v1/employees/{employee_id}."
+        },
+        {
+          "name": "fieldedge_list_business_units",
+          "type": "read",
+          "title": "List business units",
+          "description": "Business units (needed to create a work order). Needs scope business-units:read. GET /open-api/v1/business-units."
+        },
+        {
+          "name": "fieldedge_get_business_unit",
+          "type": "read",
+          "title": "Get a business unit",
+          "description": "One business unit by id. Needs scope business-units:read. GET /open-api/v1/business-units/{business_unit_id}."
+        },
+        {
+          "name": "fieldedge_list_lead_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "Lead sources (needed to create a work order). Needs scope lead-sources:read. GET /open-api/v1/lead-sources."
+        },
+        {
+          "name": "fieldedge_get_lead_source",
+          "type": "read",
+          "title": "Get a lead source",
+          "description": "One lead source by id. Needs scope lead-sources:read. GET /open-api/v1/lead-sources/{lead_source_id}."
+        },
+        {
+          "name": "fieldedge_list_tasks",
+          "type": "read",
+          "title": "List tasks (service types)",
+          "description": "Tasks (service types, needed to create a work order). Needs scope tasks:read. GET /open-api/v1/tasks."
+        },
+        {
+          "name": "fieldedge_get_task_bundle",
+          "type": "read",
+          "title": "Get a task with department and skill",
+          "description": "One task together with its resolved department and skill. Needs scope tasks:read. GET /open-api/v1/tasks/{task_id}/bundle."
+        },
+        {
+          "name": "fieldedge_list_items",
+          "type": "read",
+          "title": "List inventory items",
+          "description": "Inventory items (parts, services) with cost and rate. Needs scope items:read. GET /open-api/v1/items."
+        },
+        {
+          "name": "fieldedge_get_item",
+          "type": "read",
+          "title": "Get an inventory item",
+          "description": "One inventory item by id. Needs scope items:read. GET /open-api/v1/items/{item_id}."
+        },
+        {
+          "name": "fieldedge_list_item_categories",
+          "type": "read",
+          "title": "List item categories",
+          "description": "Inventory item categories (tree: childTreeLevel, parent). Needs scope item-categories:read. GET /open-api/v1/item-categories."
+        },
+        {
+          "name": "fieldedge_get_item_category",
+          "type": "read",
+          "title": "Get an item category",
+          "description": "One item category by id. Needs scope item-categories:read. GET /open-api/v1/item-categories/{item_category_id}."
+        },
+        {
+          "name": "fieldedge_list_sales_tax_codes",
+          "type": "read",
+          "title": "List sales tax codes",
+          "description": "Sales tax codes. Needs scope items:read. GET /open-api/v1/sales-tax-codes."
+        },
+        {
+          "name": "fieldedge_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "Inventory warehouses. Needs scope warehouses:read. GET /open-api/v1/warehouses."
+        },
+        {
+          "name": "fieldedge_get_warehouse",
+          "type": "read",
+          "title": "Get a warehouse",
+          "description": "One warehouse by id. Needs scope warehouses:read. GET /open-api/v1/warehouses/{warehouse_id}."
+        },
+        {
+          "name": "fieldedge_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "One lead by id (lead-provider integrations). Needs scope leads:read. GET /open-api/v1/leads/{lead_id}."
+        },
+        {
+          "name": "fieldedge_get_company",
+          "type": "read",
+          "title": "Get a company name",
+          "description": "The company name for a company id (the tenant id). Needs scope company:read. GET /open-api/v1/companies/{company_id}."
+        },
+        {
+          "name": "fieldedge_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "WRITE: create a customer record in FieldEdge, visible to the office staff at once. Needs an e-mail or a phone number (international format, e.g. +14155552671); marketing_email_opt_in needs an e-mail and marketing_sms_opt_in a phone number. Names are 2-50 characters without digits. Check fieldedge_search_customers first so you do not create a duplicate. Needs scope customers:write. POST /open-api/v1/customers."
+        },
+        {
+          "name": "fieldedge_create_customer_note",
+          "type": "write",
+          "title": "Add a note to a customer",
+          "description": "WRITE: add a free-text note to a customer record; office staff see it in FieldEdge at once. Needs scope customers:write. POST /open-api/v1/customers/{customerId}/notes."
+        },
+        {
+          "name": "fieldedge_update_customer_note",
+          "type": "write",
+          "title": "Edit a customer note",
+          "description": "WRITE: replace the text of an existing customer note (the old text is lost). Get the note id from fieldedge_list_customer_notes. Needs scope customers:write. PATCH /open-api/v1/customers/{customerId}/notes/{noteId}."
+        },
+        {
+          "name": "fieldedge_create_tag",
+          "type": "write",
+          "title": "Create a customer tag",
+          "description": "WRITE: create a reusable customer tag (e.g. \"VIP Customer\"). Check fieldedge_list_tags first. Needs scope customers:write. POST /open-api/v1/tags."
+        },
+        {
+          "name": "fieldedge_add_customer_tag",
+          "type": "write",
+          "title": "Tag a customer",
+          "description": "WRITE: attach an existing tag to a customer; it shows on the customer record in FieldEdge. Needs scope customers:write. POST /open-api/v1/customers/{customerId}/tags."
+        },
+        {
+          "name": "fieldedge_remove_customer_tag",
+          "type": "write",
+          "title": "Remove a tag from a customer",
+          "description": "WRITE: detach a tag from a customer (the tag itself stays). Needs scope customers:write. DELETE /open-api/v1/customers/{customerId}/tags/{tagId}."
+        },
+        {
+          "name": "fieldedge_create_work_order",
+          "type": "write",
+          "title": "Create a work order",
+          "description": "WRITE: create a work order for a customer location. business_unit_id, lead_source_id and task_id are required: get them from fieldedge_list_business_units, fieldedge_list_lead_sources and fieldedge_list_tasks. Scheduling, invoice lines and equipment are separate steps (fieldedge_assign_technician for scheduling). Needs scope workorders:write. POST /open-api/v1/work-orders."
+        },
+        {
+          "name": "fieldedge_update_work_order",
+          "type": "write",
+          "title": "Update a work order",
+          "description": "WRITE: partially update a work order; only the fields you pass change. Can reassign the primary technician, change description/notes, and mark it completed (with a resolution) or cancel it (cancel_note). Look at fieldedge_get_work_order first. Needs scope workorders:write. PATCH /open-api/v1/work-orders/{workOrderId}."
+        },
+        {
+          "name": "fieldedge_assign_technician",
+          "type": "write",
+          "title": "Assign a technician to a work order",
+          "description": "WRITE: schedule a technician on a work order. The assignment appears on the Dispatch Board at once and FieldEdge returns no assignment id: list the assignments afterwards to find it. Needs scope workorders:write. POST /open-api/v1/work-orders/{workOrderId}/assignments."
+        },
+        {
+          "name": "fieldedge_update_assignment_status",
+          "type": "write",
+          "title": "Change a technician assignment's status",
+          "description": "WRITE: move an assignment to pending, traveling, working, paused, completed or canceled. It triggers the same customer notifications and dispatch-board updates as a change on the dispatch board and is timestamped now. Canceling needs cancel_note; it fails once the assignment is completed, canceled or finalized. Get the assignment id from fieldedge_list_work_order_assignments. Needs scope workorders:write. PATCH /open-api/v1/work-orders/{workOrderId}/assignments/{assignmentId}/status."
+        },
+        {
+          "name": "fieldedge_remove_assignment",
+          "type": "write",
+          "title": "Remove a technician from a work order",
+          "description": "WRITE: unassign one technician (by assignment id) from a work order; other technicians on it stay. Get the assignment id from fieldedge_list_work_order_assignments. Needs scope workorders:write. DELETE /open-api/v1/work-orders/{workOrderId}/assignments/{assignmentId}."
+        },
+        {
+          "name": "fieldedge_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fieldedge_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FieldEdge tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fieldedge_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for FieldEdge (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fieldedge_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FieldEdge Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fieldedge_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which work orders are still open and have no technician assigned?",
+        "Find the customer with phone number +14155552671 and show their notes.",
+        "List the service agreements whose next service date is in the next 30 days.",
+        "Create a work order for customer <id> and assign it to my first technician tomorrow at 9am.",
+        "Which invoices were added this week?"
+      ]
+    },
+    {
+      "slug": "weekdone",
+      "name": "Weekdone",
+      "category": "productivity",
+      "description": "Read weekly reports, teams, objectives and KPIs; add report items and comments in Weekdone.",
+      "endpoint": "https://weekdone.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your teams, users, items, reports, objectives and KPIs, and can create or change items, add comments and update KPI values when you ask it to. You can revoke access any time in Weekdone → Settings → Applications."
+      },
+      "tools": [
+        {
+          "name": "weekdone_get_company",
+          "type": "read",
+          "title": "Get company settings",
+          "description": "Get the company settings: reporting schedule, timezone, template and which objective levels are used. Weekdone API: GET /1/company."
+        },
+        {
+          "name": "weekdone_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams in the company with their ids, names and report privacy. Use the team ids in other tools. Weekdone API: GET /1/teams."
+        },
+        {
+          "name": "weekdone_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users in the company with their ids, names, admin flag and teams. Weekdone API: GET /1/users."
+        },
+        {
+          "name": "weekdone_list_types",
+          "type": "read",
+          "title": "List item types",
+          "description": "List the report categories (item types) with their ids and names, for example 0 = Plans on hold, 1 = Progress, 2 = Plans, 3 = Problems and custom types. Use the id as type_id when creating items. Weekdone API: GET /1/types."
+        },
+        {
+          "name": "weekdone_search_items",
+          "type": "read",
+          "title": "Search items",
+          "description": "Search the report items (progress, plans, problems and custom items) of one week, filtered by user or team. Defaults to the current week. Weekdone API: GET /1/items."
+        },
+        {
+          "name": "weekdone_get_item_comments",
+          "type": "read",
+          "title": "Get item comments",
+          "description": "List the comments on one report item. Weekdone API: GET /1/item/{id}/comments."
+        },
+        {
+          "name": "weekdone_get_report",
+          "type": "read",
+          "title": "Get weekly report",
+          "description": "Get the weekly report data grouped by team, with each user's items, rate and ratings. Defaults to the current week. Weekdone API: GET /1/report."
+        },
+        {
+          "name": "weekdone_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the tags used on items, with their priority status and latest status text. Weekdone API: GET /1/tag."
+        },
+        {
+          "name": "weekdone_list_objectives",
+          "type": "read",
+          "title": "List objectives",
+          "description": "List OKR objectives (company, department, team or user level) with their progress and key results. Weekdone API: GET /1/objective."
+        },
+        {
+          "name": "weekdone_list_kpis",
+          "type": "read",
+          "title": "List KPIs",
+          "description": "List the company, department and team KPIs with their current value, type and range. Weekdone API: GET /1/kpi."
+        },
+        {
+          "name": "weekdone_create_item",
+          "type": "write",
+          "title": "Create item",
+          "description": "Create a report item (a plan, progress, problem or custom item) in a week. Changes Weekdone data. Weekdone API: POST /1/item. Not retried on failure."
+        },
+        {
+          "name": "weekdone_update_item",
+          "type": "write",
+          "title": "Update item",
+          "description": "Change the text, category, priority or due date of a report item. Changes Weekdone data. Weekdone API: PATCH /1/item/{id}. Moving an item to another type_id also needs period."
+        },
+        {
+          "name": "weekdone_assign_item",
+          "type": "write",
+          "title": "Assign item",
+          "description": "Assign a report item to another user. Changes Weekdone data. Weekdone API: PATCH /1/item/{id}/assign."
+        },
+        {
+          "name": "weekdone_add_item_comment",
+          "type": "write",
+          "title": "Add item comment",
+          "description": "Add a comment to a report item. Changes Weekdone data. Weekdone API: POST /1/item/{id}/comments."
+        },
+        {
+          "name": "weekdone_update_kpi_progress",
+          "type": "write",
+          "title": "Update KPI value",
+          "description": "Set the current value of a KPI. Changes Weekdone data. Weekdone API: POST /1/kpi/{id}/progress."
+        },
+        {
+          "name": "weekdone_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "weekdone_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Weekdone tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "weekdone_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Weekdone (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "weekdone_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Weekdone Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run weekdone_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What did my team report as progress this week?",
+        "Which items are marked red in the current report?",
+        "Show the company objectives for this quarter and their progress.",
+        "Add a plan item for next week: prepare the Q4 review deck."
+      ]
     }
   ]
 }

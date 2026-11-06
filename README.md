@@ -767,6 +767,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MyOnlineStore](servers/myonlinestore/) | ecommerce | 24 | API token | [servers/myonlinestore/](servers/myonlinestore/) |
 | [Jostle](servers/jostle/) | productivity | 11 | API token | [servers/jostle/](servers/jostle/) |
 | [GoTo Webinar](servers/goto-webinar/) | marketing | 16 | OAuth | [servers/goto-webinar/](servers/goto-webinar/) |
+| [FieldEdge](servers/fieldedge/) | business-operations | 49 | API token | [servers/fieldedge/](servers/fieldedge/) |
+| [Weekdone](servers/weekdone/) | productivity | 19 | OAuth | [servers/weekdone/](servers/weekdone/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
