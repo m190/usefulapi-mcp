@@ -130067,6 +130067,330 @@
         "Find the customer Maria Lopez and list her active policies.",
         "Add a note to lead 48213 that the quote was sent, and create a call task for Friday."
       ]
+    },
+    {
+      "slug": "molzait",
+      "name": "Molzait",
+      "category": "scheduling",
+      "description": "Read reservations, guests, slots and gift cards; create and change reservations in Molzait.",
+      "endpoint": "https://molzait.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Molzait API key"
+          }
+        ],
+        "hint": "Molzait issues API keys on request: ask Molzait for a key for your restaurant. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "molzait_get_restaurant",
+          "type": "read",
+          "title": "Get restaurant details",
+          "description": "Get the restaurant this API key belongs to: name, address, timezone, contact details and branding. Good first call to confirm which restaurant is connected. Molzait API: GET /external/restaurant."
+        },
+        {
+          "name": "molzait_list_labels",
+          "type": "read",
+          "title": "List restaurant labels",
+          "description": "List the labels the restaurant uses to tag reservations and guests (VIP, allergy, and so on). Use the label ids when you filter guests or set labels on a reservation. Molzait API: GET /external/restaurant/labels."
+        },
+        {
+          "name": "molzait_list_floor_plans",
+          "type": "read",
+          "title": "List floor plans",
+          "description": "List the floor plans of the restaurant with their tables, table combinations and elements. Use table ids from here when you pin tables to a reservation. Molzait API: GET /external/floorplans."
+        },
+        {
+          "name": "molzait_search_guests",
+          "type": "read",
+          "title": "Search guests",
+          "description": "Search the guest directory by name, email, phone or company, with visit counts and labels. Use it to find a guest id before you list their reservations. Molzait API: GET /external/guests."
+        },
+        {
+          "name": "molzait_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "List reservations in a date range, optionally for one guest or one status. Each reservation has its experience, times, tables, guest and labels. Molzait API: GET /external/reservations."
+        },
+        {
+          "name": "molzait_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "Get one reservation by id: status, times, attendees, experience, guest, pinned tables, notes and labels. Molzait API: GET /external/reservations/{reservationId}."
+        },
+        {
+          "name": "molzait_list_receipts",
+          "type": "read",
+          "title": "List receipts of a reservation",
+          "description": "List the point-of-sale receipts of one reservation: products, waiters and table. Molzait API: GET /external/reservations/{reservationId}/receipts."
+        },
+        {
+          "name": "molzait_list_experiences",
+          "type": "read",
+          "title": "List experiences",
+          "description": "List the bookable experiences of the restaurant (for example lunch or dinner menus) with their party-size limits. Use the experience id when you check slots or book. Molzait API: GET /external/availability/experiences."
+        },
+        {
+          "name": "molzait_list_available_slots",
+          "type": "read",
+          "title": "List available slots",
+          "description": "List the bookable time slots for one experience, day and party size, with open spots per slot. Molzait API: GET /external/availability/slots."
+        },
+        {
+          "name": "molzait_list_gift_card_templates",
+          "type": "read",
+          "title": "List gift card templates",
+          "description": "List the gift card templates the restaurant sells, with amounts, variations and expiry rules. Molzait API: GET /external/gift-cards/templates."
+        },
+        {
+          "name": "molzait_get_gift_card",
+          "type": "read",
+          "title": "Get a gift card",
+          "description": "Get one gift card by id: amount, remaining amount, template, expiry day and locale. Molzait API: GET /external/gift-cards/{giftCardId}."
+        },
+        {
+          "name": "molzait_create_reservation",
+          "type": "write",
+          "title": "Create a reservation",
+          "description": "Book a reservation for one experience, day, time and party size. The guest is found or created from the name, email and phone. Creates a real booking that the restaurant sees. Molzait API: POST /external/reservations."
+        },
+        {
+          "name": "molzait_update_reservation",
+          "type": "write",
+          "title": "Update a reservation",
+          "description": "Change one reservation: its status (for example cancelled or no_show), day, start time, party size or tables. Only the fields you pass are sent. Changes the live booking. Molzait API: PATCH /external/reservations/{reservationId}."
+        },
+        {
+          "name": "molzait_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "molzait_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Molzait tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "molzait_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Molzait (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "molzait_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Molzait Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run molzait_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is booked at our restaurant tomorrow evening, and how many guests?",
+        "Find free slots for a party of four on Saturday for our dinner experience.",
+        "Show me the guests who visited the most in the last year.",
+        "Cancel the no-show reservation for Anna Berger on Friday."
+      ]
+    },
+    {
+      "slug": "treeplotter",
+      "name": "TreePlotter",
+      "category": "maps",
+      "description": "Read assets, work orders and service requests; add and change assets and work orders in TreePlotter.",
+      "endpoint": "https://treeplotter.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TreePlotter region"
+          },
+          {
+            "label": "INVENTORY folder"
+          },
+          {
+            "label": "TreePlotter login"
+          },
+          {
+            "label": "TreePlotter password"
+          },
+          {
+            "label": "TreePlotter API key"
+          }
+        ],
+        "hint": "Ask PlanIT Geo support for an **API key** and a **login** for the API. The folder is the lowercase name in your INVENTORY app address, for example `pg-cloud.com/tpdemo` gives `tpdemo`. Your login and key are stored encrypted and are used only to call the TreePlotter API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "treeplotter_list_inventories",
+          "type": "read",
+          "title": "List inventory layers",
+          "description": "List the inventory layers in this TreePlotter folder (for example trees), with alias and geometry type. Good first call. GET /<folder>/inventories."
+        },
+        {
+          "name": "treeplotter_get_inventory_metadata",
+          "type": "read",
+          "title": "Get inventory field metadata",
+          "description": "Get the fields, field types and lookup tables of one inventory layer. Use it to read field names before you create or update features. GET /<folder>/metadata/inventories/<inventory>."
+        },
+        {
+          "name": "treeplotter_list_features",
+          "type": "read",
+          "title": "List features in a layer",
+          "description": "List GeoJSON features (assets) of one inventory layer, one page at a time. Use offset to get the next page. GET /<folder>/inventories/<inventory>."
+        },
+        {
+          "name": "treeplotter_list_translated_features",
+          "type": "read",
+          "title": "List features with readable values",
+          "description": "List features of one inventory layer with lookup values translated to readable text. Read-only. GET /<folder>/translated/inventories/<inventory>."
+        },
+        {
+          "name": "treeplotter_get_feature",
+          "type": "read",
+          "title": "Get a feature",
+          "description": "Get one feature (asset) of an inventory layer by its Primary ID. GET /<folder>/inventories/<inventory>/<pid>."
+        },
+        {
+          "name": "treeplotter_list_work_activities",
+          "type": "read",
+          "title": "List work activities",
+          "description": "List the work activity types (for example Prune Tree) that work records can use. GET /<folder>/wom/workactivities."
+        },
+        {
+          "name": "treeplotter_list_work_fields",
+          "type": "read",
+          "title": "List work record fields",
+          "description": "List the fields that work records can use, with their layer names. GET /<folder>/wom/workfields."
+        },
+        {
+          "name": "treeplotter_list_work_records",
+          "type": "read",
+          "title": "List work records",
+          "description": "List work records (work done on assets). GET /<folder>/wom/workrecords."
+        },
+        {
+          "name": "treeplotter_list_service_requests",
+          "type": "read",
+          "title": "List service requests",
+          "description": "List service requests (citizen or customer requests about assets). GET /<folder>/wom/servicerequests."
+        },
+        {
+          "name": "treeplotter_get_service_request",
+          "type": "read",
+          "title": "Get a service request",
+          "description": "Get one service request by its ID. GET /<folder>/wom/servicerequests/<pid>."
+        },
+        {
+          "name": "treeplotter_list_jobs",
+          "type": "read",
+          "title": "List work orders (jobs)",
+          "description": "List work orders (jobs). GET /<folder>/wom/jobs."
+        },
+        {
+          "name": "treeplotter_get_job",
+          "type": "read",
+          "title": "Get a work order (job)",
+          "description": "Get one work order (job) by its ID. GET /<folder>/wom/jobs/<pid>."
+        },
+        {
+          "name": "treeplotter_get_jobs_metadata",
+          "type": "read",
+          "title": "Get work order metadata",
+          "description": "Get the field metadata for work orders (jobs). GET /<folder>/wom/jobs/metadata."
+        },
+        {
+          "name": "treeplotter_create_feature",
+          "type": "write",
+          "title": "Create a feature",
+          "description": "Create a new feature (asset) in an inventory layer. Point layers need lat and lng in data. Check field names with treeplotter_get_inventory_metadata first. POST /<folder>/inventories/<inventory>."
+        },
+        {
+          "name": "treeplotter_update_feature",
+          "type": "write",
+          "title": "Update a feature",
+          "description": "Update fields of one feature (asset) by its Primary ID. Only the fields you send change. PUT /<folder>/inventories/<inventory>/<pid>."
+        },
+        {
+          "name": "treeplotter_create_job",
+          "type": "write",
+          "title": "Create a work order (job)",
+          "description": "Create a new work order (job). Check field names with treeplotter_get_jobs_metadata first. POST /<folder>/wom/jobs."
+        },
+        {
+          "name": "treeplotter_update_job",
+          "type": "write",
+          "title": "Update a work order (job)",
+          "description": "Update fields of one work order (job) by its ID, for example its status. Only the fields you send change. PUT /<folder>/wom/jobs/<pid>."
+        },
+        {
+          "name": "treeplotter_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "treeplotter_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TreePlotter tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "treeplotter_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TreePlotter (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "treeplotter_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TreePlotter Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run treeplotter_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which trees in our INVENTORY folder are in poor condition?",
+        "List all work orders that are still open.",
+        "Show the field names for the trees layer before we add a new tree.",
+        "Create a service request at these coordinates for a broken park bench."
+      ]
     }
   ]
 }

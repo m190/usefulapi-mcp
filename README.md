@@ -770,6 +770,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FieldEdge](servers/fieldedge/) | business-operations | 49 | API token | [servers/fieldedge/](servers/fieldedge/) |
 | [Weekdone](servers/weekdone/) | productivity | 19 | OAuth | [servers/weekdone/](servers/weekdone/) |
 | [AgencyZoom](servers/agencyzoom/) | crm | 32 | API token | [servers/agencyzoom/](servers/agencyzoom/) |
+| [Molzait](servers/molzait/) | scheduling | 17 | API token | [servers/molzait/](servers/molzait/) |
+| [TreePlotter](servers/treeplotter/) | maps | 21 | API token | [servers/treeplotter/](servers/treeplotter/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
