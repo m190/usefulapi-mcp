@@ -21,13 +21,13 @@ Use your [Docketwise](https://www.docketwise.com) account from Claude, Cursor, o
 }
 ```
 
-Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and you sign in with your Docketwise account.
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and you enter your own Docketwise app's client ID and secret, then sign in with your Docketwise account.
 
 Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/docketwise/
 
 <!-- connect:end (generated above, edit below) -->
 
-On first connect you sign in to Docketwise and approve access. The server validates it and stores it per user. No keys go in config files.
+On first connect you enter the client ID and secret of your firm's own Docketwise API app (create it under Settings > Developer access with the redirect URI `https://docketwise.usefulapi.io/callback`), then sign in to Docketwise and approve access. The server stores the app credentials and tokens encrypted per connection. No keys go in config files.
 
 ## Tools
 

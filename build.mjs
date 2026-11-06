@@ -244,8 +244,11 @@ const credentialText = (s) => {
   const req = requiredFields(s);
   return req.length ? `your ${andList(req.map((l) => `<b>${esc(l)}</b>`))}` : `your <b>${esc(s.name)}</b> credentials`;
 };
+// customerClient (fleet runtime): the customer's own vendor app; the login page asks for its client ID + secret first.
+const ownApp = (s) => loginKind(s) === "upstream" && !!s.login?.customerClient;
 function authStepFor(s, client = "Claude") {
   const k = loginKind(s);
+  if (ownApp(s)) return `${client} opens the login page: enter your own <b>${esc(s.name)}</b> app's client ID and secret, then sign in and approve the access`;
   if (k === "upstream") return `${client} opens the <b>${esc(s.name)}</b> login page: sign in and approve the access`;
   if (k === "email") return `${client} opens the login page: enter your email and the 6-digit code from <b>login@usefulapi.io</b> (no ${esc(s.name)} key needed)`;
   return `${client} opens the login page: enter ${credentialText(s)}`;
@@ -253,6 +256,7 @@ function authStepFor(s, client = "Claude") {
 // Some clients send a configured Authorization header instead of the OAuth token (every call → 401).
 function loginByOAuth(s) {
   const k = loginKind(s);
+  if (ownApp(s)) return `you enter your own ${esc(s.name)} app's client ID and secret, then sign in with your ${esc(s.name)} account`;
   if (k === "upstream") return `you sign in with your ${esc(s.name)} account`;
   if (k === "email") return `the login page asks for your email address and a 6-digit code`;
   return `the login page asks for ${credentialText(s)}`;
@@ -280,7 +284,9 @@ const patientDataNote = (s) => (PATIENT_DATA.has(s.slug)
 function setupSection(s) {
   const k = loginKind(s), opt = optionalFields(s);
   let lead;
-  if (k === "upstream") lead = `<p>You sign in with your ${esc(s.name)} account and approve the access (OAuth). You do not need an API key.</p>`;
+  if (ownApp(s)) lead = `<p>You need your own ${esc(s.name)} API app. The login page asks for its <b>Client ID</b> and <b>Client secret</b>; then you sign in with your ${esc(s.name)} account and approve the access (OAuth).</p>` +
+    (s.login.appHint ? `<p>${hintHtml(s.login.appHint)}</p>` : "");
+  else if (k === "upstream") lead = `<p>You sign in with your ${esc(s.name)} account and approve the access (OAuth). You do not need an API key.</p>`;
   else if (k === "email") lead = `<p>You do not need an account or a key for ${esc(s.name)}. You log in with your email address and a 6-digit code.</p>`;
   else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
   const optional = opt.length ? `<p>Optional: ${andList(opt.map((l) => `<b>${esc(l)}</b>`))}.</p>` : "";
@@ -321,7 +327,8 @@ function faqFor(s) {
     `Yes. In Claude, add this server's URL as a custom connector. In ChatGPT, add it as a custom MCP server in Plugins. ` +
     `Then log in once. Cursor, VS Code, Claude Code and Codex work too. See <a href="#connect">the setup steps</a>.` });
   faq.push({ q: `What do I need to connect?`, a:
-    k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
+    ownApp(s) ? `A ${n} account with API access and your own ${n} API app (its client ID and secret). See <a href="#setup">Before you connect</a> for how to create it.`
+    : k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
     : k === "email" ? `Only an email address. You do not need a key for ${n}.`
     : `The login page asks for ${credentialText(s)}. See <a href="#setup">Before you connect</a> for where to find ${requiredFields(s).length > 1 ? "them" : "it"}.` });
   faq.push({ q: k === "key" ? `Do I put my ${n} key or an Authorization header in the client config?` : `Do I add an Authorization header to the client config?`,

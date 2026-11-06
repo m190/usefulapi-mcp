@@ -174,7 +174,8 @@ const CONNECT_END = "<!-- connect:end (generated above, edit below) -->";
 // Same rule as the portal: some clients send a configured Authorization header instead of the OAuth token.
 function readmeNoHeader(s) {
   const k = s.login?.kind || (s.auth === "oauth" ? "upstream" : s.auth === "none" ? "email" : "key");
-  const how = k === "upstream" ? `you sign in with your ${s.name} account`
+  const how = k === "upstream" && s.login?.customerClient ? `you enter your own ${s.name} app's client ID and secret, then sign in with your ${s.name} account`
+    : k === "upstream" ? `you sign in with your ${s.name} account`
     : k === "email" ? "the login page asks for your email address and a 6-digit code"
     : `the login page asks for your ${s.name} credentials`;
   return `Add only the URL. Do not add an \`Authorization\` header or an API key to the client config: the server signs you in with OAuth, and ${how}.`;
