@@ -774,6 +774,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TreePlotter](servers/treeplotter/) | maps | 21 | API token | [servers/treeplotter/](servers/treeplotter/) |
 | [StatusHub](servers/statushub/) | monitoring | 18 | API token | [servers/statushub/](servers/statushub/) |
 | [WebinarKit](servers/webinarkit/) | marketing | 9 | API token | [servers/webinarkit/](servers/webinarkit/) |
+| [Docketwise](servers/docketwise/) | business-operations | 24 | OAuth | [servers/docketwise/](servers/docketwise/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
