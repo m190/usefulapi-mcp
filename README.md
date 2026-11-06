@@ -776,6 +776,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [WebinarKit](servers/webinarkit/) | marketing | 9 | API token | [servers/webinarkit/](servers/webinarkit/) |
 | [Docketwise](servers/docketwise/) | business-operations | 24 | OAuth | [servers/docketwise/](servers/docketwise/) |
 | [Kourses](servers/kourses/) | membership | 9 | API token | [servers/kourses/](servers/kourses/) |
+| [Open Dental](servers/open-dental/) | healthcare | 21 | API token | [servers/open-dental/](servers/open-dental/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -130929,6 +130929,174 @@
         "Give jane@example.com access to membership abcd1234 until 2027-06-30.",
         "Remove jane@example.com's access to membership abcd1234."
       ]
+    },
+    {
+      "slug": "open-dental",
+      "name": "Open Dental",
+      "category": "healthcare",
+      "description": "Read appointments, open slots, providers, procedure codes and recalls in Open Dental.",
+      "endpoint": "https://open-dental.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.2.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Customer API key"
+          }
+        ],
+        "hint": "UsefulAPI issues the **customer key** for your practice: email **developers@usefulapi.io** with the practice name and we send it. Add it in Open Dental under **Setup > Advanced Setup > API** (Add Key, then enable the API; the eConnector must be running), then paste it here. The key is used only to call the Open Dental API on your behalf; it is never shown to anyone. All tools are read-only (the free ReadAll permission)."
+      },
+      "tools": [
+        {
+          "name": "opendental_get_api_permissions",
+          "type": "read",
+          "title": "Get API permissions",
+          "description": "The API permissions this customer key has (ReadAll, Appointments, Patients, ...), each true or false. The tools here only read, so ReadAll is the one they need. Use it to explain why a call is refused. GET /securityperms."
+        },
+        {
+          "name": "opendental_list_patients",
+          "type": "read",
+          "title": "List patients",
+          "description": "List patients with the fast search (name, birthdate, status, guarantor, primary provider, clinic, changed since). Names match partially, case-insensitive. Returns demographics, balances and contact data (protected health information); SSNs are removed. Page with limit/offset. GET /patients/Simple."
+        },
+        {
+          "name": "opendental_search_patients",
+          "type": "read",
+          "title": "Search patients",
+          "description": "Search patients the way Open Dental's Patient Select window does: by name, phone, email, address, city, state, chart number, birthdate or insurance subscriber id. Slower than opendental_list_patients on large databases; use it for phone, email and address lookups. Returns the Patient Select columns only (use opendental_get_patient for the full record). GET /patients."
+        },
+        {
+          "name": "opendental_get_patient",
+          "type": "read",
+          "title": "Get patient",
+          "description": "One patient's full record by PatNum: name, status, birthdate, contact details, balances, providers, preferred contact methods, urgent notes. SSN is removed. GET /patients/{PatNum}."
+        },
+        {
+          "name": "opendental_get_patient_notes",
+          "type": "read",
+          "title": "Get patient notes",
+          "description": "A patient's note fields: family financial, medical, service, medical complete, treatment (odontogram) notes and the emergency contact (ICE name and phone). GET /patientnotes/{PatNum}."
+        },
+        {
+          "name": "opendental_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments, filtered by patient, status, operatory, a day or a date range, clinic, appointment type, or changed since. Each has AptNum, PatNum, status, AptDateTime, pattern, provider, operatory, note and procedures. Use `date` for one day (e.g. today's schedule) or date_start/date_end for a range. GET /appointments."
+        },
+        {
+          "name": "opendental_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "One appointment by AptNum, with its patient, time, provider, operatory, status, confirmation, note and procedures. GET /appointments/{AptNum}."
+        },
+        {
+          "name": "opendental_list_asap_appointments",
+          "type": "read",
+          "title": "List ASAP appointments",
+          "description": "The ASAP list: appointments whose priority is ASAP (patients who want an earlier time). ClinicNum is required when the office uses clinics (use 0 for no clinic). GET /appointments/ASAP."
+        },
+        {
+          "name": "opendental_find_open_slots",
+          "type": "read",
+          "title": "Find open appointment slots",
+          "description": "Open schedule slots for a provider and operatory (like the Appointments module search): each has DateTimeStart, DateTimeEnd, ProvNum and OpNum. Dates must be today or later; the default is the next 14 days. GET /appointments/Slots."
+        },
+        {
+          "name": "opendental_list_providers",
+          "type": "read",
+          "title": "List providers",
+          "description": "Providers (dentists, hygienists, billing entities) with ProvNum, abbreviation, name, specialty, status and hidden flags. SSN/TIN is removed. Optionally only providers usable at one clinic, or only those changed since a time (not both). GET /providers."
+        },
+        {
+          "name": "opendental_list_operatories",
+          "type": "read",
+          "title": "List operatories",
+          "description": "Operatories (treatment rooms) with OperatoryNum, name, abbreviation, assigned dentist and hygienist, clinic and hidden flag. GET /operatories."
+        },
+        {
+          "name": "opendental_list_clinics",
+          "type": "read",
+          "title": "List clinics",
+          "description": "All non-hidden clinics (locations) with address, billing address and phone. An empty list means the office does not use the Clinics feature. GET /clinics."
+        },
+        {
+          "name": "opendental_list_appointment_types",
+          "type": "read",
+          "title": "List appointment types",
+          "description": "Appointment types (AppointmentTypeNum, name, default pattern, required procedure codes, hidden flag). GET /appointmenttypes."
+        },
+        {
+          "name": "opendental_list_procedure_codes",
+          "type": "read",
+          "title": "List procedure codes",
+          "description": "The office's procedure codes (CodeNum, ADA code, description, category, treatment area, hygiene flag). Use CodeNum to filter procedure logs. Page with limit/offset. GET /procedurecodes."
+        },
+        {
+          "name": "opendental_list_procedure_logs",
+          "type": "read",
+          "title": "List procedures",
+          "description": "Procedure log entries (treatment-planned, complete, existing, referred, deleted) filtered by patient, appointment, date, status, clinic, procedure code or creation time. Each has ProcNum, PatNum, ProcDate, fee, tooth, surface, status, provider and code. Page with limit/offset. GET /procedurelogs."
+        },
+        {
+          "name": "opendental_list_commlogs",
+          "type": "read",
+          "title": "List communication log entries",
+          "description": "Communication log entries (calls, texts, emails, letters) for a patient or changed since a time: CommlogNum, PatNum, date, mode, sent or received, note. Page with limit/offset. GET /commlogs."
+        },
+        {
+          "name": "opendental_list_recalls_due",
+          "type": "read",
+          "title": "List recalls due",
+          "description": "The Recall List as in Open Dental's Appointment module: patients due for recall (prophy, perio) with due date, interval, reminders sent, last reminder, preferred contact and status. Defaults follow the office's recall preferences. Page with limit/offset. GET /recalls/List."
+        },
+        {
+          "name": "opendental_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "opendental_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Open Dental tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "opendental_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Open Dental (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "opendental_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Open Dental Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run opendental_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show today's appointments with patient names and operatories.",
+        "Which patients are due for a recall this month and haven't been reminded?",
+        "Find open 60-minute slots for Dr. Albert next week.",
+        "Show patient 8's communication log for the last month."
+      ]
     }
   ]
 }
