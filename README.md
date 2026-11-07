@@ -865,6 +865,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Steady](servers/steady/) | membership | 9 | API token | [servers/steady/](servers/steady/) |
 | [Delfi PMS](servers/delfi-pms/) | property-management | 21 | API token | [servers/delfi-pms/](servers/delfi-pms/) |
 | [Action1](servers/action1/) | security | 20 | API token | [servers/action1/](servers/action1/) |
+| [Tiltify](servers/tiltify/) | fundraising | 9 | OAuth | [servers/tiltify/](servers/tiltify/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
