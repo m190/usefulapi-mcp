@@ -844,6 +844,19 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ComplyCube](servers/complycube/) | fraud-detection | 10 | API token | [servers/complycube/](servers/complycube/) |
 | [Recommand](servers/recommand/) | billing | 13 | API token | [servers/recommand/](servers/recommand/) |
 | [Typless](servers/typless/) | document-ai | 8 | API token | [servers/typless/](servers/typless/) |
+| [CloudSign](servers/cloudsign/) | esignature | 13 | API token | [servers/cloudsign/](servers/cloudsign/) |
+| [Stibee](servers/stibee/) | email-marketing | 19 | API token | [servers/stibee/](servers/stibee/) |
+| [amego](servers/amego/) | accounting | 17 | API token | [servers/amego/](servers/amego/) |
+| [GHN](servers/ghn/) | shipping | 13 | API token | [servers/ghn/](servers/ghn/) |
+| [GHTK](servers/ghtk/) | shipping | 12 | API token | [servers/ghtk/](servers/ghtk/) |
+| [AbleSign](servers/ablesign/) | marketing | 22 | API token | [servers/ablesign/](servers/ablesign/) |
+| [Termii](servers/termii/) | messaging | 9 | API token | [servers/termii/](servers/termii/) |
+| [Temp Stick](servers/temp-stick/) | monitoring | 8 | API token | [servers/temp-stick/](servers/temp-stick/) |
+| [BrewMan](servers/brewman/) | business-operations | 18 | API token | [servers/brewman/](servers/brewman/) |
+| [Pulseway](servers/pulseway/) | monitoring | 20 | API token | [servers/pulseway/](servers/pulseway/) |
+| [Scalefusion](servers/scalefusion/) | security | 18 | API token | [servers/scalefusion/](servers/scalefusion/) |
+| [Chit Chats](servers/chit-chats/) | shipping | 15 | API token | [servers/chit-chats/](servers/chit-chats/) |
+| [dilisense](servers/dilisense/) | fraud-detection | 9 | API token | [servers/dilisense/](servers/dilisense/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
