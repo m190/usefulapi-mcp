@@ -811,6 +811,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PiggyVest Business](servers/piggyvest-business-api/) | payments | 21 | API token | [servers/piggyvest-business-api/](servers/piggyvest-business-api/) |
 | [Tavzio](servers/tavzio/) | Food & Beverage | 8 | API token | [servers/tavzio/](servers/tavzio/) |
 | [Trestle](servers/trestle/) | data-enrichment | 6 | API token | [servers/trestle/](servers/trestle/) |
+| [F-sąskaita](servers/f-saskaita/) | accounting | 16 | API token | [servers/f-saskaita/](servers/f-saskaita/) |
+| [Parseo](servers/parseo/) | document-ai | 27 | API token | [servers/parseo/](servers/parseo/) |
+| [Rock Gym Pro](servers/rock-gym-pro/) | membership | 23 | API token | [servers/rock-gym-pro/](servers/rock-gym-pro/) |
+| [FieldClimate](servers/fieldclimate/) | monitoring | 20 | API token | [servers/fieldclimate/](servers/fieldclimate/) |
+| [DicksonOne](servers/dicksonone/) | monitoring | 11 | API token | [servers/dicksonone/](servers/dicksonone/) |
+| [RaspberryPints](servers/raspberrypints/) | Food & Beverage | 19 | API token | [servers/raspberrypints/](servers/raspberrypints/) |
+| [Sensorist](servers/sensorist/) | monitoring | 9 | API token | [servers/sensorist/](servers/sensorist/) |
+| [Agro API](servers/agro-api/) | data | 21 | API token | [servers/agro-api/](servers/agro-api/) |
+| [Ausha](servers/ausha/) | marketing | 21 | API token | [servers/ausha/](servers/ausha/) |
+| [Castos](servers/castos/) | marketing | 18 | API token | [servers/castos/](servers/castos/) |
+| [RSS.com](servers/rss-com/) | marketing | 32 | API token | [servers/rss-com/](servers/rss-com/) |
+| [Hexnode](servers/hexnode/) | security | 23 | API token | [servers/hexnode/](servers/hexnode/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

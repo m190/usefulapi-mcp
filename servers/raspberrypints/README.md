@@ -1,0 +1,71 @@
+# RaspberryPints MCP by usefulapi
+
+Use your [RaspberryPints](https://www.raspberrypints.com) account from Claude, Cursor, or any MCP client. Read taps, beers and pours, and add beers or put them on tap. Hosted, no local install: connect with your own credentials.
+
+**Live endpoint:** `https://raspberrypints.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://raspberrypints.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http raspberrypints https://raspberrypints.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=raspberrypints&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fraspberrypints.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
+
+```json
+{
+  "mcpServers": {
+    "raspberrypints": {
+      "url": "https://raspberrypints.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your RaspberryPints credentials.
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/raspberrypints/
+
+<!-- connect:end (generated above, edit below) -->
+
+On first connect you provide your **brewery ID** (shown on the API Keys page) and a **Partner API key** (admin panel → API Keys, Owner access). The server validates it and stores it per user. No keys go in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `raspberrypints_get_brewery` | read | Get the brewery |
+| `raspberrypints_list_beers` | read | List beers |
+| `raspberrypints_get_beer` | read | Get a beer |
+| `raspberrypints_get_beer_by_external_id` | read | Get a beer by external id |
+| `raspberrypints_list_taps` | read | List taps |
+| `raspberrypints_get_tap` | read | Get a tap |
+| `raspberrypints_get_tap_by_external_id` | read | Get a tap by external id |
+| `raspberrypints_get_taplist` | read | Get the taplist |
+| `raspberrypints_list_pours` | read | List pours |
+| `raspberrypints_get_pour_by_external_id` | read | Get a pour by external id |
+| `raspberrypints_create_beer` | **write** | Create a beer |
+| `raspberrypints_update_beer` | **write** | Update a beer |
+| `raspberrypints_create_tap` | **write** | Create a tap |
+| `raspberrypints_tap_beer` | **write** | Tap a beer |
+| `raspberrypints_untap_tap` | **write** | Untap a tap |
+| `raspberrypints_usage_status` | meta | Usage status (free-tier meter) |
+| `raspberrypints_request_feature` | meta | Request a missing feature |
+| `raspberrypints_upgrade` | meta | Upgrade to Pro or Pro+ |
+| `raspberrypints_cancel_subscription` | meta | Cancel the Pro subscription |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 50 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+
+\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
+
+Pro covers this server only. Subscribe with `raspberrypints_upgrade` (it returns a Stripe Checkout link). Cancel any time with `raspberrypints_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `raspberrypints_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+
+## License
+
+MIT — see [LICENSE](../LICENSE). Documentation only; the server is hosted.
