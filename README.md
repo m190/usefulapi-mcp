@@ -857,6 +857,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Scalefusion](servers/scalefusion/) | security | 18 | API token | [servers/scalefusion/](servers/scalefusion/) |
 | [Chit Chats](servers/chit-chats/) | shipping | 15 | API token | [servers/chit-chats/](servers/chit-chats/) |
 | [dilisense](servers/dilisense/) | fraud-detection | 9 | API token | [servers/dilisense/](servers/dilisense/) |
+| [Cobalt Intelligence](servers/cobalt-intelligence/) | data-enrichment | 9 | API token | [servers/cobalt-intelligence/](servers/cobalt-intelligence/) |
+| [ConsignCloud](servers/consigncloud/) | retail | 17 | API token | [servers/consigncloud/](servers/consigncloud/) |
+| [Realtime Register](servers/realtime-register/) | dns | 18 | API token | [servers/realtime-register/](servers/realtime-register/) |
+| [Auvik](servers/auvik/) | monitoring | 15 | API token | [servers/auvik/](servers/auvik/) |
+| [Gandi](servers/gandi/) | dns | 12 | API token | [servers/gandi/](servers/gandi/) |
+| [Steady](servers/steady/) | membership | 9 | API token | [servers/steady/](servers/steady/) |
+| [Delfi PMS](servers/delfi-pms/) | property-management | 21 | API token | [servers/delfi-pms/](servers/delfi-pms/) |
+| [Action1](servers/action1/) | security | 20 | API token | [servers/action1/](servers/action1/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
