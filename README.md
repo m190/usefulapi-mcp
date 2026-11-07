@@ -795,6 +795,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [HR WORKS](servers/hrworks/) | hr | 10 | API token | [servers/hrworks/](servers/hrworks/) |
 | [STEL Order](servers/stel-order/) | billing | 20 | API token | [servers/stel-order/](servers/stel-order/) |
 | [Webfleet](servers/webfleet/) | logistics | 14 | API token | [servers/webfleet/](servers/webfleet/) |
+| [Superchat](servers/superchat/) | messaging | 20 | API token | [servers/superchat/](servers/superchat/) |
+| [FMX](servers/fmx/) | property-management | 15 | API token | [servers/fmx/](servers/fmx/) |
+| [Woffu](servers/woffu/) | hr | 9 | API token | [servers/woffu/](servers/woffu/) |
+| [Octadesk](servers/octadesk/) | support | 17 | API token | [servers/octadesk/](servers/octadesk/) |
+| [Clearstream](servers/clearstream/) | messaging | 19 | API token | [servers/clearstream/](servers/clearstream/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

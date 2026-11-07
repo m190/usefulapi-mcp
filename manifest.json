@@ -133550,6 +133550,714 @@
         "Which vehicles are nearest to this customer address?",
         "Show the events of this week that nobody has acknowledged."
       ]
+    },
+    {
+      "slug": "superchat",
+      "name": "Superchat",
+      "category": "messaging",
+      "description": "Read conversations, messages, contacts, channels and templates in Superchat.",
+      "endpoint": "https://superchat.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Superchat admin API token"
+          }
+        ],
+        "hint": "Find it in Superchat → **Settings → API**. Only workspace administrators can see the token. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "superchat_get_me",
+          "type": "read",
+          "title": "Get the current user",
+          "description": "Get the user that owns the API token. Useful first call to confirm the connection. Superchat API: GET /me."
+        },
+        {
+          "name": "superchat_list_conversations",
+          "type": "read",
+          "title": "List conversations",
+          "description": "List conversations in the workspace (customer threads across channels). Superchat API: GET /conversations."
+        },
+        {
+          "name": "superchat_get_conversation",
+          "type": "read",
+          "title": "Get a conversation",
+          "description": "Get one conversation by id, including its status and assignment. Superchat API: GET /conversations/{conversation_id}."
+        },
+        {
+          "name": "superchat_list_conversation_messages",
+          "type": "read",
+          "title": "List messages in a conversation",
+          "description": "List the messages of one conversation, in the order the API returns them. Read only: does not send messages. Superchat API: GET /conversations/{conversation_id}/messages."
+        },
+        {
+          "name": "superchat_get_message",
+          "type": "read",
+          "title": "Get a message",
+          "description": "Get one message by id. Superchat API: GET /messages/{message_id}."
+        },
+        {
+          "name": "superchat_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (customer records) in the workspace. Superchat API: GET /contacts."
+        },
+        {
+          "name": "superchat_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id, including its custom attributes. Superchat API: GET /contacts/{contact_id}."
+        },
+        {
+          "name": "superchat_list_contact_conversations",
+          "type": "read",
+          "title": "List a contact's conversations",
+          "description": "List the conversations of one contact. Superchat API: GET /contacts/{contact_id}/conversations."
+        },
+        {
+          "name": "superchat_list_contact_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List the contact lists (segments) of the workspace. Superchat API: GET /contact-lists."
+        },
+        {
+          "name": "superchat_list_channels",
+          "type": "read",
+          "title": "List channels",
+          "description": "List the connected channels (WhatsApp, email, chat and others). Superchat API: GET /channels."
+        },
+        {
+          "name": "superchat_get_channel",
+          "type": "read",
+          "title": "Get a channel",
+          "description": "Get one channel by id. Superchat API: GET /channels/{channel_id}."
+        },
+        {
+          "name": "superchat_list_inboxes",
+          "type": "read",
+          "title": "List inboxes",
+          "description": "List the inboxes of the workspace. Superchat API: GET /inboxes."
+        },
+        {
+          "name": "superchat_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users (team members) of the workspace. Superchat API: GET /users."
+        },
+        {
+          "name": "superchat_list_labels",
+          "type": "read",
+          "title": "List labels",
+          "description": "List the labels that tag conversations. Superchat API: GET /labels."
+        },
+        {
+          "name": "superchat_list_custom_attributes",
+          "type": "read",
+          "title": "List custom attributes",
+          "description": "List the custom attribute definitions used on contacts. Superchat API: GET /custom-attributes."
+        },
+        {
+          "name": "superchat_list_templates",
+          "type": "read",
+          "title": "List message templates",
+          "description": "List the message templates of the workspace. Read only. Superchat API: GET /templates."
+        },
+        {
+          "name": "superchat_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "superchat_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Superchat tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "superchat_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Superchat (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "superchat_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Superchat Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run superchat_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which conversations in our workspace are still open, and who is assigned to them?",
+        "Show me the message history of the conversation with this customer.",
+        "List the contacts in our VIP contact list.",
+        "Which channels are connected to our Superchat workspace?"
+      ]
+    },
+    {
+      "slug": "fmx",
+      "name": "FMX",
+      "category": "property-management",
+      "description": "Read buildings, equipment, inventory, resources, attachments and users in FMX.",
+      "endpoint": "https://fmx.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FMX tenant"
+          },
+          {
+            "label": "API user email"
+          },
+          {
+            "label": "API user password"
+          }
+        ],
+        "hint": "Create the API user in FMX under Admin Settings → User Types (an API user type), then Users. Do not use a personal login: the API must be enabled for your tenant."
+      },
+      "tools": [
+        {
+          "name": "fmx_list_buildings",
+          "type": "read",
+          "title": "List buildings",
+          "description": "List buildings in the FMX tenant. Calls GET /api/v1/buildings and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_get_building",
+          "type": "read",
+          "title": "Get building",
+          "description": "Get one building by id. Calls GET /api/v1/buildings/{id} and returns the response unchanged."
+        },
+        {
+          "name": "fmx_list_equipment",
+          "type": "read",
+          "title": "List equipment records",
+          "description": "List equipment records in the FMX tenant. Calls GET /api/v1/equipment and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_get_equipment",
+          "type": "read",
+          "title": "Get equipment record",
+          "description": "Get one equipment record by id. Calls GET /api/v1/equipment/{id} and returns the response unchanged."
+        },
+        {
+          "name": "fmx_list_inventory",
+          "type": "read",
+          "title": "List inventory items",
+          "description": "List inventory items in the FMX tenant. Calls GET /api/v1/inventory and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_get_inventory_item",
+          "type": "read",
+          "title": "Get inventory item",
+          "description": "Get one inventory item by id. Calls GET /api/v1/inventory/{id} and returns the response unchanged."
+        },
+        {
+          "name": "fmx_list_resources",
+          "type": "read",
+          "title": "List resources",
+          "description": "List resources in the FMX tenant. Calls GET /api/v1/resources and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_get_resource",
+          "type": "read",
+          "title": "Get resource",
+          "description": "Get one resource by id. Calls GET /api/v1/resources/{id} and returns the response unchanged."
+        },
+        {
+          "name": "fmx_list_attachments",
+          "type": "read",
+          "title": "List attachments",
+          "description": "List attachments in the FMX tenant. Calls GET /api/v1/attachments and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_get_attachment",
+          "type": "read",
+          "title": "Get attachment",
+          "description": "Get one attachment by id. Calls GET /api/v1/attachments/{id} and returns the response unchanged."
+        },
+        {
+          "name": "fmx_list_users",
+          "type": "read",
+          "title": "List API-visible users",
+          "description": "List API-visible users in the FMX tenant. Calls GET /api/v1/users and returns the response unchanged. FMX paging and filter parameters are not sent."
+        },
+        {
+          "name": "fmx_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fmx_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FMX tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fmx_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for FMX (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fmx_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FMX Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fmx_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which buildings are in our FMX tenant?",
+        "List the equipment records and show the details of one piece of equipment.",
+        "Show the inventory items in our FMX tenant.",
+        "Which resources and attachments are linked to our facilities?"
+      ]
+    },
+    {
+      "slug": "woffu",
+      "name": "Woffu",
+      "category": "hr",
+      "description": "Read users, employment contracts, departments and offices in Woffu.",
+      "endpoint": "https://woffu.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "CompanyId (Woffu company number)"
+          },
+          {
+            "label": "API key"
+          }
+        ],
+        "hint": "A Woffu administrator creates the key: log in, open **Mi perfil**, then **Datos técnicos**, and click **Generar nueva**. The key expires after about 90 days; then regenerate it. This server uses the key only to call the Woffu API for your company and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "woffu_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the Woffu company. Woffu API: GET /api/v1/users. No paging parameter is sent."
+        },
+        {
+          "name": "woffu_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Get one user by UserId: name, company, department and status fields as Woffu returns them. Woffu API: GET /api/v1/users/{userId}."
+        },
+        {
+          "name": "woffu_list_user_contracts",
+          "type": "read",
+          "title": "List user contracts",
+          "description": "List the employment contracts of one user by UserId. Woffu API: GET /api/v1/users/{userId}/contracts."
+        },
+        {
+          "name": "woffu_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List the departments of the Woffu company. Woffu API: GET /api/v1/departments."
+        },
+        {
+          "name": "woffu_list_offices",
+          "type": "read",
+          "title": "List offices",
+          "description": "List the offices (work centres) of the Woffu company. Woffu API: GET /api/v1/offices."
+        },
+        {
+          "name": "woffu_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "woffu_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Woffu tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "woffu_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Woffu (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "woffu_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Woffu Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run woffu_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the users of our company who are active in Woffu.",
+        "Show the contracts of user 1234 and when each one starts.",
+        "Which departments and offices does our Woffu company have?"
+      ]
+    },
+    {
+      "slug": "octadesk",
+      "name": "Octadesk",
+      "category": "support",
+      "description": "Search tickets, read conversations and people; create and update tickets and people in Octadesk.",
+      "endpoint": "https://octadesk.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Octadesk subdomain"
+          },
+          {
+            "label": "Legacy API token"
+          },
+          {
+            "label": "Account e-mail"
+          }
+        ],
+        "hint": "Create the token in Octadesk → **Settings → API → Token API Octadesk (Legacy)**. Calls act with that account's rights. The token is used only to call the API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "octadesk_search_tickets",
+          "type": "read",
+          "title": "Search tickets",
+          "description": "Search tickets with optional filters. Returns the page of tickets plus paging fields (total_count, search_id, next_page_url). For the next page, pass the same filters with the returned search_id and page + 1. GET /tickets/search."
+        },
+        {
+          "name": "octadesk_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "Get one ticket by its number, with its fields and status. GET /tickets/{number}."
+        },
+        {
+          "name": "octadesk_get_ticket_interactions",
+          "type": "read",
+          "title": "Get ticket conversation",
+          "description": "List the interactions of one ticket: replies, internal notes and property changes, in order. GET /tickets/{number}/interactions."
+        },
+        {
+          "name": "octadesk_list_requester_tickets",
+          "type": "read",
+          "title": "List tickets of a requester",
+          "description": "List the tickets of one requester. Pass last_number to read past the last ticket of the previous page. GET /tickets."
+        },
+        {
+          "name": "octadesk_list_custom_ticket_lists",
+          "type": "read",
+          "title": "List custom ticket lists",
+          "description": "List the saved custom ticket lists (views) of the account. GET /tickets/custom-lists."
+        },
+        {
+          "name": "octadesk_find_person_by_email",
+          "type": "read",
+          "title": "Find person by e-mail",
+          "description": "Find one person (requester or agent) by exact e-mail address. GET /persons?email=."
+        },
+        {
+          "name": "octadesk_get_person",
+          "type": "read",
+          "title": "Get person",
+          "description": "Get one person by id. GET /persons/{id}."
+        },
+        {
+          "name": "octadesk_search_requesters",
+          "type": "read",
+          "title": "Search requesters",
+          "description": "Search requesters (customers who open tickets) by e-mail or name. GET /persons/requesters."
+        },
+        {
+          "name": "octadesk_search_agents",
+          "type": "read",
+          "title": "Search agents",
+          "description": "Search agents (staff who work tickets) by e-mail or name. GET /persons/agents."
+        },
+        {
+          "name": "octadesk_create_ticket",
+          "type": "write",
+          "title": "Create ticket",
+          "description": "Create a ticket. Common keys of `ticket`: summary, requester ({ email, name } or { id }), idGroupAssigned, idAssigned, idPriority, idCurrentStatus, idSubject, tags (string array), comments ({ internal: { content } } for an agent-only note, { public: { content } } for a reply the requester can read). POST /tickets."
+        },
+        {
+          "name": "octadesk_update_ticket",
+          "type": "write",
+          "title": "Update ticket",
+          "description": "Change fields of one ticket, for example status, priority, assignee or group. Send only the fields to change. A `comments.public` entry is e-mailed to the requester. PUT /tickets/{number}."
+        },
+        {
+          "name": "octadesk_create_person",
+          "type": "write",
+          "title": "Create person",
+          "description": "Create a person (requester or agent). Send the person fields, for example email and name. POST /persons."
+        },
+        {
+          "name": "octadesk_update_person",
+          "type": "write",
+          "title": "Update person",
+          "description": "Change fields of one person. Send only the fields to change. PATCH /persons/{id}."
+        },
+        {
+          "name": "octadesk_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "octadesk_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Octadesk tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "octadesk_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Octadesk (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "octadesk_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Octadesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run octadesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the open tickets that are assigned to me and are older than three days.",
+        "What happened in ticket 1024? Show the conversation in order.",
+        "Find the requester with the e-mail anna@example.com and list her tickets.",
+        "Add an internal note to ticket 1024: waiting for the customer's invoice number."
+      ]
+    },
+    {
+      "slug": "clearstream",
+      "name": "Clearstream",
+      "category": "messaging",
+      "description": "Read lists, subscribers, tags and texts; send texts and change subscribers in Clearstream.",
+      "endpoint": "https://clearstream.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Clearstream API key"
+          },
+          {
+            "label": "Account ID for a subaccount key (optional)",
+            "optional": true
+          }
+        ],
+        "hint": "Create or copy the key inside your Clearstream account. Clearstream API integrations are for churches, non-profits, schools and government organizations. Only a subaccount key needs the Account ID. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "clearstream_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Get the Clearstream account behind the API key: name, plan and settings. Good first call to confirm which account is connected. Clearstream API: GET /v1/account."
+        },
+        {
+          "name": "clearstream_list_numbers",
+          "type": "read",
+          "title": "List sending numbers",
+          "description": "List the shortcodes and longcodes this account can send texts from, and which one is the default. Clearstream API: GET /v1/numbers."
+        },
+        {
+          "name": "clearstream_list_lists",
+          "type": "read",
+          "title": "List lists",
+          "description": "List the subscriber lists (groups) in the account, with subscriber counts. Filter by name or locked state. Clearstream API: GET /v1/lists."
+        },
+        {
+          "name": "clearstream_get_list",
+          "type": "read",
+          "title": "Get a list",
+          "description": "Get one subscriber list: name, subscriber count, active texting subscriber count and sync status. Clearstream API: GET /v1/lists/{id}."
+        },
+        {
+          "name": "clearstream_list_subscribers_of_list",
+          "type": "read",
+          "title": "List subscribers in a list",
+          "description": "List the subscribers in one list, with optional name filters. Clearstream API: GET /v1/lists/{id}/subscribers."
+        },
+        {
+          "name": "clearstream_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "Search the account's subscribers by name or mobile number. Clearstream API: GET /v1/subscribers."
+        },
+        {
+          "name": "clearstream_get_subscriber",
+          "type": "read",
+          "title": "Get a subscriber",
+          "description": "Get one subscriber by mobile number: name, opt-in status, lists and tags. Clearstream API: GET /v1/subscribers/{number}."
+        },
+        {
+          "name": "clearstream_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List the subscriber tags in the account. Clearstream API: GET /v1/tags."
+        },
+        {
+          "name": "clearstream_list_texts",
+          "type": "read",
+          "title": "List texts",
+          "description": "List texts in the account's inbox history, incoming or outgoing, optionally for one number. Use the cursor from a previous reply for the next page. Clearstream API: GET /v1/texts."
+        },
+        {
+          "name": "clearstream_get_text_stats",
+          "type": "read",
+          "title": "Get text statistics",
+          "description": "Get text volume statistics for a date range (YYYY-MM-DD, inclusive). Clearstream API: GET /v1/stats/texts."
+        },
+        {
+          "name": "clearstream_send_text",
+          "type": "write",
+          "title": "Send a text",
+          "description": "Send one SMS to one or more numbers. This sends real messages to real phones and cannot be undone. The customer must hold explicit written consent from every recipient before you use this tool (Clearstream terms, section 4G). Opted-out numbers are skipped (for a list of numbers) or cause an error (for one number). Clearstream API: POST /v1/texts."
+        },
+        {
+          "name": "clearstream_add_subscriber",
+          "type": "write",
+          "title": "Add a subscriber",
+          "description": "Create or add one subscriber, with optional lists and tags. By default the subscriber must confirm opt-in by text. The customer must hold explicit written consent from every recipient before you use this tool (Clearstream terms, section 4G). Clearstream API: POST /v1/subscribers."
+        },
+        {
+          "name": "clearstream_add_subscriber_to_list",
+          "type": "write",
+          "title": "Add a subscriber to a list",
+          "description": "Add one mobile number to a subscriber list. Locked lists cannot change. The customer must hold explicit written consent from every recipient before you use this tool (Clearstream terms, section 4G). Clearstream API: POST /v1/lists/{id}/subscribers."
+        },
+        {
+          "name": "clearstream_remove_subscriber_from_list",
+          "type": "write",
+          "title": "Remove a subscriber from a list",
+          "description": "Remove one mobile number from a subscriber list. The subscriber's opt-in status does not change. Locked lists cannot change. Clearstream API: DELETE /v1/lists/{id}/subscribers/{number}."
+        },
+        {
+          "name": "clearstream_tag_subscribers",
+          "type": "write",
+          "title": "Tag subscribers",
+          "description": "Add a tag to up to 100 subscribers by mobile number. The customer must hold explicit written consent from every recipient before you use this tool (Clearstream terms, section 4G). Clearstream API: POST /v1/tags/{id}/subscribers."
+        },
+        {
+          "name": "clearstream_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "clearstream_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Clearstream tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "clearstream_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Clearstream (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "clearstream_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Clearstream Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run clearstream_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our lists has the most subscribers, and how many are active for texting?",
+        "Show the text volume for last month, incoming and outgoing.",
+        "Add the new volunteer at +12005551234 to the Volunteers list.",
+        "Send a reminder text about Sunday's service to the members of the Youth group list."
+      ]
     }
   ]
 }
