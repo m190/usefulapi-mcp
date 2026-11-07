@@ -810,6 +810,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Jubelio](servers/jubelio/) | commerce | 20 | API token | [servers/jubelio/](servers/jubelio/) |
 | [PiggyVest Business](servers/piggyvest-business-api/) | payments | 21 | API token | [servers/piggyvest-business-api/](servers/piggyvest-business-api/) |
 | [Tavzio](servers/tavzio/) | Food & Beverage | 8 | API token | [servers/tavzio/](servers/tavzio/) |
+| [Trestle](servers/trestle/) | data-enrichment | 6 | API token | [servers/trestle/](servers/trestle/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

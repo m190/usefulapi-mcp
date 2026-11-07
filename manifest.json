@@ -135579,6 +135579,84 @@
         "Mark order ord_8k2p as ready.",
         "Which Tavzio resources can this key read or change?"
       ]
+    },
+    {
+      "slug": "trestle",
+      "name": "Trestle",
+      "category": "data-enrichment",
+      "description": "Validate phone numbers, line types and TCPA litigator risk in Trestle.",
+      "endpoint": "https://trestle.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Trestle API key"
+          }
+        ],
+        "hint": "Copy the key in the Trestle portal ([portal.trestleiq.com](https://portal.trestleiq.com)). Use the results only for identity or lead verification and caller routing, never for credit, insurance, employment, housing or benefits decisions. Your key is used only to call the Trestle API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "trestle_validate_phone",
+          "type": "read",
+          "title": "Validate a phone number",
+          "description": "Check a phone number with Trestle Phone Validation. Returns whether it is valid, its country and carrier, its line type (Mobile, Landline, FixedVOIP, NonFixedVOIP, TollFree and so on), whether it is prepaid, and a 0-100 activity score (70 or above: likely connected; 30 or below: likely disconnected or unanswered). Does not return the owner's name. Use only for identity or lead verification, or caller routing. Never use the result for credit, insurance, employment, housing or benefits decisions (FCRA), or for marketing. Trestle Phone Validation API: GET /3.0/phone_intel."
+        },
+        {
+          "name": "trestle_check_tcpa_litigator",
+          "type": "read",
+          "title": "Check a US number for TCPA litigator risk",
+          "description": "Validate a US phone number and run Trestle's TCPA litigator check. Returns add_ons.litigator_checks['phone.is_litigator_risk']: true when the subscriber is a known TCPA litigator, null when the check could not finish. US numbers only. The check is a paid add-on and works only when it is enabled on the API key; otherwise add_ons is missing from the reply. Use it to verify leads before you call or text them. Use only for identity or lead verification, or caller routing. Never use the result for credit, insurance, employment, housing or benefits decisions (FCRA), or for marketing. Trestle Phone Validation API: GET /3.0/phone_intel with add_ons=litigator_checks."
+        },
+        {
+          "name": "trestle_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "trestle_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Trestle tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "trestle_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Trestle (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "trestle_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Trestle Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run trestle_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Is the phone number +44 20 7946 0958 valid, and is it a mobile or a landline?",
+        "Check whether this lead's number (206) 973-5100 is likely connected: give me the activity score.",
+        "Does this US number belong to a known TCPA litigator before we call it?",
+        "Validate these 20 lead phone numbers one by one and list the ones with an activity score of 30 or below."
+      ]
     }
   ]
 }
