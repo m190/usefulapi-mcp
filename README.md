@@ -783,6 +783,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MemberVault](servers/membervault/) | membership | 8 | API token | [servers/membervault/](servers/membervault/) |
 | [Documint](servers/documint/) | documents | 7 | API token | [servers/documint/](servers/documint/) |
 | [Silverfin](servers/silverfin/) | accounting-practice | 14 | OAuth | [servers/silverfin/](servers/silverfin/) |
+| [SureLC](servers/surelc/) | business-operations | 29 | API token | [servers/surelc/](servers/surelc/) |
+| [Fiix](servers/fiix/) | business-operations | 7 | API token | [servers/fiix/](servers/fiix/) |
+| [GPS Insight](servers/gps-insight/) | logistics | 19 | API token | [servers/gps-insight/](servers/gps-insight/) |
+| [Azuga](servers/azuga/) | logistics | 20 | API token | [servers/azuga/](servers/azuga/) |
+| [Quartix](servers/quartix/) | logistics | 15 | API token | [servers/quartix/](servers/quartix/) |
+| [Orah](servers/orah/) | education | 29 | API token | [servers/orah/](servers/orah/) |
+| [TourCMS](servers/tourcms/) | commerce | 20 | API token | [servers/tourcms/](servers/tourcms/) |
+| [Rentlio](servers/rentlio/) | property-management | 14 | API token | [servers/rentlio/](servers/rentlio/) |
+| [Exely](servers/exely/) | property-management | 15 | API token | [servers/exely/](servers/exely/) |
+| [HR WORKS](servers/hrworks/) | hr | 10 | API token | [servers/hrworks/](servers/hrworks/) |
+| [STEL Order](servers/stel-order/) | billing | 20 | API token | [servers/stel-order/](servers/stel-order/) |
+| [Webfleet](servers/webfleet/) | logistics | 14 | API token | [servers/webfleet/](servers/webfleet/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
