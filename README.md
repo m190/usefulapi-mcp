@@ -834,6 +834,16 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [CultureMonkey](servers/culturemonkey/) | hr | 9 | API token | [servers/culturemonkey/](servers/culturemonkey/) |
 | [Encircle](servers/encircle/) | property-management | 14 | API token | [servers/encircle/](servers/encircle/) |
 | [ShipSlip](servers/shipslip/) | shipping | 7 | API token | [servers/shipslip/](servers/shipslip/) |
+| [Spektrix](servers/spektrix/) | commerce | 9 | API token | [servers/spektrix/](servers/spektrix/) |
+| [Good Grants](servers/good-grants/) | fundraising | 24 | API token | [servers/good-grants/](servers/good-grants/) |
+| [Libib](servers/libib/) | membership | 11 | API token | [servers/libib/](servers/libib/) |
+| [GovDelivery](servers/govdelivery/) | email-marketing | 10 | API token | [servers/govdelivery/](servers/govdelivery/) |
+| [CharityFundraiser](servers/charityfundraiser/) | fundraising | 11 | API token | [servers/charityfundraiser/](servers/charityfundraiser/) |
+| [RentMy](servers/rentmy/) | rental | 21 | API token | [servers/rentmy/](servers/rentmy/) |
+| [Nivoda](servers/nivoda/) | inventory | 6 | API token | [servers/nivoda/](servers/nivoda/) |
+| [ComplyCube](servers/complycube/) | fraud-detection | 10 | API token | [servers/complycube/](servers/complycube/) |
+| [Recommand](servers/recommand/) | billing | 13 | API token | [servers/recommand/](servers/recommand/) |
+| [Typless](servers/typless/) | document-ai | 8 | API token | [servers/typless/](servers/typless/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
