@@ -601,7 +601,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [CentreCareOS](servers/centrecareos/) | childcare-administration | 28 | API token | [servers/centrecareos/](servers/centrecareos/) |
 | [Setora](servers/setora/) | scheduling | 14 | API token | [servers/setora/](servers/setora/) |
 | [GoTable](servers/gotable/) | scheduling | 25 | API token | [servers/gotable/](servers/gotable/) |
-| [Janitorial Manager](servers/janitorial-manager/) | business-operations | 24 | API token | [servers/janitorial-manager/](servers/janitorial-manager/) |
 | [Quarterwise](servers/quarterwise/) | tax | 9 | API token | [servers/quarterwise/](servers/quarterwise/) |
 | [Enerflo](servers/enerflo/) | crm | 24 | API token | [servers/enerflo/](servers/enerflo/) |
 | [Aurora Solar](servers/aurora-solar/) | business-operations | 32 | API token | [servers/aurora-solar/](servers/aurora-solar/) |
