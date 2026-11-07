@@ -759,6 +759,9 @@ mkdirSync(`${outDir}/_probe`, { recursive: true });
 for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new URL(`portal/_probe/${f}`, ROOT), `${outDir}/_probe/${f}`);
 // Pages headers: probe files are machine replies, not pages (keep them out of search indexes; short cache).
 writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=300\n`);
+// Withdrawn product pages: Cloudflare kept serving a stored copy of the removed page (s-maxage 7 days) after a zone
+// purge; a redirect from the current deployment replaces it. Janitorial Manager withdrawn 2026-11-07 (vendor request).
+writeFileSync(`${outDir}/_redirects`, ["/janitorial-manager / 301", "/janitorial-manager/ / 301"].join("\n") + "\n");
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
 mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
