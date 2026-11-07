@@ -782,6 +782,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FeedLetter](servers/feedletter/) | forms-surveys | 8 | API token | [servers/feedletter/](servers/feedletter/) |
 | [MemberVault](servers/membervault/) | membership | 8 | API token | [servers/membervault/](servers/membervault/) |
 | [Documint](servers/documint/) | documents | 7 | API token | [servers/documint/](servers/documint/) |
+| [Silverfin](servers/silverfin/) | accounting-practice | 14 | OAuth | [servers/silverfin/](servers/silverfin/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
