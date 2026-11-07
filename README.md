@@ -800,6 +800,16 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Woffu](servers/woffu/) | hr | 9 | API token | [servers/woffu/](servers/woffu/) |
 | [Octadesk](servers/octadesk/) | support | 17 | API token | [servers/octadesk/](servers/octadesk/) |
 | [Clearstream](servers/clearstream/) | messaging | 19 | API token | [servers/clearstream/](servers/clearstream/) |
+| [Maintainly](servers/maintainly/) | business-operations | 13 | API token | [servers/maintainly/](servers/maintainly/) |
+| [ParkPow](servers/parkpow/) | property-management | 15 | API token | [servers/parkpow/](servers/parkpow/) |
+| [SchoolBusTrack](servers/schoolbustrack/) | logistics | 16 | API token | [servers/schoolbustrack/](servers/schoolbustrack/) |
+| [LastFolk](servers/lastfolk/) | shipping | 13 | API token | [servers/lastfolk/](servers/lastfolk/) |
+| [Reviewshake](servers/reviewshake/) | marketing | 14 | API token | [servers/reviewshake/](servers/reviewshake/) |
+| [Referrals.com](servers/referrals-com/) | marketing | 19 | API token | [servers/referrals-com/](servers/referrals-com/) |
+| [White Label Loyalty](servers/white-label-loyalty/) | membership | 9 | API token | [servers/white-label-loyalty/](servers/white-label-loyalty/) |
+| [Jubelio](servers/jubelio/) | commerce | 20 | API token | [servers/jubelio/](servers/jubelio/) |
+| [PiggyVest Business](servers/piggyvest-business-api/) | payments | 21 | API token | [servers/piggyvest-business-api/](servers/piggyvest-business-api/) |
+| [Tavzio](servers/tavzio/) | Food & Beverage | 8 | API token | [servers/tavzio/](servers/tavzio/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
