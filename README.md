@@ -823,6 +823,17 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Castos](servers/castos/) | marketing | 18 | API token | [servers/castos/](servers/castos/) |
 | [RSS.com](servers/rss-com/) | marketing | 32 | API token | [servers/rss-com/](servers/rss-com/) |
 | [Hexnode](servers/hexnode/) | security | 23 | API token | [servers/hexnode/](servers/hexnode/) |
+| [Cincopa](servers/cincopa/) | video-hosting | 19 | API token | [servers/cincopa/](servers/cincopa/) |
+| [Transdirect](servers/transdirect/) | shipping | 15 | API token | [servers/transdirect/](servers/transdirect/) |
+| [Boxtal](servers/boxtal/) | shipping | 11 | API token | [servers/boxtal/](servers/boxtal/) |
+| [Freightview](servers/freightview/) | logistics | 26 | API token | [servers/freightview/](servers/freightview/) |
+| [ShipsGo](servers/shipsgo/) | logistics | 17 | API token | [servers/shipsgo/](servers/shipsgo/) |
+| [Biteship](servers/biteship/) | shipping | 12 | API token | [servers/biteship/](servers/biteship/) |
+| [Bob Go](servers/bob-go/) | shipping | 16 | API token | [servers/bob-go/](servers/bob-go/) |
+| [Giftbit](servers/giftbit/) | digital-commerce | 18 | API token | [servers/giftbit/](servers/giftbit/) |
+| [CultureMonkey](servers/culturemonkey/) | hr | 9 | API token | [servers/culturemonkey/](servers/culturemonkey/) |
+| [Encircle](servers/encircle/) | property-management | 14 | API token | [servers/encircle/](servers/encircle/) |
+| [ShipSlip](servers/shipslip/) | shipping | 7 | API token | [servers/shipslip/](servers/shipslip/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
