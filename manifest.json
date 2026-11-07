@@ -131036,6 +131036,566 @@
         "List the employment contracts that are active today.",
         "Show the finished relief hours report for report 42."
       ]
+    },
+    {
+      "slug": "salsa-engage",
+      "name": "Salsa Engage",
+      "category": "fundraising",
+      "description": "Search supporters, donations, emails and segments; create or update supporters in Salsa Engage.",
+      "endpoint": "https://salsa-engage.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Salsa Engage organization API token"
+          }
+        ],
+        "hint": "Find it in Salsa Engage → **Organization Settings → API → Integration**. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "salsa_get_call_metrics",
+          "type": "read",
+          "title": "Get API call metrics",
+          "description": "Show the calls left in the current one-minute window for this token, the batch limit, and the call counters. Good first call to check the token works. Engage API: GET /integration/ext/v1/metrics."
+        },
+        {
+          "name": "salsa_search_supporters",
+          "type": "read",
+          "title": "Search supporters",
+          "description": "Find supporters by Salsa Engage supporter ID, by text (first name, last name, email or cell phone), or by the time their census data changed. Returns each supporter with address, contacts and per-record errors and warnings. Engage API: POST /integration/ext/v1/supporters/search."
+        },
+        {
+          "name": "salsa_get_supporter_groups",
+          "type": "read",
+          "title": "Get supporter groups",
+          "description": "List the groups that each of the given supporters belongs to. Engage API: POST /integration/ext/v1/supporters/groups."
+        },
+        {
+          "name": "salsa_search_transactions",
+          "type": "read",
+          "title": "Search transactions",
+          "description": "Find donation transactions by transaction ID or supporter ID, or by a transaction date range. Pass identifiers with identifierType, or transactionFrom (with transactionTo). Engage API: POST /integration/ext/v1/transactionDetails/search."
+        },
+        {
+          "name": "salsa_search_activities",
+          "type": "read",
+          "title": "Search activities",
+          "description": "Find supporter activity (signups, donations, petitions, letters, event registrations and similar) by activity ID, by form, by supporter, or by modified time. Pass modifiedFrom or activityIds. Engage API: POST /integration/ext/v1/activities/search."
+        },
+        {
+          "name": "salsa_search_email_blasts",
+          "type": "read",
+          "title": "Search email blasts",
+          "description": "Find sent email blasts by blast ID, content ID, or publish date. Use the returned cursor to read more. Engage API: POST /integration/ext/v1/emails/search."
+        },
+        {
+          "name": "salsa_get_email_blast_results",
+          "type": "read",
+          "title": "Get email blast results",
+          "description": "Read the per-supporter results of one email blast (who received, opened or clicked it, as Engage reports them). Engage API: POST /integration/ext/v1/emails/individualResults."
+        },
+        {
+          "name": "salsa_search_segments",
+          "type": "read",
+          "title": "Search segments",
+          "description": "Get the definition of segments (supporter groups used for email targeting and export) by segment ID. Engage API: POST /integration/ext/v1/segments/search."
+        },
+        {
+          "name": "salsa_search_segment_members",
+          "type": "read",
+          "title": "Search segment members",
+          "description": "List the supporters in one segment, optionally only some supporter IDs or those who joined since a time. Engage API: POST /integration/ext/v1/segments/members/search."
+        },
+        {
+          "name": "salsa_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the supporter and activity custom fields in this Engage organization, with their names and types. Use it before you write custom data. Engage API: GET /integration/ext/v1/customFields."
+        },
+        {
+          "name": "salsa_upsert_supporters",
+          "type": "write",
+          "title": "Create or update supporters",
+          "description": "Create or update up to 20 supporters in one call. Give supporterId to update a known supporter. For a supporter without it, Engage decides the match, so check each result, errors and warnings in the reply. Engage API: PUT /integration/ext/v1/supporters."
+        },
+        {
+          "name": "salsa_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "salsa_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Salsa Engage tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "salsa_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Salsa Engage (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "salsa_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Salsa Engage Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run salsa_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which supporters changed their details in the last 7 days?",
+        "Show me the donations made this month and which template they used.",
+        "Show the results of our last email blast.",
+        "Add these three new supporters to Salsa Engage with their contact details."
+      ]
+    },
+    {
+      "slug": "pestscan",
+      "name": "PestScan",
+      "category": "crm",
+      "description": "Read customers, locations, orders, appointments, infestations and bait stations in PestScan.",
+      "endpoint": "https://pestscan.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "PestScan appCustomerId"
+          },
+          {
+            "label": "PestScan API username"
+          },
+          {
+            "label": "PestScan API password"
+          }
+        ],
+        "hint": "PestScan supplies the appCustomerId and creates an API user with the ApiUser role for your company. Ask your PestScan account manager or support for them. They are used only to log in to the PestScan API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "pestscan_test_connection",
+          "type": "read",
+          "title": "Test connection",
+          "description": "Log in and check that the PestScan API answers. Good first call. PestScan API: GET /v1/test/connection."
+        },
+        {
+          "name": "pestscan_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (companies and private persons) with their names and external ids. Use it to find a customer id. PestScan API: GET /v1/crm/customers."
+        },
+        {
+          "name": "pestscan_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List customer locations (the sites that pests are checked at), with their customer id. PestScan API: GET /v1/crm/locations."
+        },
+        {
+          "name": "pestscan_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "Get one location with its full details by PestScan id. PestScan API: GET /v1/crm/locations/GetById?id."
+        },
+        {
+          "name": "pestscan_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders (visits) created in a date range, with status, visit type and planned dates. PestScan API: GET /v1/crm/orders."
+        },
+        {
+          "name": "pestscan_list_new_orders",
+          "type": "read",
+          "title": "List new orders",
+          "description": "List order sheets that are new for this integration, not yet taken over. Reading does not confirm them. PestScan API: GET /v1/crm/orders/new."
+        },
+        {
+          "name": "pestscan_list_completed_orders",
+          "type": "read",
+          "title": "List completed orders",
+          "description": "List order sheets that are completed and ready for the integration. Reading does not confirm them. PestScan API: GET /v1/crm/orders/completed."
+        },
+        {
+          "name": "pestscan_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments with their employees, in a date range (end on or after fromDate, start on or before toDate). PestScan API: GET /v1/crm/appointments."
+        },
+        {
+          "name": "pestscan_list_infestations",
+          "type": "read",
+          "title": "List infestations",
+          "description": "List infestations (pest findings) recorded at a location, filtered by survey, bait station, pest type or date. PestScan API: GET /v1/crm/infestations."
+        },
+        {
+          "name": "pestscan_list_bait_stations",
+          "type": "read",
+          "title": "List bait stations",
+          "description": "List bait stations (monitoring points) with their location, optionally from a date. PestScan API: GET /v1/crm/baitstations."
+        },
+        {
+          "name": "pestscan_list_recommendations",
+          "type": "read",
+          "title": "List recommendations",
+          "description": "List recommendations (advice from the inspector) for locations, filtered by survey and status. PestScan API: GET /v1/crm/recommendations."
+        },
+        {
+          "name": "pestscan_list_consumption",
+          "type": "read",
+          "title": "List material consumption",
+          "description": "List materials used (consumption) per location or visit, in a date range. PestScan API: GET /v1/crm/consumption."
+        },
+        {
+          "name": "pestscan_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees (technicians and office users) with their names and external ids. PestScan API: GET /v1/crm/employees."
+        },
+        {
+          "name": "pestscan_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List articles (products and materials) with their category. Category 0 = rodents, 1 = insects, 2 = electric traps. PestScan API: GET /v1/crm/articles."
+        },
+        {
+          "name": "pestscan_list_visit_types",
+          "type": "read",
+          "title": "List visit types",
+          "description": "List the visit types (kinds of visit) that the account uses. PestScan API: GET /v1/crm/visit-types."
+        },
+        {
+          "name": "pestscan_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pestscan_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the PestScan tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pestscan_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for PestScan (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pestscan_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's PestScan Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run pestscan_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which locations had new infestations recorded this month?",
+        "List the orders completed in the last 7 days.",
+        "Show the bait station records for location 1234.",
+        "Which employees have appointments tomorrow?"
+      ]
+    },
+    {
+      "slug": "feedletter",
+      "name": "FeedLetter",
+      "category": "forms-surveys",
+      "description": "List surveys, votes and feedback; create surveys and read Wall of Love items in FeedLetter.",
+      "endpoint": "https://feedletter.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FeedLetter API key"
+          }
+        ],
+        "hint": "Create it in FeedLetter → **Account → API Keys**. Only the account owner can manage keys. A **Read & write** key lets the assistant create surveys; a Read key can only list and read them. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "feedletter_list_surveys",
+          "type": "read",
+          "title": "List surveys",
+          "description": "List or search your FeedLetter surveys (newsletter surveys, one-time polls and web rating widgets), newest first, 50 per page. q matches the name, id or external_id. Each item has id, type, name, external_id, public_title and created_at. While has_more is true, call again with page + 1. Read-only. FeedLetter API: GET /v2/surveys."
+        },
+        {
+          "name": "feedletter_get_survey",
+          "type": "read",
+          "title": "Get a survey",
+          "description": "Get one survey by its FeedLetter survey id: settings, placement code (links or embed_html), analytics (votes, daily votes, sentiment) and all feedback. Set results_only to true for just the identity, analytics and feedback. Use the survey id, not the external_id. Read-only. FeedLetter API: GET /v2/surveys/{id}."
+        },
+        {
+          "name": "feedletter_get_wall_of_love",
+          "type": "read",
+          "title": "Get a Wall of Love",
+          "description": "Get the feedback that one Wall of Love shows, to build your own wall. Each item has id, comment, name (when shown), answer_label, created_at and survey_title. Comment and name are HTML-escaped. Business plan only: other plans get 403 plan_required. Read-only. FeedLetter API: GET /v2/walls-of-love/{id}."
+        },
+        {
+          "name": "feedletter_create_survey",
+          "type": "write",
+          "title": "Create a survey",
+          "description": "Create a newsletter survey, a one-time poll or a web rating widget. Needs a Read & write key. Only type and name are required. Newsletter and poll responses return links (one voting link per answer) and email_html; web ratings return embed_html. Set external_id to your own stable id: a second call with the same external_id returns the existing survey (HTTP 200, already_exists) and changes nothing. Without external_id, each call creates a new survey. Do not combine copy_from with text_template. FeedLetter API: POST /v2/surveys."
+        },
+        {
+          "name": "feedletter_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "feedletter_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FeedLetter tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "feedletter_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for FeedLetter (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "feedletter_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FeedLetter Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run feedletter_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my FeedLetter surveys whose name contains 'Issue'.",
+        "Create a three-answer newsletter survey for issue #43 with the external id newsletter-43.",
+        "Show the votes and feedback for my latest poll.",
+        "Load the feedback on my Wall of Love so I can build it into my website."
+      ]
+    },
+    {
+      "slug": "membervault",
+      "name": "MemberVault",
+      "category": "membership",
+      "description": "List courses; add users to courses, remove course access or delete users in MemberVault.",
+      "endpoint": "https://membervault.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MemberVault account name"
+          },
+          {
+            "label": "MemberVault API key"
+          }
+        ],
+        "hint": "Find the key in your MemberVault admin under **Integrations / Other**, in the **Webhooks API** block. The account name is the part before **.mvsite.app** in your API links. Your key is used only to call the API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "membervault_list_courses",
+          "type": "read",
+          "title": "List courses",
+          "description": "Lists the products (courses) in the MemberVault account with their ids. Read-only. Call this first: use one of these ids as course_id in the other tools. The vendor documents no reply fields, so the reply is the vendor's JSON as it is. MemberVault API: GET /api/get_courses."
+        },
+        {
+          "name": "membervault_add_user",
+          "type": "write",
+          "title": "Add a user to a course",
+          "description": "Adds a user to a course (product). MemberVault finds an existing user with that email and does not create a duplicate, so the call is safe to repeat. Use course_id -1 to add the user with no product access. This changes the account. MemberVault API: GET /api/add_user."
+        },
+        {
+          "name": "membervault_remove_user",
+          "type": "write",
+          "title": "Remove a user's access to a course",
+          "description": "Removes a user's access to one course (product). The user stays in the MemberVault account, with their other courses and their progress. This changes the account at once. To delete the user entirely, use membervault_delete_user. MemberVault API: GET /api/remove_user."
+        },
+        {
+          "name": "membervault_delete_user",
+          "type": "write",
+          "title": "Delete a user (IRREVERSIBLE)",
+          "description": "IRREVERSIBLE: permanently deletes a user from the MemberVault account, with all of their data, progress and quiz answers. MemberVault cannot undo it. Only call this when the user must be removed completely; to remove course access only, use membervault_remove_user. MemberVault API: GET /api/delete_user."
+        },
+        {
+          "name": "membervault_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "membervault_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MemberVault tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "membervault_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for MemberVault (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "membervault_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MemberVault Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run membervault_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which courses are in our MemberVault account, and what are their ids?",
+        "Give jane@example.com access to course 109.",
+        "Remove sam@example.com's access to course 109, but keep the account."
+      ]
+    },
+    {
+      "slug": "documint",
+      "name": "Documint",
+      "category": "documents",
+      "description": "List and read templates; merge field values into PDF documents in Documint.",
+      "endpoint": "https://documint.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "Unlimited",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Documint API key"
+          }
+        ],
+        "hint": "Create the key in Documint under **Settings → API Keys** (New API Key). Your key is used only to call the Documint API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "documint_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the document templates in your Documint account with their ids, names and created dates. Start here to find a template id for documint_merge_template. Documint API: GET /templates."
+        },
+        {
+          "name": "documint_get_template",
+          "type": "read",
+          "title": "Get template",
+          "description": "Get one document template by its id. Documint API: GET /templates/{id}."
+        },
+        {
+          "name": "documint_merge_template",
+          "type": "write",
+          "title": "Merge template into a PDF",
+          "description": "Merge field values into a template and create a PDF document. Each call creates a new document in your Documint account and uses one document from your plan. Returns the hosted PDF url and the document name. Documint API: POST /templates/{id}/content."
+        },
+        {
+          "name": "documint_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "documint_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Documint tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "documint_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Documint (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "documint_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Documint Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run documint_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which document templates do I have in Documint?",
+        "Create a PDF from my Sales Invoice template for Acme Ltd with the total 1,200 EUR.",
+        "Show me the details of my Sales Contract template.",
+        "Generate the proposal PDF for the client data I give you, then send me the link."
+      ]
     }
   ]
 }

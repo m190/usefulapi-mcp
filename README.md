@@ -777,6 +777,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Kourses](servers/kourses/) | membership | 9 | API token | [servers/kourses/](servers/kourses/) |
 | [Open Dental](servers/open-dental/) | healthcare | 21 | API token | [servers/open-dental/](servers/open-dental/) |
 | [Bedrijfsrooster](servers/bedrijfsrooster/) | scheduling | 10 | OAuth | [servers/bedrijfsrooster/](servers/bedrijfsrooster/) |
+| [Salsa Engage](servers/salsa-engage/) | fundraising | 15 | API token | [servers/salsa-engage/](servers/salsa-engage/) |
+| [PestScan](servers/pestscan/) | crm | 19 | API token | [servers/pestscan/](servers/pestscan/) |
+| [FeedLetter](servers/feedletter/) | forms-surveys | 8 | API token | [servers/feedletter/](servers/feedletter/) |
+| [MemberVault](servers/membervault/) | membership | 8 | API token | [servers/membervault/](servers/membervault/) |
+| [Documint](servers/documint/) | documents | 7 | API token | [servers/documint/](servers/documint/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
