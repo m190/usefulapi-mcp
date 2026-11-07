@@ -50,6 +50,10 @@ On first connect you'll paste your Cliniko API key. It's validated, stored per-u
 | `cliniko_next_available_time` | read | Next available time |
 | `cliniko_create_patient` | **write** | Create a patient |
 | `cliniko_create_appointment` | **write** | Create an appointment |
+| `cliniko_list_unavailable_block_types` | read | List unavailable block types |
+| `cliniko_list_unavailable_blocks` | read | List unavailable blocks |
+| `cliniko_create_unavailable_block` | **write** | Create an unavailable block |
+| `cliniko_archive_unavailable_block` | **write** | Archive an unavailable block |
 | `cliniko_usage_status` | meta | Usage status (free-tier meter) |
 | `cliniko_request_feature` | meta | Request a missing feature |
 | `cliniko_upgrade` | meta | Upgrade to Pro or Pro+ |
