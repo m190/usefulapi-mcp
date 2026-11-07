@@ -35,6 +35,12 @@ keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `printify_create_order` | **write** | Preview or create an unsubmitted order |
+| `printify_send_to_production` | **write** | Preview or submit an order to production |
+| `printify_create_webhook` | **write** | Preview or create a signed order webhook |
+| `printify_delete_webhook` | **write** | Preview or delete a webhook |
+| `printify_update_product_prices` | **write** | Preview or update variant retail prices |
+| `printify_write_operation_status` | read | Check write operation |
 | `printify_copy_products` | **write** | Copy products between shops |
 | `printify_copy_status` | read | Check product copy progress |
 | `printify_resolve_copy` | **write** | Resolve an uncertain product copy |

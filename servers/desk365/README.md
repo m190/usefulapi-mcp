@@ -29,6 +29,8 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `desk365_add_ticket_reply` | **write** | Preview or send a ticket reply |
+| `desk365_reply_operation_status` | read | Check reply operation |
 | `desk365_set_ticket_status` | **write** | Set ticket status |
 | `desk365_list_tickets` | read | List tickets |
 | `desk365_search_tickets` | read | Search tickets |

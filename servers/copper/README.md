@@ -34,6 +34,11 @@ per-user, and scoped to you — no keys in config files.
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `copper_search_projects` | read | Search projects |
+| `copper_get_project` | read | Get project |
+| `copper_list_custom_field_definitions` | read | List custom field definitions |
+| `copper_list_files` | read | List attached file metadata |
+| `copper_get_file_metadata` | read | Get attached file metadata |
 | `copper_get_account` | read | Get account |
 | `copper_list_users` | read | List users |
 | `copper_search_people` | read | Search people |
