@@ -152507,6 +152507,169 @@
         "Add a TXT record for my domain verification code with a 1 hour TTL.",
         "Which of my monitoring checks are down right now?"
       ]
+    },
+    {
+      "slug": "formitize",
+      "name": "Formitize",
+      "category": "forms",
+      "description": "Read jobs, form templates, submitted forms and assets; create and update CRM tasks in Formitize.",
+      "endpoint": "https://formitize.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Formitize API token"
+          }
+        ],
+        "hint": "Create it in Formitize → **Settings → API → API Tokens**. Include the **forms read** permission: the login check reads your form templates. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "formitize_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List jobs (work orders). Returns unfinished jobs by default; set finished to true for finished jobs. Up to 500 per call. Formitize API: GET /job/."
+        },
+        {
+          "name": "formitize_get_job",
+          "type": "read",
+          "title": "Get a job",
+          "description": "Get one job by id: client, contact, title, job and order numbers, status, forms attached to the job and invoice id. Formitize API: GET /job/{id}."
+        },
+        {
+          "name": "formitize_get_job_history",
+          "type": "read",
+          "title": "Get job history",
+          "description": "Get the change history of one job: edits, status changes and their times. Formitize API: GET /job/{id}/history."
+        },
+        {
+          "name": "formitize_list_form_templates",
+          "type": "read",
+          "title": "List form templates",
+          "description": "List the form templates in the account (id, title, dates). Use the id with formitize_get_form_template. Formitize API: GET /form/list."
+        },
+        {
+          "name": "formitize_get_form_template",
+          "type": "read",
+          "title": "Get a form template",
+          "description": "Get one form template with its field layout (elements and their types). Formitize API: GET /form/{id}."
+        },
+        {
+          "name": "formitize_list_submitted_forms",
+          "type": "read",
+          "title": "List submitted forms",
+          "description": "List submitted forms (form entries), newest first, 200 per page. Filter by title, job, template or modified date. Formitize API: GET /form/submit/list."
+        },
+        {
+          "name": "formitize_get_submitted_form",
+          "type": "read",
+          "title": "Get a submitted form",
+          "description": "Get one submitted form with its answers, the submitting user, the job and the GPS position. Formitize API: GET /form/submit/{id}."
+        },
+        {
+          "name": "formitize_list_asset_types",
+          "type": "read",
+          "title": "List asset types",
+          "description": "List the asset types (schemas) with their column names. Use the id with formitize_list_assets. Formitize API: GET /asset/schema/list."
+        },
+        {
+          "name": "formitize_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List the assets of one asset type, with their schema columns. Formitize API: GET /asset/list/{schemaID}/."
+        },
+        {
+          "name": "formitize_get_asset",
+          "type": "read",
+          "title": "Get an asset",
+          "description": "Get one asset by id, with its asset type schema, client, location and field values. Formitize API: GET /asset/{schemaID}/{assetID}."
+        },
+        {
+          "name": "formitize_list_lookup_databases",
+          "type": "read",
+          "title": "List lookup databases",
+          "description": "List the lookup database tables with their column names. Formitize API: GET /database/list."
+        },
+        {
+          "name": "formitize_list_tasks",
+          "type": "read",
+          "title": "List CRM tasks",
+          "description": "List CRM tasks with optional filters. Paginated. Formitize API: GET /crm/task/."
+        },
+        {
+          "name": "formitize_get_task",
+          "type": "read",
+          "title": "Get a CRM task",
+          "description": "Get one CRM task with its related client or job and attachments. Formitize API: GET /crm/task/{id}."
+        },
+        {
+          "name": "formitize_create_task",
+          "type": "write",
+          "title": "Create a CRM task",
+          "description": "WRITE: create a new CRM task. Each call makes a new task, so do not repeat it. Formitize API: POST /crm/task/."
+        },
+        {
+          "name": "formitize_update_task",
+          "type": "write",
+          "title": "Update a CRM task",
+          "description": "WRITE: update a CRM task. Only the fields you pass change. Repeating the same call gives the same result. Formitize API: POST /crm/task/{id}."
+        },
+        {
+          "name": "formitize_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "formitize_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Formitize tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "formitize_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Formitize (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "formitize_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Formitize Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run formitize_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which jobs are still open for this week, and who is assigned to each?",
+        "Show me the latest submitted inspection forms for job 245.",
+        "List the CRM tasks assigned to user 45 that are due this month.",
+        "Create a follow-up task for client 77 and assign it to user 45."
+      ]
     }
   ]
 }

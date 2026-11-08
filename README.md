@@ -890,6 +890,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [HammerTech](servers/hammertech/) | business-operations | 14 | API token | [servers/hammertech/](servers/hammertech/) |
 | [sanctions.io](servers/sanctions-io/) | fraud-detection | 6 | API token | [servers/sanctions-io/](servers/sanctions-io/) |
 | [ClouDNS](servers/cloudns/) | dns | 10 | API token | [servers/cloudns/](servers/cloudns/) |
+| [Formitize](servers/formitize/) | forms | 19 | API token | [servers/formitize/](servers/formitize/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
