@@ -882,6 +882,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zenkit](servers/zenkit/) | project-management | 13 | API token | [servers/zenkit/](servers/zenkit/) |
 | [Submittable](servers/submittable/) | forms | 15 | API token | [servers/submittable/](servers/submittable/) |
 | [WeatherLink](servers/weatherlink/) | data | 11 | API token | [servers/weatherlink/](servers/weatherlink/) |
+| [Heartland Retail](servers/heartland-retail/) | retail | 20 | API token | [servers/heartland-retail/](servers/heartland-retail/) |
+| [Sienge](servers/sienge/) | real-estate | 21 | API token | [servers/sienge/](servers/sienge/) |
+| [Rosterfy](servers/rosterfy/) | hr | 19 | API token | [servers/rosterfy/](servers/rosterfy/) |
+| [Ginesys](servers/ginesys-erp/) | inventory | 8 | API token | [servers/ginesys-erp/](servers/ginesys-erp/) |
+| [Zaui](servers/zaui/) | scheduling | 13 | API token | [servers/zaui/](servers/zaui/) |
+| [HammerTech](servers/hammertech/) | business-operations | 14 | API token | [servers/hammertech/](servers/hammertech/) |
+| [sanctions.io](servers/sanctions-io/) | fraud-detection | 6 | API token | [servers/sanctions-io/](servers/sanctions-io/) |
+| [ClouDNS](servers/cloudns/) | dns | 10 | API token | [servers/cloudns/](servers/cloudns/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
