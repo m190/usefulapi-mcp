@@ -879,6 +879,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Aqarsas](servers/aqarsas/) | real-estate-transactions | 9 | API token | [servers/aqarsas/](servers/aqarsas/) |
 | [Billogram](servers/billogram/) | billing | 16 | API token | [servers/billogram/](servers/billogram/) |
 | [Play Systems](servers/play-systems-api/) | cloud | 12 | API token | [servers/play-systems-api/](servers/play-systems-api/) |
+| [Zenkit](servers/zenkit/) | project-management | 13 | API token | [servers/zenkit/](servers/zenkit/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

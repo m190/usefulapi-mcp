@@ -151024,6 +151024,133 @@
         "What is the web usage of our hosting package this month?",
         "Are the DNS records for our domain set up correctly?"
       ]
+    },
+    {
+      "slug": "zenkit",
+      "name": "Zenkit",
+      "category": "project-management",
+      "description": "Read workspaces, lists, fields, members, activity and entries, and search them in Zenkit.",
+      "endpoint": "https://zenkit.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Zenkit API key"
+          }
+        ],
+        "hint": "Find it in Zenkit → your **profile → Integrations** (API key). Your key is used only to call the Zenkit API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zenkit_get_current_user",
+          "type": "read",
+          "title": "Get current user",
+          "description": "Get the Zenkit user that owns the API key: name, username, locale, timezone and e-mail addresses. Good first call to confirm the connection. Zenkit API: GET /api/v1/users/me."
+        },
+        {
+          "name": "zenkit_list_workspaces",
+          "type": "read",
+          "title": "List workspaces with lists",
+          "description": "List the workspaces the user can access, each with its lists (collections). Use the returned list shortId or id in other tools. Zenkit API: GET /api/v1/users/me/workspacesWithLists."
+        },
+        {
+          "name": "zenkit_get_workspace",
+          "type": "read",
+          "title": "Get a workspace",
+          "description": "Get one workspace by its id, shortId or uuid: name, description and creation data. Zenkit API: GET /api/v1/workspaces/{workspaceAllId}."
+        },
+        {
+          "name": "zenkit_get_list",
+          "type": "read",
+          "title": "Get a list",
+          "description": "Get one list (collection) by its shortId: name, item name, workspace id and visibility. Zenkit API: GET /api/v1/lists/{listShortId}."
+        },
+        {
+          "name": "zenkit_get_list_elements",
+          "type": "read",
+          "title": "Get list fields",
+          "description": "Get all fields (elements) of a list: name, type category, sort order and visibility. Call this before reading entries, to learn the field names. Zenkit API: GET /api/v1/lists/{listAllId}/elements."
+        },
+        {
+          "name": "zenkit_get_list_users",
+          "type": "read",
+          "title": "Get list members",
+          "description": "Get the users who have access to a list, with their roles. Zenkit API: GET /api/v1/lists/{listAllId}/users."
+        },
+        {
+          "name": "zenkit_get_list_activities",
+          "type": "read",
+          "title": "Get list activities",
+          "description": "Get recent activities (changes, comments) in one list, newest first, with paging. Zenkit API: GET /api/v1/lists/{listAllId}/activities."
+        },
+        {
+          "name": "zenkit_get_entry",
+          "type": "read",
+          "title": "Get a list entry",
+          "description": "Get one entry (item) of a list by its ids: the field values, checklists and timestamps. Zenkit API: GET /api/v1/lists/{listAllId}/entries/{listEntryAllId}."
+        },
+        {
+          "name": "zenkit_search_entries",
+          "type": "read",
+          "title": "Search entries",
+          "description": "Search list entries (items) across all lists the user can access, by text. Returns matching entries; set include_related_lists to also get the lists they belong to. Zenkit API: GET /api/v1/entries/search."
+        },
+        {
+          "name": "zenkit_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zenkit_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zenkit tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zenkit_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Zenkit (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zenkit_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zenkit Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zenkit_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which lists are in my Zenkit workspaces?",
+        "Find every entry that mentions 'invoice' and show the list each one is in.",
+        "What fields does my Zenkit project list have?",
+        "Show the most recent activity in my onboarding list."
+      ]
     }
   ]
 }
