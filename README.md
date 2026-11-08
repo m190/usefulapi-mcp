@@ -871,6 +871,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Cledara](servers/cledara/) | Finance | 7 | API token | [servers/cledara/](servers/cledara/) |
 | [Talexio](servers/talexio/) | hr | 9 | API token | [servers/talexio/](servers/talexio/) |
 | [Zomentum](servers/zomentum/) | crm | 29 | API token | [servers/zomentum/](servers/zomentum/) |
+| [Addressfinder](servers/addressfinder/) | data-enrichment | 15 | API token | [servers/addressfinder/](servers/addressfinder/) |
+| [Agiloft](servers/agiloft/) | knowledge-base | 7 | API token | [servers/agiloft/](servers/agiloft/) |
+| [Axcient](servers/axcient/) | monitoring | 22 | API token | [servers/axcient/](servers/axcient/) |
+| [HOA.to](servers/hoa-to/) | property-management | 28 | API token | [servers/hoa-to/](servers/hoa-to/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

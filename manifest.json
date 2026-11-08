@@ -149790,6 +149790,645 @@
         "Find the client company Acme and list its contacts and open documents.",
         "Add a comment to the Acme opportunity saying the proposal was sent today."
       ]
+    },
+    {
+      "slug": "addressfinder",
+      "name": "Addressfinder",
+      "category": "data-enrichment",
+      "description": "Autocomplete and verify NZ and AU addresses, and search NZ and AU locations in Addressfinder.",
+      "endpoint": "https://addressfinder.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Addressfinder API key"
+          },
+          {
+            "label": "Addressfinder API secret"
+          }
+        ],
+        "hint": "Find both in your Addressfinder Portal, under **credentials**. Your plan must include direct API access. Your key and secret are used only to call the API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "addressfinder_nz_address_autocomplete",
+          "type": "read",
+          "title": "NZ address autocomplete",
+          "description": "Search NZ addresses from a partial address. Returns candidates with `a` (the address) and `pxid`. Pair each call with addressfinder_nz_address_metadata: call it with the chosen pxid to load the full address."
+        },
+        {
+          "name": "addressfinder_nz_address_metadata",
+          "type": "read",
+          "title": "NZ address metadata",
+          "description": "Load the full metadata for one NZ address, given the pxid from addressfinder_nz_address_autocomplete or addressfinder_nz_reverse_geocode. Returns the parsed address parts, postcode, dpid and coordinates."
+        },
+        {
+          "name": "addressfinder_nz_address_verify",
+          "type": "read",
+          "title": "Verify NZ address",
+          "description": "Verify one full NZ address, which may contain typos, against the Addressfinder database. Returns the matched address and its metadata when a match exists. Each verified result is one billed Lookup."
+        },
+        {
+          "name": "addressfinder_nz_reverse_geocode",
+          "type": "read",
+          "title": "NZ reverse geocode",
+          "description": "Find the nearest NZ addresses to a GPS point, ordered by distance. Returns `a` and `pxid` for each. Pair with addressfinder_nz_address_metadata for the chosen pxid."
+        },
+        {
+          "name": "addressfinder_nz_location_autocomplete",
+          "type": "read",
+          "title": "NZ location autocomplete",
+          "description": "Search NZ streets, suburbs, cities and regions (locations). Returns candidates with `a` and `pxid`. Pair each call with addressfinder_nz_location_metadata for the chosen pxid. To return several location types, set the others to 0."
+        },
+        {
+          "name": "addressfinder_nz_location_metadata",
+          "type": "read",
+          "title": "NZ location metadata",
+          "description": "Load the metadata for one NZ location (street, suburb, city or region), given the pxid from addressfinder_nz_location_autocomplete. Returns the canonical name and coordinates."
+        },
+        {
+          "name": "addressfinder_au_address_autocomplete",
+          "type": "read",
+          "title": "AU address autocomplete",
+          "description": "Search AU addresses from a partial address. Returns candidates with `full_address` and `id`. Pair each call with addressfinder_au_address_metadata: call it with the chosen id to load the full address."
+        },
+        {
+          "name": "addressfinder_au_address_metadata",
+          "type": "read",
+          "title": "AU address metadata",
+          "description": "Load the full metadata for one AU address, given the id from addressfinder_au_address_autocomplete. Returns the parsed address parts, postcode, coordinates and GNAF identifiers."
+        },
+        {
+          "name": "addressfinder_au_address_verify",
+          "type": "read",
+          "title": "Verify AU address",
+          "description": "Verify one full AU address, which may contain typos, against Australia Post PAF and Geoscape GNAF data. Returns whether it matched and the matched address. Each verified result is one billed Lookup."
+        },
+        {
+          "name": "addressfinder_au_location_autocomplete",
+          "type": "read",
+          "title": "AU location autocomplete",
+          "description": "Search AU streets, localities (suburbs) and states (locations). Returns candidates with `full_location` and `id`. Pair each call with addressfinder_au_location_metadata for the chosen id."
+        },
+        {
+          "name": "addressfinder_au_location_metadata",
+          "type": "read",
+          "title": "AU location metadata",
+          "description": "Load the metadata for one AU location (street, locality or state), given the id from addressfinder_au_location_autocomplete. Returns the full location, type, coordinates and state."
+        },
+        {
+          "name": "addressfinder_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "addressfinder_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Addressfinder tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "addressfinder_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Addressfinder (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "addressfinder_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Addressfinder Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run addressfinder_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Is 184 Willis Street, Wellington a valid NZ address, and what is its postcode?",
+        "Find the NZ addresses nearest to these GPS coordinates: -41.2865, 174.7762.",
+        "Suggest AU addresses for '10 Martin pl Sydney' and show the full details of the best match.",
+        "Which suburbs in NSW match 'Parra'?"
+      ]
+    },
+    {
+      "slug": "agiloft",
+      "name": "Agiloft",
+      "category": "knowledge-base",
+      "description": "List tables, read records and search a knowledgebase in Agiloft.",
+      "endpoint": "https://agiloft.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Agiloft instance host"
+          },
+          {
+            "label": "Knowledgebase name"
+          },
+          {
+            "label": "KB user login"
+          },
+          {
+            "label": "KB user password"
+          }
+        ],
+        "hint": "Use a **dedicated, native (non-LDAP) KB user** with REST access, not a person's own account. The KB name and table names are case sensitive. Your password is used only to log in to your instance (EWLogin) and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "agiloft_list_tables",
+          "type": "read",
+          "title": "List tables",
+          "description": "List the tables of the Agiloft knowledgebase (label and logical name). Pass table and include_fields=true to get that table's fields. Use the logical names in the other tools. Agiloft REST: EWTable."
+        },
+        {
+          "name": "agiloft_get_record",
+          "type": "read",
+          "title": "Get a record",
+          "description": "Get one record by id, with all its fields as the KB user can see them. Use agiloft_list_tables to find the table and its fields. Agiloft REST: EWRead."
+        },
+        {
+          "name": "agiloft_search_records",
+          "type": "read",
+          "title": "Search records",
+          "description": "Search a table with an ad hoc query (for example summary~='test'&&priority=3; ~= means contains) and return the number of matches and the requested fields. Pages with page and limit. Agiloft REST: EWSearch."
+        },
+        {
+          "name": "agiloft_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "agiloft_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Agiloft tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "agiloft_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Agiloft (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "agiloft_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Agiloft Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run agiloft_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which Agiloft tables hold contract records?",
+        "Search the contracts table for records that are still open.",
+        "Show me the full record with id 358 from the contacts table."
+      ]
+    },
+    {
+      "slug": "axcient",
+      "name": "Axcient",
+      "category": "monitoring",
+      "description": "List clients, devices, vaults and restore points, and check backup jobs in Axcient.",
+      "endpoint": "https://axcient.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Axcient x360Recover API key"
+          }
+        ],
+        "hint": "A partner admin creates the key in **partner.axcient.com → Settings → API Keys**. The key covers the whole partner account. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "axcient_get_organization",
+          "type": "read",
+          "title": "Get organization",
+          "description": "Return the partner organization that the API key belongs to. Use it to confirm the connection. Axcient API: GET /organization."
+        },
+        {
+          "name": "axcient_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the clients (customer accounts) of the partner organization, with their health status and device counters. Start here to find a client_id. Axcient API: GET /client."
+        },
+        {
+          "name": "axcient_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "Return one client by its id. Axcient API: GET /client/{client_id}."
+        },
+        {
+          "name": "axcient_get_client_usage",
+          "type": "read",
+          "title": "Get client storage usage",
+          "description": "Return the local, vault and cloud storage usage of one client. Axcient API: GET /client/{client_id}/usage."
+        },
+        {
+          "name": "axcient_list_appliances",
+          "type": "read",
+          "title": "List appliances",
+          "description": "List the x360Recover appliances (on-premise backup servers) of the organization. Axcient API: GET /appliance."
+        },
+        {
+          "name": "axcient_get_appliance",
+          "type": "read",
+          "title": "Get appliance",
+          "description": "Return one appliance by its id. Axcient API: GET /appliance/{appliance_id}."
+        },
+        {
+          "name": "axcient_list_vaults",
+          "type": "read",
+          "title": "List vaults",
+          "description": "List the vaults of the organization, with health status, storage use and replicated devices. Axcient API: GET /vault."
+        },
+        {
+          "name": "axcient_get_vault",
+          "type": "read",
+          "title": "Get vault",
+          "description": "Return one vault by its id, with its health, storage and devices. Axcient API: GET /vault/{vault_id}."
+        },
+        {
+          "name": "axcient_get_vault_connectivity_threshold",
+          "type": "read",
+          "title": "Get vault connectivity threshold",
+          "description": "Return the connectivity threshold that the vault uses for its alerts. Read only: this tool does not change it. Axcient API: GET /vault/{vault_id}/threshold/connectivity."
+        },
+        {
+          "name": "axcient_list_devices",
+          "type": "read",
+          "title": "List devices",
+          "description": "List the protected devices (servers, workstations) of the organization, with health status, usage and vaults. Axcient API: GET /device."
+        },
+        {
+          "name": "axcient_get_device",
+          "type": "read",
+          "title": "Get device",
+          "description": "Return one protected device by its id: health, thresholds, usage, vaults and jobs. Axcient API: GET /device/{device_id}."
+        },
+        {
+          "name": "axcient_get_device_autoverify",
+          "type": "read",
+          "title": "Get device AutoVerify results",
+          "description": "Return the AutoVerify results (automatic restore tests) for one device. Axcient API: GET /device/{device_id}/autoverify."
+        },
+        {
+          "name": "axcient_list_device_restore_points",
+          "type": "read",
+          "title": "List device restore points",
+          "description": "List the restore points of one device, grouped by the cloud vaults it is replicated to. Use it to check the latest recovery point. Axcient API: GET /device/{device_id}/restore_point."
+        },
+        {
+          "name": "axcient_list_device_jobs",
+          "type": "read",
+          "title": "List device jobs",
+          "description": "List the jobs of one device under one client. Start here to find a job_id. Axcient API: GET /client/{client_id}/device/{device_id}/job."
+        },
+        {
+          "name": "axcient_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "Return one job by its id. Axcient API: GET /client/{client_id}/device/{device_id}/job/{job_id}."
+        },
+        {
+          "name": "axcient_get_job_history",
+          "type": "read",
+          "title": "Get job history",
+          "description": "List the run history of one job: status, start and end time, and error message per run. Use it to find failed backups. Axcient API: GET /client/{client_id}/device/{device_id}/job/{job_id}/history."
+        },
+        {
+          "name": "axcient_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users related to the organization: name, role, active state and last login. Axcient API: GET /user."
+        },
+        {
+          "name": "axcient_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Return one user by its id. Axcient API: GET /user/{user_id}."
+        },
+        {
+          "name": "axcient_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "axcient_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Axcient tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "axcient_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Axcient (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "axcient_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Axcient Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run axcient_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our protected devices have failed backups in the last 7 days?",
+        "Show the latest restore point for the server of client Acme.",
+        "How much cloud storage does each client use?",
+        "List the vaults and their current health status."
+      ]
+    },
+    {
+      "slug": "hoa-to",
+      "name": "HOA.to",
+      "category": "property-management",
+      "description": "Read units, owners, charges and requests, and record payments and violations in HOA.to.",
+      "endpoint": "https://hoa-to.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "HOA.to API key"
+          }
+        ],
+        "hint": "Create the key in HOA.to under **Integrations → API keys**. Each key works for one community. A **hoa_test_** key uses sandbox data, so you can try writes safely. The key is used only to call the HOA.to API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hoato_ping",
+          "type": "read",
+          "title": "Check the API key",
+          "description": "Show the association this key belongs to, whether it is a live or test key, and its scopes. Write tools need write: true. Call this first. Uses GET /ping."
+        },
+        {
+          "name": "hoato_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List every unit in the association, ordered by unit number. Uses GET /units."
+        },
+        {
+          "name": "hoato_get_unit",
+          "type": "read",
+          "title": "Get a unit",
+          "description": "Fetch one unit by id, with its current owners and residents. Uses GET /units/{id}."
+        },
+        {
+          "name": "hoato_create_unit",
+          "type": "write",
+          "title": "Create a unit",
+          "description": "Add a unit to the association. unitNumber must be unique; a duplicate returns 409. Needs a write key. Uses POST /units."
+        },
+        {
+          "name": "hoato_update_unit",
+          "type": "write",
+          "title": "Update a unit",
+          "description": "Change the fields you send on one unit. Omitted fields stay as they are. Needs a write key. Uses PATCH /units/{id}."
+        },
+        {
+          "name": "hoato_list_owners",
+          "type": "read",
+          "title": "List owners and residents",
+          "description": "List owners and residents, optionally for one unit. Past owners appear only when includeEnded is true. Uses GET /owners."
+        },
+        {
+          "name": "hoato_add_owner",
+          "type": "write",
+          "title": "Attach an owner or resident",
+          "description": "Attach an owner, co-owner, tenant, occupant or property manager to a unit, matched by email. Needs a write key. Uses POST /owners."
+        },
+        {
+          "name": "hoato_update_owner",
+          "type": "write",
+          "title": "Update or end an ownership",
+          "description": "Change the relation, primary flag or notes of one ownership, or end it with endDate and endReason. Ending an ownership removes it from current owners. Needs a write key. Uses PATCH /owners/{id}."
+        },
+        {
+          "name": "hoato_list_requests",
+          "type": "read",
+          "title": "List maintenance and ARC requests",
+          "description": "List maintenance and architectural review (ARC) requests. Filter by kind, status, unit or open (not finished). This list pages by limit only; it has no cursor. Uses GET /requests."
+        },
+        {
+          "name": "hoato_get_request",
+          "type": "read",
+          "title": "Get a request",
+          "description": "Fetch one maintenance or ARC request by id. Uses GET /requests/{id}."
+        },
+        {
+          "name": "hoato_create_request",
+          "type": "write",
+          "title": "Create a request",
+          "description": "Open a maintenance request, or an ARC request (which needs unit and description). Defaults: NEW for maintenance, SUBMITTED for ARC. Needs a write key. Uses POST /requests."
+        },
+        {
+          "name": "hoato_update_request",
+          "type": "write",
+          "title": "Update a request",
+          "description": "Change the fields you send on one request, such as status, priority, schedule, cost or decision note. Omitted fields stay as they are. Needs a write key. Uses PATCH /requests/{id}."
+        },
+        {
+          "name": "hoato_list_charges",
+          "type": "read",
+          "title": "List charges",
+          "description": "List assessments and other charges. status \"open\" covers OPEN and PARTIAL charges. Uses GET /charges."
+        },
+        {
+          "name": "hoato_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments recorded for the association, newest first. Uses GET /payments."
+        },
+        {
+          "name": "hoato_record_payment",
+          "type": "write",
+          "title": "Record a payment",
+          "description": "Record a payment that was already collected elsewhere, for example by check or bank transfer. It applies to the unit's open charges, oldest first. It does NOT charge a card or move money. Needs a write key. Uses POST /payments."
+        },
+        {
+          "name": "hoato_get_ledger",
+          "type": "read",
+          "title": "Get a unit ledger",
+          "description": "Get every charge and payment for one unit as a dated ledger with a running balance and the outstanding total. Charges are debits, payments are credits. Uses GET /ledger/{unit}."
+        },
+        {
+          "name": "hoato_list_violations",
+          "type": "read",
+          "title": "List violations",
+          "description": "List open and past violations, newest first. Uses GET /violations."
+        },
+        {
+          "name": "hoato_file_violation",
+          "type": "write",
+          "title": "File a violation",
+          "description": "Record a violation against a unit, with photo URLs. It records the violation only: it sends no notice and sets no fine. A person decides the next step in HOA.to. Needs a write key. Uses POST /violations."
+        },
+        {
+          "name": "hoato_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List published association documents, optionally in one category. Uses GET /documents."
+        },
+        {
+          "name": "hoato_publish_document",
+          "type": "write",
+          "title": "Publish a document",
+          "description": "Publish a document that is already hosted at a URL, and set who can see it with visibility. Owners with that access can see it at once. Needs a write key. Uses POST /documents."
+        },
+        {
+          "name": "hoato_list_meetings",
+          "type": "read",
+          "title": "List meetings and minutes",
+          "description": "List board, annual, special and committee meetings with their minutes. upcoming true returns future meetings, oldest first. Uses GET /meetings."
+        },
+        {
+          "name": "hoato_get_meeting",
+          "type": "read",
+          "title": "Get a meeting",
+          "description": "Fetch one meeting by id, with its agenda and minutes. Uses GET /meetings/{id}."
+        },
+        {
+          "name": "hoato_schedule_meeting",
+          "type": "write",
+          "title": "Schedule a meeting",
+          "description": "Schedule a meeting with an agenda and an optional quorum. Needs a write key. Uses POST /meetings."
+        },
+        {
+          "name": "hoato_list_announcements",
+          "type": "read",
+          "title": "List announcements",
+          "description": "List published announcements to owners, newest first. Uses GET /announcements."
+        },
+        {
+          "name": "hoato_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hoato_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the HOA.to tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hoato_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for HOA.to (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hoato_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's HOA.to Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hoato_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which owners in our community have unpaid balances, and how much do they owe?",
+        "List the open maintenance requests for the common areas and their status.",
+        "Show me the upcoming board meetings and the agenda for each.",
+        "Record the check payment from unit 204 for the November assessment."
+      ]
     }
   ]
 }
