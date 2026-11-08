@@ -35,6 +35,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `hostaway_list_users` | read | List account team members |
 | `hostaway_list_listings` | read | List listings |
 | `hostaway_get_listing` | read | Get one listing |
 | `hostaway_list_reservations` | read | List reservations |
