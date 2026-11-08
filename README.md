@@ -891,6 +891,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [sanctions.io](servers/sanctions-io/) | fraud-detection | 6 | API token | [servers/sanctions-io/](servers/sanctions-io/) |
 | [ClouDNS](servers/cloudns/) | dns | 10 | API token | [servers/cloudns/](servers/cloudns/) |
 | [Formitize](servers/formitize/) | forms | 19 | API token | [servers/formitize/](servers/formitize/) |
+| [INWX](servers/inwx/) | dns | 15 | API token | [servers/inwx/](servers/inwx/) |
+| [Comet Backup](servers/comet-backup/) | devops | 16 | API token | [servers/comet-backup/](servers/comet-backup/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

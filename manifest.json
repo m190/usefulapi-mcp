@@ -152670,6 +152670,303 @@
         "List the CRM tasks assigned to user 45 that are due this month.",
         "Create a follow-up task for client 77 and assign it to user 45."
       ]
+    },
+    {
+      "slug": "inwx",
+      "name": "INWX",
+      "category": "dns",
+      "description": "Check domain availability, list domains and DNS zones, change DNS records in INWX.",
+      "endpoint": "https://inwx.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "INWX username"
+          },
+          {
+            "label": "INWX password"
+          },
+          {
+            "label": "TOTP secret (only with 2-factor login)",
+            "optional": true
+          }
+        ],
+        "hint": "A dedicated **API subaccount** with only the domain roles you need is safer than your main login. Enter the **TOTP secret** (the setup key of your authenticator app) only if two-factor login is on for that login. The password and secret are stored encrypted, used only to call INWX on your behalf, and never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "inwx_account_info",
+          "type": "read",
+          "title": "Get account details",
+          "description": "Get the details of the INWX login used by this server: account id, customer number, roles and default settings. INWX method: account.info."
+        },
+        {
+          "name": "inwx_domain_check",
+          "type": "read",
+          "title": "Check domain availability",
+          "description": "Check whether domain names can be registered now, with the registration price and premium flag. Read only: nothing is ordered. INWX method: domain.check."
+        },
+        {
+          "name": "inwx_domain_list",
+          "type": "read",
+          "title": "List domains",
+          "description": "List the domains of this INWX account with status, expiry date, renewal mode and lock state. Filter by name text or status. INWX method: domain.list."
+        },
+        {
+          "name": "inwx_domain_info",
+          "type": "read",
+          "title": "Get domain details",
+          "description": "Get one domain: dates (creation, expiry), status, renewal and transfer modes, and the registrant, admin and tech contact handle ids. The transfer auth code is never returned. INWX method: domain.info."
+        },
+        {
+          "name": "inwx_nameserver_list",
+          "type": "read",
+          "title": "List DNS zones",
+          "description": "List the DNS zones hosted at INWX with their zone type, mail and web entries. Filter by domain text. INWX method: nameserver.list."
+        },
+        {
+          "name": "inwx_nameserver_info",
+          "type": "read",
+          "title": "Get DNS zone details",
+          "description": "Get one DNS zone with its records (record id, name, type, content, TTL, priority). Use the record ids with inwx_nameserver_update_record. INWX method: nameserver.info."
+        },
+        {
+          "name": "inwx_contact_list",
+          "type": "read",
+          "title": "List contact handles",
+          "description": "List the contact handles (owner, admin and tech contacts) of this account. Filter by search text. INWX method: contact.list."
+        },
+        {
+          "name": "inwx_contact_info",
+          "type": "read",
+          "title": "Get a contact handle",
+          "description": "Get one contact handle by id: name, organisation, address and e-mail. INWX method: contact.info."
+        },
+        {
+          "name": "inwx_nameserver_update",
+          "type": "write",
+          "title": "Update DNS zone settings",
+          "description": "Change the settings of a DNS zone: zone type, master IP, nameserver list, and the web and mail entries. This changes live DNS. INWX method: nameserver.update."
+        },
+        {
+          "name": "inwx_nameserver_create_record",
+          "type": "write",
+          "title": "Add a DNS record",
+          "description": "Add one DNS record to a zone. This changes live DNS. INWX method: nameserver.createRecord."
+        },
+        {
+          "name": "inwx_nameserver_update_record",
+          "type": "write",
+          "title": "Change a DNS record",
+          "description": "Change one existing DNS record (take its id from inwx_nameserver_info). Only the fields you pass change. This changes live DNS. INWX method: nameserver.updateRecord."
+        },
+        {
+          "name": "inwx_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "inwx_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the INWX tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "inwx_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for INWX (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "inwx_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's INWX Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run inwx_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my domains expire in the next 60 days?",
+        "Is example-brand.com still free to register, and what does it cost?",
+        "Show the DNS records of mysite.de and their ids.",
+        "Change the TTL of the www record on mysite.de to 300 seconds."
+      ]
+    },
+    {
+      "slug": "comet-backup",
+      "name": "Comet Backup",
+      "category": "devops",
+      "description": "Read backup jobs, job logs, users, live devices and storage sizes in Comet Backup.",
+      "endpoint": "https://comet-backup.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Comet Server address"
+          },
+          {
+            "label": "Admin account name"
+          },
+          {
+            "label": "Admin account password"
+          }
+        ],
+        "hint": "The address is the public https address of your own server, for example `https://backup.example.com` (port 443 or 8443). The server's **Auth Role** must be enabled, and the admin account must sign in with its password alone (no TOTP code). A dedicated admin account is best. The password is stored encrypted, used only to call your server on your behalf, and never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "cometbackup_server_info",
+          "type": "read",
+          "title": "Get server version",
+          "description": "Get the Comet Server version and which roles are enabled (storage, authentication, software build, constellation). Comet API: POST /api/v1/admin/meta/version."
+        },
+        {
+          "name": "cometbackup_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the user account names on the Comet Server. Comet API: POST /api/v1/admin/list-users."
+        },
+        {
+          "name": "cometbackup_list_user_groups",
+          "type": "read",
+          "title": "List user groups",
+          "description": "List the user group names on the Comet Server (id to name). Comet API: POST /api/v1/admin/user-groups/list."
+        },
+        {
+          "name": "cometbackup_list_policies",
+          "type": "read",
+          "title": "List policies",
+          "description": "List the policy names on the Comet Server (id to name). Comet API: POST /api/v1/admin/policies/list."
+        },
+        {
+          "name": "cometbackup_list_recent_jobs",
+          "type": "read",
+          "title": "List recent jobs",
+          "description": "List recent and still-running backup jobs across all users: status, start and end time, user, protected item and storage vault ids. Newest first is not guaranteed; sort by StartTime if needed. Comet API: POST /api/v1/admin/get-jobs-recent."
+        },
+        {
+          "name": "cometbackup_list_user_jobs",
+          "type": "read",
+          "title": "List jobs for a user",
+          "description": "List the backup jobs of one user account. Comet API: POST /api/v1/admin/get-jobs-for-user (TargetUser)."
+        },
+        {
+          "name": "cometbackup_list_jobs_between",
+          "type": "read",
+          "title": "List jobs between two dates",
+          "description": "List the backup jobs that ran from the start day to the end day (both included, UTC). Use it for failure reports over a period. Comet API: POST /api/v1/admin/get-jobs-for-date-range."
+        },
+        {
+          "name": "cometbackup_get_job",
+          "type": "read",
+          "title": "Get a job",
+          "description": "Get one backup job: status, times, retry count, user, protected item, storage vault, device and client version. Comet API: POST /api/v1/admin/get-job-properties."
+        },
+        {
+          "name": "cometbackup_get_job_log",
+          "type": "read",
+          "title": "Get a job log",
+          "description": "Get the plain-text report log of one backup job, for example to see why it failed. Comet API: POST /api/v1/admin/get-job-log."
+        },
+        {
+          "name": "cometbackup_get_server_stats",
+          "type": "read",
+          "title": "Get server statistics",
+          "description": "Get the historical counts of buckets, users, devices, boosters and network devices on the Comet Server. Comet API: POST /api/v1/admin/meta/stats."
+        },
+        {
+          "name": "cometbackup_list_live_devices",
+          "type": "read",
+          "title": "List live devices",
+          "description": "List the devices connected to the Comet Server right now: user, device id, client version and platform. Comet API: POST /api/v1/admin/dispatcher/list-active."
+        },
+        {
+          "name": "cometbackup_list_storage_buckets",
+          "type": "read",
+          "title": "List storage buckets",
+          "description": "List the storage buckets with their owner, creation time and size in bytes. Keys and passwords are never returned. Comet API: POST /api/v1/admin/storage/list-buckets."
+        },
+        {
+          "name": "cometbackup_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cometbackup_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Comet Backup tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cometbackup_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Comet Backup (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cometbackup_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Comet Backup Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cometbackup_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which backup jobs failed in the last 24 hours, and why?",
+        "Show the log of the most recent failed job for user alice.",
+        "How much storage does each storage bucket use?",
+        "Which devices are connected to the server right now?"
+      ]
     }
   ]
 }
