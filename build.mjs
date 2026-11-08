@@ -829,4 +829,25 @@ writeFileSync(`${outDir}/mcp-robots.txt`,
   `# These hosts are JSON-RPC API endpoints; the human-readable pages live on ${base}.\n` +
   `User-agent: *\nDisallow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
+// Visit source tag. Most visitors arrive from AI apps that send no Referer, and the Free zone plan
+// does not log query strings, so a landing page asks for /_src/<source><path> once: the zone's request
+// log then records utm_source (or the referring host, or "none") and the landing page.
+// _redirects answers that path with a tiny static file.
+const SOURCE_TAG = `<script>(function(){try{var r="";try{r=new URL(document.referrer).hostname}catch(e){}` +
+  `if(/(^|\\.)usefulapi\\.io$/.test(r))return;var q=new URLSearchParams(location.search);` +
+  `var s=(q.get("utm_source")||q.get("ref")||r||"none").toLowerCase().replace(/[^a-z0-9.-]/g,"").replace(/^\\.+/,"").slice(0,60)||"none";` +
+  `fetch("/_src/"+s+location.pathname,{keepalive:true,credentials:"omit"}).catch(function(){})}catch(e){}})()</script>`;
+const htmlFiles = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+  e.isDirectory() ? htmlFiles(`${dir}/${e.name}`) : e.name.endsWith(".html") ? [`${dir}/${e.name}`] : []);
+for (const f of htmlFiles(outDir)) {
+  if (f === `${outDir}/404.html`) continue;
+  const html = readFileSync(f, "utf8");
+  if (!html.includes("</head>")) throw new Error(`${f}: no </head> for the source tag`);
+  writeFileSync(f, html.replace("</head>", () => `${SOURCE_TAG}</head>`));
+}
+writeFileSync(`${outDir}/_src.txt`, "ok\n");
+writeFileSync(`${outDir}/_redirects`, `/_src/* /_src.txt 200\n`);
+writeFileSync(`${outDir}/_headers`, readFileSync(`${outDir}/_headers`, "utf8") +
+  `/_src/*\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n/_src.txt\n  X-Robots-Tag: noindex\n`);
+
 console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${POSTS.length} blog post(s), robots.txt, mcp-robots.txt, llms.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);

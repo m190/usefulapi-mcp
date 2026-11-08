@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 30 October 2026
+**Effective date:** 16 July 2026 · **Last updated:** 8 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -70,6 +70,11 @@ Stripe does. We store your Stripe customer/subscription identifiers and plan sta
 
 **Operational logs.** Our infrastructure (Cloudflare) processes IP address, request metadata, and
 error diagnostics for security, abuse prevention, and reliability.
+
+**Website analytics.** On usefulapi.io we count page views with Cloudflare Web Analytics, which sets
+no cookies. When you arrive from another site, the page also records where you came from (the referring
+site or a link tag such as `utm_source`) and the page you landed on. We use this only to learn how people
+find us, and it is kept with the operational logs.
 
 ## 2. Legal bases (GDPR)
 
