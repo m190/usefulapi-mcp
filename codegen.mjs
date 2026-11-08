@@ -142,7 +142,7 @@ function pricingSection(s) {
   const rows = s.pricing
     .map((p) => `| **${p.plan}**${p.scope ? ` (${p.scope})` : ""} | ${priceCell(p)} | ${p.limit}${isUnlimitedPro(p) ? "*" : ""} |`)
     .join("\n");
-  // The limit the fleet runtime enforces (core.ts PRO_FAIR_USE_LIMIT); the manifest says only "Unlimited".
+  // Compatibility for older manifest entries that still describe Pro as "Unlimited".
   const fairUse = s.pricing.some(isUnlimitedPro)
     ? `\n\\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.\n`
     : "";
@@ -150,9 +150,10 @@ function pricingSection(s) {
   const meta = (suffix) => s.tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
   const up = meta("_upgrade"), cancel = meta("_cancel_subscription");
   const note = up && cancel
-    ? `\nPro covers this server only. Subscribe with \`${up.name}\` (it returns a Stripe Checkout link). ` +
-      `Cancel any time with \`${cancel.name}\`: Pro continues to the end of the paid period, with no refund ` +
-      `for the current period, and running \`${up.name}\` before then undoes the cancel. Or write to support@usefulapi.io.\n`
+    ? `\nEach paid plan covers this server only. Ask your AI to run \`${up.name}\` and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). ` +
+      `If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. ` +
+      `Cancel any time with \`${cancel.name}\`: your paid plan continues to the end of the paid period, with no refund ` +
+      `for the current period, and asking to resume the same plan with \`${up.name}\` before then undoes the cancel. Or write to support@usefulapi.io.\n`
     : "";
   return `## Pricing\n\n| Plan | Price | Limit |\n|------|-------|-------|\n${rows}\n${fairUse}${note}`;
 }

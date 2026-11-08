@@ -58,10 +58,9 @@ Connect a dedicated Fitssey API key and Studio UUID. Read-only tools cover studi
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** (per Studio UUID and API key) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+| **Pro** (per Studio UUID and API key) | **$9/mo** or **$90/yr** (2 months free) | 10,000 tool calls / month |
+| **Pro+** (per Studio UUID and API key) | **$39/mo** or **$390/yr** (2 months free) | 100,000 tool calls / month |
 
-\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
-
-Pro covers this server only. Subscribe with `fitssey_upgrade` (it returns a Stripe Checkout link). Cancel any time with `fitssey_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `fitssey_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+Each paid plan covers this server only. Ask your AI to run `fitssey_upgrade` and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. Cancel any time with `fitssey_cancel_subscription`: your paid plan continues to the end of the paid period, with no refund for the current period, and asking to resume the same plan with `fitssey_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License

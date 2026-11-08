@@ -118,9 +118,10 @@ const priceText = (p) => {
   if (!p.monthly || p.monthly === "$0") return "$0";
   return [p.monthly && `${p.monthly}/mo`, p.yearly && `${p.yearly}/yr`].filter(Boolean).join(" · ");
 };
-const proTier = (s) => (s.pricing || []).find((p) => /pro/i.test(p.plan));
+const proTier = (s) => (s.pricing || []).find((p) => /^pro$/i.test(p.plan));
+const plusTier = (s) => (s.pricing || []).find((p) => /^pro\+$/i.test(p.plan));
 const freeTier = (s) => (s.pricing || []).find((p) => /free/i.test(p.plan));
-// The limit the fleet runtime enforces (core.ts PRO_FAIR_USE_LIMIT); the manifest says only "Unlimited".
+// Compatibility for older manifest entries that still describe Pro as "Unlimited".
 const PRO_FAIR_USE = "fair use limit: 10,000 tool calls a month";
 const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit);
 /** The limit as a sentence shows it: Pro's "Unlimited" carries its fair use limit. */
@@ -312,7 +313,7 @@ function faqFor(s) {
   const reads = tools.filter((t) => t.type === "read").length, writes = tools.filter((t) => t.type === "write").length;
   const metaTool = (suffix) => tools.find((t) => t.type === "meta" && t.name.endsWith(suffix));
   const up = metaTool("_upgrade"), cancel = metaTool("_cancel_subscription"), usage = metaTool("_usage_status"), feature = metaTool("_request_feature");
-  const ft = freeTier(s), pt = proTier(s);
+  const ft = freeTier(s), pt = proTier(s), plus = plusTier(s);
   const faq = [];
   const c = CONTENT.get(s.slug);
   if (c) faq.push({ q: `What can I do with ${n} in Claude or ChatGPT?`, a:
@@ -340,10 +341,14 @@ function faqFor(s) {
     ? `Yes, if you approve it. ${writes} of the ${reads + writes} ${n} tools can create or change data. The other ${reads} are marked read-only. Most MCP clients ask you to approve a tool call before it runs.`
     : `All ${reads} ${n} tools are marked read-only.` });
   if (ft && pt) faq.push({ q: `What does it cost?`, a:
-    `The Free plan gives ${esc(ft.limit)}. Pro costs ${esc(priceText(pt).replace(" · ", " or "))}, with ${esc(isUnlimitedPro(pt) ? `unlimited tool calls (${PRO_FAIR_USE})` : `${pt.limit.toLowerCase()} tool calls`)}, for this ${n} server only. Cancel any time: Pro then runs to the end of the paid period.` +
+    `The Free plan gives ${esc(ft.limit)}. Pro costs ${esc(priceText(pt).replace(" · ", " or "))}, with ${esc(limitText(pt))}. ` +
+    (plus ? `Pro+ costs ${esc(priceText(plus).replace(" · ", " or "))}, with ${esc(limitText(plus))}. ` : "") +
+    `Each subscription covers this ${n} server only. Cancel any time: your paid plan then runs to the end of the paid period.` +
     (usage ? ` Run <code>${esc(usage.name)}</code> to see how many calls you used.` : "") });
   if (up && cancel) faq.push({ q: `How do I subscribe or cancel?`, a:
-    `Ask the AI to run <code>${esc(up.name)}</code>: it returns a Stripe Checkout link. To cancel, run <code>${esc(cancel.name)}</code>. Pro continues to the end of the paid period.` });
+    `Ask the AI to run <code>${esc(up.name)}</code> and choose Pro or Pro+, billed monthly or yearly: it returns a Stripe Checkout link. ` +
+    (plus ? `If you already have Pro, ask to change it to Pro+. After you confirm, your existing subscription changes in place, keeps its billing interval and charges the price difference for the rest of the period immediately. ` : "") +
+    `To cancel, run <code>${esc(cancel.name)}</code>. Your paid plan continues to the end of the paid period.` });
   if (feature) faq.push({ q: `What if a ${n} tool that I need is missing?`, a:
     `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name, the type of AI client and the tool you tried, not with your account, and read every request when we plan new tools. You can send up to 5 requests per day.` });
   faq.push({ q: `Which AI clients can I use?`, a:
@@ -447,9 +452,10 @@ ${TOOL_GROUPS.map(([type, label]) => {
   const upTool = metaTool("_upgrade"), cancelTool = metaTool("_cancel_subscription");
   const fairUseNote = pt && isUnlimitedPro(pt) ? `<p class="hint">*Pro ${esc(PRO_FAIR_USE)} on this server. For more, write to <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>.</p>` : "";
   const billingNote = pt && upTool && cancelTool
-    ? `<p class="hint">Pro covers this ${esc(s.name)} server only. Subscribe with <code>${esc(upTool.name)}</code> (it returns a Stripe Checkout link). ` +
-      `Cancel any time with <code>${esc(cancelTool.name)}</code>: Pro continues to the end of the paid period, with no refund for the current period, ` +
-      `and running <code>${esc(upTool.name)}</code> before then undoes the cancel. Or write to <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>.</p>`
+    ? `<p class="hint">Each paid plan covers this ${esc(s.name)} server only. Ask your AI to run <code>${esc(upTool.name)}</code> and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). ` +
+      `If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. ` +
+      `Cancel any time with <code>${esc(cancelTool.name)}</code>: your paid plan continues to the end of the paid period, with no refund for the current period, ` +
+      `and asking to resume the same plan with <code>${esc(upTool.name)}</code> before then undoes the cancel. Or write to <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>.</p>`
     : "";
   const pricingSection = (s.pricing || []).length
     ? `<h2 class="sec">Pricing</h2>
@@ -744,6 +750,13 @@ const homeLd = [
     itemListElement: manifest.servers.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: `${s.name} MCP Server`, url: `${SITE}${pagePath(s)}` })) }
 ];
 indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
+const publicPricing = manifest.servers.find((s) => s.status === "live")?.pricing || [];
+indexHtml = replaceOnce(indexHtml, "<!-- public-pricing -->", `<details class="plans" id="pricing">
+<summary>Plans per server: ${publicPricing.map((p) => `<span>${esc(p.plan)} ${esc(p.monthly === "$0" ? "$0" : `${p.monthly}/mo`)}</span>`).join(" · ")}</summary>
+<table><thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Monthly calls</th></tr></thead>
+<tbody>${publicPricing.map((p) => `<tr><th scope="row">${esc(p.plan)}</th><td>${esc(priceText(p))}</td><td>${esc(limitText(p))}</td></tr>`).join("")}</tbody></table>
+<p>Each subscription covers one server, for the billing unit shown on its page. Choose a server below, connect your AI client, then ask to upgrade to Pro or Pro+. Paid plans renew automatically; cancel any time.</p>
+</details>`);
 if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
 indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', `<a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>`);
 // Custom work: one line under the tagline (the footer has the link and the support email).
@@ -798,13 +811,15 @@ writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${bas
 
 // llms.txt (llmstxt.org): the catalog in plain Markdown for AI answer engines, which are how most users
 // find a server. One line per server: the page, what it does, and the URL to add to an MCP client.
-const ft0 = freeTier(manifest.servers[0]), pt0 = proTier(manifest.servers[0]);
+const ft0 = freeTier(manifest.servers[0]), pt0 = proTier(manifest.servers[0]), plus0 = plusTier(manifest.servers[0]);
 writeFileSync(`${outDir}/llms.txt`,
   `# usefulapi.io\n\n` +
   `> ${manifest.servers.length} hosted MCP servers that connect AI assistants (Claude, ChatGPT, Codex, Cursor and other MCP clients) to business APIs. ` +
   `Each server is a remote MCP endpoint with an OAuth login: add its URL to the client as a custom connector, then sign in ` +
   `with your vendor account or API key (a few public-data servers ask only for an email code). ` +
-  (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)} per server, unlimited tool calls (${PRO_FAIR_USE}); each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
+  (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)}, ${limitText(pt0)}. ` +
+    (plus0 ? `Pro+: ${priceText(plus0)}, ${limitText(plus0)}. ` : "") +
+    `Paid plans are per server; each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
   groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
     .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
   (POSTS.length ? `\n\n## Blog\n\n` + POSTS.map((p) => `- [${p.title}](${base}${postPath(p)}): ${p.description}`).join("\n") : "") +

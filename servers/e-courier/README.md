@@ -56,11 +56,10 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** (per e-Courier database/user) | $0 | 50 tool calls / month |
-| **Pro** (per e-Courier database/user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+| **Pro** (per e-Courier database/user) | **$9/mo** or **$90/yr** (2 months free) | 10,000 tool calls / month |
+| **Pro+** (per e-Courier database/user) | **$39/mo** or **$390/yr** (2 months free) | 100,000 tool calls / month |
 
-\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
-
-Pro covers this server only. Subscribe with `ecourier_upgrade` (it returns a Stripe Checkout link). Cancel any time with `ecourier_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `ecourier_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+Each paid plan covers this server only. Ask your AI to run `ecourier_upgrade` and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. Cancel any time with `ecourier_cancel_subscription`: your paid plan continues to the end of the paid period, with no refund for the current period, and asking to resume the same plan with `ecourier_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 

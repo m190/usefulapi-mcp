@@ -50,11 +50,10 @@ On first connect you provide a **Cobalt Intelligence API key** (the **x-api-key*
 | Plan | Price | Limit |
 |------|-------|-------|
 | **Free** | $0 | 50 tool calls / month |
-| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | Unlimited* |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | 10,000 tool calls / month |
+| **Pro+** (per user) | **$39/mo** or **$390/yr** (2 months free) | 100,000 tool calls / month |
 
-\*Pro has a fair use limit of 10,000 tool calls a month on this server. For more, write to support@usefulapi.io.
-
-Pro covers this server only. Subscribe with `cobaltintelligence_upgrade` (it returns a Stripe Checkout link). Cancel any time with `cobaltintelligence_cancel_subscription`: Pro continues to the end of the paid period, with no refund for the current period, and running `cobaltintelligence_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+Each paid plan covers this server only. Ask your AI to run `cobaltintelligence_upgrade` and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. Cancel any time with `cobaltintelligence_cancel_subscription`: your paid plan continues to the end of the paid period, with no refund for the current period, and asking to resume the same plan with `cobaltintelligence_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
 
 ## License
 
