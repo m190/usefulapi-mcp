@@ -750,13 +750,6 @@ const homeLd = [
     itemListElement: manifest.servers.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: `${s.name} MCP Server`, url: `${SITE}${pagePath(s)}` })) }
 ];
 indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
-const publicPricing = manifest.servers.find((s) => s.status === "live")?.pricing || [];
-indexHtml = replaceOnce(indexHtml, "<!-- public-pricing -->", `<details class="plans" id="pricing">
-<summary>Plans per server: ${publicPricing.map((p) => `<span>${esc(p.plan)} ${esc(p.monthly === "$0" ? "$0" : `${p.monthly}/mo`)}</span>`).join(" · ")}</summary>
-<table><thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Monthly calls</th></tr></thead>
-<tbody>${publicPricing.map((p) => `<tr><th scope="row">${esc(p.plan)}</th><td>${esc(priceText(p))}</td><td>${esc(limitText(p))}</td></tr>`).join("")}</tbody></table>
-<p>Each subscription covers one server, for the billing unit shown on its page. Choose a server below, connect your AI client, then ask to upgrade to Pro or Pro+. Paid plans renew automatically; cancel any time.</p>
-</details>`);
 if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
 indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', `<a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>`);
 // Custom work: one line under the tagline (the footer has the link and the support email).
