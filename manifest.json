@@ -150749,6 +150749,281 @@
         "Find recent deals near the property with RER number 1234567890000000.",
         "How many land deals were registered in Makkah last month, and how does that compare with the month before?"
       ]
+    },
+    {
+      "slug": "billogram",
+      "name": "Billogram",
+      "category": "billing",
+      "description": "Read invoices, customers, items and balances; create invoices, customers and items in Billogram.",
+      "endpoint": "https://billogram.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API User ID"
+          },
+          {
+            "label": "API Password"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "In Billogram open **Company Settings → API → API Users** and create an API user for this integration (Billogram recommends one API user per integration). Your credentials are used only to call the Billogram API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "billogram_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices (Billogram calls them billograms): invoice number, customer, dates, state, totals and remaining sum. Optional filter and sort. Use an id from the reply with billogram_get_invoice. GET /billogram."
+        },
+        {
+          "name": "billogram_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Fetch one invoice with its customer, items, totals, state, dates and registered payments. GET /billogram/{id}."
+        },
+        {
+          "name": "billogram_list_invoice_events",
+          "type": "read",
+          "title": "List invoice events",
+          "description": "List invoice events (the history of changes, such as sent, paid or reminded) as Billogram returns them. Optional filter and sort. GET /billogram_event."
+        },
+        {
+          "name": "billogram_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers with number, name, organisation and VAT number, contact, addresses and payment settings. Optional filter and sort. GET /customer."
+        },
+        {
+          "name": "billogram_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Fetch one customer by customer number: contact, addresses, e-invoice details and payment settings. GET /customer/{customer_no}."
+        },
+        {
+          "name": "billogram_get_customer_balance",
+          "type": "read",
+          "title": "Get customer balance",
+          "description": "Fetch the balance of one customer by customer number (the amount they owe). GET /customer/{customer_no}/balance."
+        },
+        {
+          "name": "billogram_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List saved items (products and services) with item number, title, price, VAT, unit and bookkeeping accounts. Optional filter and sort. GET /item."
+        },
+        {
+          "name": "billogram_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "Fetch one saved item by item number. GET /item/{item_no}."
+        },
+        {
+          "name": "billogram_get_settings",
+          "type": "read",
+          "title": "Get settings",
+          "description": "Fetch the account settings: company details, default due days, currency and invoice defaults. GET /settings."
+        },
+        {
+          "name": "billogram_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Create a customer. Only the fields you pass are set. Creates a new customer record each time (it is not idempotent). POST /customer."
+        },
+        {
+          "name": "billogram_create_item",
+          "type": "write",
+          "title": "Create item",
+          "description": "Create a saved item (product or service) for later invoices. Creates a new item each time (it is not idempotent). POST /item."
+        },
+        {
+          "name": "billogram_create_invoice",
+          "type": "write",
+          "title": "Create invoice",
+          "description": "Create an invoice (a Billogram billogram) for an existing customer. The invoice is created only: this server does not send it, and sending is a separate Billogram command that is not exposed. Creates a new invoice each time (it is not idempotent). POST /billogram."
+        },
+        {
+          "name": "billogram_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "billogram_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Billogram tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "billogram_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Billogram (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "billogram_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Billogram Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run billogram_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are still unpaid, and what is the total remaining?",
+        "Show customer 1042 with its current balance.",
+        "Create a draft invoice for customer 1042 with 3 hours of consulting at 1200 SEK each.",
+        "List the invoice events from the last 7 days."
+      ]
+    },
+    {
+      "slug": "play-systems-api",
+      "name": "Play Systems",
+      "category": "cloud",
+      "description": "Read e-invoices and payments, hosting packages, domains, DNS and web usage in Play Systems.",
+      "endpoint": "https://play-systems-api.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Play Systems API key"
+          },
+          {
+            "label": "Issuer VAT number (9 digits)"
+          }
+        ],
+        "hint": "The key is issued to you by Play Systems and shown once at creation. Ask Play Systems for a new key if you lost it. Your key is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "playsystemsapi_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List e-invoices (Greek AADE/myDATA) for an issuer. Give a 15-digit MARK for one invoice, or an issuer VAT number with an optional invoice type and date range. Read-only: GET /invoices."
+        },
+        {
+          "name": "playsystemsapi_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one e-invoice with its lines, totals and status. Read-only: GET /invoices/{invoiceId}."
+        },
+        {
+          "name": "playsystemsapi_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments recorded against one e-invoice. Read-only: GET /invoices/{invoiceId}/payments."
+        },
+        {
+          "name": "playsystemsapi_get_package",
+          "type": "read",
+          "title": "Get hosting package",
+          "description": "Get one hosting package on Play Cloud Services: plan, status and limits. Read-only: GET /cloud/package/{packageId}."
+        },
+        {
+          "name": "playsystemsapi_get_web_usage",
+          "type": "read",
+          "title": "Get web usage",
+          "description": "Get web usage statistics for a hosting package: bandwidth, disk, databases and mail counts. Read-only: GET /cloud/package/{packageId}/web/usage."
+        },
+        {
+          "name": "playsystemsapi_get_domain",
+          "type": "read",
+          "title": "Get domain",
+          "description": "Get one domain on a hosting package: name, expiry and status. Read-only: GET /cloud/package/{packageId}/domain/{domainId}."
+        },
+        {
+          "name": "playsystemsapi_get_domain_dns",
+          "type": "read",
+          "title": "Get domain DNS records",
+          "description": "Get the DNS records of one domain on a hosting package, with suggested nameservers. Read-only: GET /cloud/package/{packageId}/domain/{domainId}/dns."
+        },
+        {
+          "name": "playsystemsapi_search_domains",
+          "type": "read",
+          "title": "Search domain availability",
+          "description": "Check whether a domain name or prefix is available, with its price and expiry. Read-only: GET /cloud/domain-search/{prefix_or_name}."
+        },
+        {
+          "name": "playsystemsapi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "playsystemsapi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Play Systems tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "playsystemsapi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Play Systems (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "playsystemsapi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Play Systems Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run playsystemsapi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the e-invoices we issued this month for our VAT number.",
+        "Show the payments recorded against invoice 12345.",
+        "What is the web usage of our hosting package this month?",
+        "Are the DNS records for our domain set up correctly?"
+      ]
     }
   ]
 }
