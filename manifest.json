@@ -149135,6 +149135,661 @@
         "Show me the donations to my campaign from the last 24 hours.",
         "Which fundraisers are leading my campaign for the year to date?"
       ]
+    },
+    {
+      "slug": "vatstack",
+      "name": "Vatstack",
+      "category": "tax",
+      "description": "Validate VAT numbers, look up VAT rates and review past checks and plan hits in Vatstack.",
+      "endpoint": "https://vatstack.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Vatstack secret key"
+          }
+        ],
+        "hint": "Find it in your Vatstack dashboard, under your API keys. Use the **secret key**, not the public key. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "vatstack_validate_vat",
+          "type": "write",
+          "title": "Validate a VAT number",
+          "description": "Check a VAT number against the official government register. Returns whether the company is active and VAT-registered, with its name and address when the register gives them. Each check creates a validation record and uses one hit of the plan. Vatstack: POST /v1/validations."
+        },
+        {
+          "name": "vatstack_list_validations",
+          "type": "read",
+          "title": "List VAT validations",
+          "description": "List past VAT number validations, newest first. Filter by batch, number, type or request date range. Vatstack: GET /v1/validations."
+        },
+        {
+          "name": "vatstack_get_validation",
+          "type": "read",
+          "title": "Get a VAT validation",
+          "description": "Get one VAT validation by its id, with the register result and any error code. Vatstack: GET /v1/validations/{id}."
+        },
+        {
+          "name": "vatstack_get_rates",
+          "type": "read",
+          "title": "List VAT rates",
+          "description": "List standard and reduced VAT rates by country, including rates for digital products. Filter by a two-letter country code or EU member state. Vatstack: GET /v1/rates."
+        },
+        {
+          "name": "vatstack_get_rate_by_ip",
+          "type": "read",
+          "title": "Get the VAT rate for an IP address",
+          "description": "Get the VAT rate that applies to an IPv4 or IPv6 address, from its geolocated country. Leave the address empty to use the requesting address. Vatstack: GET /v1/rates/geolocate."
+        },
+        {
+          "name": "vatstack_get_hits",
+          "type": "read",
+          "title": "Get plan hit usage",
+          "description": "Get the hits used this month and the plan capacity, for supplies and validations. Check it before a batch of validations. Vatstack: GET /v1/hits."
+        },
+        {
+          "name": "vatstack_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "vatstack_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Vatstack tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "vatstack_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Vatstack (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "vatstack_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Vatstack Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run vatstack_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Is the VAT number DE123456789 valid, and which company does it belong to?",
+        "Which VAT rate applies to ebooks in France right now?",
+        "How many validations have we used this month, and how many does our plan include?",
+        "Show the VAT checks we ran for FR12345678901 since the start of the year."
+      ]
+    },
+    {
+      "slug": "eurosender",
+      "name": "Eurosender",
+      "category": "shipping",
+      "description": "Quote, book and cancel parcel shipments, track them and get their labels in Eurosender.",
+      "endpoint": "https://eurosender.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Eurosender API key"
+          },
+          {
+            "label": "Environment"
+          }
+        ],
+        "hint": "You need an active Eurosender **Business Account** with API access that Eurosender approved. A **production** key books and charges real shipments on your account. A sandbox key works only in the sandbox. UsefulAPI does not request API access for you. Your key is sent only to Eurosender to make calls for you, and it is never shared with other customers."
+      },
+      "tools": [
+        {
+          "name": "eurosender_list_countries",
+          "type": "read",
+          "title": "List countries",
+          "description": "List the countries Eurosender ships to and from, with flags for whether a city or region is required in an address. Call this first to learn the country codes. Eurosender API: GET /v1/countries."
+        },
+        {
+          "name": "eurosender_list_cities",
+          "type": "read",
+          "title": "List cities",
+          "description": "List the cities supported for pickup and delivery in one country. Use a city id in an address when the city name is not exact. Eurosender API: GET /v1/countries/{countryCode}/cities."
+        },
+        {
+          "name": "eurosender_list_regions",
+          "type": "read",
+          "title": "List regions",
+          "description": "List the regions of one country. Use a region id or code in an address where the country needs one. Eurosender API: GET /v1/countries/{countryCode}/regions."
+        },
+        {
+          "name": "eurosender_get_quote",
+          "type": "read",
+          "title": "Get a shipping quote",
+          "description": "Get the available service types, prices and add-ons for a shipment. Creates no order and books nothing. Prices are in EUR only. Use the returned serviceType in eurosender_validate_order and eurosender_create_order. Eurosender API: POST /v1/quotes."
+        },
+        {
+          "name": "eurosender_validate_order",
+          "type": "read",
+          "title": "Validate an order (no booking)",
+          "description": "Check order data against Eurosender's rules without booking anything. Run it before eurosender_create_order. Uses the same fields as eurosender_create_order. Currency is EUR only. Eurosender API: POST /v1/orders/validate_creation."
+        },
+        {
+          "name": "eurosender_create_order",
+          "type": "write",
+          "title": "Create an order (books and charges a shipment)",
+          "description": "BOOKS A REAL SHIPMENT and charges it to the customer's Eurosender account (EUR only). Call eurosender_get_quote and eurosender_validate_order first. Set confirm_booking to true only after the user approves this exact shipment and price. Eurosender API: POST /v1/orders."
+        },
+        {
+          "name": "eurosender_cancel_order",
+          "type": "write",
+          "title": "Cancel an order",
+          "description": "CANCELS an existing order. Eurosender decides whether the cancel is allowed and what it costs. Check the order status with eurosender_get_tracking first. Eurosender API: DELETE /v1/orders/{orderCode}."
+        },
+        {
+          "name": "eurosender_get_tracking",
+          "type": "read",
+          "title": "Get tracking",
+          "description": "Get the live tracking status and checkpoints of each parcel in an order. Eurosender API: GET /v1/orders/{orderCode}/tracking."
+        },
+        {
+          "name": "eurosender_get_order_labels",
+          "type": "read",
+          "title": "Get shipping labels",
+          "description": "Download the shipping label PDF of an order, returned as base64 (max 524288 bytes). Larger labels are not returned. Eurosender API: GET /v1/orders/{orderCode}/labels."
+        },
+        {
+          "name": "eurosender_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "eurosender_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Eurosender tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "eurosender_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Eurosender (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "eurosender_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Eurosender Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run eurosender_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What does it cost to send a 5 kg parcel from Berlin to Paris?",
+        "Which countries can Eurosender ship to?",
+        "Where is my latest Eurosender order right now?",
+        "Get the shipping label for order 12345."
+      ]
+    },
+    {
+      "slug": "cledara",
+      "name": "Cledara",
+      "category": "Finance",
+      "description": "List applications, transactions and invoice download links in Cledara.",
+      "endpoint": "https://cledara.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Cledara API key"
+          }
+        ],
+        "hint": "Create it in Cledara under **Profile → API Keys**. A key has the same access as the user who created it. Your key is used only to call the Cledara API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "cledara_list_applications",
+          "type": "read",
+          "title": "List applications",
+          "description": "List the applications in the Cledara workspace of this API key, with status, budget, owner, teams, balance and the next renewal or payment date. Good first call to see which SaaS applications are tracked. Cledara API: GET /v0/applications."
+        },
+        {
+          "name": "cledara_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List transactions in the Cledara workspace: amount (negative for debits), currency, account type, application, invoice flag and accounting fields. Filter by time window (`from` is after, `to` is before, RFC 3339), by application ids, and page with `offset`. The result has `hasMore`, `nextOffset` and `totalCount`; pass `nextOffset` as `offset` for the next page. Cledara API: GET /v0/transactions."
+        },
+        {
+          "name": "cledara_get_transaction_invoice_url",
+          "type": "read",
+          "title": "Get transaction invoice URL",
+          "description": "Get a download URL for a transaction's invoice. The URL is valid for 5 minutes. Check `hasInvoice` in cledara_list_transactions first; a transaction without an invoice or an unknown id returns an error. Cledara API: GET /v0/transactions/{transactionId}/invoice-url."
+        },
+        {
+          "name": "cledara_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cledara_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Cledara tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cledara_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Cledara (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cledara_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Cledara Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cledara_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which applications in our Cledara workspace are active, and when do they renew?",
+        "Show our Cledara transactions for October 2026 and total the debits.",
+        "Get the invoice download link for this Cledara transaction."
+      ]
+    },
+    {
+      "slug": "talexio",
+      "name": "Talexio",
+      "category": "hr",
+      "description": "Read employees, approved pay lines, approved time off and shift templates in Talexio.",
+      "endpoint": "https://talexio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Talexio Third-Party Token"
+          }
+        ],
+        "hint": "Find it in Talexio → **Third-Party Token** section (the API must be enabled for your company). The token follows your Talexio permissions: the tools only return data you can see. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "talexio_list_organisation_units",
+          "type": "read",
+          "title": "List organisation units",
+          "description": "List the active organisation units (departments, sites, companies) of the client. Their ids are the organisationUnitId filter for the other tools. Talexio API: GET /payroll/organisation-units."
+        },
+        {
+          "name": "talexio_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees with their payroll fields and the positions that overlap the period. periodFrom and periodTo are yyyy-mm-dd; payrollPeriod is required. Only positions with that pay frequency are returned. Talexio API: GET /payroll/employees."
+        },
+        {
+          "name": "talexio_list_payroll_approvals",
+          "type": "read",
+          "title": "List approved timesheet pay lines",
+          "description": "List approved timesheet pay lines per employee, computed the same way as Talexio payslips: hours at day-type rates, overtime, allowances, and penalty rows (negative). Filter by approval date. periodFrom and periodTo are yyyy-mm-dd, at most 92 days apart. Times are in Europe/Malta. Results are grouped per employee; pageSize counts employees. Talexio API: GET /payroll/approvals."
+        },
+        {
+          "name": "talexio_list_time_off",
+          "type": "read",
+          "title": "List approved time off",
+          "description": "List approved leave records in a date range, so a planner knows who is away. Only approved leave appears. Cancelled leave is left out unless includeCancelled is true. dateFrom and dateTo are yyyy-mm-dd; the range is at most 366 days. Talexio API: GET /ta/time-off-data."
+        },
+        {
+          "name": "talexio_list_shift_templates",
+          "type": "read",
+          "title": "List shift templates",
+          "description": "List the shift templates the token user can see, ordered by name. Their ids are used when a roster is planned. The list is limited to the units the user works in. Talexio API: GET /ta/shift-templates."
+        },
+        {
+          "name": "talexio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "talexio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Talexio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "talexio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Talexio (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "talexio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Talexio Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run talexio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which employees are on the monthly payroll this period?",
+        "List the approved timesheet pay lines for last week in the London unit.",
+        "Who is on approved leave between 2026-12-01 and 2026-12-10?",
+        "Show me the shift templates our planners can use."
+      ]
+    },
+    {
+      "slug": "zomentum",
+      "name": "Zomentum",
+      "category": "crm",
+      "description": "Read opportunities, contacts, documents and tasks, and add tasks or comments in Zomentum.",
+      "endpoint": "https://zomentum.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Zomentum API user refresh token"
+          }
+        ],
+        "hint": "In Grow, open **Settings → Users**, open the API user and copy its **Refresh Token**. The API User role needs the Growth plan or the API Access add-on. Reset Token in Grow invalidates the old token. The token is used only to call the API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zomentum_list_opportunities",
+          "type": "read",
+          "title": "List opportunities",
+          "description": "List sales opportunities (deals) with name, stage, value, close date, owner and client company. Optionally limit to one pipeline. Zomentum API: GET /v2/opportunities/."
+        },
+        {
+          "name": "zomentum_get_opportunity",
+          "type": "read",
+          "title": "Get opportunity",
+          "description": "Fetch one opportunity with its stage, value, close date, linked contacts, documents and comments. Zomentum API: GET /v2/opportunities/{id}/."
+        },
+        {
+          "name": "zomentum_count_opportunities",
+          "type": "read",
+          "title": "Count opportunities by stage",
+          "description": "Count opportunities per pipeline stage, for a pipeline dashboard. Zomentum API: GET /v2/opportunities/count/."
+        },
+        {
+          "name": "zomentum_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the sales pipelines and their stages. Use the ids with the opportunity tools. Zomentum API: GET /v2/pipelines/."
+        },
+        {
+          "name": "zomentum_get_pipeline",
+          "type": "read",
+          "title": "Get pipeline",
+          "description": "Fetch one pipeline with its stages. Zomentum API: GET /v2/pipelines/{id}/."
+        },
+        {
+          "name": "zomentum_search",
+          "type": "read",
+          "title": "Search workspace",
+          "description": "Search across opportunities, client companies, documents, catalog items, users and suppliers by text. Results show only the types the API user may read. Zomentum API: GET /v2/search/."
+        },
+        {
+          "name": "zomentum_list_client_companies",
+          "type": "read",
+          "title": "List client companies",
+          "description": "List client companies (customers and prospects) with market, source, owner and opportunity count. Zomentum API: GET /v2/client/companies/."
+        },
+        {
+          "name": "zomentum_get_client_company",
+          "type": "read",
+          "title": "Get client company",
+          "description": "Fetch one client company with its contacts, opportunities and comments. Zomentum API: GET /v2/client/companies/{id}/."
+        },
+        {
+          "name": "zomentum_list_client_users",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List client contacts (people at client companies) with email, phone, job title and company. Zomentum API: GET /v2/client/users/."
+        },
+        {
+          "name": "zomentum_get_client_user",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Fetch one client contact. Zomentum API: GET /v2/client/users/{id}/."
+        },
+        {
+          "name": "zomentum_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List documents (quotes, proposals, orders and similar) with status, number, recipients and linked opportunity. Zomentum API: GET /v2/documents/."
+        },
+        {
+          "name": "zomentum_get_document",
+          "type": "read",
+          "title": "Get document",
+          "description": "Fetch one document with its status, revisions, recipients and signers. Zomentum API: GET /v2/documents/{id}/."
+        },
+        {
+          "name": "zomentum_get_document_download_url",
+          "type": "read",
+          "title": "Get document PDF link",
+          "description": "Return a signed, short-lived URL to download one document as PDF. Share it only with people who may read the document. Zomentum API: GET /v2/documents/download_url/{id}/."
+        },
+        {
+          "name": "zomentum_list_items",
+          "type": "read",
+          "title": "List catalog items",
+          "description": "List catalog items (products and services) with pricing, category, manufacturer and SKU. Zomentum API: GET /v2/items/."
+        },
+        {
+          "name": "zomentum_get_item",
+          "type": "read",
+          "title": "Get catalog item",
+          "description": "Fetch one catalog item with its pricing, optionally in one currency. Zomentum API: GET /v2/items/{id}/."
+        },
+        {
+          "name": "zomentum_list_activities",
+          "type": "read",
+          "title": "List sales activities",
+          "description": "List all sales activities (tasks, meetings, calls and emails) in the workspace. Zomentum API: GET /v2/activities/."
+        },
+        {
+          "name": "zomentum_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List sales tasks with title, due date, priority, completion state and linked record. Zomentum API: GET /v2/activities/sales/task/."
+        },
+        {
+          "name": "zomentum_list_meetings",
+          "type": "read",
+          "title": "List meetings",
+          "description": "List sales meetings with title, start and end time, attendees and linked record. Zomentum API: GET /v2/activities/sales/meeting/."
+        },
+        {
+          "name": "zomentum_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers with name, email and drop-ship or electronic PO flags. Zomentum API: GET /v2/supplier/."
+        },
+        {
+          "name": "zomentum_list_users",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the team members of the company with email, job title, roles and whether they are disabled. Zomentum API: GET /v2/users/."
+        },
+        {
+          "name": "zomentum_get_user",
+          "type": "read",
+          "title": "Get team member",
+          "description": "Fetch one team member with roles and settings. Zomentum API: GET /v2/users/{id}/."
+        },
+        {
+          "name": "zomentum_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags with the entity type each tag applies to and its colour. Zomentum API: GET /v2/tags/."
+        },
+        {
+          "name": "zomentum_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom field definitions for one entity type, to read custom field ids and dropdown values. Zomentum API: GET /v2/custom/fields/."
+        },
+        {
+          "name": "zomentum_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "Create an open sales task (not completed), with a due date and an optional link to an opportunity, client company or contact. The author must be a team member id. Zomentum API: POST /v2/activities/sales/task/."
+        },
+        {
+          "name": "zomentum_add_comment",
+          "type": "write",
+          "title": "Add comment",
+          "description": "Add a comment to an opportunity, client company, document or other record. The author must be a team member id. Zomentum API: POST /v2/comments/."
+        },
+        {
+          "name": "zomentum_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zomentum_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Zomentum tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zomentum_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Zomentum (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zomentum_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Zomentum Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zomentum_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which opportunities are closing this month, and what is their total value?",
+        "Show the open tasks due this week and who they are assigned to.",
+        "Find the client company Acme and list its contacts and open documents.",
+        "Add a comment to the Acme opportunity saying the proposal was sent today."
+      ]
     }
   ]
 }

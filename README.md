@@ -866,6 +866,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Delfi PMS](servers/delfi-pms/) | property-management | 21 | API token | [servers/delfi-pms/](servers/delfi-pms/) |
 | [Action1](servers/action1/) | security | 20 | API token | [servers/action1/](servers/action1/) |
 | [Tiltify](servers/tiltify/) | fundraising | 9 | OAuth | [servers/tiltify/](servers/tiltify/) |
+| [Vatstack](servers/vatstack/) | tax | 10 | API token | [servers/vatstack/](servers/vatstack/) |
+| [Eurosender](servers/eurosender/) | shipping | 13 | API token | [servers/eurosender/](servers/eurosender/) |
+| [Cledara](servers/cledara/) | Finance | 7 | API token | [servers/cledara/](servers/cledara/) |
+| [Talexio](servers/talexio/) | hr | 9 | API token | [servers/talexio/](servers/talexio/) |
+| [Zomentum](servers/zomentum/) | crm | 29 | API token | [servers/zomentum/](servers/zomentum/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
