@@ -150646,6 +150646,109 @@
         "List the bank lines that still need reconciling for our main account.",
         "What is the current balance sheet?"
       ]
+    },
+    {
+      "slug": "aqarsas",
+      "name": "Aqarsas",
+      "category": "real-estate-transactions",
+      "description": "Search Saudi deals, get market stats, rank top sales and look up property histories in Aqarsas.",
+      "endpoint": "https://aqarsas.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Aqarsas API key"
+          }
+        ],
+        "hint": "Aqarsas issues API keys through its support team (API Integration plan). Your key is used only to call the Aqarsas API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "aqarsas_search_transactions",
+          "type": "read",
+          "title": "Search real estate transactions",
+          "description": "Search registered Saudi real estate transactions by date, region, city, district, plan, unit, category, property type, price and area. The API returns up to 5,000 matching rows (a random 5,000 when more match); this tool returns the first `limit` of them. Each row has the date, category, property kind, price per m², total price, area, location, plan and unit, and a non-standard flag such as mortgage or gift. Aqarsas API: POST /transactions/."
+        },
+        {
+          "name": "aqarsas_get_market_stats",
+          "type": "read",
+          "title": "Get market statistics",
+          "description": "Aggregate Saudi real estate deal statistics: the number of deals, the total deal value, or the total area, broken down by category and property type, for a date range and a region, city or district. If hai is given, city is required. Aqarsas API: POST /stats/."
+        },
+        {
+          "name": "aqarsas_get_top_transactions",
+          "type": "read",
+          "title": "Get top transactions",
+          "description": "Rank Saudi real estate transactions by total deal price, price per m², or area, highest or lowest first, for a date range and a region, city or district. Date sorting is not offered here. Aqarsas API: POST /toptransactions/."
+        },
+        {
+          "name": "aqarsas_get_property_details",
+          "type": "read",
+          "title": "Get property details",
+          "description": "Look up a land plot or property and return up to 5 matching records, each with its full transaction history (up to 100 deals per record). Use rer_realestate_number when known; otherwise give state, city, m566 and unit, and area to rank close matches. Spatial fields (coordinates, elevation, zoning) appear only for accounts with spatial access. Aqarsas API: POST /propertydetails/."
+        },
+        {
+          "name": "aqarsas_find_nearby_transactions",
+          "type": "read",
+          "title": "Find nearby transactions",
+          "description": "Find recent deals on properties near a reference property, for comparable-sales analysis. The reference is identified by rer_realestate_number, or by state, city, m566 and unit (exactly one match is required). RER deal ids are masked by the API. Aqarsas API: POST /nearbytransactions/."
+        },
+        {
+          "name": "aqarsas_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "aqarsas_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Aqarsas tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "aqarsas_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Aqarsas (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "aqarsas_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Aqarsas Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run aqarsas_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What was the total value of residential deals in Riyadh's Al-Narjis district in May 2026?",
+        "Show the 10 most expensive commercial transactions in Jeddah this year.",
+        "Find recent deals near the property with RER number 1234567890000000.",
+        "How many land deals were registered in Makkah last month, and how does that compare with the month before?"
+      ]
     }
   ]
 }

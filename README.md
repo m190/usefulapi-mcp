@@ -876,6 +876,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Axcient](servers/axcient/) | monitoring | 22 | API token | [servers/axcient/](servers/axcient/) |
 | [HOA.to](servers/hoa-to/) | property-management | 28 | API token | [servers/hoa-to/](servers/hoa-to/) |
 | [Zero Plus One](servers/zero-plus-one/) | accounting | 28 | API token | [servers/zero-plus-one/](servers/zero-plus-one/) |
+| [Aqarsas](servers/aqarsas/) | real-estate-transactions | 9 | API token | [servers/aqarsas/](servers/aqarsas/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
