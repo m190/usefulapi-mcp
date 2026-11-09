@@ -153964,6 +153964,719 @@
         "Void boleta B001-45 because of a system error.",
         "Check whether the voiding of factura F001-120 was accepted by SUNAT."
       ]
+    },
+    {
+      "slug": "pagsafe",
+      "name": "PagSafe",
+      "category": "payments",
+      "description": "Create Pix charges, check and refund payments, and manage Pix subscriptions in PagSafe.",
+      "endpoint": "https://pagsafe.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "PagSafe API key (x-api-key)"
+          },
+          {
+            "label": "PagSafe API secret (x-api-secret)"
+          }
+        ],
+        "hint": "Find them in PagSafe → **Integrações → API → Nova credencial**. Your key pair is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "pagsafe_create_pix_charge",
+          "type": "write",
+          "title": "Create a Pix charge",
+          "description": "Create a one-time Pix charge. Returns the id, status PENDING, and pix.payload (the copy and paste code to show the buyer). The charge is paid only when the PagSafe webhook reports AUTHORIZED: do not treat the reply as paid. A retry with the same external_id, amount and customer.document returns the same pending Pix within 6 hours (reused: true). Writes a real charge. Uses POST /v2/transactions."
+        },
+        {
+          "name": "pagsafe_get_transaction",
+          "type": "read",
+          "title": "Get a transaction",
+          "description": "Get the current status of a transaction created through this API: PENDING, AUTHORIZED (paid), FAILED, REFUNDED, IN_DISPUTE or CHARGEBACK. Use it to check a payment or to recover a lost webhook; prefer the webhook for live updates. Uses GET /v2/transactions/{transaction_id}."
+        },
+        {
+          "name": "pagsafe_refund_transaction",
+          "type": "write",
+          "title": "Refund a transaction",
+          "description": "Refund the full amount of a transaction back to the buyer. The transaction must be AUTHORIZED, created through this API, and have enough balance in every split account. A refund cannot be undone. Uses POST /v2/transactions/{transaction_id}/refund."
+        },
+        {
+          "name": "pagsafe_create_pix_subscription",
+          "type": "write",
+          "title": "Create a Pix Automático subscription",
+          "description": "Create a recurring Pix Automático subscription. Returns status PENDING_AUTHORIZATION and pix.qr_code or pix.payment_link: show one to the buyer, who must authorize it once. After authorization the status becomes ACTIVE and later cycles are charged on their own. For Pix, the cycles are SEMANAL, MENSAL and ANUAL only. If the call fails with HTTP 500, check PagSafe for an existing subscription before you retry. Writes a real subscription. Uses POST /v2/subscriptions."
+        },
+        {
+          "name": "pagsafe_get_subscription",
+          "type": "read",
+          "title": "Get a subscription",
+          "description": "Get a subscription's status (PENDING_AUTHORIZATION, ACTIVE, LATE, PAUSED or CANCELED), amount, cycle, and the dates of the last and next charge. Uses GET /v2/subscriptions/{subscription_id}."
+        },
+        {
+          "name": "pagsafe_cancel_pix_subscription",
+          "type": "write",
+          "title": "Cancel a PagSafe subscription",
+          "description": "Cancel a PagSafe customer subscription so no further cycles are charged. The buyer keeps access until the cycle already paid ends. This cancels a subscription of YOUR customer, not a UsefulAPI plan. Uses POST /v2/subscriptions/{subscription_id}/cancel."
+        },
+        {
+          "name": "pagsafe_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pagsafe_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the PagSafe tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pagsafe_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for PagSafe (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pagsafe_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's PagSafe Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run pagsafe_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Create a Pix charge for R$ 149.90 for order pedido-1042 and give me the copy and paste code.",
+        "Has transaction tr_8f2c1a been paid yet?",
+        "Refund transaction tr_8f2c1a.",
+        "Create a monthly Pix Automático subscription of R$ 97 for this customer."
+      ]
+    },
+    {
+      "slug": "bill-pt",
+      "name": "Bill.pt",
+      "category": "billing",
+      "description": "List invoices, contacts, items and stock, and create contacts in Bill.pt.",
+      "endpoint": "https://bill-pt.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bill.pt API token"
+          }
+        ],
+        "hint": "In Bill.pt, open **Gestão de utilizadores**, give your user API permission and generate a key for that user. The API is included in Bill.pt's Basic plan and above. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "billpt_list_document_types",
+          "type": "read",
+          "title": "List document types",
+          "description": "List document types (invoice FT, simplified invoice FS, credit note NC and others) with their ids. Bill.pt API: GET /api/1.0/tipos-documento. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List payment methods with their ids. Bill.pt API: GET /api/1.0/metodos-pagamento. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List tax (VAT) rates configured in the account, with their ids. Bill.pt API: GET /api/1.0/impostos. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_units",
+          "type": "read",
+          "title": "List units of measure",
+          "description": "List units of measure with their ids. Bill.pt API: GET /api/1.0/unidades-medida. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_series",
+          "type": "read",
+          "title": "List numbering series",
+          "description": "List document numbering series with their ids. Bill.pt API: GET /api/1.0/series. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_stores",
+          "type": "read",
+          "title": "List stores",
+          "description": "List stores and warehouses with their ids. Bill.pt API: GET /api/1.0/lojas. Use the ids in other tools."
+        },
+        {
+          "name": "billpt_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customers and suppliers (contacts) with their tax numbers, addresses and payment terms. Bill.pt API: GET /api/1.0/contatos."
+        },
+        {
+          "name": "billpt_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "Create a customer or supplier (contact) in the Bill.pt account. Bill.pt API: POST /api/1.0/contatos. The code must be unique in the account. The record is saved at once."
+        },
+        {
+          "name": "billpt_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List products and services (items) with their codes, prices, tax rate and stock flag. Bill.pt API: GET /api/1.0/items."
+        },
+        {
+          "name": "billpt_list_stock",
+          "type": "read",
+          "title": "List stock",
+          "description": "Read stock levels per item and store at a date (default now). Bill.pt API: GET /api/1.0/stock."
+        },
+        {
+          "name": "billpt_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List invoices, receipts and other sales documents, filtered by type, contact or number. Bill.pt API: GET /api/1.0/documentos. Read-only: this tool never creates or changes a document."
+        },
+        {
+          "name": "billpt_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "billpt_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bill.pt tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "billpt_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Bill.pt (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "billpt_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bill.pt Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run billpt_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the last 10 invoices for contact 42, newest first.",
+        "Which VAT rates and document types does my Bill.pt account use?",
+        "Create a new customer with the NIF 500000000 and the email address billing@example.com.",
+        "How much stock do we have of items 12 and 15 in store 1 today?"
+      ]
+    },
+    {
+      "slug": "fiscalo",
+      "name": "Fiscalo",
+      "category": "billing",
+      "description": "Read and create customers, items and draft invoices in Fiscalo.",
+      "endpoint": "https://fiscalo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Fiscalo API key"
+          }
+        ],
+        "hint": "Create or copy a key in the Fiscalo **Developer Center** (API keys). The key sets the company and the environment. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fiscalo_connection_test",
+          "type": "read",
+          "title": "Test the connection",
+          "description": "Check that the API key works and show its environment (sandbox or production). Use this first. Fiscalo API: GET /connection-test."
+        },
+        {
+          "name": "fiscalo_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers of the company behind the API key. Filter by name, tax number or your own external_id. Fiscalo API: GET /customers."
+        },
+        {
+          "name": "fiscalo_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by its Fiscalo id. Fiscalo API: GET /customers/{id}."
+        },
+        {
+          "name": "fiscalo_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer (individual or company). Writes need production access on the company. Fiscalo API: POST /customers."
+        },
+        {
+          "name": "fiscalo_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List products and services in the catalog. Fiscalo API: GET /items."
+        },
+        {
+          "name": "fiscalo_get_item",
+          "type": "read",
+          "title": "Get an item",
+          "description": "Get one product or service by its Fiscalo id. Fiscalo API: GET /items/{id}."
+        },
+        {
+          "name": "fiscalo_create_item",
+          "type": "write",
+          "title": "Create an item",
+          "description": "Create a product or service with its unit price and tax rate. Writes need production access on the company. Fiscalo API: POST /items."
+        },
+        {
+          "name": "fiscalo_list_tax_rates",
+          "type": "read",
+          "title": "List tax rates",
+          "description": "List the global tax-rate catalog (read-only). Use it to find the tax_rate_id for an item or a document line. Fiscalo API: GET /tax-rates."
+        },
+        {
+          "name": "fiscalo_list_document_series",
+          "type": "read",
+          "title": "List document series",
+          "description": "List the document series of the company. A draft needs an active series (series_id). Fiscalo API: GET /document-series."
+        },
+        {
+          "name": "fiscalo_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List documents (invoices, credit notes, quotes and others) with their status. Fiscalo API: GET /documents."
+        },
+        {
+          "name": "fiscalo_get_document",
+          "type": "read",
+          "title": "Get a document",
+          "description": "Get one document with its lines, taxes, totals and status (draft or issued). Fiscalo API: GET /documents/{id}."
+        },
+        {
+          "name": "fiscalo_create_document_draft",
+          "type": "write",
+          "title": "Create a document draft",
+          "description": "Create a draft document for a customer in an active series. The draft is NOT issued: this tool cannot issue or cancel a document. Repeating the same call sends the same Idempotency-Key, so it does not create a second draft. Fiscalo API: POST /documents."
+        },
+        {
+          "name": "fiscalo_add_document_line",
+          "type": "write",
+          "title": "Add a line to a draft",
+          "description": "Add a line to a draft document. Only drafts accept lines; issued documents return document_not_editable. A retry adds the line again: check the document first. Fiscalo API: POST /documents/{id}/lines."
+        },
+        {
+          "name": "fiscalo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fiscalo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Fiscalo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fiscalo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Fiscalo (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fiscalo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Fiscalo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fiscalo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Check that my Fiscalo connection works and tell me whether it is sandbox or production.",
+        "Find the customer with tax number 123456789 and show me their details.",
+        "Create a draft invoice for this customer in my default series, with two lines of consulting at 80 EUR.",
+        "List the documents created today and show their status."
+      ]
+    },
+    {
+      "slug": "zapassina",
+      "name": "ZapAssina",
+      "category": "e-sign",
+      "description": "Send documents for e-signature, track signers, and organize folders in ZapAssina.",
+      "endpoint": "https://zapassina.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ZapAssina API token"
+          }
+        ],
+        "hint": "Create it in ZapAssina → **Painel → Integrações**. The token appears only once, when you create it. It is used only to call the API for you and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zapassina_list_templates",
+          "type": "read",
+          "title": "List document templates",
+          "description": "List the organization's document templates (Word models with {{fields}}). Returns the ZapAssina JSON. File links in the result expire after 60 minutes. ZapAssina API: GET /templates/."
+        },
+        {
+          "name": "zapassina_get_template",
+          "type": "read",
+          "title": "Get a document template",
+          "description": "Show one template: its fields (inputs), signers, public link and extra documents. Use the fields before creating a document from it. ZapAssina API: GET /templates/{token}/."
+        },
+        {
+          "name": "zapassina_list_documents",
+          "type": "read",
+          "title": "List and search documents",
+          "description": "List documents, newest first. Filters combine. Returns the ZapAssina JSON. File links in the result expire after 60 minutes. ZapAssina API: GET /docs/."
+        },
+        {
+          "name": "zapassina_get_document",
+          "type": "read",
+          "title": "Get a document",
+          "description": "Show one document: status, signers with their status and signing links, answers, and file links. Returns the ZapAssina JSON. File links in the result expire after 60 minutes. ZapAssina API: GET /docs/{token}/."
+        },
+        {
+          "name": "zapassina_list_folders",
+          "type": "read",
+          "title": "List folders",
+          "description": "List the document folders with their document counts. ZapAssina API: GET /folders/."
+        },
+        {
+          "name": "zapassina_create_document_from_template",
+          "type": "write",
+          "title": "Create a document from a template",
+          "description": "Create a signing document from a template. Fill the template fields with data (de = field name, para = value). Set send_automatic_email only when the user asked to send the invitation now. Plan quota applies. ZapAssina API: POST /models/create-doc/."
+        },
+        {
+          "name": "zapassina_create_document",
+          "type": "write",
+          "title": "Create a document from a PDF",
+          "description": "Send a ready PDF for signature. Give exactly one of base64_pdf or url_pdf (PDF up to 25 MB). Set send_automatic_email only when the user asked to send the invitations now. Signature positions: anchors <<signer1>>, <<signer2>> and <<rubrica1>> in the PDF text. ZapAssina API: POST /docs/."
+        },
+        {
+          "name": "zapassina_cancel_document",
+          "type": "write",
+          "title": "Cancel a document",
+          "description": "Cancel a document. Signing links stop working at once. This cannot be undone through the API. ZapAssina API: DELETE /docs/{token}/."
+        },
+        {
+          "name": "zapassina_set_document_deadline",
+          "type": "write",
+          "title": "Set or clear a document deadline",
+          "description": "Set a new deadline to sign, or clear it (clear_deadline true). A new deadline reopens an expired document. ZapAssina API: POST /docs/{token}/deadline/."
+        },
+        {
+          "name": "zapassina_move_document",
+          "type": "write",
+          "title": "Move a document to a folder",
+          "description": "Move a document to a folder. Missing folders are created. Use / to remove it from all folders. ZapAssina API: POST /docs/{token}/folder/."
+        },
+        {
+          "name": "zapassina_resend_invitation",
+          "type": "write",
+          "title": "Resend signing invitations",
+          "description": "Send the signing invitation again to pending signers who can sign now. Pass signer_token to send to one signer only. This sends a real message to the signer. ZapAssina API: POST /docs/{token}/resend/."
+        },
+        {
+          "name": "zapassina_add_signer",
+          "type": "write",
+          "title": "Add a signer to a document",
+          "description": "Add a signer to a document that is already sent. The signer joins at the end of the order and gets the invitation at once (or when their turn comes). This sends a real message. ZapAssina API: POST /docs/{token}/add-signer/."
+        },
+        {
+          "name": "zapassina_update_signer",
+          "type": "write",
+          "title": "Update a signer",
+          "description": "Correct a signer who has not signed yet. Omitted fields stay as they are. A new email or phone gives a new signing link. Set resend_invite only when the user asked to send the invitation again. ZapAssina API: POST /signers/{token}/."
+        },
+        {
+          "name": "zapassina_remove_signer",
+          "type": "write",
+          "title": "Remove a signer",
+          "description": "Remove a signer who has not signed yet. Their signing link stops working. If the others already signed, the document completes. ZapAssina API: DELETE /signers/{token}/."
+        },
+        {
+          "name": "zapassina_create_folder",
+          "type": "write",
+          "title": "Create a folder",
+          "description": "Create a document folder. Missing parent levels are created too (up to 5 levels). ZapAssina API: POST /folders/."
+        },
+        {
+          "name": "zapassina_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zapassina_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ZapAssina tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zapassina_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ZapAssina (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zapassina_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ZapAssina Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zapassina_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the documents still waiting for signature in the Clientes/2026 folder.",
+        "Create a service contract from our honorarios template for Maria da Silva.",
+        "Move the signed document 3b7e to the Arquivo folder.",
+        "Extend the signing deadline of document 3b7e to 2026-12-01."
+      ]
+    },
+    {
+      "slug": "kassa-at",
+      "name": "KASSA.AT",
+      "category": "retail",
+      "description": "Read and update articles, customers and stock in KASSA.AT.",
+      "endpoint": "https://kassa-at.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "KASSA.AT company subdomain"
+          },
+          {
+            "label": "KASSA.AT API token"
+          }
+        ],
+        "hint": "The subdomain is the part before .kassa.at in your KASSA.AT address. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "kassa_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List the articles (products and services) of the cash register, with price, VAT percent, unit and bar codes. Full-text search with query, or filter by article number, bar code or your own article id. GET /api/v1/articles."
+        },
+        {
+          "name": "kassa_list_article_categories",
+          "type": "read",
+          "title": "List article categories",
+          "description": "List the product categories an article belongs to (id, name, colour). GET /api/v1/articles/{id}/product_categories."
+        },
+        {
+          "name": "kassa_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, with name, customer number, address, phone and email. Full-text search with query, or filter by a field. GET /api/v1/customers."
+        },
+        {
+          "name": "kassa_find_customer_by_number",
+          "type": "read",
+          "title": "Find a customer by number",
+          "description": "Find one customer by the customer number you assigned. GET /api/v1/customers/customer_number."
+        },
+        {
+          "name": "kassa_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List the warehouses (stock locations) of the company, with id and description. GET /api/v1/warehouses."
+        },
+        {
+          "name": "kassa_list_inventories",
+          "type": "read",
+          "title": "List inventories (stock per article)",
+          "description": "List the inventory records of a warehouse for given articles, optionally with the current stock. Rate limited by KASSA.AT. Give article_numbers (up to 1000), article_number or article. POST /api/v1/warehouses/{id}/inventories/search (a read)."
+        },
+        {
+          "name": "kassa_get_inventory_stock",
+          "type": "read",
+          "title": "Get current stock",
+          "description": "Get the current stock quantity of one inventory record. GET /api/v1/warehouses/{id}/inventories/{inventory_id}/stock."
+        },
+        {
+          "name": "kassa_create_article",
+          "type": "write",
+          "title": "Create an article",
+          "description": "Create a new article (product or service) in the cash register. The VAT percent must be 0, 10, 13 or 20. Creates a record; it does not delete anything. POST /api/v1/articles."
+        },
+        {
+          "name": "kassa_update_article",
+          "type": "write",
+          "title": "Update an article",
+          "description": "Change one or more fields of an article. Only the fields you pass change; the rest stay as they are. PATCH /api/v1/articles/{id}."
+        },
+        {
+          "name": "kassa_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer record. Give at least one field. Creates a record; it does not delete anything. POST /api/v1/customers."
+        },
+        {
+          "name": "kassa_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Change one or more fields of a customer. Only the fields you pass change. This tool does not delete customers. PATCH /api/v1/customers/{id}."
+        },
+        {
+          "name": "kassa_record_stock_movement",
+          "type": "write",
+          "title": "Record a stock movement",
+          "description": "Add a stock movement to one inventory: a positive quantity adds stock, a negative one removes it. It changes the stock level; it does not set an absolute level. POST /api/v1/warehouses/{id}/inventories/{inventory_id}/movements."
+        },
+        {
+          "name": "kassa_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "kassa_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the KASSA.AT tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "kassa_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for KASSA.AT (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place (needs confirm: true; the price difference for the rest of the period is charged at once). Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "kassa_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's KASSA.AT Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kassa_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which articles do we sell, and what do they cost including VAT?",
+        "Find the customer with number K-0042 and show their contact details.",
+        "How much stock is left for article ART001 in the main warehouse?",
+        "Add 10 units of article ART001 to the main warehouse stock."
+      ]
     }
   ]
 }

@@ -898,6 +898,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Maqplan ERP](servers/erp-saas-maqplan/) | business-operations | 26 | API token | [servers/erp-saas-maqplan/](servers/erp-saas-maqplan/) |
 | [Vendty](servers/vendty/) | retail | 32 | API token | [servers/vendty/](servers/vendty/) |
 | [NubeFact](servers/nubefact/) | tax | 8 | API token | [servers/nubefact/](servers/nubefact/) |
+| [PagSafe](servers/pagsafe/) | payments | 10 | API token | [servers/pagsafe/](servers/pagsafe/) |
+| [Bill.pt](servers/bill-pt/) | billing | 15 | API token | [servers/bill-pt/](servers/bill-pt/) |
+| [Fiscalo](servers/fiscalo/) | billing | 17 | API token | [servers/fiscalo/](servers/fiscalo/) |
+| [ZapAssina](servers/zapassina/) | e-sign | 19 | API token | [servers/zapassina/](servers/zapassina/) |
+| [KASSA.AT](servers/kassa-at/) | retail | 16 | API token | [servers/kassa-at/](servers/kassa-at/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
