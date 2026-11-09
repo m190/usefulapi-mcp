@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 8 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 9 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -44,7 +44,7 @@ does not contain the text.
 **Request contents (transient).** To fulfil a tool call, the server passes your request to the
 third-party API and returns the response to your AI client. This data is processed **in transit to
 complete your request** and is not stored by us beyond what is technically necessary to serve the
-response, except transient logs (see §4) and the resumable-workflow and polling metadata described below. Our servers
+response, except transient logs (see §5) and the resumable-workflow and polling metadata described below. Our servers
 process tool arguments and results in memory to complete each call. We do not log or retain full tool
 payloads, and no person at usefulapi reads them. A
 server can filter, reformat or shorten a result, or add a usage notice to it, before it reaches your AI
@@ -93,11 +93,16 @@ withdraw it at any time.
 We do **not** sell your data, and we do **not** use your data or request contents to train machine
 learning models.
 
-## 4. Sub-processors
+## 4. Service providers and other recipients
 
 We rely on: **Cloudflare, Inc.** (hosting, DNS, storage of encrypted tokens), **Stripe** (payments),
 and the **third-party service you connect** (e.g. Linear) — your requests go to that provider under
 its own privacy policy. A current list is available on request at privacy@usefulapi.io.
+
+**Your AI client and its model provider** (for example Anthropic or OpenAI) receive the records you
+ask for: the server returns them to the AI client you connect. You choose that provider. It handles
+the data under its own terms and privacy policy, it is not our sub-processor, and we do not control
+how it keeps or uses that data.
 
 ## 5. Retention
 
