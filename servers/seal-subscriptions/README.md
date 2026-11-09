@@ -38,6 +38,7 @@ On first connect you'll paste your Seal Subscriptions **API token** (the Seal ap
 | `sealsubscriptions_get_subscription` | read | Get subscription |
 | `sealsubscriptions_list_subscription_rules` | read | List subscription rules |
 | `sealsubscriptions_get_subscription_rule` | read | Get subscription rule |
+| `sealsubscriptions_list_selling_plans` | read | List selling plans |
 | `sealsubscriptions_list_webhooks` | read | List webhooks |
 | `sealsubscriptions_pause_subscription` | **write** | Pause subscription |
 | `sealsubscriptions_resume_subscription` | **write** | Resume subscription |
