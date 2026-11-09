@@ -894,6 +894,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [INWX](servers/inwx/) | dns | 15 | API token | [servers/inwx/](servers/inwx/) |
 | [Comet Backup](servers/comet-backup/) | devops | 16 | API token | [servers/comet-backup/](servers/comet-backup/) |
 | [Dotypos](servers/dotypos/) | retail | 27 | OAuth | [servers/dotypos/](servers/dotypos/) |
+| [Fatture in Cloud](servers/fatture-in-cloud/) | accounting | 27 | OAuth | [servers/fatture-in-cloud/](servers/fatture-in-cloud/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
