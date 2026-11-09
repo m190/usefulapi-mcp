@@ -121253,7 +121253,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.3.5",
+      "version": "1.4.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -121301,7 +121301,7 @@
           "name": "botpress_get_bot_logs",
           "type": "read",
           "title": "Get bot logs",
-          "description": "Read the logs of a bot in a time range, with filters for level, user, conversation and message text. Admin API: GET /v1/admin/bots/{id}/logs."
+          "description": "Read bot logs with level, user, conversation and message filters. Use real ISO 8601 timestamps with a timezone; times are normalized to UTC and timeStart must not be later than timeEnd. Admin API: GET /v1/admin/bots/{id}/logs."
         },
         {
           "name": "botpress_get_bot_analytics",
@@ -121382,6 +121382,30 @@
           "description": "Semantic search over the indexed files of a bot. Returns the best matching text passages. Files API: GET /v1/files/search."
         },
         {
+          "name": "botpress_get_bot_content",
+          "type": "read",
+          "title": "Inspect Studio bot content",
+          "description": "Inspect authenticated Studio bot JSON in bounded pages. Returns a snapshot_hash and observed JSON Pointer paths; follow paths to inspect workflow/instruction strings. Credential fields are omitted. Does not change or publish anything. API: official SDK getBotJson."
+        },
+        {
+          "name": "botpress_preview_bot_content_edit",
+          "type": "read",
+          "title": "Validate and preview Studio text edits",
+          "description": "Read-only local preview/validation of existing workflow or instruction text replacements against a fresh snapshot_hash. Returns before/after changes and preview_hash for user approval. No draft save, vendor compile validation or publish occurs. Only observed string paths may be edited; structure/IDs/settings/credentials cannot be changed."
+        },
+        {
+          "name": "botpress_publish_bot_content_edit",
+          "type": "write",
+          "title": "Publish approved Studio text edits",
+          "description": "WRITE: publish exactly the approved text edits to the live Studio bot using official SDK publishFromBotJson. Obtain user approval first. Requires confirm:true, snapshot_hash, exact preview_hash and stable operation_id. Rechecks current content, preserves all unedited data and prevents replay after uncertain publication. No atomic vendor conditional write: avoid simultaneous Studio edits. Hosted persistent operation storage is required. Inspect status/Studio before retrying; success requires readback of text and a changed deployment timestamp."
+        },
+        {
+          "name": "botpress_get_content_operation",
+          "type": "read",
+          "title": "Inspect content publish operation",
+          "description": "Read the persistent result of a content publish in this authenticated workspace and bot. An uncertain outcome must be reconciled in Studio; never retry it with a new operation_id."
+        },
+        {
           "name": "botpress_usage_status",
           "type": "meta",
           "title": "Usage status (free-tier meter)",
@@ -121410,7 +121434,8 @@
         "List my Botpress bots and show which ones have runtime issues.",
         "How many conversations and LLM tokens did my support bot use last week?",
         "Show the last 20 conversations of my bot with their messages.",
-        "Search my bot's knowledge base for our refund policy."
+        "Search my bot's knowledge base for our refund policy.",
+        "Inspect my Studio bot's instructions and preview a text edit for my approval before publishing."
       ]
     },
     {

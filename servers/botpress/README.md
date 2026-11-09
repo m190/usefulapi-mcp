@@ -52,6 +52,10 @@ On first connect you provide a **Personal Access Token** (Botpress → Profile s
 | `botpress_list_files` | read | List files |
 | `botpress_get_file` | read | Get file |
 | `botpress_search_files` | read | Search files |
+| `botpress_get_bot_content` | read | Inspect Studio bot content |
+| `botpress_preview_bot_content_edit` | read | Validate and preview Studio text edits |
+| `botpress_publish_bot_content_edit` | **write** | Publish approved Studio text edits |
+| `botpress_get_content_operation` | read | Inspect content publish operation |
 | `botpress_usage_status` | meta | Usage status (free-tier meter) |
 | `botpress_request_feature` | meta | Request a missing feature |
 | `botpress_upgrade` | meta | Upgrade to Pro or Pro+ |

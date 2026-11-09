@@ -683,7 +683,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Parsio](servers/parsio/) | document-ai | 16 | API token | [servers/parsio/](servers/parsio/) |
 | [Roadmunk](servers/roadmunk/) | project-management | 18 | API token | [servers/roadmunk/](servers/roadmunk/) |
 | [Disqus](servers/disqus/) | communications | 18 | API token | [servers/disqus/](servers/disqus/) |
-| [Botpress](servers/botpress/) | chat | 23 | API token | [servers/botpress/](servers/botpress/) |
+| [Botpress](servers/botpress/) | chat | 27 | API token | [servers/botpress/](servers/botpress/) |
 | [Teamdeck](servers/teamdeck/) | project-management | 20 | API token | [servers/teamdeck/](servers/teamdeck/) |
 | [Klipfolio](servers/klipfolio/) | analytics | 17 | API token | [servers/klipfolio/](servers/klipfolio/) |
 | [Nozbe Teams](servers/nozbe-teams/) | productivity | 20 | API token | [servers/nozbe-teams/](servers/nozbe-teams/) |
