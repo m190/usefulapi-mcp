@@ -903,6 +903,26 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Fiscalo](servers/fiscalo/) | billing | 17 | API token | [servers/fiscalo/](servers/fiscalo/) |
 | [ZapAssina](servers/zapassina/) | e-sign | 19 | API token | [servers/zapassina/](servers/zapassina/) |
 | [KASSA.AT](servers/kassa-at/) | retail | 16 | API token | [servers/kassa-at/](servers/kassa-at/) |
+| [FiscalHub](servers/fiscalhub/) | tax | 13 | API token | [servers/fiscalhub/](servers/fiscalhub/) |
+| [Kvittia](servers/kvittia/) | accounting | 18 | API token | [servers/kvittia/](servers/kvittia/) |
+| [Hobok](servers/hobok/) | billing | 15 | API token | [servers/hobok/](servers/hobok/) |
+| [Billify](servers/billify/) | billing | 12 | API token | [servers/billify/](servers/billify/) |
+| [reenio](servers/reenio/) | scheduling | 26 | API token | [servers/reenio/](servers/reenio/) |
+| [Oases](servers/oases/) | education | 15 | API token | [servers/oases/](servers/oases/) |
+| [Buk.ng](servers/buk-ng/) | scheduling | 10 | API token | [servers/buk-ng/](servers/buk-ng/) |
+| [MightyCall](servers/mightycall/) | communications | 13 | API token | [servers/mightycall/](servers/mightycall/) |
+| [Telzio](servers/telzio/) | communications | 18 | API token | [servers/telzio/](servers/telzio/) |
+| [GoAudits](servers/goaudits/) | business-operations | 12 | API token | [servers/goaudits/](servers/goaudits/) |
+| [CallHippo](servers/callhippo/) | communications | 19 | API token | [servers/callhippo/](servers/callhippo/) |
+| [Timetaag](servers/timetaag/) | hr | 18 | API token | [servers/timetaag/](servers/timetaag/) |
+| [SkyPrep](servers/skyprep/) | education | 18 | API token | [servers/skyprep/](servers/skyprep/) |
+| [TempClock](servers/tempclock/) | time-tracking | 9 | API token | [servers/tempclock/](servers/tempclock/) |
+| [SalesRabbit](servers/salesrabbit/) | crm | 20 | API token | [servers/salesrabbit/](servers/salesrabbit/) |
+| [OfficeGest](servers/officegest/) | accounting | 20 | API token | [servers/officegest/](servers/officegest/) |
+| [Cuéntica](servers/cuentica/) | accounting | 22 | API token | [servers/cuentica/](servers/cuentica/) |
+| [SUMIT](servers/sumit/) | accounting | 13 | API token | [servers/sumit/](servers/sumit/) |
+| [keyCRM](servers/keycrm/) | crm | 19 | API token | [servers/keycrm/](servers/keycrm/) |
+| [Wise](servers/wise-tutoring/) | education | 15 | API token | [servers/wise-tutoring/](servers/wise-tutoring/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
