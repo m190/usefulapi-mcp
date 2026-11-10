@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 9 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 10 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -92,6 +92,12 @@ is transferred or claimed.
   on each server, at the price shown when you subscribe. A Pro subscription can change to Pro+ with
   the `<product>_upgrade` tool; the change keeps the billing interval and charges the price
   difference for the rest of the current period at once.
+- **Free Pro trial:** when the free tier of a server is used up, the server may offer Pro free for
+  **7 days**, once per account on each server. Stripe asks for a card and charges nothing at the
+  start. Unless you cancel before the trial ends (with `<product>_cancel_subscription`), the trial
+  continues as monthly Pro and the first monthly payment is charged when the trial ends. If you
+  cancel during the trial, Pro continues to the end of the trial and nothing is charged. A change to
+  Pro+ during the trial ends the trial and charges the full Pro+ price at once.
 - **Billing is per server:** a Pro subscription covers only the server (`<product>.usefulapi.io`) you
   subscribed on. You subscribe with that server's `<product>_upgrade` tool, which returns a Stripe
   Checkout link.
