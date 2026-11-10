@@ -11,7 +11,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 |--------|----------|------:|------|------|
 | [Ably](servers/ably/) | realtime | 19 | API token | [servers/ably/](servers/ably/) |
 | [Accelo](servers/accelo/) | project-management | 27 | API token | [servers/accelo/](servers/accelo/) |
-| [Acuity Scheduling](servers/acuity-scheduling/) | calendar | 22 | API token | [servers/acuity-scheduling/](servers/acuity-scheduling/) |
+| [Acuity Scheduling](servers/acuity-scheduling/) | calendar | 23 | API token | [servers/acuity-scheduling/](servers/acuity-scheduling/) |
 | [Aircall](servers/aircall/) | communications | 29 | API token | [servers/aircall/](servers/aircall/) |
 | [All Quiet](servers/all-quiet/) | observability | 15 | API token | [servers/all-quiet/](servers/all-quiet/) |
 | [Amberflo](servers/amberflo/) | usage-metering | 18 | API token | [servers/amberflo/](servers/amberflo/) |

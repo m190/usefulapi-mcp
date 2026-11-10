@@ -50,6 +50,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `acuity_list_blocks` | read | List blocked-off times |
 | `acuity_list_labels` | read | List labels |
 | `acuity_get_me` | read | Get account info |
+| `acuity_offer_class` | **write** | Offer a new group class session |
 | `acuity_create_appointment` | **write** | Create appointment |
 | `acuity_cancel_appointment` | **write** | Cancel appointment |
 | `acuity_reschedule_appointment` | **write** | Reschedule appointment |

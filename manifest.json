@@ -461,7 +461,7 @@
           "name": "acuity_availability_classes",
           "type": "read",
           "title": "Get available classes",
-          "description": "List group class time slots (for class-type appointment types) in a month. Acuity REST: GET /availability/classes."
+          "description": "List existing group class time slots in a month. To offer a new session use acuity_offer_class (Enterprise credentials required); booking an attendee does not offer a new class. Acuity REST: GET /availability/classes."
         },
         {
           "name": "acuity_list_clients",
@@ -506,10 +506,16 @@
           "description": "Get the authenticated Acuity account's profile (name, email, timezone, plan, currency). Acuity REST: GET /me."
         },
         {
+          "name": "acuity_offer_class",
+          "type": "write",
+          "title": "Offer a new group class session",
+          "description": "Offer one NEW session of an existing group class appointment type. Requires Acuity Enterprise API access: reconnect with the Scheduling Instance ID, Enterprise API key and optional Enterprise ID field filled. First call previews; set confirm=true only after the user approves the calendar, date and time. Creates an offering, not an attendee booking. Existing offerings are rejected, and series are excluded to avoid changing enrolled clients' schedules. Dates/times use the calendar's timezone. Acuity Enterprise: POST /information/availability/classes, with no update id."
+        },
+        {
           "name": "acuity_create_appointment",
           "type": "write",
           "title": "Create appointment",
-          "description": "CREATES a new appointment (books a client into a time slot). This MODIFIES the calendar and, unless suppressed, may send confirmation emails. Acuity REST: POST /appointments."
+          "description": "CREATES a new appointment (books a client into an existing time slot). To offer an additional group class session use acuity_offer_class; this tool books attendees. This MODIFIES the calendar and, unless suppressed, may send confirmation emails. Acuity REST: POST /appointments."
         },
         {
           "name": "acuity_cancel_appointment",
@@ -554,7 +560,7 @@
           "description": "Cancel the caller's Acuity Scheduling Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run acuity_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.38.1",
+      "version": "1.39.0",
       "examples": [
         "What appointments do I have tomorrow? Group them by calendar.",
         "Find the next three free 60-minute slots for a consultation next week.",
@@ -566,10 +572,14 @@
         "kind": "key",
         "fields": [
           {
-            "label": "Acuity User ID"
+            "label": "Acuity User ID / Enterprise Instance ID"
           },
           {
             "label": "API Key"
+          },
+          {
+            "label": "Enterprise ID (Enterprise API only)",
+            "optional": true
           }
         ],
         "hint": "Find both in Acuity → **Integrations → API** (your User ID and API Key are shown there). Your credentials are used only to call the API on your behalf and to derive a private account id; they are never shown to anyone."
