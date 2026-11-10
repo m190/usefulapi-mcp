@@ -83,7 +83,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Kinde](servers/kinde/) | security | 27 | API token | [servers/kinde/](servers/kinde/) |
 | [Knack](servers/knack/) | no-code-database | 13 | API token | [servers/knack/](servers/knack/) |
 | [KnowledgeOwl](servers/knowledgeowl/) | knowledge-base | 28 | API token | [servers/knowledgeowl/](servers/knowledgeowl/) |
-| [Lago](servers/lago/) | billing | 28 | API token | [servers/lago/](servers/lago/) |
 | [Lambda Labs](servers/lambda-labs/) | ai-infra | 19 | API token | [servers/lambda-labs/](servers/lambda-labs/) |
 | [Laravel Forge](servers/laravel-forge/) | devops | 21 | API token | [servers/laravel-forge/](servers/laravel-forge/) |
 | [Lemon Squeezy](servers/lemonsqueezy/) | payments | 22 | API token | [servers/lemonsqueezy/](servers/lemonsqueezy/) |
@@ -678,7 +677,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ManyChat](servers/manychat/) | messaging | 19 | API token | [servers/manychat/](servers/manychat/) |
 | [Mention](servers/mention/) | marketing | 15 | API token | [servers/mention/](servers/mention/) |
 | [Price2Spy](servers/price2spy/) | ecommerce | 12 | API token | [servers/price2spy/](servers/price2spy/) |
-| [Asset Panda](servers/asset-panda/) | inventory | 16 | API token | [servers/asset-panda/](servers/asset-panda/) |
 | [Zigaflow](servers/zigaflow/) | business-operations | 35 | API token | [servers/zigaflow/](servers/zigaflow/) |
 | [Parsio](servers/parsio/) | document-ai | 16 | API token | [servers/parsio/](servers/parsio/) |
 | [Roadmunk](servers/roadmunk/) | project-management | 18 | API token | [servers/roadmunk/](servers/roadmunk/) |
@@ -796,7 +794,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [STEL Order](servers/stel-order/) | billing | 20 | API token | [servers/stel-order/](servers/stel-order/) |
 | [Webfleet](servers/webfleet/) | logistics | 14 | API token | [servers/webfleet/](servers/webfleet/) |
 | [Superchat](servers/superchat/) | messaging | 20 | API token | [servers/superchat/](servers/superchat/) |
-| [FMX](servers/fmx/) | property-management | 15 | API token | [servers/fmx/](servers/fmx/) |
 | [Woffu](servers/woffu/) | hr | 9 | API token | [servers/woffu/](servers/woffu/) |
 | [Octadesk](servers/octadesk/) | support | 17 | API token | [servers/octadesk/](servers/octadesk/) |
 | [Clearstream](servers/clearstream/) | messaging | 19 | API token | [servers/clearstream/](servers/clearstream/) |
