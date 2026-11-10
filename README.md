@@ -923,6 +923,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SUMIT](servers/sumit/) | accounting | 13 | API token | [servers/sumit/](servers/sumit/) |
 | [keyCRM](servers/keycrm/) | crm | 19 | API token | [servers/keycrm/](servers/keycrm/) |
 | [Wise](servers/wise-tutoring/) | education | 15 | API token | [servers/wise-tutoring/](servers/wise-tutoring/) |
+| [Faktuo](servers/faktuo/) | billing | 6 | API token | [servers/faktuo/](servers/faktuo/) |
+| [Rechnio](servers/rechnio/) | accounting | 10 | API token | [servers/rechnio/](servers/rechnio/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
