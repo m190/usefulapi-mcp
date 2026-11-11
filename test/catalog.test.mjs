@@ -149,3 +149,26 @@ test("every page type has the shared top bar with the custom-integration link; t
   assert.ok(read("catalog.css").includes(".topbar{"));
   assert.ok(read("index.html").includes('<button class="search-submit" type="submit">Search</button>'));
 });
+
+test("every page type shares one width, one footer and the same base CSS", () => {
+  const post = readdirSync(join(output, "blog"), { withFileTypes: true }).find((d) => d.isDirectory()).name;
+  const pages = ["index.html", "servers/index.html", "category/crm-and-sales/index.html", "pipedrive/index.html", "blog/index.html", `blog/${post}/index.html`, "services/index.html", "privacy/index.html", "terms/index.html", "404.html"];
+  for (const path of pages) {
+    const html = read(path);
+    const css = html.includes('href="/catalog.css"') ? read("catalog.css") : html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    assert.deepEqual([...css.matchAll(/\.wrap\{max-width:(\d+)px/g)].map((m) => m[1]), ["1008"], path);
+    assert.equal((html.match(/<footer class="site">/g) || []).length, 1, path);
+    assert.ok(!/<footer>/.test(html), path);
+  }
+});
+
+test("category pages use the directory cards; the 404 page offers search and categories", () => {
+  for (const group of index.groups) {
+    const html = read(`${group.url.slice(1)}index.html`);
+    assert.equal((html.match(/class="card"/g) || []).length, group.count, group.name);
+    assert.ok(html.includes(`<h1>${group.name.replace(/&/g, "&amp;")} integrations</h1>`), group.name);
+  }
+  const notFound = read("404.html");
+  assert.ok(notFound.includes('<form class="search-form" action="/servers/"') && notFound.includes('name="q"'));
+  assert.equal((notFound.match(/class="category-link"/g) || []).length, index.groups.length);
+});

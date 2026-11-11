@@ -55,31 +55,67 @@ function mdToHtml(md) {
 const NAV = [["/servers/", "Integrations"], ["/blog/", "Blog"], ["/services/", "Custom integration →", "nav-cta"]];
 const topbar = (current = "") => `<header class="topbar"><a class="logo" href="/" aria-label="usefulapi home"><img src="/icon.svg" width="28" height="28" alt=""><span>usefulapi</span></a>` +
   `<nav aria-label="Main">${NAV.map(([href, label, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ""}${current === href ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</nav></header>`;
-const TOPBAR_CSS = `
+// SITE_CSS: the one shared base for every page (appended last, so it wins): colours, page width, headings,
+// top bar, footer, search field, category pills. Page CSS keeps only page-specific layout.
+const CHEV = (c) => `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23${c}' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`;
+const SITE_CSS = `
+:root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#626262;--card:#fff;--border:#e6e6e3;--accent:#0f766e;--on-accent:#fff;--chip:#f0f0ee;--chev:${CHEV("626262")}}
+@media(prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#aaa;--card:#17171a;--border:#2e2e33;--accent:#14b8a6;--on-accent:#0f0f11;--chip:#212125;--chev:${CHEV("aaaaaa")}}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1008px;margin:0 auto;padding:20px 24px 56px}
+h1{font-size:32px;line-height:1.2;letter-spacing:-.025em}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.crumbs{margin:0 0 16px;font-size:13px;color:var(--muted)}.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent);text-decoration:none}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 40px;font-size:14px;line-height:1.3}
 .topbar .logo{display:flex;align-items:center;gap:8px;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:-.01em;text-decoration:none}
 .topbar .logo img{display:block;border-radius:7px}
 .topbar nav{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px 18px}
 .topbar nav a{color:var(--muted);text-decoration:none}.topbar nav a:hover,.topbar nav a[aria-current]{color:var(--fg);text-decoration:none}
 .topbar .nav-cta{color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:6px 12px}.topbar .nav-cta:hover,.topbar .nav-cta[aria-current]{color:var(--accent);border-color:var(--accent)}
-.topbar a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-@media(max-width:560px){.topbar{margin-bottom:28px}.topbar .logo span{display:none}.topbar nav{gap:6px 14px}}`;
+footer.site{margin-top:56px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;line-height:1.55}
+footer.site p{margin:0 0 10px}footer.site nav{display:flex;flex-wrap:wrap;gap:8px 18px}
+footer.site a{color:var(--muted);text-decoration:none}footer.site a:hover{color:var(--accent);text-decoration:none}
+.search-form{margin:0 0 32px}
+.search-field{position:relative;min-width:0}
+.search-field svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-field input{width:100%;height:46px;margin:0;padding:0 96px 0 40px;background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:10px;font:inherit;font-size:16px;-webkit-appearance:none;appearance:none}
+.search-field input::placeholder{color:var(--muted);opacity:1}
+.search-field input:focus{border-color:var(--accent)}
+.search-field input::-webkit-search-cancel-button{display:none}
+.search-submit{position:absolute;top:5px;right:5px;bottom:5px;padding:0 14px;border:0;border-radius:7px;background:var(--accent);color:var(--on-accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.search-submit:hover{filter:brightness(1.08)}
+.category-links{display:flex;flex-wrap:wrap;gap:8px}
+.category-link{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:999px;padding:7px 14px;color:var(--fg);font-size:14px;line-height:1.3;background:var(--card);white-space:nowrap;text-decoration:none}
+.category-link:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+.category-link span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+@media(max-width:560px){
+.wrap{padding:16px 16px 44px}h1{font-size:26px}
+.topbar{margin-bottom:28px}.topbar .logo span{display:none}.topbar nav{gap:6px 14px}
+.search-form{margin-bottom:26px}
+/* One row that scrolls sideways, so the categories do not push the content off the first screen. */
+.category-links{flex-wrap:nowrap;overflow-x:auto;margin:-8px -16px 0;padding:8px 16px;scrollbar-width:none;scroll-padding:0 16px}
+.category-links::-webkit-scrollbar{display:none}.category-link{flex:none}.category-link:focus-visible{outline-offset:2px}}`;
+const SITE_FOOTER = `<footer class="site"><p>Connect from Claude, ChatGPT, Cursor, or any MCP client.</p><nav aria-label="Footer"><a href="/servers/">All integrations</a><a href="/services/">Custom integrations</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
+// One search field (homepage, directory, category pages, 404); it submits to the directory.
+const searchField = (n) => `<label class="sr-only" for="search">Search all integrations</label><div class="search-field">` +
+  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>` +
+  `<input id="search" name="q" type="search" placeholder="Search ${n} integrations" autocomplete="off"><button class="search-submit" type="submit">Search</button></div>`;
 const SHELL = (title, body, current = "") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} — usefulapi</title>
 <style>
- :root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--border:#e6e6e3;--accent:#0f766e;--chip:#f0f0ee}
- @media(prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--border:#262629;--accent:#14b8a6;--chip:#212125}}
- *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
- .wrap{max-width:720px;margin:0 auto;padding:20px 24px 96px}${TOPBAR_CSS}
- @media(max-width:560px){.wrap{padding:16px 16px 72px}}
- a{color:var(--accent)} h1{font-size:30px;letter-spacing:-.02em;margin:0 0 24px}
- h2{font-size:20px;margin:36px 0 10px} p{margin:0 0 14px} ul{margin:0 0 14px;padding-left:22px}
+ .wrap>:not(.topbar):not(.site){max-width:720px}
+ a{color:var(--accent)} h1{margin:0 0 24px}
+ h2{font-size:20px;margin:36px 0 10px} p{margin:0 0 14px} ul,ol{margin:0 0 14px;padding-left:22px}
  li{margin:4px 0} code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px}
- .home{display:inline-block;margin-bottom:28px;color:var(--muted);text-decoration:none;font-size:14px}.home:hover{color:var(--accent)}
+ .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+ .notfound .search-form{margin:20px 0 28px}.notfound h2{font-size:16px;margin:0 0 12px}
+${SITE_CSS}
 </style></head><body><div class="wrap">
 ${topbar(current)}
 ${body}
+${SITE_FOOTER}
 </div></body></html>`;
 const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`legal/${mdName}`, ROOT), "utf8")));
 
@@ -145,14 +181,10 @@ const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit
 const limitText = (p) => (isUnlimitedPro(p) ? `${p.limit} (${PRO_FAIR_USE})` : p.limit);
 const MARK = `<svg class="mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient></defs><rect width="512" height="512" rx="114" fill="url(#tl)"/><g fill="#fff"><circle cx="169" cy="256" r="61"/><circle cx="343" cy="256" r="61"/><rect x="169" y="223" width="174" height="66" rx="33"/></g></svg>`;
 const PRODUCT_CSS = `
-:root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--card:#fff;--border:#e6e6e3;--accent:#0f766e;--on-accent:#fff;--chip:#f0f0ee}
-@media (prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--card:#17171a;--border:#262629;--accent:#14b8a6;--on-accent:#0f0f11;--chip:#212125}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 a{color:inherit}
-.wrap{max-width:920px;margin:0 auto;padding:20px 24px 96px}${TOPBAR_CSS}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .brand .mark{width:38px;height:38px;border-radius:10px;flex:none}
-h1{font-size:32px;letter-spacing:-.02em;margin:0}
+h1{margin:0}
 .sub{color:var(--muted);font-size:17px;margin:0 0 28px;max-width:52ch}.sub strong{color:var(--fg)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
@@ -185,8 +217,6 @@ table tr:last-child td{border-bottom:0}
 .uses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
 .use h3{font-size:15px;margin:0 0 6px}.use p{margin:0;font-size:14px}.use .via{color:var(--muted);font-size:12px;margin-top:8px}
 .tname{font-weight:600;font-size:13px}.tdesc{color:var(--muted);font-size:13px;margin-top:2px}
-footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--muted)}
-.crumbs{font-size:13px;color:var(--muted);margin:0 0 14px}.crumbs a{color:var(--muted);text-decoration:none}.crumbs a:hover{color:var(--accent)}
 .rel{display:flex;flex-wrap:wrap;gap:8px}.rel a{background:var(--chip);border-radius:999px;padding:4px 12px;font-size:13px;text-decoration:none}.rel a:hover{color:var(--accent)}
 .hint a{color:var(--accent)}a.tname{text-decoration:none}a.tname:hover{color:var(--accent)}
 .card h2 .for{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}.lead.small{font-size:13px;margin-top:10px}
@@ -202,11 +232,10 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
-@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:16px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}
+${SITE_CSS}`;
 // Product page only: the facts bar, the client tabs, the closed tool list.
 const PAGE_CSS = `
-:root{--accent:#0f766e;--on-accent:#fff}
-@media (prefers-color-scheme:dark){:root{--accent:#14b8a6;--on-accent:#0f0f11}}
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
 .btn{color:var(--on-accent)!important}
 .facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
@@ -249,7 +278,7 @@ const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.ad
 // Custom work (professional services): one page, contact by email only, no prices on the site.
 const SERVICES_PATH = "/services/";
 const SERVICES_MAIL = "mailto:support@usefulapi.io?subject=Custom%20work";
-const FOOTER = `<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; ${POSTS.length ? `<a href="/blog/">Blog</a> &nbsp;·&nbsp; ` : ""}<a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
+const FOOTER = SITE_FOOTER;
 const postList = (list, id = "") => `<ul class="posts"${id ? ` id="${id}"` : ""}>${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 // Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
@@ -550,32 +579,7 @@ ${ld.map(jsonLd).join("\n")}
 }
 
 // Category landing pages (/category/<group>/): crawlable internal-linking hubs, one per browse group.
-function categoryPage(g, list) {
-  const url = `${SITE}${categoryPath(g)}`;
-  const title = `${g} MCP servers — ${list.length} hosted servers | usefulapi`;
-  const desc = `${list.length} hosted ${g} MCP servers: ${list.slice(0, 6).map((s) => s.name).join(", ")}${list.length > 6 ? " and more" : ""}. Connect from Claude, Cursor or any MCP client.`;
-  const rows = list.map((s) =>
-    `<tr><td><a class="tname" href="${pagePath(s)}">${esc(s.name)}</a></td><td><div class="tdesc">${esc(s.description)}</div></td><td>${toolCount(s)}</td></tr>`).join("");
-  const others = GROUP_ORDER.filter((x) => x !== g && manifest.servers.some((s) => groupOf(s) === x));
-  const ld = {
-    "@context": "https://schema.org", "@type": "CollectionPage", name: `${g} MCP servers`, url, description: desc,
-    mainEntity: { "@type": "ItemList", itemListElement: list.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) }
-  };
-  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › ${esc(g)}</nav>
-<div class="brand"><h1>${esc(g)} MCP servers</h1></div>
-<p class="sub">${list.length} hosted, remote MCP servers for ${esc(g)} tools. Each is a Streamable HTTP endpoint with a free tier — paste the URL into Claude, Cursor, or any MCP client.</p>
-<table class="tools"><thead><tr><th>Server</th><th>What it does</th><th>Tools</th></tr></thead><tbody>${rows}</tbody></table>
-<h2 class="sec">Other categories</h2>
-<div class="rel">${others.map((x) => `<a href="${categoryPath(x)}">${esc(x)}</a>`).join("")}</div>
-${FOOTER}`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)}</title>
-${headMeta({ title, desc, url })}
-${jsonLd(ld)}
-<style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${topbar()}${body}</div></body></html>`;
-}
+function categoryPage(g) { return catalogPage({ category: g }); }
 
 // Blog post pages (/blog/<slug>/) and the blog index (/blog/).
 const serverBySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
@@ -704,43 +708,60 @@ const replaceOnce = (html, from, to) => {
   if (!html.includes(from)) throw new Error(`portal/index.html: marker not found: ${from}`);
   return html.replace(from, () => to);
 };
-function catalogPage({ directory = false, page = 1 } = {}) {
+function catalogPage({ directory = false, page = 1, category = "" } = {}) {
   const N = catalog.length;
+  const home = !directory && !category;
   const slice = paginate(directoryServers, page);
-  const path = directory ? staticPagePath(page) : "/";
+  const inGroup = category ? catalog.filter((s) => s.group === category).sort((a, b) => a.name.localeCompare(b.name)) : [];
+  const path = category ? categoryPath(category) : directory ? staticPagePath(page) : "/";
   const url = `${SITE}${path}`;
-  const title = directory ? `All ${N} MCP integrations${page > 1 ? ` — page ${page}` : ""} | usefulapi` : `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
-  const desc = directory ? `Browse ${N} hosted MCP integrations. Search by app, tool or category and connect from Claude, ChatGPT, Cursor or any MCP client.` : `${N} hosted MCP servers for the tools you already use. Find your integration by app or category and connect from Claude, ChatGPT, Cursor or any MCP client.`;
-  const visible = directory ? slice.items : featured;
+  const n = inGroup.length;
+  const title = category ? `${category} MCP servers — ${n} hosted servers | usefulapi`
+    : directory ? `All ${N} MCP integrations${page > 1 ? ` — page ${page}` : ""} | usefulapi` : `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
+  const desc = category ? `${n} hosted ${category} MCP servers: ${inGroup.slice(0, 6).map((s) => s.name).join(", ")}${n > 6 ? " and more" : ""}. Connect from Claude, ChatGPT, Cursor or any MCP client.`
+    : directory ? `Browse ${N} hosted MCP integrations. Search by app, tool or category and connect from Claude, ChatGPT, Cursor or any MCP client.` : `${N} hosted MCP servers for the tools you already use. Find your integration by app or category and connect from Claude, ChatGPT, Cursor or any MCP client.`;
+  const visible = category ? inGroup : directory ? slice.items : featured;
   const ld = [
-    ...(directory ? [] : [
+    ...(home ? [
       { "@context": "https://schema.org", "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: `${SITE}/icon-512.png`, email: "support@usefulapi.io" },
       { "@context": "https://schema.org", "@type": "WebSite", name: "usefulapi", url: `${SITE}/`, description: desc }
-    ]),
-    { "@context": "https://schema.org", "@type": directory ? "CollectionPage" : "WebPage", name: title, url, description: desc,
-      mainEntity: { "@type": "ItemList", name: directory ? "MCP integrations" : "Featured integrations", numberOfItems: visible.length,
+    ] : []),
+    { "@context": "https://schema.org", "@type": home ? "WebPage" : "CollectionPage", name: category ? `${category} MCP servers` : title, url, description: desc,
+      mainEntity: { "@type": "ItemList", name: category ? `${category} MCP servers` : directory ? "MCP integrations" : "Featured integrations", numberOfItems: visible.length,
         itemListElement: visible.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) } }
   ];
-  const filters = directory ? `<div class="filters"><label for="category">Category <select id="category" name="category"><option value="">All categories</option>${groups.map((g) => `<option value="${attr(g.name)}">${esc(g.name)} (${g.count})</option>`).join("")}</select></label><label for="sort">Sort <select id="sort" name="sort"><option value="name">Name (A–Z)</option><option value="relevance">Relevance</option><option value="category">Category</option></select></label></div>` : "";
-  const categories = directory ? "" : `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2><div class="category-links">${groups.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div></section>`;
+  const pills = (list) => `<div class="category-links">${list.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div>`;
+  // Directory: search, category and sort share one row; the labels are for screen readers.
+  const search = directory
+    ? `<form class="search-form toolbar" action="/servers/" method="get" role="search">${searchField(N)}` +
+      `<label class="sr-only" for="category">Category</label><select id="category" name="category"><option value="">All categories</option>${groups.map((g) => `<option value="${attr(g.name)}">${esc(g.name)} (${g.count})</option>`).join("")}</select>` +
+      `<label class="sr-only" for="sort">Sort</label><select id="sort" name="sort"><option value="name">Sort: A–Z</option><option value="relevance">Sort: relevance</option><option value="category">Sort: category</option></select></form>`
+    : `<form class="search-form" action="/servers/" method="get" role="search">${searchField(N)}</form>`;
+  const head = home ? `<div class="section-head"><h2 id="results-heading">Featured integrations</h2></div>`
+    : directory ? `<div class="section-head"><h2 id="results-heading" class="sr-only">All integrations</h2><p class="count" id="count" role="status">${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, N)} of ${N} integrations</p><a href="/#categories">Browse categories →</a></div>`
+    : `<div class="section-head"><h2 id="results-heading" class="sr-only">${esc(category)} integrations</h2><p class="count">${n} integrations</p><a href="/servers/">All ${N} integrations →</a></div>`;
+  const how = `<section class="how" aria-labelledby="how-heading"><h2 id="how-heading">How it works</h2><ol class="steps">` +
+    `<li><b>Find your tool</b>Search or browse, open the tool's page and copy its URL, for example <code>https://pipedrive.usefulapi.io/mcp</code>.</li>` +
+    `<li><b>Add it to your AI client</b>Add the URL as a connector in Claude, ChatGPT, Cursor or any MCP client.</li>` +
+    `<li><b>Log in and ask</b>Log in to your tool once, then ask in plain words. The AI picks the tools.</li></ol></section>`;
   const markers = {
     "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
-    "<!-- breadcrumb -->": directory ? '<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › All integrations</nav>' : "",
     "<!-- topbar -->": topbar(directory ? "/servers/" : ""),
-    "<!-- heading -->": directory ? "All integrations" : "Hosted MCP servers for the tools you already use",
-    "<!-- intro -->": directory ? "" : `<p class="tagline">Connect ${N} business tools to Claude, ChatGPT, Cursor or any MCP client.</p>`,
-    "<!-- filters -->": filters,
-    "<!-- categories -->": categories,
-    "<!-- results-title -->": directory ? "All integrations" : "Featured integrations",
-    "<!-- browse-link -->": directory ? '<a href="/#categories">Browse categories →</a>' : "",
-    "<!-- count -->": directory ? `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, N)} of ${N} integrations` : "",
+    "<!-- breadcrumb -->": home ? "" : `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › ${directory ? "All integrations" : esc(category)}</nav>`,
+    "<!-- heading -->": category ? `${esc(category)} integrations` : directory ? "All integrations" : "Hosted MCP servers for the tools you already use",
+    "<!-- intro -->": category ? `<p class="tagline">${n} hosted MCP servers for ${esc(category)} tools. Add one to Claude, ChatGPT, Cursor or any MCP client, then log in.</p>`
+      : directory ? "" : `<p class="tagline">Connect ${N} business tools to Claude, ChatGPT, Cursor or any MCP client.</p>`,
+    "<!-- search -->": search,
+    "<!-- categories -->": home ? `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2>${pills(groups)}</section>` : "",
+    "<!-- section-head -->": head,
     "<!-- results -->": cardsHtml(visible),
     "<!-- pagination -->": directory ? paginationHtml(slice) : "",
-    "<!-- browse-all -->": directory ? "" : `<p class="browse-all"><a class="button" href="/servers/">Browse all ${N} integrations →</a></p>`,
+    "<!-- after -->": home ? `<p class="browse-all"><a class="button" href="/servers/">Browse all ${N} integrations →</a></p>${how}`
+      : category ? `<section class="categories other" aria-labelledby="other-heading"><h2 id="other-heading">Other categories</h2>${pills(groups.filter((g) => g.name !== category))}</section>` : "",
+    "<!-- footer -->": SITE_FOOTER,
     "<!-- scripts -->": directory ? '<noscript><p class="wrap">Search and filters need JavaScript. You can still follow the page links or <a href="/#categories">browse categories</a>.</p></noscript><script type="module" src="/catalog.js"></script>' : ""
   };
   let html = replaceOnce(catalogTemplate, '<title>usefulapi — hosted MCP servers</title>', `<title>${esc(title)}</title>`);
-  html = replaceOnce(html, 'placeholder="Search integrations"', `placeholder="Search ${N} integrations"`);
   for (const [marker, value] of Object.entries(markers)) html = replaceOnce(html, marker, value);
   return html;
 }
@@ -784,7 +805,7 @@ for (let page = 1; page <= directoryPageCount; page++) {
 }
 writeFileSync(`${outDir}/search-index.json`, JSON.stringify({ groups, servers: catalog }));
 for (const f of ["catalog.js", "catalog-model.mjs"]) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
-writeFileSync(`${outDir}/catalog.css`, readFileSync(new URL("portal/catalog.css", ROOT), "utf8") + TOPBAR_CSS + "\n"); // one top-bar style for every page
+writeFileSync(`${outDir}/catalog.css`, readFileSync(new URL("portal/catalog.css", ROOT), "utf8") + SITE_CSS + "\n"); // shared site base, same as every other page
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }
@@ -805,9 +826,8 @@ for (const s of manifest.servers) {
   writeFileSync(`${outDir}/${s.slug}/index.html`, productPage(s));
 }
 for (const g of groupsPresent) {
-  const list = manifest.servers.filter((s) => groupOf(s) === g).sort((a, b) => a.name.localeCompare(b.name));
   mkdirSync(`${outDir}${categoryPath(g)}`, { recursive: true });
-  writeFileSync(`${outDir}${categoryPath(g)}index.html`, categoryPage(g, list));
+  writeFileSync(`${outDir}${categoryPath(g)}index.html`, categoryPage(g));
 }
 if (POSTS.length) {
   mkdirSync(`${outDir}/blog`, { recursive: true });
@@ -819,9 +839,11 @@ if (POSTS.length) {
 }
 // A top-level 404.html makes Cloudflare Pages return a real 404 for unknown paths instead of its
 // SPA fallback (serving index.html with 200 for every URL = soft-404s / duplicate content).
-writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found</h1>
-<p>That page doesn't exist. <a href="/">Browse all ${manifest.servers.length} usefulapi MCP servers</a>, or pick a category:</p>
-<ul>${groupsPresent.map((g) => `<li><a href="${categoryPath(g)}">${esc(g)}</a></li>`).join("")}</ul>`).replace("<head>", '<head><meta name="robots" content="noindex">'));
+writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<div class="notfound"><h1>Page not found</h1>
+<p>That page does not exist. Search for the tool you need, or pick a category.</p>
+<form class="search-form" action="/servers/" method="get" role="search">${searchField(manifest.servers.length)}</form>
+<h2>Categories</h2>
+<div class="category-links">${groups.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div></div>`).replace("<head>", '<head><meta name="robots" content="noindex">'));
 
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
