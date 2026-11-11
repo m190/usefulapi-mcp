@@ -491,8 +491,9 @@ ${FOOTER}`;
   const url = `${SITE}${pagePath(s)}`;
   const n = toolCount(s);
   // Worded like the question a user asks an AI assistant ("connect Acuity to ChatGPT"): answer engines bring most users.
-  const title = `${s.name} MCP server for Claude & ChatGPT | usefulapi`;
-  const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server for Claude, ChatGPT, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
+  // "connector" too: Claude and ChatGPT call these integrations connectors, and Search Console shows "<vendor> connector" queries.
+  const title = `${s.name} MCP server & connector for Claude, ChatGPT | usefulapi`;
+  const desc = `${s.description.replace(/\.?$/, ".")} Hosted remote MCP server (connector) for Claude, ChatGPT, Cursor & any MCP client — ${n} tools${ft ? ", free tier" : ""}.`;
   const offers = (s.pricing || []).map((p) => ({
     "@type": "Offer", name: p.plan, priceCurrency: "USD",
     price: String(p.monthly || "$0").replace(/[^0-9.]/g, "") || "0", description: limitText(p)
