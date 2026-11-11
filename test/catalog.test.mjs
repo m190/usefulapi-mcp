@@ -1,7 +1,7 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync, mkdtempSync, rmSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -83,9 +83,50 @@ test("filtered pagination preserves search, category and ordering in shareable l
   assert.ok(html.includes("category=CRM+%26+Sales"));
 });
 
-test("card content is escaped and contains only name, description and category", () => {
-  const html = cardsHtml([{ slug: "example", name: '<script>alert("x")</script>', description: "A & B", category: "payments", tools: [{ name: "secret" }], pricing: [{ monthly: "$9" }] }]);
+test("card content is escaped and shows group, tool count and free tier, never tool names or prices", () => {
+  const html = cardsHtml([{ slug: "example", name: '<script>alert("x")</script>', description: "A & B", category: "payments", group: "Payments & Billing", toolCount: 7, free: "Free 50 calls/mo", tools: [{ name: "secret" }], pricing: [{ monthly: "$9" }] }]);
   assert.ok(!html.includes("<script>"));
   assert.ok(html.includes("&lt;script&gt;") && html.includes("A &amp; B"));
+  assert.ok(html.includes("Payments &amp; Billing") && html.includes("7 tools · Free 50 calls/mo"));
   assert.ok(!html.includes("secret") && !html.includes("$9"));
+});
+
+test("homepage and directory cards carry real tool counts; directory pages drop the homepage intro", () => {
+  const pipedrive = index.servers.find((s) => s.slug === "pipedrive");
+  assert.equal(pipedrive.toolCount, manifest.servers.find((s) => s.slug === "pipedrive").tools.length);
+  assert.match(pipedrive.free, /^Free \d[\d,]* calls\/mo$/);
+  assert.ok(read("index.html").includes(`${pipedrive.toolCount} tools`));
+  assert.ok(read("index.html").includes('class="tagline"'));
+  assert.ok(!read("servers/index.html").includes('class="tagline"'));
+  assert.equal((read("index.html").match(/Browse all \d+/g) || []).length, 1);
+});
+
+test("every directory card and every search-index slice renders group and tool metadata", () => {
+  const totalPages = Math.ceil(manifest.servers.length / PAGE_SIZE);
+  for (let page = 1; page <= totalPages; page++) {
+    const html = read(`${staticPagePath(page)}index.html`);
+    assert.equal((html.match(/class="meta">\d+ tools · Free /g) || []).length, (html.match(/class="card"/g) || []).length);
+  }
+  // catalog.js renders search results from search-index.json entries with the same cardsHtml.
+  for (const s of index.servers) {
+    const html = cardsHtml([s]);
+    assert.ok(html.includes(`<span class="category">${s.group.replace(/&/g, "&amp;")}</span>`), s.slug);
+    assert.ok(html.includes(`<span class="meta">${s.toolCount} tools · ${s.free}</span>`), s.slug);
+    assert.ok(s.toolCount > 0 && /^Free \d/.test(s.free), s.slug);
+  }
+});
+
+test("blog index keeps every post in the HTML and adds the show-more button only when needed", () => {
+  const html = read("blog/index.html");
+  const posts = readdirSync(join(root, "blog")).filter((f) => f.endsWith(".md")).length;
+  assert.equal((html.match(/<li><a href="\/blog\//g) || []).length, posts);
+  assert.ok(html.includes('id="post-list"'));
+  assert.equal(html.includes('id="more-posts"'), posts > 10);
+  assert.ok(!/<li[^>]* hidden/.test(html)); // hidden only by the script, so no-JS readers see all posts
+});
+
+test("links inside sentences keep an underline (colour alone is not a link cue)", () => {
+  const css = readFileSync(join(root, "portal/catalog.css"), "utf8");
+  for (const sel of [".custom-line a", ".empty a", "#catalog-error a", "noscript a"]) assert.match(css, new RegExp(`${sel.replace(/[.#]/g, "\\$&")}[^{]*\\{text-decoration:underline`));
+  assert.ok(read("servers/index.html").includes("<noscript>"));
 });

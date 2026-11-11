@@ -181,8 +181,9 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .prompts{margin:0;padding:0;list-style:none;display:grid;gap:8px}.prompts li{margin:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:15px}
 .prompts li::before{content:"“";color:var(--muted)}.prompts li::after{content:"”";color:var(--muted)}
 .faq details{border-bottom:1px solid var(--border);padding:12px 0}.faq summary{cursor:pointer;font-weight:600}.faq p{margin:8px 0 0;color:var(--muted);font-size:15px}.faq a{color:var(--accent)}
-.posts{list-style:none;margin:0;padding:0;display:grid;gap:12px}.posts li{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px}
+.posts{list-style:none;margin:0;padding:0;display:grid;gap:12px}.posts li{margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px}
 .posts a{font-weight:600;text-decoration:none}.posts a:hover{color:var(--accent)}.posts p{margin:4px 0 0;color:var(--muted);font-size:14px}.posts .date{color:var(--muted);font-size:12px}
+.more-posts{display:block;margin:20px auto 0;padding:10px 18px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg);font:inherit;font-size:15px;font-weight:600;cursor:pointer}.more-posts:hover{border-color:var(--accent)}.more-posts:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.more-posts[hidden]{display:none}
 .post{max-width:720px}.post h1{margin:0 0 8px}.post .meta{color:var(--muted);font-size:14px;margin:0 0 28px}.post .meta a{color:var(--accent)}
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
@@ -235,7 +236,7 @@ const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.ad
 const SERVICES_PATH = "/services/";
 const SERVICES_MAIL = "mailto:support@usefulapi.io?subject=Custom%20work";
 const FOOTER = `<footer><a href="/">← Browse all usefulapi servers</a> &nbsp;·&nbsp; <a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; ${POSTS.length ? `<a href="/blog/">Blog</a> &nbsp;·&nbsp; ` : ""}<a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp; <a href="mailto:support@usefulapi.io">support@usefulapi.io</a></footer>`;
-const postList = (list) => `<ul class="posts">${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
+const postList = (list, id = "") => `<ul class="posts"${id ? ` id="${id}"` : ""}>${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 // Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
 // a 6-digit email code). From s.login (codegen syncs it from fleet product.ts), else from s.auth.
@@ -596,6 +597,9 @@ ${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}</style></head>
 <body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
 }
+// Blog index: every post stays in the HTML (crawlable, readable without JS); the script shows BLOG_PAGE at a time.
+const BLOG_PAGE = 10;
+const MORE_POSTS_JS = `<script>(function(){var items=[].slice.call(document.querySelectorAll("#post-list>li")),btn=document.getElementById("more-posts"),step=${BLOG_PAGE},shown=step;if(!btn)return;function render(){items.forEach(function(li,i){li.hidden=i>=shown;});var left=items.length-shown;btn.hidden=left<=0;if(left>0)btn.textContent=left>step?"Show "+step+" more posts ("+left+" left)":"Show the last "+left+(left===1?" post":" posts");}btn.addEventListener("click",function(){var first=items[shown];shown+=step;render();if(first)first.querySelector("a").focus();});render();})();</script>`;
 function blogIndexPage() {
   const url = `${SITE}/blog/`;
   const title = "Blog: business tools in Claude and ChatGPT | usefulapi";
@@ -605,7 +609,8 @@ function blogIndexPage() {
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › Blog</nav>
 <div class="brand">${MARK}<h1>Blog</h1></div>
 <p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>
-${postList(POSTS)}
+${postList(POSTS, "post-list")}
+${POSTS.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden></button>` : ""}
 ${FOOTER}`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -613,7 +618,7 @@ ${FOOTER}`;
 ${headMeta({ title, desc, url })}
 ${jsonLd(ld)}
 <style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${body}</div></body></html>`;
+<body><div class="wrap">${body}</div>${MORE_POSTS_JS}</body></html>`;
 }
 
 // ---- Catalog groups: shared by category pages, the directory and its compact search index. ----
@@ -668,6 +673,7 @@ const groups = groupsPresent.map((name) => ({ name, count: manifest.servers.filt
 // Search uses deduplicated tool-name/title words, not full tool descriptions or the 9 MB manifest.
 const catalog = manifest.servers.map((s) => ({
   slug: s.slug, name: s.name, description: s.description, category: s.category, group: groupOf(s),
+  toolCount: toolCount(s), free: freeTier(s) ? `Free ${String(freeTier(s).limit).replace(/\s*tool calls\s*\/\s*month$/i, " calls/mo")}` : "",
   keywords: [...new Set(normalize((s.tools || []).map((t) => `${t.name || ""} ${t.title || ""}`).join(" ")).split(" "))].join(" ")
 }));
 // An editorial starting point across common business tasks, not a popularity ranking.
@@ -701,16 +707,17 @@ function catalogPage({ directory = false, page = 1 } = {}) {
       mainEntity: { "@type": "ItemList", name: directory ? "MCP integrations" : "Featured integrations", numberOfItems: visible.length,
         itemListElement: visible.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) } }
   ];
-  const filters = directory ? `<div class="filters"><label for="category">Category <select id="category" name="category"><option value="">All categories (${N})</option>${groups.map((g) => `<option value="${attr(g.name)}">${esc(g.name)} (${g.count})</option>`).join("")}</select></label><label for="sort">Sort <select id="sort" name="sort"><option value="name">Name (A–Z)</option><option value="relevance">Relevance</option><option value="category">Category</option></select></label></div>` : "";
+  const filters = directory ? `<div class="filters"><label for="category">Category <select id="category" name="category"><option value="">All categories</option>${groups.map((g) => `<option value="${attr(g.name)}">${esc(g.name)} (${g.count})</option>`).join("")}</select></label><label for="sort">Sort <select id="sort" name="sort"><option value="name">Name (A–Z)</option><option value="relevance">Relevance</option><option value="category">Category</option></select></label></div>` : "";
   const categories = directory ? "" : `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2><div class="category-links">${groups.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div></section>`;
   const markers = {
     "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
     "<!-- breadcrumb -->": directory ? '<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › All integrations</nav>' : "",
     "<!-- heading -->": directory ? "All integrations" : "usefulapi",
+    "<!-- intro -->": directory ? "" : `<p class="tagline">Hosted MCP servers for the tools you already use.</p><p class="custom-line">Need a tool that is not here, or a custom integration? <a href="/services/">We build it →</a></p>`,
     "<!-- filters -->": filters,
     "<!-- categories -->": categories,
     "<!-- results-title -->": directory ? "All integrations" : "Featured integrations",
-    "<!-- browse-link -->": directory ? '<a href="/#categories">Browse categories →</a>' : `<a href="/servers/">Browse all ${N} →</a>`,
+    "<!-- browse-link -->": directory ? '<a href="/#categories">Browse categories →</a>' : "",
     "<!-- count -->": directory ? `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, N)} of ${N} integrations` : "",
     "<!-- results -->": cardsHtml(visible),
     "<!-- pagination -->": directory ? paginationHtml(slice) : "",

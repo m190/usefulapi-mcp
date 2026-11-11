@@ -37,8 +37,13 @@ export function paginate(servers, requestedPage = 1) {
   return { page, pages, total: servers.length, items: servers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE) };
 }
 
+// Card tag = browse group (same names as the category links); meta = tool count + free tier.
 export function cardsHtml(servers) {
-  return `<div class="grid">${servers.map((s) => `<a class="card" href="/${escapeHtml(s.slug)}/"><h3>${escapeHtml(s.name)}</h3><p>${escapeHtml(s.description)}</p><span class="category">${escapeHtml(categoryLabel(s.category))}</span></a>`).join("")}</div>`;
+  return `<div class="grid">${servers.map((s) => {
+    const meta = [s.toolCount ? `${s.toolCount} tools` : "", s.free || ""].filter(Boolean).join(" · ");
+    return `<a class="card" href="/${escapeHtml(s.slug)}/"><h3>${escapeHtml(s.name)}</h3><p>${escapeHtml(s.description)}</p>` +
+      `<span class="card-foot"><span class="category">${escapeHtml(s.group || categoryLabel(s.category || ""))}</span>${meta ? `<span class="meta">${escapeHtml(meta)}</span>` : ""}</span></a>`;
+  }).join("")}</div>`;
 }
 
 export function paginationHtml({ page, pages }, state = {}) {
