@@ -760,6 +760,8 @@ for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-ic
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }
 copyFileSync(new URL("manifest.json", ROOT), `${outDir}/manifest.json`); // homepage fetches this
+// IndexNow ownership key (public by design): scripts/indexnow-ping.mjs submits changed URLs to Bing and others.
+for (const f of readdirSync(new URL("portal/", ROOT))) if (/^indexnow-[0-9a-f]{32}\.txt$/.test(f)) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 // _probe/<slug>.json: static discovery replies for crawler redirect tests (zone redirect rules; no Worker runs).
 mkdirSync(`${outDir}/_probe`, { recursive: true });
 for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new URL(`portal/_probe/${f}`, ROOT), `${outDir}/_probe/${f}`);
