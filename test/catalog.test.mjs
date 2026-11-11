@@ -200,3 +200,15 @@ test("phones show six category pills and a Show-all button; without JS every pil
   assert.match(read("catalog.css"), /\.category-links\.collapsible \.category-link:nth-child\(n\+7\)\{display:none\}/);
   assert.ok(!read("catalog.css").includes("overflow-x:auto;margin:-8px"));
 });
+
+test("product header shows the Connect button and one short free-tier label only", () => {
+  const s = manifest.servers.find((x) => x.status === "live" && (x.pricing || []).some((p) => /free/i.test(p.plan)));
+  const html = read(`${s.slug}/index.html`);
+  const facts = html.match(/<div class="facts">(.*?)<\/div>/)[1];
+  // On phones the name is hidden visually only, so the accessible name stays "Connect <name>".
+  assert.match(html, /@media \(max-width:560px\)\{\.facts\{font-size:14px\}\.cta-name\{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect\(0 0 0 0\)/);
+  assert.doesNotMatch(html, /\.cta-name\{display:none/);
+  assert.match(facts, /<a class="cta" href="#connect">Connect<span class="cta-name"> [^<]+<\/span><\/a>/);
+  assert.match(facts, /<span class="f">Free \d[\d,]* calls\/mo<\/span>$/);
+  assert.doesNotMatch(facts, /tools|\$/);
+});

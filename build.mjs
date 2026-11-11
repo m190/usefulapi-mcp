@@ -181,6 +181,8 @@ const priceText = (p) => {
 const proTier = (s) => (s.pricing || []).find((p) => /^pro$/i.test(p.plan));
 const plusTier = (s) => (s.pricing || []).find((p) => /^pro\+$/i.test(p.plan));
 const freeTier = (s) => (s.pricing || []).find((p) => /free/i.test(p.plan));
+// Short free-tier label for cards and the product header, e.g. "Free 50 calls/mo".
+const freeShort = (s) => freeTier(s) ? `Free ${String(freeTier(s).limit).replace(/\s*tool calls\s*\/\s*month$/i, " calls/mo")}` : "";
 // Compatibility for older manifest entries that still describe Pro as "Unlimited".
 const PRO_FAIR_USE = "fair use limit: 10,000 tool calls a month";
 const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit);
@@ -246,7 +248,7 @@ const PAGE_CSS = `
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
 .btn{color:var(--on-accent)!important}
 .facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
-.facts .f{color:var(--muted)}.facts .f b{color:var(--fg);font-weight:600}
+.facts .f{color:var(--muted);white-space:nowrap}
 .cta{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--on-accent)!important;text-decoration:none;font-weight:600;font-size:15px}
 .cta:hover{filter:brightness(1.08)}
 .lead-in{color:var(--muted);margin:-4px 0 14px;font-size:15px}
@@ -264,7 +266,7 @@ details.all>summary .n{color:var(--muted);font-weight:400}
 .tgroup{margin:4px 0 14px}.tgroup h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin:10px 0 4px}
 .tlist{list-style:none;margin:0;padding:0}.tlist li{margin:0;padding:10px 0;border-top:1px solid var(--border);font-size:14px}
 .tlist code.tn{color:var(--muted);font-size:12px;margin-left:8px;background:none;padding:0}
-@media (max-width:560px){.facts{font-size:14px}.tlist code.tn{display:block;margin:2px 0 0}}`;
+@media (max-width:560px){.facts{font-size:14px}.cta-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.tlist code.tn{display:block;margin:2px 0 0}}`;
 // The client tabs: without JavaScript every panel shows (crawlers, AI answer engines); with it, one panel at a time,
 // the reader's last choice first (localStorage, optional).
 const TABS_JS = `<script>(function(){var bar=document.querySelector(".tabs");if(!bar)return;var bs=[].slice.call(bar.querySelectorAll("[role=tab]")),ps=[].slice.call(document.querySelectorAll(".panel"));
@@ -477,10 +479,10 @@ ${copyLine(urlShown)}
 <div class="panels">${clients.map((x) =>
     `<div class="card panel" role="tabpanel" tabindex="0" id="p-${x.c}" aria-labelledby="tab-${x.c}" data-c="${x.c}"><h3>${x.label}${x.for ? ` <span class="for">${x.for}</span>` : ""}</h3>
 ${x.html}</div>`).join("\n")}</div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
-  // Next to the button: the free tier and the tool count only. Prices are in the pricing section below.
+  // Next to the button: one short free-tier label, so it fits in one row on phones. Prices are in the pricing section below.
   const ft = freeTier(s), pt = proTier(s);
-  const facts = `<div class="facts">${live ? `<a class="cta" href="#connect">Connect ${name}</a>` : chip("launching soon")}` +
-    `<span class="f">${ft ? `<b>Free:</b> ${esc(ft.limit)} · ` : ""}${toolCount(s)} tools</span></div>`;
+  const facts = `<div class="facts">${live ? `<a class="cta" href="#connect">Connect<span class="cta-name"> ${name}</span></a>` : chip("launching soon")}` +
+    `${freeShort(s) ? `<span class="f">${esc(freeShort(s))}</span>` : ""}</div>`;
 
   // All tools in one closed section, grouped by what they do. The "GET /path." suffix is for developers only.
   const plainDesc = (d) => String(d || "").replace(ROUTE_SENTENCE, "$1").replace(ROUTE_PAREN, "$1").trim();
@@ -698,7 +700,7 @@ const groups = groupsPresent.map((name) => ({ name, count: manifest.servers.filt
 // Search uses deduplicated tool-name/title words, not full tool descriptions or the 9 MB manifest.
 const catalog = manifest.servers.map((s) => ({
   slug: s.slug, name: s.name, description: s.description, category: s.category, group: groupOf(s),
-  toolCount: toolCount(s), free: freeTier(s) ? `Free ${String(freeTier(s).limit).replace(/\s*tool calls\s*\/\s*month$/i, " calls/mo")}` : "",
+  toolCount: toolCount(s), free: freeShort(s),
   keywords: [...new Set(normalize((s.tools || []).map((t) => `${t.name || ""} ${t.title || ""}`).join(" ")).split(" "))].join(" ")
 }));
 // An editorial starting point across common business tasks, not a popularity ranking.
