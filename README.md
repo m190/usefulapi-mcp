@@ -948,6 +948,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Imker SalesCRM](servers/imker-salescrm/) | ecommerce | 15 | API token | [servers/imker-salescrm/](servers/imker-salescrm/) |
 | [Reviso](servers/reviso/) | accounting | 27 | API token | [servers/reviso/](servers/reviso/) |
 | [Xodo Sign](servers/eversign/) | e-sign | 12 | OAuth | [servers/eversign/](servers/eversign/) |
+| [Humanforce](servers/humanforce/) | hr | 18 | API token | [servers/humanforce/](servers/humanforce/) |
+| [ePoslovanje](servers/eposlovanje/) | billing | 18 | API token | [servers/eposlovanje/](servers/eposlovanje/) |
+| [CBO](servers/cloud-business-organiser/) | business-operations | 34 | API token | [servers/cloud-business-organiser/](servers/cloud-business-organiser/) |
+| [Wrapp](servers/wrapp/) | billing | 24 | API token | [servers/wrapp/](servers/wrapp/) |
+| [Kobiyi](servers/kobiyi/) | Finance | 24 | API token | [servers/kobiyi/](servers/kobiyi/) |
+| [Facturis Online](servers/facturis-online/) | billing | 10 | API token | [servers/facturis-online/](servers/facturis-online/) |
+| [Invoices Online](servers/invoices-online/) | billing | 17 | API token | [servers/invoices-online/](servers/invoices-online/) |
+| [CargoRomania](servers/cargoromania/) | logistics | 26 | API token | [servers/cargoromania/](servers/cargoromania/) |
+| [Doklado](servers/doklado/) | accounting | 13 | API token | [servers/doklado/](servers/doklado/) |
+| [WizCloud](servers/wizcloud/) | accounting | 11 | API token | [servers/wizcloud/](servers/wizcloud/) |
+| [Sorted](servers/sorted/) | shipping | 13 | API token | [servers/sorted/](servers/sorted/) |
+| [FreightSimple](servers/freightsimple/) | logistics | 16 | API token | [servers/freightsimple/](servers/freightsimple/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
