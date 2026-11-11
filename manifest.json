@@ -161337,6 +161337,123 @@
         "Create a draft invoice for customer 102 with 3 hours of product 110.",
         "List the ledger entries on account 4000 for the current accounting year."
       ]
+    },
+    {
+      "slug": "eversign",
+      "name": "Xodo Sign",
+      "category": "e-sign",
+      "description": "List and read documents and templates; send reminders, cancel or trash documents in Xodo Sign.",
+      "endpoint": "https://eversign.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your businesses, documents and templates. It can send a signing reminder, cancel a pending document and move a document to the trash when you ask it to. You can revoke access from your Xodo Sign account settings."
+      },
+      "tools": [
+        {
+          "name": "eversign_list_businesses",
+          "type": "read",
+          "title": "List businesses",
+          "description": "List the businesses (workspaces) the signed-in account can use, with business_id, name and whether each is the primary business. Call this first to find a business_id. Xodo Sign API: GET /business."
+        },
+        {
+          "name": "eversign_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List documents in a business, filtered by status (for example waiting_for_others or completed). Each entry includes document_hash, title and status flags. Xodo Sign API: GET /document?type=..."
+        },
+        {
+          "name": "eversign_get_document",
+          "type": "read",
+          "title": "Get document or template",
+          "description": "Get one document or template in full: signers (with signer ids and status), fields, files, dates and flags. Works for templates too. Xodo Sign API: GET /document?document_hash=..."
+        },
+        {
+          "name": "eversign_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the templates in a business (active, archived or drafts). Xodo Sign API: GET /document?type=templates."
+        },
+        {
+          "name": "eversign_get_final_pdf_url",
+          "type": "read",
+          "title": "Get final PDF link",
+          "description": "Get the download link of the final signed PDF of a completed document. Returns the link, not the file. Set audit_trail to include the audit trail. Xodo Sign API: GET /download_final_document?url_only=1."
+        },
+        {
+          "name": "eversign_send_reminder",
+          "type": "write",
+          "title": "Send signing reminder",
+          "description": "Send an email reminder to one signer of a pending document. The signer is emailed at once; a reminder cannot be unsent. Xodo Sign API: POST /send_reminder."
+        },
+        {
+          "name": "eversign_cancel_document",
+          "type": "write",
+          "title": "Cancel document",
+          "description": "Cancel a pending document: no signer can sign it after this. Cancelling does not delete it. Xodo Sign API: DELETE /document?cancel=1."
+        },
+        {
+          "name": "eversign_trash_document",
+          "type": "write",
+          "title": "Move document to trash",
+          "description": "Move a document to the trash. Pending documents must be cancelled first, and completed or draft documents must be trashed before deletion. Xodo Sign API: DELETE /document?trash=1."
+        },
+        {
+          "name": "eversign_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "eversign_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Xodo Sign tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "eversign_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Xodo Sign (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "eversign_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Xodo Sign Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run eversign_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my documents are still waiting for other people to sign?",
+        "Show me the documents that were completed this month.",
+        "Send a signing reminder for document j6yMcaF2gQAIIQ to signer 1.",
+        "Give me the download link for the final signed PDF of this document."
+      ]
     }
   ]
 }
