@@ -960,6 +960,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [WizCloud](servers/wizcloud/) | accounting | 11 | API token | [servers/wizcloud/](servers/wizcloud/) |
 | [Sorted](servers/sorted/) | shipping | 13 | API token | [servers/sorted/](servers/sorted/) |
 | [FreightSimple](servers/freightsimple/) | logistics | 16 | API token | [servers/freightsimple/](servers/freightsimple/) |
+| [Daras](servers/daras/) | ecommerce | 26 | API token | [servers/daras/](servers/daras/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
