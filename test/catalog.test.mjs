@@ -1,4 +1,6 @@
 import { test, before, after } from "node:test";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync, mkdtempSync, rmSync, existsSync } from "node:fs";
@@ -155,7 +157,7 @@ test("every page type shares one width, one footer and the same base CSS", () =>
   const pages = ["index.html", "servers/index.html", "category/crm-and-sales/index.html", "pipedrive/index.html", "blog/index.html", `blog/${post}/index.html`, "services/index.html", "privacy/index.html", "terms/index.html", "404.html"];
   for (const path of pages) {
     const html = read(path);
-    const css = html.includes('href="/catalog.css"') ? read("catalog.css") : html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    const css = html.includes('href="/catalog.css?v=') ? read("catalog.css") : html.match(/<style>([\s\S]*?)<\/style>/)[1];
     assert.deepEqual([...css.matchAll(/\.wrap\{max-width:(\d+)px/g)].map((m) => m[1]), ["1008"], path);
     assert.equal((html.match(/<footer class="site">/g) || []).length, 1, path);
     assert.ok(!/<footer>/.test(html), path);
@@ -178,4 +180,23 @@ test("text pages use the full column and the phone top bar stays on one row", ()
   for (const path of [`blog/${post}/index.html`, "services/index.html", "privacy/index.html", "404.html"]) assert.ok(!read(path).includes("max-width:720px"), path);
   assert.ok(read("index.html").includes('<a href="/servers/" class="nav-wide">Integrations</a>'));
   assert.match(read("catalog.css"), /\.topbar \.nav-wide\{display:none\}/);
+});
+
+test("catalog CSS and JS URLs carry a content hash, so browsers never keep a stale copy", () => {
+  const { createHash } = require("node:crypto");
+  const hash = (t) => createHash("sha256").update(t).digest("hex").slice(0, 10);
+  for (const path of ["index.html", "servers/index.html", "category/crm-and-sales/index.html"])
+    assert.ok(read(path).includes(`<link rel="stylesheet" href="/catalog.css?v=${hash(read("catalog.css"))}">`), path);
+  assert.ok(read("servers/index.html").includes(`src="/catalog.js?v=${hash(read("catalog.js"))}"`));
+  assert.ok(read("catalog.js").includes(`from "/catalog-model.mjs?v=${hash(read("catalog-model.mjs"))}"`));
+});
+
+test("phones show six category pills and a Show-all button; without JS every pill is in the HTML", () => {
+  const home = read("index.html");
+  const block = home.match(/<div class="category-links">([\s\S]*?)<\/div><script>([\s\S]*?)<\/script>/);
+  assert.ok(block, "pills followed by their script");
+  assert.equal((block[1].match(/class="category-link"/g) || []).length, index.groups.length);
+  assert.ok(block[2].includes("Show all") && block[2].includes("collapsible"));
+  assert.match(read("catalog.css"), /\.category-links\.collapsible \.category-link:nth-child\(n\+7\)\{display:none\}/);
+  assert.ok(!read("catalog.css").includes("overflow-x:auto;margin:-8px"));
 });

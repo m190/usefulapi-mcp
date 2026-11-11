@@ -8,6 +8,7 @@
 //   <outDir>/terms/index.html      (rendered from legal/terms.md)
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { loadContent } from "./content.mjs";
 import { loadBlog } from "./blog.mjs";
 import { PAGE_SIZE, cardsHtml, normalize, paginate, paginationHtml, selectServers, staticPagePath } from "./portal/catalog-model.mjs";
@@ -90,16 +91,20 @@ footer.site a{color:var(--muted);text-decoration:none}footer.site a:hover{color:
 .category-link{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:999px;padding:7px 14px;color:var(--fg);font-size:14px;line-height:1.3;background:var(--card);white-space:nowrap;text-decoration:none}
 .category-link:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
 .category-link span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.category-more{display:none;align-items:center;border:1px solid var(--border);border-radius:999px;padding:6px 12px;background:none;color:var(--accent);font:inherit;font-size:13px;font-weight:600;line-height:1.3;cursor:pointer}.category-more:hover{border-color:var(--accent)}
 @media(max-width:560px){
 .wrap{padding:16px 16px 44px}h1{font-size:26px}
 .topbar{margin-bottom:28px}.topbar .logo span,.topbar .nav-wide{display:none}.topbar nav{flex-wrap:nowrap;gap:14px}.topbar .nav-cta{white-space:nowrap}
 .search-form{margin-bottom:26px}
-/* One row that scrolls sideways, so the categories do not push the content off the first screen. */
-.category-links{flex-wrap:nowrap;overflow-x:auto;margin:-8px -16px 0;padding:8px 56px 8px 16px;scrollbar-width:none;scroll-padding:0 56px 0 16px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 48px),transparent)}
-/* The end padding (56px) is wider than the fade (48px), so the last pill scrolls clear of it; no fade while a pill has focus. */
-.category-links:focus-within{-webkit-mask-image:none;mask-image:none}
-.category-links::-webkit-scrollbar{display:none}.category-link{flex:none}.category-link:focus-visible{outline-offset:2px}}`;
+.category-link{padding:6px 12px;font-size:13px}
+.category-links.collapsible .category-link:nth-child(n+7){display:none}.category-links.collapsible .category-more{display:inline-flex}}`;
 const SITE_FOOTER = `<footer class="site"><p>Connect from Claude, ChatGPT, Cursor, or any MCP client.</p><nav aria-label="Footer"><a href="/servers/">All integrations</a><a href="/services/">Custom integrations</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
+// Category pills (homepage, category pages, 404). On phones the script shows the first PILLS_PHONE and a
+// "Show all" button; without JS, or on wider screens, every pill shows.
+const PILLS_PHONE = 6;
+const PILLS_JS = `(function(){var row=document.currentScript.previousElementSibling,n=row.children.length,b=document.createElement("button");b.type="button";b.className="category-more";b.textContent="Show all "+n+" categories";row.appendChild(b);row.classList.add("collapsible");b.addEventListener("click",function(){row.classList.remove("collapsible");b.remove();var next=row.children[${PILLS_PHONE}];if(next)next.focus();});})();`;
+const categoryPills = (list) => `<div class="category-links">${list.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div>` +
+  (list.length > PILLS_PHONE ? `<script>${PILLS_JS}</script>` : "");
 // One search field (homepage, directory, category pages, 404); it submits to the directory.
 const searchField = (n) => `<label class="sr-only" for="search">Search all integrations</label><div class="search-field">` +
   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>` +
@@ -706,6 +711,18 @@ const featured = FEATURED_SLUGS.map((slug) => {
 const directoryServers = selectServers(catalog);
 const directoryPageCount = Math.ceil(catalog.length / PAGE_SIZE);
 const catalogTemplate = readFileSync(new URL("portal/index.html", ROOT), "utf8");
+// Catalog assets get a content hash in the URL: Cloudflare sends max-age=14400, so a fixed URL kept old CSS for hours.
+const fingerprint = (text) => createHash("sha256").update(text).digest("hex").slice(0, 10);
+const CATALOG_CSS = readFileSync(new URL("portal/catalog.css", ROOT), "utf8") + SITE_CSS + "\n";
+const MODEL_JS = readFileSync(new URL("portal/catalog-model.mjs", ROOT), "utf8");
+const MODEL_URL = `/catalog-model.mjs?v=${fingerprint(MODEL_JS)}`;
+const CATALOG_JS = (() => {
+  const js = readFileSync(new URL("portal/catalog.js", ROOT), "utf8");
+  if (!js.includes('from "/catalog-model.mjs"')) throw new Error("portal/catalog.js: model import not found");
+  return js.replace('from "/catalog-model.mjs"', () => `from "${MODEL_URL}"`);
+})();
+const CSS_URL = `/catalog.css?v=${fingerprint(CATALOG_CSS)}`;
+const JS_URL = `/catalog.js?v=${fingerprint(CATALOG_JS)}`;
 const replaceOnce = (html, from, to) => {
   if (!html.includes(from)) throw new Error(`portal/index.html: marker not found: ${from}`);
   return html.replace(from, () => to);
@@ -732,7 +749,6 @@ function catalogPage({ directory = false, page = 1, category = "" } = {}) {
       mainEntity: { "@type": "ItemList", name: category ? `${category} MCP servers` : directory ? "MCP integrations" : "Featured integrations", numberOfItems: visible.length,
         itemListElement: visible.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) } }
   ];
-  const pills = (list) => `<div class="category-links">${list.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div>`;
   // Directory: search, category and sort share one row; the labels are for screen readers.
   const search = directory
     ? `<form class="search-form toolbar" action="/servers/" method="get" role="search">${searchField(N)}` +
@@ -754,16 +770,17 @@ function catalogPage({ directory = false, page = 1, category = "" } = {}) {
     "<!-- intro -->": category ? `<p class="tagline">${n} hosted MCP servers for ${esc(category)} tools. Add one to Claude, ChatGPT, Cursor or any MCP client, then log in.</p>`
       : directory ? "" : `<p class="tagline">Connect ${N} business tools to Claude, ChatGPT, Cursor or any MCP client.</p>`,
     "<!-- search -->": search,
-    "<!-- categories -->": home ? `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2>${pills(groups)}</section>` : "",
+    "<!-- categories -->": home ? `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2>${categoryPills(groups)}</section>` : "",
     "<!-- section-head -->": head,
     "<!-- results -->": cardsHtml(visible),
     "<!-- pagination -->": directory ? paginationHtml(slice) : "",
     "<!-- after -->": home ? `<p class="browse-all"><a class="button" href="/servers/">Browse all ${N} integrations →</a></p>${how}`
-      : category ? `<section class="categories other" aria-labelledby="other-heading"><h2 id="other-heading">Other categories</h2>${pills(groups.filter((g) => g.name !== category))}</section>` : "",
+      : category ? `<section class="categories other" aria-labelledby="other-heading"><h2 id="other-heading">Other categories</h2>${categoryPills(groups.filter((g) => g.name !== category))}</section>` : "",
     "<!-- footer -->": SITE_FOOTER,
-    "<!-- scripts -->": directory ? '<noscript><p class="wrap">Search and filters need JavaScript. You can still follow the page links or <a href="/#categories">browse categories</a>.</p></noscript><script type="module" src="/catalog.js"></script>' : ""
+    "<!-- scripts -->": directory ? `<noscript><p class="wrap">Search and filters need JavaScript. You can still follow the page links or <a href="/#categories">browse categories</a>.</p></noscript><script type="module" src="${JS_URL}"></script>` : ""
   };
   let html = replaceOnce(catalogTemplate, '<title>usefulapi — hosted MCP servers</title>', `<title>${esc(title)}</title>`);
+  html = replaceOnce(html, '<link rel="stylesheet" href="/catalog.css">', `<link rel="stylesheet" href="${CSS_URL}">`);
   for (const [marker, value] of Object.entries(markers)) html = replaceOnce(html, marker, value);
   return html;
 }
@@ -806,8 +823,9 @@ for (let page = 1; page <= directoryPageCount; page++) {
   writeFileSync(`${outDir}${staticPagePath(page)}index.html`, catalogPage({ directory: true, page }));
 }
 writeFileSync(`${outDir}/search-index.json`, JSON.stringify({ groups, servers: catalog }));
-for (const f of ["catalog.js", "catalog-model.mjs"]) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
-writeFileSync(`${outDir}/catalog.css`, readFileSync(new URL("portal/catalog.css", ROOT), "utf8") + SITE_CSS + "\n"); // shared site base, same as every other page
+writeFileSync(`${outDir}/catalog.css`, CATALOG_CSS); // page rules + the shared SITE_CSS base
+writeFileSync(`${outDir}/catalog.js`, CATALOG_JS);
+writeFileSync(`${outDir}/catalog-model.mjs`, MODEL_JS);
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }
@@ -845,7 +863,7 @@ writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<div class="notfoun
 <p>That page does not exist. Search for the tool you need, or pick a category.</p>
 <form class="search-form" action="/servers/" method="get" role="search">${searchField(manifest.servers.length)}</form>
 <h2>Categories</h2>
-<div class="category-links">${groups.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div></div>`).replace("<head>", '<head><meta name="robots" content="noindex">'));
+${categoryPills(groups)}</div>`).replace("<head>", '<head><meta name="robots" content="noindex">'));
 
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
