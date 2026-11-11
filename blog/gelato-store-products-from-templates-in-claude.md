@@ -8,9 +8,9 @@ You can use the Gelato MCP server in Claude, ChatGPT or Cursor to turn a saved G
 
 ## Which prompt do I start with?
 
-> Use my Gelato store ID and template ID to prepare a new t-shirt product with this artwork URL. Show me the available colors and sizes, then propose the title, description, selected variants and image placement. Do not create anything until I approve. After approval, create it hidden from the online store and check its publishing status.
+> Create a hidden t-shirt in my Gelato store from my template and this artwork. Show me the plan and wait for my approval.
 
-Provide the store ID, template ID and a public URL for your artwork with the prompt. Your template should already have the product, prices and mockups set up in Gelato.
+Provide the store ID, template ID and a public URL for your artwork with the prompt. You can ask it to show the colors and sizes, the title, the description and the image placement before it creates anything. Your template should already have the product, prices and mockups set up in Gelato.
 
 ## What does the AI do step by step?
 

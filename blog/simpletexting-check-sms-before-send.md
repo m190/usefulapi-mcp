@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT to check a text message before it goes out with Si
 
 ## Which prompt do I start with?
 
-> Check whether this fits in one text and what it costs: "Your order is ready for pickup. Show this message at the counter." Make it shorter if it does not fit.
+> Does this fit in one text, and what does it cost? "Your order is ready for pickup. Show this message at the counter." If not, make it shorter.
 
 ## What does the AI do, step by step?
 

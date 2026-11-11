@@ -8,7 +8,7 @@ You can make Printful mockups for a new design from Claude, ChatGPT or Cursor. T
 
 ## Which prompt do I start with?
 
-> Find a unisex t-shirt in the Printful catalog in black and white. Add my design from this URL, make front mockups for both colors, and estimate the cost of one shirt shipped to Germany.
+> Make front mockups of my design on a black and a white unisex t-shirt from Printful, and estimate the cost shipped to Germany.
 
 ## What does the AI do, step by step?
 

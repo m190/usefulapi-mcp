@@ -8,7 +8,7 @@ You can check Deputy timesheets before payroll from Claude or ChatGPT. The AI li
 
 ## Which prompt do I start with?
 
-> For last week, list every employee's timesheets with total hours. Mark the timesheets that are not approved, and the ones that differ from the rostered shift by more than 30 minutes. Include approved leave.
+> Check last week's Deputy timesheets before payroll: which are not approved, and which differ from the roster by more than 30 minutes? Include approved leave.
 
 ## What does the AI do, step by step?
 

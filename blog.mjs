@@ -15,6 +15,7 @@
 //   A `code` span that looks like a tool name (a_b) must be a tool of one of the post's products.
 // Section order (AI answer engines quote the top of a page; a human decides in seconds): answer first, setup last.
 //   1. intro: what you can do, in which assistant, and the server URL   2. ## Which prompt do I start with? (a > quote)
+//   A prompt is what a user types: each > quote has at most PROMPT_MAX_WORDS words; options go in the text below it.
 //   3. ## What does the AI do, step by step? (the tools)   4. ## a safety question (approvals, previews, what it never does)
 //   5. ## What do I need? (1-2 lines + link to /<server>/). Headings are the questions users ask.
 // Never publish usage numbers: with few users per server they show one customer's activity.
@@ -108,6 +109,14 @@ export function renderBody(md) {
   return { html: out.join("\n"), codes, links, errors };
 }
 
+const PROMPT_MAX_WORDS = 30;
+
+/** Word counts of every > quote (prompt) in the rendered HTML; hasStart: one comes right after "## Which prompt ...". */
+export function promptWords(html) {
+  const words = [...html.matchAll(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g)].map((m) => m[1].replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length);
+  return { hasStart: /<h2 id="which-prompt[^"]*">(?:(?!<\/h2>)[\s\S])*<\/h2>\s*<blockquote/.test(html), words };
+}
+
 function checkOne(slug, text, bySlug, today) {
   const err = [];
   const { meta, body } = parse(text);
@@ -134,6 +143,12 @@ function checkOne(slug, text, bySlug, today) {
     else if (s.status !== "live") err.push(`products: ${p} is not live`);
   }
   const r = renderBody(body);
+  const pw = promptWords(r.html);
+  if (!pw.hasStart) err.push('body: no start prompt (a "> " quote right under "## Which prompt do I start with?")');
+  for (const n of pw.words) {
+    if (n === 0) err.push("prompt: an empty > quote");
+    else if (n > PROMPT_MAX_WORDS) err.push(`prompt: ${n} words (max ${PROMPT_MAX_WORDS}): write it as a user types it; put options in the text below`);
+  }
   err.push(...r.errors);
   if (!r.html.trim()) err.push("body: empty");
   for (const v of [meta.title, meta.description, body.replace(/```[\s\S]*?```/g, "")]) {

@@ -8,9 +8,9 @@ You can ask Claude or ChatGPT to compare your SOS Inventory stock with your open
 
 ## Which prompt do I start with?
 
-> Look at my SOS Inventory items in the category "Finished goods". Show their stock quantities next to the quantities still not shipped on open sales orders and still not received on open purchase orders. Match the records by item. Include the expected receipt dates where SOS has them. Explain how you calculate any shortage, and tell me if a field is missing or unclear.
+> Compare my SOS Inventory stock of "Finished goods" with my open sales and purchase orders. Which items could run short?
 
-You can name a location to see the quantities at one warehouse only. You can also start smaller: "Which purchase orders are still waiting to be received?"
+Ask the AI to explain how it calculates a shortage, and to tell you when a field is missing or unclear. You can name a location to see the quantities at one warehouse only. You can also start smaller: "Which purchase orders are still waiting to be received?"
 
 ## What does the AI do, step by step?
 

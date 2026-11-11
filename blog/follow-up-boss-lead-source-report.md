@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT how many leads from a source such as Zillow each a
 
 ## Which prompt do I start with?
 
-> Count the Zillow leads created since July 1 per assigned agent, and how many of them are now in the Closed stage. Show the conversion rate per agent and the leads per lender.
+> Per agent, how many Zillow leads came in since July 1, and how many are now Closed? Also show the leads per lender.
 
 ## What does the AI do, step by step?
 

@@ -8,7 +8,7 @@ You can ask Cursor or Claude to prepare a follow-up using the contact records, n
 
 ## Which prompt do I start with?
 
-> Find Acme Ltd in Less Annoying CRM. Summarize its latest notes, current pipeline stages and incomplete tasks due this week. Draft a short follow-up based on those records. Only read the CRM; show the draft here without saving or sending anything.
+> Prepare my follow-up with Acme Ltd from Less Annoying CRM: notes, pipeline stages, tasks due this week and a short draft. Do not save anything.
 
 If several records match, give the AI an email address or another detail to identify the right one before it continues. Name the dates you mean by "this week" if needed.
 

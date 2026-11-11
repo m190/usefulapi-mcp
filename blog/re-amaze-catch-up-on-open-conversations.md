@@ -8,7 +8,7 @@ You can ask Claude or ChatGPT to go through your open Re:amaze support conversat
 
 ## Which prompt do I start with?
 
-> Show me the open Re:amaze conversations from the last 3 days. For each one, read the messages and tell me in one line what the customer needs and who replied last.
+> Catch me up on the open Re:amaze conversations from the last 3 days. What does each customer need, and who replied last?
 
 You can narrow it: name a channel (for example your email inbox or live chat), a tag, or a customer email.
 

@@ -8,9 +8,9 @@ You can give ChatGPT or Claude a list of contacts, for example from a trade show
 
 ## Which prompt do I start with?
 
-> Here are 8 contacts from yesterday's trade show. For each one, check if noCRM.io already has a lead with that email, unassigned leads included. Show me which ones are new. Then create the new ones as leads for anna@ourcompany.com in the step "Contacted", with the tag "trade-show-2026".
+> Add these trade show contacts to noCRM.io as leads for anna@ourcompany.com. Check by email first which ones already exist, unassigned leads included.
 
-Paste the contacts below the prompt. Company, name, email and phone are enough. You can also ask the AI to show you the leads it plans to create before it creates them.
+Paste the contacts below the prompt. Company, name, email and phone are enough. You can also name a pipeline step and a tag, for example "Contacted" and "trade-show-2026". You can also ask the AI to show you the leads it plans to create before it creates them.
 
 ## What does the AI do, step by step?
 

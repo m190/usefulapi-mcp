@@ -8,7 +8,7 @@ You can read the Shiftbase schedule from Claude or ChatGPT. The AI lists the shi
 
 ## Which prompt do I start with?
 
-> Show next week's schedule for the Amsterdam department per day, with employee, team, start and end time. Add the total hours per employee and list the open shifts and approved absences.
+> Show next week's Shiftbase schedule for the Amsterdam department, with total hours per employee, open shifts and approved absences.
 
 ## What does the AI do, step by step?
 

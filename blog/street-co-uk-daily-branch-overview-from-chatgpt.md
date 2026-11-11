@@ -8,7 +8,7 @@ You can ask ChatGPT, Claude or another MCP client to read your Street.co.uk CRM 
 
 ## Which prompt do I start with?
 
-> For my main branch in Street, list today's confirmed and unconfirmed viewings with the property and the applicant, the enquiries from the last 24 hours, the inspections that are overdue or need booking, and the sales and lettings offers that are still pending. Keep it to one short list per section.
+> What is on today at my main branch in Street? Show viewings, new enquiries, inspections that are overdue or need booking, and pending offers.
 
 You can change the time range, for example "this week". Viewings, enquiries, offers, tasks and follow-ups filter by branch, and viewings also by sales or lettings. Inspections have no branch filter, so the AI checks the property of each inspection to keep your branch only.
 
