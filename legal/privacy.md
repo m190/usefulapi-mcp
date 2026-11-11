@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 9 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 11 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -15,10 +15,19 @@ the `*.usefulapi.io` MCP endpoints. We are the data controller for the personal 
 ## 1. Data we process
 
 **Account & identity.** When you connect a server, you authenticate to the underlying third-party
-service via OAuth (or, for some servers, an API token you provide). We receive and store a
-credential (OAuth access/refresh token, or your API token) so the server can call that service for
-you. We derive a per-user identifier from it to key your usage and billing. We do **not** receive
-your third-party account password.
+service. Depending on the service, you do this via OAuth or by entering credentials on our login
+page: an API key or token, API client credentials, or, for some services, the username and password
+of your account or of an API user. We receive and store that credential so the server can call
+that service for you. Depending on the server, access tokens obtained with it are used in memory or
+stored encrypted for reuse. We derive an account identifier from your credentials or account details
+to key your usage and billing. If you sign in through the third-party service's OAuth page, we do
+**not** receive your account password. Providing a credential is optional, but we cannot connect
+that service without it. We process it to perform our contract with you.
+
+**Usernames and passwords.** Where a server asks for a username and password, we store them
+encrypted and use them to authenticate and make your requests to that service. We delete them as
+described in section 5. Where the service offers it, use a dedicated API user with only the
+permissions you need.
 
 **Email login (servers without a credential).** Servers for public data sources need no credential;
 you log in with your email address instead, and we send a 6-digit code from login@usefulapi.io. The
@@ -95,7 +104,7 @@ learning models.
 
 ## 4. Service providers and other recipients
 
-We rely on: **Cloudflare, Inc.** (hosting, DNS, storage of encrypted tokens), **Stripe** (payments),
+We rely on: **Cloudflare, Inc.** (hosting, DNS, storage of encrypted credentials), **Stripe** (payments),
 and the **third-party service you connect** (e.g. Linear) — your requests go to that provider under
 its own privacy policy. A current list is available on request at privacy@usefulapi.io.
 
@@ -106,7 +115,7 @@ how it keeps or uses that data.
 
 ## 5. Retention
 
-- Stored credentials: kept until you disconnect, cancel, or request deletion, then deleted within
+- Stored credentials (including usernames, passwords and stored access tokens): kept until you disconnect, cancel, or request deletion, then deleted within
   **30 days**.
 - EasyStore connections: stored OAuth grants and installation metadata are deleted after a verified
   uninstall notification or a confirmed rejection of the store token, and after **30 days without a
