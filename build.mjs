@@ -245,8 +245,10 @@ ${SITE_CSS}`;
 const PAGE_CSS = `
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
 .btn{color:var(--on-accent)!important}
-.facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
-.facts .f{color:var(--muted)}.facts .f b{color:var(--fg)}.facts .f a{color:var(--accent)}
+.facts{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin:0 0 8px;font-size:15px}
+.facts .fl{display:flex;flex-wrap:wrap;gap:4px 18px}
+.facts .f{color:var(--muted);text-decoration:none}.facts .f b{color:var(--fg)}.facts a.f:hover,.facts a.f:hover b{color:var(--accent)}
+.facts a.f .v{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}
 .cta{display:inline-block;padding:10px 18px;border-radius:10px;background:var(--accent);color:var(--on-accent)!important;text-decoration:none;font-weight:600;font-size:15px}
 .cta:hover{filter:brightness(1.08)}
 .lead-in{color:var(--muted);margin:-4px 0 14px;font-size:15px}
@@ -264,7 +266,7 @@ details.all>summary .n{color:var(--muted);font-weight:400}
 .tgroup{margin:4px 0 14px}.tgroup h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:500;margin:10px 0 4px}
 .tlist{list-style:none;margin:0;padding:0}.tlist li{margin:0;padding:10px 0;border-top:1px solid var(--border);font-size:14px}
 .tlist code.tn{color:var(--muted);font-size:12px;margin-left:8px;background:none;padding:0}
-@media (max-width:560px){.facts{font-size:14px}.tlist code.tn{display:block;margin:2px 0 0}}`;
+@media (max-width:560px){.facts{flex-direction:column;align-items:stretch;gap:12px;font-size:14px}.facts .cta{display:block;text-align:center;padding:12px 18px}.facts .fl{display:grid;grid-auto-flow:column;grid-auto-columns:auto;justify-content:space-between;gap:4px 14px}.facts .f{line-height:1.35}.facts .f b{display:block;margin-bottom:2px}.tlist code.tn{display:block;margin:2px 0 0}}`;
 // The client tabs: without JavaScript every panel shows (crawlers, AI answer engines); with it, one panel at a time,
 // the reader's last choice first (localStorage, optional).
 const TABS_JS = `<script>(function(){var bar=document.querySelector(".tabs");if(!bar)return;var bs=[].slice.call(bar.querySelectorAll("[role=tab]")),ps=[].slice.call(document.querySelectorAll(".panel"));
@@ -479,8 +481,8 @@ ${copyLine(urlShown)}
 ${x.html}</div>`).join("\n")}</div>` : `<div class="card"><h2>Launching soon</h2><p class="lead">This server isn't live yet — check back shortly.</p></div>`;
   const ft = freeTier(s), pt = proTier(s);
   const facts = `<div class="facts">${live ? `<a class="cta" href="#connect">Connect ${name}</a>` : chip("launching soon")}` +
-    `${ft ? `<span class="f"><b>Free</b> ${esc(ft.limit)}</span>` : ""}${pt ? `<span class="f"><b>Pro</b> ${esc(priceText(pt))} · <a href="#pricing">pricing</a></span>` : ""}` +
-    `<span class="f">${toolCount(s)} tools</span></div>`;
+    `<div class="fl">${ft ? `<span class="f"><b>Free</b> ${esc(ft.limit)}</span>` : ""}${pt ? `<a class="f" href="#pricing"><b>Pro</b> <span class="v">${esc(priceText(pt))}</span></a>` : ""}` +
+    `<span class="f"><b>Tools</b> ${toolCount(s)}</span></div></div>`;
 
   // All tools in one closed section, grouped by what they do. The "GET /path." suffix is for developers only.
   const plainDesc = (d) => String(d || "").replace(ROUTE_SENTENCE, "$1").replace(ROUTE_PAREN, "$1").trim();
