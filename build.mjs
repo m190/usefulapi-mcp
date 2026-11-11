@@ -52,7 +52,8 @@ function mdToHtml(md) {
   return out.join("\n");
 }
 // Shared top bar on every page: logo (home), main sections, custom work at the top right.
-const NAV = [["/servers/", "Integrations"], ["/blog/", "Blog"], ["/services/", "Custom integration →", "nav-cta"]];
+// On phones "Integrations" hides (the logo leads to the search page) so the bar stays on one row.
+const NAV = [["/servers/", "Integrations", "nav-wide"], ["/blog/", "Blog"], ["/services/", "Custom integration →", "nav-cta"]];
 const topbar = (current = "") => `<header class="topbar"><a class="logo" href="/" aria-label="usefulapi home"><img src="/icon.svg" width="28" height="28" alt=""><span>usefulapi</span></a>` +
   `<nav aria-label="Main">${NAV.map(([href, label, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ""}${current === href ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</nav></header>`;
 // SITE_CSS: the one shared base for every page (appended last, so it wins): colours, page width, headings,
@@ -91,10 +92,12 @@ footer.site a{color:var(--muted);text-decoration:none}footer.site a:hover{color:
 .category-link span{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 @media(max-width:560px){
 .wrap{padding:16px 16px 44px}h1{font-size:26px}
-.topbar{margin-bottom:28px}.topbar .logo span{display:none}.topbar nav{gap:6px 14px}
+.topbar{margin-bottom:28px}.topbar .logo span,.topbar .nav-wide{display:none}.topbar nav{flex-wrap:nowrap;gap:14px}.topbar .nav-cta{white-space:nowrap}
 .search-form{margin-bottom:26px}
 /* One row that scrolls sideways, so the categories do not push the content off the first screen. */
-.category-links{flex-wrap:nowrap;overflow-x:auto;margin:-8px -16px 0;padding:8px 16px;scrollbar-width:none;scroll-padding:0 16px}
+.category-links{flex-wrap:nowrap;overflow-x:auto;margin:-8px -16px 0;padding:8px 56px 8px 16px;scrollbar-width:none;scroll-padding:0 56px 0 16px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 48px),transparent)}
+/* The end padding (56px) is wider than the fade (48px), so the last pill scrolls clear of it; no fade while a pill has focus. */
+.category-links:focus-within{-webkit-mask-image:none;mask-image:none}
 .category-links::-webkit-scrollbar{display:none}.category-link{flex:none}.category-link:focus-visible{outline-offset:2px}}`;
 const SITE_FOOTER = `<footer class="site"><p>Connect from Claude, ChatGPT, Cursor, or any MCP client.</p><nav aria-label="Footer"><a href="/servers/">All integrations</a><a href="/services/">Custom integrations</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
 // One search field (homepage, directory, category pages, 404); it submits to the directory.
@@ -105,7 +108,6 @@ const SHELL = (title, body, current = "") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} — usefulapi</title>
 <style>
- .wrap>:not(.topbar):not(.site){max-width:720px}
  a{color:var(--accent)} h1{margin:0 0 24px}
  h2{font-size:20px;margin:36px 0 10px} p{margin:0 0 14px} ul,ol{margin:0 0 14px;padding-left:22px}
  li{margin:4px 0} code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px}
@@ -228,7 +230,7 @@ table tr:last-child td{border-bottom:0}
 .posts{list-style:none;margin:0;padding:0;display:grid;gap:12px}.posts li{margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px}
 .posts a{font-weight:600;text-decoration:none}.posts a:hover{color:var(--accent)}.posts p{margin:4px 0 0;color:var(--muted);font-size:14px}.posts .date{color:var(--muted);font-size:12px}
 .more-posts{display:block;margin:20px auto 0;padding:10px 18px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg);font:inherit;font-size:15px;font-weight:600;cursor:pointer}.more-posts:hover{border-color:var(--accent)}.more-posts:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.more-posts[hidden]{display:none}
-.post{max-width:720px}.post h1{margin:0 0 8px}.post .meta{color:var(--muted);font-size:14px;margin:0 0 28px}.post .meta a{color:var(--accent)}
+.post h1{margin:0 0 8px}.post .meta{color:var(--muted);font-size:14px;margin:0 0 28px}.post .meta a{color:var(--accent)}
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}

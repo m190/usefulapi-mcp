@@ -172,3 +172,10 @@ test("category pages use the directory cards; the 404 page offers search and cat
   assert.ok(notFound.includes('<form class="search-form" action="/servers/"') && notFound.includes('name="q"'));
   assert.equal((notFound.match(/class="category-link"/g) || []).length, index.groups.length);
 });
+
+test("text pages use the full column and the phone top bar stays on one row", () => {
+  const post = readdirSync(join(output, "blog"), { withFileTypes: true }).find((d) => d.isDirectory()).name;
+  for (const path of [`blog/${post}/index.html`, "services/index.html", "privacy/index.html", "404.html"]) assert.ok(!read(path).includes("max-width:720px"), path);
+  assert.ok(read("index.html").includes('<a href="/servers/" class="nav-wide">Integrations</a>'));
+  assert.match(read("catalog.css"), /\.topbar \.nav-wide\{display:none\}/);
+});
