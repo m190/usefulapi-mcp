@@ -926,6 +926,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [everbill](servers/everbill/) | billing | 17 | API token | [servers/everbill/](servers/everbill/) |
 | [WebClock](servers/webclock/) | time-tracking | 20 | API token | [servers/webclock/](servers/webclock/) |
 | [Timicx](servers/timicx/) | time-tracking | 20 | API token | [servers/timicx/](servers/timicx/) |
+| [Aladtec](servers/aladtec/) | scheduling | 28 | API token | [servers/aladtec/](servers/aladtec/) |
+| [SalesDrive](servers/salesdrive/) | crm | 12 | API token | [servers/salesdrive/](servers/salesdrive/) |
+| [Facture App](servers/facture-app/) | billing | 14 | OAuth | [servers/facture-app/](servers/facture-app/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
