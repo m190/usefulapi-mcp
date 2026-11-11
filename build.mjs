@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 // build.mjs — assemble the usefulapi.io static site into <outDir> (default: dist).
 // Run in-repo (Cloudflare Pages build command: `node build.mjs dist`, output dir `dist`).
-//   <outDir>/index.html            (portal, copied from portal/index.html)
+//   <outDir>/index.html            (homepage with search, categories and 12 featured integrations)
+//   <outDir>/servers/              (static directory, 24 integrations per page)
+//   <outDir>/search-index.json     (compact search data, derived from manifest.json)
 //   <outDir>/privacy/index.html    (rendered from legal/privacy.md)
 //   <outDir>/terms/index.html      (rendered from legal/terms.md)
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 import { loadContent } from "./content.mjs";
 import { loadBlog } from "./blog.mjs";
+import { PAGE_SIZE, cardsHtml, normalize, paginate, paginationHtml, selectServers, staticPagePath } from "./portal/catalog-model.mjs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
 const outDir = process.argv[2] || "dist";
@@ -613,8 +616,7 @@ ${jsonLd(ld)}
 <body><div class="wrap">${body}</div></body></html>`;
 }
 
-// ---- homepage browse groups (SINGLE SOURCE) — injected into the homepage JS AND used to
-// statically pre-render the tiles so the server list is crawlable without JavaScript. ----
+// ---- Catalog groups: shared by category pages, the directory and its compact search index. ----
 const GROUP_ORDER = [
   "Payments & Billing", "Fintech", "Accounting & Tax",
   "Commerce & Memberships", "Messaging & Communication", "CRM & Sales",
@@ -661,31 +663,65 @@ const CAT_GROUP = {
   "image-cdn": "Media", "video-hosting": "Media"
 };
 const groupOf = (s) => CAT_GROUP[s.category] || "Other";
-const groupRank = (g) => { const i = GROUP_ORDER.indexOf(g); return i === -1 ? GROUP_ORDER.length : i; };
-const prettyCat = (c) => (c || "").replace(/-/g, " ").replace(/^\w/, (m) => m.toUpperCase());
-// Static tile — mirrors the homepage JS card(); the client re-renders identically on load.
-const homeCard = (s) => {
-  const live = s.status === "live";
-  const statusChip = live ? '<span class="chip live">live</span>' : '<span class="chip soon">launching soon</span>';
-  const ft = freeTier(s), pt = proTier(s);
-  return `<a class="card${live ? "" : " soon"}" href="${pagePath(s)}">` +
-    `<div class="top"><h2>${esc(s.name)}</h2>${statusChip}</div>` +
-    `<p>${esc(s.description)}</p>` +
-    `<div class="chips"><span class="chip">${toolCount(s)} tools</span>` +
-    `<span class="chip">${esc(prettyCat(s.category))}</span>` +
-    (ft ? `<span class="chip">Free ${esc(ft.limit)}</span>` : "") +
-    (pt ? `<span class="chip">Pro ${esc(priceText(pt))}</span>` : "") +
-    `</div></a>`;
+const groupsPresent = GROUP_ORDER.concat(["Other"]).filter((g) => manifest.servers.some((s) => groupOf(s) === g));
+const groups = groupsPresent.map((name) => ({ name, count: manifest.servers.filter((s) => groupOf(s) === name).length, url: categoryPath(name) }));
+// Search uses deduplicated tool-name/title words, not full tool descriptions or the 9 MB manifest.
+const catalog = manifest.servers.map((s) => ({
+  slug: s.slug, name: s.name, description: s.description, category: s.category, group: groupOf(s),
+  keywords: [...new Set(normalize((s.tools || []).map((t) => `${t.name || ""} ${t.title || ""}`).join(" ")).split(" "))].join(" ")
+}));
+// An editorial starting point across common business tasks, not a popularity ranking.
+const FEATURED_SLUGS = ["pipedrive", "clickup", "mailchimp", "zendesk", "acuity-scheduling", "braintree", "freeagent", "gelato", "betterstack", "plausible-analytics", "mistral", "docraptor"];
+const featured = FEATURED_SLUGS.map((slug) => {
+  const server = catalog.find((s) => s.slug === slug);
+  if (!server || manifest.servers.find((s) => s.slug === slug).status !== "live") throw new Error(`Featured integration is not live: ${slug}`);
+  return server;
+});
+const directoryServers = selectServers(catalog);
+const directoryPageCount = Math.ceil(catalog.length / PAGE_SIZE);
+const catalogTemplate = readFileSync(new URL("portal/index.html", ROOT), "utf8");
+const replaceOnce = (html, from, to) => {
+  if (!html.includes(from)) throw new Error(`portal/index.html: marker not found: ${from}`);
+  return html.replace(from, () => to);
 };
-// Default (grouped) view, sectioned in GROUP_ORDER with servers A–Z — matches the JS default.
-const homeResults = () => {
-  const buckets = {};
-  for (const s of manifest.servers) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
-  return Object.keys(buckets).sort((a, b) => groupRank(a) - groupRank(b)).map((g) =>
-    `<h2 class="group-head"><a href="${categoryPath(g)}">${esc(g)}</a> <span class="n">${buckets[g].length}</span></h2>` +
-    `<div class="grid">${buckets[g].sort((a, b) => a.name.localeCompare(b.name)).map(homeCard).join("")}</div>`
-  ).join("");
-};
+function catalogPage({ directory = false, page = 1 } = {}) {
+  const N = catalog.length;
+  const slice = paginate(directoryServers, page);
+  const path = directory ? staticPagePath(page) : "/";
+  const url = `${SITE}${path}`;
+  const title = directory ? `All ${N} MCP integrations${page > 1 ? ` — page ${page}` : ""} | usefulapi` : `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
+  const desc = directory ? `Browse ${N} hosted MCP integrations. Search by app, tool or category and connect from Claude, ChatGPT, Cursor or any MCP client.` : `${N} hosted MCP servers for the tools you already use. Find your integration by app or category and connect from Claude, ChatGPT, Cursor or any MCP client.`;
+  const visible = directory ? slice.items : featured;
+  const ld = [
+    ...(directory ? [] : [
+      { "@context": "https://schema.org", "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: `${SITE}/icon-512.png`, email: "support@usefulapi.io" },
+      { "@context": "https://schema.org", "@type": "WebSite", name: "usefulapi", url: `${SITE}/`, description: desc }
+    ]),
+    { "@context": "https://schema.org", "@type": directory ? "CollectionPage" : "WebPage", name: title, url, description: desc,
+      mainEntity: { "@type": "ItemList", name: directory ? "MCP integrations" : "Featured integrations", numberOfItems: visible.length,
+        itemListElement: visible.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) } }
+  ];
+  const filters = directory ? `<div class="filters"><label for="category">Category <select id="category" name="category"><option value="">All categories (${N})</option>${groups.map((g) => `<option value="${attr(g.name)}">${esc(g.name)} (${g.count})</option>`).join("")}</select></label><label for="sort">Sort <select id="sort" name="sort"><option value="name">Name (A–Z)</option><option value="relevance">Relevance</option><option value="category">Category</option></select></label></div>` : "";
+  const categories = directory ? "" : `<section class="categories" id="categories" aria-labelledby="categories-heading"><h2 id="categories-heading">Browse by category</h2><div class="category-links">${groups.map((g) => `<a class="category-link" href="${g.url}">${esc(g.name)} <span>${g.count}</span></a>`).join("")}</div></section>`;
+  const markers = {
+    "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
+    "<!-- breadcrumb -->": directory ? '<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › All integrations</nav>' : "",
+    "<!-- heading -->": directory ? "All integrations" : "usefulapi",
+    "<!-- filters -->": filters,
+    "<!-- categories -->": categories,
+    "<!-- results-title -->": directory ? "All integrations" : "Featured integrations",
+    "<!-- browse-link -->": directory ? '<a href="/#categories">Browse categories →</a>' : `<a href="/servers/">Browse all ${N} →</a>`,
+    "<!-- count -->": directory ? `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, N)} of ${N} integrations` : "",
+    "<!-- results -->": cardsHtml(visible),
+    "<!-- pagination -->": directory ? paginationHtml(slice) : "",
+    "<!-- browse-all -->": directory ? "" : `<p class="browse-all"><a class="button" href="/servers/">Browse all ${N} integrations →</a></p>`,
+    "<!-- scripts -->": directory ? '<noscript><p class="wrap">Search and filters need JavaScript. You can still follow the page links or <a href="/#categories">browse categories</a>.</p></noscript><script type="module" src="/catalog.js"></script>' : ""
+  };
+  let html = replaceOnce(catalogTemplate, '<title>usefulapi — hosted MCP servers</title>', `<title>${esc(title)}</title>`);
+  html = replaceOnce(html, 'placeholder="Search integrations"', `placeholder="Search ${N} integrations"`);
+  for (const [marker, value] of Object.entries(markers)) html = replaceOnce(html, marker, value);
+  return html;
+}
 
 // /services/: what we build for a customer. Facts only: no prices, no customer names or numbers, no SLA.
 function servicesPage() {
@@ -719,48 +755,17 @@ function servicesPage() {
 
 mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
-// Inject manifest.json (source of truth) into the portal, overriding its dev-fallback MANIFEST.
-let indexHtml = readFileSync(new URL("portal/index.html", ROOT), "utf8");
-indexHtml = indexHtml.replace(/const MANIFEST = [\s\S]*?\n {2}\};/, `const MANIFEST = ${JSON.stringify(manifest, null, 2).replace(/</g, "\\u003c")};`);
-// Make build.mjs authoritative for the browse groups: overwrite the page's inline dev-fallback
-// GROUP_ORDER/CAT_GROUP with the copies above (single source, no drift).
-indexHtml = indexHtml.replace(
-  /const GROUP_ORDER = \[[\s\S]*?const CAT_GROUP = \{[\s\S]*?\n {2}\};/,
-  `const GROUP_ORDER = ${JSON.stringify(GROUP_ORDER)};\n  const CAT_GROUP = ${JSON.stringify(CAT_GROUP)};`
-);
-// Statically pre-render the default grouped view so crawlers / no-JS clients see every product
-// link and description. The homepage JS re-renders the same content on load (progressive enhancement).
-indexHtml = indexHtml.replace('<main id="results"></main>', `<main id="results">${homeResults()}</main>`);
-indexHtml = indexHtml.replace('<p class="count" id="count"></p>', `<p class="count" id="count">${manifest.servers.length} servers</p>`);
-// SEO: server count in the title/description, canonical, structured data. The pre-rendered
-// group headings link the category pages (crawlable hub links).
-const N = manifest.servers.length;
-const homeTitle = `usefulapi — ${N} hosted MCP servers for Claude, Cursor & any MCP client`;
-const homeDesc = `${N} hosted, remote MCP servers for the SaaS and developer tools you already use — CRM, payments, messaging, healthcare, DevOps and more. Free tier on every server.`;
-const replaceOnce = (html, from, to) => { if (!html.includes(from)) throw new Error(`portal/index.html: marker not found: ${from}`); return html.replace(from, to); };
-indexHtml = replaceOnce(indexHtml, "<title>usefulapi — hosted MCP servers</title>", `<title>${esc(homeTitle)}</title>`);
-indexHtml = indexHtml.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${attr(homeDesc)}">`);
-indexHtml = indexHtml.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${attr(homeTitle)}">`);
-indexHtml = indexHtml.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${attr(homeDesc)}">`);
-indexHtml = indexHtml.replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${SITE}/">`);
-const groupsPresent = GROUP_ORDER.concat(["Other"]).filter((g) => manifest.servers.some((s) => groupOf(s) === g));
-const homeLd = [
-  { "@context": "https://schema.org", "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: `${SITE}/icon-512.png`, email: "support@usefulapi.io" },
-  { "@context": "https://schema.org", "@type": "WebSite", name: "usefulapi", url: `${SITE}/`, description: homeDesc },
-  { "@context": "https://schema.org", "@type": "ItemList", name: "Hosted MCP servers", numberOfItems: N,
-    itemListElement: manifest.servers.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: `${s.name} MCP Server`, url: `${SITE}${pagePath(s)}` })) }
-];
-indexHtml = replaceOnce(indexHtml, "</head>", `<link rel="canonical" href="${SITE}/">\n${homeLd.map(jsonLd).join("\n")}\n</head>`);
-if (POSTS.length) indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', '<a href="/blog/">Blog</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>');
-indexHtml = replaceOnce(indexHtml, '<a href="/privacy/">Privacy</a>', `<a href="${SERVICES_PATH}">Custom integrations</a> &nbsp;·&nbsp; <a href="/privacy/">Privacy</a>`);
-// Custom work: one line under the tagline (the footer has the link and the support email).
-indexHtml = replaceOnce(indexHtml, '<p id="tagline">Hosted MCP servers for the tools you already use.</p>',
-  `<p id="tagline">Hosted MCP servers for the tools you already use.</p>\n    <p class="custom-line">Need a tool that is not here, or a custom integration? <a href="${SERVICES_PATH}">We build it →</a></p>`);
-writeFileSync(`${outDir}/index.html`, indexHtml);
+writeFileSync(`${outDir}/index.html`, catalogPage());
+for (let page = 1; page <= directoryPageCount; page++) {
+  mkdirSync(`${outDir}${staticPagePath(page)}`, { recursive: true });
+  writeFileSync(`${outDir}${staticPagePath(page)}index.html`, catalogPage({ directory: true, page }));
+}
+writeFileSync(`${outDir}/search-index.json`, JSON.stringify({ groups, servers: catalog }));
+for (const f of ["catalog.css", "catalog.js", "catalog-model.mjs"]) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }
-copyFileSync(new URL("manifest.json", ROOT), `${outDir}/manifest.json`); // homepage fetches this
+copyFileSync(new URL("manifest.json", ROOT), `${outDir}/manifest.json`); // retained for machine clients; browsing uses search-index.json
 // IndexNow ownership key (public by design): scripts/indexnow-ping.mjs submits changed URLs to Bing and others.
 for (const f of readdirSync(new URL("portal/", ROOT))) if (/^indexnow-[0-9a-f]{32}\.txt$/.test(f)) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 // _probe/<slug>.json: static discovery replies for crawler redirect tests (zone redirect rules; no Worker runs).
@@ -798,7 +803,7 @@ writeFileSync(`${outDir}/404.html`, SHELL("Page not found", `<h1>Page not found<
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
 const base = SITE;
-const urls = [`${base}/`, `${base}${SERVICES_PATH}`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
+const urls = [`${base}/`, ...Array.from({ length: directoryPageCount }, (_, i) => `${base}${staticPagePath(i + 1)}`), `${base}${SERVICES_PATH}`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
   ...(POSTS.length ? [`${base}/blog/`, ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +

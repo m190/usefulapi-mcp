@@ -4,262 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>usefulapi — hosted MCP servers</title>
-<meta name="description" content="Hosted MCP servers for the tools you already use. Connect from Claude, Cursor, or any MCP client.">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:title" content="usefulapi — hosted MCP servers">
-<meta property="og:description" content="Hosted MCP servers for the tools you already use. Connect from Claude, Cursor, or any MCP client.">
-<meta property="og:image" content="https://usefulapi.io/og.png">
-<meta property="og:url" content="https://usefulapi.io">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://usefulapi.io/og.png">
-<style>
-  :root {
-    --bg: #fbfbfa; --fg: #1a1a1a; --muted: #6b6b6b; --card: #ffffff;
-    --border: #e6e6e3; --accent: #4f46e5; --chip: #f0f0ee;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f0f11; --fg: #ececec; --muted: #9a9a9a; --card: #17171a;
-      --border: #262629; --accent: #8b83f8; --chip: #212125;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg);
-    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  a { color: inherit; }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 52px 24px 96px; }
-  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-  .brand .mark { width: 38px; height: 38px; border-radius: 10px; flex: none; }
-  header h1 { font-size: 32px; letter-spacing: -0.02em; margin: 0; }
-  header p { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 44ch; }
-  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 20px; }
-  .search { position: relative; flex: 1 1 260px; min-width: 0; }
-  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-  .search input { width: 100%; padding: 10px 12px 10px 36px; background: var(--card); color: var(--fg);
-    border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 15px; }
-  .search input:focus { outline: none; border-color: var(--accent); }
-  .search input::placeholder { color: var(--muted); }
-  select { padding: 10px 30px 10px 12px; background: var(--card); color: var(--fg); border: 1px solid var(--border);
-    border-radius: 10px; font: inherit; font-size: 14px; cursor: pointer; -webkit-appearance: none; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 10px center; }
-  select:focus { outline: none; border-color: var(--accent); }
-  .count { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
-  .empty { color: var(--muted); font-size: 15px; padding: 40px 0; text-align: center; }
-  .empty b { color: var(--fg); }
-  .group-head { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase;
-    letter-spacing: .05em; margin: 34px 0 14px; display: flex; align-items: baseline; gap: 8px; }
-  .group-head:first-child { margin-top: 0; }
-  .group-head .n { font-weight: 400; opacity: .7; }
-  .group-head a { color: inherit; text-decoration: none; }
-  .group-head a:hover { color: var(--accent); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .grid + .group-head { margin-top: 34px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 20px; text-decoration: none; color: inherit; display: flex; flex-direction: column;
-    gap: 10px; transition: border-color .15s, transform .15s; }
-  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .card.soon { opacity: .8; }
-  .card .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .card h2 { font-size: 19px; margin: 0; }
-  .card p { margin: 0; color: var(--muted); font-size: 14px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .chip { background: var(--chip); border-radius: 999px; padding: 3px 10px; font-size: 12px; color: var(--muted); }
-  .chip.live { color: #12873f; }
-  .chip.soon { color: var(--accent); }
-  @media (prefers-color-scheme: dark) { .chip.live { color: #5fd68a; } }
-  header p.custom-line { margin: -16px 0 28px; font-size: 15px; max-width: none; }
-  .custom-line a, .empty a { color: var(--accent); }
-  .empty button { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
-  .empty p { margin: 0 0 6px; }
-  footer { margin-top: 56px; color: var(--muted); font-size: 13px; }
-  footer a { color: var(--muted); }
-  code { background: var(--chip); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
-
-  /* As soon as the grid drops from 3 to 2 columns (≤859px), collapse the filter/sort
-     selects to square icon buttons and keep them on the search row (never wrap). */
-  @media (max-width: 859px) {
-    .controls { flex-wrap: nowrap; }
-    .search { flex: 1 1 auto; }
-    /* Keep the native <select> (still fully functional) but hide its text and show a centered icon. */
-    #group, #sort {
-      flex: none; width: 44px; height: 42px; padding: 0; color: transparent; text-indent: -9999px;
-      background-position: center; background-size: 20px 20px;
-    }
-    #group {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M4 6h16M7 12h10M10 18h4'/%3E%3C/svg%3E");
-    }
-    #sort {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v16M7 4l-3 4M7 4l3 4M17 20V4M17 20l-3-4M17 20l3-4'/%3E%3C/svg%3E");
-    }
-  }
-  /* Phones: tighten the header further. */
-  @media (max-width: 560px) {
-    .wrap { padding: 32px 16px 72px; }
-    .brand .mark { width: 34px; height: 34px; }
-    header h1 { font-size: 27px; }
-    header p { font-size: 15px; margin-bottom: 22px; }
-  }
-</style>
+<!-- page-meta -->
+<link rel="stylesheet" href="/catalog.css">
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="brand"><img class="mark" src="/icon.svg" width="44" height="44" alt=""><h1>usefulapi</h1></div>
-    <p id="tagline">Hosted MCP servers for the tools you already use.</p>
+    <!-- breadcrumb -->
+    <div class="brand"><a href="/" aria-label="usefulapi home"><img src="/icon.svg" width="38" height="38" alt=""></a><h1><!-- heading --></h1></div>
+    <p class="tagline">Hosted MCP servers for the tools you already use.</p>
+    <p class="custom-line">Need a tool that is not here, or a custom integration? <a href="/services/">We build it →</a></p>
   </header>
-  <div class="controls">
-    <label class="search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
-      <input id="search" type="search" placeholder="Search servers, tools, categories…" autocomplete="off" aria-label="Search servers">
-    </label>
-    <select id="group" aria-label="Filter by group"></select>
-    <select id="sort" aria-label="Sort servers">
-      <option value="group">Sort: group</option>
-      <option value="name">Sort: name (A–Z)</option>
-      <option value="tools">Sort: most tools</option>
-    </select>
-  </div>
-  <p class="count" id="count"></p>
-  <main id="results"></main>
+  <main>
+    <form class="search-form" action="/servers/" method="get" role="search">
+      <label class="sr-only" for="search">Search all integrations</label>
+      <div class="search-row">
+        <div class="search-field">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+          <input id="search" name="q" type="search" placeholder="Search integrations" autocomplete="off">
+        </div>
+        <button class="button primary" type="submit">Search</button>
+      </div>
+      <!-- filters -->
+    </form>
+    <!-- categories -->
+    <section aria-labelledby="results-heading">
+      <div class="section-head"><h2 id="results-heading"><!-- results-title --></h2><!-- browse-link --></div>
+      <p class="count" id="count" role="status"><!-- count --></p>
+      <div id="catalog-error" role="alert"></div>
+      <div id="results"><!-- results --></div>
+      <nav class="pagination" id="pagination" aria-label="Directory pages"><!-- pagination --></nav>
+    </section>
+    <!-- browse-all -->
+  </main>
   <footer>
-    Connect from Claude, Cursor, or any MCP client. &nbsp;·&nbsp;
-    <a href="/privacy/">Privacy</a> &nbsp;·&nbsp; <a href="/terms/">Terms</a> &nbsp;·&nbsp;
-    <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>
+    <p>Connect from Claude, ChatGPT, Cursor, or any MCP client.</p>
+    <nav aria-label="Footer"><a href="/servers/">All integrations</a><a href="/services/">Custom integrations</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav>
   </footer>
 </div>
-<script>
-  // Single source of truth = /manifest.json (same file build.mjs uses for product pages).
-  // Derived from the enriched schema (tools[]/pricing[]) so tiles never carry stale counts.
-  const priceText = function (p) {
-    if (!p || !p.monthly || p.monthly === "$0") return "$0";
-    return [p.monthly && p.monthly + "/mo", p.yearly && p.yearly + "/yr"].filter(Boolean).join(" · ");
-  };
-  const tier = function (s, re) { return (s.pricing || []).find(function (p) { return re.test(p.plan); }); };
-  const toolN = function (s) { return (s.tools || []).length; };
-  // "esignature" -> "Esignature", "payment-operations" -> "Payment operations"
-  const prettyCat = function (c) { return (c || "").replace(/-/g, " ").replace(/^\w/, function (m) { return m.toUpperCase(); }); };
-  const esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); };
-
-  // Coarse browse groups. Each fine manifest `category` maps to exactly one group; the group
-  // is derived here (not stored per-server) so it stays DRY and can't drift from the manifest.
-  const GROUP_ORDER = [
-    "Payments & Billing", "Messaging & Communication", "Developer Tools & Infrastructure",
-    "Documents & Delivery", "AI", "Data & Analytics", "Healthcare", "Media"
-  ];
-  const CAT_GROUP = {
-    billing: "Payments & Billing", payments: "Payments & Billing", "payment-operations": "Payments & Billing",
-    fintech: "Payments & Billing", tax: "Payments & Billing", "usage-metering": "Payments & Billing", ecommerce: "Payments & Billing",
-    email: "Messaging & Communication", chat: "Messaging & Communication", notifications: "Messaging & Communication",
-    communications: "Messaging & Communication", calendar: "Messaging & Communication", marketing: "Messaging & Communication",
-    devops: "Developer Tools & Infrastructure", observability: "Developer Tools & Infrastructure", dns: "Developer Tools & Infrastructure",
-    paas: "Developer Tools & Infrastructure", "feature-flags": "Developer Tools & Infrastructure",
-    "project-management": "Developer Tools & Infrastructure", localization: "Developer Tools & Infrastructure",
-    realtime: "Developer Tools & Infrastructure", maps: "Developer Tools & Infrastructure",
-    documents: "Documents & Delivery", esignature: "Documents & Delivery", "direct-mail": "Documents & Delivery", shipping: "Documents & Delivery",
-    "ai-infra": "AI", "image-generation": "AI", "speech-to-text": "AI", "document-ai": "AI",
-    analytics: "Data & Analytics", "data-enrichment": "Data & Analytics", "financial-data": "Data & Analytics", "fraud-detection": "Data & Analytics",
-    healthcare: "Healthcare", "health-data": "Healthcare",
-    "image-cdn": "Media", "video-hosting": "Media"
-  };
-  const groupOf = function (s) { return CAT_GROUP[s.category] || "Other"; };
-  // Must match build.mjs groupSlug() — category pages live at /category/<slug>/.
-  const groupSlug = function (g) { return g.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); };
-  const groupRank = function (g) { const i = GROUP_ORDER.indexOf(g); return i === -1 ? GROUP_ORDER.length : i; };
-
-  fetch('/manifest.json').then(function (r) { return r.json(); }).then(function (MANIFEST) {
-    document.getElementById('tagline').textContent = MANIFEST.portal.tagline;
-    const results = document.getElementById('results');
-    const countEl = document.getElementById('count');
-    const searchEl = document.getElementById('search');
-    const sortEl = document.getElementById('sort');
-    const groupEl = document.getElementById('group');
-    const servers = MANIFEST.servers.slice();
-
-    // Precompute a lowercase haystack per server: name, description, category, group, tool names + titles.
-    const hay = new Map();
-    for (const s of servers) {
-      const toolText = (s.tools || []).map(function (t) { return (t.name || "") + " " + (t.title || "") + " " + (t.description || ""); }).join(" ");
-      hay.set(s, (s.name + " " + s.description + " " + prettyCat(s.category) + " " + s.category + " " + groupOf(s) + " " + toolText).toLowerCase());
-    }
-
-    // Populate the group filter with counts, in GROUP_ORDER.
-    const groupCounts = {};
-    for (const s of servers) { const g = groupOf(s); groupCounts[g] = (groupCounts[g] || 0) + 1; }
-    const groups = Object.keys(groupCounts).sort(function (a, b) { return a.localeCompare(b); });
-    groupEl.innerHTML = '<option value="">All groups (' + servers.length + ')</option>' +
-      groups.map(function (g) { return '<option value="' + esc(g) + '">' + esc(g) + ' (' + groupCounts[g] + ')</option>'; }).join("");
-
-    const card = function (s) {
-      const live = s.status === "live";
-      const statusChip = live
-        ? '<span class="chip live">live</span>'
-        : '<span class="chip soon">launching soon</span>';
-      const free = tier(s, /free/i), pro = tier(s, /^pro$/i);
-      return '<a class="card' + (live ? '' : ' soon') + '" href="/' + esc(s.slug) + '/">' +
-        '<div class="top"><h2>' + esc(s.name) + '</h2>' + statusChip + '</div>' +
-        '<p>' + esc(s.description) + '</p>' +
-        '<div class="chips">' +
-          '<span class="chip">' + toolN(s) + ' tools</span>' +
-          '<span class="chip">' + esc(prettyCat(s.category)) + '</span>' +
-          (free ? '<span class="chip">Free ' + esc(free.limit) + '</span>' : '') +
-          (pro ? '<span class="chip">Pro ' + esc(priceText(pro)) + '</span>' : '') +
-        '</div></a>';
-    };
-    const gridHtml = function (arr) { return '<div class="grid">' + arr.map(card).join("") + '</div>'; };
-    const byName = function (a, b) { return a.name.localeCompare(b.name); };
-
-    const render = function () {
-      const q = searchEl.value.trim().toLowerCase();
-      const group = groupEl.value;
-      const sort = sortEl.value;
-      const list = servers.filter(function (s) {
-        if (group && groupOf(s) !== group) return false;
-        if (q && hay.get(s).indexOf(q) === -1) return false;
-        return true;
-      });
-
-      if (!list.length) {
-        results.innerHTML = '';
-        // Recovery first, then the custom-work page (it explains what to send; no mail link here).
-        countEl.innerHTML = '<span class="empty"><p>No servers match <b>' + esc(searchEl.value.trim()) + '</b>' +
-          (group ? ' in ' + esc(group) : '') + '. <button type="button" id="clear">Clear search and filters</button></p>' +
-          '<p>Need something built? <a href="/services/">See custom integrations →</a></p></span>';
-        document.getElementById('clear').addEventListener('click', function () {
-          searchEl.value = ''; groupEl.value = ''; render(); searchEl.focus();
-        });
-        return;
-      }
-      countEl.textContent = list.length + (list.length === 1 ? " server" : " servers") +
-        (q || group ? " of " + servers.length : "");
-
-      if (sort === "group") {
-        // Sectioned view: one labelled grid per group, groups in GROUP_ORDER, servers A–Z within.
-        const buckets = {};
-        for (const s of list) { const g = groupOf(s); (buckets[g] = buckets[g] || []).push(s); }
-        const order = Object.keys(buckets).sort(function (a, b) { return groupRank(a) - groupRank(b); });
-        results.innerHTML = order.map(function (g) {
-          return '<h2 class="group-head"><a href="/category/' + groupSlug(g) + '/">' + esc(g) + '</a> <span class="n">' + buckets[g].length + '</span></h2>' +
-            gridHtml(buckets[g].sort(byName));
-        }).join("");
-      } else {
-        // Flat view.
-        list.sort(sort === "tools"
-          ? function (a, b) { return toolN(b) - toolN(a) || byName(a, b); }
-          : byName);
-        results.innerHTML = gridHtml(list);
-      }
-    };
-
-    searchEl.addEventListener('input', render);
-    sortEl.addEventListener('change', render);
-    groupEl.addEventListener('change', render);
-    render();
-  });
-</script>
+<!-- scripts -->
 </body>
 </html>
