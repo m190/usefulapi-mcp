@@ -373,7 +373,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Cyberimpact](servers/cyberimpact/) | email | 29 | API token | [servers/cyberimpact/](servers/cyberimpact/) |
 | [Loox](servers/loox/) | ecommerce | 11 | API token | [servers/loox/](servers/loox/) |
 | [Method CRM](servers/method-crm/) | crm | 20 | API token | [servers/method-crm/](servers/method-crm/) |
-| [noCRM.io](servers/nocrm-io/) | crm | 28 | API token | [servers/nocrm-io/](servers/nocrm-io/) |
+| [noCRM.io](servers/nocrm-io/) | crm | 29 | API token | [servers/nocrm-io/](servers/nocrm-io/) |
 | [PHP Point of Sale](servers/php-point-of-sale/) | ecommerce | 30 | API token | [servers/php-point-of-sale/](servers/php-point-of-sale/) |
 | [Tamigo](servers/tamigo/) | productivity | 12 | API token | [servers/tamigo/](servers/tamigo/) |
 | [Precoro](servers/precoro/) | productivity | 28 | API token | [servers/precoro/](servers/precoro/) |

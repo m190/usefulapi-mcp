@@ -37,6 +37,7 @@ On first connect you'll enter your noCRM.io **account name** (acme for acme.nocr
 | `nocrm_list_unassigned_leads` | read | List unassigned leads |
 | `nocrm_get_lead` | read | Get lead |
 | `nocrm_list_lead_comments` | read | List lead comments |
+| `nocrm_summarize_lead_activities` | read | Summarize activities on selected leads |
 | `nocrm_list_lead_history` | read | List lead history |
 | `nocrm_get_lead_duplicates` | read | Find duplicate leads |
 | `nocrm_list_lead_attachments` | read | List lead attachments |
