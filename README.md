@@ -933,6 +933,17 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MyCashflow](servers/mycashflow/) | ecommerce | 22 | API token | [servers/mycashflow/](servers/mycashflow/) |
 | [Bokadirekt](servers/bokadirekt/) | scheduling | 12 | API token | [servers/bokadirekt/](servers/bokadirekt/) |
 | [clockin](servers/clockin/) | time-tracking | 17 | API token | [servers/clockin/](servers/clockin/) |
+| [Auvo](servers/auvo/) | scheduling | 23 | API token | [servers/auvo/](servers/auvo/) |
+| [Chorus Pay](servers/chorus-pay/) | payment-operations | 9 | API token | [servers/chorus-pay/](servers/chorus-pay/) |
+| [Tokko Broker](servers/tokko-broker/) | real-estate | 10 | API token | [servers/tokko-broker/](servers/tokko-broker/) |
+| [SmartDoctor](servers/smartdoctor/) | healthcare | 13 | API token | [servers/smartdoctor/](servers/smartdoctor/) |
+| [ERClinic](servers/erclinic/) | healthcare | 19 | API token | [servers/erclinic/](servers/erclinic/) |
+| [ByDoctor](servers/bydoctor/) | healthcare | 19 | API token | [servers/bydoctor/](servers/bydoctor/) |
+| [Regi](servers/regi/) | messaging | 7 | API token | [servers/regi/](servers/regi/) |
+| [UnderChat](servers/underchat/) | chat | 25 | API token | [servers/underchat/](servers/underchat/) |
+| [PowerHub](servers/powerhub/) | ecommerce | 14 | API token | [servers/powerhub/](servers/powerhub/) |
+| [Putiikkipalvelu](servers/putiikkipalvelu/) | ecommerce | 14 | API token | [servers/putiikkipalvelu/](servers/putiikkipalvelu/) |
+| [Wasi](servers/wasi/) | real-estate | 23 | API token | [servers/wasi/](servers/wasi/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
