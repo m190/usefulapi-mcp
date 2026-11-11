@@ -599,7 +599,7 @@ ${ld.map(jsonLd).join("\n")}
 }
 // Blog index: every post stays in the HTML (crawlable, readable without JS); the script shows BLOG_PAGE at a time.
 const BLOG_PAGE = 10;
-const MORE_POSTS_JS = `<script>(function(){var items=[].slice.call(document.querySelectorAll("#post-list>li")),btn=document.getElementById("more-posts"),step=${BLOG_PAGE},shown=step;if(!btn)return;function render(){items.forEach(function(li,i){li.hidden=i>=shown;});var left=items.length-shown;btn.hidden=left<=0;if(left>0)btn.textContent=left>step?"Show "+step+" more posts ("+left+" left)":"Show the last "+left+(left===1?" post":" posts");}btn.addEventListener("click",function(){var first=items[shown];shown+=step;render();if(first)first.querySelector("a").focus();});render();})();</script>`;
+const MORE_POSTS_JS = `<script>(function(){var items=[].slice.call(document.querySelectorAll("#post-list>li")),btn=document.getElementById("more-posts"),step=${BLOG_PAGE},shown=step;if(!btn)return;function render(){items.forEach(function(li,i){li.hidden=i>=shown;});var left=items.length-shown;btn.hidden=left<=0;}btn.addEventListener("click",function(){var first=items[shown];shown+=step;render();if(first)first.querySelector("a").focus();});render();})();</script>`;
 function blogIndexPage() {
   const url = `${SITE}/blog/`;
   const title = "Blog: business tools in Claude and ChatGPT | usefulapi";
@@ -610,7 +610,7 @@ function blogIndexPage() {
 <div class="brand">${MARK}<h1>Blog</h1></div>
 <p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>
 ${postList(POSTS, "post-list")}
-${POSTS.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden></button>` : ""}
+${POSTS.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden>Show more posts</button>` : ""}
 ${FOOTER}`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
