@@ -158497,6 +158497,658 @@
         "Show the invoices issued this period and which ones are cancelled.",
         "Stamp the invoice I prepared for this client from branch 17694."
       ]
+    },
+    {
+      "slug": "talero",
+      "name": "Talero",
+      "category": "accounting",
+      "description": "Read invoices, customers, expenses and reports; create customers and invoice drafts in Talero.",
+      "endpoint": "https://talero.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Talero API key"
+          }
+        ],
+        "hint": "Create it in Talero under **Indstillinger → API-nøgler** (Settings → API keys). Choose only the scopes you need. A **tlr_test_** key works against a sandbox company. Your key is used only to call the Talero API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "talero_get_company",
+          "type": "read",
+          "title": "Get the connected company",
+          "description": "Get the company the API key is bound to: name, CVR, VAT registration status, and whether the key is a sandbox (test) key. Talero API: GET /v1/company."
+        },
+        {
+          "name": "talero_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, filterable by date range and free text, sortable by name, created_at or email. Talero API: GET /v1/customers."
+        },
+        {
+          "name": "talero_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id, with contact, CVR and payment-terms fields. Talero API: GET /v1/customers/{id}."
+        },
+        {
+          "name": "talero_lookup_customer",
+          "type": "read",
+          "title": "Look up a customer",
+          "description": "Find customers by exact CVR number, email or phone. Give at least one. Talero API: GET /v1/customers/lookup."
+        },
+        {
+          "name": "talero_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List sales invoices, filterable by status (draft, approved, sent, paid, overdue, cancelled, credit_note), date range and free text. Talero API: GET /v1/invoices."
+        },
+        {
+          "name": "talero_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice by id, with its lines, totals, status and invoice number. Talero API: GET /v1/invoices/{id}."
+        },
+        {
+          "name": "talero_create_invoice_draft",
+          "type": "write",
+          "title": "Create an invoice draft",
+          "description": "Create a DRAFT sales invoice. The draft gets no invoice number and is not posted to the ledger; approve and send it in Talero. Lines need description, quantity and unit_price; vat_rate defaults to 25. Talero API: POST /v1/invoices without auto_approve."
+        },
+        {
+          "name": "talero_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expenses (purchase costs), filterable by status (pending, approved, paid), date range and free text. Talero API: GET /v1/expenses."
+        },
+        {
+          "name": "talero_get_expense",
+          "type": "read",
+          "title": "Get an expense",
+          "description": "Get one expense by id, with amount, VAT, date, supplier and voucher link. Talero API: GET /v1/expenses/{id}."
+        },
+        {
+          "name": "talero_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products and services with unit prices and VAT rates, sortable by name, created_at or unit_price. Talero API: GET /v1/products."
+        },
+        {
+          "name": "talero_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "Get one product by id, with price, unit, SKU and VAT rate. Talero API: GET /v1/products/{id}."
+        },
+        {
+          "name": "talero_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers (creditors), filterable by date range and free text, sortable by name or created_at. Talero API: GET /v1/suppliers."
+        },
+        {
+          "name": "talero_get_supplier",
+          "type": "read",
+          "title": "Get a supplier",
+          "description": "Get one supplier by id, with contact and CVR fields. Talero API: GET /v1/suppliers/{id}."
+        },
+        {
+          "name": "talero_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List accounts of the chart of accounts (account number, name, type, VAT code), sortable by account_number, name or created_at. Talero API: GET /v1/accounts."
+        },
+        {
+          "name": "talero_list_transactions",
+          "type": "read",
+          "title": "List ledger transactions",
+          "description": "List ledger transactions (journal entries) by date range, newest first by default. Talero API: GET /v1/transactions."
+        },
+        {
+          "name": "talero_get_voucher",
+          "type": "read",
+          "title": "Get voucher metadata",
+          "description": "Get voucher (bilag) metadata by id: file name, type, date and linked entries. The document file itself is not returned. Talero API: GET /v1/vouchers/{id}."
+        },
+        {
+          "name": "talero_get_balance_sheet",
+          "type": "read",
+          "title": "Get balance sheet",
+          "description": "Get the balance sheet for a period. Talero API: GET /v1/reports/balance."
+        },
+        {
+          "name": "talero_get_profit_loss",
+          "type": "read",
+          "title": "Get profit and loss report",
+          "description": "Get the profit and loss report for a period. Talero API: GET /v1/reports/profit-loss."
+        },
+        {
+          "name": "talero_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer. Only name is required. Talero API: POST /v1/customers."
+        },
+        {
+          "name": "talero_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Update a customer. Fields you omit keep their current value: the server reads the record first, merges your changes, then saves it. Talero API: GET then PUT /v1/customers/{id}."
+        },
+        {
+          "name": "talero_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "talero_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Talero tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "talero_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Talero (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "talero_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Talero Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run talero_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are overdue, and who owes us the most?",
+        "Create a draft invoice for customer Nordlys ApS for 12 hours of consulting at 950 DKK.",
+        "Show me the profit and loss report for this year so far.",
+        "Find the customer with CVR 12345678 and show their payment terms."
+      ]
+    },
+    {
+      "slug": "mycashflow",
+      "name": "MyCashflow",
+      "category": "ecommerce",
+      "description": "Read orders, products, stock and customers; add private comments and change stock in MyCashflow.",
+      "endpoint": "https://mycashflow.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Store name"
+          },
+          {
+            "label": "API user name"
+          },
+          {
+            "label": "API key"
+          }
+        ],
+        "hint": "Install the API extension under **Account → Extensions**, then create an API user in the store admin. The API needs the **Advanced, Pro or Enterprise** plan. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "mycashflow_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List store orders, filterable by status and by created or updated date. Use it to find orders to review or ship. Returns one page; use page and page_size to read more. API: GET /v0/orders."
+        },
+        {
+          "name": "mycashflow_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by its numeric id, with its products, customer, payments and status. API: GET /v0/orders/{orderID}."
+        },
+        {
+          "name": "mycashflow_get_order_by_external_id",
+          "type": "read",
+          "title": "Get an order by external ID",
+          "description": "Get one order by the external id that your shop or system set on it (for example a marketplace order number). API: GET /v0/orders/external-id={externalID}."
+        },
+        {
+          "name": "mycashflow_list_order_shipments",
+          "type": "read",
+          "title": "List order shipments",
+          "description": "List the shipments of one order, with their status and tracking data. API: GET /v0/orders/{orderID}/shipments."
+        },
+        {
+          "name": "mycashflow_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products in the store, filterable by created or updated date. Returns one page; use page and page_size to read more. API: GET /v1/products."
+        },
+        {
+          "name": "mycashflow_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "Get one product by its numeric id, with its variations, options and visibility. API: GET /v1/products/{productID}."
+        },
+        {
+          "name": "mycashflow_get_product_by_code",
+          "type": "read",
+          "title": "Get a product by product code",
+          "description": "Get one product by its product code (SKU as set in the store). API: GET /v1/products/product_code={productCode}."
+        },
+        {
+          "name": "mycashflow_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List the product categories of the store. API: GET /v1/categories."
+        },
+        {
+          "name": "mycashflow_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customer accounts, filterable by created, updated or last login date. Customer data is personal data: request only what you need. API: GET /v1/customers."
+        },
+        {
+          "name": "mycashflow_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer account by its numeric id. API: GET /v1/customers/{customerID}."
+        },
+        {
+          "name": "mycashflow_get_customer_by_email",
+          "type": "read",
+          "title": "Get a customer by email",
+          "description": "Get one customer account by its email address. API: GET /v1/customers/email={email}."
+        },
+        {
+          "name": "mycashflow_list_stock",
+          "type": "read",
+          "title": "List stock items",
+          "description": "List the stock items (balance per product), filterable by the update date. API: GET /v1/stock."
+        },
+        {
+          "name": "mycashflow_get_stock_item",
+          "type": "read",
+          "title": "Get a stock item",
+          "description": "Get the stock item of one product by its product code. API: GET /v1/stock/{productCode}."
+        },
+        {
+          "name": "mycashflow_list_stock_changes",
+          "type": "read",
+          "title": "List stock changes",
+          "description": "List the stock movements, each with its balance change and reason. API: GET /v1/stock-changes."
+        },
+        {
+          "name": "mycashflow_list_shipping_methods",
+          "type": "read",
+          "title": "List shipping methods",
+          "description": "List the shipping methods the store offers. API: GET /v1/shipping-methods."
+        },
+        {
+          "name": "mycashflow_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List the payment methods the store offers. API: GET /v1/payment-methods."
+        },
+        {
+          "name": "mycashflow_add_order_comment",
+          "type": "write",
+          "title": "Add a private order comment",
+          "description": "Add a PRIVATE comment to an order. It is visible only to store admins and sends no email to the customer. Use it for internal notes. API: POST /v0/orders/{orderID}/comments."
+        },
+        {
+          "name": "mycashflow_update_stock_balance",
+          "type": "write",
+          "title": "Change a stock balance",
+          "description": "Add to or subtract from the stock balance of one product by product code. Use a negative balance_change to subtract. Each call changes the live stock count. API: POST /v1/stock/{productCode}/update-balance."
+        },
+        {
+          "name": "mycashflow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mycashflow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MyCashflow tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mycashflow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for MyCashflow (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mycashflow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MyCashflow Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mycashflow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are still open, and which of them have not shipped yet?",
+        "Show me the stock balance of product code SKU-1042 and its last stock changes.",
+        "Add a private note to order 1234 saying the customer asked for a split delivery.",
+        "List the customers who logged in during the last 30 days."
+      ]
+    },
+    {
+      "slug": "bokadirekt",
+      "name": "Bokadirekt",
+      "category": "scheduling",
+      "description": "Read locations, staff, services, bookings, customers, sales and products in Bokadirekt.",
+      "endpoint": "https://bokadirekt.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bokadirekt Merchant API key"
+          }
+        ],
+        "hint": "Find it in Bokadirekt → **Settings → Other → API-service & Webhooks**. The Merchant API add-on must be on your subscription. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "bokadirekt_list_salons",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the locations of your salon (the API calls them salons). Each has a salonId that bookings, staff, products and sales reference. Good first call. GET /api/v1/salons."
+        },
+        {
+          "name": "bokadirekt_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the legal entities (companies) that own products and issue receipts, with organisation number and whether product inventory is enabled. GET /api/v1/companies."
+        },
+        {
+          "name": "bokadirekt_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the bookable services of the salon, with their ids and whether each is an add-on. GET /api/v1/services."
+        },
+        {
+          "name": "bokadirekt_list_resources",
+          "type": "read",
+          "title": "List staff (resources)",
+          "description": "List the bookable staff members (resources) with their location, online-booking flag, availability and price list. Takes an optional date range. GET /api/v1/resources."
+        },
+        {
+          "name": "bokadirekt_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the salon's customers with name, contact details, consent flags, city and birthday. The national ID is never returned. GET /api/v1/customers returns the full list in one response."
+        },
+        {
+          "name": "bokadirekt_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings in a date range: customer, staff, service, time, price, cancelled, no-show and online flags. Filter by scheduled start (0, default) or by creation time (1). At most 365 days per request. GET /api/v1/bookings."
+        },
+        {
+          "name": "bokadirekt_list_sales",
+          "type": "read",
+          "title": "List sales",
+          "description": "List sales receipts in a date range, with their rows and payments. At most 365 days per request. GET /api/v1/sales."
+        },
+        {
+          "name": "bokadirekt_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the salon's retail products with supplier, barcode and stock per location. Read-only; stock is not changed here. GET /api/v1/products."
+        },
+        {
+          "name": "bokadirekt_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bokadirekt_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bokadirekt tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bokadirekt_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Bokadirekt (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bokadirekt_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bokadirekt Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bokadirekt_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which bookings do we have tomorrow, and which staff member is booked for each?",
+        "Show the sales and payments for last week, per location.",
+        "How many customers gave consent to SMS, and how many are in each city?",
+        "List the services we offer and their add-ons."
+      ]
+    },
+    {
+      "slug": "clockin",
+      "name": "clockin",
+      "category": "time-tracking",
+      "description": "Read employees, absences, projects and work days; create absences and time events in clockin.",
+      "endpoint": "https://clockin.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "clockin API token"
+          }
+        ],
+        "hint": "Create it in clockin → **Einstellungen → Schnittstellen → clockin API** (an admin generates the key). Read tokens list data; write tools (absences, time events) need a token with write permission. Your token is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "clockin_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees of the company, paged. Returns id, names, email and related data. Use the ids with the other tools. Customer API: GET /v3/employees."
+        },
+        {
+          "name": "clockin_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by id. Customer API: GET /v3/employees/{employee}."
+        },
+        {
+          "name": "clockin_search_employees",
+          "type": "read",
+          "title": "Search employees by last name",
+          "description": "Find employees whose last name matches exactly. Customer API: POST /v3/employees/search with scope byLastName."
+        },
+        {
+          "name": "clockin_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers of the company, paged. Customer API: GET /v3/customers."
+        },
+        {
+          "name": "clockin_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id. Customer API: GET /v3/customers/{customer}."
+        },
+        {
+          "name": "clockin_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absences (vacation, sick days, workshops and similar), paged. Customer API: GET /v3/absences."
+        },
+        {
+          "name": "clockin_search_absences",
+          "type": "read",
+          "title": "Search absences",
+          "description": "Find absences by start time (from this date-time on) and/or approval state. Pass at least one filter. Customer API: POST /v3/absences/search with scopes byStartsAt and byApprovals."
+        },
+        {
+          "name": "clockin_get_absence",
+          "type": "read",
+          "title": "Get an absence",
+          "description": "Get one absence by id. Customer API: GET /v3/absences/{absence}."
+        },
+        {
+          "name": "clockin_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects, paged. Use include=employees,subProjects for the assigned staff and sub-projects. Customer API: GET /v3/projects."
+        },
+        {
+          "name": "clockin_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one project by id. Customer API: GET /v3/projects/{project}."
+        },
+        {
+          "name": "clockin_search_workdays",
+          "type": "read",
+          "title": "Search workdays",
+          "description": "Get the work days of employees for a date range. Each day lists its activities (start, end, project_id) and events. Sum activities by project_id for project hours. Customer API: POST /v3/workdays/search."
+        },
+        {
+          "name": "clockin_create_absence",
+          "type": "write",
+          "title": "Create an absence",
+          "description": "WRITE: create an absence for one employee. absencecategory_name must match an absence category set up in clockin (for example workshop). approval is denied, granted or pending. Customer API: POST /v3/absences."
+        },
+        {
+          "name": "clockin_create_event",
+          "type": "write",
+          "title": "Create a time event",
+          "description": "WRITE: record a clock event for one employee, for example a back-dated start of work. task_id: 2 LOADING_TIME, 3 DRIVING_TIME, 4 PROJECT, 5 PAUSE, 6 SPECIAL_1, 7 SPECIAL_2, 8 LOGOUT, 9 BUSINESS_TRIP, 10 WORKING_TIME. Customer API: POST /v3/events."
+        },
+        {
+          "name": "clockin_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "clockin_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the clockin tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "clockin_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for clockin (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "clockin_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's clockin Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run clockin_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which employees are on absence next week?",
+        "How many hours did each employee book on project 14 last month?",
+        "Create a vacation absence for employee 12 from 2 to 6 December, granted.",
+        "List our open projects with their assigned employees."
+      ]
     }
   ]
 }
