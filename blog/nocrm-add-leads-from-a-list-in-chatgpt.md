@@ -1,7 +1,7 @@
 ---
 title: Add new leads to noCRM.io from a list in ChatGPT
 description: Ask ChatGPT or Claude to check a list of contacts against your noCRM.io leads, skip the ones you already have, and create the rest with owner and tags.
-date: 2026-11-09
+date: 2026-11-08
 products: nocrm-io
 ---
 You can give ChatGPT or Claude a list of contacts, for example from a trade show, an email thread or a spreadsheet, and ask it to add them to noCRM.io as leads. Ask it to search for each email in your existing leads first: this helps you skip contacts you already have. Add `https://nocrm-io.usefulapi.io/mcp` as a connector, then ask in plain words.

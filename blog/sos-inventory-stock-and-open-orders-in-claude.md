@@ -1,7 +1,7 @@
 ---
 title: Check SOS Inventory stock against open orders in Claude
 description: Ask Claude or ChatGPT to compare SOS Inventory stock with open sales orders and check the purchase orders that are not fully received yet.
-date: 2026-11-10
+date: 2026-11-09
 products: sos-inventory
 ---
 You can ask Claude or ChatGPT to compare your SOS Inventory stock with your open sales orders and your open purchase orders. The tools return the SOS records; the AI matches the items and compares the quantities. Add `https://sos-inventory.usefulapi.io/mcp` as a connector, then ask in plain words.

@@ -1,7 +1,7 @@
 ---
 title: Review STEL Order invoices by client and product in ChatGPT
 description: Ask ChatGPT or Claude to read your STEL Order invoices for a period and sum the invoice lines by client and by product.
-date: 2026-11-08
+date: 2026-11-11
 products: stel-order
 ---
 You can ask ChatGPT or Claude to review the invoices in your STEL Order account for a period and sum them up by client and by product. The AI reads the invoices and their lines in the date range, then puts the client names next to the totals. Add `https://stel-order.usefulapi.io/mcp` as a connector, then ask in plain words.

@@ -1,7 +1,7 @@
 ---
 title: Review Wincher keyword rankings and add keywords from ChatGPT
 description: Ask ChatGPT or Claude to read your Wincher keyword positions, find the keywords that dropped or sit just below page one, and add new keywords to track.
-date: 2026-11-11
+date: 2026-11-10
 products: wincher
 ---
 You can ask ChatGPT or Claude to read the keyword rankings of a website you track in Wincher. The AI lists each keyword with its latest position, finds the ones that dropped or sit just below page one, and tells you which pages rank for them. When you find new search terms worth tracking, the AI can add them to Wincher in the same chat. Add `https://wincher.usefulapi.io/mcp` as a connector, then ask in plain words.
