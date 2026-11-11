@@ -163627,6 +163627,145 @@
         "Find the return requests that are waiting for approval.",
         "What is the tracking status of shipment 4821?"
       ]
+    },
+    {
+      "slug": "tefacturo",
+      "name": "tefacturo",
+      "category": "billing",
+      "description": "Read SUNAT status, XML, PDF and CDR; emit invoices, receipts, notes and voids in tefacturo.",
+      "endpoint": "https://tefacturo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "RUC of the company (11 digits)"
+          },
+          {
+            "label": "tefacturo user email"
+          },
+          {
+            "label": "tefacturo clave (password)"
+          }
+        ],
+        "hint": "Your company's tefacturo account owner or the Close2u team creates the user and the clave. This server uses the login only to call the tefacturo API for your company and to derive a private account id. The clave is sent only to tefacturo's login endpoint."
+      },
+      "tools": [
+        {
+          "name": "tefacturo_get_status",
+          "type": "read",
+          "title": "Get document status",
+          "description": "Get the three states of one issued document: SUNAT answer (estadoSunat), declaration (estadoComprobante) and mail delivery (estadoEntrega), with the declaration text. Use it before a document is sent again. Read-only."
+        },
+        {
+          "name": "tefacturo_get_xml",
+          "type": "read",
+          "title": "Get document XML",
+          "description": "Get the signed UBL XML of one issued document. The reply holds xmlFirma, the XML in base64, and hashCode (may be null). Read-only."
+        },
+        {
+          "name": "tefacturo_get_pdf",
+          "type": "read",
+          "title": "Get document PDF",
+          "description": "Get the printed PDF of one issued document, as a base64 string (decode it to a .pdf file). Read-only."
+        },
+        {
+          "name": "tefacturo_get_cdr",
+          "type": "read",
+          "title": "Get SUNAT receipt (CDR)",
+          "description": "Get the SUNAT receipt (CDR) of one document as a base64 ZIP that holds an XML answer from SUNAT. The CDR proves SUNAT accepted the document. Read-only."
+        },
+        {
+          "name": "tefacturo_preview_document",
+          "type": "read",
+          "title": "Preview a document",
+          "description": "Render a PDF preview of a document from its JSON, without a number and without a SUNAT filing (the tool sets datosDocumento.numero to 0). Use it to check the layout before tefacturo_emit_invoice. Read-only. Returns base64Pdf."
+        },
+        {
+          "name": "tefacturo_emit_invoice",
+          "type": "write",
+          "title": "Emit an invoice (files with SUNAT)",
+          "description": "SUNAT FILING, IRREVERSIBLE: files a new invoice (factura, type 01) with SUNAT for this login's RUC. The numero must be new: check the series with tefacturo_get_status first. Use tefacturo_preview_document to check the layout first. Use the same JSON as the tefacturo docs for this document (close2u, datosDocumento, detalleDocumento, emisor, receptor, informacionAdicional). The emisor.numeroDocumentoIdentidad must be this login's RUC; the tool sets it and rejects another RUC."
+        },
+        {
+          "name": "tefacturo_emit_receipt",
+          "type": "write",
+          "title": "Emit a receipt (files with SUNAT)",
+          "description": "SUNAT FILING, IRREVERSIBLE: files a new receipt (boleta de venta, type 03) for a consumer with SUNAT, through the daily summary. The numero must be new: check the series with tefacturo_get_status first. Use the same JSON as the tefacturo docs for this document (close2u, datosDocumento, detalleDocumento, emisor, receptor, informacionAdicional). The emisor.numeroDocumentoIdentidad must be this login's RUC; the tool sets it and rejects another RUC."
+        },
+        {
+          "name": "tefacturo_emit_credit_note",
+          "type": "write",
+          "title": "Emit a credit note (files with SUNAT)",
+          "description": "SUNAT FILING, IRREVERSIBLE: files a credit note (nota de crédito, type 07) that adjusts an earlier invoice or receipt. The payload must name the original document in comprobanteAjustado and a motivo. Use the same JSON as the tefacturo docs for this document (close2u, datosDocumento, detalleDocumento, emisor, receptor, informacionAdicional). The emisor.numeroDocumentoIdentidad must be this login's RUC; the tool sets it and rejects another RUC."
+        },
+        {
+          "name": "tefacturo_emit_debit_note",
+          "type": "write",
+          "title": "Emit a debit note (files with SUNAT)",
+          "description": "SUNAT FILING, IRREVERSIBLE: files a debit note (nota de débito, type 08) that adds a charge to an earlier invoice or receipt. The payload must name the original document in comprobanteAjustado and a motivo. Use the same JSON as the tefacturo docs for this document (close2u, datosDocumento, detalleDocumento, emisor, receptor, informacionAdicional). The emisor.numeroDocumentoIdentidad must be this login's RUC; the tool sets it and rejects another RUC."
+        },
+        {
+          "name": "tefacturo_void_documents",
+          "type": "write",
+          "title": "Void documents (files with SUNAT)",
+          "description": "SUNAT FILING, IRREVERSIBLE: sends a voiding summary (resumen de baja) that cancels issued invoices or receipts. The payload holds fechaGeneracion, fechaDocumentoBaja and resumenBajaItemList (serie, numero, tipoComprobante 01 or 03, motivo). SUNAT processes it later: check it with tefacturo_get_status. Use the same JSON as the tefacturo docs for this document (close2u, datosDocumento, detalleDocumento, emisor, receptor, informacionAdicional). The emisor.numeroDocumentoIdentidad must be this login's RUC; the tool sets it and rejects another RUC."
+        },
+        {
+          "name": "tefacturo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tefacturo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the tefacturo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tefacturo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for tefacturo (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tefacturo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's tefacturo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run tefacturo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the SUNAT status of invoice FFA2-15.",
+        "Get the PDF of receipt BBV5-4 so I can send it to the customer.",
+        "Preview this invoice layout before we file it with SUNAT.",
+        "Get the SUNAT receipt (CDR) of invoice FFA2-15 for our records."
+      ]
     }
   ]
 }
