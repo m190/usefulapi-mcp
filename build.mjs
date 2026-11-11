@@ -51,20 +51,34 @@ function mdToHtml(md) {
   flushPara(); flushList();
   return out.join("\n");
 }
-const SHELL = (title, body) => `<!doctype html>
+// Shared top bar on every page: logo (home), main sections, custom work at the top right.
+const NAV = [["/servers/", "Integrations"], ["/blog/", "Blog"], ["/services/", "Custom integration →", "nav-cta"]];
+const topbar = (current = "") => `<header class="topbar"><a class="logo" href="/" aria-label="usefulapi home"><img src="/icon.svg" width="28" height="28" alt=""><span>usefulapi</span></a>` +
+  `<nav aria-label="Main">${NAV.map(([href, label, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ""}${current === href ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</nav></header>`;
+const TOPBAR_CSS = `
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 40px;font-size:14px;line-height:1.3}
+.topbar .logo{display:flex;align-items:center;gap:8px;color:var(--fg);font-weight:700;font-size:17px;letter-spacing:-.01em;text-decoration:none}
+.topbar .logo img{display:block;border-radius:7px}
+.topbar nav{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px 18px}
+.topbar nav a{color:var(--muted);text-decoration:none}.topbar nav a:hover,.topbar nav a[aria-current]{color:var(--fg);text-decoration:none}
+.topbar .nav-cta{color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:6px 12px}.topbar .nav-cta:hover,.topbar .nav-cta[aria-current]{color:var(--accent);border-color:var(--accent)}
+.topbar a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media(max-width:560px){.topbar{margin-bottom:28px}.topbar .logo span{display:none}.topbar nav{gap:6px 14px}}`;
+const SHELL = (title, body, current = "") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} — usefulapi</title>
 <style>
- :root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--border:#e6e6e3;--accent:#4f46e5;--chip:#f0f0ee}
- @media(prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--border:#262629;--accent:#8b83f8;--chip:#212125}}
+ :root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--border:#e6e6e3;--accent:#0f766e;--chip:#f0f0ee}
+ @media(prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--border:#262629;--accent:#14b8a6;--chip:#212125}}
  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
- .wrap{max-width:720px;margin:0 auto;padding:56px 24px 96px}
+ .wrap{max-width:720px;margin:0 auto;padding:20px 24px 96px}${TOPBAR_CSS}
+ @media(max-width:560px){.wrap{padding:16px 16px 72px}}
  a{color:var(--accent)} h1{font-size:30px;letter-spacing:-.02em;margin:0 0 24px}
  h2{font-size:20px;margin:36px 0 10px} p{margin:0 0 14px} ul{margin:0 0 14px;padding-left:22px}
  li{margin:4px 0} code{background:var(--chip);padding:2px 6px;border-radius:6px;font-size:13px}
  .home{display:inline-block;margin-bottom:28px;color:var(--muted);text-decoration:none;font-size:14px}.home:hover{color:var(--accent)}
 </style></head><body><div class="wrap">
-<a class="home" href="/">← usefulapi</a>
+${topbar(current)}
 ${body}
 </div></body></html>`;
 const render = (mdName, title) => SHELL(title, mdToHtml(readFileSync(new URL(`legal/${mdName}`, ROOT), "utf8")));
@@ -131,11 +145,11 @@ const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit
 const limitText = (p) => (isUnlimitedPro(p) ? `${p.limit} (${PRO_FAIR_USE})` : p.limit);
 const MARK = `<svg class="mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="1" stop-color="#0f766e"/></linearGradient></defs><rect width="512" height="512" rx="114" fill="url(#tl)"/><g fill="#fff"><circle cx="169" cy="256" r="61"/><circle cx="343" cy="256" r="61"/><rect x="169" y="223" width="174" height="66" rx="33"/></g></svg>`;
 const PRODUCT_CSS = `
-:root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--card:#fff;--border:#e6e6e3;--accent:#4f46e5;--chip:#f0f0ee}
-@media (prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--card:#17171a;--border:#262629;--accent:#8b83f8;--chip:#212125}}
+:root{--bg:#fbfbfa;--fg:#1a1a1a;--muted:#6b6b6b;--card:#fff;--border:#e6e6e3;--accent:#0f766e;--on-accent:#fff;--chip:#f0f0ee}
+@media (prefers-color-scheme:dark){:root{--bg:#0f0f11;--fg:#ececec;--muted:#9a9a9a;--card:#17171a;--border:#262629;--accent:#14b8a6;--on-accent:#0f0f11;--chip:#212125}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 a{color:inherit}
-.wrap{max-width:920px;margin:0 auto;padding:52px 24px 96px}
+.wrap{max-width:920px;margin:0 auto;padding:20px 24px 96px}${TOPBAR_CSS}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .brand .mark{width:38px;height:38px;border-radius:10px;flex:none}
 h1{font-size:32px;letter-spacing:-.02em;margin:0}
@@ -188,7 +202,7 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}footer a{color:var(--mu
 .post h2{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px}.post h3{font-size:17px;margin:26px 0 8px}.post p{margin:0 0 14px}
 .post ul,.post ol{margin:0 0 14px;padding-left:22px}.post li{margin:5px 0}.post a{color:var(--accent)}.post pre.code{margin:0 0 14px}
 .post blockquote.prompt{margin:0 0 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:10px 14px}
-@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:32px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
+@media (max-width:560px){table td{overflow-wrap:anywhere}.tools td:first-child{white-space:normal;max-width:38vw}.tools code{word-break:break-all}.wrap{padding:16px 16px 72px}.brand .mark{width:34px;height:34px}h1{font-size:27px}.sub{font-size:15px;margin-bottom:22px}}`;
 // Product page only: the facts bar, the client tabs, the closed tool list.
 const PAGE_CSS = `
 :root{--accent:#0f766e;--on-accent:#fff}
@@ -478,7 +492,7 @@ ${fairUseNote}${billingNote}`
 <p class="hint"><a href="${categoryPath(g)}">All ${esc(g)} servers →</a></p>`
     : "";
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="${categoryPath(g)}">${esc(g)}</a></nav>
-<div class="brand">${MARK}<h1>${esc(s.name)} MCP server</h1></div>
+<div class="brand"><h1>${esc(s.name)} MCP server</h1></div>
 <p class="sub">${esc(s.description)} Hosted by <strong>usefulapi</strong>: connect it to Claude, ChatGPT, Cursor or any MCP client.</p>
 ${facts}
 ${live ? examplesSection(s) : ""}
@@ -532,7 +546,7 @@ ${FOOTER}`;
 ${headMeta({ title, desc, url })}
 ${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}${PAGE_CSS}</style></head>
-<body><div class="wrap">${body}</div>${COPY_JS}${live ? TABS_JS : ""}</body></html>`;
+<body><div class="wrap">${topbar()}${body}</div>${COPY_JS}${live ? TABS_JS : ""}</body></html>`;
 }
 
 // Category landing pages (/category/<group>/): crawlable internal-linking hubs, one per browse group.
@@ -548,7 +562,7 @@ function categoryPage(g, list) {
     mainEntity: { "@type": "ItemList", itemListElement: list.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.name, url: `${SITE}${pagePath(s)}` })) }
   };
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › ${esc(g)}</nav>
-<div class="brand">${MARK}<h1>${esc(g)} MCP servers</h1></div>
+<div class="brand"><h1>${esc(g)} MCP servers</h1></div>
 <p class="sub">${list.length} hosted, remote MCP servers for ${esc(g)} tools. Each is a Streamable HTTP endpoint with a free tier — paste the URL into Claude, Cursor, or any MCP client.</p>
 <table class="tools"><thead><tr><th>Server</th><th>What it does</th><th>Tools</th></tr></thead><tbody>${rows}</tbody></table>
 <h2 class="sec">Other categories</h2>
@@ -560,7 +574,7 @@ ${FOOTER}`;
 ${headMeta({ title, desc, url })}
 ${jsonLd(ld)}
 <style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${body}</div></body></html>`;
+<body><div class="wrap">${topbar()}${body}</div></body></html>`;
 }
 
 // Blog post pages (/blog/<slug>/) and the blog index (/blog/).
@@ -595,7 +609,7 @@ ${FOOTER}`;
 ${headMeta({ title, desc: p.description, url }).replace('content="website"', 'content="article"')}
 ${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${body}</div>${COPY_JS}</body></html>`;
+<body><div class="wrap">${topbar("/blog/")}${body}</div>${COPY_JS}</body></html>`;
 }
 // Blog index: every post stays in the HTML (crawlable, readable without JS); the script shows BLOG_PAGE at a time.
 const BLOG_PAGE = 10;
@@ -607,7 +621,7 @@ function blogIndexPage() {
   const ld = { "@context": "https://schema.org", "@type": "Blog", name: "usefulapi blog", url, description: desc,
     blogPost: POSTS.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date })) };
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › Blog</nav>
-<div class="brand">${MARK}<h1>Blog</h1></div>
+<div class="brand"><h1>Blog</h1></div>
 <p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>
 ${postList(POSTS, "post-list")}
 ${POSTS.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden>Show more posts</button>` : ""}
@@ -618,7 +632,7 @@ ${FOOTER}`;
 ${headMeta({ title, desc, url })}
 ${jsonLd(ld)}
 <style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${body}</div>${MORE_POSTS_JS}</body></html>`;
+<body><div class="wrap">${topbar("/blog/")}${body}</div>${MORE_POSTS_JS}</body></html>`;
 }
 
 // ---- Catalog groups: shared by category pages, the directory and its compact search index. ----
@@ -712,8 +726,9 @@ function catalogPage({ directory = false, page = 1 } = {}) {
   const markers = {
     "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
     "<!-- breadcrumb -->": directory ? '<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › All integrations</nav>' : "",
-    "<!-- heading -->": directory ? "All integrations" : "usefulapi",
-    "<!-- intro -->": directory ? "" : `<p class="tagline">Hosted MCP servers for the tools you already use.</p><p class="custom-line">Need a tool that is not here, or a custom integration? <a href="/services/">We build it →</a></p>`,
+    "<!-- topbar -->": topbar(directory ? "/servers/" : ""),
+    "<!-- heading -->": directory ? "All integrations" : "Hosted MCP servers for the tools you already use",
+    "<!-- intro -->": directory ? "" : `<p class="tagline">Connect ${N} business tools to Claude, ChatGPT, Cursor or any MCP client.</p>`,
     "<!-- filters -->": filters,
     "<!-- categories -->": categories,
     "<!-- results-title -->": directory ? "All integrations" : "Featured integrations",
@@ -755,7 +770,7 @@ function servicesPage() {
 <h2>Contact</h2>
 <p>Email <a href="${SERVICES_MAIL}">support@usefulapi.io</a> with the subject "Custom work".</p>
 <p>For paid custom work, email us. For a suggestion about one of our hosted servers, ask your AI assistant to use the server's <code>request_feature</code> tool (for example <code>rotacloud_request_feature</code>). We read every suggestion, but a suggestion does not order work and does not guarantee that we build it.</p>`;
-  return SHELL(title, body)
+  return SHELL(title, body, "/services/")
     .replace(`<title>${title} — usefulapi</title>`, `<title>${title} — usefulapi</title>\n${headMeta({ title: `${title} — usefulapi`, desc, url: `${SITE}${SERVICES_PATH}` })}`)
     .replace("<style>", "<style>\n ol{margin:0 0 14px;padding-left:22px}");
 }
@@ -768,7 +783,8 @@ for (let page = 1; page <= directoryPageCount; page++) {
   writeFileSync(`${outDir}${staticPagePath(page)}index.html`, catalogPage({ directory: true, page }));
 }
 writeFileSync(`${outDir}/search-index.json`, JSON.stringify({ groups, servers: catalog }));
-for (const f of ["catalog.css", "catalog.js", "catalog-model.mjs"]) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
+for (const f of ["catalog.js", "catalog-model.mjs"]) copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
+writeFileSync(`${outDir}/catalog.css`, readFileSync(new URL("portal/catalog.css", ROOT), "utf8") + TOPBAR_CSS + "\n"); // one top-bar style for every page
 for (const f of ["icon.svg", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png", "icon-256.png", "icon-512.png", "og.png"]) {
   copyFileSync(new URL(`portal/${f}`, ROOT), `${outDir}/${f}`);
 }

@@ -127,6 +127,25 @@ test("blog index keeps every post in the HTML and adds the show-more button only
 
 test("links inside sentences keep an underline (colour alone is not a link cue)", () => {
   const css = readFileSync(join(root, "portal/catalog.css"), "utf8");
-  for (const sel of [".custom-line a", ".empty a", "#catalog-error a", "noscript a"]) assert.match(css, new RegExp(`${sel.replace(/[.#]/g, "\\$&")}[^{]*\\{text-decoration:underline`));
+  for (const sel of [".empty a", "#catalog-error a", "noscript a"]) assert.match(css, new RegExp(`${sel.replace(/[.#]/g, "\\$&")}[^{]*\\{text-decoration:underline`));
   assert.ok(read("servers/index.html").includes("<noscript>"));
+});
+
+test("every page type has the shared top bar with the custom-integration link; the section link is marked current", () => {
+  const pages = { "index.html": "", "servers/index.html": "/servers/", "servers/page/2/index.html": "/servers/", "pipedrive/index.html": "",
+    "category/crm-and-sales/index.html": "", "blog/index.html": "/blog/", "services/index.html": "/services/", "privacy/index.html": "", "terms/index.html": "", "404.html": "" };
+  const post = readdirSync(join(output, "blog"), { withFileTypes: true }).find((d) => d.isDirectory()).name;
+  pages[`blog/${post}/index.html`] = "/blog/";
+  for (const [path, current] of Object.entries(pages)) {
+    const html = read(path);
+    assert.equal((html.match(/<header class="topbar">/g) || []).length, 1, path);
+    assert.ok(html.includes('<a href="/services/" class="nav-cta"'), path);
+    const bar = html.match(/<header class="topbar">[\s\S]*?<\/header>/)[0];
+    const marked = [...bar.matchAll(/<a href="([^"]+)"[^>]*aria-current="page"[^>]*>/g)].map((m) => m[1]).filter((h) => ["/servers/", "/blog/", "/services/"].includes(h));
+    assert.deepEqual(marked, current ? [current] : [], path);
+    assert.ok(!/<div class="brand"><svg/.test(html), path);
+  }
+  for (const path of ["index.html", "servers/index.html"]) assert.match(read(path), /<\/header>\s*<main>\s*<div class="intro">[\s\S]*?<h1>/, path);
+  assert.ok(read("catalog.css").includes(".topbar{"));
+  assert.ok(read("index.html").includes('<button class="search-submit" type="submit">Search</button>'));
 });
