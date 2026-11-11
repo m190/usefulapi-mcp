@@ -181,8 +181,12 @@ const priceText = (p) => {
 const proTier = (s) => (s.pricing || []).find((p) => /^pro$/i.test(p.plan));
 const plusTier = (s) => (s.pricing || []).find((p) => /^pro\+$/i.test(p.plan));
 const freeTier = (s) => (s.pricing || []).find((p) => /free/i.test(p.plan));
-// Short free-tier label for cards and the product header, e.g. "Free 50 calls/mo".
-const freeShort = (s) => freeTier(s) ? `Free ${String(freeTier(s).limit).replace(/\s*tool calls\s*\/\s*month$/i, " calls/mo")}` : "";
+// Short free-tier label for cards and the product header, e.g. "50 free tool calls a month".
+const freeShort = (s) => {
+  const ft = freeTier(s); if (!ft) return "";
+  const m = String(ft.limit).match(/^([\d,]+)\s*tool calls\s*\/\s*month$/i);
+  return m ? `${m[1]} free tool calls a month` : `Free: ${ft.limit}`;
+};
 // Compatibility for older manifest entries that still describe Pro as "Unlimited".
 const PRO_FAIR_USE = "fair use limit: 10,000 tool calls a month";
 const isUnlimitedPro = (p) => /pro/i.test(p.plan) && /^unlimited$/i.test(p.limit);

@@ -86,17 +86,17 @@ test("filtered pagination preserves search, category and ordering in shareable l
 });
 
 test("card content is escaped and shows group, tool count and free tier, never tool names or prices", () => {
-  const html = cardsHtml([{ slug: "example", name: '<script>alert("x")</script>', description: "A & B", category: "payments", group: "Payments & Billing", toolCount: 7, free: "Free 50 calls/mo", tools: [{ name: "secret" }], pricing: [{ monthly: "$9" }] }]);
+  const html = cardsHtml([{ slug: "example", name: '<script>alert("x")</script>', description: "A & B", category: "payments", group: "Payments & Billing", toolCount: 7, free: "50 free tool calls a month", tools: [{ name: "secret" }], pricing: [{ monthly: "$9" }] }]);
   assert.ok(!html.includes("<script>"));
   assert.ok(html.includes("&lt;script&gt;") && html.includes("A &amp; B"));
-  assert.ok(html.includes("Payments &amp; Billing") && html.includes("7 tools · Free 50 calls/mo"));
+  assert.ok(html.includes("Payments &amp; Billing") && html.includes("7 tools · 50 free tool calls a month"));
   assert.ok(!html.includes("secret") && !html.includes("$9"));
 });
 
 test("homepage and directory cards carry real tool counts; directory pages drop the homepage intro", () => {
   const pipedrive = index.servers.find((s) => s.slug === "pipedrive");
   assert.equal(pipedrive.toolCount, manifest.servers.find((s) => s.slug === "pipedrive").tools.length);
-  assert.match(pipedrive.free, /^Free \d[\d,]* calls\/mo$/);
+  assert.match(pipedrive.free, /^\d[\d,]* free tool calls a month$/);
   assert.ok(read("index.html").includes(`${pipedrive.toolCount} tools`));
   assert.ok(read("index.html").includes('class="tagline"'));
   assert.ok(!read("servers/index.html").includes('class="tagline"'));
@@ -107,14 +107,14 @@ test("every directory card and every search-index slice renders group and tool m
   const totalPages = Math.ceil(manifest.servers.length / PAGE_SIZE);
   for (let page = 1; page <= totalPages; page++) {
     const html = read(`${staticPagePath(page)}index.html`);
-    assert.equal((html.match(/class="meta">\d+ tools · Free /g) || []).length, (html.match(/class="card"/g) || []).length);
+    assert.equal((html.match(/class="meta">\d+ tools · \d[\d,]* free tool calls a month</g) || []).length, (html.match(/class="card"/g) || []).length);
   }
   // catalog.js renders search results from search-index.json entries with the same cardsHtml.
   for (const s of index.servers) {
     const html = cardsHtml([s]);
     assert.ok(html.includes(`<span class="category">${s.group.replace(/&/g, "&amp;")}</span>`), s.slug);
     assert.ok(html.includes(`<span class="meta">${s.toolCount} tools · ${s.free}</span>`), s.slug);
-    assert.ok(s.toolCount > 0 && /^Free \d/.test(s.free), s.slug);
+    assert.ok(s.toolCount > 0 && /^\d[\d,]* free tool calls a month$/.test(s.free), s.slug);
   }
 });
 
@@ -209,6 +209,6 @@ test("product header shows the Connect button and one short free-tier label only
   assert.match(html, /@media \(max-width:560px\)\{\.facts\{font-size:14px\}\.cta-name\{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect\(0 0 0 0\)/);
   assert.doesNotMatch(html, /\.cta-name\{display:none/);
   assert.match(facts, /<a class="cta" href="#connect">Connect<span class="cta-name"> [^<]+<\/span><\/a>/);
-  assert.match(facts, /<span class="f">Free \d[\d,]* calls\/mo<\/span>$/);
-  assert.doesNotMatch(facts, /tools|\$/);
+  assert.match(facts, /<span class="f">\d[\d,]* free tool calls a month<\/span>$/);
+  assert.doesNotMatch(facts, /\d+ tools|\$/);
 });
