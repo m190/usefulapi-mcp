@@ -945,6 +945,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Putiikkipalvelu](servers/putiikkipalvelu/) | ecommerce | 14 | API token | [servers/putiikkipalvelu/](servers/putiikkipalvelu/) |
 | [Wasi](servers/wasi/) | real-estate | 23 | API token | [servers/wasi/](servers/wasi/) |
 | [Cegid Jasmin](servers/cegid-jasmin/) | accounting | 29 | OAuth | [servers/cegid-jasmin/](servers/cegid-jasmin/) |
+| [Imker SalesCRM](servers/imker-salescrm/) | ecommerce | 15 | API token | [servers/imker-salescrm/](servers/imker-salescrm/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

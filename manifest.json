@@ -160984,6 +160984,148 @@
         "List my most recent supplier invoices with their due dates.",
         "Show the lines of sales order number 12 in series 2026."
       ]
+    },
+    {
+      "slug": "imker-salescrm",
+      "name": "Imker SalesCRM",
+      "category": "ecommerce",
+      "description": "Read products, orders and sales reports; create and change discount codes in Imker SalesCRM.",
+      "endpoint": "https://imker-salescrm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Shop subdomain"
+          },
+          {
+            "label": "Imker SalesCRM API key"
+          }
+        ],
+        "hint": "Your shop subdomain is the part before **.salescrm.pl** in your shop address. Create the key in the shop admin under **Integracje → API**. Keys with the write_data scope can create and change discount codes. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "imkersalescrm_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products in the shop with price, VAT rate, active state, category and stock fields (in_stock, reserved, available). Filter by active state, category or name/SKU. Imker API: GET /api/v1/products."
+        },
+        {
+          "name": "imkersalescrm_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Get one product by id, with its full description, stock fields and category ids. Imker API: GET /api/v1/products/:id."
+        },
+        {
+          "name": "imkersalescrm_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders with paging and filters: status id, internal status (placed, canceled, returned), payment status, date range, customer email, product id or SKU, and updated_since to fetch only changed orders. Use updated_since with the time of your last run to poll for changes. Imker API: GET /api/v1/orders."
+        },
+        {
+          "name": "imkersalescrm_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "Get one order with its items, addresses, costs, notes and attributes. The uuid field is an access secret for the order's cart; do not share it. Imker API: GET /api/v1/orders/:id."
+        },
+        {
+          "name": "imkersalescrm_list_order_statuses",
+          "type": "read",
+          "title": "List order statuses",
+          "description": "List the visible order statuses with their ids. Use an id when you filter orders by status. Imker API: GET /api/v1/order_statuses."
+        },
+        {
+          "name": "imkersalescrm_list_delivery_types",
+          "type": "read",
+          "title": "List delivery types",
+          "description": "List the delivery types with their ids. Use an id in discount codes that cover delivery. Imker API: GET /api/v1/delivery_types."
+        },
+        {
+          "name": "imkersalescrm_list_discount_codes",
+          "type": "read",
+          "title": "List discount codes",
+          "description": "List discount codes with type, value, limits, usage count, validity dates and active state. Filter by type, active state or code/name. Imker API: GET /api/v1/discount_codes."
+        },
+        {
+          "name": "imkersalescrm_get_discount_code",
+          "type": "read",
+          "title": "Get discount code",
+          "description": "Get one discount code by id with all its rules. Imker API: GET /api/v1/discount_codes/:id."
+        },
+        {
+          "name": "imkersalescrm_create_discount_code",
+          "type": "write",
+          "title": "Create discount code",
+          "description": "Create a discount code that customers can use at checkout. It goes live at once unless start_date is in the future. Needs a key with the write_data scope. Imker API: POST /api/v1/discount_codes."
+        },
+        {
+          "name": "imkersalescrm_update_discount_code",
+          "type": "write",
+          "title": "Update discount code",
+          "description": "Change a discount code. Send only the fields to change. Needs a key with the write_data scope. Imker API: PATCH /api/v1/discount_codes/:id."
+        },
+        {
+          "name": "imkersalescrm_get_sales_report",
+          "type": "read",
+          "title": "Get sales report",
+          "description": "Get the number and sum of orders placed in a date range (canceled and returned orders are left out), optionally grouped by day, week or month. The range may span up to 1830 days. Imker API: GET /api/v1/reports/sales."
+        },
+        {
+          "name": "imkersalescrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "imkersalescrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Imker SalesCRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "imkersalescrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Imker SalesCRM (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "imkersalescrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Imker SalesCRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run imkersalescrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which products in my shop are sold out, and which are still active?",
+        "Show me the orders placed this week that are not paid yet.",
+        "Create a 15 percent discount code for my newsletter subscribers, valid until the end of the month.",
+        "What was my total revenue and order count for last month, by week?"
+      ]
     }
   ]
 }
