@@ -45,6 +45,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `smoobu_get_rates` | read | Get rates and availability |
 | `smoobu_check_availability` | read | Check availability and quote a stay |
 | `smoobu_list_message_threads` | read | List inbox threads |
+| `smoobu_get_conversation` | read | Read a booking conversation |
 | `smoobu_list_reservation_messages` | read | List a reservation's messages |
 | `smoobu_list_guests` | read | List guests |
 | `smoobu_get_guest` | read | Get one guest |

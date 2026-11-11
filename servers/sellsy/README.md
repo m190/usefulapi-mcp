@@ -29,6 +29,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 
 | Tool | Type | What it does |
 |------|------|--------------|
+| `sellsy_get_estimate_pdf` | read | Read a quote PDF |
 | `sellsy_create_draft_estimate` | **write** | Preview or create a draft quote |
 | `sellsy_update_draft_estimate` | **write** | Preview or edit a draft quote |
 | `sellsy_estimate_operation_status` | read | Check draft quote operation |
