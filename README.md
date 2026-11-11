@@ -922,6 +922,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Wise](servers/wise-tutoring/) | education | 15 | API token | [servers/wise-tutoring/](servers/wise-tutoring/) |
 | [Faktuo](servers/faktuo/) | billing | 6 | API token | [servers/faktuo/](servers/faktuo/) |
 | [Rechnio](servers/rechnio/) | accounting | 10 | API token | [servers/rechnio/](servers/rechnio/) |
+| [Paychex Europe Payroll](servers/paychex-europe-payroll/) | hr | 12 | API token | [servers/paychex-europe-payroll/](servers/paychex-europe-payroll/) |
+| [everbill](servers/everbill/) | billing | 17 | API token | [servers/everbill/](servers/everbill/) |
+| [WebClock](servers/webclock/) | time-tracking | 20 | API token | [servers/webclock/](servers/webclock/) |
+| [Timicx](servers/timicx/) | time-tracking | 20 | API token | [servers/timicx/](servers/timicx/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
