@@ -962,6 +962,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FreightSimple](servers/freightsimple/) | logistics | 16 | API token | [servers/freightsimple/](servers/freightsimple/) |
 | [Daras](servers/daras/) | ecommerce | 26 | API token | [servers/daras/](servers/daras/) |
 | [tefacturo](servers/tefacturo/) | billing | 14 | API token | [servers/tefacturo/](servers/tefacturo/) |
+| [Loket.nl](servers/loket-nl/) | hr | 17 | OAuth | [servers/loket-nl/](servers/loket-nl/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
