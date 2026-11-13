@@ -1,38 +1,39 @@
 ---
-title: Review STEL Order invoices by client and product in ChatGPT
-description: Ask ChatGPT or Claude to read your STEL Order invoices for a period and sum the invoice lines by client and by product.
+title: Analiza facturas de STEL Order por cliente y producto en ChatGPT
+description: Pide a ChatGPT o Claude que revise tus facturas de STEL Order de un periodo y agrupe los importes por cliente y por producto.
 date: 2026-11-11
 products: stel-order
+lang: es
 ---
-You can ask ChatGPT or Claude to review the invoices in your STEL Order account for a period and sum them up by client and by product. The AI reads the invoices and their lines in the date range, then puts the client names next to the totals. Add `https://stel-order.usefulapi.io/mcp` as a connector, then ask in plain words.
+Puedes pedir a ChatGPT o Claude que revise las facturas de tu cuenta de STEL Order de un periodo y sume sus importes por cliente y por producto. La IA lee las facturas y sus líneas dentro del intervalo indicado, y añade el nombre del cliente a cada total. Añade `https://stel-order.usefulapi.io/mcp` como conector y pregunta en español.
 
-## Which prompt do I start with?
+## ¿Qué le pregunto para empezar?
 
-> Break down my STEL Order invoices from October by client and by product, with a total for each.
+> Desglosa mis facturas de STEL Order de octubre por cliente y por producto, con un total para cada uno.
 
-Name the period in plain words. You can also limit the review to one client, ask for the top products only, or ask which invoices are not paid yet.
+Indica el periodo que quieres revisar. También puedes limitar el análisis a un cliente, pedir solo los productos con más ventas o consultar qué facturas siguen pendientes de cobro.
 
-## What does the AI do, step by step?
+## ¿Qué hace la IA paso a paso?
 
-1. It can check which company the API key belongs to with `stelorder_get_company`.
-2. It lists the invoices of the period with `stelorder_list_ordinary_invoices`, using a start date and an end date in UTC. Each invoice comes with its reference, title, date, client id and document state id. One call returns 100 invoices by default and at most 500. If there are more, the AI must make another call with a higher start offset, so ask it to read all pages.
-3. The list reply can already include the lines of each invoice (item name, item reference, units and line amount), the invoice total, the tax total, a tax breakdown for each rate and the paid amount. To read one invoice in full, the AI opens it with `stelorder_get_ordinary_invoice`. Each tool call that succeeds counts toward your plan; a failed call does not. For a long period, start with one month or with one client.
-4. The invoices name the client only by id. It finds the client names and tax numbers with `stelorder_list_clients`, or reads one client with `stelorder_get_client`.
-5. The lines already carry the item name and reference, and a line can be a product or a service. For more about a product, such as its category or whether it is inactive, it can use `stelorder_list_products` or `stelorder_get_product`.
-6. If you also want to know what is still due, it lists the unpaid payment items with `stelorder_list_invoice_receipts` and matches them to the reviewed invoices by the invoice id in each item.
+1. Puede comprobar a qué empresa pertenece la clave de API con `stelorder_get_company`.
+2. Lista las facturas del periodo con `stelorder_list_ordinary_invoices`, indicando una fecha de inicio y otra de fin en UTC. Cada factura incluye su referencia, título, fecha, identificador de cliente e identificador de estado del documento. Cada llamada devuelve 100 facturas por defecto y hasta 500 como máximo. Si hay más, la IA debe realizar otra llamada con un desplazamiento mayor; pídele que lea todas las páginas.
+3. La respuesta puede incluir las líneas de cada factura: nombre y referencia del artículo, unidades e importe de la línea. También puede contener el total de la factura, los impuestos, el desglose por tipo impositivo y el importe pagado. Para consultar una factura completa, utiliza `stelorder_get_ordinary_invoice`. Las llamadas de datos que terminan correctamente cuentan para tu plan; el servidor intenta devolver el uso de las llamadas fallidas. Si el periodo es amplio, empieza por un mes o por un cliente.
+4. Las facturas identifican al cliente mediante un ID. La IA busca su nombre y número fiscal con `stelorder_list_clients`, o consulta un cliente concreto con `stelorder_get_client`.
+5. Las líneas ya contienen el nombre y la referencia del artículo, que puede ser un producto o un servicio. Para obtener más información sobre un producto, como su categoría o si está inactivo, puede utilizar `stelorder_list_products` o `stelorder_get_product`.
+6. Si también quieres saber cuánto queda por cobrar, lista los vencimientos pendientes con `stelorder_list_invoice_receipts` y los relaciona con las facturas revisadas mediante el identificador de factura de cada vencimiento.
 
-Ask the AI to say whether a total includes tax. The invoice gives the total, the tax total and the tax breakdown separately. The document state is only an id, and the server has no tool that gives the names of the states. If you want to leave out some states, check their ids in STEL Order first.
+Pide a la IA que aclare si cada total incluye impuestos. La factura proporciona por separado el total, los impuestos y su desglose. El estado del documento es un ID y este servidor no tiene una herramienta que devuelva los nombres de los estados. Si quieres excluir alguno, comprueba primero sus identificadores en STEL Order.
 
-## Can it change or delete my invoices?
+## ¿Puede modificar o eliminar mis facturas?
 
-No. The invoice tools only read. The server has no tool that creates, changes or deletes an invoice, a receipt, an estimate, an order, a product or a stock movement.
+Las herramientas de facturas solo leen datos. Este servidor no tiene herramientas para crear, modificar o eliminar facturas, recibos, presupuestos, pedidos, productos o movimientos de stock.
 
-The server has three tools that write STEL Order data: `stelorder_create_client`, `stelorder_update_client` and `stelorder_create_contact`. They act when they are called; they do not enforce a separate preview or confirmation step. `stelorder_update_client` changes the live client record, and the fields you leave out keep their values. For a review like this one, ask the AI not to call a write tool. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
+Sí dispone de tres herramientas que escriben datos en STEL Order: `stelorder_create_client`, `stelorder_update_client` y `stelorder_create_contact`. Actúan cuando se ejecutan y no incorporan un paso separado de vista previa o confirmación. `stelorder_update_client` modifica el cliente real; los campos que no se envían conservan sus valores. Para una revisión como esta, pide a la IA que no ejecute herramientas de escritura. Tu cliente de IA puede solicitar autorización antes de cada llamada, según su configuración.
 
-The server also has tools that are not about STEL Order data: `stelorder_usage_status` shows your UsefulAPI usage and plan, `stelorder_upgrade` returns a payment link or changes an existing subscription, `stelorder_cancel_subscription` cancels at the end of the current period, and `stelorder_request_feature` sends us a feature request. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+Las herramientas de tu cuenta de UsefulAPI son independientes de los datos de STEL Order. `stelorder_usage_status` muestra tu uso y plan; `stelorder_upgrade` devuelve un enlace de pago o cambia una suscripción existente; `stelorder_cancel_subscription` la cancela al final del periodo actual, y `stelorder_request_feature` permite solicitar una función. La cancelación y el cambio de Pro a Pro+ requieren confirmación.
 
-## What do I need?
+## ¿Qué necesito?
 
-A STEL Order API key from a superadmin account: in STEL Order, open **Functionalities → API** and create a key or use an existing one.
+Una clave de API de STEL Order creada desde una cuenta de superadministrador. Abre la sección de API en STEL Order y crea una clave o utiliza una existente.
 
-See the [STEL Order setup steps](/stel-order/) for ChatGPT, Claude, Cursor and other MCP clients.
+Consulta los [pasos de configuración de STEL Order](/stel-order/) para ChatGPT, Claude, Cursor y otros clientes MCP.

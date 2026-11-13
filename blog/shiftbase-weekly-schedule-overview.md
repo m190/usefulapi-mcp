@@ -1,30 +1,33 @@
 ---
-title: Read the Shiftbase schedule per department from Claude
-description: Claude or ChatGPT can list the Shiftbase schedule for a department and date range, with employees, hours and open shifts, and move a shift when you ask.
+title: Bekijk het Shiftbase-rooster per afdeling in Claude
+description: Laat Claude of ChatGPT het Shiftbase-rooster per afdeling tonen, met uren, open diensten en afwezigheden, en op jouw verzoek een dienst verplaatsen.
 date: 2026-10-17
 products: shiftbase
+lang: nl
 ---
-You can read the Shiftbase schedule from Claude or ChatGPT. The AI lists the shifts of a department for a week, shows who works when and for how many hours, and finds the open shifts and the absences. When you ask, it moves a shift. To start, add `https://shiftbase.usefulapi.io/mcp` to your AI client as a connector.
+Je kunt het Shiftbase-rooster bekijken vanuit Claude of ChatGPT. De AI toont de diensten van een afdeling voor een week, wie wanneer werkt en hoeveel uur, en welke diensten openstaan. Ook kun je de afwezigheden laten opzoeken. Als je daarom vraagt, kan de AI een dienst verplaatsen. Voeg `https://shiftbase.usefulapi.io/mcp` als koppeling toe aan je AI-client om te beginnen.
 
-## Which prompt do I start with?
+## Met welke vraag begin ik?
 
-> Show next week's Shiftbase schedule for the Amsterdam department, with total hours per employee, open shifts and approved absences.
+> Toon het Shiftbase-rooster voor volgende week van de afdeling Amsterdam, met uren per medewerker, open diensten en goedgekeurde afwezigheden.
 
-## What does the AI do, step by step?
+## Wat doet de AI stap voor stap?
 
-1. It lists the departments with `shiftbase_list_departments` and the teams with `shiftbase_list_teams`.
-2. It lists the scheduled shifts for a date range of at most 62 days with `shiftbase_list_rosters`: date, times, break, employee, team and hours.
-3. It maps the user ids to names with `shiftbase_list_users`.
-4. It lists the open shifts with `shiftbase_list_open_shifts` and the absences with `shiftbase_list_absences`.
-5. When you ask, it moves a shift to another date, time or employee with `shiftbase_update_roster`.
+1. Hij haalt de afdelingen op met `shiftbase_list_departments` en de teams met `shiftbase_list_teams`.
+2. Met `shiftbase_list_rosters` leest hij de geplande diensten voor een periode van maximaal 62 dagen: datum, tijden, pauze, medewerker, team en uren.
+3. Hij koppelt de gebruikers-ID's aan namen met `shiftbase_list_users`.
+4. Hij leest de open diensten met `shiftbase_list_open_shifts` en de afwezigheden met `shiftbase_list_absences`.
+5. Op jouw verzoek verplaatst hij een dienst naar een andere datum, tijd of medewerker met `shiftbase_update_roster`.
 
-## Can the AI change the schedule by mistake?
+## Kan de AI het rooster per ongeluk wijzigen?
 
-- The tools in steps 1 to 4 only read data.
-- `shiftbase_update_roster` changes a shift. For a recurring shift, it changes this date only, this date and all later ones, or the whole series. Tell the AI which one you want.
-- `shiftbase_create_roster` adds a shift. It notifies the employee only when the call asks for it.
-- Your AI client can ask you to approve each call that creates or changes data. This depends on the client and its settings. The tools themselves do not ask.
+- De tools in stap 1 tot en met 4 lezen alleen gegevens.
+- `shiftbase_update_roster` wijzigt een dienst. Bij een terugkerende dienst kan de wijziging alleen voor die datum gelden, voor die datum en alle volgende diensten, of voor de hele reeks. Geef aan welke optie je bedoelt.
+- `shiftbase_create_roster` voegt een dienst toe. Een medewerker krijgt alleen een melding als de aanroep daarom vraagt.
+- Je AI-client kan voor elke aanroep die gegevens aanmaakt of wijzigt om toestemming vragen. Dat hangt af van de client en de instellingen. De tools zelf vragen niet apart om toestemming.
 
-## What do I need?
+## Wat heb ik nodig?
 
-A Shiftbase API key. Create it in Shiftbase under **Settings → App center → Public API → Add**. The API needs the **App Center Plus** add-on. Open shifts and absences also need the Shiftbase **Basic** plan or higher. See the [setup steps](/shiftbase/) for Claude, ChatGPT, Cursor and other clients.
+Een Shiftbase-API-sleutel. Maak die aan in het App Center bij **Public API**. De API vereist de uitbreiding **App Center Plus**. Voor open diensten en afwezigheden heb je ook het Shiftbase-abonnement **Basic** of hoger nodig.
+
+Bekijk de [installatiestappen voor Shiftbase](/shiftbase/) voor Claude, ChatGPT, Cursor en andere clients.

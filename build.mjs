@@ -10,7 +10,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { loadContent } from "./content.mjs";
-import { loadBlog } from "./blog.mjs";
+import { loadBlog, BLOG_LOCALES } from "./blog.mjs";
 import { PAGE_SIZE, cardsHtml, normalize, paginate, paginationHtml, selectServers, staticPagePath } from "./portal/catalog-model.mjs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
@@ -137,7 +137,7 @@ const { posts: POSTS, errors: blogErrors } = loadBlog(manifest);
 if (blogErrors.length) throw new Error(`blog/ has ${blogErrors.length} error(s):\n${blogErrors.join("\n")}`);
 const postPath = (p) => `/blog/${p.slug}/`;
 const postsFor = (s) => POSTS.filter((p) => p.products.includes(s.slug));
-const dateText = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const dateText = (d, lang = "en") => new Date(`${d}T00:00:00Z`).toLocaleDateString(BLOG_LOCALES[lang].locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
 // URL + SEO helpers. Canonical page URLs carry the trailing slash: Pages serves /<slug>/index.html
 // and 308-redirects /<slug> → /<slug>/, so links/sitemap/canonical all use the final form.
@@ -292,7 +292,7 @@ const COPY_JS = `<script>for(const b of document.querySelectorAll(".copy")){b.ad
 const SERVICES_PATH = "/services/";
 const SERVICES_MAIL = "mailto:support@usefulapi.io?subject=Custom%20work";
 const FOOTER = SITE_FOOTER;
-const postList = (list, id = "") => `<ul class="posts"${id ? ` id="${id}"` : ""}>${list.map((p) => `<li><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date)}</span></li>`).join("")}</ul>`;
+const postList = (list, id = "") => `<ul class="posts"${id ? ` id="${id}"` : ""}>${list.map((p) => `<li lang="${p.lang}"><a href="${postPath(p)}">${esc(p.title)}</a><p>${esc(p.description)}</p><span class="date">${dateText(p.date, p.lang)}</span></li>`).join("")}</ul>`;
 const chip = (t, cls) => `<span class="chip${cls ? " " + cls : ""}">${t}</span>`;
 // Login kind: "key" (the user pastes vendor credentials), "upstream" (vendor OAuth) or "email" (keyless:
 // a 6-digit email code). From s.login (codegen syncs it from fleet product.ts), else from s.auth.
@@ -598,21 +598,22 @@ function categoryPage(g) { return catalogPage({ category: g }); }
 const serverBySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
 function postPage(p) {
   const url = `${SITE}${postPath(p)}`;
+  const copy = BLOG_LOCALES[p.lang];
   const prods = p.products.map((x) => serverBySlug.get(x));
-  const connect = prods.map((s) => `<div class="card"><h2>Connect ${esc(s.name)}</h2>` +
-    `<p class="lead">Add this URL to Claude, ChatGPT, Cursor or any MCP client, then log in. <a href="${pagePath(s)}">Setup steps, tools and pricing →</a></p>` +
-    `<div class="copywrap line"><span class="url">${esc(s.endpoint)}</span><button class="copy" type="button">Copy</button></div></div>`).join("");
-  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › <a href="/blog/">Blog</a></nav>
+  const connect = prods.map((s) => `<div class="card"><h2>${copy.connect} ${esc(s.name)}</h2>` +
+    `<p class="lead">${copy.setup} <a href="${pagePath(s)}">${copy.setupLink}</a></p>` +
+    `<div class="copywrap line"><span class="url">${esc(s.endpoint)}</span><button class="copy" type="button">${copy.copy}</button></div></div>`).join("");
+  const body = `<nav class="crumbs" aria-label="${copy.breadcrumb}"><a href="/">usefulapi</a> › <a href="/blog/">Blog</a></nav>
 <article class="post"><h1>${esc(p.title)}</h1>
-<p class="meta"><time datetime="${p.date}">${dateText(p.date)}</time> · ${prods.map((s) => `<a href="${pagePath(s)}">${esc(s.name)} MCP server</a>`).join(", ")}</p>
+<p class="meta"><time datetime="${p.date}">${dateText(p.date, p.lang)}</time> · ${prods.map((s) => `<a href="${pagePath(s)}">${esc(s.name)} MCP server</a>`).join(", ")}</p>
 ${p.html}</article>
-<h2 class="sec">Try it</h2>
+<h2 class="sec">${copy.tryIt}</h2>
 <div class="grid">${connect}</div>
-${FOOTER}`;
+<div lang="en">${FOOTER}</div>`;
   const title = `${p.title} | usefulapi`;
   const ld = [
     { "@context": "https://schema.org", "@type": "BlogPosting", headline: p.title, description: p.description, url, mainEntityOfPage: url,
-      datePublished: p.date, author: { "@type": "Organization", name: "usefulapi", url: `${SITE}/` },
+      datePublished: p.date, inLanguage: p.lang, author: { "@type": "Organization", name: "usefulapi", url: `${SITE}/` },
       publisher: { "@type": "Organization", name: "usefulapi", url: `${SITE}/`, logo: { "@type": "ImageObject", url: `${SITE}/icon-512.png` } },
       about: prods.map((s) => ({ "@type": "SoftwareApplication", name: `${s.name} MCP Server by usefulapi`, url: `${SITE}${pagePath(s)}` })) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
@@ -620,13 +621,13 @@ ${FOOTER}`;
       { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog/` },
       { "@type": "ListItem", position: 3, name: p.title, item: url }] }
   ];
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+  return `<!doctype html><html lang="${p.lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 ${headMeta({ title, desc: p.description, url }).replace('content="website"', 'content="article"')}
 ${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${topbar("/blog/")}${body}</div>${COPY_JS}</body></html>`;
+<body><div class="wrap">${topbar("/blog/").replace("<header ", '<header lang="en" ')}${body}</div>${COPY_JS.replace('b.textContent="Copied"', `b.textContent=${JSON.stringify(copy.copied)}`)}</body></html>`;
 }
 // Blog index: every post stays in the HTML (crawlable, readable without JS); the script shows BLOG_PAGE at a time.
 const BLOG_PAGE = 10;
@@ -636,7 +637,7 @@ function blogIndexPage() {
   const title = "Blog: business tools in Claude and ChatGPT | usefulapi";
   const desc = "Short guides and real use cases: how people use their business tools from Claude, ChatGPT and other AI assistants with usefulapi MCP servers.";
   const ld = { "@context": "https://schema.org", "@type": "Blog", name: "usefulapi blog", url, description: desc,
-    blogPost: POSTS.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date })) };
+    blogPost: POSTS.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date, inLanguage: p.lang })) };
   const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › Blog</nav>
 <div class="brand"><h1>Blog</h1></div>
 <p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>

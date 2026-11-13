@@ -1,7 +1,7 @@
 ---
 title: Review Freshsales deals that close this month in Claude
 description: Ask Claude or ChatGPT to list your open Freshsales deals that close this month, with stage, amount, owner and contacts, and flag past close dates.
-date: 2026-11-13
+date: 2026-11-12
 products: freshsales
 ---
 You can ask Claude or ChatGPT to review the open deals in your Freshsales account before a pipeline meeting. The AI reads a deal view, picks the deals that close this month, and adds the stage, the owner and the contacts of each deal. Add `https://freshsales.usefulapi.io/mcp` as a connector, then ask in plain words.

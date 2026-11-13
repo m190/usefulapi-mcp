@@ -7,9 +7,12 @@
 //   description: One sentence for search results.      (50-160 chars)
 //   date: 2026-10-26                                    (YYYY-MM-DD, not in the future, one post per day)
 //   products: rotacloud                                 (1+ live server slugs, space- or comma-separated)
+//   lang: en                                           (optional: en, nl or es; defaults to en)
 //   ---
 // Titles name the workflow and a supported AI assistant. Rotate Claude, ChatGPT and Cursor across posts
 // rather than repeatedly using the same assistant; check the most recent titles before choosing one.
+// For products serving a specific language market, use that audience's language (e.g. WeFact: nl,
+// STEL Order: es). Check the product's customers/docs, not just the vendor's country. Global products stay en.
 //   Markdown body: ## and ### headings, paragraphs, "- " and "1. " lists, "> " prompt quotes, ``` code blocks,
 //   inline `code`, **bold** and [links](https://... or /path/). No raw HTML: everything is escaped.
 //   A `code` span that looks like a tool name (a_b) must be a tool of one of the post's products.
@@ -24,6 +27,15 @@ import { fileURLToPath } from "node:url";
 
 const DIR = new URL("blog/", import.meta.url);
 const LIMITS = { title: 70, descMin: 50, descMax: 160 };
+export const BLOG_LOCALES = {
+  en: { locale: "en-GB", promptHeading: "Which prompt do I start with?", connect: "Connect", tryIt: "Try it", copy: "Copy", copied: "Copied", breadcrumb: "Breadcrumb",
+    setup: "Add this URL to Claude, ChatGPT, Cursor or any MCP client, then log in.", setupLink: "Setup steps, tools and pricing →" },
+  nl: { locale: "nl-NL", promptHeading: "Met welke vraag begin ik?", connect: "Koppel", tryIt: "Probeer het", copy: "Kopiëren", copied: "Gekopieerd", breadcrumb: "Broodkruimelpad",
+    setup: "Voeg deze URL toe aan Claude, ChatGPT, Cursor of een andere MCP-client en meld je aan.", setupLink: "Installatie, tools en abonnementen →" },
+  es: { locale: "es-ES", promptHeading: "¿Qué le pregunto para empezar?", connect: "Conecta", tryIt: "Pruébalo", copy: "Copiar", copied: "Copiado", breadcrumb: "Ruta de navegación",
+    setup: "Añade esta URL a Claude, ChatGPT, Cursor u otro cliente MCP e inicia sesión.", setupLink: "Configuración, herramientas y precios →" },
+};
+const headingId = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 // Claims we never make (we are independent; prices and limits come from the manifest and change).
 const BANNED = [/\bofficial\b/i, /\bendorsed\b/i, /\bpartner(ship)?\b/i, /\bcertified\b/i, /\bunlimited\b/i, /\$\d/];
 const TOOL_LIKE = /^[a-z0-9]+(?:_[a-z0-9]+)+$/;
@@ -86,7 +98,7 @@ export function renderBody(md) {
       flush();
       const lvl = m[1].length;
       if (lvl < 2 || lvl > 3) errors.push(`heading "${m[2]}": use ## or ### (the title is the only h1)`);
-      const id = m[2].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const id = headingId(m[2]);
       out.push(`<h${lvl} id="${id}">${il(m[2])}</h${lvl}>`);
     } else if (/^\s+([-*]|\d+\.)\s/.test(line)) {
       errors.push(`nested list item "${line.trim()}": nested lists are not supported`);
@@ -112,19 +124,24 @@ export function renderBody(md) {
 const PROMPT_MAX_WORDS = 30;
 
 /** Word counts of every > quote (prompt) in the rendered HTML; hasStart: one comes right after "## Which prompt ...". */
-export function promptWords(html) {
+export function promptWords(html, lang = "en") {
   const words = [...html.matchAll(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g)].map((m) => m[1].replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length);
-  return { hasStart: /<h2 id="which-prompt[^"]*">(?:(?!<\/h2>)[\s\S])*<\/h2>\s*<blockquote/.test(html), words };
+  const copy = Object.hasOwn(BLOG_LOCALES, lang) ? BLOG_LOCALES[lang] : BLOG_LOCALES.en;
+  const startId = lang === "en" ? "which-prompt[^\"]*" : headingId(copy.promptHeading);
+  return { hasStart: new RegExp(`<h2 id="${startId}">(?:(?!<\\/h2>)[\\s\\S])*<\\/h2>\\s*<blockquote`).test(html), words };
 }
 
-function checkOne(slug, text, bySlug, today) {
+export function checkOne(slug, text, bySlug, today) {
   const err = [];
   const { meta, body } = parse(text);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) err.push("file name: use a-z, 0-9 and single hyphens");
   if (!meta) return { err: [...err, "no front matter (--- ... --- at the top)"] };
   if (meta.__bad) err.push(`front matter: bad line "${meta.__bad}"`);
-  const extra = Object.keys(meta).filter((k) => !["title", "description", "date", "products", "__bad"].includes(k));
+  const extra = Object.keys(meta).filter((k) => !["title", "description", "date", "products", "lang", "__bad"].includes(k));
   if (extra.length) err.push(`front matter: unknown keys: ${extra.join(", ")}`);
+  const lang = meta.lang ?? "en";
+  if (!Object.hasOwn(BLOG_LOCALES, lang)) err.push(`lang: "${lang}" is not supported (use en, nl or es)`);
+  const copy = Object.hasOwn(BLOG_LOCALES, lang) ? BLOG_LOCALES[lang] : BLOG_LOCALES.en;
   const str = (v, min, max, what) => {
     if (!v) return err.push(`${what}: missing`);
     if (v.length < min || v.length > max) err.push(`${what}: ${v.length} chars (need ${min}-${max})`);
@@ -143,8 +160,8 @@ function checkOne(slug, text, bySlug, today) {
     else if (s.status !== "live") err.push(`products: ${p} is not live`);
   }
   const r = renderBody(body);
-  const pw = promptWords(r.html);
-  if (!pw.hasStart) err.push('body: no start prompt (a "> " quote right under "## Which prompt do I start with?")');
+  const pw = promptWords(r.html, lang);
+  if (!pw.hasStart) err.push(`body: no start prompt (a "> " quote right under "## ${copy.promptHeading}")`);
   for (const n of pw.words) {
     if (n === 0) err.push("prompt: an empty > quote");
     else if (n > PROMPT_MAX_WORDS) err.push(`prompt: ${n} words (max ${PROMPT_MAX_WORDS}): write it as a user types it; put options in the text below`);
@@ -163,7 +180,7 @@ function checkOne(slug, text, bySlug, today) {
       else if (m[3] && !["privacy", "terms"].includes(m[3]) && !bySlug.has(m[3])) err.push(`link ${l}: no such server page`);
     } else if (!SAFE_URL.test(l)) err.push(`link ${l}: only https:// or /internal/ links`);
   }
-  return { err, post: { slug, title: meta.title, description: meta.description, date: d, products, html: r.html, links: r.links } };
+  return { err, post: { slug, title: meta.title, description: meta.description, date: d, products, lang, html: r.html, links: r.links } };
 }
 
 /** Posts (newest first) for the listed slugs that have a file, plus every error. */
