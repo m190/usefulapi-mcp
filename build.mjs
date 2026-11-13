@@ -11,6 +11,7 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } fro
 import { createHash } from "node:crypto";
 import { loadContent } from "./content.mjs";
 import { loadBlog, BLOG_LOCALES } from "./blog.mjs";
+import { blogPath, blogIndexPath, alternates } from "./locales.mjs";
 import { PAGE_SIZE, cardsHtml, normalize, paginate, paginationHtml, selectServers, staticPagePath } from "./portal/catalog-model.mjs";
 
 const ROOT = new URL("./", import.meta.url);          // repo root (this file's dir)
@@ -54,9 +55,12 @@ function mdToHtml(md) {
 }
 // Shared top bar on every page: logo (home), main sections, custom work at the top right.
 // On phones "Integrations" hides (the logo leads to the search page) so the bar stays on one row.
-const NAV = [["/servers/", "Integrations", "nav-wide"], ["/blog/", "Blog"], ["/services/", "Custom integration →", "nav-cta"]];
-const topbar = (current = "") => `<header class="topbar"><a class="logo" href="/" aria-label="usefulapi home"><img src="/icon.svg" width="28" height="28" alt=""><span>usefulapi</span></a>` +
-  `<nav aria-label="Main">${NAV.map(([href, label, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ""}${current === href ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</nav></header>`;
+const topbar = (current = "", lang = "en") => {
+  const copy = BLOG_LOCALES[lang];
+  const nav = [["/servers/", copy.integrations, "nav-wide"], [blogIndexPath(lang), "Blog"], ["/services/", copy.custom, "nav-cta"]];
+  return `<header class="topbar"><a class="logo" href="/" aria-label="${copy.home}"><img src="/icon.svg" width="28" height="28" alt=""><span>usefulapi</span></a>` +
+    `<nav aria-label="${copy.main}">${nav.map(([href, label, cls]) => `<a href="${href}"${cls ? ` class="${cls}"` : ""}${current === href ? ' aria-current="page"' : ""}>${label}</a>`).join("")}</nav></header>`;
+};
 // SITE_CSS: the one shared base for every page (appended last, so it wins): colours, page width, headings,
 // top bar, footer, search field, category pills. Page CSS keeps only page-specific layout.
 const CHEV = (c) => `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23${c}' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`;
@@ -98,7 +102,11 @@ footer.site a{color:var(--muted);text-decoration:none}footer.site a:hover{color:
 .search-form{margin-bottom:26px}
 .category-link{padding:6px 12px;font-size:13px}
 .category-links.collapsible .category-link:nth-child(n+7){display:none}.category-links.collapsible .category-more{display:inline-flex}}`;
-const SITE_FOOTER = `<footer class="site"><p>Connect from Claude, ChatGPT, Cursor, or any MCP client.</p><nav aria-label="Footer"><a href="/servers/">All integrations</a><a href="/services/">Custom integrations</a><a href="/blog/">Blog</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
+const siteFooter = (lang = "en") => {
+  const c = BLOG_LOCALES[lang];
+  return `<footer class="site"><p>${c.footerText}</p><nav aria-label="${c.footer}"><a href="/servers/">${c.allIntegrations}</a><a href="/services/">${c.customPlural}</a><a href="${blogIndexPath(lang)}">Blog</a><a href="/privacy/">${c.privacy}</a><a href="/terms/">${c.terms}</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
+};
+const SITE_FOOTER = siteFooter();
 // Category pills (homepage, category pages, 404). On phones the script shows the first PILLS_PHONE and a
 // "Show all" button; without JS, or on wider screens, every pill shows.
 const PILLS_PHONE = 6;
@@ -135,8 +143,9 @@ if (contentErrors.length) throw new Error(`content/ has ${contentErrors.length} 
 // Blog posts (blog/<slug>.md, newest first), checked against the manifest's servers and tools.
 const { posts: POSTS, errors: blogErrors } = loadBlog(manifest);
 if (blogErrors.length) throw new Error(`blog/ has ${blogErrors.length} error(s):\n${blogErrors.join("\n")}`);
-const postPath = (p) => `/blog/${p.slug}/`;
-const postsFor = (s) => POSTS.filter((p) => p.products.includes(s.slug));
+const postPath = blogPath;
+const postsFor = (s) => POSTS.filter((p) => p.lang === "en" && p.products.includes(s.slug));
+const BLOG_LANGS = Object.keys(BLOG_LOCALES).filter(lang => POSTS.some(p => p.lang === lang));
 const dateText = (d, lang = "en") => new Date(`${d}T00:00:00Z`).toLocaleDateString(BLOG_LOCALES[lang].locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
 // URL + SEO helpers. Canonical page URLs carry the trailing slash: Pages serves /<slug>/index.html
@@ -594,22 +603,30 @@ ${ld.map(jsonLd).join("\n")}
 // Category landing pages (/category/<group>/): crawlable internal-linking hubs, one per browse group.
 function categoryPage(g) { return catalogPage({ category: g }); }
 
-// Blog post pages (/blog/<slug>/) and the blog index (/blog/).
+// Full language versions share an article ID, dates and product facts; every URL is static HTML.
 const serverBySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
+const variantsFor = p => POSTS.filter(v => v.id === p.id).map(v => ({ lang: v.lang, path: postPath(v) }));
+const blogVariants = BLOG_LANGS.map(lang => ({ lang, path: blogIndexPath(lang) }));
+const localeHead = (variants, lang) => `<meta property="og:locale" content="${BLOG_LOCALES[lang].locale.replace("-", "_")}">\n` + alternates(variants).map(v => `<link rel="alternate" hreflang="${v.lang}" href="${SITE}${v.path}">`).join("\n");
+const languageNav = (variants, lang) => `<nav class="languages" aria-label="${BLOG_LOCALES[lang].languages}">${Object.keys(BLOG_LOCALES).flatMap(code => {
+  const v = variants.find(v => v.lang === code);
+  return v ? [`<a href="${v.path}" lang="${code}" hreflang="${code}"${code === lang ? ' aria-current="page"' : ""}>${BLOG_LOCALES[code].label}</a>`] : [];
+}).join("")}</nav>`;
+const LOCALE_CSS = `.languages{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 24px;font-size:14px}.languages a{color:var(--muted)}.languages a[aria-current]{color:var(--accent);font-weight:600;text-decoration:none}.languages a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}`;
 function postPage(p) {
   const url = `${SITE}${postPath(p)}`;
-  const copy = BLOG_LOCALES[p.lang];
+  const copy = BLOG_LOCALES[p.lang], variants = variantsFor(p);
   const prods = p.products.map((x) => serverBySlug.get(x));
   const connect = prods.map((s) => `<div class="card"><h2>${copy.connect} ${esc(s.name)}</h2>` +
     `<p class="lead">${copy.setup} <a href="${pagePath(s)}">${copy.setupLink}</a></p>` +
     `<div class="copywrap line"><span class="url">${esc(s.endpoint)}</span><button class="copy" type="button">${copy.copy}</button></div></div>`).join("");
-  const body = `<nav class="crumbs" aria-label="${copy.breadcrumb}"><a href="/">usefulapi</a> › <a href="/blog/">Blog</a></nav>
+  const body = `<nav class="crumbs" aria-label="${copy.breadcrumb}"><a href="/">usefulapi</a> › <a href="${blogIndexPath(p.lang)}">Blog</a></nav>
 <article class="post"><h1>${esc(p.title)}</h1>
-<p class="meta"><time datetime="${p.date}">${dateText(p.date, p.lang)}</time> · ${prods.map((s) => `<a href="${pagePath(s)}">${esc(s.name)} MCP server</a>`).join(", ")}</p>
+<p class="meta"><time datetime="${p.date}">${dateText(p.date, p.lang)}</time> · ${prods.map((s) => `<a href="${pagePath(s)}">${esc(s.name)}</a>`).join(", ")}</p>
 ${p.html}</article>
 <h2 class="sec">${copy.tryIt}</h2>
 <div class="grid">${connect}</div>
-<div lang="en">${FOOTER}</div>`;
+${siteFooter(p.lang)}`;
   const title = `${p.title} | usefulapi`;
   const ld = [
     { "@context": "https://schema.org", "@type": "BlogPosting", headline: p.title, description: p.description, url, mainEntityOfPage: url,
@@ -618,39 +635,41 @@ ${p.html}</article>
       about: prods.map((s) => ({ "@type": "SoftwareApplication", name: `${s.name} MCP Server by usefulapi`, url: `${SITE}${pagePath(s)}` })) },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
       { "@type": "ListItem", position: 1, name: "usefulapi", item: `${SITE}/` },
-      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}${blogIndexPath(p.lang)}` },
       { "@type": "ListItem", position: 3, name: p.title, item: url }] }
   ];
   return `<!doctype html><html lang="${p.lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 ${headMeta({ title, desc: p.description, url }).replace('content="website"', 'content="article"')}
+${localeHead(variants, p.lang)}
 ${ld.map(jsonLd).join("\n")}
-<style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${topbar("/blog/").replace("<header ", '<header lang="en" ')}${body}</div>${COPY_JS.replace('b.textContent="Copied"', `b.textContent=${JSON.stringify(copy.copied)}`)}</body></html>`;
+<style>${PRODUCT_CSS}${LOCALE_CSS}</style></head>
+<body><div class="wrap">${topbar(blogIndexPath(p.lang), p.lang)}${languageNav(variants, p.lang)}${body}</div>${COPY_JS.replace('b.textContent="Copied"', `b.textContent=${JSON.stringify(copy.copied)}`)}</body></html>`;
 }
-// Blog index: every post stays in the HTML (crawlable, readable without JS); the script shows BLOG_PAGE at a time.
+// Each language index lists only that language's complete articles, all readable without JS.
 const BLOG_PAGE = 10;
 const MORE_POSTS_JS = `<script>(function(){var items=[].slice.call(document.querySelectorAll("#post-list>li")),btn=document.getElementById("more-posts"),step=${BLOG_PAGE},shown=step;if(!btn)return;function render(){items.forEach(function(li,i){li.hidden=i>=shown;});var left=items.length-shown;btn.hidden=left<=0;}btn.addEventListener("click",function(){var first=items[shown];shown+=step;render();if(first)first.querySelector("a").focus();});render();})();</script>`;
-function blogIndexPage() {
-  const url = `${SITE}/blog/`;
-  const title = "Blog: business tools in Claude and ChatGPT | usefulapi";
-  const desc = "Short guides and real use cases: how people use their business tools from Claude, ChatGPT and other AI assistants with usefulapi MCP servers.";
-  const ld = { "@context": "https://schema.org", "@type": "Blog", name: "usefulapi blog", url, description: desc,
-    blogPost: POSTS.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date, inLanguage: p.lang })) };
-  const body = `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › Blog</nav>
+function blogIndexPage(lang = "en") {
+  const url = `${SITE}${blogIndexPath(lang)}`, copy = BLOG_LOCALES[lang];
+  const posts = POSTS.filter(p => p.lang === lang);
+  const title = `${copy.blogTitle} | usefulapi`, desc = copy.blogDescription;
+  const ld = { "@context": "https://schema.org", "@type": "Blog", name: "usefulapi blog", url, description: desc, inLanguage: lang,
+    blogPost: posts.map((p) => ({ "@type": "BlogPosting", headline: p.title, url: `${SITE}${postPath(p)}`, datePublished: p.date, inLanguage: p.lang })) };
+  const body = `<nav class="crumbs" aria-label="${copy.breadcrumb}"><a href="/">usefulapi</a> › Blog</nav>
 <div class="brand"><h1>Blog</h1></div>
-<p class="sub">Short guides and real use cases: business tools in Claude, ChatGPT and other AI assistants.</p>
-${postList(POSTS, "post-list")}
-${POSTS.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden>Show more posts</button>` : ""}
-${FOOTER}`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<p class="sub">${copy.blogIntro}</p>
+${postList(posts, "post-list")}
+${posts.length > BLOG_PAGE ? `<button class="more-posts" id="more-posts" type="button" hidden>${copy.more}</button>` : ""}
+${siteFooter(lang)}`;
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 ${headMeta({ title, desc, url })}
+${localeHead(blogVariants, lang)}
 ${jsonLd(ld)}
-<style>${PRODUCT_CSS}</style></head>
-<body><div class="wrap">${topbar("/blog/")}${body}</div>${MORE_POSTS_JS}</body></html>`;
+<style>${PRODUCT_CSS}${LOCALE_CSS}</style></head>
+<body><div class="wrap">${topbar(blogIndexPath(lang), lang)}${languageNav(blogVariants, lang)}${body}</div>${MORE_POSTS_JS}</body></html>`;
 }
 
 // ---- Catalog groups: shared by category pages, the directory and its compact search index. ----
@@ -857,8 +876,10 @@ for (const g of groupsPresent) {
   writeFileSync(`${outDir}${categoryPath(g)}index.html`, categoryPage(g));
 }
 if (POSTS.length) {
-  mkdirSync(`${outDir}/blog`, { recursive: true });
-  writeFileSync(`${outDir}/blog/index.html`, blogIndexPage());
+  for (const lang of BLOG_LANGS) {
+    mkdirSync(`${outDir}${blogIndexPath(lang)}`, { recursive: true });
+    writeFileSync(`${outDir}${blogIndexPath(lang)}index.html`, blogIndexPage(lang));
+  }
   for (const p of POSTS) {
     mkdirSync(`${outDir}${postPath(p)}`, { recursive: true });
     writeFileSync(`${outDir}${postPath(p)}index.html`, postPage(p));
@@ -876,7 +897,7 @@ ${categoryPills(groups)}</div>`).replace("<head>", '<head><meta name="robots" co
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
 const base = SITE;
 const urls = [`${base}/`, ...Array.from({ length: directoryPageCount }, (_, i) => `${base}${staticPagePath(i + 1)}`), `${base}${SERVICES_PATH}`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
-  ...(POSTS.length ? [`${base}/blog/`, ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
+  ...(POSTS.length ? [...BLOG_LANGS.map(lang => `${base}${blogIndexPath(lang)}`), ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
@@ -926,7 +947,7 @@ for (const f of htmlFiles(outDir)) {
   writeFileSync(f, html.replace("</head>", () => `${SOURCE_TAG}</head>`));
 }
 writeFileSync(`${outDir}/_src.txt`, "ok\n");
-writeFileSync(`${outDir}/_redirects`, `/_src/* /_src.txt 200\n`);
+writeFileSync(`${outDir}/_redirects`, `/_src/* /_src.txt 200\n` + POSTS.flatMap(p => p.aliases.flatMap(alias => [`${alias} ${postPath(p)} 301`, `${alias.slice(0, -1)} ${postPath(p)} 301`])).join("\n") + "\n");
 writeFileSync(`${outDir}/_headers`, readFileSync(`${outDir}/_headers`, "utf8") +
   `/_src/*\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n/_src.txt\n  X-Robots-Tag: noindex\n`);
 

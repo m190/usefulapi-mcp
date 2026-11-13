@@ -5,14 +5,18 @@
 //   ---
 //   title: Plan RotaCloud shifts from ChatGPT          (max 70 chars)
 //   description: One sentence for search results.      (50-160 chars)
-//   date: 2026-10-26                                    (YYYY-MM-DD, not in the future, one post per day)
+//   date: 2026-10-26                                    (YYYY-MM-DD; one original article per day)
 //   products: rotacloud                                 (1+ live server slugs, space- or comma-separated)
-//   lang: en                                           (optional: en, nl or es; defaults to en)
+//   lang: en                                           (optional: en, nl, es or de; defaults to en)
 //   ---
 // Titles name the workflow and a supported AI assistant. Rotate Claude, ChatGPT and Cursor across posts
 // rather than repeatedly using the same assistant; check the most recent titles before choosing one.
-// For products serving a specific language market, use that audience's language (e.g. WeFact: nl,
-// STEL Order: es). Check the product's customers/docs, not just the vendor's country. Global products stay en.
+// English originals live at blog/<slug>.md. Full translations live at blog/<lang>/<localized-slug>.md.
+// Translations declare lang, translation (English slug), and source (SHA-256 of the English file).
+// Run `node blog.mjs --sources` for current hashes. Keep dates/products identical across variants.
+// Prioritize languages by the product audience, not vendor headquarters; retain English originals.
+// Review the full translation after changing an original, then update its source hash. The build blocks
+// stale translations. An optional aliases field permanently redirects published /blog/<slug>/ URLs.
 //   Markdown body: ## and ### headings, paragraphs, "- " and "1. " lists, "> " prompt quotes, ``` code blocks,
 //   inline `code`, **bold** and [links](https://... or /path/). No raw HTML: everything is escaped.
 //   A `code` span that looks like a tool name (a_b) must be a tool of one of the post's products.
@@ -27,14 +31,9 @@ import { fileURLToPath } from "node:url";
 
 const DIR = new URL("blog/", import.meta.url);
 const LIMITS = { title: 70, descMin: 50, descMax: 160 };
-export const BLOG_LOCALES = {
-  en: { locale: "en-GB", promptHeading: "Which prompt do I start with?", connect: "Connect", tryIt: "Try it", copy: "Copy", copied: "Copied", breadcrumb: "Breadcrumb",
-    setup: "Add this URL to Claude, ChatGPT, Cursor or any MCP client, then log in.", setupLink: "Setup steps, tools and pricing →" },
-  nl: { locale: "nl-NL", promptHeading: "Met welke vraag begin ik?", connect: "Koppel", tryIt: "Probeer het", copy: "Kopiëren", copied: "Gekopieerd", breadcrumb: "Broodkruimelpad",
-    setup: "Voeg deze URL toe aan Claude, ChatGPT, Cursor of een andere MCP-client en meld je aan.", setupLink: "Installatie, tools en abonnementen →" },
-  es: { locale: "es-ES", promptHeading: "¿Qué le pregunto para empezar?", connect: "Conecta", tryIt: "Pruébalo", copy: "Copiar", copied: "Copiado", breadcrumb: "Ruta de navegación",
-    setup: "Añade esta URL a Claude, ChatGPT, Cursor u otro cliente MCP e inicia sesión.", setupLink: "Configuración, herramientas y precios →" },
-};
+export { LOCALES as BLOG_LOCALES } from "./locales.mjs";
+import { LOCALES as BLOG_LOCALES, blogPath, blogIndexPath } from "./locales.mjs";
+import { createHash } from "node:crypto";
 const headingId = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 // Claims we never make (we are independent; prices and limits come from the manifest and change).
 const BANNED = [/\bofficial\b/i, /\bendorsed\b/i, /\bpartner(ship)?\b/i, /\bcertified\b/i, /\bunlimited\b/i, /\$\d/];
@@ -42,6 +41,7 @@ const TOOL_LIKE = /^[a-z0-9]+(?:_[a-z0-9]+)+$/;
 const SAFE_URL = /^https:\/\/[A-Za-z0-9.-]+(?:\/[A-Za-z0-9._~%\/?#=&+:,;@!-]*)?$/;
 // Internal links: the home page, a server page, /privacy/, /terms/, /blog/ or a post (an #anchor is allowed).
 const INTERNAL = /^\/(?:(blog)\/(?:([a-z0-9-]+)\/)?|([a-z0-9-]+)\/)?(?:#[a-z0-9-]+)?$/;
+const LOCALIZED_BLOG = new RegExp(`^/(${Object.keys(BLOG_LOCALES).filter(lang => lang !== "en").join("|")})/blog/(?:[a-z0-9-]+/)?(?:#[a-z0-9-]+)?$`);
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -137,11 +137,18 @@ export function checkOne(slug, text, bySlug, today) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) err.push("file name: use a-z, 0-9 and single hyphens");
   if (!meta) return { err: [...err, "no front matter (--- ... --- at the top)"] };
   if (meta.__bad) err.push(`front matter: bad line "${meta.__bad}"`);
-  const extra = Object.keys(meta).filter((k) => !["title", "description", "date", "products", "lang", "__bad"].includes(k));
+  const extra = Object.keys(meta).filter((k) => !["title", "description", "date", "products", "lang", "translation", "source", "aliases", "__bad"].includes(k));
   if (extra.length) err.push(`front matter: unknown keys: ${extra.join(", ")}`);
   const lang = meta.lang ?? "en";
-  if (!Object.hasOwn(BLOG_LOCALES, lang)) err.push(`lang: "${lang}" is not supported (use en, nl or es)`);
+  if (!Object.hasOwn(BLOG_LOCALES, lang)) err.push(`lang: "${lang}" is not supported (use en, nl, es or de)`);
   const copy = Object.hasOwn(BLOG_LOCALES, lang) ? BLOG_LOCALES[lang] : BLOG_LOCALES.en;
+  if (lang === "en" && (meta.translation || meta.source)) err.push("English originals cannot declare translation or source");
+  if (lang !== "en") {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(meta.translation ?? "")) err.push("translation: name the English original's slug");
+    if (!/^[a-f0-9]{64}$/.test(meta.source ?? "")) err.push("source: provide the English file's SHA-256 hash");
+  }
+  const aliases = (meta.aliases || "").split(/\s+/).filter(Boolean);
+  if (aliases.some(a => !/^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/.test(a))) err.push("aliases: use legacy /blog/<slug>/ paths");
   const str = (v, min, max, what) => {
     if (!v) return err.push(`${what}: missing`);
     if (v.length < min || v.length > max) err.push(`${what}: ${v.length} chars (need ${min}-${max})`);
@@ -176,47 +183,80 @@ export function checkOne(slug, text, bySlug, today) {
   for (const l of r.links) {
     if (l.startsWith("/")) {
       const m = l.match(INTERNAL);
+      if (LOCALIZED_BLOG.test(l)) continue;
       if (!m) err.push(`link ${l}: use /, /<server>/, /privacy/, /terms/, /blog/ or /blog/<post>/`);
       else if (m[3] && !["privacy", "terms"].includes(m[3]) && !bySlug.has(m[3])) err.push(`link ${l}: no such server page`);
     } else if (!SAFE_URL.test(l)) err.push(`link ${l}: only https:// or /internal/ links`);
   }
-  return { err, post: { slug, title: meta.title, description: meta.description, date: d, products, lang, html: r.html, links: r.links } };
+  return { err, post: { slug, title: meta.title, description: meta.description, date: d, products, lang, id: meta.translation || slug, source: meta.source, aliases, html: r.html, links: r.links } };
 }
 
-/** Posts (newest first) for the listed slugs that have a file, plus every error. */
-export function loadBlog(manifest, only, today = new Date().toISOString().slice(0, 10)) {
-  const bySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
-  const posts = [], errors = [];
-  const files = existsSync(DIR) ? readdirSync(DIR).filter((f) => f.endsWith(".md")) : [];
-  for (const f of files) {
-    const slug = f.replace(/\.md$/, "");
-    if (only && !only.includes(slug)) continue;
-    const { err, post } = checkOne(slug, readFileSync(new URL(f, DIR), "utf8"), bySlug, today);
-    if (err.length) errors.push(...err.map((e) => `blog/${f}: ${e}`)); else posts.push(post);
+/** Validate the article registry: translations are siblings, never extra publication days. */
+export function validateTranslations(posts) {
+  const errors = [], originals = new Map(posts.filter(p => p.lang === "en").map(p => [p.id, p]));
+  const identities = new Set(), paths = new Set(posts.map(blogPath));
+  const dates = new Map(), aliases = new Set();
+  for (const p of posts) {
+    const key = `${p.id}:${p.lang}`;
+    if (identities.has(key)) errors.push(`${p.file}: duplicate language ${p.lang} for ${p.id}`);
+    identities.add(key);
+    const original = originals.get(p.id);
+    if (p.lang !== "en") {
+      if (!original) errors.push(`${p.file}: no English original ${p.id}`);
+      else {
+        if (p.date !== original.date) errors.push(`${p.file}: publication date must match ${p.id}`);
+        if ([...p.products].sort().join(",") !== [...original.products].sort().join(",")) errors.push(`${p.file}: products must match ${p.id}`);
+        if (p.source !== original.hash) errors.push(`${p.file}: translation needs review; source hash differs from ${p.id}`);
+      }
+    } else {
+      if (dates.has(p.date)) errors.push(`date ${p.date}: multiple originals (${dates.get(p.date)}, ${p.id}): use one article per day`);
+      dates.set(p.date, p.id);
+    }
+    for (const alias of p.aliases || []) {
+      if (paths.has(alias) || aliases.has(alias)) errors.push(`${p.file}: alias ${alias} conflicts with another page`);
+      aliases.add(alias);
+    }
+    for (const link of p.links || []) {
+      const path = link.split("#")[0];
+      if (/^\/(?:[a-z]{2}\/)?blog\//.test(path) && !paths.has(path) && !Object.keys(BLOG_LOCALES).some(lang => blogIndexPath(lang) === path))
+        errors.push(`${p.file}: link ${link}: no such blog page`);
+    }
   }
-  // Links between posts must point at a post that exists.
-  const known = new Set(posts.map((p) => p.slug));
-  if (!only) for (const p of posts) for (const l of p.links) {
-    const m = l.match(/^\/blog\/([a-z0-9-]+)\//);
-    if (m && !known.has(m[1])) errors.push(`blog/${p.slug}.md: link ${l}: no such post`);
-  }
-  // At most one post per day: compared across ALL posts, reported when a checked post is involved.
-  const byDate = new Map();
-  for (const f of files) {
-    const d = parse(readFileSync(new URL(f, DIR), "utf8")).meta?.date;
-    if (d) byDate.set(d, [...(byDate.get(d) ?? []), f.replace(/\.md$/, "")]);
-  }
-  for (const [d, slugs] of byDate)
-    if (slugs.length > 1 && (!only || slugs.some((s) => only.includes(s))))
-      errors.push(`date ${d}: ${slugs.length} posts (${slugs.sort().join(", ")}): use one post per day`);
-  posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
-  return { posts, errors };
+  return errors;
 }
+
+/** Load originals and full translations; only controls output, never bypasses registry validation. */
+export function loadBlog(manifest, only, today = new Date().toISOString().slice(0, 10), dir = DIR) {
+  const bySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
+  const posts = [], errors = [], files = [];
+  if (existsSync(dir)) for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith(".md")) files.push({ file: entry.name, folderLang: "en" });
+    else if (entry.isDirectory()) {
+      if (!Object.hasOwn(BLOG_LOCALES, entry.name) || entry.name === "en") { errors.push(`blog/${entry.name}: unsupported language folder`); continue; }
+      for (const name of readdirSync(new URL(`${entry.name}/`, dir)))
+        if (name.endsWith(".md")) files.push({ file: `${entry.name}/${name}`, folderLang: entry.name });
+    }
+  }
+  for (const { file, folderLang } of files) {
+    const slug = file.split("/").at(-1).replace(/\.md$/, "");
+    const text = readFileSync(new URL(file, dir), "utf8");
+    const { err, post } = checkOne(slug, text, bySlug, today);
+    if (post && post.lang !== folderLang) err.push(`lang: must match folder language ${folderLang}`);
+    if (err.length) errors.push(...err.map(e => `blog/${file}: ${e}`));
+    else posts.push({ ...post, file: `blog/${file}`, hash: sourceHash(text) });
+  }
+  errors.push(...validateTranslations(posts));
+  posts.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id) || a.lang.localeCompare(b.lang));
+  return { posts: only ? posts.filter(p => only.includes(p.slug) || only.includes(p.id)) : posts, errors };
+}
+export const sourceHash = text => createHash("sha256").update(text.replace(/\r\n?/g, "\n")).digest("hex");
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", import.meta.url), "utf8"));
-  const only = process.argv.slice(2);
+  const sources = process.argv.includes("--sources");
+  const only = process.argv.slice(2).filter(a => a !== "--sources");
   const { posts, errors } = loadBlog(manifest, only.length ? only : undefined);
+  if (sources) for (const p of posts.filter(p => p.lang === "en")) console.log(`${p.id} ${p.hash}`);
   for (const e of errors) console.log(e);
   console.log(`${posts.length} ok, ${errors.length} error(s)`);
   process.exitCode = errors.length ? 1 : 0;

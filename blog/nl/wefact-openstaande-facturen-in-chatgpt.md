@@ -4,6 +4,9 @@ description: Laat ChatGPT je openstaande WeFact-facturen op een rij zetten, met 
 date: 2026-11-13
 products: wefact
 lang: nl
+translation: wefact-outstanding-invoices-in-chatgpt
+source: c307b193d56f7270c5de8ad2f3bb9d24baca1755c26fd40d42b94455cebd9701
+aliases: /blog/wefact-openstaande-facturen-in-chatgpt/
 ---
 Je kunt ChatGPT vragen welke WeFact-facturen nog openstaan, bij welke de betaaltermijn verstreken is en hoeveel iedere klant nog moet betalen. De AI leest je facturen en maakt er een overzicht van, zonder facturen te wijzigen of herinneringen te versturen. Koppel `https://wefact.usefulapi.io/mcp` aan ChatGPT en stel je vraag in het Nederlands. Dezelfde koppeling werkt ook met Claude, Cursor en andere MCP-clients.
 

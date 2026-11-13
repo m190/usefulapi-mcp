@@ -121,7 +121,7 @@ test("every directory card and every search-index slice renders group and tool m
 test("blog index keeps every post in the HTML and adds the show-more button only when needed", () => {
   const html = read("blog/index.html");
   const posts = readdirSync(join(root, "blog")).filter((f) => f.endsWith(".md")).length;
-  assert.equal((html.match(/<li><a href="\/blog\//g) || []).length, posts);
+  assert.equal((html.match(/<li\b[^>]*><a href="\/blog\//g) || []).length, posts);
   assert.ok(html.includes('id="post-list"'));
   assert.equal(html.includes('id="more-posts"'), posts > 10);
   assert.ok(!/<li[^>]* hidden/.test(html)); // hidden only by the script, so no-JS readers see all posts
