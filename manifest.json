@@ -9757,31 +9757,31 @@
           "name": "healthchecksio_list_checks",
           "type": "read",
           "title": "List checks",
-          "description": "List all checks in the project, optionally filtered by slug and/or tags. Returns {checks:[...]} — each check's status, schedule, last ping, and ping URL. Healthchecks: GET /checks/."
+          "description": "List all checks in the API key's project, optionally filtered by slug and/or tags. Returns {checks:[...]} with status, schedule and last ping. A read-write key also returns uuid and ping_url; a read-only key returns unique_key instead. Pass a returned uuid or unique_key to get_check/list_flips. Ping history and writes need a read-write key and uuid. Healthchecks: GET /checks/."
         },
         {
           "name": "healthchecksio_get_check",
           "type": "read",
           "title": "Get check",
-          "description": "Get a single check by its UUID (or its unique read-only key). Returns the check's full state — status, timeout/schedule, grace, tags, last ping. Healthchecks: GET /checks/{uuid}."
+          "description": "Get a single check using uuid or unique_key returned by healthchecksio_list_checks with this project's API key. Do not pass a check name, slug or ping URL. Returns status, timeout/schedule, grace, tags and last ping; read-only keys omit sensitive fields. Healthchecks: GET /checks/{uuid}."
         },
         {
           "name": "healthchecksio_list_pings",
           "type": "read",
           "title": "List pings",
-          "description": "List a check's logged pings (100 on the free plan, 1000 on paid), most recent first. Each ping: type, date, n, scheme, remote_addr, method, ua, rid, duration, body_url. Healthchecks: GET /checks/{uuid}/pings/."
+          "description": "List a check's logged pings (100 on the free plan, 1000 on paid), most recent first. Requires a read-write project API key and the uuid returned by healthchecksio_list_checks. A read-only key and its unique_key cannot read ping history; use list_flips for status changes or reconnect with a read-write key. Each ping: type, date, n, scheme, remote_addr, method, ua, rid, duration, body_url. Healthchecks: GET /checks/{uuid}/pings/."
         },
         {
           "name": "healthchecksio_get_ping_body",
           "type": "read",
           "title": "Get ping body",
-          "description": "Get the logged request body of a single ping, returned as PLAIN TEXT (verbatim, not JSON). Healthchecks: GET /checks/{uuid}/pings/{n}/body."
+          "description": "Get the logged request body of a single ping, returned as PLAIN TEXT (verbatim, not JSON). Requires a read-write project API key and the check's uuid from healthchecksio_list_checks; a read-only unique_key is not supported. Get n from healthchecksio_list_pings; not every ping has a saved body. Healthchecks: GET /checks/{uuid}/pings/{n}/body."
         },
         {
           "name": "healthchecksio_list_flips",
           "type": "read",
           "title": "List flips",
-          "description": "List a check's status changes (\"flips\") over time — [{timestamp, up}]. Optionally scope by a lookback window or an explicit start/end range. Healthchecks: GET /checks/{uuid}/flips/."
+          "description": "List a check's status changes (\"flips\") over time — [{timestamp, up}]. Works with a read-only or read-write project key: use the unique_key or uuid returned by healthchecksio_list_checks for that project. Optionally scope by a lookback window or an explicit start/end range. Healthchecks: GET /checks/{uuid}/flips/."
         },
         {
           "name": "healthchecksio_list_integrations",
@@ -9850,7 +9850,7 @@
           "description": "Cancel the caller's Healthchecks.io Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run healthchecksio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.39.1",
+      "version": "1.39.3",
       "login": {
         "kind": "key",
         "fields": [
@@ -9858,7 +9858,7 @@
             "label": "Healthchecks.io API key"
           }
         ],
-        "hint": "Find it in Healthchecks.io → **Project → Settings → API Access**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+        "hint": "Find it in Healthchecks.io → **Project → Settings → API Access**. A **read-only key** supports checks, status changes and badges. Ping history, notification integrations and changes to checks require a **read-write key**. Each key accesses one project. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
       },
       "examples": [
         "Which of my scheduled job checks are down right now?",
