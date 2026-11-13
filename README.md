@@ -963,6 +963,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Daras](servers/daras/) | ecommerce | 26 | API token | [servers/daras/](servers/daras/) |
 | [tefacturo](servers/tefacturo/) | billing | 14 | API token | [servers/tefacturo/](servers/tefacturo/) |
 | [Loket.nl](servers/loket-nl/) | hr | 17 | OAuth | [servers/loket-nl/](servers/loket-nl/) |
+| [Carerix](servers/carerix/) | hr | 7 | API token | [servers/carerix/](servers/carerix/) |
+| [Testlify](servers/testlify/) | hr | 7 | API token | [servers/testlify/](servers/testlify/) |
+| [Willo](servers/willo/) | hr | 7 | API token | [servers/willo/](servers/willo/) |
+| [Skedway](servers/skedway/) | scheduling | 6 | API token | [servers/skedway/](servers/skedway/) |
+| [Cegid Business](servers/cegid-business/) | accounting | 7 | API token | [servers/cegid-business/](servers/cegid-business/) |
+| [Affilink](servers/affilink/) | marketing | 7 | API token | [servers/affilink/](servers/affilink/) |
+| [Invoice Maven](servers/invoice-maven/) | billing | 5 | API token | [servers/invoice-maven/](servers/invoice-maven/) |
+| [Royal Mail](servers/royal-mail/) | shipping | 7 | API token | [servers/royal-mail/](servers/royal-mail/) |
+| [Gupy](servers/gupy/) | hr | 7 | API token | [servers/gupy/](servers/gupy/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
