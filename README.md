@@ -974,6 +974,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Gupy](servers/gupy/) | hr | 7 | API token | [servers/gupy/](servers/gupy/) |
 | [Oyster](servers/oyster/) | hr | 24 | OAuth | [servers/oyster/](servers/oyster/) |
 | [Avirato](servers/avirato/) | property-management | 27 | API token | [servers/avirato/](servers/avirato/) |
+| [ROLLER](servers/roller/) | scheduling | 46 | API token | [servers/roller/](servers/roller/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
