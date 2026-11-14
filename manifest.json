@@ -164903,6 +164903,223 @@
         "Show unreviewed expenses from this month and their totals.",
         "Which Oyster invoices are overdue or waiting for a wire transfer?"
       ]
+    },
+    {
+      "slug": "avirato",
+      "name": "Avirato",
+      "category": "property-management",
+      "description": "Read reservations, availability, rates and prices; record cash payments in Avirato.",
+      "endpoint": "https://avirato.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API user email"
+          },
+          {
+            "label": "API user password"
+          },
+          {
+            "label": "Establishment code (webCode)"
+          }
+        ],
+        "hint": "Create a **dedicated API user** in Avirato: Menú → Configuración → Mi cuenta → **Usuarios y seguridad**, new user with its own email, tick only **API**, save, confirm the verification email and set its password. The establishment code is the number at the end of the link from Configuración → Canales de venta → Motor de reservas → **Generador de enlaces**. Your login is stored encrypted and used only to call the Avirato API on your behalf; it is never shown to anyone. Avirato limits requests per source IP: after a wrong password wait a moment before retrying."
+      },
+      "tools": [
+        {
+          "name": "avirato_list_reservations",
+          "type": "read",
+          "title": "List reservations between dates",
+          "description": "Reservations of the establishment between two dates (reservation id, channel booking id, room, rate, guest name and document, check-in/out, price, paid and outstanding, status, notes) plus a summary of counts by status. Dates are whole days (yyyy-mm-dd) or exact date-times. GET /reservation/betweenDates."
+        },
+        {
+          "name": "avirato_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "One reservation by the hotel's own booking id, or by a channel's booking id together with the channel (operator) id. Returns the booking(s) with guest, room, rate, dates, price, paid and outstanding amounts and status. Card data is never returned. GET /reservation/{bookingId}."
+        },
+        {
+          "name": "avirato_get_reservation_details",
+          "type": "read",
+          "title": "Get reservation details",
+          "description": "Extended information of one reservation by its booking id (the reservationInfo view). Card data is never returned. GET /reservation/reservationInfo."
+        },
+        {
+          "name": "avirato_get_related_reservations",
+          "type": "read",
+          "title": "Get related reservations",
+          "description": "A reservation with the other reservations of the same group (master booking and its related rooms). Card data is never returned. GET /reservation/related/{reservationId}."
+        },
+        {
+          "name": "avirato_list_all_reservations",
+          "type": "read",
+          "title": "List all reservations",
+          "description": "Every reservation of the establishment in the PMS (can be a very large list for an old hotel; prefer avirato_list_reservations with a date range). Returns `limit` entries from `offset` (default the first 100), the total count and next_offset. Card data is never returned. GET /reservation/allReservations."
+        },
+        {
+          "name": "avirato_list_booking_channels",
+          "type": "read",
+          "title": "List booking channels",
+          "description": "The sales channels (operators: OTAs, own website, ...) that book into the establishment, with their operator ids (used by avirato_get_reservation). GET /reservation/operators."
+        },
+        {
+          "name": "avirato_check_availability",
+          "type": "read",
+          "title": "Check availability",
+          "description": "Availability of rooms for a stay: which room types and rooms are free between check-in and check-out, optionally limited to a room category, rooms, room types or zones. GET /availability."
+        },
+        {
+          "name": "avirato_list_available_spaces",
+          "type": "read",
+          "title": "List available rooms",
+          "description": "The free rooms (spaces) of one room category between two dates. GET /availability/availableSpaces."
+        },
+        {
+          "name": "avirato_get_unavailable_dates",
+          "type": "read",
+          "title": "Get unavailable dates of a room",
+          "description": "The dates a room (space) is not free from a start date on, ignoring the given booking (useful to check whether a booking can be extended or moved). GET /availability/unavailable-dates."
+        },
+        {
+          "name": "avirato_get_booking_engine_overview",
+          "type": "read",
+          "title": "Get rooms, diets, extras and availability overview",
+          "description": "The booking-engine start data between two dates: room types with descriptions and availability, meal plans (diets), taxes, extras and billing configuration. The quickest way to learn the room type, space type and rate ids of the establishment. GET /rate/init."
+        },
+        {
+          "name": "avirato_list_rates",
+          "type": "read",
+          "title": "List rates",
+          "description": "The rates of the establishment (name, minimum/maximum stay, refundable, linked rate and percentage, release days, room category), optionally only some rate ids and one rate mode. GET /rate."
+        },
+        {
+          "name": "avirato_list_rates_by_room_category",
+          "type": "read",
+          "title": "List rates by room category",
+          "description": "All rates of the establishment, optionally limited to some rate ids and room categories (space types). GET /rate/all."
+        },
+        {
+          "name": "avirato_get_rate",
+          "type": "read",
+          "title": "Get a rate",
+          "description": "One rate by id: name, stay limits, refundable, linked and master rate, release days and mode. GET /rate/{rateId}."
+        },
+        {
+          "name": "avirato_get_price",
+          "type": "read",
+          "title": "Get the price of a stay",
+          "description": "The final price of a stay for one room type and rate, with discounts and increments applied, for a number of adults, children, meal plan and rooms. GET /rate/getPrice."
+        },
+        {
+          "name": "avirato_get_prices_map",
+          "type": "read",
+          "title": "Get a price calendar",
+          "description": "Prices per room type and rate for each day of a period, with the establishment's taxes. GET /rate/getPricesMap."
+        },
+        {
+          "name": "avirato_get_discounts",
+          "type": "read",
+          "title": "Get discounts",
+          "description": "The discounts and increments that apply to room types and rates for a period and a number of rooms. GET /rate/discounts."
+        },
+        {
+          "name": "avirato_list_diets",
+          "type": "read",
+          "title": "List meal plans",
+          "description": "The meal plans (diets) of the establishment with their ids, as used by the price tools. GET /rate/diets."
+        },
+        {
+          "name": "avirato_list_rate_releases",
+          "type": "read",
+          "title": "List rate release days",
+          "description": "The release (minimum advance booking) days of each rate. GET /rate/release."
+        },
+        {
+          "name": "avirato_get_minimum_stay",
+          "type": "read",
+          "title": "Get minimum stay restrictions",
+          "description": "The minimum-stay restrictions per day for room types and rates over a period. GET /restrictions/minimum-stay."
+        },
+        {
+          "name": "avirato_get_daily_prices",
+          "type": "read",
+          "title": "Get daily prices of a rate",
+          "description": "The daily prices of one rate on one date (per room type and occupancy). GET /dailyPrice."
+        },
+        {
+          "name": "avirato_list_promotional_packages",
+          "type": "read",
+          "title": "List promotional packages",
+          "description": "The promotional packages of the establishment with their extras. GET /payment/promotionalPackages."
+        },
+        {
+          "name": "avirato_list_extras",
+          "type": "read",
+          "title": "List extras",
+          "description": "The extras (additional services) that can be charged on a booking. GET /payment/extras."
+        },
+        {
+          "name": "avirato_add_booking_cash_payment",
+          "type": "write",
+          "title": "Record a cash payment on a booking",
+          "description": "WRITE: records a cash payment on an existing booking in the hotel's PMS (it changes the booking's paid and outstanding amounts and cannot be undone through this server). Not idempotent: calling it twice records two payments. Confirm the booking id and the amount with the user first, then pass confirm: true. If the call fails with a network error or timeout the payment may still have been recorded: read the booking (avirato_get_reservation) and check its payments before trying again. Card payments are not supported. POST /payment/addBookingPayment."
+        },
+        {
+          "name": "avirato_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "avirato_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Avirato tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "avirato_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Avirato (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "avirato_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Avirato Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run avirato_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who checks in at my hotel tomorrow and who checks out?",
+        "Which rooms are free from 12 to 15 November?",
+        "How much is a double room on the standard rate for 3 nights from 20 December, 2 adults?",
+        "Show the reservation 123456 with what is still outstanding."
+      ]
     }
   ]
 }
