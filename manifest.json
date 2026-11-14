@@ -165451,6 +165451,265 @@
         "Show yesterday's payments and revenue entries.",
         "Find the booking for Andrew Smith and show its tickets and what he paid."
       ]
+    },
+    {
+      "slug": "marmin",
+      "name": "Marmin",
+      "category": "accounting",
+      "description": "Read invoices, credit notes, XML, Peppol status logs and business profiles in Marmin.",
+      "endpoint": "https://marmin.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client Secret"
+          }
+        ],
+        "hint": "In Marmin open the Developer Dashboard, then Settings, then API Configuration. If you do not see that tab, ask support@marmin.ai to enable API Integration for your organization. The secret is shown after an email code. This server signs a token request with the secret and sends it only to Marmin. Marmin sandbox and production have separate credentials."
+      },
+      "tools": [
+        {
+          "name": "marmin_list_business_profiles",
+          "type": "read",
+          "title": "List business profiles",
+          "description": "List the Marmin business profiles (legal entities) of this organization, with TRN, TIN, Peppol endpoint and onboarding status. Use profile_id from the result to know which entity a document belongs to. Read-only. Limit: 30 requests/minute."
+        },
+        {
+          "name": "marmin_get_business_profile",
+          "type": "read",
+          "title": "Get a business profile",
+          "description": "Get one business profile by its profile_id (for example MBP-00001): legal name, TRN, trade license, Peppol endpoint, address and onboarding status. Read-only."
+        },
+        {
+          "name": "marmin_list_documents",
+          "type": "read",
+          "title": "List documents",
+          "description": "List tax invoices, credit notes or proforma invoices of one kind, newest first as Marmin returns them. Each item has the number, dates, type code (380 invoice, 381 credit note, 389 self-billed, 261 self-billed credit note), parties, amounts and currency. Filter by number, party name, VAT number, status or issue date. Read-only. Limit: 60 requests/minute."
+        },
+        {
+          "name": "marmin_list_document_uuids",
+          "type": "read",
+          "title": "List document ids created on a day",
+          "description": "List the ids (UUIDs) of all documents of one kind that were created on one day. Use it to find new documents day by day, then read each with marmin_get_document. Read-only."
+        },
+        {
+          "name": "marmin_get_document",
+          "type": "read",
+          "title": "Get a document",
+          "description": "Get one invoice, credit note or proforma invoice by id: parties, lines, tax breakdown, totals (also in AED) and meta_info.peppol_status (overall_status PENDING, APPROVED, REJECTED or VALIDATION_FAILED, with validation_results). Read-only."
+        },
+        {
+          "name": "marmin_get_document_xml",
+          "type": "read",
+          "title": "Get the UBL XML of a document",
+          "description": "Get the UAE e-invoicing XML (UBL 2.1, PINT AE) of an invoice or credit note. Long XML is cut by the server's result size limit. Read-only."
+        },
+        {
+          "name": "marmin_get_peppol_status",
+          "type": "read",
+          "title": "Get the Peppol status of a document",
+          "description": "Get the current Peppol transmission snapshot of an invoice or credit note: the billing leg (toC3, to the buyer's access point) and the tax-reporting leg (toC5, to the FTA), each with status and transmission errors, plus validation results. The XML copies are left out. Needs Phase 2 in the Marmin subscription (else HTTP 404). Read-only."
+        },
+        {
+          "name": "marmin_get_peppol_status_log",
+          "type": "read",
+          "title": "Get the Peppol status log of a document",
+          "description": "Get the time-ordered Peppol events of a sales invoice, sales credit note or purchase credit note (DOCUMENT_CREATED, DOCUMENT_SUBMITTED, VALIDATION_SUCCESS and so on) with a message each. Use it to see why a document was rejected. The XML copies are left out. Read-only."
+        },
+        {
+          "name": "marmin_get_register_entry",
+          "type": "read",
+          "title": "Get a register entry",
+          "description": "Get one document register entry (the sales or purchase register of a business profile) by its id, including the linked document_id for e-invoices. Read-only."
+        },
+        {
+          "name": "marmin_get_codelist",
+          "type": "read",
+          "title": "Get a code list",
+          "description": "Get a Marmin code list: valid values for invoice fields, for example tax-categories, unit-of-measure-codes, uae-subdivisions (emirate codes), currencies, credit-note-reason-codes, payment-means-modes, tax-exemption-reason-codes. Read-only."
+        },
+        {
+          "name": "marmin_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "marmin_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Marmin tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "marmin_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Marmin (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "marmin_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Marmin Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run marmin_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my sales invoices from this week and show the Peppol status of each.",
+        "Why was invoice INV-001 rejected? Show the Peppol status log.",
+        "Show the purchase invoices from supplier VAT number 100123456700003.",
+        "Which business profiles do I have and are they onboarded?",
+        "List the valid UAE emirate codes and tax categories."
+      ]
+    },
+    {
+      "slug": "planerio",
+      "name": "Planerio",
+      "category": "scheduling",
+      "description": "Read shifts, staffing requirements, staff, employees, absences and vacation days in Planerio.",
+      "endpoint": "https://planerio.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Planerio address"
+          },
+          {
+            "label": "Technical login: user"
+          },
+          {
+            "label": "Technical login: password"
+          },
+          {
+            "label": "Shift group token"
+          }
+        ],
+        "hint": "The address is the part before .planer.io in your browser (for example example for example.planer.io). The technical login is not your normal Planerio login: your Planerio account manager issues it (ask for it with your customer number and the purpose). A Planerio admin creates the shift group token in Admin, Einstellungen, box Planerio-Schnittstelle: it limits the data to the shift groups you choose. This server sends the login only to your Planerio gateway and reads data only."
+      },
+      "tools": [
+        {
+          "name": "planerio_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List the planned shifts between two dates: shift id, start and end time, employee (name, personnel number, employee_uuid), shift group, workplace, location, tags and last change. By default only published plans and no deleted shifts. Use updated_after for changes since a date. Sorted by start time. Read-only. Long lists are cut: use offset to continue."
+        },
+        {
+          "name": "planerio_list_shift_cards",
+          "type": "read",
+          "title": "List staffing requirements (shift cards)",
+          "description": "List the staffing requirement defined in shift cards: workplace, location, shift group, validity, weekdays, times, shift type, required qualifications and the shifts of each card with priority and pre-planned employee. Filter by validity dates. Read-only."
+        },
+        {
+          "name": "planerio_list_staff",
+          "type": "read",
+          "title": "List available staff (resource planning)",
+          "description": "List the current staff supply for resource planning: name, personnel number, primary shift group, qualifications, weekly hours and days, hours per weekday, entry and exit date. Use it together with planerio_list_shift_cards. For plain employee master data use planerio_list_employees. Read-only."
+        },
+        {
+          "name": "planerio_list_employees",
+          "type": "read",
+          "title": "List employees (master data)",
+          "description": "List the employee master data valid on a reference date: employee_uuid, names, email, personnel number, shift groups, entry and exit date, work schedule (weekly hours, job title, tariff), supervisor, cost center, occupational category, date of birth. Personal data: ask only for what the task needs. Read-only."
+        },
+        {
+          "name": "planerio_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List the absence periods that overlap two dates: employee, dates and times, calendar and working days, status (ACCEPTED, OPEN, REJECTED, DELETED), absence type and comment. By default only approved absences. Use include_open for requests that wait for approval. Read-only. Long lists are cut: use offset to continue."
+        },
+        {
+          "name": "planerio_get_vacation_days",
+          "type": "read",
+          "title": "Get vacation budget",
+          "description": "Get the vacation days per employee for one year: allowance, carry-over from the last year, expired, requested, approved, taken and remaining. Only for Planerio 1.5 (not 2.0); Planerio replaces this endpoint in 2026/27. Read-only."
+        },
+        {
+          "name": "planerio_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "planerio_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Planerio tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "planerio_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Planerio (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "planerio_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Planerio Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run planerio_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the shifts of the next 7 days and who works the night shift.",
+        "Who is absent next week? Include the requests that wait for approval.",
+        "Which shift groups have open staffing requirements in December?",
+        "List the employees who joined this year with their weekly hours.",
+        "How many vacation days does each employee have left this year?"
+      ]
     }
   ]
 }
