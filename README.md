@@ -977,6 +977,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [ROLLER](servers/roller/) | scheduling | 46 | API token | [servers/roller/](servers/roller/) |
 | [Marmin](servers/marmin/) | accounting | 14 | API token | [servers/marmin/](servers/marmin/) |
 | [Planerio](servers/planerio/) | scheduling | 10 | API token | [servers/planerio/](servers/planerio/) |
+| [Elementary POS](servers/elementary-pos/) | retail | 25 | API token | [servers/elementary-pos/](servers/elementary-pos/) |
+| [PerfectView](servers/perfectview/) | crm | 13 | API token | [servers/perfectview/](servers/perfectview/) |
+| [Clearooms](servers/clearooms/) | scheduling | 18 | API token | [servers/clearooms/](servers/clearooms/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
