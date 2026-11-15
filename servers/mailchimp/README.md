@@ -49,10 +49,20 @@ keys in config files.
 | `mailchimp_list_templates` | read | List templates |
 | `mailchimp_list_segments` | read | List segments |
 | `mailchimp_list_member_tags` | read | List member tags |
+| `mailchimp_get_campaign_content` | read | Get campaign content |
+| `mailchimp_get_send_checklist` | read | Get campaign send checklist |
+| `mailchimp_get_automation` | read | Get automation |
+| `mailchimp_list_automation_emails` | read | List automation emails |
 | `mailchimp_add_member` | **write** | Add member |
 | `mailchimp_update_member` | **write** | Update member |
 | `mailchimp_add_member_tags` | **write** | Add/remove member tags |
 | `mailchimp_archive_member` | **write** | Archive member |
+| `mailchimp_create_campaign` | **write** | Create campaign draft |
+| `mailchimp_update_campaign` | **write** | Update campaign draft |
+| `mailchimp_set_campaign_content` | **write** | Set campaign content |
+| `mailchimp_send_test_email` | **write** | Send campaign test email |
+| `mailchimp_schedule_campaign` | **write** | Schedule campaign |
+| `mailchimp_unschedule_campaign` | **write** | Unschedule campaign |
 | `mailchimp_usage_status` | meta | Usage status (free-tier meter) |
 | `mailchimp_request_feature` | meta | Request a missing feature |
 | `mailchimp_upgrade` | meta | Upgrade to Pro or Pro+ |

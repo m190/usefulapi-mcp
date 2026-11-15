@@ -566,7 +566,7 @@
           "description": "Cancel the caller's Acuity Scheduling Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run acuity_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.3",
+      "version": "1.42.4",
       "examples": [
         "What appointments do I have tomorrow? Group them by calendar.",
         "Find the next three free 60-minute slots for a consultation next week.",
@@ -13135,6 +13135,30 @@
           "description": "List the tags applied to a single audience member (by email or subscriber_hash). Paginated. REST: GET /lists/{list_id}/members/{subscriber_hash}/tags (email → MD5 hash)."
         },
         {
+          "name": "mailchimp_get_campaign_content",
+          "type": "read",
+          "title": "Get campaign content",
+          "description": "Get the HTML and plain-text content of one campaign (draft or sent). REST: GET /campaigns/{campaign_id}/content."
+        },
+        {
+          "name": "mailchimp_get_send_checklist",
+          "type": "read",
+          "title": "Get campaign send checklist",
+          "description": "Mailchimp's pre-send review of one campaign: is_ready plus items (type success / warning / error) for the audience, subject, from address, content and plan limits. Use it before mailchimp_schedule_campaign. REST: GET /campaigns/{campaign_id}/send-checklist."
+        },
+        {
+          "name": "mailchimp_get_automation",
+          "type": "read",
+          "title": "Get automation",
+          "description": "Get one classic automation: status, audience, trigger settings, tracking and report summary. Automation flows built in the Customer Journey builder are not in Mailchimp's API. REST: GET /automations/{workflow_id}."
+        },
+        {
+          "name": "mailchimp_list_automation_emails",
+          "type": "read",
+          "title": "List automation emails",
+          "description": "List the emails of one classic automation in order: subject, delay after the trigger, status, emails sent and report summary. REST: GET /automations/{workflow_id}/emails."
+        },
+        {
           "name": "mailchimp_add_member",
           "type": "write",
           "title": "Add member",
@@ -13157,6 +13181,42 @@
           "type": "write",
           "title": "Archive member",
           "description": "Archive (soft-remove) an audience member — reversible; this is NOT the permanent-delete action. REST: DELETE /lists/{list_id}/members/{subscriber_hash} (email → MD5 hash). Returns HTTP 204 (no body)."
+        },
+        {
+          "name": "mailchimp_create_campaign",
+          "type": "write",
+          "title": "Create campaign draft",
+          "description": "Create a new email campaign as a DRAFT (nothing is sent). Set the audience, an optional saved segment or tag, and the subject, from name and reply-to. Then add content with mailchimp_set_campaign_content and schedule with mailchimp_schedule_campaign. REST: POST /campaigns."
+        },
+        {
+          "name": "mailchimp_update_campaign",
+          "type": "write",
+          "title": "Update campaign draft",
+          "description": "Change the settings or the target of an unsent campaign: subject, preview text, title, from name, reply-to, template, audience or saved segment. Only the fields you pass change. A scheduled campaign must be unscheduled first. REST: PATCH /campaigns/{campaign_id}."
+        },
+        {
+          "name": "mailchimp_set_campaign_content",
+          "type": "write",
+          "title": "Set campaign content",
+          "description": "REPLACE the content of an unsent campaign with your HTML and/or plain text. Pass html alone and Mailchimp writes the plain-text version. The reply gives the stored sizes; read the content back with mailchimp_get_campaign_content. REST: PUT /campaigns/{campaign_id}/content."
+        },
+        {
+          "name": "mailchimp_send_test_email",
+          "type": "write",
+          "title": "Send campaign test email",
+          "description": "Send a TEST copy of a campaign to up to 10 addresses you name (not to the audience). This sends real emails at once. Mailchimp limits test sends per campaign and per day by plan. REST: POST /campaigns/{campaign_id}/actions/test."
+        },
+        {
+          "name": "mailchimp_schedule_campaign",
+          "type": "write",
+          "title": "Schedule campaign",
+          "description": "Schedule a draft campaign to SEND to its audience at a future time. First call previews: the audience, recipient count, subject, time and Mailchimp's send checklist, with no change, and returns a preview_hash. Call again with confirm=true and that preview_hash only after the user approved the preview; without the hash of the current preview nothing is scheduled. A campaign that fails the checklist is refused. Undo with mailchimp_unschedule_campaign before the send time. Scheduling is part of Mailchimp's paid plans. REST: POST /campaigns/{campaign_id}/actions/schedule."
+        },
+        {
+          "name": "mailchimp_unschedule_campaign",
+          "type": "write",
+          "title": "Unschedule campaign",
+          "description": "Cancel the schedule of a campaign that has not started to send. The campaign becomes a draft again and nothing is deleted. REST: POST /campaigns/{campaign_id}/actions/unschedule."
         },
         {
           "name": "mailchimp_usage_status",
@@ -13183,7 +13243,7 @@
           "description": "Cancel the caller's Mailchimp Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mailchimp_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.39.2",
+      "version": "1.40.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -13197,7 +13257,8 @@
         "How many subscribers are in each of my audiences?",
         "What were the open and click rates of my last campaign?",
         "Show my 25 most recently sent campaigns with their send dates.",
-        "Is jane@acme.example subscribed, and which tags does she have?"
+        "Is jane@acme.example subscribed, and which tags does she have?",
+        "Draft a campaign to my VIP segment with this HTML, send me a test, then schedule it for Tuesday 15:00 UTC."
       ]
     },
     {
@@ -47379,7 +47440,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.26.2",
+      "version": "1.26.3",
       "login": {
         "kind": "key",
         "fields": [
