@@ -166260,6 +166260,142 @@
         "List my desk bookings for this week and cancel the one on Friday.",
         "Give me a bookings report for October for the whole office."
       ]
+    },
+    {
+      "slug": "freshchat",
+      "name": "Freshchat",
+      "category": "support",
+      "description": "Find customers, read conversations and messages, list agents and groups, send replies in Freshchat.",
+      "endpoint": "https://freshchat.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Freshchat account domain"
+          },
+          {
+            "label": "Freshchat API token"
+          }
+        ],
+        "hint": "Create the token in Freshchat → **Admin → CONFIGURE → API Tokens** (Generate Token). The domain is the part before .freshchat.com. Your credentials are used only to call the API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "freshchat_get_account",
+          "type": "read",
+          "title": "Get account configuration",
+          "description": "Get the Freshchat account configuration for the connected account. Good first call to confirm the connection. Freshchat API: GET /v2/accounts/configuration."
+        },
+        {
+          "name": "freshchat_list_users",
+          "type": "read",
+          "title": "Find users",
+          "description": "Find customer users. The API needs at least one filter: first_name, last_name, email, reference_id or phone_no. Freshchat API: GET /v2/users."
+        },
+        {
+          "name": "freshchat_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one customer user by id, with e-mail, name, phone and custom properties. Freshchat API: GET /v2/users/{user_id}."
+        },
+        {
+          "name": "freshchat_list_user_conversations",
+          "type": "read",
+          "title": "List a user's conversations",
+          "description": "List the conversation ids of one customer user. Freshchat API: GET /v2/users/{user_id}/conversations."
+        },
+        {
+          "name": "freshchat_get_conversation",
+          "type": "read",
+          "title": "Get a conversation",
+          "description": "Get one conversation: assignment, status, channel, users and properties. Freshchat API: GET /v2/conversations/{conversation_id}."
+        },
+        {
+          "name": "freshchat_list_messages",
+          "type": "read",
+          "title": "List messages in a conversation",
+          "description": "List the messages of one conversation, oldest first. Use from_time to read only newer messages. Freshchat API: GET /v2/conversations/{conversation_id}/messages."
+        },
+        {
+          "name": "freshchat_send_message",
+          "type": "write",
+          "title": "Send a message to a conversation",
+          "description": "Send a plain-text agent reply into a conversation. The customer sees it at once. Freshchat API: POST /v2/conversations/{conversation_id}/messages."
+        },
+        {
+          "name": "freshchat_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List support agents, with their groups, roles and availability. Freshchat API: GET /v2/agents."
+        },
+        {
+          "name": "freshchat_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List agent groups (teams that conversations are assigned to). Freshchat API: GET /v2/groups."
+        },
+        {
+          "name": "freshchat_list_channels",
+          "type": "read",
+          "title": "List channels",
+          "description": "List channels (topics) that new conversations are created under. Freshchat API: GET /v2/channels."
+        },
+        {
+          "name": "freshchat_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "freshchat_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Freshchat tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "freshchat_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Freshchat (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "freshchat_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Freshchat Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run freshchat_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which conversations are still open and assigned to nobody?",
+        "Show me the latest messages in the conversation with Jane Smith.",
+        "Which agents are active in the Billing group?",
+        "Reply to the open conversation about the refund and tell the customer we are checking it."
+      ]
     }
   ]
 }
