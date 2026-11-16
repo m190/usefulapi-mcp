@@ -45,6 +45,8 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `hostaway_calculate_price` | read | Quote a stay |
 | `hostaway_list_conversations` | read | List guest conversations |
 | `hostaway_list_conversation_messages` | read | Read a conversation |
+| `hostaway_list_message_templates` | read | List message templates |
+| `hostaway_get_message_template` | read | Get one message template |
 | `hostaway_list_reviews` | read | List reviews |
 | `hostaway_list_tasks` | read | List tasks |
 | `hostaway_list_expenses` | read | List expenses and extras |
