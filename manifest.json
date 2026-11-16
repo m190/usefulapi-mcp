@@ -167803,6 +167803,717 @@
         "Which custom contact fields does our SolarPlus account use?",
         "Mark contact 19670 as Active and add a note that the site survey is booked."
       ]
+    },
+    {
+      "slug": "tatango",
+      "name": "Tatango",
+      "category": "messaging",
+      "description": "Read lists, subscribers, opt-outs and messages; add subscribers and send SMS in Tatango.",
+      "endpoint": "https://tatango.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Tatango login email"
+          },
+          {
+            "label": "Tatango API key"
+          }
+        ],
+        "hint": "Create the key in the Tatango app under **My Account → API → Create API Key**. The API needs an account with API access enabled, and every text message follows your account's messaging rules. Your key is stored encrypted and used only to call the Tatango API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tatango_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Show the Tatango account that the API key belongs to (id, login email, username). Good first call to confirm the connection. GET /api/v2/accounts/me."
+        },
+        {
+          "name": "tatango_list_lists",
+          "type": "read",
+          "title": "List lists",
+          "description": "List the subscriber lists of the account (name, id, subscriber counts). Use the list id in the other tools. GET /api/v2/lists."
+        },
+        {
+          "name": "tatango_get_list",
+          "type": "read",
+          "title": "Get list",
+          "description": "Show one subscriber list by id, including its keywords and opt-in settings. GET /api/v2/lists/{ID}."
+        },
+        {
+          "name": "tatango_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List the subscribed phone numbers of one list. Opted-out numbers are in tatango_list_unsubscribed. GET /api/v2/lists/{ID}/subscribers."
+        },
+        {
+          "name": "tatango_list_unsubscribed",
+          "type": "read",
+          "title": "List unsubscribed numbers",
+          "description": "List the phone numbers that unsubscribed from one list. Do not message these numbers. GET /api/v2/lists/{ID}/subscribers/unsubscribed."
+        },
+        {
+          "name": "tatango_get_subscriber",
+          "type": "read",
+          "title": "Get subscriber",
+          "description": "Show one subscriber of a list: phone number, name, custom fields and tags. GET /api/v2/lists/{ID}/subscribers/{SUBSCRIBER_ID}."
+        },
+        {
+          "name": "tatango_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom subscriber fields defined for one list. GET /api/v2/lists/{ID}/custom_fields."
+        },
+        {
+          "name": "tatango_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks that send events for one list (delivery status, replies). GET /api/v2/lists/{ID}/webhooks."
+        },
+        {
+          "name": "tatango_list_sent_messages",
+          "type": "read",
+          "title": "List sent messages",
+          "description": "List the messages already sent to one list, optionally within a UTC date range. GET /api/v2/lists/{ID}/messages."
+        },
+        {
+          "name": "tatango_list_scheduled_messages",
+          "type": "read",
+          "title": "List scheduled messages",
+          "description": "List the messages scheduled but not yet sent to one list, optionally within a UTC date range. GET /api/v2/lists/{ID}/messages/scheduled."
+        },
+        {
+          "name": "tatango_get_message",
+          "type": "read",
+          "title": "Get message",
+          "description": "Show one sent message of a list: content, send time and delivery counts. GET /api/v2/lists/{ID}/messages/{MESSAGE_ID}."
+        },
+        {
+          "name": "tatango_add_subscriber",
+          "type": "write",
+          "title": "Add subscriber",
+          "description": "Add a phone number to one list, with optional name, email, birthdate (YYYYMMDD) and zip code. Changes the list. POST /api/v2/lists/{ID}/subscribers."
+        },
+        {
+          "name": "tatango_send_transactional_message",
+          "type": "write",
+          "title": "Send transactional message",
+          "description": "Send ONE SMS or MMS to one phone number, for example an order or appointment notice. It sends a real text message to a real person. SMS is limited to 160 characters; MMS needs a subject. POST /api/v2/transactional_messages."
+        },
+        {
+          "name": "tatango_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tatango_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tatango tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tatango_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Tatango (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tatango_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tatango Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run tatango_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our subscriber lists has the most phone numbers, and how many have unsubscribed?",
+        "Show the messages we sent to the VIP list in the last 30 days.",
+        "Add 2141234567 to the Spring Sale list with the first name Jane.",
+        "Send a one-off SMS to 2141234567 that says the order has shipped."
+      ]
+    },
+    {
+      "slug": "iris-crm",
+      "name": "IRIS CRM",
+      "category": "crm",
+      "description": "Read leads, lead notes, merchants and users in IRIS CRM.",
+      "endpoint": "https://iris-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "IRIS CRM account subdomain"
+          },
+          {
+            "label": "IRIS CRM API token"
+          }
+        ],
+        "hint": "The subdomain is the part before **.iriscrm.com** in your CRM address. Create the token under your user **Settings → API Settings**. The token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "iriscrm_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List CRM leads (sales prospects) with filters by group, merchant id, campaign, source, status, status category, owner user, and a date range. IRIS CRM Open API: GET /leads."
+        },
+        {
+          "name": "iriscrm_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead with its field values (status, owner, contact details, custom fields). IRIS CRM Open API: GET /leads/{leadId}."
+        },
+        {
+          "name": "iriscrm_list_lead_notes",
+          "type": "read",
+          "title": "List lead notes",
+          "description": "List the notes on one lead, optionally from one note tab. IRIS CRM Open API: GET /leads/{leadId}/notes."
+        },
+        {
+          "name": "iriscrm_list_lead_fields",
+          "type": "read",
+          "title": "List lead fields",
+          "description": "List the lead field definitions and their ids. Use the ids before reading or updating a field value. IRIS CRM Open API: GET /leads/fields."
+        },
+        {
+          "name": "iriscrm_list_merchants",
+          "type": "read",
+          "title": "List merchants",
+          "description": "List merchants (processing accounts) with filters by group, processor, merchant id, name, status, active flag, and a date range. IRIS CRM Open API: GET /merchants."
+        },
+        {
+          "name": "iriscrm_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List CRM users (sales reps and admins) with their class and active flag. IRIS CRM Open API: GET /users/list."
+        },
+        {
+          "name": "iriscrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "iriscrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the IRIS CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "iriscrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for IRIS CRM (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "iriscrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's IRIS CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run iriscrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which leads did we add this week, and who owns them?",
+        "Show the notes on lead 1234, newest first.",
+        "List our merchants that were created in the last 30 days.",
+        "Which CRM users are active right now?"
+      ]
+    },
+    {
+      "slug": "hosthub",
+      "name": "Hosthub",
+      "category": "rental",
+      "description": "Read rentals, channels, rates and calendar events; create, change and delete bookings in Hosthub.",
+      "endpoint": "https://hosthub.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Hosthub API key"
+          }
+        ],
+        "hint": "Find it in Hosthub → **Settings**. If the key is missing, ask Hosthub support to turn on API access for your account. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "hosthub_list_rentals",
+          "type": "read",
+          "title": "List rentals",
+          "description": "List the rentals (vacation properties) on the account. Each has id, name, city, country, currency, time_zone, and check-in and checkout times. Hosthub API: GET /rentals."
+        },
+        {
+          "name": "hosthub_get_rental",
+          "type": "read",
+          "title": "Get a rental",
+          "description": "Get one rental (property) by id: address, currency, time zone, check-in and checkout times, guest capacity, unit count, and preparation days. Hosthub API: GET /rentals/{rentalId}."
+        },
+        {
+          "name": "hosthub_list_rental_channels",
+          "type": "read",
+          "title": "List channels of a rental",
+          "description": "List the sales channels (for example Airbnb or Booking.com) connected to one rental. Pages with cursor_gt or cursor_lt. Hosthub API: GET /rentals/{rentalId}/channels."
+        },
+        {
+          "name": "hosthub_list_rate_plans",
+          "type": "read",
+          "title": "List rate plans of a rental",
+          "description": "List the rate plans of one rental, with id, name, whether it is the default, and its status (active or inactive). Hosthub API: GET /rentals/{rentalId}/rate-plans."
+        },
+        {
+          "name": "hosthub_get_rate_plan",
+          "type": "read",
+          "title": "Get a rate plan",
+          "description": "Get one rate plan by its encoded id: name, default flag, status, and URL. Hosthub API: GET /rate-plans/{encodedId}."
+        },
+        {
+          "name": "hosthub_get_rate_plan_daily_rates",
+          "type": "read",
+          "title": "Get daily rates of a rate plan",
+          "description": "Get the daily rates of one rate plan: the price per night for each date the API holds. Hosthub API: GET /rate-plans/{encodedId}/rates."
+        },
+        {
+          "name": "hosthub_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the account (owners and team members) with id, name, email, status, and team role. Hosthub API: GET /users."
+        },
+        {
+          "name": "hosthub_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id: name, email, phone number, status, and team role. Hosthub API: GET /users/{userId}."
+        },
+        {
+          "name": "hosthub_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List team members with their roles. Filter by role id or rental id. Hosthub API: GET /team-members."
+        },
+        {
+          "name": "hosthub_list_calendar_events",
+          "type": "read",
+          "title": "List calendar events",
+          "description": "List calendar events (bookings and holds). With rental_id, list only that rental; without it, list across all rentals. Filter by updated or created integers and visibility. Pages with cursor_gt or cursor_lt. Hosthub API: GET /calendar-events or GET /rentals/{rentalId}/calendar-events."
+        },
+        {
+          "name": "hosthub_get_calendar_event",
+          "type": "read",
+          "title": "Get a calendar event",
+          "description": "Get one calendar event (booking or hold) by id: type, dates, rental and unit, guest details, and money fields. Hosthub API: GET /calendar-events/{calendarEventId}."
+        },
+        {
+          "name": "hosthub_list_calendar_event_notes",
+          "type": "read",
+          "title": "List notes of a calendar event",
+          "description": "List the internal notes on one calendar event. Hosthub API: GET /calendar-events/{calendarEventId}/notes."
+        },
+        {
+          "name": "hosthub_create_calendar_event",
+          "type": "write",
+          "title": "Create a booking or hold",
+          "description": "Create a booking or a hold (a blocked period) for one rental. A booking needs guest details; a hold needs hold_reason. This changes live availability on every connected channel. Hosthub API: POST /rentals/{rentalId}/calendar-events."
+        },
+        {
+          "name": "hosthub_update_calendar_event",
+          "type": "write",
+          "title": "Update a calendar event",
+          "description": "Change the dates, times, guest details, or notes of an existing calendar event. Only the fields you pass change. This can move availability on connected channels. Hosthub API: POST /calendar-events/{calendarEventKey}."
+        },
+        {
+          "name": "hosthub_delete_calendar_event",
+          "type": "write",
+          "title": "Delete a calendar event",
+          "description": "Delete one calendar event (booking or hold). This changes availability for its dates. Hosthub API: DELETE /calendar-events/{calendarEventId}."
+        },
+        {
+          "name": "hosthub_add_calendar_event_note",
+          "type": "write",
+          "title": "Add a note to a calendar event",
+          "description": "Add a note to one calendar event. Hosthub API: POST /calendar-events/{calendarEventId}/notes."
+        },
+        {
+          "name": "hosthub_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "hosthub_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Hosthub tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "hosthub_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Hosthub (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "hosthub_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Hosthub Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hosthub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our rentals have a booking next weekend?",
+        "List the channels connected to our Lisbon apartment.",
+        "Block the cottage from 12 to 15 December for repairs.",
+        "What are the daily rates on our default rate plan for July?"
+      ]
+    },
+    {
+      "slug": "propmanagement",
+      "name": "PropManagement",
+      "category": "property-management",
+      "description": "Read tenants, payments and maintenance; create and update properties and tenants in PropManagement.",
+      "endpoint": "https://propmanagement.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "PropManagement API key"
+          }
+        ],
+        "hint": "In PropManagement go to **Organization → API** and create a key (it starts with **pm_live_**). The full key is shown only once. The API is included with the Business and Enterprise plans. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "propmanagement_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List the properties in your PropManagement organization."
+        },
+        {
+          "name": "propmanagement_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Retrieve one property by id."
+        },
+        {
+          "name": "propmanagement_list_tenants",
+          "type": "read",
+          "title": "List tenants",
+          "description": "List tenants. Pass property_id to list only the tenants of one property."
+        },
+        {
+          "name": "propmanagement_get_tenant",
+          "type": "read",
+          "title": "Get a tenant",
+          "description": "Retrieve one tenant by id."
+        },
+        {
+          "name": "propmanagement_list_payments",
+          "type": "read",
+          "title": "List rent payments",
+          "description": "List rent payments in your organization."
+        },
+        {
+          "name": "propmanagement_get_payment",
+          "type": "read",
+          "title": "Get a rent payment",
+          "description": "Retrieve one rent payment by id."
+        },
+        {
+          "name": "propmanagement_list_maintenance_requests",
+          "type": "read",
+          "title": "List maintenance requests",
+          "description": "List tenant maintenance requests."
+        },
+        {
+          "name": "propmanagement_get_maintenance_request",
+          "type": "read",
+          "title": "Get a maintenance request",
+          "description": "Retrieve one maintenance request by id."
+        },
+        {
+          "name": "propmanagement_list_maintenance_tasks",
+          "type": "read",
+          "title": "List scheduled maintenance tasks",
+          "description": "List scheduled maintenance tasks."
+        },
+        {
+          "name": "propmanagement_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List service vendors (contractors) in your organization."
+        },
+        {
+          "name": "propmanagement_get_vendor",
+          "type": "read",
+          "title": "Get a vendor",
+          "description": "Retrieve one vendor by id."
+        },
+        {
+          "name": "propmanagement_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List work orders."
+        },
+        {
+          "name": "propmanagement_list_documents",
+          "type": "read",
+          "title": "List tenant documents",
+          "description": "List tenant documents. Document contents are not returned by this tool."
+        },
+        {
+          "name": "propmanagement_list_listings",
+          "type": "read",
+          "title": "List rental listings",
+          "description": "List rental listings."
+        },
+        {
+          "name": "propmanagement_get_listing",
+          "type": "read",
+          "title": "Get a rental listing",
+          "description": "Retrieve one rental listing by id."
+        },
+        {
+          "name": "propmanagement_list_notifications",
+          "type": "read",
+          "title": "List notifications",
+          "description": "List notifications for your organization."
+        },
+        {
+          "name": "propmanagement_create_property",
+          "type": "write",
+          "title": "Create a property",
+          "description": "Create a property. Name, address and type are required."
+        },
+        {
+          "name": "propmanagement_update_property",
+          "type": "write",
+          "title": "Update a property",
+          "description": "Update the name, address or type of one property. Send only the fields to change."
+        },
+        {
+          "name": "propmanagement_create_tenant",
+          "type": "write",
+          "title": "Create a tenant",
+          "description": "Create a tenant. Name is required; email, property_id and rent_amount are optional."
+        },
+        {
+          "name": "propmanagement_update_tenant",
+          "type": "write",
+          "title": "Update a tenant",
+          "description": "Update the name, email, property or monthly rent of one tenant. Send only the fields to change."
+        },
+        {
+          "name": "propmanagement_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "propmanagement_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the PropManagement tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "propmanagement_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for PropManagement (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "propmanagement_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's PropManagement Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run propmanagement_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which properties are in our PropManagement account?",
+        "Which tenants live in one of our properties, and what rent do they pay?",
+        "Show the rent payments recorded in PropManagement this month.",
+        "List the latest maintenance requests from tenants."
+      ]
+    },
+    {
+      "slug": "staffwise",
+      "name": "Staffwise",
+      "category": "scheduling",
+      "description": "Read the shift details of a job over a date range in Staffwise.",
+      "endpoint": "https://staffwise.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Staffwise account"
+          },
+          {
+            "label": "Staffwise API key"
+          },
+          {
+            "label": "A job ID this key can read"
+          }
+        ],
+        "hint": "Create the key in Staffwise under **Accounts > API Keys**. Give it access to the job you want to read. Your key is used only to call the Staffwise API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "staffwise_get_shifts",
+          "type": "read",
+          "title": "Get shifts for a job",
+          "description": "Read the shift details that Staffwise reports for one job over a date range. Use a job id from Jobs > View Jobs. Staffwise API: POST /api/campaigns/get-data/{job-id}. The response is returned as the vendor sent it."
+        },
+        {
+          "name": "staffwise_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "staffwise_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Staffwise tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "staffwise_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Staffwise (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "staffwise_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Staffwise Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run staffwise_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What shifts are booked for job 1234 between 1 and 30 November?",
+        "Show me the shift report for job 1234 for last week."
+      ]
     }
   ]
 }

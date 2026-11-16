@@ -990,6 +990,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [WorkSchedule.Net](servers/workschedule-net/) | scheduling | 11 | API token | [servers/workschedule-net/](servers/workschedule-net/) |
 | [Pawoon](servers/pawoon/) | Food & Beverage | 32 | API token | [servers/pawoon/](servers/pawoon/) |
 | [SolarPlus](servers/solarplus/) | crm | 9 | API token | [servers/solarplus/](servers/solarplus/) |
+| [Tatango](servers/tatango/) | messaging | 17 | API token | [servers/tatango/](servers/tatango/) |
+| [IRIS CRM](servers/iris-crm/) | crm | 10 | API token | [servers/iris-crm/](servers/iris-crm/) |
+| [Hosthub](servers/hosthub/) | rental | 20 | API token | [servers/hosthub/](servers/hosthub/) |
+| [PropManagement](servers/propmanagement/) | property-management | 24 | API token | [servers/propmanagement/](servers/propmanagement/) |
+| [Staffwise](servers/staffwise/) | scheduling | 5 | API token | [servers/staffwise/](servers/staffwise/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
