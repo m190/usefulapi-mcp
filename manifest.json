@@ -170822,6 +170822,141 @@
         "List the taxes and menu items of my store.",
         "Show the loyalty balances of this customer."
       ]
+    },
+    {
+      "slug": "cirqll",
+      "name": "Cirqll",
+      "category": "crm",
+      "description": "Read customers, contacts, tasks and sales chances; create customers, tasks and notes in Cirqll.",
+      "endpoint": "https://cirqll.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your customers, contacts, tasks, appointments, sales chances and notes, and can create customers, tasks and notes when you ask it to. You can revoke access any time in Cirqll → Settings → Marketplace."
+      },
+      "tools": [
+        {
+          "name": "cirqll_get_me",
+          "type": "read",
+          "title": "Get the signed-in user",
+          "description": "Return the Cirqll user the access token belongs to, with roles and permissions. Use it to confirm the account. Cirqll API: GET /auth/me."
+        },
+        {
+          "name": "cirqll_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers in the CRM, with paging, filter and sort. Use it for customer overviews and search. Cirqll API: GET /customer."
+        },
+        {
+          "name": "cirqll_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id, with its custom field values and any related data you ask for in with. Cirqll API: GET /customer/{id}."
+        },
+        {
+          "name": "cirqll_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (people at customers). Filter by customer with filter=\"customer_id:eq:<id>\". Cirqll API: GET /contact."
+        },
+        {
+          "name": "cirqll_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks, optionally filtered by date, assignee or customer. Cirqll API: GET /task."
+        },
+        {
+          "name": "cirqll_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments for calendar and overview use, filter by date range, user or customer. Cirqll API: GET /appointment."
+        },
+        {
+          "name": "cirqll_list_chances",
+          "type": "read",
+          "title": "List sales chances",
+          "description": "List sales opportunities (chances) in the pipeline, filter by stage, value or customer. Cirqll API: GET /chance."
+        },
+        {
+          "name": "cirqll_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes attached to customers. Filter by customer with filter=\"customer_id:eq:<id>\". Cirqll API: GET /note."
+        },
+        {
+          "name": "cirqll_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a new customer record in the CRM. Only the fields you pass are set. Cirqll API: POST /customer."
+        },
+        {
+          "name": "cirqll_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task linked to a customer, with a due date. Cirqll API: POST /task."
+        },
+        {
+          "name": "cirqll_create_note",
+          "type": "write",
+          "title": "Create a note",
+          "description": "Attach a note to a customer, with a date. Cirqll API: POST /note."
+        },
+        {
+          "name": "cirqll_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cirqll_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Cirqll tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cirqll_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Cirqll (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cirqll_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Cirqll Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cirqll_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customers in Cirqll have no task planned in the next 14 days?",
+        "Show the open sales chances and their expected values.",
+        "Create a follow-up task for the Acme customer next Monday at 09:00.",
+        "Add a note to the Jansen Bouw customer: quote sent today."
+      ]
     }
   ]
 }
