@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 11 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 16 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
@@ -115,8 +115,13 @@ how it keeps or uses that data.
 
 ## 5. Retention
 
-- Stored credentials (including usernames, passwords and stored access tokens): kept until you disconnect, cancel, or request deletion, then deleted within
-  **30 days**.
+- Stored credentials (including usernames, passwords and stored access tokens): kept with the connection. A
+  connection expires **90 days** after it was made or after your MCP client last refreshed its tokens (clients can
+  do this in the background). When a connection expires, or when your MCP client revokes its refresh token as you
+  disconnect, we delete the connection and the credentials stored in it. Some servers also keep copies of
+  credentials or vendor access tokens in an encrypted cache or in server memory. Deleting a connection does not
+  remove these copies at once: copies in memory have no fixed deletion deadline and remain until the entry is
+  replaced or removed, or the server instance stops. If you ask us to delete your credentials, we do so within **30 days**.
 - EasyStore connections: stored OAuth grants and installation metadata are deleted after a verified
   uninstall notification or a confirmed rejection of the store token, and after **30 days without a
   successful EasyStore API call**. If an uninstall notification is missed, a later token rejection
@@ -132,8 +137,10 @@ how it keeps or uses that data.
 
 Under the GDPR you may request **access, correction, deletion, export (portability), restriction,
 or object** to processing, and withdraw consent where applicable. Contact privacy@usefulapi.io; we
-respond within one month. You can disconnect a server at any time, which revokes our stored
-credential for that service. You also have the right to lodge a complaint with the Czech Data
+respond within one month. You can disconnect a server at any time. If your MCP client revokes the connection's
+refresh token, we delete the connection at once; otherwise it expires as described in section 5, or earlier on
+request to privacy@usefulapi.io. Revoking or rotating a credential at the service stops new sign-ins with it;
+access tokens that the service already issued can work until they expire or the service invalidates them. You also have the right to lodge a complaint with the Czech Data
 Protection Authority (**Úřad pro ochranu osobních údajů**, uoou.gov.cz).
 
 ## 7. Security
