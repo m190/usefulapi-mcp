@@ -1006,6 +1006,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [NextAgency](servers/nextagency/) | crm | 26 | OAuth | [servers/nextagency/](servers/nextagency/) |
 | [StaffSavvy](servers/staffsavvy/) | time-tracking | 13 | API token | [servers/staffsavvy/](servers/staffsavvy/) |
 | [Quendoo](servers/quendoo/) | property-management | 22 | API token | [servers/quendoo/](servers/quendoo/) |
+| [Sociocs](servers/sociocs/) | messaging | 19 | API token | [servers/sociocs/](servers/sociocs/) |
+| [Koban](servers/koban/) | crm | 25 | API token | [servers/koban/](servers/koban/) |
+| [PeopleForce](servers/peopleforce/) | hr | 25 | API token | [servers/peopleforce/](servers/peopleforce/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

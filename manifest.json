@@ -170116,6 +170116,570 @@
         "What does cancelling booking 4821 cost today?",
         "Close the suite for 20 to 23 January and set a minimum stay of 2 nights on the flexible rate."
       ]
+    },
+    {
+      "slug": "sociocs",
+      "name": "Sociocs",
+      "category": "messaging",
+      "description": "List contacts and messages, send texts and delete scheduled messages in Sociocs.",
+      "endpoint": "https://sociocs.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Sociocs API key"
+          }
+        ],
+        "hint": "Find it in Sociocs → **Profile & settings → API** (your account needs a free trial or a paid plan). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sociocs_list_channels",
+          "type": "read",
+          "title": "List channels",
+          "description": "List the sending channels (phone numbers) for one provider, with their channel_key. Use it first to find the channel_key that sociocs_send_message needs. Sociocs API: GET /channels."
+        },
+        {
+          "name": "sociocs_get_channel",
+          "type": "read",
+          "title": "Get a channel",
+          "description": "Get one channel by its channel_key: name, phone number, country code and provider. Sociocs API: GET /channels/{channel_key}."
+        },
+        {
+          "name": "sociocs_list_contact_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List all contact lists with their ids. Use an id as list_id in sociocs_list_contacts. Sociocs API: GET /lists."
+        },
+        {
+          "name": "sociocs_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts from 'All Contacts' (list_id 0, the default) or from one contact list. Sociocs API: GET /contacts."
+        },
+        {
+          "name": "sociocs_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search contacts by part of a name or a phone number (case insensitive, at least 2 characters). Sociocs API: GET /contacts/search."
+        },
+        {
+          "name": "sociocs_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by phone number, with the country code (with or without the leading plus). Sociocs API: GET /contacts/{phone_number}."
+        },
+        {
+          "name": "sociocs_list_messages",
+          "type": "read",
+          "title": "List messages by date",
+          "description": "List all messages between start_date and end_date (inclusive; at most 31 days apart; default today). Sociocs API: GET /messages."
+        },
+        {
+          "name": "sociocs_search_messages",
+          "type": "read",
+          "title": "Search messages",
+          "description": "Search message text. Filter by direction (incoming, outbound or both; default both) and dates (default: the last 90 days). Sociocs API: GET /messages/search."
+        },
+        {
+          "name": "sociocs_list_unreplied_messages",
+          "type": "read",
+          "title": "List unreplied messages",
+          "description": "List incoming messages that have no reply, from the last 90 days by default. Good for finding customers who are waiting. Sociocs API: GET /messages/unreplied."
+        },
+        {
+          "name": "sociocs_list_scheduled_messages",
+          "type": "read",
+          "title": "List scheduled messages",
+          "description": "List up to 100 scheduled messages, newest scheduled date first. There is no pagination. Sociocs API: GET /messages/scheduled."
+        },
+        {
+          "name": "sociocs_list_bulk_jobs",
+          "type": "read",
+          "title": "List bulk messaging jobs",
+          "description": "List up to 100 bulk messaging jobs, newest scheduled date first. There is no pagination. Sociocs API: GET /messages/bulk."
+        },
+        {
+          "name": "sociocs_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the team members of the account with their user ids (use one as user_id in sociocs_send_message). Sociocs API: GET /team-members."
+        },
+        {
+          "name": "sociocs_list_webhook_subscriptions",
+          "type": "read",
+          "title": "List webhook subscriptions",
+          "description": "List the webhook subscriptions (endpoints that receive incoming messages or status updates). Sociocs API: GET /webhook-subscriptions."
+        },
+        {
+          "name": "sociocs_send_message",
+          "type": "write",
+          "title": "Send a message",
+          "description": "SENDS a real SMS or WhatsApp message to a real phone number, now or at a future schedule time. Not reversible. Give at least one of text, image_url, video_url or file_url. WhatsApp messages outside the 24-hour window need a template, which this tool does not send. Sociocs API: POST /message."
+        },
+        {
+          "name": "sociocs_delete_scheduled_message",
+          "type": "write",
+          "title": "Delete a scheduled message",
+          "description": "Delete a scheduled message that has not been sent yet. A message that is already sending or sent cannot be deleted. Sociocs API: DELETE /messages/scheduled/{message_id}."
+        },
+        {
+          "name": "sociocs_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sociocs_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sociocs tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sociocs_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Sociocs (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sociocs_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sociocs Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sociocs_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customers sent us a message in the last 90 days and have not had a reply?",
+        "Find the contact for +16175551212 and show the messages we exchanged this month.",
+        "List our Twilio SMS channels and their phone numbers.",
+        "Show all scheduled messages and delete the one for tomorrow's reminder campaign."
+      ]
+    },
+    {
+      "slug": "koban",
+      "name": "Koban",
+      "category": "crm",
+      "description": "Read accounts, leads and deals; save accounts and contacts, add actions in Koban.",
+      "endpoint": "https://koban.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Koban API key (X-ncApi)"
+          },
+          {
+            "label": "Koban user login key (X-ncUser)"
+          }
+        ],
+        "hint": "Find both keys in Koban → **Parameters → API**. The API key identifies your Koban account; the user login key acts as one of your users, so the tools see what that user can see. Keys are used only to call the Koban API on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "koban_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the Koban account (login, name, active state). Use it to find the user id for assignments. Koban API: GET /ncAuthenticate/GetUsers."
+        },
+        {
+          "name": "koban_search_accounts",
+          "type": "read",
+          "title": "Search accounts",
+          "description": "Search Koban accounts (companies and persons) by label. Returns matching accounts with status, type and assignment. Koban API: GET /ncThird/GetByLabel."
+        },
+        {
+          "name": "koban_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "Get one Koban account by its id, including address, status, type, tags and custom fields. Koban API: GET /ncThird/GetOne."
+        },
+        {
+          "name": "koban_get_account_by_external_code",
+          "type": "read",
+          "title": "Get an account by external code",
+          "description": "Get one Koban account by your own external code (Extcode). Use it when your system stores the Koban link by external code. Koban API: GET /ncThird/GetOneByExtcode."
+        },
+        {
+          "name": "koban_list_updated_accounts",
+          "type": "read",
+          "title": "List updated accounts",
+          "description": "List accounts changed after a Unix time, one page at a time. Use it for incremental sync. Koban API: GET /ncThird/GetUpdated."
+        },
+        {
+          "name": "koban_find_contact_by_email",
+          "type": "read",
+          "title": "Find a contact by email",
+          "description": "Find Koban contacts by their e-mail address. Returns the matching contacts and their accounts. Koban API: GET /ncContact/GetByEMail."
+        },
+        {
+          "name": "koban_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one Koban contact by its id, including name, e-mail, phone, function and tags. Koban API: GET /ncContact/GetOne."
+        },
+        {
+          "name": "koban_list_updated_contacts",
+          "type": "read",
+          "title": "List updated contacts",
+          "description": "List contacts changed after a Unix time, one page at a time. Use it for incremental sync. Koban API: GET /ncContact/GetUpdated."
+        },
+        {
+          "name": "koban_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one Koban lead by its id, including the person, company, status and tags. Koban API: GET /ncLead/GetOne."
+        },
+        {
+          "name": "koban_list_leads_by_status",
+          "type": "read",
+          "title": "List leads by status",
+          "description": "List Koban leads that have one status code (for example MQL), one page at a time. Koban API: GET /ncLead/GetByStatus."
+        },
+        {
+          "name": "koban_get_deal",
+          "type": "read",
+          "title": "Get a deal",
+          "description": "Get one Koban deal by its id, including its process, amount, owner and status. Koban API: GET /ncDeal/GetOne."
+        },
+        {
+          "name": "koban_list_deals_for_account",
+          "type": "read",
+          "title": "List deals for an account",
+          "description": "List all Koban deals linked to one account id. Koban API: GET /ncDeal/GetForThird."
+        },
+        {
+          "name": "koban_list_updated_deals",
+          "type": "read",
+          "title": "List updated deals",
+          "description": "List deals changed after a Unix time, one page at a time. Use it for incremental sync. Koban API: GET /ncDeal/GetUpdated."
+        },
+        {
+          "name": "koban_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one Koban invoice by its id, including number, amounts, status and lines. Koban API: GET /ncInvoice/GetOne."
+        },
+        {
+          "name": "koban_list_updated_invoices",
+          "type": "read",
+          "title": "List updated invoices",
+          "description": "List invoices changed after a Unix time, one page at a time. Use it for incremental sync. Koban API: GET /ncInvoice/GetUpdated."
+        },
+        {
+          "name": "koban_list_updated_orders",
+          "type": "read",
+          "title": "List updated orders",
+          "description": "List orders changed after a Unix time, one page at a time. Koban API: GET /ncOrder/GetUpdated."
+        },
+        {
+          "name": "koban_get_action",
+          "type": "read",
+          "title": "Get an action",
+          "description": "Get one Koban action (task, call or meeting) by its id. Koban API: GET /ncAction/Get."
+        },
+        {
+          "name": "koban_list_pending_actions",
+          "type": "read",
+          "title": "List pending actions",
+          "description": "List the open actions of one user, optionally in a date range. Koban API: GET /ncAction/GetPending."
+        },
+        {
+          "name": "koban_upsert_account",
+          "type": "write",
+          "title": "Create or update an account",
+          "description": "Create an account, or update the account that has this external code. Existing fields not sent are kept. Koban API: POST /ncThird/PostOne with uniqueproperty=Extcode."
+        },
+        {
+          "name": "koban_upsert_contact",
+          "type": "write",
+          "title": "Create or update a contact",
+          "description": "Create a contact, or update the contact that has this external code. Optionally link it to an account by the account's external code. Koban API: POST /ncContact/PostOne."
+        },
+        {
+          "name": "koban_create_action",
+          "type": "write",
+          "title": "Create an action",
+          "description": "Create a new action (task, call or meeting) for a user, linked to an account or a deal. Each call creates a new action; a retry creates a duplicate. Koban API: POST /ncAction/Post."
+        },
+        {
+          "name": "koban_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "koban_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Koban tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "koban_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Koban (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "koban_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Koban Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run koban_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the Koban account for 'Dupont SARL' and list its open deals.",
+        "Which leads are in status MQL right now?",
+        "List the actions assigned to me for this week.",
+        "Create a follow-up call action for the deal linked to account ACME-001."
+      ]
+    },
+    {
+      "slug": "peopleforce",
+      "name": "PeopleForce",
+      "category": "hr",
+      "description": "Read employees, leave, timesheets and recruitment candidates in PeopleForce.",
+      "endpoint": "https://peopleforce.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "PeopleForce Company API key"
+          }
+        ],
+        "hint": "Find it in PeopleForce → **Settings → API keys** (the API needs the Professional plan). Use a Company key, not a Career key. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "peopleforce_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees with status, job position, department, division, location, manager and hire date. Filter by status, ids, emails or employee numbers. Company API: GET /employees."
+        },
+        {
+          "name": "peopleforce_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by id with contact, job, department, division, location and manager fields. Company API: GET /employees/{id}."
+        },
+        {
+          "name": "peopleforce_list_terminated_employees",
+          "type": "read",
+          "title": "List terminated employees",
+          "description": "List employees who left, with termination date and comment. Company API: GET /employees/terminated."
+        },
+        {
+          "name": "peopleforce_list_employee_leave_balances",
+          "type": "read",
+          "title": "List an employee's leave balances",
+          "description": "List one employee's leave balances per leave type, with the effective date. Company API: GET /employees/{id}/leave_balances."
+        },
+        {
+          "name": "peopleforce_list_employee_tasks",
+          "type": "read",
+          "title": "List an employee's tasks",
+          "description": "List onboarding or HR tasks assigned to one employee. Company API: GET /employees/{id}/tasks."
+        },
+        {
+          "name": "peopleforce_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments with parent, manager and level. Company API: GET /departments."
+        },
+        {
+          "name": "peopleforce_list_divisions",
+          "type": "read",
+          "title": "List divisions",
+          "description": "List divisions. Company API: GET /divisions."
+        },
+        {
+          "name": "peopleforce_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List office and work locations with time zone and country. Company API: GET /locations."
+        },
+        {
+          "name": "peopleforce_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams with the team lead and team members. Company API: GET /teams."
+        },
+        {
+          "name": "peopleforce_list_positions",
+          "type": "read",
+          "title": "List positions",
+          "description": "List job positions (titles). Company API: GET /positions."
+        },
+        {
+          "name": "peopleforce_list_job_profiles",
+          "type": "read",
+          "title": "List job profiles",
+          "description": "List job profiles with job group and salary band limits. Company API: GET /job_profiles."
+        },
+        {
+          "name": "peopleforce_list_leave_requests",
+          "type": "read",
+          "title": "List leave requests",
+          "description": "List leave requests with state, dates, amount, leave type and approvals. Filter by employee, state or date range. Company API: GET /leave_requests."
+        },
+        {
+          "name": "peopleforce_list_pending_leave_requests",
+          "type": "read",
+          "title": "List pending leave requests",
+          "description": "List leave requests waiting for approval. Company API: GET /leave_requests/pending."
+        },
+        {
+          "name": "peopleforce_get_leave_request",
+          "type": "read",
+          "title": "Get a leave request",
+          "description": "Get one leave request by id with its entries and approvals. Company API: GET /leave_requests/{id}."
+        },
+        {
+          "name": "peopleforce_list_leave_types",
+          "type": "read",
+          "title": "List leave types",
+          "description": "List leave types (for example vacation or sick leave) with unit and colour. Company API: GET /leave_types."
+        },
+        {
+          "name": "peopleforce_list_holidays",
+          "type": "read",
+          "title": "List public holidays",
+          "description": "List public holidays with their date and holiday policy. Company API: GET /holidays."
+        },
+        {
+          "name": "peopleforce_list_timesheets",
+          "type": "read",
+          "title": "List monthly timesheets",
+          "description": "List monthly timesheet totals per employee: expected, worked, break and leave minutes. Company API: GET /time/timesheets."
+        },
+        {
+          "name": "peopleforce_list_timesheet_entries",
+          "type": "read",
+          "title": "List timesheet entries",
+          "description": "List clock-in and clock-out entries in a date range, with minutes and type. Filter by approval status. Company API: GET /time/timesheet_entries."
+        },
+        {
+          "name": "peopleforce_list_recruitment_vacancies",
+          "type": "read",
+          "title": "List vacancies",
+          "description": "List open and closed job vacancies with title, pipeline, location and dates. Company API: GET /recruitment/vacancies."
+        },
+        {
+          "name": "peopleforce_get_recruitment_vacancy",
+          "type": "read",
+          "title": "Get a vacancy",
+          "description": "Get one vacancy by id with its pipeline, hiring lead and description. Company API: GET /recruitment/vacancies/{id}."
+        },
+        {
+          "name": "peopleforce_list_recruitment_candidates",
+          "type": "read",
+          "title": "List candidates",
+          "description": "List job candidates with contact fields, skills and their applications. Filter by email, vacancy or pipeline stage. Company API: GET /recruitment/candidates."
+        },
+        {
+          "name": "peopleforce_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "peopleforce_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the PeopleForce tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "peopleforce_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for PeopleForce (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "peopleforce_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's PeopleForce Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run peopleforce_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who joined our company in the last 30 days, and in which departments?",
+        "Which leave requests are waiting for approval right now?",
+        "How many hours did each team log last month compared with the expected minutes?",
+        "List the open vacancies in London and the candidates in the final interview stage."
+      ]
     }
   ]
 }
