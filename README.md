@@ -981,6 +981,11 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PerfectView](servers/perfectview/) | crm | 13 | API token | [servers/perfectview/](servers/perfectview/) |
 | [Clearooms](servers/clearooms/) | scheduling | 18 | API token | [servers/clearooms/](servers/clearooms/) |
 | [Freshchat](servers/freshchat/) | support | 14 | API token | [servers/freshchat/](servers/freshchat/) |
+| [Amenitiz](servers/amenitiz/) | property-management | 19 | API token | [servers/amenitiz/](servers/amenitiz/) |
+| [Faveo Helpdesk](servers/faveo-helpdesk/) | support | 22 | API token | [servers/faveo-helpdesk/](servers/faveo-helpdesk/) |
+| [Linga POS](servers/linga-pos/) | Food & Beverage | 12 | API token | [servers/linga-pos/](servers/linga-pos/) |
+| [SleekFlow](servers/sleekflow/) | messaging | 29 | API token | [servers/sleekflow/](servers/sleekflow/) |
+| [TimeTrex](servers/timetrex/) | time-tracking | 8 | API token | [servers/timetrex/](servers/timetrex/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

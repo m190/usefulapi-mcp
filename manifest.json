@@ -166396,6 +166396,806 @@
         "Which agents are active in the Billing group?",
         "Reply to the open conversation about the refund and tell the customer we are checking it."
       ]
+    },
+    {
+      "slug": "amenitiz",
+      "name": "Amenitiz",
+      "category": "property-management",
+      "description": "Read properties, unit groups, bookings, invoices, rate plans and availability in Amenitiz.",
+      "endpoint": "https://amenitiz.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Amenitiz API client ID"
+          },
+          {
+            "label": "Amenitiz API client secret"
+          }
+        ],
+        "hint": "The account owner creates the credential in Amenitiz under **Settings → API credentials**. The hotel needs the open API feature enabled. Revoke the credential in Amenitiz to end access. Booking, guest and payment data pass through UsefulAPI to your selected AI assistant and its provider."
+      },
+      "tools": [
+        {
+          "name": "amenitiz_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List the hotel properties this credential can read. Use this first to find property IDs. GET /inventory/properties."
+        },
+        {
+          "name": "amenitiz_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Fetch one property by UUID. GET /inventory/properties/{uuid}."
+        },
+        {
+          "name": "amenitiz_list_unit_groups",
+          "type": "read",
+          "title": "List unit groups",
+          "description": "List the unit groups (room types) of one property, optionally filtered by name. GET /inventory/unit-groups."
+        },
+        {
+          "name": "amenitiz_get_unit_group",
+          "type": "read",
+          "title": "Get a unit group",
+          "description": "Fetch one unit group by UUID. GET /inventory/unit-groups/{uuid}."
+        },
+        {
+          "name": "amenitiz_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List the physical units inside one unit group. GET /inventory/units."
+        },
+        {
+          "name": "amenitiz_get_unit",
+          "type": "read",
+          "title": "Get a unit",
+          "description": "Fetch one unit by UUID. GET /inventory/units/{uuid}."
+        },
+        {
+          "name": "amenitiz_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings for one property. Pass a reference, or at least one From date (created, arrival, departure or cancelled). Each date axis spans at most 90 days. GET /bookings/bookings."
+        },
+        {
+          "name": "amenitiz_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Fetch one booking by UUID. GET /bookings/bookings/{uuid}."
+        },
+        {
+          "name": "amenitiz_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "Fetch one reservation (a room stay inside a booking) by UUID. GET /bookings/reservations/{uuid}."
+        },
+        {
+          "name": "amenitiz_list_booking_payments",
+          "type": "read",
+          "title": "List booking payments",
+          "description": "List the payments recorded against one booking. GET /bookings/bookings/{uuid}/payments."
+        },
+        {
+          "name": "amenitiz_list_booking_charges",
+          "type": "read",
+          "title": "List booking charges",
+          "description": "List the charges on one booking. GET /bookings/bookings/{uuid}/charges."
+        },
+        {
+          "name": "amenitiz_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices for one property, filtered by created date or by booking reference or number. GET /finance/invoices."
+        },
+        {
+          "name": "amenitiz_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Fetch one invoice by UUID. GET /finance/invoices/{uuid}."
+        },
+        {
+          "name": "amenitiz_list_rate_plans",
+          "type": "read",
+          "title": "List rate plans",
+          "description": "List the rate plans of one property: the sellable price products. GET /rates/rate-plans."
+        },
+        {
+          "name": "amenitiz_get_availability",
+          "type": "read",
+          "title": "Get availability",
+          "description": "List how many units are open to sell, per unit group and date, over a date window. GET /ari/availability."
+        },
+        {
+          "name": "amenitiz_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "amenitiz_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Amenitiz tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "amenitiz_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Amenitiz (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "amenitiz_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Amenitiz Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run amenitiz_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the properties this Amenitiz connection can read.",
+        "Show the bookings that arrive next week at our main property.",
+        "Which unit groups does this property sell, and how many units does each have?",
+        "Check the availability for the next 14 days."
+      ]
+    },
+    {
+      "slug": "faveo-helpdesk",
+      "name": "Faveo Helpdesk",
+      "category": "support",
+      "description": "Read and search tickets; reply, add internal notes and open tickets in Faveo Helpdesk.",
+      "endpoint": "https://faveo-helpdesk.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Faveo host"
+          },
+          {
+            "label": "Username or email"
+          },
+          {
+            "label": "Password"
+          },
+          {
+            "label": "API key — only if mandatory",
+            "optional": true
+          }
+        ],
+        "hint": "The API must be on: Admin Panel → **Settings → API**. If your admin made the **API key mandatory**, enter that key too. Your password is used only to log in to your own Faveo instance on your behalf."
+      },
+      "tools": [
+        {
+          "name": "faveo_get_authenticated_user",
+          "type": "read",
+          "title": "Get logged-in user",
+          "description": "Return the Faveo user the connection logs in as: name, role, email and status. Use it to confirm the connection works."
+        },
+        {
+          "name": "faveo_list_open_tickets",
+          "type": "read",
+          "title": "List open tickets",
+          "description": "List open tickets that are answered or not, 10 per page. Use page to read more. Faveo API: GET /api/v1/helpdesk/open."
+        },
+        {
+          "name": "faveo_list_unassigned_tickets",
+          "type": "read",
+          "title": "List unassigned tickets",
+          "description": "List open tickets that no agent has taken yet, 10 per page. Faveo API: GET /api/v1/helpdesk/unassigned."
+        },
+        {
+          "name": "faveo_list_closed_tickets",
+          "type": "read",
+          "title": "List closed tickets",
+          "description": "List closed tickets, 10 per page. Faveo API: GET /api/v1/helpdesk/closed."
+        },
+        {
+          "name": "faveo_get_ticket",
+          "type": "read",
+          "title": "Get ticket",
+          "description": "Return one ticket with its status, priority, department, owner and dates. Faveo API: GET /api/v1/helpdesk/ticket."
+        },
+        {
+          "name": "faveo_get_ticket_thread",
+          "type": "read",
+          "title": "Get ticket thread",
+          "description": "Return the messages of one ticket: customer replies, agent replies and internal notes. Faveo API: GET /api/v1/helpdesk/ticket-thread."
+        },
+        {
+          "name": "faveo_search_tickets",
+          "type": "read",
+          "title": "Search tickets",
+          "description": "Search tickets by text (subject, body or ticket number). Faveo API: GET /api/v1/helpdesk/ticket-search."
+        },
+        {
+          "name": "faveo_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, optionally filtered by a search text (name or email). Faveo API: GET /api/v1/helpdesk/customers."
+        },
+        {
+          "name": "faveo_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Return one customer's profile by user id. Faveo API: GET /api/v1/helpdesk/customer."
+        },
+        {
+          "name": "faveo_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List the support agents of the instance. Faveo API: GET /api/v1/helpdesk/agents."
+        },
+        {
+          "name": "faveo_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the agent teams of the instance. Faveo API: GET /api/v1/helpdesk/teams."
+        },
+        {
+          "name": "faveo_list_help_topics",
+          "type": "read",
+          "title": "List help topics",
+          "description": "List the help topics. Their ids go into faveo_create_ticket. Faveo API: GET /api/v1/helpdesk/help-topic."
+        },
+        {
+          "name": "faveo_list_sla_plans",
+          "type": "read",
+          "title": "List SLA plans",
+          "description": "List the SLA plans. Their ids go into faveo_create_ticket. Faveo API: GET /api/v1/helpdesk/sla-plan."
+        },
+        {
+          "name": "faveo_list_priorities",
+          "type": "read",
+          "title": "List priorities",
+          "description": "List the ticket priorities. Their ids go into faveo_create_ticket. Faveo API: GET /api/v1/helpdesk/priority."
+        },
+        {
+          "name": "faveo_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List the departments. Their ids go into faveo_create_ticket. Faveo API: GET /api/v1/helpdesk/department."
+        },
+        {
+          "name": "faveo_create_ticket",
+          "type": "write",
+          "title": "Create ticket",
+          "description": "Create a new ticket for a customer. Faveo may email the customer. Use the ids from the list tools for help topic, SLA plan and priority. Faveo API: POST /api/v1/helpdesk/create."
+        },
+        {
+          "name": "faveo_reply_to_ticket",
+          "type": "write",
+          "title": "Reply to ticket",
+          "description": "Post a reply on a ticket as the logged-in agent. Faveo emails the reply to the customer. Faveo API: POST /api/v1/helpdesk/reply."
+        },
+        {
+          "name": "faveo_add_internal_note",
+          "type": "write",
+          "title": "Add internal note",
+          "description": "Add an internal note to a ticket. Customers do not see it. The note is written as the logged-in agent. Faveo API: POST /api/v1/helpdesk/internal-note."
+        },
+        {
+          "name": "faveo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "faveo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Faveo Helpdesk tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "faveo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Faveo Helpdesk (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "faveo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Faveo Helpdesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run faveo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open tickets are still unassigned?",
+        "Show me the conversation on ticket 42 and summarize what the customer wants.",
+        "Reply to ticket 42 that we have fixed the login issue.",
+        "Add an internal note to ticket 17 saying the refund is approved."
+      ]
+    },
+    {
+      "slug": "linga-pos",
+      "name": "Linga POS",
+      "category": "Food & Beverage",
+      "description": "Read stores, menu items, customers, sale reports and single sales in Linga POS.",
+      "endpoint": "https://linga-pos.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Linga POS Developer API key"
+          }
+        ],
+        "hint": "Create it in Linga back office → **Licenses → Developer API → Key Generator**. Your key is used only to call the Linga API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "lingapos_list_stores",
+          "type": "read",
+          "title": "List stores",
+          "description": "List the stores on the Linga POS account, with their ids. Start here to find a store_id for the other tools. Linga API: GET /store/."
+        },
+        {
+          "name": "lingapos_get_store",
+          "type": "read",
+          "title": "Get a store",
+          "description": "Get one store's details by store id. Linga API: GET /store/{store-id}."
+        },
+        {
+          "name": "lingapos_list_menu_items",
+          "type": "read",
+          "title": "List menu items",
+          "description": "List the menu items of one store (items sold on the POS), optionally only active or only inactive ones. Linga API: GET /store/{store-id}/menuItems."
+        },
+        {
+          "name": "lingapos_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the customers saved on the Linga POS account (loyalty and contact records). Linga API: GET /customers."
+        },
+        {
+          "name": "lingapos_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer record by customer id. Linga API: GET /customer/{customer-id}."
+        },
+        {
+          "name": "lingapos_sale_summary_report",
+          "type": "read",
+          "title": "Sale summary report",
+          "description": "Read the sale summary report of one store for a date range (totals of sales). Linga API: GET /store/{store-id}/saleSummaryReport."
+        },
+        {
+          "name": "lingapos_transaction_report",
+          "type": "read",
+          "title": "Transaction report",
+          "description": "Read the transactions report of one store for a date range (payments and tenders). Linga API: GET /store/{store-id}/transactionReport."
+        },
+        {
+          "name": "lingapos_get_sale",
+          "type": "read",
+          "title": "Get a sale",
+          "description": "Get the details of one sale (order) by sale id. Find the sale id in a sale report. Linga API: GET /sale/{sale-id}/getSale."
+        },
+        {
+          "name": "lingapos_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "lingapos_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Linga POS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "lingapos_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Linga POS (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "lingapos_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Linga POS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lingapos_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which stores are on my Linga POS account?",
+        "Show the sale summary for store 5c5981496bcf7500013afeb0 for last 7 days.",
+        "List the active menu items of my main store.",
+        "Find the customer record for jane@example.com."
+      ]
+    },
+    {
+      "slug": "sleekflow",
+      "name": "SleekFlow",
+      "category": "messaging",
+      "description": "Read chats, contacts, teams and broadcasts; send messages and notes, and manage labels in SleekFlow.",
+      "endpoint": "https://sleekflow.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SleekFlow Platform API key"
+          }
+        ],
+        "hint": "Find it in SleekFlow → **Channels → Add integrations → API**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sleekflow_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts with their profile fields, labels and lists. Filter by phone, email or name. SleekFlow API: GET /api/contact."
+        },
+        {
+          "name": "sleekflow_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by user profile id, with all profile fields. SleekFlow API: GET /api/contact/{userProfileId}."
+        },
+        {
+          "name": "sleekflow_list_conversations",
+          "type": "read",
+          "title": "List conversations",
+          "description": "List inbox conversations with status, assignee, channel and last update. Good first call to find open or unread chats. A repeat call within 1 second can return HTTP 400 'Server busy': wait 1 second, then call again. SleekFlow API: GET /api/conversation/all."
+        },
+        {
+          "name": "sleekflow_get_conversation",
+          "type": "read",
+          "title": "Get a conversation",
+          "description": "Get one conversation: contact, status, assignee and channel. SleekFlow API: GET /api/conversation/{conversationId}."
+        },
+        {
+          "name": "sleekflow_list_messages",
+          "type": "read",
+          "title": "List messages in a conversation",
+          "description": "List the messages of one conversation. Filter by time with start_timestamp and end_timestamp (Unix seconds). SleekFlow API: GET /api/conversation/message/{conversationId}."
+        },
+        {
+          "name": "sleekflow_search_messages",
+          "type": "read",
+          "title": "Search messages",
+          "description": "Search messages across all conversations by keyword, channel or status. SleekFlow API: GET /api/conversation/message/search."
+        },
+        {
+          "name": "sleekflow_list_channels",
+          "type": "read",
+          "title": "List connected channels",
+          "description": "List the messaging channels connected to the account (WhatsApp, Messenger, LINE, WeChat, web and others). SleekFlow API: GET /api/conversation/channel."
+        },
+        {
+          "name": "sleekflow_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List staff members, optionally one team's members. SleekFlow API: GET /api/staffs."
+        },
+        {
+          "name": "sleekflow_get_staff",
+          "type": "read",
+          "title": "Get a staff member",
+          "description": "Get one staff member: name, role, status and teams. SleekFlow API: GET /api/staffs/{staffUserId}."
+        },
+        {
+          "name": "sleekflow_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List all teams in the account. SleekFlow API: GET /api/teams."
+        },
+        {
+          "name": "sleekflow_get_team",
+          "type": "read",
+          "title": "Get a team",
+          "description": "Get one team and its members. SleekFlow API: GET /api/teams/{teamId}."
+        },
+        {
+          "name": "sleekflow_list_labels",
+          "type": "read",
+          "title": "List labels",
+          "description": "List the contact labels (hashtags) and their colors. SleekFlow API: GET /api/labels."
+        },
+        {
+          "name": "sleekflow_list_contact_lists",
+          "type": "read",
+          "title": "List contact lists",
+          "description": "List contact lists (groups of contacts). SleekFlow API: GET /api/contact/list."
+        },
+        {
+          "name": "sleekflow_get_contact_list",
+          "type": "read",
+          "title": "Get a contact list",
+          "description": "Get one contact list and its details. SleekFlow API: GET /api/contact/list/{contactListId}."
+        },
+        {
+          "name": "sleekflow_list_broadcasts",
+          "type": "read",
+          "title": "List broadcasts",
+          "description": "List broadcast campaigns, optionally by name. SleekFlow API: GET /api/broadcasts."
+        },
+        {
+          "name": "sleekflow_get_broadcast",
+          "type": "read",
+          "title": "Get a broadcast",
+          "description": "Get one broadcast campaign and its details. SleekFlow API: GET /api/broadcasts/{broadcastId}."
+        },
+        {
+          "name": "sleekflow_get_broadcast_recipients",
+          "type": "read",
+          "title": "List broadcast recipients",
+          "description": "List the recipients of one broadcast with their delivery status. SleekFlow API: GET /api/broadcasts/{broadcastId}/recipients."
+        },
+        {
+          "name": "sleekflow_get_analytics",
+          "type": "read",
+          "title": "Get conversation analytics",
+          "description": "Get conversation analytics data for a date range. SleekFlow API: GET /api/analytic."
+        },
+        {
+          "name": "sleekflow_send_message",
+          "type": "write",
+          "title": "Send a message to a contact",
+          "description": "Send a text message to a customer through a connected channel. The customer receives it: confirm the text and recipient first. Outside WhatsApp's 24-hour window only an approved template works. Phone numbers: international format, no '+'. SleekFlow API: POST /api/message/send/json."
+        },
+        {
+          "name": "sleekflow_send_internal_note",
+          "type": "write",
+          "title": "Add an internal note",
+          "description": "Add an internal note to a conversation. The customer does not see it. Optional staff_user_id posts the note as that staff member. SleekFlow API: POST /api/message/send/note."
+        },
+        {
+          "name": "sleekflow_add_or_update_contacts",
+          "type": "write",
+          "title": "Add or update contacts",
+          "description": "Create contacts, or update them when the phone number already exists. Send one or more contacts. SleekFlow API: POST /api/contact/addOrUpdate."
+        },
+        {
+          "name": "sleekflow_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Change one contact's name, phone or email, or add and remove labels. Fields you leave out stay as they are. SleekFlow API: POST /api/contact/update/{userProfileId}."
+        },
+        {
+          "name": "sleekflow_assign_conversation",
+          "type": "write",
+          "title": "Assign a conversation",
+          "description": "Assign a conversation to a staff member. Pass staff_id 'unassigned' to remove the assignee. SleekFlow API: POST /api/conversation/{conversationId}/assignee."
+        },
+        {
+          "name": "sleekflow_add_contacts_to_list",
+          "type": "write",
+          "title": "Add contacts to a list",
+          "description": "Add contacts to one contact list. SleekFlow API: POST /api/contact/list/{contactListId}/add."
+        },
+        {
+          "name": "sleekflow_create_labels",
+          "type": "write",
+          "title": "Create labels",
+          "description": "Create one or more contact labels with a color: blue, pink, yellow, green, red, purple, grey or cyan. SleekFlow API: POST /api/labels."
+        },
+        {
+          "name": "sleekflow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sleekflow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SleekFlow tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sleekflow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for SleekFlow (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sleekflow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SleekFlow Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sleekflow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open conversations are unread, and who is assigned to them?",
+        "Show me the last 20 messages in the conversation with this customer.",
+        "Add a 'VIP' label to this contact and assign the conversation to Sam.",
+        "How many conversations did we have per day last week?"
+      ]
+    },
+    {
+      "slug": "timetrex",
+      "name": "TimeTrex",
+      "category": "time-tracking",
+      "description": "Read employees, time punches, branches and departments in TimeTrex.",
+      "endpoint": "https://timetrex.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TimeTrex web address"
+          },
+          {
+            "label": "TimeTrex API key (registered SessionID)"
+          }
+        ],
+        "hint": "Use the address you open in the browser, for example **https://payroll.example.com** or **https://example.com/timetrex**. Register the key in TimeTrex under **Passwords / Security → More (…) → Register API Key**. The key is used only to call the API for you and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "timetrex_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees in the TimeTrex installation: record id, employee number, first and last name. Filter by employee number or name. Use the id in the other tools. TimeTrex API: APIUser.getUser."
+        },
+        {
+          "name": "timetrex_list_punches",
+          "type": "read",
+          "title": "List punches",
+          "description": "List time punches (clock in and clock out records) for one employee between two dates. Dates are yyyy-mm-dd. TimeTrex API: APIPunch.getPunch."
+        },
+        {
+          "name": "timetrex_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List branches (work sites) of the TimeTrex installation. TimeTrex API: APIBranch.getBranch."
+        },
+        {
+          "name": "timetrex_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments of the TimeTrex installation. TimeTrex API: APIDepartment.getDepartment."
+        },
+        {
+          "name": "timetrex_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timetrex_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TimeTrex tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timetrex_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TimeTrex (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timetrex_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TimeTrex Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timetrex_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the employees in our TimeTrex installation who work in the Berlin branch.",
+        "Show all punches for employee 1042 between 2026-11-01 and 2026-11-15.",
+        "Which departments exist in our TimeTrex installation?"
+      ]
     }
   ]
 }
