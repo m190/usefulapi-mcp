@@ -168514,6 +168514,513 @@
         "What shifts are booked for job 1234 between 1 and 30 November?",
         "Show me the shift report for job 1234 for last week."
       ]
+    },
+    {
+      "slug": "shiftbrook",
+      "name": "Shiftbrook",
+      "category": "scheduling",
+      "description": "Read shifts, people, leave and timesheets; add people and approve leave in Shiftbrook.",
+      "endpoint": "https://shiftbrook.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Shiftbrook API key"
+          }
+        ],
+        "hint": "Create it in Shiftbrook → **Settings → Integrations → API** as an owner or admin on a paid plan. The key is shown once. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "shiftbrook_check_key",
+          "type": "read",
+          "title": "Check API key",
+          "description": "Check that the API key is valid. Returns the organisation name. Shiftbrook GET /api/v1/auth/test."
+        },
+        {
+          "name": "shiftbrook_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List people in the organisation, with open invites. Use status to filter. Shiftbrook GET /api/v1/people."
+        },
+        {
+          "name": "shiftbrook_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "Get one person by id. Shiftbrook GET /api/v1/people/{id}."
+        },
+        {
+          "name": "shiftbrook_create_person",
+          "type": "write",
+          "title": "Add a person",
+          "description": "Add a person to the organisation. Shiftbrook sends that person an invite email. The invite token is not returned. Shiftbrook POST /api/v1/people."
+        },
+        {
+          "name": "shiftbrook_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the organisation's locations (sites). Shiftbrook GET /api/v1/locations."
+        },
+        {
+          "name": "shiftbrook_get_location",
+          "type": "read",
+          "title": "Get a location",
+          "description": "Get one location by id. Shiftbrook GET /api/v1/locations/{id}."
+        },
+        {
+          "name": "shiftbrook_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List shifts in the rota, optionally between two dates. Draft shifts are not published. Shiftbrook GET /api/v1/shifts."
+        },
+        {
+          "name": "shiftbrook_get_shift",
+          "type": "read",
+          "title": "Get a shift",
+          "description": "Get one shift by id. Shiftbrook GET /api/v1/shifts/{id}."
+        },
+        {
+          "name": "shiftbrook_list_leave_requests",
+          "type": "read",
+          "title": "List leave requests",
+          "description": "List leave requests. Use status to see only pending or approved requests. Shiftbrook GET /api/v1/leave-requests."
+        },
+        {
+          "name": "shiftbrook_get_leave_request",
+          "type": "read",
+          "title": "Get a leave request",
+          "description": "Get one leave request by id. Shiftbrook GET /api/v1/leave-requests/{id}."
+        },
+        {
+          "name": "shiftbrook_approve_leave_request",
+          "type": "write",
+          "title": "Approve a leave request",
+          "description": "Approve one leave request. This changes the request and its approved absence. Shiftbrook POST /api/v1/leave-requests/{id}/approve."
+        },
+        {
+          "name": "shiftbrook_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "List timesheets. With status 'approved', each item includes approvedHours. Shiftbrook GET /api/v1/timesheets."
+        },
+        {
+          "name": "shiftbrook_get_timesheet",
+          "type": "read",
+          "title": "Get a timesheet",
+          "description": "Get one timesheet by id. Shiftbrook GET /api/v1/timesheets/{id}."
+        },
+        {
+          "name": "shiftbrook_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List approved leave that overlaps a date range, for example one month. Shiftbrook GET /api/v1/absences."
+        },
+        {
+          "name": "shiftbrook_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shiftbrook_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Shiftbrook tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shiftbrook_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Shiftbrook (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shiftbrook_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Shiftbrook Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shiftbrook_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on shift at our Leeds site on Saturday?",
+        "List the leave requests waiting for approval this week.",
+        "Show the approved hours for last month and who has the most.",
+        "Which absences overlap the bank holiday week?"
+      ]
+    },
+    {
+      "slug": "timehunter",
+      "name": "TimeHunter",
+      "category": "time-tracking",
+      "description": "Read employee status, attendance, work reports and schedules in TimeHunter.",
+      "endpoint": "https://timehunter.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TimeHunter API key"
+          }
+        ],
+        "hint": "A company admin creates the key in TimeHunter → **Klucze API** (API keys). The key is read-only. It is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "timehunter_employee_status",
+          "type": "read",
+          "title": "Employee status now",
+          "description": "List every employee with their current work state: working, on break, and the start time of today's session. Good first call to get employee ids. TimeHunter API: GET /api/employees/status."
+        },
+        {
+          "name": "timehunter_get_work_time_today",
+          "type": "read",
+          "title": "Work time today",
+          "description": "Get one employee's net working time today in seconds (totalSeconds) and the number of work sessions. TimeHunter API: GET /api/work/today."
+        },
+        {
+          "name": "timehunter_list_attendance",
+          "type": "read",
+          "title": "List attendance",
+          "description": "List attendance per employee and day: check-in, check-out, break times, work time and location. Defaults to today. Give date, or date_from and date_to together. TimeHunter API: GET /api/attendance."
+        },
+        {
+          "name": "timehunter_get_daily_report",
+          "type": "read",
+          "title": "Daily report",
+          "description": "Get one employee's report for today: net work seconds and each work session with start, end and break times. The API always reports today and ignores other dates. TimeHunter API: GET /api/report/daily."
+        },
+        {
+          "name": "timehunter_get_weekly_report",
+          "type": "read",
+          "title": "Weekly report",
+          "description": "Get one employee's work seconds per day for the current week (dailyTotals). TimeHunter API: GET /api/report/weekly."
+        },
+        {
+          "name": "timehunter_get_monthly_report",
+          "type": "read",
+          "title": "Monthly report",
+          "description": "Get one employee's work seconds per day for a month (dailyTotals, days with work only). Defaults to the current month. TimeHunter API: GET /api/report/monthly."
+        },
+        {
+          "name": "timehunter_get_period_summary",
+          "type": "read",
+          "title": "Period summary",
+          "description": "Get a summary per employee and month: work hours, norm, overtime, balance, late arrivals, absence days by type, and weekend or holiday work. Defaults to the previous and current month. TimeHunter API: GET /api/report/summary."
+        },
+        {
+          "name": "timehunter_list_schedules",
+          "type": "read",
+          "title": "List schedules",
+          "description": "List work schedules for one month: each day's planned start and end, and the actual presence (arrival, departure, session id). TimeHunter API: GET /api/schedules."
+        },
+        {
+          "name": "timehunter_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timehunter_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TimeHunter tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timehunter_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TimeHunter (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timehunter_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TimeHunter Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timehunter_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is working right now, and who is on a break?",
+        "How many hours did one employee work this month, and how much overtime do they have?",
+        "Show the attendance for the whole team yesterday.",
+        "Which employees arrived late in September?"
+      ]
+    },
+    {
+      "slug": "zekerflex",
+      "name": "ZekerFlex",
+      "category": "hr",
+      "description": "Read open shifts, approved timesheets and invoices in ZekerFlex.",
+      "endpoint": "https://zekerflex.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ZekerFlex API key"
+          }
+        ],
+        "hint": "Create the key yourself in ZekerFlex → Werkgever → Koppelingen (Free plan, no payment needed). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "zekerflex_list_open_shifts",
+          "type": "read",
+          "title": "List open shifts",
+          "description": "List the open shifts of your organization: title, start and end time, hourly rate in eurocents, number of positions, status (OPEN, MATCHING or PARTIALLY_FILLED), branch and city. Needs the shifts:read scope. Uses GET /shifts."
+        },
+        {
+          "name": "zekerflex_get_shift",
+          "type": "read",
+          "title": "Get a shift",
+          "description": "Get one shift of your organization by id, with the people scheduled on it (first name and initial). Needs the shifts:read scope. Uses GET /shifts/{id}."
+        },
+        {
+          "name": "zekerflex_list_approved_timesheets",
+          "type": "read",
+          "title": "List approved timesheets",
+          "description": "List approved and paid timesheets of your organization, most recently approved first: scheduled start and end, billable minutes, hourly rate in eurocents, branch and freelancer name. Needs the timesheets:read scope. Uses GET /timesheets/approved."
+        },
+        {
+          "name": "zekerflex_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices issued to your organization, newest first. Optionally only invoices since a date. Needs the invoices:read scope. Uses GET /invoices."
+        },
+        {
+          "name": "zekerflex_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "zekerflex_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ZekerFlex tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "zekerflex_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ZekerFlex (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "zekerflex_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ZekerFlex Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zekerflex_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open shifts do we have this week, and how many positions are still unfilled?",
+        "Show the approved timesheets from the last two weeks and their billable minutes.",
+        "List the invoices we received since 1 October."
+      ]
+    },
+    {
+      "slug": "totemclock",
+      "name": "TotemClock",
+      "category": "time-tracking",
+      "description": "Read employees, punches, timecards and timesheets; record punches in TotemClock.",
+      "endpoint": "https://totemclock.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TotemClock company API key"
+          }
+        ],
+        "hint": "Create it in TotemClock → **API e integrazioni**, and select only the scopes you need. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "totemclock_get_organization",
+          "type": "read",
+          "title": "Get the company",
+          "description": "Return the company that owns the API key: name, slug, and timezone. Good first call to confirm which company is connected. TotemClock API: GET /api/v1/organization."
+        },
+        {
+          "name": "totemclock_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List active employees with code, name, job title, department, hire and termination dates, and attendance mode (SCHEDULED, SINGLE_DAILY, EXEMPT, ACTUAL). Use the id in the other tools. TotemClock API: GET /api/v1/employees."
+        },
+        {
+          "name": "totemclock_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List active company sites with address, punch policy (NONE, GEO, QR, GEO_OR_QR, GEO_AND_QR), and geofence radius in meters. TotemClock API: GET /api/v1/sites."
+        },
+        {
+          "name": "totemclock_list_schedules",
+          "type": "read",
+          "title": "List schedules",
+          "description": "List active work schedules and which employees each one is assigned to. TotemClock API: GET /api/v1/schedules."
+        },
+        {
+          "name": "totemclock_list_punches",
+          "type": "read",
+          "title": "List punches",
+          "description": "List raw clock punches (CLOCK_IN, CLOCK_OUT, BREAK_START, BREAK_END) in a date-time range, optionally for one employee. Range is required. TotemClock API: GET /api/v1/punches."
+        },
+        {
+          "name": "totemclock_create_punch",
+          "type": "write",
+          "title": "Record a punch",
+          "description": "Record one clock punch for an employee (CLOCK_IN, CLOCK_OUT, BREAK_START, BREAK_END) at occurredAt. externalId makes the call safe to retry: the same externalId and payload return the existing punch. Needs the punches:write scope. TotemClock API: POST /api/v1/punches."
+        },
+        {
+          "name": "totemclock_get_employee_day",
+          "type": "read",
+          "title": "Get an employee day",
+          "description": "Return one employee's punches and calculated result for one day: first in, last out, worked, target, overtime, late and early-leave minutes, and anomalies. TotemClock API: GET /api/v1/employees/{employeeId}/days/{date}."
+        },
+        {
+          "name": "totemclock_list_timecards",
+          "type": "read",
+          "title": "List daily timecards",
+          "description": "Return the calculated daily timecard rows for all employees on one day (default: today in the company timezone). TotemClock API: GET /api/v1/timecards."
+        },
+        {
+          "name": "totemclock_get_monthly_timecard",
+          "type": "read",
+          "title": "Get a monthly timecard",
+          "description": "Return one employee's calculated monthly timecard: each day, the causes behind the results, and monthly totals. TotemClock API: GET /api/v1/monthly-timecards."
+        },
+        {
+          "name": "totemclock_get_timesheet",
+          "type": "read",
+          "title": "Get a monthly timesheet",
+          "description": "Return one employee's monthly timesheet: the hours and activities assigned to customers, projects and work, with the total minutes. TotemClock API: GET /api/v1/timesheets."
+        },
+        {
+          "name": "totemclock_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "totemclock_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TotemClock tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "totemclock_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TotemClock (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "totemclock_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TotemClock Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run totemclock_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who clocked in late at our Milan site this week?",
+        "Show me Maria's calculated day for 2026-09-11, with overtime and anomalies.",
+        "Record a CLOCK_OUT for employee 7f1c… at 17:30 with the same externalId on retry.",
+        "Give me the monthly timesheet for September for each project."
+      ]
     }
   ]
 }

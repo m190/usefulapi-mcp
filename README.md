@@ -995,6 +995,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Hosthub](servers/hosthub/) | rental | 20 | API token | [servers/hosthub/](servers/hosthub/) |
 | [PropManagement](servers/propmanagement/) | property-management | 24 | API token | [servers/propmanagement/](servers/propmanagement/) |
 | [Staffwise](servers/staffwise/) | scheduling | 5 | API token | [servers/staffwise/](servers/staffwise/) |
+| [Shiftbrook](servers/shiftbrook/) | scheduling | 18 | API token | [servers/shiftbrook/](servers/shiftbrook/) |
+| [TimeHunter](servers/timehunter/) | time-tracking | 12 | API token | [servers/timehunter/](servers/timehunter/) |
+| [ZekerFlex](servers/zekerflex/) | hr | 8 | API token | [servers/zekerflex/](servers/zekerflex/) |
+| [TotemClock](servers/totemclock/) | time-tracking | 14 | API token | [servers/totemclock/](servers/totemclock/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
