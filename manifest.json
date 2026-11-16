@@ -167196,6 +167196,613 @@
         "Show all punches for employee 1042 between 2026-11-01 and 2026-11-15.",
         "Which departments exist in our TimeTrex installation?"
       ]
+    },
+    {
+      "slug": "timestation",
+      "name": "TimeStation",
+      "category": "time-tracking",
+      "description": "Read employees, shifts and reports, and create employees or close shifts in TimeStation.",
+      "endpoint": "https://timestation.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "TimeStation API key"
+          }
+        ],
+        "hint": "Find or create it in TimeStation → **Settings → API Keys**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "timestation_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List all employees in the TimeStation account with their current status (in/out), primary and current department, and custom employee id. Good first call. GET /employees."
+        },
+        {
+          "name": "timestation_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get the details of one employee, including status, departments, and custom fields. GET /employees/{employee_id}."
+        },
+        {
+          "name": "timestation_list_employee_departments",
+          "type": "read",
+          "title": "List an employee's departments",
+          "description": "List the departments an employee belongs to (primary and secondary). GET /employees/{employee_id}/departments."
+        },
+        {
+          "name": "timestation_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List all departments in the TimeStation account. GET /departments."
+        },
+        {
+          "name": "timestation_get_department",
+          "type": "read",
+          "title": "Get a department",
+          "description": "Get the details of one department. GET /departments/{department_id}."
+        },
+        {
+          "name": "timestation_list_shifts",
+          "type": "read",
+          "title": "List an employee's shifts",
+          "description": "List the shifts of one employee (check-in and check-out times, total minutes, notes), optionally within a date range. GET /shifts."
+        },
+        {
+          "name": "timestation_get_shift",
+          "type": "read",
+          "title": "Get a shift",
+          "description": "Get the details of one shift, including its check-in and check-out times. GET /shifts/{shift_id}."
+        },
+        {
+          "name": "timestation_run_report",
+          "type": "read",
+          "title": "Run a report",
+          "description": "Run a TimeStation report and return it as CSV (first row is the header). Examples: AttendanceOnly, CurrentEmployeeStatus, DepartmentList, DepartmentSummary, DailyAttendanceAbsence (use day_date). Pass start_date and end_date for date-range reports. GET /reports/{report_id}."
+        },
+        {
+          "name": "timestation_create_employee",
+          "type": "write",
+          "title": "Create an employee",
+          "description": "Create a new employee. Provide department_id or department_name (a new department is created when the name is unknown). Creates a record: this is not idempotent. POST /employees."
+        },
+        {
+          "name": "timestation_check_out_employee",
+          "type": "write",
+          "title": "Check out an employee",
+          "description": "Check out an employee: close the employee's current open shift at time_out (or now). It acts on whatever shift is open, so do not retry blindly after a success. PUT /employees/{employee_id}/check-out."
+        },
+        {
+          "name": "timestation_close_shift",
+          "type": "write",
+          "title": "Close a shift",
+          "description": "Close an open shift at time_out (or now). PUT /shifts/{shift_id}/close."
+        },
+        {
+          "name": "timestation_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timestation_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TimeStation tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timestation_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TimeStation (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timestation_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TimeStation Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timestation_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is currently clocked in, and in which department?",
+        "Show me John's shifts for last week and his total minutes.",
+        "Run the AttendanceOnly report for 1 to 15 November.",
+        "Check out Maria at 17:00 today."
+      ]
+    },
+    {
+      "slug": "workschedule-net",
+      "name": "WorkSchedule.Net",
+      "category": "scheduling",
+      "description": "Read users, categories and time blocks, and create or update shifts in WorkSchedule.Net.",
+      "endpoint": "https://workschedule-net.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "CompanyID (digits)"
+          },
+          {
+            "label": "API user name"
+          },
+          {
+            "label": "API user passcode"
+          }
+        ],
+        "hint": "Your company needs API access. Create one user account for the API with the API role, and use only that account here. The passcode is the API user's password and is sent only to WorkSchedule.Net to start a session."
+      },
+      "tools": [
+        {
+          "name": "workschedulenet_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List every user account in the company, with names, UserID, ExternalID, role and department. Use it to find the UserID for a shift. WorkSchedule.Net API: GET /User."
+        },
+        {
+          "name": "workschedulenet_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Read one user account by UserID or ExternalID. WorkSchedule.Net API: GET /User/{id}, Lookup-Key header."
+        },
+        {
+          "name": "workschedulenet_list_category_items",
+          "type": "read",
+          "title": "List category items",
+          "description": "List every item in one category, such as Locations, Areas or Departments, with CatItemID. Use the IDs in shift CategoryItems. WorkSchedule.Net API: GET /CategoryItem/{CatName}."
+        },
+        {
+          "name": "workschedulenet_get_category_item",
+          "type": "read",
+          "title": "Get category item",
+          "description": "Read one category item by CatItemID or ExternalID. WorkSchedule.Net API: GET /CategoryItem/{CatName}/{id}, Lookup-Key header."
+        },
+        {
+          "name": "workschedulenet_get_timeblock",
+          "type": "read",
+          "title": "Get time block",
+          "description": "Read one shift or time-off block by TimeBlockID or ExternalID, from the Schedule or Attendance calendar. WorkSchedule.Net API: GET /TimeBlock/{calendar}/{id}."
+        },
+        {
+          "name": "workschedulenet_create_timeblock",
+          "type": "write",
+          "title": "Create time block",
+          "description": "Create a shift or time-off block for a user, or an open shift with user_id \"0\". This writes to the live schedule. WorkSchedule.Net API: POST /TimeBlock/{calendar}."
+        },
+        {
+          "name": "workschedulenet_update_timeblock",
+          "type": "write",
+          "title": "Update time block",
+          "description": "Change one shift or time-off block: user, times, notes, colour, external id or category items. Send only the fields to change. This writes to the live schedule. WorkSchedule.Net API: PUT /TimeBlock/{calendar}/{id}."
+        },
+        {
+          "name": "workschedulenet_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "workschedulenet_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the WorkSchedule.Net tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "workschedulenet_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for WorkSchedule.Net (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "workschedulenet_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's WorkSchedule.Net Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run workschedulenet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which users work at the Main location this week?",
+        "Create an open shift on the Schedule calendar for 9:00 to 17:00 tomorrow at Main.",
+        "Show the time block 49176 and who is assigned to it.",
+        "List the Areas and Departments set up in our company."
+      ]
+    },
+    {
+      "slug": "pawoon",
+      "name": "Pawoon",
+      "category": "Food & Beverage",
+      "description": "Read outlets, products, transactions, stock cards and sales reports in Pawoon.",
+      "endpoint": "https://pawoon.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "Create them in the Pawoon dashboard under **Integration settings** (Open API). Your client secret is used only to sign in to the Pawoon API on your behalf; it is never shown to anyone. Open API access may need a Pawoon plan that includes it."
+      },
+      "tools": [
+        {
+          "name": "pawoon_get_company",
+          "type": "read",
+          "title": "Get company",
+          "description": "Return the company profile, business information and notification settings. Pawoon OpenAPI: GET /companies/me."
+        },
+        {
+          "name": "pawoon_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List the company payment methods, including manual and integrated ones (GoPay, OVO, DANA). Pawoon OpenAPI: GET /company-payment-methods."
+        },
+        {
+          "name": "pawoon_list_outlets",
+          "type": "read",
+          "title": "List outlets",
+          "description": "List the outlets with their address, tax and service settings. Pawoon OpenAPI: GET /outlets."
+        },
+        {
+          "name": "pawoon_list_devices",
+          "type": "read",
+          "title": "List devices",
+          "description": "List the registered POS devices. Pawoon OpenAPI: GET /devices."
+        },
+        {
+          "name": "pawoon_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the staff accounts of the company. Pawoon OpenAPI: GET /users."
+        },
+        {
+          "name": "pawoon_list_taxes",
+          "type": "read",
+          "title": "List taxes",
+          "description": "List the tax rules of the company. Pawoon OpenAPI: GET /taxes."
+        },
+        {
+          "name": "pawoon_list_services",
+          "type": "read",
+          "title": "List service charges",
+          "description": "List the service charge rules of the company. Pawoon OpenAPI: GET /services."
+        },
+        {
+          "name": "pawoon_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the customers (name, contact, member id). Pawoon OpenAPI: GET /customers."
+        },
+        {
+          "name": "pawoon_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Return one customer by id. Pawoon OpenAPI: GET /customers/{customer_id}."
+        },
+        {
+          "name": "pawoon_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products of an outlet with price, category and stock unit. Pawoon OpenAPI: GET /products?outlet_id."
+        },
+        {
+          "name": "pawoon_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Return one product with its details. Pawoon OpenAPI: GET /products/{product_id}."
+        },
+        {
+          "name": "pawoon_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List the product categories. Pawoon OpenAPI: GET /products/categories."
+        },
+        {
+          "name": "pawoon_list_product_variants",
+          "type": "read",
+          "title": "List product variants",
+          "description": "List the variants of one product (size, colour, and so on). Pawoon OpenAPI: GET /products/{product_id}/variants."
+        },
+        {
+          "name": "pawoon_list_modifier_groups",
+          "type": "read",
+          "title": "List modifier groups",
+          "description": "List the modifier groups attached to one product. Pawoon OpenAPI: GET /products/{product_id}/modifier-groups."
+        },
+        {
+          "name": "pawoon_list_modifiers",
+          "type": "read",
+          "title": "List modifiers",
+          "description": "List the modifiers of one modifier group. Pawoon OpenAPI: GET /modifier-groups/{modifier_group_id}/modifiers."
+        },
+        {
+          "name": "pawoon_list_stock_cards",
+          "type": "read",
+          "title": "List stock cards",
+          "description": "Return the stock report per product: beginning stock, stock in, stock out and sales. Pawoon OpenAPI: GET /stock-cards."
+        },
+        {
+          "name": "pawoon_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List the purchase orders. Pawoon OpenAPI: GET /purchase-orders."
+        },
+        {
+          "name": "pawoon_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List the suppliers, with paging. Pawoon OpenAPI: GET /suppliers."
+        },
+        {
+          "name": "pawoon_list_promos",
+          "type": "read",
+          "title": "List promos",
+          "description": "List the promos of an outlet (promo type, dates), with paging. Pawoon OpenAPI: GET /outlets/{outlet_id}/promos."
+        },
+        {
+          "name": "pawoon_get_promo",
+          "type": "read",
+          "title": "Get promo detail",
+          "description": "Return the detail of one promo. Pawoon OpenAPI: GET /promos/{promo_id}/detail."
+        },
+        {
+          "name": "pawoon_list_vouchers",
+          "type": "read",
+          "title": "List vouchers",
+          "description": "List the vouchers of an outlet (code, type, amount, validity, quota, used). Pawoon OpenAPI: GET /vouchers?outlet_id."
+        },
+        {
+          "name": "pawoon_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List sales transactions (receipt code, outlet, cashier, totals). The vendor documents no filters for this list. Pawoon OpenAPI: GET /transactions."
+        },
+        {
+          "name": "pawoon_get_transaction_payments",
+          "type": "read",
+          "title": "Get transaction payments",
+          "description": "List the payments of one transaction. Pawoon OpenAPI: GET /transactions/{transaction_id}/payments."
+        },
+        {
+          "name": "pawoon_get_transaction_items",
+          "type": "read",
+          "title": "Get transaction items",
+          "description": "List the items of one transaction, with their modifiers. Pawoon OpenAPI: GET /transactions/{transaction_id}/items?include=modifiers."
+        },
+        {
+          "name": "pawoon_get_sales_summary",
+          "type": "read",
+          "title": "Get sales summary",
+          "description": "Return gross sales, discounts, refunds, net sales, taxes, services and transaction count. Pawoon OpenAPI: GET /reports/summary."
+        },
+        {
+          "name": "pawoon_get_product_sales_report",
+          "type": "read",
+          "title": "Get product sales report",
+          "description": "Return sales per product, category and SKU. Pawoon OpenAPI: GET /reports/product-sales."
+        },
+        {
+          "name": "pawoon_get_payment_method_report",
+          "type": "read",
+          "title": "Get payment method report",
+          "description": "Return the number and amount of payments per payment method. Pawoon OpenAPI: GET /reports/payment-methods."
+        },
+        {
+          "name": "pawoon_get_promo_report",
+          "type": "read",
+          "title": "Get promo report",
+          "description": "Return the use and amount of each promo. Pawoon OpenAPI: GET /reports/promos."
+        },
+        {
+          "name": "pawoon_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "pawoon_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Pawoon tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "pawoon_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Pawoon (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "pawoon_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Pawoon Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run pawoon_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which products sold best at our outlets this month?",
+        "Show the payment methods report for last week and the total per method.",
+        "Show the stock card for each product: stock in, stock out and sales.",
+        "Which customers are in our member list, and what are their contact details?"
+      ]
+    },
+    {
+      "slug": "solarplus",
+      "name": "SolarPlus",
+      "category": "crm",
+      "description": "Read contacts and contact fields, and create or update contacts in SolarPlus.",
+      "endpoint": "https://solarplus.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SolarPlus API token"
+          }
+        ],
+        "hint": "Create it in SolarPlus at **go.solarplus.co/user/api**: click **Generate new Secret Key**, then **Generate new Token**. The token is used only to call the SolarPlus API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "solarplus_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id: name, email, phone, full address, status, source, business name, categories and notes. SolarPlus API: GET /api/contact/{id}."
+        },
+        {
+          "name": "solarplus_list_contact_fields",
+          "type": "read",
+          "title": "List contact fields",
+          "description": "List the built-in contact fields with name, label, type, required flag and select options. Use it before creating or updating contacts. SolarPlus API: GET /api/contact/fields."
+        },
+        {
+          "name": "solarplus_list_custom_contact_fields",
+          "type": "read",
+          "title": "List custom contact fields",
+          "description": "List the custom contact fields this company set up, with the name to use in custom_fields. SolarPlus API: GET /api/contact/custom-fields."
+        },
+        {
+          "name": "solarplus_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a contact (a lead by default). Required: first name, last name, email and full address. Creates a new record in the SolarPlus CRM. SolarPlus API: POST /api/contact."
+        },
+        {
+          "name": "solarplus_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Change the given fields of one contact. Fields you leave out keep their current value. SolarPlus API: POST /api/contact/{id}."
+        },
+        {
+          "name": "solarplus_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "solarplus_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SolarPlus tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "solarplus_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for SolarPlus (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "solarplus_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SolarPlus Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run solarplus_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the SolarPlus contact 19670 with its status and address.",
+        "Create a lead for John Doe at 222 Exhibition St, Melbourne VIC 3000 with the email john@example.com.",
+        "Which custom contact fields does our SolarPlus account use?",
+        "Mark contact 19670 as Active and add a note that the site survey is booked."
+      ]
     }
   ]
 }

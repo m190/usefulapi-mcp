@@ -986,6 +986,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Linga POS](servers/linga-pos/) | Food & Beverage | 12 | API token | [servers/linga-pos/](servers/linga-pos/) |
 | [SleekFlow](servers/sleekflow/) | messaging | 29 | API token | [servers/sleekflow/](servers/sleekflow/) |
 | [TimeTrex](servers/timetrex/) | time-tracking | 8 | API token | [servers/timetrex/](servers/timetrex/) |
+| [TimeStation](servers/timestation/) | time-tracking | 15 | API token | [servers/timestation/](servers/timestation/) |
+| [WorkSchedule.Net](servers/workschedule-net/) | scheduling | 11 | API token | [servers/workschedule-net/](servers/workschedule-net/) |
+| [Pawoon](servers/pawoon/) | Food & Beverage | 32 | API token | [servers/pawoon/](servers/pawoon/) |
+| [SolarPlus](servers/solarplus/) | crm | 9 | API token | [servers/solarplus/](servers/solarplus/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
