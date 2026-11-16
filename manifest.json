@@ -169021,6 +169021,429 @@
         "Record a CLOCK_OUT for employee 7f1c… at 17:30 with the same externalId on retry.",
         "Give me the monthly timesheet for September for each project."
       ]
+    },
+    {
+      "slug": "mijornada",
+      "name": "MiJornada",
+      "category": "time-tracking",
+      "description": "Read employees, work hours, absences, projects and statements to invoice in MiJornada.",
+      "endpoint": "https://mijornada.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "MiJornada API key"
+          }
+        ],
+        "hint": "Create the key in MiJornada under **Company > Integrations**. Only the company owner can create it. Give it the read scopes you need. The key is used only to call the MiJornada API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "mijornada_get_account",
+          "type": "read",
+          "title": "Get account and key",
+          "description": "Return the company (name, time zone) and the key this server uses: its scopes and purpose. Use it to test the connection. MiJornada API: GET /me."
+        },
+        {
+          "name": "mijornada_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the people in the company, with name, email, employee code, worksite and status. Filter by exact email, employee code, worksite or status. MiJornada API: GET /employees (scope employees:read)."
+        },
+        {
+          "name": "mijornada_get_employee",
+          "type": "read",
+          "title": "Get employee",
+          "description": "Return one employee by id. MiJornada API: GET /employees/{id} (scope employees:read)."
+        },
+        {
+          "name": "mijornada_list_worksites",
+          "type": "read",
+          "title": "List worksites",
+          "description": "List the company's workplaces (worksites). Use the ids as worksite_id filters. MiJornada API: GET /worksites (scope employees:read)."
+        },
+        {
+          "name": "mijornada_list_workdays",
+          "type": "read",
+          "title": "List working days",
+          "description": "List one row per person and day: worked minutes, breaks, first clock-in, last clock-out, and whether an approved correction applies. These are the figures in force, so use this for payroll. Window: up to 93 days. Pass include_timeline to add each day's movements. MiJornada API: GET /workdays (scope time:read)."
+        },
+        {
+          "name": "mijornada_list_time_events",
+          "type": "read",
+          "title": "List clock events",
+          "description": "List the raw clock events (in, break, out) in time order. Approved corrections do not change these rows: use mijornada_list_workdays for the figures in force. Window: up to 93 days. MiJornada API: GET /time-events (scope time:read)."
+        },
+        {
+          "name": "mijornada_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List vacations and other absences that overlap the range: type, dates, state and days. Medical leave appears as a plain absence, with no reason or documents. Window: up to a year. MiJornada API: GET /absences (scope absences:read)."
+        },
+        {
+          "name": "mijornada_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the clients the company works for. Archived clients are left out unless include_archived is true. MiJornada API: GET /clients (scope projects:read)."
+        },
+        {
+          "name": "mijornada_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List the jobs, sites or assignments the company tracks hours against. Filter by state or client. Rates and money budgets appear only when the key has billing:read. MiJornada API: GET /projects (scope projects:read)."
+        },
+        {
+          "name": "mijornada_list_project_time",
+          "type": "read",
+          "title": "List project hours",
+          "description": "List minutes per person, day, project and activity. A day's lines add up to the minutes worked that day; time on no project has no project_id. Window: up to 93 days. MiJornada API: GET /project-time (scope projects:read)."
+        },
+        {
+          "name": "mijornada_list_valuations",
+          "type": "read",
+          "title": "List statements to invoice",
+          "description": "List issued statements to invoice: approved hours, materials and other lines, priced, with VAT per line. They are not invoices and have no tax validity. Drafts are not listed. Window: up to a year of issue dates. MiJornada API: GET /valuations (scope billing:read)."
+        },
+        {
+          "name": "mijornada_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mijornada_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the MiJornada tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mijornada_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for MiJornada (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mijornada_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's MiJornada Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mijornada_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which employees worked more than 40 hours in the week of 2026-10-05?",
+        "List the absences approved for the team in November 2026.",
+        "How many project hours did we log against client Acme last month?",
+        "Give me the worked and break minutes per person for October, for payroll."
+      ]
+    },
+    {
+      "slug": "quickinvoice",
+      "name": "QuickInvoice",
+      "category": "billing",
+      "description": "Read and create invoices, and read customers, products and services in QuickInvoice.",
+      "endpoint": "https://quickinvoice.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "QuickInvoice API key"
+          }
+        ],
+        "hint": "Create a key in QuickInvoice → **Settings → API and Integrations**. New keys are read-only by default. Enable **invoices:write** to let the server create invoices. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "quickinvoice_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices of the company that owns the API key, newest first. Filter by status, type, customer, search text or date range. Uses GET /api/v1/invoices."
+        },
+        {
+          "name": "quickinvoice_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice by id, with its lines, totals, status and customer. Uses GET /api/v1/invoices/{id}."
+        },
+        {
+          "name": "quickinvoice_create_invoice",
+          "type": "write",
+          "title": "Create an invoice",
+          "description": "Create an invoice for the company that owns the API key (POST /api/v1/invoices). unit_price is the NET price per unit; VAT is computed from tax_rate. A new invoice can use a number in its series. Confirm the customer, lines, amounts and series with the user before calling. Needs the invoices:write key permission."
+        },
+        {
+          "name": "quickinvoice_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers of the company, with optional text search. Uses GET /api/v1/customers."
+        },
+        {
+          "name": "quickinvoice_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer by id. Uses GET /api/v1/customers/{id}."
+        },
+        {
+          "name": "quickinvoice_list_products",
+          "type": "read",
+          "title": "List products and services",
+          "description": "List the company's products and services (read-only in the API), with optional search, category and type filters. Uses GET /api/v1/products."
+        },
+        {
+          "name": "quickinvoice_get_product",
+          "type": "read",
+          "title": "Get a product or service",
+          "description": "Get one product or service by id, with its price and VAT rate. Uses GET /api/v1/products/{id}."
+        },
+        {
+          "name": "quickinvoice_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "quickinvoice_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the QuickInvoice tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "quickinvoice_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for QuickInvoice (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "quickinvoice_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's QuickInvoice Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run quickinvoice_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are overdue for our company, and how much is still open?",
+        "Find the customer with tax id RO12345678 and show their last invoices.",
+        "Create an invoice for SC Exemplu SRL: two hours of consulting at 250 RON net, 21% VAT.",
+        "List our services and their prices."
+      ]
+    },
+    {
+      "slug": "wobaka",
+      "name": "Wobaka",
+      "category": "crm",
+      "description": "Read contacts, tasks and pipelines; create contacts, tasks, notes and opportunities in Wobaka.",
+      "endpoint": "https://wobaka.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Wobaka API key"
+          }
+        ],
+        "hint": "Create or copy a key at **app.wobaka.com/settings/api**. The key acts as your user. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "wobaka_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List active contacts (or archived ones with show_archived). Filter by search text, status, owner, tags, or company vs person. Wobaka API: GET /contacts."
+        },
+        {
+          "name": "wobaka_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Show one contact with its custom attributes and related contacts. Wobaka API: GET /contacts/:id."
+        },
+        {
+          "name": "wobaka_get_contact_feed",
+          "type": "read",
+          "title": "Get a contact's feed",
+          "description": "Show the timeline of one contact: notes, messages, emails, automation messages and actions, each with a type field. Wobaka API: GET /contacts/:id/feed."
+        },
+        {
+          "name": "wobaka_list_contact_notes",
+          "type": "read",
+          "title": "List a contact's notes",
+          "description": "List all notes on one contact, oldest first (not paginated). Wobaka API: GET /contacts/:id/notes."
+        },
+        {
+          "name": "wobaka_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List open tasks (or completed ones with show_done) across the company. Filter by assignee or search text. Wobaka API: GET /tasks."
+        },
+        {
+          "name": "wobaka_list_contact_tasks",
+          "type": "read",
+          "title": "List a contact's tasks",
+          "description": "List all tasks for one contact, newest first (not paginated). Wobaka API: GET /contacts/:id/tasks."
+        },
+        {
+          "name": "wobaka_get_company",
+          "type": "read",
+          "title": "Show the company",
+          "description": "Show the company name and id of the account this key belongs to. Wobaka API: GET /company."
+        },
+        {
+          "name": "wobaka_list_members",
+          "type": "read",
+          "title": "List members",
+          "description": "List the company members (active and inactive) with their ids, for owner and assignee fields (not paginated). Wobaka API: GET /members."
+        },
+        {
+          "name": "wobaka_list_statuses",
+          "type": "read",
+          "title": "List contact statuses",
+          "description": "List the contact statuses in display order, for status_id fields (not paginated). Wobaka API: GET /statuses."
+        },
+        {
+          "name": "wobaka_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the sales pipelines with their stages in order (not paginated). Use a stage id, not a pipeline id, when creating an opportunity. Wobaka API: GET /pipelines."
+        },
+        {
+          "name": "wobaka_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a contact owned by the key's user. A person contact needs a first name, last name, email, or company; a company contact needs company. Wobaka API: POST /contacts."
+        },
+        {
+          "name": "wobaka_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Change the given fields of one contact. The tool reads the contact first and keeps every field you do not pass, because Wobaka replaces the whole contact on update. Wobaka API: GET then PUT /contacts/:id."
+        },
+        {
+          "name": "wobaka_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task assigned to a company member, optionally linked to a contact. Wobaka API: POST /tasks."
+        },
+        {
+          "name": "wobaka_create_note",
+          "type": "write",
+          "title": "Add a note to a contact",
+          "description": "Add a note to one contact; the author and timestamps are set by Wobaka. Wobaka API: POST /notes."
+        },
+        {
+          "name": "wobaka_create_opportunity",
+          "type": "write",
+          "title": "Create an opportunity",
+          "description": "Create a sales opportunity on a contact in a pipeline stage. The contact, stage and assignee must belong to the company. Wobaka API: POST /opportunities."
+        },
+        {
+          "name": "wobaka_update_opportunity",
+          "type": "write",
+          "title": "Update an opportunity",
+          "description": "Change the given fields of one opportunity (for example move it to another stage). Fields you do not pass are kept. Set archived_at to mark it lost; set it to null to restore it. Wobaka API: PUT /opportunities/:id."
+        },
+        {
+          "name": "wobaka_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "wobaka_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Wobaka tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "wobaka_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Wobaka (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "wobaka_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Wobaka Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run wobaka_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which contacts did we add this week, and who owns each one?",
+        "Show me the open tasks due this week for Richard Hendricks.",
+        "Move the Big deal opportunity to the Demo stage.",
+        "Add a note to Bruce Wayne's contact: he asked for a pricing call on Monday."
+      ]
     }
   ]
 }

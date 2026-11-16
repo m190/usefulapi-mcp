@@ -999,6 +999,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TimeHunter](servers/timehunter/) | time-tracking | 12 | API token | [servers/timehunter/](servers/timehunter/) |
 | [ZekerFlex](servers/zekerflex/) | hr | 8 | API token | [servers/zekerflex/](servers/zekerflex/) |
 | [TotemClock](servers/totemclock/) | time-tracking | 14 | API token | [servers/totemclock/](servers/totemclock/) |
+| [MiJornada](servers/mijornada/) | time-tracking | 15 | API token | [servers/mijornada/](servers/mijornada/) |
+| [QuickInvoice](servers/quickinvoice/) | billing | 11 | API token | [servers/quickinvoice/](servers/quickinvoice/) |
+| [Wobaka](servers/wobaka/) | crm | 20 | API token | [servers/wobaka/](servers/wobaka/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
