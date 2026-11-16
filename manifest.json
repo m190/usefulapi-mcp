@@ -169444,6 +169444,666 @@
         "Move the Big deal opportunity to the Demo stage.",
         "Add a note to Bruce Wayne's contact: he asked for a pricing call on Monday."
       ]
+    },
+    {
+      "slug": "orkelis",
+      "name": "Orkelis",
+      "category": "scheduling",
+      "description": "Read agents, plannings, absences and time entries; add, change and cancel records in Orkelis.",
+      "endpoint": "https://orkelis.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Orkelis API key"
+          }
+        ],
+        "hint": "Create it in Orkelis → **Clés API** as an admin on a Pro or Enterprise plan. Give it the scopes you need (read:users, read:plannings, read:absences, read:time-entries, and the write scopes if you want changes). The key is shown once. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "orkelis_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the agents (users) of the account, paginated. Filter by status (for example ACTIVE). Orkelis GET /api/v1/public/users. Scope read:users."
+        },
+        {
+          "name": "orkelis_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one agent (user) by id. Orkelis GET /api/v1/public/users/{id}. Scope read:users."
+        },
+        {
+          "name": "orkelis_create_user",
+          "type": "write",
+          "title": "Add a user",
+          "description": "Create an agent (user) in the account. Orkelis POST /api/v1/public/users. Scope write:users. Role is AGENT for a staff member."
+        },
+        {
+          "name": "orkelis_update_user",
+          "type": "write",
+          "title": "Update a user",
+          "description": "Change fields of an agent (user). Only the fields you pass change. Orkelis PATCH /api/v1/public/users/{id}. Scope write:users."
+        },
+        {
+          "name": "orkelis_deactivate_user",
+          "type": "write",
+          "title": "Deactivate a user",
+          "description": "Deactivate an agent (user). The agent stays in the account but is no longer scheduled. Orkelis DELETE /api/v1/public/users/{id}. Scope write:users."
+        },
+        {
+          "name": "orkelis_list_plannings",
+          "type": "read",
+          "title": "List plannings",
+          "description": "List planning assignments and shifts between two dates, with optional service, agent and shift type filters. Orkelis GET /api/v1/public/plannings. Scope read:plannings."
+        },
+        {
+          "name": "orkelis_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absences and leave requests, with optional date range, agent and type filters. Orkelis GET /api/v1/public/absences. Scope read:absences."
+        },
+        {
+          "name": "orkelis_create_absence",
+          "type": "write",
+          "title": "Add an absence",
+          "description": "Create an absence or leave request for an agent. Orkelis POST /api/v1/public/absences. Scope write:absences."
+        },
+        {
+          "name": "orkelis_cancel_absence",
+          "type": "write",
+          "title": "Cancel an absence",
+          "description": "Cancel an absence or leave request. Orkelis DELETE /api/v1/public/absences/{id}. Scope write:absences."
+        },
+        {
+          "name": "orkelis_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List clock-in and clock-out time entries between two dates, with optional agent and method filters. Orkelis GET /api/v1/public/time-entries. Scope read:time-entries."
+        },
+        {
+          "name": "orkelis_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "orkelis_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Orkelis tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "orkelis_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Orkelis (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "orkelis_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Orkelis Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run orkelis_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which agents are active in our account right now?",
+        "Show the plannings for next week for the night shift.",
+        "List the absence requests from this month and their types.",
+        "Add a sick-leave absence for an agent from tomorrow for two days."
+      ]
+    },
+    {
+      "slug": "nextagency",
+      "name": "NextAgency",
+      "category": "crm",
+      "description": "Read cases, contacts, tasks, notes and benefits; add cases, notes and tasks in NextAgency.",
+      "endpoint": "https://nextagency.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [
+          {
+            "label": "NextAgency address"
+          },
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Secret ID"
+          }
+        ],
+        "hint": "Your NextAgency address is the part before **.nextbroker.io**, for example **youragency**. The API is an add-on: an administrator of your agency must enable it. This server reads cases, contacts, tasks, notes, benefits, employees and users, and it can create cases, case notes and case tasks. It never deletes anything. Social security numbers, tax ids and Medicare ids are removed from the record fields, and SSNs in note text are masked. It can see only what your NextAgency user can see. You can revoke access any time in NextAgency.",
+        "customerClient": true,
+        "appHint": "Your agency administrator enables the API under **Settings > Integrations > API** and copies the Client ID and Secret ID there. Add the redirect URL **https://nextagency.usefulapi.io/callback** to the application. Enter the Client ID and Secret ID on the next page. The secret is stored encrypted and is used only to sign you in and refresh your NextAgency access."
+      },
+      "tools": [
+        {
+          "name": "nextagency_get_profile",
+          "type": "read",
+          "title": "Get my profile",
+          "description": "The NextAgency user the token acts as: id, name, email and role. Use it to check the connection."
+        },
+        {
+          "name": "nextagency_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The agency's users (brokers and staff): id, name, email, role. Use the id as assigned_to in nextagency_create_case_task."
+        },
+        {
+          "name": "nextagency_list_cases",
+          "type": "read",
+          "title": "List cases",
+          "description": "The cases the token can see, one page at a time: id, case number, name, sales status, stage, owner, market segment. Filter by sales status (for example Prospect or Client) or by case number. Use the id with the other case tools."
+        },
+        {
+          "name": "nextagency_search_cases",
+          "type": "read",
+          "title": "Search cases",
+          "description": "Cases whose name, number or contact details match the query, one page at a time."
+        },
+        {
+          "name": "nextagency_get_case",
+          "type": "read",
+          "title": "Get a case",
+          "description": "One case by id: its details, status, stage, owner and addresses."
+        },
+        {
+          "name": "nextagency_list_case_contacts",
+          "type": "read",
+          "title": "List a case's contacts",
+          "description": "The contacts linked to one case, with the primary flag. Use nextagency_get_contact for one contact."
+        },
+        {
+          "name": "nextagency_list_case_employees",
+          "type": "read",
+          "title": "List a case's employees",
+          "description": "The employees of one case (group business): name, employment type, start and termination dates, pay cycle."
+        },
+        {
+          "name": "nextagency_list_case_custom_fields",
+          "type": "read",
+          "title": "List a case's custom fields",
+          "description": "The custom fields of one case, with their names and values."
+        },
+        {
+          "name": "nextagency_list_case_benefits",
+          "type": "read",
+          "title": "List a case's benefits",
+          "description": "The insurance benefits (policies) of one case: type, carrier and features."
+        },
+        {
+          "name": "nextagency_list_case_tasks",
+          "type": "read",
+          "title": "List a case's tasks",
+          "description": "The tasks of one case: title, stage, type, priority, due date and assignees."
+        },
+        {
+          "name": "nextagency_get_case_task",
+          "type": "read",
+          "title": "Get a case task",
+          "description": "One task of a case by id."
+        },
+        {
+          "name": "nextagency_list_case_notes",
+          "type": "read",
+          "title": "List a case's notes",
+          "description": "The notes of one case: title, body, pinned flag, author and assignees. Use nextagency_get_case_note for one note."
+        },
+        {
+          "name": "nextagency_get_case_note",
+          "type": "read",
+          "title": "Get a case note",
+          "description": "One note of a case by id, with its full body."
+        },
+        {
+          "name": "nextagency_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "The agency's contacts, one page at a time: name, emails, phone numbers and addresses."
+        },
+        {
+          "name": "nextagency_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Contacts whose name, email or details match the query, one page at a time."
+        },
+        {
+          "name": "nextagency_find_contacts_by_phone",
+          "type": "read",
+          "title": "Find contacts by phone number",
+          "description": "The contacts that have this phone number. Enter the digits only, for example 5551234567."
+        },
+        {
+          "name": "nextagency_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "One contact by id: name, emails, phone numbers and addresses."
+        },
+        {
+          "name": "nextagency_list_carriers",
+          "type": "read",
+          "title": "List carriers",
+          "description": "The insurance carriers in the agency's list: name, states and contact details."
+        },
+        {
+          "name": "nextagency_list_sub_agents",
+          "type": "read",
+          "title": "List sub-agents",
+          "description": "The sub-agents (vendors and individual agents) of the agency."
+        },
+        {
+          "name": "nextagency_create_case",
+          "type": "write",
+          "title": "Create a case",
+          "description": "WRITE: create a new case. Give a name, or a first name for an individual (market_segment individual). The API checks the whole request first: an invalid request stores nothing. Returns the new case."
+        },
+        {
+          "name": "nextagency_create_case_note",
+          "type": "write",
+          "title": "Add a case note",
+          "description": "WRITE: add a note to one case. Use the title for a short label and the body for the text. Returns the new note."
+        },
+        {
+          "name": "nextagency_create_case_task",
+          "type": "write",
+          "title": "Add a case task",
+          "description": "WRITE: add a task to one case. The due date uses the format of the vendor example: DD-MM-YYYY HH:MM AM UTC. assigned_to takes user ids from nextagency_list_users. Returns the new task."
+        },
+        {
+          "name": "nextagency_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "nextagency_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the NextAgency tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "nextagency_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for NextAgency (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "nextagency_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's NextAgency Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run nextagency_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which cases are still Prospects, and who owns them?",
+        "Show the open tasks of the case for Jane Smith, with their due dates.",
+        "Find the contact with the phone number 5551234567.",
+        "Add a note to the case 42291: the client asked for a renewal quote."
+      ]
+    },
+    {
+      "slug": "staffsavvy",
+      "name": "StaffSavvy",
+      "category": "time-tracking",
+      "description": "Read shifts, time entries, absences, staff accounts, venues and groups in StaffSavvy.",
+      "endpoint": "https://staffsavvy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "StaffSavvy login address"
+          },
+          {
+            "label": "API User ID"
+          },
+          {
+            "label": "API key"
+          }
+        ],
+        "hint": "Create them in StaffSavvy under **System → Levels & Permissions**: give the API user the general API permission, then copy the ID and key from its **API Access** page. Your key is used only to call the API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "staffsavvy_get_info",
+          "type": "read",
+          "title": "Get StaffSavvy version",
+          "description": "Return the StaffSavvy software version and API version for this instance. A good first call to check the connection. API: GET /api/v1/info."
+        },
+        {
+          "name": "staffsavvy_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List shifts on the rota: start and end times, the account, group, venue and task. Filter by event or by field, e.g. start=gte:2026-01-01. API: GET /api/v1/shifts."
+        },
+        {
+          "name": "staffsavvy_get_shift",
+          "type": "read",
+          "title": "Get shift",
+          "description": "Return one shift by its numeric id. API: GET /api/v1/shifts/{shiftid}."
+        },
+        {
+          "name": "staffsavvy_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List recorded time entries (worked hours): start, end, account, group, venue and pay element. Filter by event or by field. API: GET /api/v1/time-entries."
+        },
+        {
+          "name": "staffsavvy_list_absences",
+          "type": "read",
+          "title": "List absences",
+          "description": "List absence periods (holiday, sickness and other absences) with their dates and types. Filter by field. API: GET /api/v1/absences."
+        },
+        {
+          "name": "staffsavvy_list_accounts",
+          "type": "read",
+          "title": "List staff accounts",
+          "description": "List staff accounts with names, contact details and levels. This returns personal data about staff. API: GET /api/v1/accounts."
+        },
+        {
+          "name": "staffsavvy_list_venues",
+          "type": "read",
+          "title": "List venues",
+          "description": "List the venues (sites or locations) set up in StaffSavvy. API: GET /api/v1/venues."
+        },
+        {
+          "name": "staffsavvy_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List the groups (teams or departments) set up in StaffSavvy. API: GET /api/v1/groups."
+        },
+        {
+          "name": "staffsavvy_list_absence_types",
+          "type": "read",
+          "title": "List absence types",
+          "description": "List the absence types set up in StaffSavvy, e.g. holiday or sickness. API: GET /api/v1/absence-types."
+        },
+        {
+          "name": "staffsavvy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "staffsavvy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the StaffSavvy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "staffsavvy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for StaffSavvy (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "staffsavvy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's StaffSavvy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run staffsavvy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on shift at our main venue tomorrow?",
+        "List the absences booked for this month.",
+        "Show the time entries for group 5 since 1 January 2026.",
+        "Which venues and groups are set up in our StaffSavvy account?"
+      ]
+    },
+    {
+      "slug": "quendoo",
+      "name": "Quendoo",
+      "category": "property-management",
+      "description": "Read rooms, rates and bookings; set availability, rates, restrictions; book and cancel in Quendoo.",
+      "endpoint": "https://quendoo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Quendoo Connect API token"
+          }
+        ],
+        "hint": "Create it in Quendoo → **PEM systems → Quendoo Connect → API tokens**. It starts with **qc_** and is shown once. Writes take effect only when the hotel sets the property to live; until then they are checked but not stored."
+      },
+      "tools": [
+        {
+          "name": "quendoo_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List the hotel properties this token reaches, with name, type, currency, star rating and mode (shadow or live). Good first call to get a property_id. Connect API: GET /properties."
+        },
+        {
+          "name": "quendoo_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Read one property: address, contact details, check-in and check-out times, currency and mode. Connect API: GET /properties/{property_id}."
+        },
+        {
+          "name": "quendoo_get_structure",
+          "type": "read",
+          "title": "Get property structure",
+          "description": "Read the whole structure of one property: room types, rate plans and their links. One call instead of several. Connect API: GET /properties/{property_id}/structure."
+        },
+        {
+          "name": "quendoo_list_room_types",
+          "type": "read",
+          "title": "List room types",
+          "description": "List the room types of one property, with capacity, quantity and partner code. Connect API: GET /properties/{property_id}/room_types."
+        },
+        {
+          "name": "quendoo_list_rate_plans",
+          "type": "read",
+          "title": "List rate plans",
+          "description": "List the rate plans of one property: room type, meal plan, cancellation and payment policy, and occupancy rates. Connect API: GET /properties/{property_id}/rate_plans."
+        },
+        {
+          "name": "quendoo_get_availability",
+          "type": "read",
+          "title": "Get availability",
+          "description": "Read the calendar per day and room type: rooms open, booked and free to sell. Use a date range of a few weeks. Connect API: GET /properties/{property_id}/availability."
+        },
+        {
+          "name": "quendoo_get_rates",
+          "type": "read",
+          "title": "Get rates",
+          "description": "Read the prices and restrictions of one rate plan over a date range. Connect API: GET /properties/{property_id}/rate_plans/{rate_plan_id}/rates."
+        },
+        {
+          "name": "quendoo_search_offers",
+          "type": "read",
+          "title": "Search booking offers",
+          "description": "Search the offers a property sells for dates and a party. Returns each offer with a search_token (valid 30 minutes) to book with quendoo_book_from_search. Connect API: GET /properties/{property_id}/booking_offers."
+        },
+        {
+          "name": "quendoo_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings of one property, filtered by check-in or check-out window, status or guest name. Connect API: GET /properties/{property_id}/bookings."
+        },
+        {
+          "name": "quendoo_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Read one booking: status, payment status, dates, total amount and payment plan. Connect API: GET /properties/{property_id}/bookings/{booking_id}."
+        },
+        {
+          "name": "quendoo_get_cancellation_quote",
+          "type": "read",
+          "title": "Get a cancellation quote",
+          "description": "Read what cancelling a booking costs today, under its cancellation policy. Makes no change. Connect API: GET /properties/{property_id}/bookings/{booking_id}/cancellation_quote."
+        },
+        {
+          "name": "quendoo_list_booking_revisions",
+          "type": "read",
+          "title": "List booking changes",
+          "description": "Read the booking change feed: created, changed and cancelled bookings not yet acknowledged. Pass next_cursor as since to continue. Reading does not acknowledge. Connect API: GET /booking_revisions/feed."
+        },
+        {
+          "name": "quendoo_update_availability",
+          "type": "write",
+          "title": "Update availability",
+          "description": "Set the rooms to sell, and open or close room types, for date ranges. Send up to 1000 rows per call; a row covers a date range. Connect API: POST /properties/{property_id}/inventory/availability. Writes take effect only when the property is live. In shadow mode the answer has dry: true and nothing is stored."
+        },
+        {
+          "name": "quendoo_update_rates",
+          "type": "write",
+          "title": "Update rates",
+          "description": "Set the price of a rate plan on a room type for date ranges. Send up to 1000 rows per call. Connect API: POST /properties/{property_id}/inventory/rates. Writes take effect only when the property is live. In shadow mode the answer has dry: true and nothing is stored."
+        },
+        {
+          "name": "quendoo_update_restrictions",
+          "type": "write",
+          "title": "Update restrictions",
+          "description": "Set stay restrictions (minimum or maximum nights, stop sell, closed to arrival or departure) for date ranges. Send up to 900 rows per call. Connect API: POST /properties/{property_id}/inventory/restrictions. Writes take effect only when the property is live. In shadow mode the answer has dry: true and nothing is stored."
+        },
+        {
+          "name": "quendoo_book_from_search",
+          "type": "write",
+          "title": "Book from a search",
+          "description": "Create a real booking from a search_token and the offers the guest chose. Confirm the guest, dates and price first. Returns the payment_url to send to the guest. Connect API: POST /properties/{property_id}/bookings/from_search. Writes take effect only when the property is live. In shadow mode the answer has dry: true and nothing is stored."
+        },
+        {
+          "name": "quendoo_cancel_booking",
+          "type": "write",
+          "title": "Cancel a booking",
+          "description": "Cancel a whole booking. Read quendoo_get_cancellation_quote first and confirm the cost with the user. Connect API: POST /properties/{property_id}/bookings/{booking_id}/cancel."
+        },
+        {
+          "name": "quendoo_ack_booking_revision",
+          "type": "write",
+          "title": "Acknowledge a booking change",
+          "description": "Acknowledge one booking change from quendoo_list_booking_revisions after you saved it. Acknowledging the same change again is safe. Connect API: POST /booking_revisions/{id}/ack."
+        },
+        {
+          "name": "quendoo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "quendoo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Quendoo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "quendoo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Quendoo (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "quendoo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Quendoo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run quendoo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which rooms are still free in our hotel from 1 to 5 December?",
+        "Show me all bookings checking in this weekend and their payment status.",
+        "What does cancelling booking 4821 cost today?",
+        "Close the suite for 20 to 23 January and set a minimum stay of 2 nights on the flexible rate."
+      ]
     }
   ]
 }

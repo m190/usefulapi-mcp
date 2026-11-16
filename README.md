@@ -1002,6 +1002,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MiJornada](servers/mijornada/) | time-tracking | 15 | API token | [servers/mijornada/](servers/mijornada/) |
 | [QuickInvoice](servers/quickinvoice/) | billing | 11 | API token | [servers/quickinvoice/](servers/quickinvoice/) |
 | [Wobaka](servers/wobaka/) | crm | 20 | API token | [servers/wobaka/](servers/wobaka/) |
+| [Orkelis](servers/orkelis/) | scheduling | 14 | API token | [servers/orkelis/](servers/orkelis/) |
+| [NextAgency](servers/nextagency/) | crm | 26 | OAuth | [servers/nextagency/](servers/nextagency/) |
+| [StaffSavvy](servers/staffsavvy/) | time-tracking | 13 | API token | [servers/staffsavvy/](servers/staffsavvy/) |
+| [Quendoo](servers/quendoo/) | property-management | 22 | API token | [servers/quendoo/](servers/quendoo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
