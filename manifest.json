@@ -170957,6 +170957,211 @@
         "Create a follow-up task for the Acme customer next Monday at 09:00.",
         "Add a note to the Jansen Bouw customer: quote sent today."
       ]
+    },
+    {
+      "slug": "decimal-pos",
+      "name": "Decimal POS",
+      "category": "retail",
+      "description": "Read products, customers, orders, invoices, vendor bills and sale history in Decimal POS.",
+      "endpoint": "https://decimal-pos.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Decimal POS API key"
+          }
+        ],
+        "hint": "Create it or copy it in the Decimal POS back office, in the **API Keys** section. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "decimalpos_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List products (item catalog: code, description, price, stock) sorted by product id. Costs 1 credit per request. Use lastMod for incremental sync. Requires the product:get scope."
+        },
+        {
+          "name": "decimalpos_get_product",
+          "type": "read",
+          "title": "Get product by id",
+          "description": "Get one product by its numeric id. Costs 1 credit. Unit price = price ÷ priceQty. Requires product:get."
+        },
+        {
+          "name": "decimalpos_get_product_by_code",
+          "type": "read",
+          "title": "Get product by code",
+          "description": "Get one product by its SKU or item code (UPC). Costs 1 credit. Requires product:get."
+        },
+        {
+          "name": "decimalpos_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List all customers, sorted by last change. Needs customer:get with all access (a sensitive scope; an own-access key gets 403). Costs 1 credit per request. Personal data: request only what the task needs."
+        },
+        {
+          "name": "decimalpos_get_customer",
+          "type": "read",
+          "title": "Get customer by id",
+          "description": "Get one customer by id (name, contact, address). Costs 1 credit. Requires customer:get."
+        },
+        {
+          "name": "decimalpos_find_customer_by_phone",
+          "type": "read",
+          "title": "Find customer by phone",
+          "description": "Find one customer by phone number (10 digits). Costs 1 credit. Requires customer:get."
+        },
+        {
+          "name": "decimalpos_get_order",
+          "type": "read",
+          "title": "Get order by id",
+          "description": "Get one order by its internal id, with items and payment. Free. Only orders created with this key."
+        },
+        {
+          "name": "decimalpos_get_order_by_external_id",
+          "type": "read",
+          "title": "Get order by external id",
+          "description": "Get one order by the external order id your system set. Free. Only orders created with this key."
+        },
+        {
+          "name": "decimalpos_get_invoice",
+          "type": "read",
+          "title": "Get invoice by id",
+          "description": "Get one invoice by its id, with lines, taxes and payments. Free. Only invoices of orders created with this key."
+        },
+        {
+          "name": "decimalpos_get_invoice_for_order",
+          "type": "read",
+          "title": "Get invoice for order",
+          "description": "Get the invoice of one order by the order's internal id. Free."
+        },
+        {
+          "name": "decimalpos_get_invoice_by_external_order_id",
+          "type": "read",
+          "title": "Get invoice by external order id",
+          "description": "Get the invoice of one order by the external order id your system set. Free."
+        },
+        {
+          "name": "decimalpos_get_invoice_by_external_invoice_id",
+          "type": "read",
+          "title": "Get invoice by external invoice id",
+          "description": "Get one invoice by the external invoice id your system set. Free."
+        },
+        {
+          "name": "decimalpos_list_sale_permissions",
+          "type": "read",
+          "title": "List items open for sale history",
+          "description": "List the item codes this key may query for sale history (GET /permissionlist). Free. Needs the store owner's sale-record grant; an empty list returns 403."
+        },
+        {
+          "name": "decimalpos_list_sale_records",
+          "type": "read",
+          "title": "List sale records for one item",
+          "description": "List invoice lines that sold one item in a date window (max 31 days). Costs 0.1 credit per row. The itemCode must be on the permission list. Sale lines carry no ticket total."
+        },
+        {
+          "name": "decimalpos_get_ticket_item_quantity",
+          "type": "read",
+          "title": "Get quantity sold on one ticket",
+          "description": "Get how many units of one item were sold on one ticket (net of returns). Costs 1 credit. A missing ticket or line returns quantity 0."
+        },
+        {
+          "name": "decimalpos_list_vendors",
+          "type": "read",
+          "title": "List vendors",
+          "description": "List suppliers, ordered by vendor code. Costs 1 credit per request. Needs the vendor:get scope with all access."
+        },
+        {
+          "name": "decimalpos_get_vendor",
+          "type": "read",
+          "title": "Get vendor by code",
+          "description": "Get one vendor by its vendor code, with address, contact and payment terms. Costs 1 credit."
+        },
+        {
+          "name": "decimalpos_list_vendor_products",
+          "type": "read",
+          "title": "List vendor products",
+          "description": "List one vendor's catalog: item numbers, pack sizes and prices (pricedPer Case or Each). Costs 1 credit per request. Paginated: send cursor back unchanged."
+        },
+        {
+          "name": "decimalpos_list_bills",
+          "type": "read",
+          "title": "List vendor bills",
+          "description": "List vendor bills (purchase invoices) with items; credit memos included. Free. Only bills created with this key. Send the same filters with every cursor."
+        },
+        {
+          "name": "decimalpos_get_bill",
+          "type": "read",
+          "title": "Get vendor bill by id",
+          "description": "Get one vendor bill by id, with items, amounts paid and balance. Free. Only bills created with this key."
+        },
+        {
+          "name": "decimalpos_find_bills_by_invoice_number",
+          "type": "read",
+          "title": "Find vendor bills by invoice number",
+          "description": "Find every bill with one vendor's invoice number. Free. Returns all matches; 404 when none."
+        },
+        {
+          "name": "decimalpos_list_payment_terms",
+          "type": "read",
+          "title": "List payment terms",
+          "description": "List every payment terms code the store defined (for example NET30), in one page. Costs 1 credit."
+        },
+        {
+          "name": "decimalpos_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "decimalpos_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Decimal POS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "decimalpos_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Decimal POS (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "decimalpos_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Decimal POS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run decimalpos_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What is the price and stock of the product with code 012345678905?",
+        "Show me the order with external id 10432 and its invoice.",
+        "List the vendor bills from invoice dates in October 2026.",
+        "How many units of item 012345678905 sold on ticket 10432?"
+      ]
     }
   ]
 }

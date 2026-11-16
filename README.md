@@ -1011,6 +1011,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PeopleForce](servers/peopleforce/) | hr | 25 | API token | [servers/peopleforce/](servers/peopleforce/) |
 | [UPOS Cloud POS](servers/upos-cloud-pos/) | retail | 15 | API token | [servers/upos-cloud-pos/](servers/upos-cloud-pos/) |
 | [Cirqll](servers/cirqll/) | crm | 15 | OAuth | [servers/cirqll/](servers/cirqll/) |
+| [Decimal POS](servers/decimal-pos/) | retail | 26 | API token | [servers/decimal-pos/](servers/decimal-pos/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
