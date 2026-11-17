@@ -780,7 +780,6 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [FeedLetter](servers/feedletter/) | forms-surveys | 8 | API token | [servers/feedletter/](servers/feedletter/) |
 | [MemberVault](servers/membervault/) | membership | 8 | API token | [servers/membervault/](servers/membervault/) |
 | [Documint](servers/documint/) | documents | 7 | API token | [servers/documint/](servers/documint/) |
-| [Silverfin](servers/silverfin/) | accounting-practice | 14 | OAuth | [servers/silverfin/](servers/silverfin/) |
 | [SureLC](servers/surelc/) | business-operations | 29 | API token | [servers/surelc/](servers/surelc/) |
 | [Fiix](servers/fiix/) | business-operations | 7 | API token | [servers/fiix/](servers/fiix/) |
 | [GPS Insight](servers/gps-insight/) | logistics | 19 | API token | [servers/gps-insight/](servers/gps-insight/) |
