@@ -8429,7 +8429,7 @@
           "name": "freshdesk_search_tickets",
           "type": "read",
           "title": "Search tickets",
-          "description": "Search tickets with the Freshdesk query DSL. The query VALUE is wrapped in double quotes automatically. Examples: `status:2 AND priority:3`, `created_at:>'2026-01-01'`, `agent_id:123`, `group_id:45`, `tag:'urgent'`. Freshdesk REST: GET /search/tickets."
+          "description": "Filter tickets with the Freshdesk query language. Only these fields work: agent_id, group_id, priority, status, tag, type, due_by, fr_due_by, created_at, updated_at, closed_at, and custom fields by name. There is no subject or text search; for a requester or company use freshdesk_list_tickets (requester_id, email, company_id). The query VALUE is wrapped in double quotes automatically. Examples: `status:2 AND priority:3`, `created_at:>'2026-01-01'`, `agent_id:123`, `tag:'urgent'`. Up to 30 results per page, pages 1-10. Freshdesk REST: GET /search/tickets."
         },
         {
           "name": "freshdesk_list_ticket_conversations",
@@ -8453,7 +8453,7 @@
           "name": "freshdesk_search_contacts",
           "type": "read",
           "title": "Search contacts",
-          "description": "Search contacts with the Freshdesk query DSL. The query VALUE is wrapped in double quotes automatically. Examples: `name:'ada'`, `email:'ada@example.com'`, `company_id:123`. Freshdesk REST: GET /search/contacts."
+          "description": "Filter contacts with the Freshdesk query language. Only these fields work: active, company_id, twitter_id, email, phone, mobile, tag, language, time_zone, created_at, updated_at, and custom fields by name. There is no name search. The query VALUE is wrapped in double quotes automatically. Examples: `email:'ada@example.com'`, `company_id:123`, `active:true`. Up to 30 results per page, pages 1-10. Freshdesk REST: GET /search/contacts."
         },
         {
           "name": "freshdesk_list_companies",
@@ -8552,7 +8552,7 @@
           "description": "Cancel the caller's Freshdesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run freshdesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.0",
+      "version": "1.41.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -76969,7 +76969,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.19.0",
+      "version": "1.20.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -77005,13 +77005,43 @@
           "name": "freshsales_search",
           "type": "read",
           "title": "Search records",
-          "description": "Search by name/email text across one record type: contact, sales_account (company), deal or user. Returns id, type, name and email for the matches (up to per_page, default 10). Use the id with the get tools. GET /search."
+          "description": "Search by name/email text across one record type: contact, lead (accounts with the Leads module), sales_account (company), deal or user. Returns id, type, name and email for the matches (up to per_page, default 10). Phone numbers are not a documented search field. Use the id with the get tools. GET /search."
         },
         {
           "name": "freshsales_lookup",
           "type": "read",
           "title": "Look up by exact field",
-          "description": "Exact-match lookup of contacts, companies or deals by one field, e.g. a contact by email address. field is 'email' (contacts), 'name', or a custom field name (cf_...). Returns the full records. GET /lookup."
+          "description": "Exact-match lookup of contacts, leads, companies or deals by one field, e.g. a contact by email address. field is 'email' (contacts, leads), 'name', 'company_name' (leads), or a custom field name (cf_...). Returns the full records. GET /lookup."
+        },
+        {
+          "name": "freshsales_export_contacts",
+          "type": "read",
+          "title": "Export contacts",
+          "description": "Read every contact of a view in ascending id order, up to 100 per call (fewer when the records are large), for a backup or a full export. Use the 'All Contacts' view id from freshsales_list_contact_views. Pass the reply's last_fetched_id to get the next part until has_next_page is false. Each call uses one request of the account's 1000 per hour. GET /contacts/scroll/{view_id}."
+        },
+        {
+          "name": "freshsales_delete_contact",
+          "type": "write",
+          "title": "Delete contact",
+          "description": "DESTRUCTIVE: delete ONE contact by id, only when its field match_field has exactly the value match_value (e.g. a cf_ custom field or email). The tool first reads the contact with its deals, tasks, appointments and notes. A contact with linked deals is refused unless allow_linked_deals is true. Without confirm=true nothing is deleted: the reply is a preview of the match and the linked records. With confirm=true the contact is deleted (DELETE /contacts/{id}) and read again to verify. Export or back up first (freshsales_export_contacts)."
+        },
+        {
+          "name": "freshsales_list_lead_views",
+          "type": "read",
+          "title": "List lead views",
+          "description": "List the saved lead views of an account that has the Leads module, e.g. 'My Leads', 'New Leads', 'Unassigned Leads'. A view id is needed by freshsales_list_leads. GET /leads/filters."
+        },
+        {
+          "name": "freshsales_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List the leads in a view (get view_id from freshsales_list_lead_views), 25 per page. Pages: use next_page. GET /leads/view/{view_id}."
+        },
+        {
+          "name": "freshsales_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "One lead by id with all its fields (name, email, phone numbers, company, lead stage, custom fields), optionally with related records via include (owner, source, lead_stage, notes, tasks, appointments...). GET /leads/{id}."
         },
         {
           "name": "freshsales_list_account_views",

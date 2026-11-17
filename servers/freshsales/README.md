@@ -38,6 +38,11 @@ On first connect you'll enter your **Freshsales domain and API key** (Freshsales
 | `freshsales_get_contact` | read | Get contact |
 | `freshsales_search` | read | Search records |
 | `freshsales_lookup` | read | Look up by exact field |
+| `freshsales_export_contacts` | read | Export contacts |
+| `freshsales_delete_contact` | **write** | Delete contact |
+| `freshsales_list_lead_views` | read | List lead views |
+| `freshsales_list_leads` | read | List leads |
+| `freshsales_get_lead` | read | Get lead |
 | `freshsales_list_account_views` | read | List account views |
 | `freshsales_list_accounts` | read | List accounts |
 | `freshsales_get_account` | read | Get account |
