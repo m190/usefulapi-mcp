@@ -35,6 +35,8 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `sellsy_estimate_operation_status` | read | Check draft quote operation |
 | `sellsy_get_estimate_pdf_link` | read | Get a quote PDF link |
 | `sellsy_list_estimate_files` | read | List quote attachments |
+| `sellsy_import_items` | **write** | Preview or import catalog items |
+| `sellsy_item_import_status` | read | Check a catalog import |
 | `sellsy_search` | read | Search across Sellsy |
 | `sellsy_list_companies` | read | List companies |
 | `sellsy_search_companies` | read | Search companies |

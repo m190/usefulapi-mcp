@@ -439,7 +439,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PaySpace](servers/payspace/) | billing | 25 | API token | [servers/payspace/](servers/payspace/) |
 | [Sapo](servers/sapo/) | ecommerce | 24 | API token | [servers/sapo/](servers/sapo/) |
 | [Sarbacane](servers/sarbacane/) | email | 23 | API token | [servers/sarbacane/](servers/sarbacane/) |
-| [Sellsy](servers/sellsy/) | crm | 55 | API token | [servers/sellsy/](servers/sellsy/) |
+| [Sellsy](servers/sellsy/) | crm | 57 | API token | [servers/sellsy/](servers/sellsy/) |
 | [smallinvoice](servers/smallinvoice/) | billing | 31 | API token | [servers/smallinvoice/](servers/smallinvoice/) |
 | [Smaregi](servers/smaregi/) | ecommerce | 24 | API token | [servers/smaregi/](servers/smaregi/) |
 | [Street.co.uk](servers/street-co-uk/) | real-estate | 58 | API token | [servers/street-co-uk/](servers/street-co-uk/) |
@@ -1040,6 +1040,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Zoko](servers/zoko/) | messaging | 14 | API token | [servers/zoko/](servers/zoko/) |
 | [Conta](servers/conta/) | accounting | 20 | API token | [servers/conta/](servers/conta/) |
 | [BrightHR](servers/brighthr/) | hr | 8 | API token | [servers/brighthr/](servers/brighthr/) |
+| [Simple Inventory](servers/simple-inventory/) | inventory | 15 | API token | [servers/simple-inventory/](servers/simple-inventory/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

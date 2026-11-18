@@ -79089,7 +79089,7 @@
         "Create a task for tomorrow 9am to call the contact Marie Martin, and add a note on her company.",
         "Preview a draft quote with catalog and free-text lines for a customer and opportunity, then save it after my approval."
       ],
-      "version": "1.20.2",
+      "version": "1.21.3",
       "login": {
         "kind": "key",
         "fields": [
@@ -79138,6 +79138,18 @@
           "type": "read",
           "title": "List quote attachments",
           "description": "List the files/directories attached to an estimate through its documented open-beta endpoint. Requires estimates.read and files.read. Does not upload, associate or read file contents."
+        },
+        {
+          "name": "sellsy_import_items",
+          "type": "write",
+          "title": "Preview or import catalog items",
+          "description": "WRITE: create catalog items (products or services) from rows of a supplier file, up to 25 rows per call, matched by reference so no duplicate is created. An existing reference is skipped, or updated with on_existing: update (only the given fields that differ). The preview shows, per row, create / update (before and after) / unchanged / skip; nothing is written until confirm:true with the preview_hash and the same operation_id. Each written item is read back. Prices are decimal strings (purchase_amount = purchase price, reference_price = sale price). Never deletes or archives. Needs items.read and items.write; confirmed writes need the hosted connection. Sellsy: POST /items/search, POST /items, PUT /items/{id}, GET /items/{id}."
+        },
+        {
+          "name": "sellsy_item_import_status",
+          "type": "read",
+          "title": "Check a catalog import",
+          "description": "Read the recorded outcome of a sellsy_import_items operation_id for this hosted connection (state and per-row results). Writes nothing."
         },
         {
           "name": "sellsy_search",
@@ -174925,6 +174937,145 @@
         "When did Jane Smith clock in and out this week?",
         "Which absences were approved for our team in December?",
         "Set the external reference of employee emp_8f2a to their payroll number."
+      ]
+    },
+    {
+      "slug": "simple-inventory",
+      "name": "Simple Inventory",
+      "category": "inventory",
+      "description": "Read items, stock, folders and events; change stock, items and event webhooks in Simple Inventory.",
+      "endpoint": "https://simple-inventory.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Simple Inventory API key"
+          }
+        ],
+        "hint": "Create it in Simple Inventory → **Settings → Integrations → API Keys** (Owners and Admins only). The key is shown once. Choose read, write, or both. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "simpleinventory_get_account",
+          "type": "read",
+          "title": "Get the connected account",
+          "description": "Show the organization and API key this server uses, with the key's scopes (read, write). Good first call to check the connection. Simple Inventory API: GET /me."
+        },
+        {
+          "name": "simpleinventory_list_folders",
+          "type": "read",
+          "title": "List folders",
+          "description": "List the organization's folders with their IDs and full paths. Use a folder ID as folderId when you create or move an item. Simple Inventory API: GET /folders."
+        },
+        {
+          "name": "simpleinventory_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List active (not archived) items with quantity, prices, SKU and folder. Search by name or SKU with search, or find one SKU with sku. To read every item, pass after=0 and then each response's pagination.nextAfter until hasMore is false. Simple Inventory API: GET /items."
+        },
+        {
+          "name": "simpleinventory_get_item",
+          "type": "read",
+          "title": "Get an item",
+          "description": "Get one item by ID or SKU, including archived items (archived: true). A variant group also returns its variations. Simple Inventory API: GET /items/{identifier}."
+        },
+        {
+          "name": "simpleinventory_list_recent_events",
+          "type": "read",
+          "title": "List recent events",
+          "description": "List the newest events of one type (stock changes, low or out-of-stock alerts, item created, updated or archived), newest first. Useful to test a webhook handler with real data. Simple Inventory API: GET /events."
+        },
+        {
+          "name": "simpleinventory_create_item",
+          "type": "write",
+          "title": "Create an item",
+          "description": "Create a standalone item, as adding it in the app would. It counts toward the plan's item limit and needs an organization that is not past due. Simple Inventory API: POST /items."
+        },
+        {
+          "name": "simpleinventory_update_item",
+          "type": "write",
+          "title": "Update an item's details",
+          "description": "Change an item's details (not its stock). Send only the fields to change. null clears a field, except name. Archived items cannot be changed. Simple Inventory API: PATCH /items/{identifier}."
+        },
+        {
+          "name": "simpleinventory_change_stock",
+          "type": "write",
+          "title": "Change an item's stock",
+          "description": "Set, add to, or remove from one item's stock. operation \"set\" (default) makes stock exactly quantity; \"increment\" adds; \"decrement\" removes and stops at 0. Pass idempotencyKey so a retry cannot apply twice. Simple Inventory API: PATCH /items/{identifier}/quantity."
+        },
+        {
+          "name": "simpleinventory_bulk_update_stock",
+          "type": "write",
+          "title": "Change stock on many items",
+          "description": "Change stock on 1-100 items in one request. Give each change an id or a sku. Each change applies on its own, so one failure does not stop the rest. A 200 reply can still list failed changes in errors: check success and errors. Simple Inventory API: POST /items/bulk-update."
+        },
+        {
+          "name": "simpleinventory_subscribe_webhook",
+          "type": "write",
+          "title": "Subscribe a URL to an event",
+          "description": "Send one event type to a URL you own, as a signed HTTP POST (HMAC-SHA256). The reply returns the signing secret only in the app (Settings → Integrations → Webhooks). Subscribing twice returns the existing subscription. Limit 50 API subscriptions per organization. Simple Inventory API: POST /hooks."
+        },
+        {
+          "name": "simpleinventory_unsubscribe_webhook",
+          "type": "write",
+          "title": "Remove an API subscription",
+          "description": "Remove a subscription made with simpleinventory_subscribe_webhook, with its delivery log. Webhooks added in the app are not removed here. Simple Inventory API: DELETE /hooks/{id}."
+        },
+        {
+          "name": "simpleinventory_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "simpleinventory_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Simple Inventory tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "simpleinventory_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Simple Inventory (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "simpleinventory_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Simple Inventory Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run simpleinventory_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which items are low on stock, and how many do we have left?",
+        "Take 3 blue mugs out of stock for order 1042.",
+        "Show the folders in our warehouse and how many items each holds.",
+        "Subscribe our order system to out-of-stock events."
       ]
     }
   ]
