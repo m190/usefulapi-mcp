@@ -236,3 +236,25 @@ test("sign-in hints decode HTML entities once, not as literal text", () => {
     assert.doesNotMatch(read(`${s.slug}/index.html`), /&amp;(?:rsquo|rsaquo|raquo);/, `${s.slug}: page`);
   }
 });
+
+test("every live product page and llms.txt links to Claude's prefilled dialog; others do not", () => {
+  const params = (u, s) => {
+    const url = new URL(u);
+    assert.equal(url.origin + url.pathname, "https://claude.ai/customize/connectors", s.slug);
+    assert.deepEqual([...url.searchParams], [["modal", "add-custom-connector"], ["connectorName", s.name], ["connectorUrl", s.endpoint]], s.slug);
+  };
+  let live = 0;
+  for (const s of manifest.servers) {
+    const page = read(`${s.slug}/index.html`), txt = read(`${s.slug}/llms.txt`);
+    const href = page.match(/href="(https:\/\/claude\.ai\/customize\/connectors\?[^"]+)"[^>]*>Add to Claude</)?.[1];
+    const line = txt.match(/Prefilled dialog: (\S+)/)?.[1];
+    if (s.status !== "live") { assert.equal(href, undefined, s.slug); assert.equal(line, undefined, s.slug); continue; }
+    live++;
+    assert.ok(href && line, s.slug);
+    assert.ok(!/&(?!amp;)/.test(href), `${s.slug}: unescaped & in href`);
+    params(href.replaceAll("&amp;", "&"), s);
+    params(line, s);
+  }
+  assert.ok(live > 0);
+  assert.ok(manifest.servers.some((s) => /[&'"]|[^\x00-\x7f]/.test(s.name) && s.status === "live"), "fixture: a live name with special characters");
+});

@@ -443,6 +443,9 @@ const stripTags = (h) => h.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace
 // OpenAI's own article, for accounts whose Plugins page has no "Add custom MCP server" (path checked 2026-10-09).
 const OPENAI_MCP_GUIDE = "https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt";
 
+// Claude's documented prefill link; the user still confirms the dialog (claude.com/docs/connectors/building/directory-vs-custom).
+const claudeAddLink = (s) => `https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=${encodeURIComponent(s.name)}&connectorUrl=${encodeURIComponent(s.endpoint)}`;
+
 function productPage(s) {
   const live = s.status === "live";
   const authStep = authStepFor(s);
@@ -452,10 +455,11 @@ function productPage(s) {
   // One-click install links. Cursor: base64 of the server config. VS Code: the vscode.dev redirect to vscode:mcp/install.
   const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(s.slug)}&config=${Buffer.from(JSON.stringify({ url: s.endpoint })).toString("base64")}`;
   const vscodeLink = `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(s.slug)}&config=${encodeURIComponent(JSON.stringify({ type: "http", url: s.endpoint }))}`;
+  const claudeLink = claudeAddLink(s);
   // One panel per client, shown as tabs (TABS_JS).
   const clients = [
-    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Open <b>Customize → Connectors</b>, then click <b>+ Add → Add custom connector</b>.</li>
-<li>Enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(urlShown)}</li>
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Click <a class="btn" href="${attr(claudeLink)}" rel="nofollow noopener">Add to Claude</a>. Claude opens the <b>Add custom connector</b> dialog with the name and URL filled in. Click <b>Add</b>.
+<br>In the desktop app, or if no dialog opens: open <b>Customize → Connectors</b>, click <b>+ Add → Add custom connector</b>, enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(urlShown)}</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
 <p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p>` },
@@ -990,7 +994,7 @@ function serverLlms(s) {
     `> ${mdText(what)} A hosted remote MCP server by usefulapi.io, an independent service (not affiliated with ${s.name}).\n\n` +
     `- Server URL: ${s.endpoint}\n- Transport: Streamable HTTP, OAuth sign-in\n- Status: ${s.status === "live" ? "live" : "launching soon"}\n- Page: ${pageUrl}\n\n` +
     `## Connect\n\n` +
-    `- Claude (claude.ai, Desktop): Customize → Connectors → Add custom connector, name ${s.name}, URL ${s.endpoint}.\n` +
+    `- Claude (claude.ai, Desktop): Customize → Connectors → Add custom connector, name ${s.name}, URL ${s.endpoint}. Prefilled dialog: ${claudeAddLink(s)}\n` +
     `- Claude Code: \`claude mcp add --transport http ${s.slug} ${s.endpoint}\`, then run \`/mcp\` to log in.\n` +
     `- Codex: \`codex mcp add ${s.slug} --url ${s.endpoint}\`, then \`codex mcp login ${s.slug}\`.\n` +
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
