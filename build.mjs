@@ -427,8 +427,11 @@ function faqFor(s) {
 const faqSection = (faq) => `<h2 class="sec">FAQ</h2>\n<div class="faq">${faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join("")}</div>`;
 // Hint/keyHelp markdown → HTML: everything escaped (quotes too); links only to plain https URLs.
 const SAFE_URL = /^https:\/\/[A-Za-z0-9.-]+(?:\/[A-Za-z0-9._~%\/?#=&+:,;@!-]*)?$/;
+// Some product hints carry HTML entities (&rsquo;, &rsaquo;, &raquo;); decode them once before escaping.
+const HINT_ENTITIES = { "&rsquo;": "’", "&lsquo;": "‘", "&rdquo;": "”", "&ldquo;": "“", "&rsaquo;": "›", "&lsaquo;": "‹", "&raquo;": "»", "&laquo;": "«", "&mdash;": "—", "&ndash;": "–", "&hellip;": "…", "&nbsp;": " ", "&rarr;": "→" };
+const decodeHint = (md) => String(md).replace(/&(?:rsquo|lsquo|rdquo|ldquo|rsaquo|lsaquo|raquo|laquo|mdash|ndash|hellip|nbsp|rarr);/g, (e) => HINT_ENTITIES[e]);
 function hintHtml(md) {
-  const parts = String(md).split(/(\[[^\]]+\]\([^)\s]+\))/);
+  const parts = decodeHint(md).split(/(\[[^\]]+\]\([^)\s]+\))/);
   return parts.map((p) => {
     const m = p.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
     if (m && SAFE_URL.test(m[2])) return `<a href="${attr(m[2])}" rel="nofollow noopener">${esc(m[1])}</a>`;
@@ -920,6 +923,44 @@ writeFileSync(`${outDir}/llms.txt`,
   `\n\n## Custom work\n\n- [Custom integrations and MCP servers](${base}${SERVICES_PATH}): we build new MCP servers, extra tools for an existing server, integrations and connectors between business systems (also without AI), AI assistant setups and private deployments. Contact: support@usefulapi.io, subject "Custom work".` +
   `\n\n## Optional\n\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n`);
 
+// Per-server llms.txt at /<slug>/llms.txt: the same facts as the product page (one source: the manifest and the
+// page's own FAQ), as plain Markdown for agents. A zone redirect sends <slug>.usefulapi.io/llms.txt here.
+const mdFromHtml = (html, pageUrl) => stripTags(String(html)
+  .replace(/<a href="([^"]*)"[^>]*>(.*?)<\/a>/g, (_, href, text) => {
+    const h = href.replace(/&amp;/g, "&");
+    return `[${text}](${h.startsWith("#") ? pageUrl + h : h.startsWith("/") ? base + h : h})`;
+  })
+  .replace(/<code>(.*?)<\/code>/g, "`$1`").replace(/<(?:b|strong)>(.*?)<\/(?:b|strong)>/g, "**$1**"));
+function serverLlms(s) {
+  const pageUrl = `${base}${pagePath(s)}`;
+  const plainDesc = (d) => String(d || "").replace(ROUTE_SENTENCE, "$1").replace(ROUTE_PAREN, "$1").trim();
+  const what = s.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase());
+  const groups = [["read", "Read only"], ["write", "Changes data"], ["meta", "Your usefulapi plan"]];
+  const tools = s.tools || [];
+  const toolLines = (list) => list.map((t) => {
+    const d = plainDesc(t.description).replace(/\s+/g, " ");
+    return `- \`${t.name}\`: ${t.title}${d && d !== t.title ? `. ${d}` : ""}`;
+  }).join("\n");
+  const other = tools.filter((t) => !groups.some(([k]) => k === t.type));
+  return `# ${s.name} MCP server\n\n` +
+    `> ${what} A hosted remote MCP server by usefulapi.io, an independent service (not affiliated with ${s.name}).\n\n` +
+    `- Server URL: ${s.endpoint}\n- Transport: Streamable HTTP, OAuth sign-in\n- Status: ${s.status === "live" ? "live" : "launching soon"}\n- Page: ${pageUrl}\n\n` +
+    `## Connect\n\n` +
+    `- Claude (claude.ai, Desktop): Customize → Connectors → Add custom connector, name ${s.name}, URL ${s.endpoint}.\n` +
+    `- Claude Code: \`claude mcp add --transport http ${s.slug} ${s.endpoint}\`, then run \`/mcp\` to log in.\n` +
+    `- Codex: \`codex mcp add ${s.slug} --url ${s.endpoint}\`, then \`codex mcp login ${s.slug}\`.\n` +
+    `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
+    `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
+    `${mdFromHtml(noHeaderText(s), pageUrl)}\n\n` +
+    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => decodeHint(h).trim()).join("\n\n")}\n\n` : "") +
+    ((s.examples || []).length ? `## Example requests\n\n${s.examples.map((e) => `- ${e}`).join("\n")}\n\n` : "") +
+    (tools.length ? `## Tools (${tools.length})\n\n` + [...groups.map(([k, label]) => [label, tools.filter((t) => t.type === k)]), ["Other tools", other]]
+      .filter(([, list]) => list.length).map(([label, list]) => `### ${label} (${list.length})\n\n${toolLines(list)}`).join("\n\n") + "\n\n" : "") +
+    `## FAQ\n\n${faqFor(s).map((f) => `### ${mdFromHtml(f.q, pageUrl)}\n\n${mdFromHtml(f.a, pageUrl)}`).join("\n\n")}\n\n` +
+    `## Links\n\n- [${s.name} MCP server page](${pageUrl})\n- [All servers](${base}/llms.txt)\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n- Support: support@usefulapi.io\n`;
+}
+for (const s of manifest.servers) writeFileSync(`${outDir}${pagePath(s)}llms.txt`, serverLlms(s));
+
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
 // endpoints with nothing to index — the indexable surface is this portal's /<slug>/ page.
 // A Cloudflare Single Redirect maps <slug>.usefulapi.io/robots.txt here, because the worker
@@ -951,4 +992,4 @@ writeFileSync(`${outDir}/_redirects`, `/_src/* /_src.txt 200\n` + POSTS.flatMap(
 writeFileSync(`${outDir}/_headers`, readFileSync(`${outDir}/_headers`, "utf8") +
   `/_src/*\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n/_src.txt\n  X-Robots-Tag: noindex\n`);
 
-console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${POSTS.length} blog post(s), robots.txt, mcp-robots.txt, llms.txt, sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
+console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${POSTS.length} blog post(s), robots.txt, mcp-robots.txt, llms.txt (+ one per server), sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
