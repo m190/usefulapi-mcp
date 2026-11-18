@@ -1046,6 +1046,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SimpleAMS](servers/simpleams/) | crm | 32 | API token | [servers/simpleams/](servers/simpleams/) |
 | [Billdu](servers/billdu/) | billing | 12 | API token | [servers/billdu/](servers/billdu/) |
 | [Skedda](servers/skedda/) | scheduling | 7 | API token | [servers/skedda/](servers/skedda/) |
+| [Pool Brain](servers/pool-brain/) | business-operations | 28 | API token | [servers/pool-brain/](servers/pool-brain/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
