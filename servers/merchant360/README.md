@@ -43,6 +43,38 @@ On first connect you provide a **Merchant360 API key** (`m360_live_…` or `m360
 | `merchant360_delete_shift` | **write** | Delete a shift |
 | `merchant360_publish_shifts` | **write** | Publish shifts |
 | `merchant360_decide_schedule_request` | **write** | Approve or deny a schedule request |
+| `merchant360_list_payments` | read | List payments |
+| `merchant360_get_payment` | read | Get a payment |
+| `merchant360_list_invoices` | read | List invoices |
+| `merchant360_get_invoice` | read | Get an invoice |
+| `merchant360_list_estimates` | read | List estimates |
+| `merchant360_list_customers` | read | List customers |
+| `merchant360_get_customer` | read | Get a customer |
+| `merchant360_list_catalog` | read | List catalog items |
+| `merchant360_get_catalog_item` | read | Get a catalog item |
+| `merchant360_list_subscriptions` | read | List subscriptions |
+| `merchant360_get_subscription` | read | Get a subscription |
+| `merchant360_list_plans` | read | List subscription plans |
+| `merchant360_list_appointments` | read | List appointments |
+| `merchant360_get_appointment` | read | Get an appointment |
+| `merchant360_list_reservations` | read | List reservations |
+| `merchant360_get_reservation` | read | Get a reservation |
+| `merchant360_list_classes` | read | List classes |
+| `merchant360_list_class_sessions` | read | List class sessions |
+| `merchant360_list_session_bookings` | read | List a class session's roster |
+| `merchant360_list_credit_memos` | read | List credit memos |
+| `merchant360_list_statements` | read | List statement months |
+| `merchant360_list_tax_rates` | read | List tax rates |
+| `merchant360_list_payment_links` | read | List payment links |
+| `merchant360_create_customer` | **write** | Create a customer |
+| `merchant360_update_customer` | **write** | Update a customer |
+| `merchant360_create_invoice` | **write** | Create an invoice |
+| `merchant360_create_estimate` | **write** | Create an estimate |
+| `merchant360_send_invoice` | **write** | Send an invoice |
+| `merchant360_create_catalog_item` | **write** | Create a catalog item |
+| `merchant360_update_catalog_item` | **write** | Update a catalog item |
+| `merchant360_create_appointment` | **write** | Create an appointment |
+| `merchant360_update_appointment_status` | **write** | Update an appointment's status |
 | `merchant360_usage_status` | meta | Usage status (free-tier meter) |
 | `merchant360_request_feature` | meta | Request a missing feature |
 | `merchant360_upgrade` | meta | Upgrade to Pro or Pro+ |

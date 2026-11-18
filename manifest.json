@@ -175319,7 +175319,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.0.0",
+      "version": "1.1.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -175327,7 +175327,7 @@
             "label": "Merchant360 API key"
           }
         ],
-        "hint": "Create one in Merchant360 → **Developers & API** (owner only) with the **scheduling:read** scope, and **scheduling:write** to change shifts. Use a live key (`m360_live_`) or a test key (`m360_test_`). Test keys write to the same schedule as live keys. Your key is used only to call the API on your behalf and to derive a private account id."
+        "hint": "Create one in Merchant360 → **Developers & API** (owner only) with the scopes you need: for example **scheduling** (shifts, appointments, classes), **invoices**, **estimates**, **customers**, **inventory** (catalog), **payments**, **recurring** and **reservations** (read, and write where you want changes). No tool charges, refunds or voids a payment. Use a live key (`m360_live_`) or a test key (`m360_test_`). Test keys write to the same schedule as live keys. Your key is used only to call the API on your behalf and to derive a private account id."
       },
       "tools": [
         {
@@ -175391,6 +175391,198 @@
           "description": "WRITE: approve or deny one staff time-off or shift trade request. The worker is texted the outcome, with the note when given. Approved time off also blocks those days on the public booking calendar. A decided request returns 409. Merchant360 API: POST /schedule-requests/{id}."
         },
         {
+          "name": "merchant360_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List the merchant's card payments, newest first (keyed/online by default; channel card_present lists card-reader sales). Read-only: no tool here charges or refunds. Scope payments:read. Merchant360 API: GET /payments."
+        },
+        {
+          "name": "merchant360_get_payment",
+          "type": "read",
+          "title": "Get a payment",
+          "description": "Get one payment by id (a keyed payment uuid or a card-present tp_ id), with its status and processor result. Scope payments:read. Merchant360 API: GET /payments/{id}."
+        },
+        {
+          "name": "merchant360_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices (not estimates), newest first, optionally by status. Scope invoices:read. Merchant360 API: GET /invoices."
+        },
+        {
+          "name": "merchant360_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice or estimate by id, with its lines, totals, balance and status. Scope invoices:read. Merchant360 API: GET /invoices/{id}."
+        },
+        {
+          "name": "merchant360_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List estimates, newest first, optionally by status. Get one with merchant360_get_invoice. Scope estimates:read. Merchant360 API: GET /estimates."
+        },
+        {
+          "name": "merchant360_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers, newest first. search matches name, legal name or email (any part), or 3+ digits of the phone. Scope customers:read. Merchant360 API: GET /customers."
+        },
+        {
+          "name": "merchant360_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer. Scope customers:read. Merchant360 API: GET /customers/{id}."
+        },
+        {
+          "name": "merchant360_list_catalog",
+          "type": "read",
+          "title": "List catalog items",
+          "description": "List active products and services, sorted by name (price and cost in cents, stock when tracked). Scope inventory:read. Merchant360 API: GET /catalog."
+        },
+        {
+          "name": "merchant360_get_catalog_item",
+          "type": "read",
+          "title": "Get a catalog item",
+          "description": "Get one catalog item. Scope inventory:read. Merchant360 API: GET /catalog/{id}."
+        },
+        {
+          "name": "merchant360_list_subscriptions",
+          "type": "read",
+          "title": "List subscriptions",
+          "description": "List every subscription (recurring billing), including the open bill of invoice subscriptions. Not paginated. Scope recurring:read. Merchant360 API: GET /subscriptions."
+        },
+        {
+          "name": "merchant360_get_subscription",
+          "type": "read",
+          "title": "Get a subscription",
+          "description": "Get one subscription with its schedule and open bill. Scope recurring:read. Merchant360 API: GET /subscriptions/{id}."
+        },
+        {
+          "name": "merchant360_list_plans",
+          "type": "read",
+          "title": "List subscription plans",
+          "description": "List up to 200 subscription plans, newest first. Scope recurring:read. Merchant360 API: GET /plans."
+        },
+        {
+          "name": "merchant360_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments, oldest start first, optionally between two start times. Scope scheduling:read. Merchant360 API: GET /appointments."
+        },
+        {
+          "name": "merchant360_get_appointment",
+          "type": "read",
+          "title": "Get an appointment",
+          "description": "Get one appointment. Scope scheduling:read. Merchant360 API: GET /appointments/{id}."
+        },
+        {
+          "name": "merchant360_list_reservations",
+          "type": "read",
+          "title": "List reservations",
+          "description": "List reservations, newest first, optionally by status. Pass next_cursor from the previous page as cursor. Scope reservations:read. Merchant360 API: GET /reservations."
+        },
+        {
+          "name": "merchant360_get_reservation",
+          "type": "read",
+          "title": "Get a reservation",
+          "description": "Get one reservation with its holds, claims and recent events. Scope reservations:read. Merchant360 API: GET /reservations/{id}."
+        },
+        {
+          "name": "merchant360_list_classes",
+          "type": "read",
+          "title": "List classes",
+          "description": "List classes, newest first; active true or false filters. Scope scheduling:read. Merchant360 API: GET /classes."
+        },
+        {
+          "name": "merchant360_list_class_sessions",
+          "type": "read",
+          "title": "List class sessions",
+          "description": "List class sessions with seats left, earliest first (includes canceled sessions), optionally for one class and a time window. Scope scheduling:read. Merchant360 API: GET /class-sessions."
+        },
+        {
+          "name": "merchant360_list_session_bookings",
+          "type": "read",
+          "title": "List a class session's roster",
+          "description": "List every booking on one class session (confirmed, waitlist, canceled). Scope scheduling:read. Merchant360 API: GET /class-sessions/{id}/bookings."
+        },
+        {
+          "name": "merchant360_list_credit_memos",
+          "type": "read",
+          "title": "List credit memos",
+          "description": "List credit memos, newest first. Scope credit_memos:read. Merchant360 API: GET /credit-memos."
+        },
+        {
+          "name": "merchant360_list_statements",
+          "type": "read",
+          "title": "List statement months",
+          "description": "List the months that have a processing statement, newest first. Scope statements:read. Merchant360 API: GET /statements."
+        },
+        {
+          "name": "merchant360_list_tax_rates",
+          "type": "read",
+          "title": "List tax rates",
+          "description": "List the merchant's tax rates (default first). Use an id as tax.rate_id on an invoice or estimate. Scope tax_rates:read. Merchant360 API: GET /tax-rates."
+        },
+        {
+          "name": "merchant360_list_payment_links",
+          "type": "read",
+          "title": "List payment links",
+          "description": "List payment links, newest first, including links made for invoices. Scope payment_links:read. Merchant360 API: GET /payment-links."
+        },
+        {
+          "name": "merchant360_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer (name required). Scope customers:write. Merchant360 API: POST /customers."
+        },
+        {
+          "name": "merchant360_update_customer",
+          "type": "write",
+          "title": "Update a customer",
+          "description": "Change the fields you send; fields left out keep their value. null clears legal_name, email or phone. Scope customers:write. Merchant360 API: PATCH /customers/{id}."
+        },
+        {
+          "name": "merchant360_create_invoice",
+          "type": "write",
+          "title": "Create an invoice",
+          "description": "Create an invoice in DRAFT status from lines (unit_price in cents), with automatic or chosen tax and an optional discount. It charges nothing. send: true emails it to customer.email and moves it to OPEN with a pay link (the customer pays on the hosted page). Scope invoices:write. Merchant360 API: POST /invoices."
+        },
+        {
+          "name": "merchant360_create_estimate",
+          "type": "write",
+          "title": "Create an estimate",
+          "description": "Create an estimate in DRAFT status from lines (unit_price in cents), with automatic or chosen tax and an optional discount. It charges nothing. send: true emails it to customer.email and moves it to OPEN, where the customer can accept it. Scope estimates:write. Merchant360 API: POST /estimates."
+        },
+        {
+          "name": "merchant360_send_invoice",
+          "type": "write",
+          "title": "Send an invoice",
+          "description": "Email an invoice or estimate with its PDF and a pay link for the remaining balance to the customer's email (and text the link when Text2Pay is on). It charges nothing; the customer pays on the hosted page. Scope invoices:write. Merchant360 API: POST /invoices/{id}/send."
+        },
+        {
+          "name": "merchant360_create_catalog_item",
+          "type": "write",
+          "title": "Create a catalog item",
+          "description": "Create a product or service (price in cents). A SKU is generated from the name when left out. Scope inventory:write. Merchant360 API: POST /catalog."
+        },
+        {
+          "name": "merchant360_update_catalog_item",
+          "type": "write",
+          "title": "Update a catalog item",
+          "description": "Change name, sku, category, description, price, cost, taxable or track_stock; fields left out keep their value. Stock on hand does not change here. Scope inventory:write. Merchant360 API: PATCH /catalog/{id}."
+        },
+        {
+          "name": "merchant360_create_appointment",
+          "type": "write",
+          "title": "Create an appointment",
+          "description": "Create an appointment (status scheduled). Merchant360 refuses a time that clashes with the assignee's open appointments. It sends no email or text. Scope scheduling:write. Merchant360 API: POST /appointments."
+        },
+        {
+          "name": "merchant360_update_appointment_status",
+          "type": "write",
+          "title": "Update an appointment's status",
+          "description": "Set an appointment's status (scheduled, confirmed, arrived, in_progress, completed, canceled, no_show). Status is the only field this changes; no email or text is sent. Scope scheduling:write. Merchant360 API: PATCH /appointments/{id}."
+        },
+        {
           "name": "merchant360_usage_status",
           "type": "meta",
           "title": "Usage status (free-tier meter)",
@@ -175417,9 +175609,11 @@
       ],
       "examples": [
         "Show this week's shifts and who is not scheduled yet.",
+        "Which invoices are still open, and how much does each customer owe?",
+        "Create a draft invoice for Acme Corp for 3 hours of consulting at $120 and email it.",
         "Add a draft shift for Sam on Saturday from 17:00 to 23:00 with a 30-minute break.",
         "List the pending time-off requests and approve the one from Alex.",
-        "Publish next week's drafts so the team can see them."
+        "List today's appointments and mark the 10:00 one as arrived."
       ]
     },
     {
