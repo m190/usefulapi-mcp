@@ -928,7 +928,7 @@ writeFileSync(`${outDir}/llms.txt`,
 // Literal text from the manifest (tool titles and descriptions, examples): escape what Markdown would act on, so
 // vendor syntax such as <a href="..."> or [Name](/path) stays text and cannot become a link or tag.
 // Split Markdown into prose and code spans (CommonMark: a run of N backticks opens a span that the next run of exactly
-// N backticks closes; an unmatched run and a backslash-escaped backtick are prose). Returns [prose, code, prose, ...].
+// N backticks on the same line closes; an unmatched run and a backslash-escaped backtick are prose). Returns [prose, code, prose, ...].
 function codeSpans(text) {
   const parts = [];
   let prose = "", i = 0;
@@ -938,7 +938,9 @@ function codeSpans(text) {
     let n = 0;
     while (text[i + n] === "`") n++;
     let j = i + n, close = -1;
-    while (j < text.length) {
+    // A span never crosses a line break: it then cannot reach into another block (safe; a rare multi-line span
+    // shows its escapes as text).
+    while (j < text.length && text[j] !== "\n") {
       if (text[j] !== "`") { j++; continue; }
       let m = 0;
       while (text[j + m] === "`") m++;
