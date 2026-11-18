@@ -876,7 +876,10 @@ for (const f of readdirSync(new URL("portal/", ROOT))) if (/^indexnow-[0-9a-f]{3
 mkdirSync(`${outDir}/_probe`, { recursive: true });
 for (const f of readdirSync(new URL("portal/_probe/", ROOT))) copyFileSync(new URL(`portal/_probe/${f}`, ROOT), `${outDir}/_probe/${f}`);
 // Pages headers: probe files are machine replies, not pages (keep them out of search indexes; short cache).
-writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=300\n`);
+const PUBLIC_DOC = "  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=3600\n  Access-Control-Allow-Origin: *\n  Access-Control-Expose-Headers: ETag\n";
+writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache-Control: public, max-age=300\n` +
+  `/*/server-card\n  Content-Type: application/mcp-server-card+json\n${PUBLIC_DOC}` +
+  `/*/ai-catalog.json\n  Content-Type: application/ai-catalog+json\n${PUBLIC_DOC}`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
 mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
@@ -1015,6 +1018,14 @@ function serverLlms(s) {
     `## FAQ\n\n${faqFor(s).map((f) => `### ${mdFromHtml(f.q, pageUrl)}\n\n${mdFromHtml(f.a, pageUrl)}`).join("\n\n")}\n\n` + links;
 }
 for (const s of manifest.servers) writeFileSync(`${outDir}${pagePath(s)}llms.txt`, serverLlms(s));
+// <slug>/server-card and <slug>/ai-catalog.json: the static copies of the Worker's v1 server card and AI Catalog
+// (portal/_cards, written by codegen.mjs). A zone redirect rule sends <slug>.usefulapi.io/mcp/server-card and
+// /.well-known/ai-catalog.json here, so no Worker runs; _headers below sets their media types and CORS.
+for (const s of manifest.servers) {
+  const { card, catalog } = JSON.parse(readFileSync(new URL(`portal/_cards/${s.slug}.json`, ROOT), "utf8"));
+  writeFileSync(`${outDir}${pagePath(s)}server-card`, card);
+  writeFileSync(`${outDir}${pagePath(s)}ai-catalog.json`, catalog);
+}
 
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
 // endpoints with nothing to index — the indexable surface is this portal's /<slug>/ page.

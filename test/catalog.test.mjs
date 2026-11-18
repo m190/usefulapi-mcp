@@ -258,3 +258,17 @@ test("every live product page and llms.txt links to Claude's prefilled dialog; o
   assert.ok(live > 0);
   assert.ok(manifest.servers.some((s) => /[&'"]|[^\x00-\x7f]/.test(s.name) && s.status === "live"), "fixture: a live name with special characters");
 });
+
+test("every server has its static v1 server card and AI Catalog, with the media types set in _headers", () => {
+  const headers = read("_headers");
+  assert.ok(headers.includes("/*/server-card\n  Content-Type: application/mcp-server-card+json\n"));
+  assert.ok(headers.includes("/*/ai-catalog.json\n  Content-Type: application/ai-catalog+json\n"));
+  for (const s of manifest.servers) {
+    const card = JSON.parse(read(`${s.slug}/server-card`));
+    assert.equal(card.name, `io.usefulapi/${s.slug}`, s.slug);
+    assert.ok(card.description.length >= 1 && card.description.length <= 100, s.slug);
+    assert.deepEqual(card.remotes.map((r) => r.url), [s.endpoint], s.slug);
+    const catalog = JSON.parse(read(`${s.slug}/ai-catalog.json`));
+    assert.deepEqual(catalog.entries.map((e) => e.url), [`${new URL(s.endpoint).origin}/mcp/server-card`], s.slug);
+  }
+});

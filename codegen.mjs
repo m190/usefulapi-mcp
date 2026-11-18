@@ -7,6 +7,7 @@
 //   servers/<slug>/README.md    — the ## Connect, ## Tools and ## Pricing sections
 //   README.md (root)            — the Servers table
 //   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
+//   portal/_cards/<slug>.json   — the v1 server card and AI Catalog bodies (fleet scripts/export-cards.ts)
 // Needs the fleet checkout next to this repo (../fleet); a missing fleet input is an error.
 // Only DEPLOYED fleet data is published: a listed product whose fleet inputs differ from the commit its live Worker
 // was deployed from (fleet/scripts/changes.mjs: refs/deployed/<slug>, else the tag "deployed"; uncommitted files
@@ -260,6 +261,25 @@ for (const s of manifest.servers) {
 }
 const probeDir = new URL("portal/_probe/", ROOT);
 if (existsSync(probeDir)) for (const f of readdirSync(probeDir)) if (f.endsWith(".json") && !probes.has(f)) remove.add(`portal/_probe/${f}`);
+
+// portal/_cards/<slug>.json: { card, catalog } = the exact bodies of <slug>.usefulapi.io/mcp/server-card and
+// /.well-known/ai-catalog.json (fleet scripts/export-cards.ts runs the runtime's own code). build.mjs serves them at
+// usefulapi.io/<slug>/server-card and /<slug>/ai-catalog.json; a zone redirect rule sends both paths there (no Worker).
+const cardExport = fleetJson("export-cards.ts");
+const cards = new Set();
+for (const s of manifest.servers) {
+  const path = `portal/_cards/${s.slug}.json`;
+  cards.add(`${s.slug}.json`);
+  if (held.has(s.slug)) {
+    if (!existsSync(new URL(path, ROOT))) die(`${s.slug}: not deployed yet and no ${path}`);
+    continue;
+  }
+  const c = cardExport[s.slug];
+  if (!c?.card || !c?.catalog) die(`${s.slug}: no server card export`);
+  emit(path, JSON.stringify(c) + "\n");
+}
+const cardDir = new URL("portal/_cards/", ROOT);
+if (existsSync(cardDir)) for (const f of readdirSync(cardDir)) if (f.endsWith(".json") && !cards.has(f)) remove.add(`portal/_cards/${f}`);
 
 // ---- write or check -----------------------------------------------------------
 const changed = [...out].filter(([path, content]) => {
