@@ -1047,6 +1047,25 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Billdu](servers/billdu/) | billing | 12 | API token | [servers/billdu/](servers/billdu/) |
 | [Skedda](servers/skedda/) | scheduling | 7 | API token | [servers/skedda/](servers/skedda/) |
 | [Pool Brain](servers/pool-brain/) | business-operations | 28 | API token | [servers/pool-brain/](servers/pool-brain/) |
+| [Areye](servers/areye-business/) | logistics | 18 | API token | [servers/areye-business/](servers/areye-business/) |
+| [Logiwa](servers/logiwa/) | logistics | 7 | API token | [servers/logiwa/](servers/logiwa/) |
+| [Rentec Direct](servers/rentec-direct/) | property-management | 19 | API token | [servers/rentec-direct/](servers/rentec-direct/) |
+| [ReturnGO](servers/returngo/) | ecommerce | 13 | API token | [servers/returngo/](servers/returngo/) |
+| [SmartrMail](servers/smartrmail/) | email-marketing | 12 | API token | [servers/smartrmail/](servers/smartrmail/) |
+| [Zenventory](servers/zenventory/) | inventory | 18 | API token | [servers/zenventory/](servers/zenventory/) |
+| [Smoove](servers/smoove/) | email-marketing | 17 | API token | [servers/smoove/](servers/smoove/) |
+| [Elite EXTRA](servers/elite-extra/) | rental | 21 | API token | [servers/elite-extra/](servers/elite-extra/) |
+| [IPQualityScore](servers/ipqualityscore/) | fraud-detection | 9 | API token | [servers/ipqualityscore/](servers/ipqualityscore/) |
+| [Ideal Postcodes](servers/ideal-postcodes/) | data-enrichment | 11 | API token | [servers/ideal-postcodes/](servers/ideal-postcodes/) |
+| [Shiftavo](servers/shiftavo/) | scheduling | 18 | API token | [servers/shiftavo/](servers/shiftavo/) |
+| [Property Meld](servers/property-meld/) | property-management | 8 | API token | [servers/property-meld/](servers/property-meld/) |
+| [CentrixOne](servers/centrixone/) | crm | 10 | API token | [servers/centrixone/](servers/centrixone/) |
+| [EstatePrime](servers/estateprime/) | real-estate | 13 | API token | [servers/estateprime/](servers/estateprime/) |
+| [CharityStack](servers/charitystack/) | fundraising | 16 | API token | [servers/charitystack/](servers/charitystack/) |
+| [BetterNow](servers/betternow/) | fundraising | 28 | API token | [servers/betternow/](servers/betternow/) |
+| [Xanatek Connect](servers/xanatek-connect/) | business-operations | 18 | API token | [servers/xanatek-connect/](servers/xanatek-connect/) |
+| [Easy Employer](servers/easy-employer/) | hr | 16 | API token | [servers/easy-employer/](servers/easy-employer/) |
+| [myClub](servers/myclub/) | membership | 19 | API token | [servers/myclub/](servers/myclub/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
