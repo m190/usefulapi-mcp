@@ -1,7 +1,7 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync, mkdtempSync, rmSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadBlog } from "../blog.mjs";
@@ -53,7 +53,10 @@ test("every language index contains only its language and links to all available
     assert.deepEqual(blog.blogPost.map(p => p.url), posts.filter(p => p.lang === lang).map(p => `https://usefulapi.io${blogPath(p)}`));
     for (const other of Object.keys(LOCALES)) assert.ok(html.includes(`hreflang="${other}" href="https://usefulapi.io${blogIndexPath(other)}"`));
   }
-  assert.equal(posts.filter(p => p.lang === "en").length, 31);
+  // Every English original in blog/ loads as an English post: none dropped, none moved to another language.
+  const originals = readdirSync(new URL("blog/", root)).filter(f => f.endsWith(".md")).map(f => `blog/${f}`).sort();
+  assert.ok(originals.length >= 31);
+  assert.deepEqual(posts.filter(p => p.lang === "en").map(p => p.file).sort(), originals);
   assert.ok(posts.filter(p => p.lang === "de").length >= 2);
 });
 
