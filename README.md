@@ -1010,6 +1010,35 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [UPOS Cloud POS](servers/upos-cloud-pos/) | retail | 15 | API token | [servers/upos-cloud-pos/](servers/upos-cloud-pos/) |
 | [Cirqll](servers/cirqll/) | crm | 15 | OAuth | [servers/cirqll/](servers/cirqll/) |
 | [Decimal POS](servers/decimal-pos/) | retail | 26 | API token | [servers/decimal-pos/](servers/decimal-pos/) |
+| [Max CRM](servers/max-crm/) | crm | 14 | API token | [servers/max-crm/](servers/max-crm/) |
+| [Lime CRM](servers/lime-crm/) | crm | 10 | API token | [servers/lime-crm/](servers/lime-crm/) |
+| [SimplyMeet.me](servers/simplymeet-me/) | scheduling | 11 | API token | [servers/simplymeet-me/](servers/simplymeet-me/) |
+| [TimetableOS](servers/timetableos/) | scheduling | 27 | API token | [servers/timetableos/](servers/timetableos/) |
+| [Truein](servers/truein/) | time-tracking | 24 | API token | [servers/truein/](servers/truein/) |
+| [fitDEGREE](servers/fitdegree/) | scheduling | 12 | API token | [servers/fitdegree/](servers/fitdegree/) |
+| [Appntmnts](servers/appntmnts/) | scheduling | 13 | API token | [servers/appntmnts/](servers/appntmnts/) |
+| [Regsta](servers/regsta/) | time-tracking | 7 | API token | [servers/regsta/](servers/regsta/) |
+| [SalesPlay POS](servers/salesplay-pos/) | retail | 30 | API token | [servers/salesplay-pos/](servers/salesplay-pos/) |
+| [Ellibo Rental](servers/ellibo-rental/) | rental | 10 | API token | [servers/ellibo-rental/](servers/ellibo-rental/) |
+| [Brother POS](servers/brother-pos/) | retail | 24 | API token | [servers/brother-pos/](servers/brother-pos/) |
+| [PrintPoss](servers/printposs/) | ecommerce | 11 | API token | [servers/printposs/](servers/printposs/) |
+| [Tshirtgang](servers/tshirtgang/) | ecommerce | 10 | API token | [servers/tshirtgang/](servers/tshirtgang/) |
+| [InventoryMod](servers/inventorymod/) | inventory | 20 | API token | [servers/inventorymod/](servers/inventorymod/) |
+| [Dokun](servers/dokun/) | membership | 6 | API token | [servers/dokun/](servers/dokun/) |
+| [Invoice Office](servers/invoice-office/) | billing | 16 | API token | [servers/invoice-office/](servers/invoice-office/) |
+| [TheBusinessApp](servers/thebusinessapp/) | business-operations | 34 | API token | [servers/thebusinessapp/](servers/thebusinessapp/) |
+| [Zulu](servers/zulu/) | billing | 17 | API token | [servers/zulu/](servers/zulu/) |
+| [Billutant](servers/billutant/) | billing | 14 | API token | [servers/billutant/](servers/billutant/) |
+| [CaptiFi](servers/captifi-connect/) | marketing | 8 | API token | [servers/captifi-connect/](servers/captifi-connect/) |
+| [ASPSMS](servers/aspsms/) | messaging | 8 | API token | [servers/aspsms/](servers/aspsms/) |
+| [SMSBlast](servers/smsblast/) | messaging | 7 | API token | [servers/smsblast/](servers/smsblast/) |
+| [BKG](servers/bkg/) | scheduling | 19 | API token | [servers/bkg/](servers/bkg/) |
+| [SMS.to](servers/sms-to/) | messaging | 9 | API token | [servers/sms-to/](servers/sms-to/) |
+| [ShopWired](servers/shopwired/) | ecommerce | 18 | API token | [servers/shopwired/](servers/shopwired/) |
+| [DoubleTick](servers/doubletick/) | messaging | 16 | API token | [servers/doubletick/](servers/doubletick/) |
+| [Feed API](servers/feed-api/) | commerce | 16 | API token | [servers/feed-api/](servers/feed-api/) |
+| [Zoko](servers/zoko/) | messaging | 14 | API token | [servers/zoko/](servers/zoko/) |
+| [Conta](servers/conta/) | accounting | 20 | API token | [servers/conta/](servers/conta/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
