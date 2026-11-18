@@ -260,9 +260,9 @@ ${SITE_CSS}`;
 const PAGE_CSS = `
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
 .btn{color:var(--on-accent)!important}
-details.manual{margin-top:14px;border-top:1px solid var(--border);font-size:14px}
-details.manual>summary{cursor:pointer;padding:12px 0 0;color:var(--muted);font-weight:600}
-details.manual[open]>summary{padding-bottom:4px}details.manual p{margin:8px 0}details.manual a{color:var(--accent)}
+details.inline{display:inline}details.inline>summary{display:inline;cursor:pointer;list-style:none}
+details.inline>summary::-webkit-details-marker{display:none}details.inline>summary::after{content:" ▸"}details.inline[open]>summary::after{content:" ▾"}
+details.inline>summary:hover{color:var(--accent)}.fold{margin:10px 0 4px}.fold p{margin:8px 0}
 .facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
 .facts .f{color:var(--muted);white-space:nowrap}
 .cta{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--on-accent)!important;text-decoration:none;font-weight:600;font-size:15px}
@@ -455,8 +455,6 @@ function productPage(s) {
   const authStep = authStepFor(s);
   const name = esc(s.name), urlShown = wrapUrl(s.endpoint);
   const copyLine = (text) => `<div class="copywrap line"><span class="url">${text}</span><button class="copy" type="button">Copy</button></div>`;
-  // The manual setup, closed by default under the one-click button.
-  const manual = (inner) => `<details class="manual"><summary>Add it by hand</summary>${inner}</details>`;
   const copyBlock = (text) => `<div class="copywrap block"><pre class="code">${text}</pre><button class="copy" type="button">Copy</button></div>`;
   // One-click install links. Cursor: base64 of the server config. VS Code: the vscode.dev redirect to vscode:mcp/install.
   const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(s.slug)}&config=${Buffer.from(JSON.stringify({ url: s.endpoint })).toString("base64")}`;
@@ -464,13 +462,14 @@ function productPage(s) {
   const claudeLink = claudeAddLink(s);
   // One panel per client, shown as tabs (TABS_JS).
   const clients = [
-    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Click <a class="btn" href="${attr(claudeLink)}" target="_blank" rel="nofollow noopener">Add to Claude</a>, then click <b>Add</b> on claude.ai.</li>
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<div class="lead"><a class="btn" href="${attr(claudeLink)}" target="_blank" rel="nofollow noopener">Add to Claude</a> <details class="inline"><summary>or add it manually</summary>
+<div class="fold"><p>Open <b>Customize → Connectors → + Add → Add custom connector</b>, then enter the name <b>${name}</b> and this URL:</p>
+${copyLine(urlShown)}
+<p>The Claude Free plan allows one custom connector.</p></div></details></div>
+<ol><li>Click <b>Add</b> in the dialog.</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
-${manual(`<p>Open <b>Customize → Connectors → + Add → Add custom connector</b>. Enter the name <b>${name}</b> and this URL, then do steps 2 and 3:</p>
-${copyLine(urlShown)}
-<p>Team and Enterprise: an Owner <a href="${attr(claudeAddLink(s, "admin-settings"))}" target="_blank" rel="nofollow noopener">adds it for the organization</a> first. Then you click <b>Connect</b> next to <b>${name}</b> in <b>Customize → Connectors</b>.</p>
-<p>The Claude Free plan allows one custom connector.</p>`)}` },
+<p class="lead small">Team and Enterprise: an Owner <a href="${attr(claudeAddLink(s, "admin-settings"))}" target="_blank" rel="nofollow noopener">adds it for the organization</a> first.</p>` },
     { c: "chatgpt", label: "ChatGPT", for: "chatgpt.com", html: `<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
 <li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(urlShown)}</li>
 <li>${authStepFor(s, "ChatGPT")}.</li>
