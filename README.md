@@ -1069,6 +1069,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Abacus POS](servers/abacus-pos/) | retail | 24 | API token | [servers/abacus-pos/](servers/abacus-pos/) |
 | [Storecove](servers/storecove/) | accounting | 10 | API token | [servers/storecove/](servers/storecove/) |
 | [Spreadconnect](servers/spod/) | ecommerce | 23 | API token | [servers/spod/](servers/spod/) |
+| [absence.io](servers/absence-io/) | hr | 8 | API token | [servers/absence-io/](servers/absence-io/) |
+| [Spotler CRM](servers/spotler-crm/) | crm | 10 | API token | [servers/spotler-crm/](servers/spotler-crm/) |
+| [Timetastic](servers/timetastic/) | hr | 14 | API token | [servers/timetastic/](servers/timetastic/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
