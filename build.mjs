@@ -955,7 +955,10 @@ function codeSpans(text) {
   return parts;
 }
 // Escape Markdown-active characters in prose only; code spans stay literal (they cannot become a link or tag).
-const mdEscapeProse = (t, chars) => codeSpans(String(t).replace(/\r\n?/g, "\n")).map((part, i) => (i % 2 ? part : part.replace(chars, "\\$&"))).join("");
+// keepEscapes (hints are Markdown already): a character with an odd run of backslashes before it is escaped already.
+const oddBackslashes = (s, at) => { let n = 0; while (at - 1 - n >= 0 && s[at - 1 - n] === "\\") n++; return n % 2 === 1; };
+const mdEscapeProse = (t, chars, keepEscapes = false) => codeSpans(String(t).replace(/\r\n?/g, "\n")).map((part, i) =>
+  (i % 2 ? part : part.replace(chars, (c, at, whole) => (keepEscapes && oddBackslashes(whole, at) ? c : `\\${c}`)))).join("");
 const mdText = (t) => mdEscapeProse(t, /[\\`*_\[\]<>]/g);
 // The product page's own HTML (FAQ, sign-in text) → Markdown: our <a>, <code>, <b> become Markdown; any other tag is
 // dropped; entity-escaped manifest text stays escaped (\<), never active HTML.
@@ -993,7 +996,7 @@ function serverLlms(s) {
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
     `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
     `${mdFromHtml(noHeaderText(s), pageUrl)}\n\n` +
-    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => mdEscapeProse(decodeHint(h).trim(), /[<>`]/g)).join("\n\n")}\n\n` : "") +
+    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => mdEscapeProse(decodeHint(h).trim(), /[<>`]/g, true)).join("\n\n")}\n\n` : "") +
     ((s.examples || []).length ? `## Example requests\n\n${s.examples.map((e) => `- ${mdText(e)}`).join("\n")}\n\n` : "") +
     (pricing ? `## Pricing\n\n${pricing}\n\nEach paid plan covers this ${s.name} server only.\n\n` : "") +
     (tools.length ? `## Tools (${tools.length})\n\n` + [...groups.map(([k, label]) => [label, tools.filter((t) => t.type === k)]), ["Other tools", other]]
