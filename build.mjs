@@ -462,7 +462,7 @@ function productPage(s) {
 <ol><li>In the dialog that opens, click <b>Add</b>.</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
-<p class="lead small">Desktop app, or no dialog? Open <b>Customize → Connectors → + Add → Add custom connector</b> , enter the name <b>${name}</b> and this URL:</p>
+<p class="lead small">Desktop app, or no dialog? Open <b>Customize → Connectors → + Add → Add custom connector</b>, enter the name <b>${name}</b> and this URL:</p>
 ${copyLine(urlShown)}
 <p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p>` },
     { c: "chatgpt", label: "ChatGPT", for: "chatgpt.com", html: `<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
