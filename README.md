@@ -1043,6 +1043,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Simple Inventory](servers/simple-inventory/) | inventory | 15 | API token | [servers/simple-inventory/](servers/simple-inventory/) |
 | [Shift4Shop](servers/shift4shop/) | ecommerce | 17 | API token | [servers/shift4shop/](servers/shift4shop/) |
 | [Merchant360](servers/merchant360/) | scheduling | 14 | API token | [servers/merchant360/](servers/merchant360/) |
+| [SimpleAMS](servers/simpleams/) | crm | 32 | API token | [servers/simpleams/](servers/simpleams/) |
+| [Billdu](servers/billdu/) | billing | 12 | API token | [servers/billdu/](servers/billdu/) |
+| [Skedda](servers/skedda/) | scheduling | 7 | API token | [servers/skedda/](servers/skedda/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
