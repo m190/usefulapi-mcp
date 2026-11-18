@@ -259,7 +259,12 @@ ${SITE_CSS}`;
 // Product page only: the facts bar, the client tabs, the closed tool list.
 const PAGE_CSS = `
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
-.btn{color:var(--on-accent)!important}
+.btn{color:var(--on-accent)!important;padding:9px 16px;border-radius:10px;font-size:15px}
+.note{display:block;margin-top:8px;color:var(--muted);font-size:14px}
+ol.steps{padding-left:20px}ol.steps>li{margin:0 0 10px}ol.steps>li:first-child{margin-bottom:14px}
+details.manual{margin-top:14px;border-top:1px solid var(--border);font-size:14px}
+details.manual>summary{cursor:pointer;padding:12px 0 0;color:var(--muted);font-weight:600}
+details.manual[open]>summary{padding-bottom:4px}details.manual p{margin:8px 0}details.manual a{color:var(--accent)}
 .facts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 8px;font-size:15px}
 .facts .f{color:var(--muted);white-space:nowrap}
 .cta{display:inline-block;padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--on-accent)!important;text-decoration:none;font-weight:600;font-size:15px}
@@ -444,13 +449,16 @@ const stripTags = (h) => h.replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace
 const OPENAI_MCP_GUIDE = "https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt";
 
 // Claude's documented prefill link; the user still confirms the dialog (claude.com/docs/connectors/building/directory-vs-custom).
-const claudeAddLink = (s) => `https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=${encodeURIComponent(s.name)}&connectorUrl=${encodeURIComponent(s.endpoint)}`;
+// Owners use the admin page with the same parameters to add it for the whole organization.
+const claudeAddLink = (s, page = "customize") => `https://claude.ai/${page}/connectors?modal=add-custom-connector&connectorName=${encodeURIComponent(s.name)}&connectorUrl=${encodeURIComponent(s.endpoint)}`;
 
 function productPage(s) {
   const live = s.status === "live";
   const authStep = authStepFor(s);
   const name = esc(s.name), urlShown = wrapUrl(s.endpoint);
   const copyLine = (text) => `<div class="copywrap line"><span class="url">${text}</span><button class="copy" type="button">Copy</button></div>`;
+  // The manual setup, closed by default under the one-click button.
+  const manual = (inner) => `<details class="manual"><summary>Add it by hand</summary>${inner}</details>`;
   const copyBlock = (text) => `<div class="copywrap block"><pre class="code">${text}</pre><button class="copy" type="button">Copy</button></div>`;
   // One-click install links. Cursor: base64 of the server config. VS Code: the vscode.dev redirect to vscode:mcp/install.
   const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(s.slug)}&config=${Buffer.from(JSON.stringify({ url: s.endpoint })).toString("base64")}`;
@@ -458,13 +466,14 @@ function productPage(s) {
   const claudeLink = claudeAddLink(s);
   // One panel per client, shown as tabs (TABS_JS).
   const clients = [
-    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<p class="lead"><a class="btn" href="${attr(claudeLink)}" rel="nofollow noopener">Add to Claude</a></p>
-<ol><li>In the dialog that opens, click <b>Add</b>.</li>
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol class="steps"><li><a class="btn" href="${attr(claudeLink)}" target="_blank" rel="nofollow noopener">Add to Claude</a>
+<span class="note">Opens claude.ai in a new tab. Click <b>Add</b> there. It then works in Claude Desktop too.</span></li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
-<p class="lead small">Desktop app, or no dialog? Open <b>Customize → Connectors → + Add → Add custom connector</b>, enter the name <b>${name}</b> and this URL:</p>
+${manual(`<p>Open <b>Customize → Connectors → + Add → Add custom connector</b>. Enter the name <b>${name}</b> and this URL, then do steps 2 and 3:</p>
 ${copyLine(urlShown)}
-<p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p>` },
+<p>Team and Enterprise: an Owner <a href="${attr(claudeAddLink(s, "admin-settings"))}" target="_blank" rel="nofollow noopener">adds it for the organization</a> first. Then you click <b>Connect</b> next to <b>${name}</b> in <b>Customize → Connectors</b>.</p>
+<p>The Claude Free plan allows one custom connector.</p>`)}` },
     { c: "chatgpt", label: "ChatGPT", for: "chatgpt.com", html: `<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
 <li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(urlShown)}</li>
 <li>${authStepFor(s, "ChatGPT")}.</li>
@@ -472,15 +481,19 @@ ${copyLine(urlShown)}
 <p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p>` },
     { c: "claude-code", label: "Claude Code", html: `<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
 ${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}` },
-    { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
+    { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a>
+<span class="note">Opens Cursor. Confirm the install, then log in when Cursor asks.</span></p>
+${manual(`<p>Add this to <code>~/.cursor/mcp.json</code>:</p>
 ${copyBlock(`{
   "mcpServers": {
     "${esc(s.slug)}": {
       "url": "${urlShown}"
     }
   }
-}`)}` },
-    { c: "vscode", label: "VS Code", html: `<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a> or add this to <code>.vscode/mcp.json</code>:</p>
+}`)}`)}` },
+    { c: "vscode", label: "VS Code", html: `<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a>
+<span class="note">Opens VS Code. Confirm the install, then log in when VS Code asks.</span></p>
+${manual(`<p>Add this to <code>.vscode/mcp.json</code>:</p>
 ${copyBlock(`{
   "servers": {
     "${esc(s.slug)}": {
@@ -488,7 +501,7 @@ ${copyBlock(`{
       "url": "${urlShown}"
     }
   }
-}`)}` },
+}`)}`)}` },
     { c: "codex", label: "Codex", html: `<p class="lead">Run these commands. The second one opens the login page:</p>
 ${copyLine(`codex mcp add ${esc(s.slug)} --url ${urlShown}`)}
 ${copyLine(`codex mcp login ${esc(s.slug)}`)}` },
