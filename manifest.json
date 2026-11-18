@@ -179131,6 +179131,193 @@
         "What do we know about legal entity 1234 and its administrations?",
         "Show me the status of the document submission I sent this morning."
       ]
+    },
+    {
+      "slug": "spod",
+      "name": "Spreadconnect",
+      "category": "ecommerce",
+      "description": "Read orders, shipments, stock and articles; create, confirm and cancel orders in Spreadconnect.",
+      "endpoint": "https://spod.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Spreadconnect API key"
+          }
+        ],
+        "hint": "Log in at **login.spreadconnect.app**, open **Connect Integration**, create a **Spreadconnect API** integration and copy its API key from the Dashboard or the Integration Settings page. The key is tied to that one integration. It is used only to call the Spreadconnect API on your behalf and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "spod_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "The Spreadconnect integration this API key belongs to: merchant id, point-of-sale id, name and type. A cheap way to confirm the connection. GET /authentication."
+        },
+        {
+          "name": "spod_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List the articles (your own designed products) of this point of sale: id, title, description and variants with sku, size, colour and prices. The sku is what spod_create_order needs. GET /articles."
+        },
+        {
+          "name": "spod_get_article",
+          "type": "read",
+          "title": "Get article",
+          "description": "One article with all details: variants (sku, size, colour, prices), images and configuration. GET /articles/{articleId}."
+        },
+        {
+          "name": "spod_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "One order by Spreadconnect order id: state (NEW, CONFIRMED, PROCESSED, CANCELLED), items with their production state, prices and the shipping address. There is no list-orders endpoint, so the id must be known (from spod_create_order or the Spreadconnect app). GET /orders/{orderId}."
+        },
+        {
+          "name": "spod_get_order_shipments",
+          "type": "read",
+          "title": "Get order shipments",
+          "description": "The shipments of an order: carrier, tracking number and link, and which order items each contains. GET /orders/{orderId}/shipments."
+        },
+        {
+          "name": "spod_get_order_shipping_types",
+          "type": "read",
+          "title": "Get order shipping types",
+          "description": "The shipping types available for an order, with id, carrier, name and price. Pick one id for spod_set_order_shipping_type. GET /orders/{orderId}/shippingTypes."
+        },
+        {
+          "name": "spod_create_order",
+          "type": "write",
+          "title": "Create order (unconfirmed)",
+          "description": "WRITE: create a new order in Spreadconnect from article skus (spod_list_articles) and a delivery address. The order is created UNCONFIRMED (state NEW): nothing is produced or charged until it is confirmed with spod_confirm_order, which needs a shipping type first (spod_get_order_shipping_types, spod_set_order_shipping_type). The customer's email and phone are sent to Spreadconnect and the carrier. Prices are what the customer paid (for the invoice/customs), not what you pay Spreadconnect. Calling it twice creates two orders. POST /orders."
+        },
+        {
+          "name": "spod_set_order_shipping_type",
+          "type": "write",
+          "title": "Set order shipping type",
+          "description": "WRITE: choose the shipping type of an order that is not confirmed yet (ids from spod_get_order_shipping_types). Required before spod_confirm_order. Setting it again replaces the choice. POST /orders/{orderId}/shippingType."
+        },
+        {
+          "name": "spod_confirm_order",
+          "type": "write",
+          "title": "Confirm order (sends it to production)",
+          "description": "WRITE, SPENDS MONEY: confirm an order so Spreadconnect prints and ships it and bills your account for production and shipping. A shipping type must be set first (spod_set_order_shipping_type). After production starts it cannot be undone; before that spod_cancel_order may still work. Only call it when the user clearly asked to place the order. POST /orders/{orderId}/confirm."
+        },
+        {
+          "name": "spod_cancel_order",
+          "type": "write",
+          "title": "Cancel order",
+          "description": "WRITE, DESTRUCTIVE: cancel an order. Spreadconnect refuses it once items are in production or sent. A cancelled order cannot be reopened. POST /orders/{orderId}/cancel."
+        },
+        {
+          "name": "spod_list_product_types",
+          "type": "read",
+          "title": "List product types",
+          "description": "The Spreadconnect catalog of blank products you can put designs on (t-shirts, hoodies, mugs...): id, name, brand, sizes, colours (appearances), print type, views and print areas. The ids are used to create articles. The reply is large. GET /productTypes."
+        },
+        {
+          "name": "spod_get_product_type",
+          "type": "read",
+          "title": "Get product type",
+          "description": "One catalog product type with all details: sizes, colours, print areas, views, print type and descriptions. GET /productTypes/{productTypeId}."
+        },
+        {
+          "name": "spod_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "The catalog category tree plus the available features, brands and genders. GET /productTypes/categories."
+        },
+        {
+          "name": "spod_list_stock",
+          "type": "read",
+          "title": "List stock",
+          "description": "Available stock for the variants of this point of sale as a map of sku to stock amount, paged. GET /stock."
+        },
+        {
+          "name": "spod_get_stock_by_sku",
+          "type": "read",
+          "title": "Get stock for a sku",
+          "description": "Available stock of one variant by its sku. GET /stock/{sku}."
+        },
+        {
+          "name": "spod_get_stock_by_product_type",
+          "type": "read",
+          "title": "Get stock for a product type",
+          "description": "Available stock of every size and colour of one catalog product type. GET /stock/productType/{productTypeId}."
+        },
+        {
+          "name": "spod_upload_design",
+          "type": "write",
+          "title": "Upload design from URL",
+          "description": "WRITE: have Spreadconnect download an image from a public URL and store it as a reusable design; returns a designId for spod_create_article. Uploading the same URL again stores another copy. POST /designs/upload."
+        },
+        {
+          "name": "spod_create_article",
+          "type": "write",
+          "title": "Create article",
+          "description": "WRITE: create an article (a sellable product) from a catalog product type, chosen colours and sizes, and one or more designs placed on views. Get the ids from spod_get_product_type and use designId from spod_upload_design or a public PNG url. Spreadconnect makes the article available in the connected shop integration. Calling it twice creates two articles. Returns the new article id. POST /articles."
+        },
+        {
+          "name": "spod_delete_article",
+          "type": "write",
+          "title": "Delete article",
+          "description": "WRITE, DESTRUCTIVE: permanently delete an article from this point of sale. It cannot be restored; existing orders are not affected. DELETE /articles/{articleId}."
+        },
+        {
+          "name": "spod_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spod_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Spreadconnect tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "spod_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Spreadconnect (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "spod_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Spreadconnect Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run spod_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What is the status of Spreadconnect order 123456 and has it shipped?",
+        "Which of my Spreadconnect articles have sizes that are out of stock?",
+        "Show the tracking numbers for order 123456.",
+        "Create an unconfirmed order for 2 units of sku ABC-123 to a customer in Berlin."
+      ]
     }
   ]
 }

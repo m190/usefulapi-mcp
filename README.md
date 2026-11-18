@@ -1068,6 +1068,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [myClub](servers/myclub/) | membership | 19 | API token | [servers/myclub/](servers/myclub/) |
 | [Abacus POS](servers/abacus-pos/) | retail | 24 | API token | [servers/abacus-pos/](servers/abacus-pos/) |
 | [Storecove](servers/storecove/) | accounting | 10 | API token | [servers/storecove/](servers/storecove/) |
+| [Spreadconnect](servers/spod/) | ecommerce | 23 | API token | [servers/spod/](servers/spod/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
