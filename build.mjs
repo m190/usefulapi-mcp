@@ -259,9 +259,7 @@ ${SITE_CSS}`;
 // Product page only: the facts bar, the client tabs, the closed tool list.
 const PAGE_CSS = `
 .url,pre.code{word-break:normal;overflow-wrap:anywhere}
-.btn{color:var(--on-accent)!important;padding:9px 16px;border-radius:10px;font-size:15px}
-.note{display:block;margin-top:8px;color:var(--muted);font-size:14px}
-ol.steps{padding-left:20px}ol.steps>li{margin:0 0 10px}ol.steps>li:first-child{margin-bottom:14px}
+.btn{color:var(--on-accent)!important}
 details.manual{margin-top:14px;border-top:1px solid var(--border);font-size:14px}
 details.manual>summary{cursor:pointer;padding:12px 0 0;color:var(--muted);font-weight:600}
 details.manual[open]>summary{padding-bottom:4px}details.manual p{margin:8px 0}details.manual a{color:var(--accent)}
@@ -466,8 +464,7 @@ function productPage(s) {
   const claudeLink = claudeAddLink(s);
   // One panel per client, shown as tabs (TABS_JS).
   const clients = [
-    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol class="steps"><li><a class="btn" href="${attr(claudeLink)}" target="_blank" rel="nofollow noopener">Add to Claude</a>
-<span class="note">Opens claude.ai in a new tab. Click <b>Add</b> there. It then works in Claude Desktop too.</span></li>
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Click <a class="btn" href="${attr(claudeLink)}" target="_blank" rel="nofollow noopener">Add to Claude</a>, then click <b>Add</b> on claude.ai.</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
 ${manual(`<p>Open <b>Customize → Connectors → + Add → Add custom connector</b>. Enter the name <b>${name}</b> and this URL, then do steps 2 and 3:</p>
@@ -481,19 +478,15 @@ ${copyLine(urlShown)}
 <p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p>` },
     { c: "claude-code", label: "Claude Code", html: `<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
 ${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}` },
-    { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a>
-<span class="note">Opens Cursor. Confirm the install, then log in when Cursor asks.</span></p>
-${manual(`<p>Add this to <code>~/.cursor/mcp.json</code>:</p>
+    { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
 ${copyBlock(`{
   "mcpServers": {
     "${esc(s.slug)}": {
       "url": "${urlShown}"
     }
   }
-}`)}`)}` },
-    { c: "vscode", label: "VS Code", html: `<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a>
-<span class="note">Opens VS Code. Confirm the install, then log in when VS Code asks.</span></p>
-${manual(`<p>Add this to <code>.vscode/mcp.json</code>:</p>
+}`)}` },
+    { c: "vscode", label: "VS Code", html: `<p class="lead"><a class="btn" href="${attr(vscodeLink)}">Add to VS Code</a> or add this to <code>.vscode/mcp.json</code>:</p>
 ${copyBlock(`{
   "servers": {
     "${esc(s.slug)}": {
@@ -501,7 +494,7 @@ ${copyBlock(`{
       "url": "${urlShown}"
     }
   }
-}`)}`)}` },
+}`)}` },
     { c: "codex", label: "Codex", html: `<p class="lead">Run these commands. The second one opens the login page:</p>
 ${copyLine(`codex mcp add ${esc(s.slug)} --url ${urlShown}`)}
 ${copyLine(`codex mcp login ${esc(s.slug)}`)}` },
