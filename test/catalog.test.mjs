@@ -221,10 +221,11 @@ test("every server has a plain-Markdown llms.txt with its URL, tools and FAQ, an
     assert.ok(text.includes(`claude mcp add --transport http ${s.slug} ${s.endpoint}`), `${s.slug}: Claude Code command`);
     if ((s.tools || []).length) assert.ok(text.includes(`## Tools (${s.tools.length})`) && s.tools.every((t) => text.includes(`\`${t.name}\``)), `${s.slug}: every tool`);
     assert.ok(text.includes("## FAQ\n\n### "), `${s.slug}: FAQ`);
-    // Check the prose converted from the page's HTML. Code spans (`<id>:<code>`) and tool descriptions
-    // (vendor syntax such as an <a href="[[unsubscribe_link]]"> template) can hold angle brackets on purpose.
-    const prose = text.replace(/\n## Tools \(\d+\)\n[\s\S]*?\n## FAQ\n/, "\n## FAQ\n").replace(/`[^`\n]*`/g, "");
-    assert.doesNotMatch(prose, /<\/?(?:a|b|code|strong|p|br)\b|&(?:amp|lt|gt|quot|rsquo|rsaquo|raquo);/, `${s.slug}: no HTML tags or entities`);
+    // Code spans may hold placeholders such as `<id>:<code>`. Outside them, every < is escaped and every link is absolute.
+    const prose = text.replace(/`[^`\n]*`/g, "");
+    assert.doesNotMatch(prose, /(?<!\\)<\/?[A-Za-z]|&(?:amp|lt|gt|quot|rsquo|rsaquo|raquo);/, `${s.slug}: no HTML tags or entities`);
+    assert.doesNotMatch(prose, /(?<!\\)\]\((?!https:\/\/)/, `${s.slug}: only absolute https links`);
+    for (const p of s.pricing || []) if (p.scope) assert.ok(text.includes(`${p.plan}: `) && text.includes(` ${p.scope}, `), `${s.slug}: ${p.plan} scope`);
     assert.doesNotMatch(text, /\]\(#/, `${s.slug}: anchors are absolute links`);
   }
 });

@@ -925,12 +925,19 @@ writeFileSync(`${outDir}/llms.txt`,
 
 // Per-server llms.txt at /<slug>/llms.txt: the same facts as the product page (one source: the manifest and the
 // page's own FAQ), as plain Markdown for agents. A zone redirect sends <slug>.usefulapi.io/llms.txt here.
-const mdFromHtml = (html, pageUrl) => stripTags(String(html)
+// Literal text from the manifest (tool titles and descriptions, examples): escape what Markdown would act on, so
+// vendor syntax such as <a href="..."> or [Name](/path) stays text and cannot become a link or tag.
+const mdText = (t) => String(t).replace(/([\\`*_\[\]<>])/g, "\\$1");
+// The product page's own HTML (FAQ, sign-in text) → Markdown: our <a>, <code>, <b> become Markdown; any other tag is
+// dropped; entity-escaped manifest text stays escaped (\<), never active HTML.
+const mdFromHtml = (html, pageUrl) => String(html)
   .replace(/<a href="([^"]*)"[^>]*>(.*?)<\/a>/g, (_, href, text) => {
     const h = href.replace(/&amp;/g, "&");
     return `[${text}](${h.startsWith("#") ? pageUrl + h : h.startsWith("/") ? base + h : h})`;
   })
-  .replace(/<code>(.*?)<\/code>/g, "`$1`").replace(/<(?:b|strong)>(.*?)<\/(?:b|strong)>/g, "**$1**"));
+  .replace(/<code>(.*?)<\/code>/g, "`$1`").replace(/<(?:b|strong)>(.*?)<\/(?:b|strong)>/g, "**$1**")
+  .replace(/<[^>]+>/g, "")
+  .replace(/&lt;/g, "\\<").replace(/&gt;/g, "\\>").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
 function serverLlms(s) {
   const pageUrl = `${base}${pagePath(s)}`;
   const plainDesc = (d) => String(d || "").replace(ROUTE_SENTENCE, "$1").replace(ROUTE_PAREN, "$1").trim();
@@ -939,11 +946,16 @@ function serverLlms(s) {
   const tools = s.tools || [];
   const toolLines = (list) => list.map((t) => {
     const d = plainDesc(t.description).replace(/\s+/g, " ");
-    return `- \`${t.name}\`: ${t.title}${d && d !== t.title ? `. ${d}` : ""}`;
+    return `- \`${t.name}\`: ${mdText(t.title)}${d && d !== t.title ? `. ${mdText(d)}` : ""}`;
   }).join("\n");
   const other = tools.filter((t) => !groups.some(([k]) => k === t.type));
+  const links = `## Links\n\n- [${s.name} MCP server page](${pageUrl})\n- [All servers](${base}/llms.txt)\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n- Support: support@usefulapi.io\n`;
+  // A server that is not live gets no connection steps, the same as its product page.
+  if (s.status !== "live") return `# ${s.name} MCP server\n\n> ${mdText(what)} A hosted remote MCP server by usefulapi.io, an independent service (not affiliated with ${s.name}).\n\n` +
+    `This server is not live yet. Check back later: ${pageUrl}\n\n` + links;
+  const pricing = (s.pricing || []).map((p) => `- ${p.plan}: ${priceText(p)}${p.scope ? ` ${p.scope}` : ""}, ${limitText(p)}`).join("\n");
   return `# ${s.name} MCP server\n\n` +
-    `> ${what} A hosted remote MCP server by usefulapi.io, an independent service (not affiliated with ${s.name}).\n\n` +
+    `> ${mdText(what)} A hosted remote MCP server by usefulapi.io, an independent service (not affiliated with ${s.name}).\n\n` +
     `- Server URL: ${s.endpoint}\n- Transport: Streamable HTTP, OAuth sign-in\n- Status: ${s.status === "live" ? "live" : "launching soon"}\n- Page: ${pageUrl}\n\n` +
     `## Connect\n\n` +
     `- Claude (claude.ai, Desktop): Customize → Connectors → Add custom connector, name ${s.name}, URL ${s.endpoint}.\n` +
@@ -952,12 +964,12 @@ function serverLlms(s) {
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
     `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
     `${mdFromHtml(noHeaderText(s), pageUrl)}\n\n` +
-    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => decodeHint(h).trim()).join("\n\n")}\n\n` : "") +
-    ((s.examples || []).length ? `## Example requests\n\n${s.examples.map((e) => `- ${e}`).join("\n")}\n\n` : "") +
+    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => decodeHint(h).trim().replace(/[<>]/g, "\\$&")).join("\n\n")}\n\n` : "") +
+    ((s.examples || []).length ? `## Example requests\n\n${s.examples.map((e) => `- ${mdText(e)}`).join("\n")}\n\n` : "") +
+    (pricing ? `## Pricing\n\n${pricing}\n\nEach paid plan covers this ${s.name} server only.\n\n` : "") +
     (tools.length ? `## Tools (${tools.length})\n\n` + [...groups.map(([k, label]) => [label, tools.filter((t) => t.type === k)]), ["Other tools", other]]
       .filter(([, list]) => list.length).map(([label, list]) => `### ${label} (${list.length})\n\n${toolLines(list)}`).join("\n\n") + "\n\n" : "") +
-    `## FAQ\n\n${faqFor(s).map((f) => `### ${mdFromHtml(f.q, pageUrl)}\n\n${mdFromHtml(f.a, pageUrl)}`).join("\n\n")}\n\n` +
-    `## Links\n\n- [${s.name} MCP server page](${pageUrl})\n- [All servers](${base}/llms.txt)\n- [Terms of Service](${base}/terms/)\n- [Privacy Policy](${base}/privacy/)\n- Support: support@usefulapi.io\n`;
+    `## FAQ\n\n${faqFor(s).map((f) => `### ${mdFromHtml(f.q, pageUrl)}\n\n${mdFromHtml(f.a, pageUrl)}`).join("\n\n")}\n\n` + links;
 }
 for (const s of manifest.servers) writeFileSync(`${outDir}${pagePath(s)}llms.txt`, serverLlms(s));
 
