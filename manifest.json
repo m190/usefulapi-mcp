@@ -18142,6 +18142,18 @@
           "description": "WRITE: preview integer-cent retail price changes on selected variants. Confirm with preview_hash to update Printify, preserving all other variants, flags, SKUs and defaults; verify readback. Does not publish to an external sales channel. Reuse operation_id rather than blindly repeating an uncertain update."
         },
         {
+          "name": "printify_upload_image",
+          "type": "write",
+          "title": "Preview or upload an image",
+          "description": "WRITE: add artwork to the account's Printify media library, from a public HTTPS url (Printify downloads it) or plain base64 contents up to about 2.9 MB. Preview first, then confirm with preview_hash; reuse operation_id on a retry. Returns the image id for printify_create_product. Printify: POST /v1/uploads/images.json."
+        },
+        {
+          "name": "printify_create_product",
+          "type": "write",
+          "title": "Preview or create a draft product",
+          "description": "WRITE: create a draft product from a catalog blueprint and print provider, with the variants to sell (retail price in cents) and the artwork placements. Positions come from printify_get_variants placeholders; an embroidery position (for example on caps) selects embroidery. The preview checks every variant, position and image against the catalog and media library. Confirm with preview_hash; reuse operation_id on a retry. Never publishes or orders: use printify_publish_product separately. Printify: POST /v1/shops/{shop_id}/products.json."
+        },
+        {
           "name": "printify_write_operation_status",
           "type": "read",
           "title": "Check write operation",
@@ -18274,7 +18286,7 @@
           "description": "Cancel the caller's Printify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run printify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.2",
+      "version": "1.43.2",
       "login": {
         "kind": "key",
         "fields": [
@@ -27283,6 +27295,24 @@
           "description": "Attach an internal note to a customer, order, product or other record. Booqable: POST /api/4/notes."
         },
         {
+          "name": "booqable_set_order_delivery_address",
+          "type": "write",
+          "title": "Set an order's delivery address",
+          "description": "Set or replace the delivery address of an order (and make it a delivery order). Without confirm: true it only previews: it returns the current and the proposed address and what would change, and saves nothing; show that to the user and call again with confirm: true. The address you pass is the whole new address (an omitted address2, region or name is cleared). Only an address that belongs to the order is changed in place; when the order uses the customer's saved address, a new address is added to the order and the customer's address stays unchanged. Returns the order read back after saving. For delivery instructions, add a note with booqable_create_note (owner_type orders). Booqable: GET /api/4/orders/{id}?include=properties, PUT /api/4/properties/{id} or PUT /api/4/orders/{id} (properties_attributes, fulfillment_type, delivery_address_property_id)."
+        },
+        {
+          "name": "booqable_update_order_line",
+          "type": "write",
+          "title": "Update an order line",
+          "description": "Change one line of an order: quantity, title, extra information or price each. A higher quantity also raises the line's planning and can fail with a shortage; a shortage *warning* can be accepted with confirm_shortage: true. Order totals are recalculated by Booqable. Find line ids with booqable_get_order (include lines). Returns the line read back. Booqable: GET and PUT /api/4/lines/{id}."
+        },
+        {
+          "name": "booqable_remove_order_line",
+          "type": "write",
+          "title": "Remove an order line",
+          "description": "Remove one line (a rental item or a custom charge) from an order. Booqable archives the line and recalculates the totals. Without confirm: true it only previews the line; show it to the user, then call again with confirm: true. Afterwards it reads back the line's planning, so you can see whether the item is still reserved. To lower a quantity instead, use booqable_update_order_line. Booqable: GET /api/4/lines/{id}, DELETE /api/4/lines/{id}, GET /api/4/plannings."
+        },
+        {
           "name": "booqable_usage_status",
           "type": "meta",
           "title": "Usage status (free-tier meter)",
@@ -27307,7 +27337,7 @@
           "description": "Cancel the caller's Booqable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run booqable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.3",
+      "version": "1.41.1",
       "login": {
         "kind": "key",
         "fields": [

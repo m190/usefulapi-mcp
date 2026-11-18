@@ -56,6 +56,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `booqable_book_product` | **write** | Book a product on an order |
 | `booqable_transition_order_status` | **write** | Change an order's status |
 | `booqable_create_note` | **write** | Add a note |
+| `booqable_set_order_delivery_address` | **write** | Set an order's delivery address |
+| `booqable_update_order_line` | **write** | Update an order line |
+| `booqable_remove_order_line` | **write** | Remove an order line |
 | `booqable_usage_status` | meta | Usage status (free-tier meter) |
 | `booqable_request_feature` | meta | Request a missing feature |
 | `booqable_upgrade` | meta | Upgrade to Pro or Pro+ |
