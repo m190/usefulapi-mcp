@@ -1042,6 +1042,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [BrightHR](servers/brighthr/) | hr | 8 | API token | [servers/brighthr/](servers/brighthr/) |
 | [Simple Inventory](servers/simple-inventory/) | inventory | 15 | API token | [servers/simple-inventory/](servers/simple-inventory/) |
 | [Shift4Shop](servers/shift4shop/) | ecommerce | 17 | API token | [servers/shift4shop/](servers/shift4shop/) |
+| [Merchant360](servers/merchant360/) | scheduling | 14 | API token | [servers/merchant360/](servers/merchant360/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

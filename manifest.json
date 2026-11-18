@@ -175264,6 +175264,139 @@
         "Which products are on sale, and how many are in stock?",
         "Show the customer record for jane@example.com."
       ]
+    },
+    {
+      "slug": "merchant360",
+      "name": "Merchant360",
+      "category": "scheduling",
+      "description": "Read shifts and requests; create, change, publish and delete shifts; decide requests in Merchant360.",
+      "endpoint": "https://merchant360.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Merchant360 API key"
+          }
+        ],
+        "hint": "Create one in Merchant360 → **Developers & API** (owner only) with the **scheduling:read** scope, and **scheduling:write** to change shifts. Use a live key (`m360_live_`) or a test key (`m360_test_`). Test keys write to the same schedule as live keys. Your key is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "merchant360_check_key",
+          "type": "read",
+          "title": "Check the API key",
+          "description": "Show the merchant the API key acts on, the key's name, its scopes and whether it is live or test. Use it first to confirm the connection. Merchant360 API: GET /me."
+        },
+        {
+          "name": "merchant360_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List the staff roster (name, title, sort order, whether the person has a login). This list is read-only and not paginated. Shift workers use the roster key from merchant360_list_shifts. Merchant360 API: GET /staff."
+        },
+        {
+          "name": "merchant360_list_shifts",
+          "type": "read",
+          "title": "List shifts",
+          "description": "List team shifts that start in a window, draft and published, earliest first, with the roster of people who can be scheduled (roster[].key is the worker_key to use when writing a shift). Not paginated. The default window starts at Sunday midnight of the current week (server time zone) and lasts 14 days; the window may be at most 92 days. Merchant360 API: GET /shifts."
+        },
+        {
+          "name": "merchant360_get_shift",
+          "type": "read",
+          "title": "Get a shift",
+          "description": "Get one shift by id: worker, start and end, unpaid break, role, note, and whether it is a draft or published. Merchant360 API: GET /shifts/{id}."
+        },
+        {
+          "name": "merchant360_list_schedule_requests",
+          "type": "read",
+          "title": "List schedule requests",
+          "description": "List staff time-off requests and shift trade requests (drop, pickup, handoff), newest first. Filter by status when set. Not paginated. Old requests are left out by the vendor. Merchant360 API: GET /schedule-requests."
+        },
+        {
+          "name": "merchant360_create_shift",
+          "type": "write",
+          "title": "Create a draft shift",
+          "description": "WRITE: create a DRAFT shift. Staff do not see it and no text is sent until merchant360_publish_shifts publishes its window. Omit worker_key for an open shift. A shift lasts at most 24 hours. Merchant360 API: POST /shifts."
+        },
+        {
+          "name": "merchant360_update_shift",
+          "type": "write",
+          "title": "Update a shift",
+          "description": "WRITE: change one shift. Fields you omit keep their value. Send worker_key null to make the shift open, and role or note null (or empty) to clear them. A published shift shows the change to staff only after merchant360_publish_shifts runs again. Merchant360 API: PATCH /shifts/{id}."
+        },
+        {
+          "name": "merchant360_delete_shift",
+          "type": "write",
+          "title": "Delete a shift",
+          "description": "WRITE: permanently delete one shift, draft or published. No text is sent. A deleted published shift leaves the staff schedule at the next publish. Merchant360 API: DELETE /shifts/{id}."
+        },
+        {
+          "name": "merchant360_publish_shifts",
+          "type": "write",
+          "title": "Publish shifts",
+          "description": "WRITE: publish every DRAFT shift that starts in the window, so staff can see it. Each worker with a published shift and a mobile number gets a text with a link to their schedule. Publishing an already-published window publishes nothing new. Merchant360 API: POST /shifts/publish."
+        },
+        {
+          "name": "merchant360_decide_schedule_request",
+          "type": "write",
+          "title": "Approve or deny a schedule request",
+          "description": "WRITE: approve or deny one staff time-off or shift trade request. The worker is texted the outcome, with the note when given. Approved time off also blocks those days on the public booking calendar. A decided request returns 409. Merchant360 API: POST /schedule-requests/{id}."
+        },
+        {
+          "name": "merchant360_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "merchant360_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Merchant360 tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "merchant360_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Merchant360 (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "merchant360_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Merchant360 Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run merchant360_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show this week's shifts and who is not scheduled yet.",
+        "Add a draft shift for Sam on Saturday from 17:00 to 23:00 with a 30-minute break.",
+        "List the pending time-off requests and approve the one from Alex.",
+        "Publish next week's drafts so the team can see them."
+      ]
     }
   ]
 }
