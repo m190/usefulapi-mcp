@@ -1039,6 +1039,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Feed API](servers/feed-api/) | commerce | 16 | API token | [servers/feed-api/](servers/feed-api/) |
 | [Zoko](servers/zoko/) | messaging | 14 | API token | [servers/zoko/](servers/zoko/) |
 | [Conta](servers/conta/) | accounting | 20 | API token | [servers/conta/](servers/conta/) |
+| [BrightHR](servers/brighthr/) | hr | 8 | API token | [servers/brighthr/](servers/brighthr/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
