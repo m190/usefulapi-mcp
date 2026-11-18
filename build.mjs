@@ -927,7 +927,8 @@ writeFileSync(`${outDir}/llms.txt`,
 // page's own FAQ), as plain Markdown for agents. A zone redirect sends <slug>.usefulapi.io/llms.txt here.
 // Literal text from the manifest (tool titles and descriptions, examples): escape what Markdown would act on, so
 // vendor syntax such as <a href="..."> or [Name](/path) stays text and cannot become a link or tag.
-const mdText = (t) => String(t).replace(/([\\`*_\[\]<>])/g, "\\$1");
+// Code spans (`...`) stay as they are: Markdown shows their content literally, so they cannot become a link or tag.
+const mdText = (t) => String(t).split(/(`[^`\n]*`)/).map((part, i) => (i % 2 ? part : part.replace(/([\\`*_\[\]<>])/g, "\\$1"))).join("");
 // The product page's own HTML (FAQ, sign-in text) → Markdown: our <a>, <code>, <b> become Markdown; any other tag is
 // dropped; entity-escaped manifest text stays escaped (\<), never active HTML.
 const mdFromHtml = (html, pageUrl) => String(html)
@@ -964,7 +965,7 @@ function serverLlms(s) {
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
     `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
     `${mdFromHtml(noHeaderText(s), pageUrl)}\n\n` +
-    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => decodeHint(h).trim().replace(/[<>]/g, "\\$&")).join("\n\n")}\n\n` : "") +
+    ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => decodeHint(h).trim().split(/(`[^`\n]*`)/).map((part, i) => (i % 2 ? part : part.replace(/[<>]/g, "\\$&"))).join("")).join("\n\n")}\n\n` : "") +
     ((s.examples || []).length ? `## Example requests\n\n${s.examples.map((e) => `- ${mdText(e)}`).join("\n")}\n\n` : "") +
     (pricing ? `## Pricing\n\n${pricing}\n\nEach paid plan covers this ${s.name} server only.\n\n` : "") +
     (tools.length ? `## Tools (${tools.length})\n\n` + [...groups.map(([k, label]) => [label, tools.filter((t) => t.type === k)]), ["Other tools", other]]

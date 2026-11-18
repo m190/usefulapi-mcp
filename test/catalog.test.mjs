@@ -225,6 +225,7 @@ test("every server has a plain-Markdown llms.txt with its URL, tools and FAQ, an
     const prose = text.replace(/`[^`\n]*`/g, "");
     assert.doesNotMatch(prose, /(?<!\\)<\/?[A-Za-z]|&(?:amp|lt|gt|quot|rsquo|rsaquo|raquo);/, `${s.slug}: no HTML tags or entities`);
     assert.doesNotMatch(prose, /(?<!\\)\]\((?!https:\/\/)/, `${s.slug}: only absolute https links`);
+    assert.doesNotMatch(text.match(/`[^`\n]*`/g)?.join(" ") ?? "", /\\[<>]/, `${s.slug}: code spans stay literal`);
     for (const p of s.pricing || []) if (p.scope) assert.ok(text.includes(`${p.plan}: `) && text.includes(` ${p.scope}, `), `${s.slug}: ${p.plan} scope`);
     assert.doesNotMatch(text, /\]\(#/, `${s.slug}: anchors are absolute links`);
   }
