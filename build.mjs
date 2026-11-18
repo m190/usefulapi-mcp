@@ -458,10 +458,12 @@ function productPage(s) {
   const claudeLink = claudeAddLink(s);
   // One panel per client, shown as tabs (TABS_JS).
   const clients = [
-    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<ol><li>Click <a class="btn" href="${attr(claudeLink)}" rel="nofollow noopener">Add to Claude</a>. Claude opens the <b>Add custom connector</b> dialog with the name and URL filled in. Click <b>Add</b>.
-<br>In the desktop app, or if no dialog opens: open <b>Customize → Connectors</b>, click <b>+ Add → Add custom connector</b>, enter the name <b>${name}</b> and this URL, then click <b>Add</b>:${copyLine(urlShown)}</li>
+    { c: "claude", label: "Claude", for: "claude.ai · Desktop", html: `<p class="lead"><a class="btn" href="${attr(claudeLink)}" rel="nofollow noopener">Add to Claude</a></p>
+<ol><li>In the dialog that opens, click <b>Add</b>.</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
+<p class="lead small">Desktop app, or no dialog? Open <b>Customize → Connectors → + Add → Add custom connector</b> , enter the name <b>${name}</b> and this URL:</p>
+${copyLine(urlShown)}
 <p class="lead small">Team and Enterprise: an Owner adds the connector for the organization first.</p>` },
     { c: "chatgpt", label: "ChatGPT", for: "chatgpt.com", html: `<ol><li>Open <a href="https://chatgpt.com/plugins" rel="nofollow noopener">Plugins</a>, click <b>+</b>, then <b>Add custom MCP server</b>.</li>
 <li>Enter the name <b>${name}</b> and this URL, choose <b>OAuth</b> as the authentication, confirm the warning and create it:${copyLine(urlShown)}</li>
