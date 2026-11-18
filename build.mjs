@@ -466,7 +466,7 @@ function productPage(s) {
 <div class="fold"><p>Open <b>Customize → Connectors → + Add → Add custom connector</b>, then enter the name <b>${name}</b> and this URL:</p>
 ${copyLine(urlShown)}
 <p>The Claude Free plan allows one custom connector.</p></div></details></div>
-<ol><li>In the dialog, click <b>Continue</b>. Under <b>Authentication</b>, choose <b>Sign in now</b>, then confirm.</li>
+<ol><li>In the dialog, click <b>Continue</b>, keep the detected options and confirm.</li>
 <li>${authStep}.</li>
 <li>In a chat, click <b>+ → Connectors</b> and turn on <b>${name}</b>.</li></ol>
 <p class="lead small">Team and Enterprise: an Owner <a href="${attr(claudeAddLink(s, "admin-settings"))}" target="_blank" rel="nofollow noopener">adds it for the organization</a> first.</p>` },
