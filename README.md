@@ -1084,6 +1084,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [AuftragsDesk](servers/auftragsdesk/) | business-operations | 13 | API token | [servers/auftragsdesk/](servers/auftragsdesk/) |
 | [Sage Sales Management](servers/sage-sales-management/) | crm | 17 | API token | [servers/sage-sales-management/](servers/sage-sales-management/) |
 | [RetailCloud](servers/retailcloud-pos/) | retail | 11 | API token | [servers/retailcloud-pos/](servers/retailcloud-pos/) |
+| [BlueCamroo](servers/bluecamroo/) | crm | 21 | API token | [servers/bluecamroo/](servers/bluecamroo/) |
+| [SugarCRM](servers/sugarcrm/) | crm | 11 | API token | [servers/sugarcrm/](servers/sugarcrm/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
