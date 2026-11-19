@@ -180351,6 +180351,111 @@
         "What is the cheapest 3-night stay for 4 people in March?",
         "Tag booking 123456 as handled externally."
       ]
+    },
+    {
+      "slug": "teamsnap",
+      "name": "TeamSnap",
+      "category": "sports",
+      "description": "Read teams, rosters, events and locations; create team events in TeamSnap.",
+      "endpoint": "https://teamsnap.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads your teams, members, events and locations, and can create events when you ask it to. Team members are not notified unless you ask. You can revoke access any time from your TeamSnap account."
+      },
+      "tools": [
+        {
+          "name": "teamsnap_get_me",
+          "type": "read",
+          "title": "Get my TeamSnap profile",
+          "description": "Return the signed-in TeamSnap user, including the user id that teamsnap_list_teams uses. TeamSnap API: GET /v3/me."
+        },
+        {
+          "name": "teamsnap_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams a user belongs to, with name, sport, season and league. Without user_id, the signed-in user is used (one extra call to /v3/me). TeamSnap API: GET /v3/teams?userId=."
+        },
+        {
+          "name": "teamsnap_list_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the members (roster) of a team: name, position, jersey number, manager flag and team id. TeamSnap API: GET /v3/members?teamId=."
+        },
+        {
+          "name": "teamsnap_list_events",
+          "type": "read",
+          "title": "List team events",
+          "description": "List the events (games, practices and other events) of a team with start date, duration, location id and status. TeamSnap API: GET /v3/events?teamId=."
+        },
+        {
+          "name": "teamsnap_list_locations",
+          "type": "read",
+          "title": "List team locations",
+          "description": "List the saved locations (fields, venues) of a team. Use a location id in teamsnap_create_event. TeamSnap API: GET /v3/locations?teamId=."
+        },
+        {
+          "name": "teamsnap_create_event",
+          "type": "write",
+          "title": "Create team event",
+          "description": "Create a practice or other event for a team. This WRITES to TeamSnap. Team members are not notified unless notify_team is true (default false). TeamSnap API: POST /v3/events."
+        },
+        {
+          "name": "teamsnap_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "teamsnap_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TeamSnap tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "teamsnap_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TeamSnap (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "teamsnap_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TeamSnap Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run teamsnap_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which teams am I on, and what is coming up for them this week?",
+        "Who is on the roster of my U12 team, and who is a manager?",
+        "What events are scheduled for my team in the next 14 days, and where?",
+        "Add a practice for my team next Tuesday at 18:00 at our usual field."
+      ]
     }
   ]
 }

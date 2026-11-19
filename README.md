@@ -1076,6 +1076,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [TapGoods](servers/tapgoods/) | rental | 11 | API token | [servers/tapgoods/](servers/tapgoods/) |
 | [Veracross](servers/veracross/) | education | 16 | API token | [servers/veracross/](servers/veracross/) |
 | [Bookster](servers/bookster/) | rental | 14 | API token | [servers/bookster/](servers/bookster/) |
+| [TeamSnap](servers/teamsnap/) | sports | 10 | OAuth | [servers/teamsnap/](servers/teamsnap/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
