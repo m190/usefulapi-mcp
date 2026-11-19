@@ -180942,6 +180942,541 @@
         "Which PMS sync failed for our portfolio this week, and why?",
         "Raise the minimum rent on unit 149-304 to $1,650 and mark it available from 2026-12-15."
       ]
+    },
+    {
+      "slug": "booxi",
+      "name": "Booxi",
+      "category": "scheduling",
+      "description": "Read services, staff, group events and free time slots in Booxi.",
+      "endpoint": "https://booxi.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Booxi Merchant API key"
+          }
+        ],
+        "hint": "Find it in Booxi Back Office → **My Business → Business Details**. Your key is used only to call the Booxi API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "booxi_get_merchant",
+          "type": "read",
+          "title": "Get the business",
+          "description": "Get the business that this Merchant API key belongs to: name, address, contact details, group and tags. Booxi API: GET /merchant."
+        },
+        {
+          "name": "booxi_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services that the business offers online, with price, duration and booking method. Only services available online are returned. Booxi API: GET /service."
+        },
+        {
+          "name": "booxi_list_service_categories",
+          "type": "read",
+          "title": "List service categories",
+          "description": "List the service categories of the business. Booxi API: GET /serviceCategory."
+        },
+        {
+          "name": "booxi_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List the staff members of the business, optionally only those who offer one service. Booxi API: GET /staff."
+        },
+        {
+          "name": "booxi_list_service_customizations",
+          "type": "read",
+          "title": "List service customizations",
+          "description": "List the customizations (price or duration changes) that apply to a service or a staff member. Booxi API: GET /serviceCustomization."
+        },
+        {
+          "name": "booxi_list_group_events",
+          "type": "read",
+          "title": "List group events",
+          "description": "List group events (classes, workshops) that start in a date range, in time order. The range is at most 180 days. Booxi API: GET /groupEvent."
+        },
+        {
+          "name": "booxi_get_group_event",
+          "type": "read",
+          "title": "Get a group event",
+          "description": "Get one group event by id: start, duration, price, location, staff and places. Booxi API: GET /groupEvent/{groupEventId}."
+        },
+        {
+          "name": "booxi_get_service_availability",
+          "type": "read",
+          "title": "Get availability for a service",
+          "description": "Get the free time slots for one service in a time window, or the next page with a cursor. Booxi API: GET /service/{serviceId}/availability."
+        },
+        {
+          "name": "booxi_find_merchant_availability",
+          "type": "read",
+          "title": "Find availability across services",
+          "description": "Find the first free slot of each service in a window of at most 31 days, optionally filtered by keyword or booking method. Use the cursor for more results. Booxi API: GET /merchantAvailability."
+        },
+        {
+          "name": "booxi_search_availability",
+          "type": "read",
+          "title": "Search availability for several services",
+          "description": "Search free time slots for up to 5 services together, for example a combined appointment with two services. Give a window (from and to) or a cursor. Booxi API: POST /availability/search."
+        },
+        {
+          "name": "booxi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "booxi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Booxi tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "booxi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Booxi (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "booxi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Booxi Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run booxi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What services does my business offer online, and who performs them?",
+        "Show me the free places in our group classes next week.",
+        "Find the first open time for a 60-minute haircut this week.",
+        "Which staff members offer massage, and when are they free on Saturday?"
+      ]
+    },
+    {
+      "slug": "auftragsdesk",
+      "name": "AuftragsDesk",
+      "category": "business-operations",
+      "description": "Read orders and customers; create orders, customers and status changes in AuftragsDesk.",
+      "endpoint": "https://auftragsdesk.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AuftragsDesk company API key"
+          },
+          {
+            "label": "Rights of this key"
+          }
+        ],
+        "hint": "Create the key in AuftragsDesk → **Integrationen → Schnittstelle und Webhooks**. The open interface needs the Enterprise plan. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "auftragsdesk_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List field-service orders (Aufträge), newest change first. Filter by status, by last change time, by ordering party, by customer (job site) or by the ordering party's own order number. Needs the auftraege:lesen right. Open interface: GET /api/v1/auftraege."
+        },
+        {
+          "name": "auftragsdesk_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by id: status and status text, description, ordering party, customer (job site), address, appointment, assigned staff and timestamps. Needs the auftraege:lesen right. Open interface: GET /api/v1/auftraege/{id}."
+        },
+        {
+          "name": "auftragsdesk_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (Kunden, the job sites where work is done), sorted by name. Search by part of the name or filter by ordering party. Needs the kunden:lesen right. Open interface: GET /api/v1/kunden."
+        },
+        {
+          "name": "auftragsdesk_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer (job site) by id: name, address, contact person, phone and email, and the ordering party. Needs the kunden:lesen right. Open interface: GET /api/v1/kunden/{id}."
+        },
+        {
+          "name": "auftragsdesk_list_ordering_parties",
+          "type": "read",
+          "title": "List ordering parties",
+          "description": "List ordering parties (Auftraggeber): the businesses that send orders, for example a property management company. Sorted by name. Needs the auftraggeber:lesen right. Open interface: GET /api/v1/auftraggeber."
+        },
+        {
+          "name": "auftragsdesk_get_ordering_party",
+          "type": "read",
+          "title": "Get an ordering party",
+          "description": "Get one ordering party (Auftraggeber) by id: name, address, contact person, phone and email. Needs the auftraggeber:lesen right. Open interface: GET /api/v1/auftraggeber/{id}."
+        },
+        {
+          "name": "auftragsdesk_create_customer",
+          "type": "write",
+          "title": "Create a customer",
+          "description": "Create a customer (job site) for an ordering party. Required: ordering_party_id and name. Needs the kunden:schreiben right. Open interface: POST /api/v1/kunden."
+        },
+        {
+          "name": "auftragsdesk_create_order",
+          "type": "write",
+          "title": "Create an order",
+          "description": "Create an order for a customer (job site). AuftragsDesk assigns the order number. Required: ordering_party_id, customer_id and description. With an appointment the order is scheduled at once. Needs the auftraege:schreiben right. Open interface: POST /api/v1/auftraege."
+        },
+        {
+          "name": "auftragsdesk_change_order_status",
+          "type": "write",
+          "title": "Change an order's status",
+          "description": "Change the status of an order, for example TERMINIERT, IN_BEARBEITUNG, ABGESCHLOSSEN or STORNIERT. The same transition rules as in the app apply; a refused change returns HTTP 409. Needs the auftraege:schreiben right. Open interface: POST /api/v1/auftraege/{id}/status."
+        },
+        {
+          "name": "auftragsdesk_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "auftragsdesk_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AuftragsDesk tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "auftragsdesk_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for AuftragsDesk (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "auftragsdesk_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AuftragsDesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run auftragsdesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which orders are still open for ordering party ACME and when are they scheduled?",
+        "Show me all orders that changed since yesterday and their current status.",
+        "Create a customer for the new site at Hauptstrasse 5 under our property manager, then open an order there for a boiler service.",
+        "Mark order A-2026-000123 as completed."
+      ]
+    },
+    {
+      "slug": "sage-sales-management",
+      "name": "Sage Sales Management",
+      "category": "crm",
+      "description": "Read accounts, contacts, opportunities; create records and update deals in Sage Sales Management.",
+      "endpoint": "https://sage-sales-management.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Public API key"
+          },
+          {
+            "label": "Private API key"
+          }
+        ],
+        "hint": "Find them in Sage Sales Management → **Settings → Integrations → API key** (an admin account). Your keys are encrypted in your connection and sent only to sign in. Records that tools return are sent to your connected AI provider. Disconnect UsefulAPI to stop this connection. [API reference](https://developer.forcemanager.com/)."
+      },
+      "tools": [
+        {
+          "name": "sagesales_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List the accounts (companies or people you sell to). Sage Sales Management API: GET /accounts."
+        },
+        {
+          "name": "sagesales_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List the contacts linked to accounts. Sage Sales Management API: GET /contacts."
+        },
+        {
+          "name": "sagesales_list_opportunities",
+          "type": "read",
+          "title": "List opportunities",
+          "description": "List the sales opportunities. Sage Sales Management API: GET /opportunities."
+        },
+        {
+          "name": "sagesales_list_activities",
+          "type": "read",
+          "title": "List activities",
+          "description": "List the logged activities (visits, calls, notes). Sage Sales Management API: GET /activities."
+        },
+        {
+          "name": "sagesales_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List the sales order headers (proposals drawn up for accounts). Sage Sales Management API: GET /salesorders."
+        },
+        {
+          "name": "sagesales_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products in the catalog. Sage Sales Management API: GET /products."
+        },
+        {
+          "name": "sagesales_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "Get one account by id. Sage Sales Management API: GET /accounts/{id}."
+        },
+        {
+          "name": "sagesales_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id. Sage Sales Management API: GET /contacts/{id}."
+        },
+        {
+          "name": "sagesales_get_opportunity",
+          "type": "read",
+          "title": "Get an opportunity",
+          "description": "Get one opportunity by id. Sage Sales Management API: GET /opportunities/{id}."
+        },
+        {
+          "name": "sagesales_create_account",
+          "type": "write",
+          "title": "Create an account",
+          "description": "Create a new account. Writes data in the CRM. Sage Sales Management API: POST /accounts."
+        },
+        {
+          "name": "sagesales_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a new contact, optionally linked to an account by accountId. Writes data in the CRM. Sage Sales Management API: POST /contacts."
+        },
+        {
+          "name": "sagesales_create_opportunity",
+          "type": "write",
+          "title": "Create an opportunity",
+          "description": "Create a new sales opportunity for an account. Writes data in the CRM. Sage Sales Management API: POST /opportunities."
+        },
+        {
+          "name": "sagesales_update_opportunity",
+          "type": "write",
+          "title": "Update an opportunity",
+          "description": "Change the value, chance of winning or comment of one opportunity. Only the fields you set are sent. Sage Sales Management API: PUT /opportunities/{id}."
+        },
+        {
+          "name": "sagesales_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sagesales_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sage Sales Management tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sagesales_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Sage Sales Management (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sagesales_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sage Sales Management Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sagesales_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which opportunities are open, and what are they worth in total?",
+        "List the accounts created this month, newest first.",
+        "Show the contacts linked to a given account.",
+        "Create an opportunity worth 5000 for an account, with a 60 percent chance of winning."
+      ]
+    },
+    {
+      "slug": "retailcloud-pos",
+      "name": "RetailCloud",
+      "category": "retail",
+      "description": "Read products, orders and purchase orders; update stock, costs, tracking in RetailCloud.",
+      "endpoint": "https://retailcloud-pos.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "RetailCloud API token"
+          }
+        ],
+        "hint": "Create the token in the RetailCloud admin portal: vendor profile, **Generate token**. Your buyer must enable the V2 API for your vendor profile first. A staging token works only with staging, and a production token only with production. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "retailcloudpos_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List your products with their variants, SKUs, prices, cost, inventory and published status (true when a buyer published the product to the storefront). Read-only. Uses GET /v2/products."
+        },
+        {
+          "name": "retailcloudpos_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders to fulfill, with UIID, customer shipping address, SKU, quantity, cost, order date and personalization. Shipped orders are left out unless include_shipped is true. Read-only. Uses GET /v2/orders."
+        },
+        {
+          "name": "retailcloudpos_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "Get the purchase order (PO) number that holds an order, by its UIID. RetailCloud issues POs each business day for the preceding period. Read-only. Uses GET /v2/po."
+        },
+        {
+          "name": "retailcloudpos_create_products",
+          "type": "write",
+          "title": "Create or update products",
+          "description": "Create products, or update a product that is still in offered status (same call). Maximum 250 products per request. A product with errors is not created; the others still are. New products stay offered until the buyer publishes them. Changes bind the vendor: call only after the user confirms the exact products. Uses POST /v2/products."
+        },
+        {
+          "name": "retailcloudpos_add_variants",
+          "type": "write",
+          "title": "Add variants",
+          "description": "Add variants to an existing product. Give the SKU of one existing variant of that product. A product can hold at most 100 variants. Changes bind the vendor: call only after the user confirms. Uses POST /v2/variants."
+        },
+        {
+          "name": "retailcloudpos_update_inventory",
+          "type": "write",
+          "title": "Update inventory, price and cost",
+          "description": "Update the quantity, suggested retail price or cost of variants, by your SKU. Set available to 0 to stop sales of a SKU. A cost increase removes the product from the site until the buyer approves it. Check open orders before you change inventory. Changes bind the vendor: call only after the user confirms. Uses PUT /v2/inventory."
+        },
+        {
+          "name": "retailcloudpos_add_tracking",
+          "type": "write",
+          "title": "Add tracking and mark shipped",
+          "description": "Add the tracking number and carrier to orders and mark them shipped. Call it only after the order has shipped. Changes bind the vendor: call only after the user confirms. Uses POST /v2/orders/fulfill."
+        },
+        {
+          "name": "retailcloudpos_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "retailcloudpos_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the RetailCloud tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "retailcloudpos_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for RetailCloud (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "retailcloudpos_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's RetailCloud Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run retailcloudpos_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our products are low on stock?",
+        "Show the orders that have not shipped yet, with their UIIDs.",
+        "Add tracking number AAA2223333WW2 from carrier UPS to order UG1-123456789 and mark it shipped.",
+        "Set the cost of SKU VAR01SKU to 5.50."
+      ]
     }
   ]
 }
