@@ -7,6 +7,7 @@ import { readFileSync, readdirSync, mkdtempSync, rmSync, existsSync } from "node
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadBlog } from "../blog.mjs";
 import { PAGE_SIZE, cardsHtml, directoryHref, paginate, paginationHtml, selectServers, staticPagePath } from "../portal/catalog-model.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -120,7 +121,7 @@ test("every directory card and every search-index slice renders group and tool m
 
 test("blog index keeps every post in the HTML and adds the show-more button only when needed", () => {
   const html = read("blog/index.html");
-  const posts = readdirSync(join(root, "blog")).filter((f) => f.endsWith(".md")).length;
+  const posts = loadBlog(JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"))).posts.filter((p) => p.lang === "en").length;
   assert.equal((html.match(/<li\b[^>]*><a href="\/blog\//g) || []).length, posts);
   assert.ok(html.includes('id="post-list"'));
   assert.equal(html.includes('id="more-posts"'), posts > 10);

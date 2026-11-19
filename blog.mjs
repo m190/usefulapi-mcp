@@ -5,7 +5,9 @@
 //   ---
 //   title: Plan RotaCloud shifts from ChatGPT          (max 70 chars)
 //   description: One sentence for search results.      (50-160 chars)
-//   date: 2026-10-26                                    (YYYY-MM-DD; one original article per day)
+//   date: 2026-10-26                                    (YYYY-MM-DD; one original article per day; a future date =
+//                                                        scheduled: the build leaves it out until that UTC day, and the
+//                                                        fleet's daily sync-portal run rebuilds the site once it is due)
 //   products: rotacloud                                 (1+ live server slugs, space- or comma-separated)
 //   lang: en                                           (optional: en, nl, es or de; defaults to en)
 //   ---
@@ -158,7 +160,6 @@ export function checkOne(slug, text, bySlug, today) {
   if (meta.description && !/[.!?]$/.test(meta.description)) err.push("description: end with a period");
   const d = meta.date || "";
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || isNaN(Date.parse(d + "T00:00:00Z")) || new Date(d + "T00:00:00Z").toISOString().slice(0, 10) !== d) err.push(`date: "${d}" is not YYYY-MM-DD`);
-  else if (d > today) err.push(`date: ${d} is in the future`);
   const products = (meta.products || "").split(/[\s,]+/).filter(Boolean);
   if (!products.length) err.push("products: name at least one server slug");
   for (const p of products) {
@@ -188,7 +189,7 @@ export function checkOne(slug, text, bySlug, today) {
       else if (m[3] && !["privacy", "terms"].includes(m[3]) && !bySlug.has(m[3])) err.push(`link ${l}: no such server page`);
     } else if (!SAFE_URL.test(l)) err.push(`link ${l}: only https:// or /internal/ links`);
   }
-  return { err, post: { slug, title: meta.title, description: meta.description, date: d, products, lang, id: meta.translation || slug, source: meta.source, aliases, html: r.html, links: r.links } };
+  return { err, post: { slug, title: meta.title, description: meta.description, date: d, scheduled: d > today, products, lang, id: meta.translation || slug, source: meta.source, aliases, html: r.html, links: r.links } };
 }
 
 /** Validate the article registry: translations are siblings, never extra publication days. */
@@ -225,7 +226,9 @@ export function validateTranslations(posts) {
   return errors;
 }
 
-/** Load originals and full translations; only controls output, never bypasses registry validation. */
+/** Load originals and full translations; only controls output, never bypasses registry validation.
+ *  A post dated after `today` is checked like any other (one original per day includes it) but returned in
+ *  `scheduled`, not in `posts`: the build leaves it out, and no published post may link to it yet. */
 export function loadBlog(manifest, only, today = new Date().toISOString().slice(0, 10), dir = DIR) {
   const bySlug = new Map(manifest.servers.map((s) => [s.slug, s]));
   const posts = [], errors = [], files = [];
@@ -247,7 +250,22 @@ export function loadBlog(manifest, only, today = new Date().toISOString().slice(
   }
   errors.push(...validateTranslations(posts));
   posts.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id) || a.lang.localeCompare(b.lang));
-  return { posts: only ? posts.filter(p => only.includes(p.slug) || only.includes(p.id)) : posts, errors };
+  // A link target must be live when the linking post goes live (its date, or today for a published post).
+  const byPath = new Map(posts.flatMap(p => [blogPath(p), ...(p.aliases || [])].map(path => [path, p])));
+  const sitePath = link => {
+    try {
+      const u = new URL(link, "https://usefulapi.io");
+      if (!["usefulapi.io", "www.usefulapi.io"].includes(u.hostname)) return null;
+      return u.pathname.endsWith("/") ? u.pathname : `${u.pathname}/`;
+    } catch { return null; }
+  };
+  for (const p of posts) for (const link of p.links || []) {
+    const target = byPath.get(sitePath(link));
+    if (target && target.date > (p.date > today ? p.date : today)) errors.push(`${p.file}: link ${link}: that post is published later (${target.date})`);
+  }
+  const scheduled = posts.filter(p => p.scheduled), published = posts.filter(p => !p.scheduled);
+  const pick = list => only ? list.filter(p => only.includes(p.slug) || only.includes(p.id)) : list;
+  return { posts: pick(published), scheduled: pick(scheduled), errors };
 }
 export const sourceHash = text => createHash("sha256").update(text.replace(/\r\n?/g, "\n")).digest("hex");
 
@@ -255,9 +273,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", import.meta.url), "utf8"));
   const sources = process.argv.includes("--sources");
   const only = process.argv.slice(2).filter(a => a !== "--sources");
-  const { posts, errors } = loadBlog(manifest, only.length ? only : undefined);
-  if (sources) for (const p of posts.filter(p => p.lang === "en")) console.log(`${p.id} ${p.hash}`);
+  const { posts, scheduled, errors } = loadBlog(manifest, only.length ? only : undefined);
+  if (sources) for (const p of [...posts, ...scheduled].filter(p => p.lang === "en")) console.log(`${p.id} ${p.hash}`);
+  for (const p of scheduled) console.log(`${p.file}: scheduled for ${p.date} (left out of the build until then)`);
   for (const e of errors) console.log(e);
-  console.log(`${posts.length} ok, ${errors.length} error(s)`);
+  console.log(`${posts.length} ok, ${scheduled.length} scheduled, ${errors.length} error(s)`);
   process.exitCode = errors.length ? 1 : 0;
 }
