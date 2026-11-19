@@ -180456,6 +180456,492 @@
         "What events are scheduled for my team in the next 14 days, and where?",
         "Add a practice for my team next Tuesday at 18:00 at our usual field."
       ]
+    },
+    {
+      "slug": "ts-facturas",
+      "name": "TS Facturas",
+      "category": "accounting",
+      "description": "Read invoices, contacts, expenses and payments; create contacts and payments in TS Facturas.",
+      "endpoint": "https://ts-facturas.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API client ID"
+          },
+          {
+            "label": "API client secret"
+          }
+        ],
+        "hint": "Create them in TS Facturas → **Integraciones → API Pública → Generar credenciales**. The API needs a Pro or Ilimitado plan (TS Facturas marks it BETA). Your secret is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tsfacturas_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Show the business this API client belongs to: business ID, fiscal name, VAT number and role. Good first call to check the connection. TS Facturas API: GET /v1/auth/info."
+        },
+        {
+          "name": "tsfacturas_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices and sales receipts with status, totals, dates and contact. Filter by status, date range, customer VAT number or paid state. Use the id from here with tsfacturas_get_invoice. TS Facturas API: GET /v1/invoices."
+        },
+        {
+          "name": "tsfacturas_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one invoice or sales receipt with its lines, taxes, totals, contact and status. TS Facturas API: GET /v1/invoices/{id}."
+        },
+        {
+          "name": "tsfacturas_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customers and providers (contacts) with fiscal name, VAT number and contact details. Filter by exact VAT number or customer/provider role. TS Facturas API: GET /v1/contacts."
+        },
+        {
+          "name": "tsfacturas_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List expenses (purchase documents) with identifier, date, contact, lines and totals. Filter by date range, identifier, paid state or supplier VAT number. TS Facturas API: GET /v1/expenses."
+        },
+        {
+          "name": "tsfacturas_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List payments with date, amount, method, direction (income or expense) and the contact or accounting account. Filter by direction, method, date range, contact or account. TS Facturas API: GET /v1/payments."
+        },
+        {
+          "name": "tsfacturas_create_contact",
+          "type": "write",
+          "title": "Create contact",
+          "description": "Create a customer or provider (contact) in the business. Writes a new record to the business books. TS Facturas API: POST /v1/contacts."
+        },
+        {
+          "name": "tsfacturas_create_product",
+          "type": "write",
+          "title": "Create product",
+          "description": "Create a product or service in the business catalogue with its tax key and prices. Writes a new record to the business books. TS Facturas API: POST /v1/products."
+        },
+        {
+          "name": "tsfacturas_create_payment",
+          "type": "write",
+          "title": "Create payment",
+          "description": "Record a payment in the business books: income received or expense paid. Give exactly one of contact_id or document_id. Writes a new record. TS Facturas API: POST /v1/payments."
+        },
+        {
+          "name": "tsfacturas_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tsfacturas_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the TS Facturas tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tsfacturas_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for TS Facturas (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tsfacturas_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's TS Facturas Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run tsfacturas_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my issued invoices are not paid yet?",
+        "List the expenses from October 2026 with their suppliers.",
+        "Add a new customer with VAT number B12345678 and email billing@acme.example.",
+        "Record a transfer of 500 EUR received from this customer."
+      ]
+    },
+    {
+      "slug": "fieldaware",
+      "name": "FieldAware",
+      "category": "scheduling",
+      "description": "Read jobs, customers, contacts and invoices; create customers, create or update jobs in FieldAware.",
+      "endpoint": "https://fieldaware.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FieldAware API key"
+          }
+        ],
+        "hint": "FieldAware issues API keys per user account. Ask your FieldAware administrator to create one for your user, or ask FieldAware support. Your plan or admin may need to enable API access first. The key is sent only to the FieldAware API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fieldaware_whoami",
+          "type": "read",
+          "title": "Who am I",
+          "description": "Identify the FieldAware user that the API key belongs to (uuid, user URL, roles and email). Use it to check the key works. GET /auth/whoami."
+        },
+        {
+          "name": "fieldaware_get_business",
+          "type": "read",
+          "title": "Get business profile",
+          "description": "Read the company profile of the FieldAware account (name, address, contact details and settings). GET /business."
+        },
+        {
+          "name": "fieldaware_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List field-service jobs scheduled in a time window (deferred and recurring jobs included), with state, schedule, location, crew and tasks. The window is required. GET /job/?start=&end=."
+        },
+        {
+          "name": "fieldaware_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "Read one job: its description, schedule, state, customer location, asset, crew, tasks, items and labor. GET /job/{uuid}."
+        },
+        {
+          "name": "fieldaware_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (companies or accounts) with their name, customer id and discount. Filter by name, email, tax status or GL account. GET /customer/."
+        },
+        {
+          "name": "fieldaware_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Read one customer by uuid, including its discount, billing details and custom fields. GET /customer/{uuid}."
+        },
+        {
+          "name": "fieldaware_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contact persons (first name, last name, email, phone) and the customer each belongs to. GET /contact/."
+        },
+        {
+          "name": "fieldaware_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List service locations (street address, locality, region, postcode, country) and whether each is a billing location. GET /location/."
+        },
+        {
+          "name": "fieldaware_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices with their number, created date, location and total amount. Optionally limit to a created-date range. GET /invoice/."
+        },
+        {
+          "name": "fieldaware_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List catalogue items (parts and products) with name, part number and prices. GET /item/."
+        },
+        {
+          "name": "fieldaware_list_tasks",
+          "type": "read",
+          "title": "List task templates",
+          "description": "List the service task templates (name, price, tax and GL account) that jobs can use. GET /task/."
+        },
+        {
+          "name": "fieldaware_list_assets",
+          "type": "read",
+          "title": "List assets",
+          "description": "List customer assets (equipment to service) with name, serial number and manufacturer. GET /asset/."
+        },
+        {
+          "name": "fieldaware_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List FieldAware users (field engineers, dispatchers, managers) with email, role and time zone. GET /user/."
+        },
+        {
+          "name": "fieldaware_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Create a customer with its first service location (the location is required). Returns the new customer's uuid. POST /customer/. Creates a real record in the account."
+        },
+        {
+          "name": "fieldaware_create_job",
+          "type": "write",
+          "title": "Create job",
+          "description": "Create a job on a date and time, optionally with its location, contact, asset and job lead. Returns the new job (uuid and jobId). POST /job/. Creates a real record that field staff will see."
+        },
+        {
+          "name": "fieldaware_update_job",
+          "type": "write",
+          "title": "Update job",
+          "description": "Change the schedule, description, duration, location, contact, asset or lead of one job. Only the fields you pass change. Tasks, items and labor are not changed by this tool. POST /job/{uuid}. Changes a real record."
+        },
+        {
+          "name": "fieldaware_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fieldaware_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FieldAware tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fieldaware_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for FieldAware (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fieldaware_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FieldAware Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fieldaware_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the jobs scheduled for next Monday with their state and assigned lead.",
+        "Show the details, crew and tasks of job J2225.",
+        "Create a job for the Plano customer on 25 November at 09:00, 90 minutes, and set its description.",
+        "Find the contact persons at customer Acme and their email addresses."
+      ]
+    },
+    {
+      "slug": "resi",
+      "name": "Resi",
+      "category": "property-management",
+      "description": "Read properties, units, leads and sync logs; update unit rent and availability in Resi.",
+      "endpoint": "https://resi.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Resi API token"
+          }
+        ],
+        "hint": "Create it in Resi → **Account Settings → API Tokens**. Choose **Full access** to allow unit updates, or **Read only** for reporting. The token is pinned to one Resi account. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "resi_get_current_user",
+          "type": "read",
+          "title": "Get current user and accounts",
+          "description": "Return the Resi user who owns this token and every account that user belongs to. The token itself is pinned to one account: use resi_get_token_account to see which one. Resi API: GET /api/v2/me."
+        },
+        {
+          "name": "resi_get_token_account",
+          "type": "read",
+          "title": "Get the account this token is pinned to",
+          "description": "Return the id of the Resi account this token runs against (the X-Resi-Account-Id response header) and the property count there. Use it to confirm which client a token serves. Resi API: GET /api/v2/properties?per_page=1."
+        },
+        {
+          "name": "resi_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List the properties (communities) in the token's account, with address, contact details and status. Start here to find a property id. Resi API: GET /api/v2/properties. Properties cannot be sorted."
+        },
+        {
+          "name": "resi_get_property",
+          "type": "read",
+          "title": "Get property",
+          "description": "Return one property with its address, settings and contact details. Resi API: GET /api/v2/properties/{property}."
+        },
+        {
+          "name": "resi_list_buildings",
+          "type": "read",
+          "title": "List buildings",
+          "description": "List the buildings of a property (filter by property_id). Resi API: GET /api/v2/buildings."
+        },
+        {
+          "name": "resi_list_floor_plans",
+          "type": "read",
+          "title": "List floor plans",
+          "description": "List floor plans with bedroom range, size and rent range. Filter by property_id, name or bedroom count. Resi API: GET /api/v2/floor-plans."
+        },
+        {
+          "name": "resi_list_units",
+          "type": "read",
+          "title": "List units",
+          "description": "List apartment units with rent, availability and bedrooms. Use is_available=true and a rent range to answer 'what can I rent'. Filters run on Resi, which saves quota. Resi API: GET /api/v2/units."
+        },
+        {
+          "name": "resi_get_unit",
+          "type": "read",
+          "title": "Get unit",
+          "description": "Return one unit with its property, building, floor plan, amenities, fee breakdown and synced_fields (fields a PMS connection overwrites). Resi API: GET /api/v2/units/{unit}."
+        },
+        {
+          "name": "resi_update_unit",
+          "type": "write",
+          "title": "Update unit availability or price",
+          "description": "WRITE: change one unit's availability, availability date, rent, deposit, specials or description. Changes go live on the client's Resi sites. A field listed in the unit's synced_fields is overwritten by the next PMS sync. Pass only the fields to change. min_rent and max_rent are total monthly leasing prices (base rent plus mandatory fees). Resi API: PATCH /api/v2/units/{unit}. Needs a full-access token."
+        },
+        {
+          "name": "resi_list_amenities",
+          "type": "read",
+          "title": "List amenities",
+          "description": "List amenities (pool, gym, pet policy items and so on) with their codes and marketing flags. Resi API: GET /api/v2/amenities."
+        },
+        {
+          "name": "resi_list_fees",
+          "type": "read",
+          "title": "List fees",
+          "description": "List fees (application, admin, pet, utility and so on) with their class, currency and status. Resi API: GET /api/v2/fees."
+        },
+        {
+          "name": "resi_list_reviews",
+          "type": "read",
+          "title": "List reviews",
+          "description": "List resident and public reviews of a property, with rating, source and publish state. Resi API: GET /api/v2/reviews."
+        },
+        {
+          "name": "resi_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads (prospect contact forms and tour bookings), newest first. Poll for new leads with created_after set to the newest created_at you hold. Contains personal data: use only for the client's own leasing work. Resi API: GET /api/v2/leads."
+        },
+        {
+          "name": "resi_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "Return one lead with its contact fields, tour booking, lead source and full submission. Resi API: GET /api/v2/leads/{lead}."
+        },
+        {
+          "name": "resi_list_lead_sources",
+          "type": "read",
+          "title": "List lead sources",
+          "description": "List lead sources (where a lead came from, e.g. Zillow or the website) for attribution. Resi API: GET /api/v2/lead-sources."
+        },
+        {
+          "name": "resi_list_media",
+          "type": "read",
+          "title": "List media",
+          "description": "List photos, floor plans, PDFs (kind=file) or videos and virtual tours (kind=embed). One kind per call. Filter by the parent record. Resi API: GET /api/v2/media."
+        },
+        {
+          "name": "resi_list_connections",
+          "type": "read",
+          "title": "List connections",
+          "description": "List PMS and CRM connections (the syncs that feed inventory and leads), with type, category and enabled state. Resi API: GET /api/v2/connections."
+        },
+        {
+          "name": "resi_list_connection_logs",
+          "type": "read",
+          "title": "List connection logs",
+          "description": "List the sync and import runs of one connection, newest first, with status and error message. Use it to find why a sync failed. Logs are kept 14 days. Resi API: GET /api/v2/connections/{connection}/logs."
+        },
+        {
+          "name": "resi_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users of the account (staff and service users) with their role. Resi API: GET /api/v2/users."
+        },
+        {
+          "name": "resi_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "resi_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Resi tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "resi_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Resi (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "resi_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Resi Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run resi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which units at our Riverside property are available under $2,500 from December 1?",
+        "Show me the leads from the website form in the last 7 days and their lead sources.",
+        "Which PMS sync failed for our portfolio this week, and why?",
+        "Raise the minimum rent on unit 149-304 to $1,650 and mark it available from 2026-12-15."
+      ]
     }
   ]
 }
