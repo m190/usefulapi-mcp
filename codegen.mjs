@@ -6,6 +6,7 @@
 //   servers/<slug>/server.json  — spec-valid MCP Registry record (io.usefulapi/<slug>)
 //   servers/<slug>/README.md    — the ## Connect, ## Tools and ## Pricing sections
 //   README.md (root)            — the Servers table
+//   portal/lastmod.json         — the sitemap date of each product page (lastmod.mjs: changes only with the page's data)
 //   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
 //   portal/_cards/<slug>.json   — the v1 server card and AI Catalog bodies (fleet scripts/export-cards.ts)
 // Needs the fleet checkout next to this repo (../fleet); a missing fleet input is an error.
@@ -17,6 +18,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { LASTMOD_FILE, lastmodText, nextLastmod, readLastmod } from "./lastmod.mjs";
 
 const ROOT = new URL("./", import.meta.url);
 const CHECK = process.argv.includes("--check");
@@ -93,6 +95,8 @@ for (const s of fresh) {
   s.examples = catalog[s.slug].examples; // the fleet is the only source
 }
 emit("manifest.json", JSON.stringify(manifest, null, 2) + "\n");
+// portal/lastmod.json: the sitemap date of each product page (lastmod.mjs), from the manifest exactly as written.
+emit(LASTMOD_FILE, lastmodText(nextLastmod(JSON.parse(out.get("manifest.json")).servers, readLastmod(ROOT), ROOT)));
 const SCHEMA = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json";
 const SITE = manifest.portal.domain.replace(/\/$/, "");
 // The brand mark (portal/), served by the portal. Vendor logos are never used (trademarks).

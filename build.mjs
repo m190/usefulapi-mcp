@@ -9,7 +9,9 @@
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { loadContent } from "./content.mjs";
+import { pageHash, readLastmod, w3cTime } from "./lastmod.mjs";
 import { loadBlog, BLOG_LOCALES } from "./blog.mjs";
 import { blogPath, blogIndexPath, alternates } from "./locales.mjs";
 import { PAGE_SIZE, cardsHtml, normalize, paginate, paginationHtml, selectServers, staticPagePath } from "./portal/catalog-model.mjs";
@@ -609,6 +611,7 @@ ${FOOTER}`;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 ${headMeta({ title, desc, url })}
+<link rel="alternate" type="text/markdown" href="${SITE}${pagePath(s)}llms.txt" title="${attr(s.name)} MCP server (Markdown)">
 ${ld.map(jsonLd).join("\n")}
 <style>${PRODUCT_CSS}${PAGE_CSS}</style></head>
 <body><div class="wrap">${topbar()}${body}</div>${COPY_JS}${live ? TABS_JS : ""}</body></html>`;
@@ -803,7 +806,7 @@ function catalogPage({ directory = false, page = 1, category = "" } = {}) {
     `<li><b>Add it to your AI client</b>Add the URL as a connector in Claude, ChatGPT, Cursor or any MCP client.</li>` +
     `<li><b>Log in and ask</b>Log in to your tool once, then ask in plain words. The AI picks the tools.</li></ol></section>`;
   const markers = {
-    "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
+    "<!-- page-meta -->": headMeta({ title, desc, url }) + "\n" + (home ? `<link rel="alternate" type="text/markdown" href="${SITE}/llms.txt" title="usefulapi.io catalog (Markdown)">\n` : "") + ld.map(jsonLd).join("\n") + (directory ? `${page > 1 ? `<link rel="prev" href="${SITE}${staticPagePath(page - 1)}">` : ""}${page < directoryPageCount ? `<link rel="next" href="${SITE}${staticPagePath(page + 1)}">` : ""}` : ""),
     "<!-- topbar -->": topbar(directory ? "/servers/" : ""),
     "<!-- breadcrumb -->": home ? "" : `<nav class="crumbs" aria-label="Breadcrumb"><a href="/">usefulapi</a> › ${directory ? "All integrations" : esc(category)}</nav>`,
     "<!-- heading -->": category ? `${esc(category)} integrations` : directory ? "All integrations" : "Hosted MCP servers for the tools you already use",
@@ -912,12 +915,28 @@ ${categoryPills(groups)}</div>`).replace("<head>", '<head><meta name="robots" co
 
 // ---- sitemap.xml + robots.txt (real files — Cloudflare Pages otherwise serves index.html
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
+// <lastmod>: a product page = the date its own data last changed (portal/lastmod.json via lastmod.mjs; data changed
+// after the last codegen run = the built commit's time) or its newest blog post; a list page = its newest member; a post = its
+// date. Pages without a data source (services, privacy, terms) have no <lastmod>. Search engines and IndexNow use it.
 const base = SITE;
-const urls = [`${base}/`, ...Array.from({ length: directoryPageCount }, (_, i) => `${base}${staticPagePath(i + 1)}`), `${base}${SERVICES_PATH}`, `${base}/privacy/`, `${base}/terms/`, ...groupsPresent.map((g) => `${base}${categoryPath(g)}`), ...manifest.servers.map((s) => `${base}${pagePath(s)}`),
-  ...(POSTS.length ? [...BLOG_LANGS.map(lang => `${base}${blogIndexPath(lang)}`), ...POSTS.map((p) => `${base}${postPath(p)}`)] : [])];
+// The build (/_build.json below): the commit and its committer time. Pages sets CF_PAGES_COMMIT_SHA; local builds ask git.
+const gitOut = (...a) => { try { return execFileSync("git", a, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch { return ""; } };
+const builtFrom = process.env.CF_PAGES_COMMIT_SHA || gitOut("rev-parse", "HEAD") || null;
+const builtTime = builtFrom ? Number(gitOut("log", "-1", "--format=%ct", builtFrom)) || null : null;
+const LASTMOD = readLastmod(ROOT), BUILD_TIME = w3cTime(builtTime ? builtTime * 1000 : Date.now());
+// Mixed precision sorts correctly: "2026-11-19" < "2026-11-19T10:00:00Z" < "2026-11-20".
+const maxDate = (dates) => dates.filter(Boolean).sort().at(-1);
+const productDate = (s) => maxDate([LASTMOD[s.slug]?.hash === pageHash(s, ROOT) ? LASTMOD[s.slug].date : BUILD_TIME, ...postsFor(s).map((p) => p.date)]);
+const productDates = new Map(manifest.servers.map((s) => [s.slug, productDate(s)]));
+const allDate = maxDate([...productDates.values()]);
+const urls = [[`${base}/`, allDate], ...Array.from({ length: directoryPageCount }, (_, i) => [`${base}${staticPagePath(i + 1)}`, allDate]),
+  [`${base}${SERVICES_PATH}`], [`${base}/privacy/`], [`${base}/terms/`],
+  ...groupsPresent.map((g) => [`${base}${categoryPath(g)}`, maxDate(manifest.servers.filter((x) => groupOf(x) === g).map((x) => productDates.get(x.slug)))]),
+  ...manifest.servers.map((s) => [`${base}${pagePath(s)}`, productDates.get(s.slug)]),
+  ...(POSTS.length ? [...BLOG_LANGS.map(lang => [`${base}${blogIndexPath(lang)}`, maxDate(POSTS.filter((p) => p.lang === lang).map((p) => p.date))]), ...POSTS.map((p) => [`${base}${postPath(p)}`, p.date])] : [])];
 writeFileSync(`${outDir}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-  urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
+  urls.map(([u, d]) => `  <url><loc>${u}</loc>${d ? `<lastmod>${d}</lastmod>` : ""}</url>`).join("\n") + `\n</urlset>\n`);
 writeFileSync(`${outDir}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`);
 
 // llms.txt (llmstxt.org): the catalog in plain Markdown for AI answer engines, which are how most users
@@ -1021,11 +1040,19 @@ for (const s of manifest.servers) writeFileSync(`${outDir}${pagePath(s)}llms.txt
 // <slug>/server-card and <slug>/ai-catalog.json: the static copies of the Worker's v1 server card and AI Catalog
 // (portal/_cards, written by codegen.mjs). A zone redirect rule sends <slug>.usefulapi.io/mcp/server-card and
 // /.well-known/ai-catalog.json here, so no Worker runs; _headers below sets their media types and CORS.
+// /.well-known/ai-catalog.json: the site-wide AI Catalog = every server's own catalog entries, in manifest order
+// (the same bytes the Workers serve, so a server is described once). _headers' /*/ai-catalog.json rule covers it.
+const siteCatalog = { specVersion: "1.0", entries: [] };
 for (const s of manifest.servers) {
   const { card, catalog } = JSON.parse(readFileSync(new URL(`portal/_cards/${s.slug}.json`, ROOT), "utf8"));
   writeFileSync(`${outDir}${pagePath(s)}server-card`, card);
   writeFileSync(`${outDir}${pagePath(s)}ai-catalog.json`, catalog);
+  const own = JSON.parse(catalog);
+  if (own.specVersion !== siteCatalog.specVersion) throw new Error(`${s.slug}: AI Catalog specVersion ${own.specVersion}, site catalog ${siteCatalog.specVersion}`);
+  siteCatalog.entries.push(...own.entries);
 }
+mkdirSync(`${outDir}/.well-known`, { recursive: true });
+writeFileSync(`${outDir}/.well-known/ai-catalog.json`, JSON.stringify(siteCatalog));
 
 // robots.txt for the *worker* subdomains (<slug>.usefulapi.io). Those are machine MCP
 // endpoints with nothing to index — the indexable surface is this portal's /<slug>/ page.
@@ -1055,7 +1082,12 @@ for (const f of htmlFiles(outDir)) {
 }
 writeFileSync(`${outDir}/_src.txt`, "ok\n");
 writeFileSync(`${outDir}/_redirects`, `/_src/* /_src.txt 200\n` + POSTS.flatMap(p => p.aliases.flatMap(alias => [`${alias} ${postPath(p)} 301`, `${alias.slice(0, -1)} ${postPath(p)} 301`])).join("\n") + "\n");
+// /_build.json: the commit this site was built from. indexnow.mjs --after-push waits for it before it tells search
+// engines about changed pages, so they never fetch the old page. `time` = the commit's committer time (Unix seconds),
+// so a waiter can tell that a later commit is live without git.
+writeFileSync(`${outDir}/_build.json`, JSON.stringify({ commit: builtFrom, time: builtTime }) + "\n");
 writeFileSync(`${outDir}/_headers`, readFileSync(`${outDir}/_headers`, "utf8") +
-  `/_src/*\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n/_src.txt\n  X-Robots-Tag: noindex\n`);
+  `/_src/*\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n/_src.txt\n  X-Robots-Tag: noindex\n` +
+  `/_build.json\n  X-Robots-Tag: noindex\n  Cache-Control: no-store\n`);
 
 console.log(`built portal → ${outDir}/ (index.html, privacy/, terms/, ${POSTS.length} blog post(s), robots.txt, mcp-robots.txt, llms.txt (+ one per server), sitemap.xml [${urls.length} urls], ${manifest.servers.length} product page(s): ${manifest.servers.map((s) => s.slug).join(", ")})`);
