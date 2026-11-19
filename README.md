@@ -1075,6 +1075,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PHC GO](servers/phc-go/) | business-operations | 7 | API token | [servers/phc-go/](servers/phc-go/) |
 | [TapGoods](servers/tapgoods/) | rental | 11 | API token | [servers/tapgoods/](servers/tapgoods/) |
 | [Veracross](servers/veracross/) | education | 16 | API token | [servers/veracross/](servers/veracross/) |
+| [Bookster](servers/bookster/) | rental | 14 | API token | [servers/bookster/](servers/bookster/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

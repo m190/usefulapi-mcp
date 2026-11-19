@@ -180218,6 +180218,139 @@
         "List the assignments due next week in the 10th-grade English classes.",
         "Which students were marked absent today?"
       ]
+    },
+    {
+      "slug": "bookster",
+      "name": "Bookster",
+      "category": "rental",
+      "description": "Read bookings, properties, availability and stay prices; set booking tags in Bookster.",
+      "endpoint": "https://bookster.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Bookster API key"
+          }
+        ],
+        "hint": "Find it in Bookster → **Account** (the API key is shown there). Your key is used only to call the Bookster API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "bookster_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings, newest booked first by default. Filter by property, state, arrival, departure, a night the stay covers, customer name or email, booking reference, or last update. Bookster API: GET /system/api/v1/booking/bookings.json."
+        },
+        {
+          "name": "bookster_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Get one booking with its customer details, party, dates, value and balance, the lines (extras and products), and housekeeping notes. Bookster API: GET /system/api/v1/booking/bookings/{id}.json."
+        },
+        {
+          "name": "bookster_list_booking_tags",
+          "type": "read",
+          "title": "List booking tags",
+          "description": "List the tags on one booking as a map of tag name to value. Tags are the keys your own integration sets. Bookster API: GET /system/api/v1/booking/bookings/{id}/tag.json."
+        },
+        {
+          "name": "bookster_set_booking_tags",
+          "type": "write",
+          "title": "Set booking tags",
+          "description": "Add, update or delete tags on one booking. Each key is a tag name: a new name adds the tag, an existing name with a non-empty value updates it, and an existing name with an empty value deletes it. Use CamelCase names with your own prefix. Changes the booking record in Bookster. Bookster API: PUT /system/api/v1/booking/bookings/{id}/tag.json."
+        },
+        {
+          "name": "bookster_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List properties (rental units, caravan pitches, rooms and similar) in the account, with their id, type id and name. Bookster API: GET /system/api/v1/entry/entries.json."
+        },
+        {
+          "name": "bookster_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Get one property with its elements: address, facilities, descriptions, geo location, local authority and more. Bookster API: GET /system/api/v1/entry/entries/{id}.json."
+        },
+        {
+          "name": "bookster_get_availability",
+          "type": "read",
+          "title": "Get property availability",
+          "description": "Get the availability ranges of one property: each range has a start, an end (exclusive) and an available flag. Only single-product setups are supported. Bookster API: GET /system/api/v1/booking/query/{id}/availability.json."
+        },
+        {
+          "name": "bookster_get_length_of_stay_prices",
+          "type": "read",
+          "title": "Get length-of-stay prices",
+          "description": "Get the prices for every possible stay of one property for the next 18 months (up to 30 nights). Each returned string is CSV: date, party size, then the price for 1, 2, 3... nights. A zero price means that stay is not possible. Prices are in the property's currency, rounded to whole units. Bookster API: GET /system/api/v1/booking/query/{id}/los.json."
+        },
+        {
+          "name": "bookster_get_booking_setup_state",
+          "type": "read",
+          "title": "Get booking setup state",
+          "description": "Get whether online booking is enabled, disabled or sold out for one property, and the state of its last consolidation (the job that publishes setup changes). Bookster API: GET /system/api/v1/booking/setup/{id}/state.json."
+        },
+        {
+          "name": "bookster_get_booking_setup_document",
+          "type": "read",
+          "title": "Get a booking setup document",
+          "description": "Download one booking setup document of a property: rates, availability, extras, products, payment profiles, reservation profiles, legals, bundles, provider, or applicability rules. Returns the name and the document JSON as text. latest=true returns the newest document that is not yet consolidated. Bookster API: GET /system/api/v1/booking/setup/{id}/ir.json."
+        },
+        {
+          "name": "bookster_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bookster_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Bookster tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bookster_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Bookster (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bookster_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Bookster Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bookster_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which bookings arrive this weekend, and which are still unpaid?",
+        "Show me the availability of the Old Farmhouse for next month.",
+        "What is the cheapest 3-night stay for 4 people in March?",
+        "Tag booking 123456 as handled externally."
+      ]
     }
   ]
 }
