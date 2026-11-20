@@ -43,12 +43,15 @@ On first connect you provide your **STEL Order APIKEY**. Find it in STEL Order u
 | `stelorder_list_sales_orders` | read | List sales orders |
 | `stelorder_list_ordinary_invoices` | read | List ordinary invoices |
 | `stelorder_get_ordinary_invoice` | read | Get an ordinary invoice |
+| `stelorder_list_sales_delivery_notes` | read | List sales delivery notes |
+| `stelorder_get_sales_delivery_note` | read | Get a sales delivery note |
 | `stelorder_list_invoice_receipts` | read | List invoice receipts |
 | `stelorder_list_warehouses` | read | List warehouses |
 | `stelorder_list_stock_movements` | read | List stock movements |
 | `stelorder_create_client` | **write** | Create a client |
 | `stelorder_update_client` | **write** | Update a client |
 | `stelorder_create_contact` | **write** | Create a contact |
+| `stelorder_send_document` | **write** | Email a document |
 | `stelorder_usage_status` | meta | Usage status (free-tier meter) |
 | `stelorder_request_feature` | meta | Request a missing feature |
 | `stelorder_upgrade` | meta | Upgrade to Pro or Pro+ |

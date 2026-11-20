@@ -43,6 +43,9 @@ On first connect you provide your **Zadarma API key** and **secret key** (my.zad
 | `zadarma_list_virtual_numbers` | read | List virtual numbers |
 | `zadarma_get_call_statistics` | read | Get call statistics |
 | `zadarma_get_call_recording_link` | read | Get call recording link |
+| `zadarma_get_pbx_call_statistics` | read | Get PBX call statistics |
+| `zadarma_get_call_transcript` | read | Get call transcript |
+| `zadarma_start_call_transcription` | **write** | Start call transcription |
 | `zadarma_list_sms_templates` | read | List SMS templates |
 | `zadarma_send_sms` | **write** | Send SMS |
 | `zadarma_usage_status` | meta | Usage status (free-tier meter) |

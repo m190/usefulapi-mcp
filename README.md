@@ -739,7 +739,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Shopper Approved](servers/shopper-approved/) | marketing | 11 | API token | [servers/shopper-approved/](servers/shopper-approved/) |
 | [Tharstern](servers/tharstern/) | business-operations | 23 | API token | [servers/tharstern/](servers/tharstern/) |
 | [Ticimax](servers/ticimax/) | ecommerce | 21 | API token | [servers/ticimax/](servers/ticimax/) |
-| [Zadarma](servers/zadarma/) | communications | 16 | API token | [servers/zadarma/](servers/zadarma/) |
+| [Zadarma](servers/zadarma/) | communications | 19 | API token | [servers/zadarma/](servers/zadarma/) |
 | [SpedirePRO](servers/spedire/) | shipping | 18 | API token | [servers/spedire/](servers/spedire/) |
 | [Slottable](servers/slottable/) | scheduling | 15 | API token | [servers/slottable/](servers/slottable/) |
 | [Scrada](servers/scrada/) | accounting | 24 | API token | [servers/scrada/](servers/scrada/) |
@@ -789,7 +789,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Rentlio](servers/rentlio/) | property-management | 14 | API token | [servers/rentlio/](servers/rentlio/) |
 | [Exely](servers/exely/) | property-management | 15 | API token | [servers/exely/](servers/exely/) |
 | [HR WORKS](servers/hrworks/) | hr | 10 | API token | [servers/hrworks/](servers/hrworks/) |
-| [STEL Order](servers/stel-order/) | billing | 20 | API token | [servers/stel-order/](servers/stel-order/) |
+| [STEL Order](servers/stel-order/) | billing | 23 | API token | [servers/stel-order/](servers/stel-order/) |
 | [Webfleet](servers/webfleet/) | logistics | 14 | API token | [servers/webfleet/](servers/webfleet/) |
 | [Superchat](servers/superchat/) | messaging | 20 | API token | [servers/superchat/](servers/superchat/) |
 | [Woffu](servers/woffu/) | hr | 9 | API token | [servers/woffu/](servers/woffu/) |
