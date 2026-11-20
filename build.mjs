@@ -885,6 +885,16 @@ writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache
   `/*/ai-catalog.json\n  Content-Type: application/ai-catalog+json\n${PUBLIC_DOC}`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
+// Pre-launch pages (prelaunch/<slug>.md): a vendor app review can need a product page before launch. The real product
+// page replaces it as soon as <slug> is in the manifest. Not listed in the sitemap.
+for (const f of readdirSync(new URL("prelaunch/", ROOT))) {
+  const slug = f.replace(/\.md$/, "");
+  if (!/^[a-z0-9-]+\.md$/.test(f) || manifest.servers.some((s) => s.slug === slug)) continue;
+  const md = readFileSync(new URL(`prelaunch/${f}`, ROOT), "utf8");
+  const title = (md.match(/^# (.+)$/m) || [, slug])[1];
+  mkdirSync(`${outDir}/${slug}`, { recursive: true });
+  writeFileSync(`${outDir}/${slug}/index.html`, SHELL(esc(title), mdToHtml(md)));
+}
 mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
 writeFileSync(`${outDir}${SERVICES_PATH}index.html`, servicesPage());
 for (const s of manifest.servers) {
