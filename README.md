@@ -1102,6 +1102,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [GreenRope](servers/greenrope/) | crm | 14 | API token | [servers/greenrope/](servers/greenrope/) |
 | [Pool Service Software](servers/pool-service-software/) | scheduling | 36 | API token | [servers/pool-service-software/](servers/pool-service-software/) |
 | [AbaNinja](servers/abaninja/) | billing | 15 | API token | [servers/abaninja/](servers/abaninja/) |
+| [Judge.me](servers/judge-me/) | ecommerce | 12 | API token | [servers/judge-me/](servers/judge-me/) |
+| [Ablefy (elopage)](servers/elopage/) | digital-commerce | 18 | API token | [servers/elopage/](servers/elopage/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
