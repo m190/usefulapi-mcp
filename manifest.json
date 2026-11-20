@@ -183548,6 +183548,368 @@
         "Create a follow-up task for Ana Lopez due on Friday.",
         "Mark the task 'Send the quote' as done."
       ]
+    },
+    {
+      "slug": "interparcel",
+      "name": "Interparcel",
+      "category": "shipping",
+      "description": "Track parcels, price courier quotes, book orders and add shipments in Interparcel.",
+      "endpoint": "https://interparcel.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Interparcel API key"
+          }
+        ],
+        "hint": "Copy it from your Interparcel account dashboard, on the API integration page. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "interparcel_track_parcel",
+          "type": "read",
+          "title": "Track a parcel",
+          "description": "Track a parcel by its 12-digit Interparcel tracking number. Returns the current tracking events. Interparcel API: GET /tracking/{trackingNumber}."
+        },
+        {
+          "name": "interparcel_get_quote",
+          "type": "read",
+          "title": "Get shipping quote",
+          "description": "READ ONLY: price the available services for one or more parcels between two addresses. Books nothing and takes no payment. Use the service names and pickup dates it returns when you create an order or shipment. Interparcel API: POST /quote."
+        },
+        {
+          "name": "interparcel_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one booked order by its Interparcel order id: status (processing, booked or requires_staff_attention), tracking numbers, price and label status. Interparcel API: GET /orders/{orderId}."
+        },
+        {
+          "name": "interparcel_search_shipments",
+          "type": "read",
+          "title": "Search shipments",
+          "description": "READ ONLY: search shipments in Shipping Manager by text or structured filters (status ready, incomplete or on_hold; created and pickup date ranges; reference; names; countries). Paged. Interparcel API: POST /shipments/search."
+        },
+        {
+          "name": "interparcel_get_shipment",
+          "type": "read",
+          "title": "Get a shipment",
+          "description": "Get one shipment from Shipping Manager by its shipment id: status (ready, incomplete or on_hold), addresses, parcels, selected service, price and validation errors. Interparcel API: GET /shipments/{shipmentId}."
+        },
+        {
+          "name": "interparcel_list_saved_cards",
+          "type": "read",
+          "title": "List saved cards",
+          "description": "List the saved payment cards on the account (id, brand, last four digits, expiry). Use an id as payment.cardId when you create an order. Interparcel API: GET /account/saved-cards."
+        },
+        {
+          "name": "interparcel_get_prepay_balance",
+          "type": "read",
+          "title": "Get PrePay balance",
+          "description": "Get the current PrePay balance and currency of the account. Interparcel API: GET /account/prepay/balance."
+        },
+        {
+          "name": "interparcel_create_order",
+          "type": "write",
+          "title": "Create and pay for courier orders",
+          "description": "WRITE, COSTS MONEY: books 1 to 20 courier orders and charges the payment method (saved card or PrePay). Each order books a paid courier job. Get the service and a pickup date from interparcel_get_quote first. Use a unique idempotencyKey (8 to 100 characters): repeating the same request with the same key returns the first result and charges nothing again. Interparcel API: POST /orders (version 2)."
+        },
+        {
+          "name": "interparcel_add_shipment",
+          "type": "write",
+          "title": "Add a shipment to Shipping Manager",
+          "description": "WRITE: imports one shipment into Shipping Manager for later booking. It does not book a courier and takes no payment. With validate true (default) the import fails on any validation error; set validate false to import an incomplete shipment for correction. Interparcel API: POST /shipments/add (version 3)."
+        },
+        {
+          "name": "interparcel_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "interparcel_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Interparcel tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "interparcel_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Interparcel (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "interparcel_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Interparcel Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run interparcel_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Track parcel GB9999999999 and tell me where it is.",
+        "Get shipping quotes for a 2 kg parcel from Crawley to Paris.",
+        "List my shipments that are on hold and their validation errors.",
+        "What is my PrePay balance?"
+      ]
+    },
+    {
+      "slug": "tempika",
+      "name": "Tempika",
+      "category": "time-tracking",
+      "description": "List employees and time entries, and get workday totals in Tempika.",
+      "endpoint": "https://tempika.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Tempika API key"
+          }
+        ],
+        "hint": "Create the key in Tempika at **app.tempika.com/integraciones/api-keys**. Grant only the read scopes this server uses: employees:read, time-entries:read and reports:read. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "tempika_check_api_key",
+          "type": "read",
+          "title": "Check API key",
+          "description": "Check the Tempika API key. Returns its tenant id, its scopes and its requests-per-minute limit. Call this first to see which tools the key can use. Tempika API: GET /api/public/v1/health."
+        },
+        {
+          "name": "tempika_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees of the tenant, without personal data: id, status, company id and external reference. Needs scope employees:read. Pass nextCursor as cursor to get the next page. Tempika API: GET /api/public/v1/employees."
+        },
+        {
+          "name": "tempika_list_time_entries",
+          "type": "read",
+          "title": "List time entries",
+          "description": "List clock-in and clock-out entries for a period, without sensitive data: employee id, type, time and source. Needs scope time-entries:read. If truncated is true, use a shorter from/to range, or add companyId or employeeId. Tempika API: GET /api/public/v1/time-entries."
+        },
+        {
+          "name": "tempika_get_workday_report",
+          "type": "read",
+          "title": "Get workday report",
+          "description": "Get the aggregated working-time report for a period: entry count, distinct employees, overtime, absence requests and net hours bank. Totals only, no rows and no personal data. Needs scope reports:read. If suppressed is true, the company has too few active employees and the totals are null (privacy threshold). Tempika API: GET /api/public/v1/reports/workday."
+        },
+        {
+          "name": "tempika_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "tempika_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Tempika tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "tempika_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Tempika (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "tempika_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Tempika Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run tempika_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which employees are on leave right now?",
+        "Give me the workday report for October, with overtime totals.",
+        "List the clock-in and clock-out entries of one employee for last week."
+      ]
+    },
+    {
+      "slug": "greenrope",
+      "name": "GreenRope",
+      "category": "crm",
+      "description": "Search contacts, groups and CRM activities; add contacts and activities in GreenRope.",
+      "endpoint": "https://greenrope.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "GreenRope sign-in email"
+          },
+          {
+            "label": "GreenRope password"
+          },
+          {
+            "label": "GreenRope account ID"
+          }
+        ],
+        "hint": "The MCP server signs in to GreenRope on each call and uses your account ID for every request. Your password is stored encrypted and is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "greenrope_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Find contacts by id, email, first or last name, or group. Returns the matching contacts and TotalMatchingContacts. Use start_chunk_page and start_chunk_size to page through large results. XML API: GetContactsRequest."
+        },
+        {
+          "name": "greenrope_search_contacts",
+          "type": "read",
+          "title": "Search contacts",
+          "description": "Search contacts with a text filter, sort order and page number. Returns the matching contacts and TotalMatchingContacts. XML API: SearchContactsRequest."
+        },
+        {
+          "name": "greenrope_get_contact_groups",
+          "type": "read",
+          "title": "Get a contact's groups",
+          "description": "List the groups that one contact belongs to, matched by contact id, email or name. XML API: GetContactGroupsRequest."
+        },
+        {
+          "name": "greenrope_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List contact groups, or one group by id or name. XML API: GetGroupsRequest."
+        },
+        {
+          "name": "greenrope_list_user_defined_fields",
+          "type": "read",
+          "title": "List user-defined fields",
+          "description": "List the custom contact fields the account defines, with their types and possible values. XML API: GetUserDefinedFieldsRequest."
+        },
+        {
+          "name": "greenrope_list_crm_activity_types",
+          "type": "read",
+          "title": "List CRM activity types",
+          "description": "List the CRM activity types (labels) that the account can use when it records an activity. XML API: GetCRMActivityTypesRequest."
+        },
+        {
+          "name": "greenrope_list_crm_activities",
+          "type": "read",
+          "title": "List CRM activities",
+          "description": "List CRM activities, such as calls, tasks and notes, filtered by contact, group, type or date range. XML API: GetCRMActivitiesRequest."
+        },
+        {
+          "name": "greenrope_add_contacts",
+          "type": "write",
+          "title": "Add contacts",
+          "description": "Create one or more contacts (up to 50 per call), each identified by its email address. This writes to the GreenRope contact list. XML API: AddContactsRequest."
+        },
+        {
+          "name": "greenrope_add_contacts_to_group",
+          "type": "write",
+          "title": "Add contacts to a group",
+          "description": "Add existing contacts to a group, by group id or group name. Each contact is given by contact id or email. This changes group membership. XML API: AddContactsToGroupRequest."
+        },
+        {
+          "name": "greenrope_add_crm_activity",
+          "type": "write",
+          "title": "Add a CRM activity",
+          "description": "Record one CRM activity (for example a note or a task) against a contact. The activity label must match one from greenrope_list_crm_activity_types. XML API: AddCRMActivitiesRequest."
+        },
+        {
+          "name": "greenrope_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "greenrope_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GreenRope tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "greenrope_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for GreenRope (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "greenrope_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GreenRope Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run greenrope_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the contact for jane@example.com and list the groups she belongs to.",
+        "Which CRM activities are due this week, and for which contacts?",
+        "Add these three new leads to the 'Webinar 2026' group.",
+        "Record a call note against contact 1042 from today's meeting."
+      ]
     }
   ]
 }
