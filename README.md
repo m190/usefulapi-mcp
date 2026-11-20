@@ -1095,6 +1095,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [A2X](servers/a2x-accounting/) | accounting | 17 | API token | [servers/a2x-accounting/](servers/a2x-accounting/) |
 | [Packeta](servers/packeta/) | shipping | 12 | API token | [servers/packeta/](servers/packeta/) |
 | [Barion](servers/barion/) | payments | 7 | API token | [servers/barion/](servers/barion/) |
+| [Peecho](servers/peecho/) | ecommerce | 14 | API token | [servers/peecho/](servers/peecho/) |
+| [SalesNOW](servers/salesnow/) | crm | 19 | API token | [servers/salesnow/](servers/salesnow/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -183246,6 +183246,308 @@
         "Show my Barion wallet transactions from today.",
         "Give me the details of the last Barion payment that came in."
       ]
+    },
+    {
+      "slug": "peecho",
+      "name": "Peecho",
+      "category": "ecommerce",
+      "description": "Read print products, quotes and orders; create orders, set print files and addresses in Peecho.",
+      "endpoint": "https://peecho.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Peecho Merchant API key"
+          }
+        ],
+        "hint": "Find it in your Peecho dashboard under **Settings → API**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "peecho_list_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List Peecho product categories and their sub-category codes (for example Books / HC). Use a sub-category code with peecho_list_offerings. Peecho API: GET /rest/v3/categories."
+        },
+        {
+          "name": "peecho_list_offerings",
+          "type": "read",
+          "title": "List offerings",
+          "description": "List the print products (offerings) available to this merchant, grouped by category code. Each offering has an id, name, paper type and minimum quantity. Peecho API: GET /rest/v3/offering/list."
+        },
+        {
+          "name": "peecho_get_offering_countries",
+          "type": "read",
+          "title": "Get shipping countries for offerings",
+          "description": "Return the countries each offering can ship to. Read-only. Peecho API: POST /rest/v3/offering/countries."
+        },
+        {
+          "name": "peecho_get_offering_spine",
+          "type": "read",
+          "title": "Get spine width for an offering",
+          "description": "Calculate the spine width (in millimetres) an offering needs for a page count in a country. Read-only. Peecho API: GET /rest/v3/offering/spine."
+        },
+        {
+          "name": "peecho_request_quote",
+          "type": "read",
+          "title": "Request a price quote",
+          "description": "Return prices, currency and shipping for items sent to a destination. It does not create an order. Peecho API: POST /rest/v3/quote."
+        },
+        {
+          "name": "peecho_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get an order's state (for example OPEN or PAID), price data, shipping address and items. Read-only. Peecho API: GET /rest/v3/order/details."
+        },
+        {
+          "name": "peecho_get_order_spine",
+          "type": "read",
+          "title": "Get spine widths for an order",
+          "description": "Return the spine width for each item in an order. Read-only. Peecho API: GET /rest/v3/order/spine/."
+        },
+        {
+          "name": "peecho_create_order",
+          "type": "write",
+          "title": "Create a print order",
+          "description": "WRITE: create an OPEN print order with one or more items. It does not pay for the order, and nothing is printed until it is paid in Peecho. Items need a unique item_reference. Peecho API: POST /rest/v3/order/."
+        },
+        {
+          "name": "peecho_update_order_address",
+          "type": "write",
+          "title": "Update an order's address",
+          "description": "WRITE: replace the customer email and shipping address on an open order. Peecho API: POST /rest/v3/order/address."
+        },
+        {
+          "name": "peecho_set_order_files",
+          "type": "write",
+          "title": "Set an order's print files",
+          "description": "WRITE: send the print file URL for each item of an order. Each merchant_item_reference must match an item_reference of the order. Peecho API: POST /rest/v3/order/files."
+        },
+        {
+          "name": "peecho_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "peecho_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Peecho tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "peecho_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Peecho (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "peecho_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Peecho Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run peecho_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which print products can I order in hardcover, and what does a 200-page book cost to ship to Germany?",
+        "Create a print order for 50 copies of this PDF and ship it to my warehouse.",
+        "What is the status of order 50786?",
+        "Which countries does this offering ship to?"
+      ]
+    },
+    {
+      "slug": "salesnow",
+      "name": "SalesNOW",
+      "category": "crm",
+      "description": "Read contacts, companies, deals, leads and tasks; create and update contacts and tasks in SalesNOW.",
+      "endpoint": "https://salesnow.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SalesNOW user name"
+          },
+          {
+            "label": "SalesNOW password"
+          },
+          {
+            "label": "SalesNOW API key"
+          }
+        ],
+        "hint": "The API key comes from SalesNOW support or an admin user. Your details are used only to sign in to SalesNOW on your behalf and to derive a private account id; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "salesnow_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts records in SalesNOW, one page at a time. Reply: item_list (records) and total_count. Use modified_from and modified_to to limit the window. GET /models/contacts."
+        },
+        {
+          "name": "salesnow_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact record by id, with all its fields. GET /models/contacts/{id}."
+        },
+        {
+          "name": "salesnow_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List companies records in SalesNOW, one page at a time. Reply: item_list (records) and total_count. Use modified_from and modified_to to limit the window. GET /models/companies."
+        },
+        {
+          "name": "salesnow_get_company",
+          "type": "read",
+          "title": "Get a company",
+          "description": "Get one company record by id, with all its fields. GET /models/companies/{id}."
+        },
+        {
+          "name": "salesnow_list_deals",
+          "type": "read",
+          "title": "List deals",
+          "description": "List deals records in SalesNOW, one page at a time. Reply: item_list (records) and total_count. Use modified_from and modified_to to limit the window. GET /models/deals."
+        },
+        {
+          "name": "salesnow_get_deal",
+          "type": "read",
+          "title": "Get a deal",
+          "description": "Get one deal record by id, with all its fields. GET /models/deals/{id}."
+        },
+        {
+          "name": "salesnow_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads records in SalesNOW, one page at a time. Reply: item_list (records) and total_count. Use modified_from and modified_to to limit the window. GET /models/leads."
+        },
+        {
+          "name": "salesnow_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead record by id, with all its fields. GET /models/leads/{id}."
+        },
+        {
+          "name": "salesnow_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks records in SalesNOW, one page at a time. Reply: item_list (records) and total_count. Use modified_from and modified_to to limit the window. GET /models/tasks."
+        },
+        {
+          "name": "salesnow_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one task record by id, with all its fields. GET /models/tasks/{id}."
+        },
+        {
+          "name": "salesnow_get_metadata",
+          "type": "read",
+          "title": "Get record fields",
+          "description": "List the field names, types and custom fields of one record type. Use it before a create or update call. GET /models/{model}/metadata."
+        },
+        {
+          "name": "salesnow_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a new contact in SalesNOW from the given fields. This adds a record that the team can see. PUT /models/contacts."
+        },
+        {
+          "name": "salesnow_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Change the given fields of one existing contact. Fields you leave out keep their values. POST /models/contacts/{id}."
+        },
+        {
+          "name": "salesnow_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a follow-up task in SalesNOW from the given fields (for example a title and a due date). PUT /models/tasks."
+        },
+        {
+          "name": "salesnow_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Change the given fields of one existing task, for example to mark it done. Fields you leave out keep their values. POST /models/tasks/{id}."
+        },
+        {
+          "name": "salesnow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "salesnow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SalesNOW tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "salesnow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for SalesNOW (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "salesnow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SalesNOW Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run salesnow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show the contacts that changed in SalesNOW today.",
+        "Which deals are open for the company Acme Ltd?",
+        "Create a follow-up task for Ana Lopez due on Friday.",
+        "Mark the task 'Send the quote' as done."
+      ]
     }
   ]
 }
