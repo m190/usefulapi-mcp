@@ -182059,6 +182059,190 @@
         "What was our completed move revenue for each month this year?",
         "Log that I called the Johnson lead and add a task to send them a revised quote on Friday."
       ]
+    },
+    {
+      "slug": "billetweb",
+      "name": "Billetweb",
+      "category": "commerce",
+      "description": "Read events, seats, attendees, sales and payouts; check in tickets and create orders in Billetweb.",
+      "endpoint": "https://billetweb.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Billetweb API user"
+          },
+          {
+            "label": "Billetweb API key"
+          }
+        ],
+        "hint": "Create a key in the Billetweb back office on the [API page](https://www.billetweb.fr/bo/api.php): choose A third party and name it (for example the AI assistant you use), pick **read only** to browse or **read and write** to also check in tickets or create orders, and optionally restrict it to some events. The page then shows the **user** and the **key**. They are used only to call the Billetweb API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "billetweb_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the organiser's events with id, name, start/end, place, shop URL, online state, tax rate, tags and contact. Past events are left out unless include_past is set. GET /events."
+        },
+        {
+          "name": "billetweb_get_availability",
+          "type": "read",
+          "title": "Get availability",
+          "description": "Remaining places of an event: per session, per category and per ticket type, with avail (-1 = unlimited), quota and sales. Use it to answer 'how many seats are left'. GET /event/{id}/avail."
+        },
+        {
+          "name": "billetweb_list_tickets",
+          "type": "read",
+          "title": "List ticket types",
+          "description": "The ticket types (tarifs) of an event in display order: id, name, price, category, quota, visibility (0 visible, 1 web, 2 box office, 3 secret link, 4 hidden), sales window, tax and commission. GET /event/{id}/tickets."
+        },
+        {
+          "name": "billetweb_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "The sessions (séances, dates) of a multi-session event: id, start/end, name, place, quota, total_sales, state (0 open, 1 hidden, 2 box office only, 3 web only, 4 link only, 5 cancelled) and the ticket ids sold in it. GET /event/{id}/dates."
+        },
+        {
+          "name": "billetweb_list_attendees",
+          "type": "read",
+          "title": "List attendees of an event",
+          "description": "The attendees (one row per ticket) of one event: name, email, ticket type, price, check-in state (used), session, order id and payment, custom form answers. Filter by session, ticket, buyer, check-in state or when the order changed; use updated_since to fetch only what is new. Billetweb allows 10 attendees calls per minute (shared with billetweb_list_all_attendees), so prefer one filtered call. GET /event/{id}/attendees."
+        },
+        {
+          "name": "billetweb_list_all_attendees",
+          "type": "read",
+          "title": "List attendees across all events",
+          "description": "The attendees of ALL events, newest changes included, with the same fields as billetweb_list_attendees. Filter by event tag, only unfinished events, buyer, ticket, check-in state or order change time. Billetweb allows 10 attendees calls per minute; use updated_since for incremental reads. GET /attendees."
+        },
+        {
+          "name": "billetweb_list_waiting_list",
+          "type": "read",
+          "title": "List waiting list",
+          "description": "People on the waiting list of an event: name, email, phone, ticket/session wanted, places asked for and whether they were notified. GET /event/{id}/waiting."
+        },
+        {
+          "name": "billetweb_list_accounting",
+          "type": "read",
+          "title": "List sales and refunds (accounting)",
+          "description": "The accounting history: one row per ticket and per money movement, type product_pay (sale) or product_refund (negative price), with price incl. tax, Billetweb fees, tax, payment type, transaction id and payout id (0 = not paid out yet). Period at most 1 year, starting at most 1 year ago. GET /accounting."
+        },
+        {
+          "name": "billetweb_list_payouts",
+          "type": "read",
+          "title": "List payouts",
+          "description": "The bank transfers Billetweb made to the organiser (type out) or took back (type in, negative amount): id, date, net amount, account holder. The IBAN is masked to its last 4 characters. GET /payouts."
+        },
+        {
+          "name": "billetweb_get_payout",
+          "type": "read",
+          "title": "Get payout detail",
+          "description": "The line-by-line detail of one payout: each sale, refund or transfer with ticket reference, order, event, price, fees and tax. Net transferred = sum of price minus sum of fees. Pass a payout id, or a date (yyyy-mm-dd) for all payouts of that day. GET /payout/{id}/data."
+        },
+        {
+          "name": "billetweb_list_crm_contacts",
+          "type": "read",
+          "title": "List CRM contacts",
+          "description": "The organiser's buyer contacts: name, email, first/last purchase, number of orders and tickets, total spent and average ticket price. Filter by email, CRM segment or last change. GET /crm/contacts."
+        },
+        {
+          "name": "billetweb_list_crm_segments",
+          "type": "read",
+          "title": "List CRM segments",
+          "description": "The saved CRM segments (id, name, created, last sync). Use an id as the segment filter of billetweb_list_crm_contacts. GET /crm/segments."
+        },
+        {
+          "name": "billetweb_list_lists",
+          "type": "read",
+          "title": "List custom lists",
+          "description": "The organiser's custom lists (id, name, key type), such as member or invitation lists used for access control and discounts. GET /lists."
+        },
+        {
+          "name": "billetweb_get_list_data",
+          "type": "read",
+          "title": "Get custom list content",
+          "description": "The rows of one custom list (each row is an array of values, the first being the key). GET /list/{id}/data."
+        },
+        {
+          "name": "billetweb_check_tickets",
+          "type": "write",
+          "title": "Check tickets in or out",
+          "description": "WRITE: set the check-in state of tickets (composter): 1 = checked in, 2 = checked out, 0 = back to not checked in. Tickets are identified by the ticket id from billetweb_list_attendees (the `id` field, not the order id). Setting the same state again is harmless. Needs a read+write key. POST /event/{id}/check."
+        },
+        {
+          "name": "billetweb_mark_orders_paid",
+          "type": "write",
+          "title": "Mark reservations as paid",
+          "description": "WRITE: confirm the payment of reservation orders (unpaid orders taken as a reservation) with the payment type you were given (card, cash, check, reservation, other). With send_confirmation the BUYER GETS AN EMAIL with the tickets; default is no email. The order id is `order_id` in billetweb_list_attendees. Needs a read+write key. POST /event/{id}/pay_order."
+        },
+        {
+          "name": "billetweb_send_payment_requests",
+          "type": "write",
+          "title": "Send payment request emails",
+          "description": "WRITE: SENDS AN EMAIL to each buyer asking them to pay their unpaid reservation. Customers receive it immediately; it cannot be recalled. The order id is `order_id` in billetweb_list_attendees. Needs a read+write key. POST /event/{id}/pay_request."
+        },
+        {
+          "name": "billetweb_create_offline_orders",
+          "type": "write",
+          "title": "Create offline orders",
+          "description": "WRITE: CREATE new orders (tickets) in an event as if sold off-line: each order takes places from the quota and is recorded as paid with the given payment type (card, cash, check, invitation, reservation, other). Only basic tickets (no choice passes, packs or seat placement). With send_tickets the BUYER GETS THE TICKETS BY EMAIL (default: no email). NOT idempotent: calling twice creates two orders, so pass request_id and check billetweb_list_attendees before retrying. Needs a read+write key. POST /event/{id}/add_order."
+        },
+        {
+          "name": "billetweb_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "billetweb_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Billetweb tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "billetweb_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Billetweb (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "billetweb_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Billetweb Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run billetweb_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many tickets are left for my next event?",
+        "Who has not checked in yet for Saturday's session?",
+        "How much did I sell last month and when is my next payout?",
+        "Which buyers are on the waiting list for my concert?"
+      ]
     }
   ]
 }

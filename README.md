@@ -1087,6 +1087,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [BlueCamroo](servers/bluecamroo/) | crm | 21 | API token | [servers/bluecamroo/](servers/bluecamroo/) |
 | [SugarCRM](servers/sugarcrm/) | crm | 11 | API token | [servers/sugarcrm/](servers/sugarcrm/) |
 | [MoveitPro+](servers/moveitpro-plus/) | logistics | 31 | API token | [servers/moveitpro-plus/](servers/moveitpro-plus/) |
+| [Billetweb](servers/billetweb/) | commerce | 22 | API token | [servers/billetweb/](servers/billetweb/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
