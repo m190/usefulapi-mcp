@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Effective date:** 16 July 2026 · **Last updated:** 10 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 20 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us").
 
@@ -79,6 +79,11 @@ IP addresses you ask about and the results on your instruction, not ours. You ar
 ensuring that they meet the conditions the ipapi.is terms set for contractors and external access,
 and for their use of that data. No API account, licence, redistribution right or vendor endorsement
 is transferred or claimed.
+
+### Data processing for business customers
+
+If you use the Service for a business or other organization and the records that you request contain
+personal data, our [Data Processing Agreement](/dpa/) applies and forms part of these Terms.
 
 ## 3. Plans, billing, and cancellation
 

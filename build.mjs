@@ -6,6 +6,7 @@
 //   <outDir>/search-index.json     (compact search data, derived from manifest.json)
 //   <outDir>/privacy/index.html    (rendered from legal/privacy.md)
 //   <outDir>/terms/index.html      (rendered from legal/terms.md)
+//   <outDir>/dpa/index.html        (rendered from legal/dpa.md)
 // Minimal md->html tuned to the legal docs. No deps.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -885,6 +886,8 @@ writeFileSync(`${outDir}/_headers`, `/_probe/*\n  X-Robots-Tag: noindex\n  Cache
   `/*/ai-catalog.json\n  Content-Type: application/ai-catalog+json\n${PUBLIC_DOC}`);
 writeFileSync(`${outDir}/privacy/index.html`, render("privacy.md", "Privacy Policy"));
 writeFileSync(`${outDir}/terms/index.html`, render("terms.md", "Terms of Service"));
+mkdirSync(`${outDir}/dpa`, { recursive: true });
+writeFileSync(`${outDir}/dpa/index.html`, render("dpa.md", "Data Processing Agreement"));
 // Pre-launch pages (prelaunch/<slug>.md): a vendor app review can need a product page before launch. The real product
 // page replaces it as soon as <slug> is in the manifest. Not listed in the sitemap.
 for (const f of readdirSync(new URL("prelaunch/", ROOT))) {
@@ -947,7 +950,7 @@ const productDate = (s) => maxDate([LASTMOD[s.slug]?.hash === pageHash(s, ROOT) 
 const productDates = new Map(manifest.servers.map((s) => [s.slug, productDate(s)]));
 const allDate = maxDate([...productDates.values()]);
 const urls = [[`${base}/`, allDate], ...Array.from({ length: directoryPageCount }, (_, i) => [`${base}${staticPagePath(i + 1)}`, allDate]),
-  [`${base}${SERVICES_PATH}`], [`${base}/privacy/`], [`${base}/terms/`],
+  [`${base}${SERVICES_PATH}`], [`${base}/privacy/`], [`${base}/terms/`], [`${base}/dpa/`],
   ...groupsPresent.map((g) => [`${base}${categoryPath(g)}`, maxDate(manifest.servers.filter((x) => groupOf(x) === g).map((x) => productDates.get(x.slug)))]),
   ...manifest.servers.map((s) => [`${base}${pagePath(s)}`, productDates.get(s.slug)]),
   ...(POSTS.length ? [...BLOG_LANGS.map(lang => [`${base}${blogIndexPath(lang)}`, maxDate(POSTS.filter((p) => p.lang === lang).map((p) => p.date))]), ...POSTS.map((p) => [`${base}${postPath(p)}`, p.date])] : [])];

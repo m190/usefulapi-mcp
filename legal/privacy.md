@@ -3,14 +3,17 @@
 
 # Privacy Policy
 
-**Effective date:** 16 July 2026 · **Last updated:** 16 November 2026
+**Effective date:** 16 July 2026 · **Last updated:** 20 November 2026
 **Operator:** Alexandr Maximov, IČO 88788814, Jeseniova 1196, 130 00 Prague, Czech Republic
 ("usefulapi", "we", "us"). Contact: **privacy@usefulapi.io**.
 
 usefulapi provides hosted [Model Context Protocol](https://modelcontextprotocol.io) (MCP) servers
 that let AI clients (e.g. Claude, Cursor) access third-party services (such as Linear) **on your
 behalf**. This policy explains what we collect, why, and your choices. It covers `usefulapi.io` and
-the `*.usefulapi.io` MCP endpoints. We are the data controller for the personal data described here.
+the `*.usefulapi.io` MCP endpoints. We are the data controller for the personal data described here,
+except the personal data in records that a business customer reads or writes through the Service: for
+that data the customer is the controller and we act as its processor under our
+[Data Processing Agreement](/dpa/).
 
 ## 1. Data we process
 
