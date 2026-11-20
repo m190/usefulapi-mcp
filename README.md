@@ -1089,6 +1089,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MoveitPro+](servers/moveitpro-plus/) | logistics | 31 | API token | [servers/moveitpro-plus/](servers/moveitpro-plus/) |
 | [Billetweb](servers/billetweb/) | commerce | 22 | API token | [servers/billetweb/](servers/billetweb/) |
 | [e-conomic](servers/visma-e-conomic/) | accounting | 32 | API token | [servers/visma-e-conomic/](servers/visma-e-conomic/) |
+| [BoxHero](servers/boxhero/) | inventory | 27 | API token | [servers/boxhero/](servers/boxhero/) |
+| [OCR.space](servers/ocr-space/) | document-ai | 8 | API token | [servers/ocr-space/](servers/ocr-space/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

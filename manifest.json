@@ -182496,6 +182496,314 @@
         "Show the booked invoices from October 2026 with their amounts.",
         "What is the balance of account 1000 in the current accounting year?"
       ]
+    },
+    {
+      "slug": "boxhero",
+      "name": "BoxHero",
+      "category": "inventory",
+      "description": "Read stock and orders, create or update items, and record stock moves in BoxHero.",
+      "endpoint": "https://boxhero.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "BoxHero API token"
+          }
+        ],
+        "hint": "Create it in BoxHero under **Settings → Integrations** (an admin task). A token is tied to one team and gives full access to that team's data; delete it there to disconnect. Your token is used only to call the BoxHero API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "boxhero_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "The BoxHero team this API token belongs to: id, name, currency (code, symbol, price decimals), memo and mode. The API needs the team in LOCATION mode (mode 2) for items, locations, transactions and orders. GET /teams/linked."
+        },
+        {
+          "name": "boxhero_list_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the active team members (id, name, role admin/member/viewer). Use the ids to filter orders by creator. GET /members."
+        },
+        {
+          "name": "boxhero_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List inventory items with SKU, barcode, cost, price, custom attributes, total quantity and the per-location stock breakdown. Pass location_ids to limit the quantities (and the list) to items with stock at those locations; item_ids to fetch specific items. Cursor-paged by id; pass next_cursor to continue. Low-stock checks: compare quantity with the item's 'Minimum Stock' style attribute. GET /items."
+        },
+        {
+          "name": "boxhero_get_item",
+          "type": "read",
+          "title": "Get item",
+          "description": "One item by id, with its attributes, total quantity and stock per location. GET /items/{item_id}."
+        },
+        {
+          "name": "boxhero_get_item_by_sku",
+          "type": "read",
+          "title": "Get item by SKU",
+          "description": "Look up one item by its SKU (case-insensitive) and return the same payload as boxhero_get_item. GET /items/by-sku/{sku}."
+        },
+        {
+          "name": "boxhero_list_item_attributes",
+          "type": "read",
+          "title": "List item attributes",
+          "description": "List the custom attribute specs defined for items (id, attr_name, attr_type text/date/number/barcode, rank). The ids are used when creating or updating items. File-type attributes are not included. GET /item-attrs."
+        },
+        {
+          "name": "boxhero_create_item",
+          "type": "write",
+          "title": "Create item",
+          "description": "WRITE: create a new inventory item. Optionally seed initial stock with quantity (and location_id when the team has more than one active location; with one location it is used automatically). Without quantity the item starts at zero everywhere. The SKU must be unique in the team (a random one is generated when omitted). Initial stock is applied in a second step, so on a partial failure the item may exist without stock. POST /items."
+        },
+        {
+          "name": "boxhero_update_item",
+          "type": "write",
+          "title": "Update item",
+          "description": "WRITE: change an item's name, SKU, barcode, photo, cost, price or custom attributes. Only the fields you pass change (an attribute with value null is removed; photo_url '' clears the photo). Stock levels are NOT changed here: use boxhero_record_stock_transaction. PUT /items/{item_id}."
+        },
+        {
+          "name": "boxhero_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the active storage locations (warehouses, stores...) with id, name, memo and total quantity stored. Location ids are needed for stock transactions. GET /locations."
+        },
+        {
+          "name": "boxhero_get_location",
+          "type": "read",
+          "title": "Get location",
+          "description": "One location by id. GET /locations/{location_id}."
+        },
+        {
+          "name": "boxhero_create_location",
+          "type": "write",
+          "title": "Create location",
+          "description": "WRITE: create a storage location. The name must be unique in the team; the plan's location limit applies (HTTP 402 when over it). POST /locations."
+        },
+        {
+          "name": "boxhero_update_location",
+          "type": "write",
+          "title": "Update location",
+          "description": "WRITE: rename a location or change its memo (memo '' clears it). Only the fields you pass change. PUT /locations/{location_id}."
+        },
+        {
+          "name": "boxhero_list_partners",
+          "type": "read",
+          "title": "List partners",
+          "description": "List business partners: suppliers (type 0, used on Stock In) and customers (type 1, used on Stock Out) with contact details. Cursor-paged by id. GET /partners."
+        },
+        {
+          "name": "boxhero_get_partner",
+          "type": "read",
+          "title": "Get partner",
+          "description": "One partner (supplier or customer) by id. GET /partners/{partner_id}."
+        },
+        {
+          "name": "boxhero_create_partner",
+          "type": "write",
+          "title": "Create partner",
+          "description": "WRITE: add a supplier (type 0) or customer (type 1) to BoxHero. It only stores contact details; BoxHero does not contact the partner. The plan's partner limit applies (HTTP 402). POST /partners."
+        },
+        {
+          "name": "boxhero_update_partner",
+          "type": "write",
+          "title": "Update partner",
+          "description": "WRITE: change a partner's name or contact details. The name is required by BoxHero (pass the current one to keep it); the other fields change only when passed. A partner's type cannot be changed. PUT /partners/{partner_id}."
+        },
+        {
+          "name": "boxhero_list_transactions",
+          "type": "read",
+          "title": "List stock transactions",
+          "description": "List stock transactions (Stock In, Stock Out, Move, Adjust), newest first, as summaries: type, locations, partner, memo, time, creator, item count, total quantity and revision. Use boxhero_get_transaction for the line items and new stock levels. Filter by type. Cursor-paged; pass next_cursor to continue. GET /transactions."
+        },
+        {
+          "name": "boxhero_get_transaction",
+          "type": "read",
+          "title": "Get stock transaction",
+          "description": "One stock transaction by id with all its lines; pass revision for an earlier version of it. GET /transactions/{tx_id}."
+        },
+        {
+          "name": "boxhero_record_stock_transaction",
+          "type": "write",
+          "title": "Record stock transaction",
+          "description": "WRITE: record a stock movement that CHANGES stock levels. type 'in' adds stock at to_location_id (optional supplier partner_id), 'out' removes stock at to_location_id (optional customer partner_id; stock may go negative), 'move' transfers from from_location_id to to_location_id, 'adjust' applies a signed RELATIVE correction at to_location_id (quantity 50 adds 50, -3 removes 3; it is not a target level). For in/out/move give each line a positive quantity (the tool applies the sign); for adjust it is signed and non-zero. Each line names an item by item_id or item_sku. to_location_id may be omitted only when the team has exactly one active location. Repeating the call records the movement again. Transactions can be edited or deleted only in the BoxHero app. POST /transactions."
+        },
+        {
+          "name": "boxhero_list_purchase_orders",
+          "type": "read",
+          "title": "List purchase orders",
+          "description": "List purchase orders (stock you ordered from suppliers), newest first: order number, status, supplier, totals, estimated date. Line items and fulfillment progress come from boxhero_get_purchase_order. Cursor-paged. GET /purchase-orders."
+        },
+        {
+          "name": "boxhero_get_purchase_order",
+          "type": "read",
+          "title": "Get purchase order",
+          "description": "One purchase order by id with every line (item, price, quantity, tax, discount), additional costs, tags, custom fields and fulfillment progress. GET /purchase-orders/{order_id}."
+        },
+        {
+          "name": "boxhero_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders (stock you sold to customers), newest first: order number, status, customer, totals, estimated date. Line items, returns and fulfillment progress come from boxhero_get_sales_order. Cursor-paged. GET /sales-orders."
+        },
+        {
+          "name": "boxhero_get_sales_order",
+          "type": "read",
+          "title": "Get sales order",
+          "description": "One sales order by id with every line (item, price, quantity, returned quantity), additional costs, tags, custom fields and fulfillment progress. GET /sales-orders/{order_id}."
+        },
+        {
+          "name": "boxhero_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "boxhero_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the BoxHero tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "boxhero_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for BoxHero (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "boxhero_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's BoxHero Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run boxhero_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which items have less than 10 units left in my main warehouse?",
+        "Show the last 20 stock-out transactions and who the customers were.",
+        "Record a stock-in of 40 units of SKU-1042 at the Berlin location from supplier Acme.",
+        "List the open purchase orders and what is still to be received."
+      ]
+    },
+    {
+      "slug": "ocr-space",
+      "name": "OCR.space",
+      "category": "document-ai",
+      "description": "Read text and tables from images and PDFs, and make searchable PDFs, in OCR.space.",
+      "endpoint": "https://ocr-space.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.1",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "OCR.space API key"
+          }
+        ],
+        "hint": "Get a free key (25,000 requests per month) at **ocr.space/ocrapi/freekey**; it arrives by e-mail. This connects the free OCR.space endpoint only. Your key is used only to call the OCR.space API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "ocrspace_ocr_url",
+          "type": "write",
+          "title": "OCR an image or PDF from a URL",
+          "description": "Extract text from an image or PDF at a public https URL with OCR.space (POST /parse/image). Returns the text per page (a PDF gives one entry per page; the free plan reads the first 3 pages and files up to 1 MB). Uses one request of your OCR.space quota (free key: 25,000 requests per month and 500 requests per day). Options: language, engine (1-3), is_table (line-by-line text for tables, receipts, invoices), detect_orientation, scale (upscale low-resolution scans), include_overlay (word coordinates; slower)."
+        },
+        {
+          "name": "ocrspace_ocr_base64",
+          "type": "write",
+          "title": "OCR a base64-encoded image or PDF",
+          "description": "Extract text from a small file passed as base64 (POST /parse/image with base64Image). Up to 1,400,000 base64 characters (about 1 MB, the free plan's file limit); use ocrspace_ocr_url for bigger files. Pass either a full data URI (data:image/png;base64,...) or the raw base64 plus mime_type. Uses one request of your OCR.space quota (free key: 25,000 requests per month and 500 requests per day). Options as in ocrspace_ocr_url."
+        },
+        {
+          "name": "ocrspace_create_searchable_pdf",
+          "type": "write",
+          "title": "Create a searchable PDF from a URL",
+          "description": "Run OCR on a public https image/PDF URL and have OCR.space build a searchable PDF (a copy of the file with a text layer). Returns searchable_pdf_url, a download link that expires after one hour, plus the recognized text. The free plan adds a 'Generated by OCR.space' watermark. Engine 3 cannot make searchable PDFs, so only engine 1 or 2 is accepted (default 2). Uses one request of your OCR.space quota (free key: 25,000 requests per month and 500 requests per day)."
+        },
+        {
+          "name": "ocrspace_list_languages",
+          "type": "read",
+          "title": "List OCR languages, engines and limits",
+          "description": "Reference (no request to OCR.space, no quota used): the documented language codes for the language option, what OCR engines 1, 2 and 3 do, and the free-plan limits."
+        },
+        {
+          "name": "ocrspace_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "ocrspace_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the OCR.space tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "ocrspace_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for OCR.space (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "ocrspace_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's OCR.space Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ocrspace_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Read the text from this receipt photo: https://example.com/receipt.jpg",
+        "Extract the table from this scanned invoice PDF as Markdown with engine 3.",
+        "Make a searchable PDF from this scanned contract URL.",
+        "Which OCR languages and engines can I use, and what are the free plan limits?"
+      ]
     }
   ]
 }
