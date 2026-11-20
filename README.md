@@ -720,7 +720,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Beamer](servers/beamer/) | communications | 20 | API token | [servers/beamer/](servers/beamer/) |
 | [Gavel](servers/gavel/) | documents | 8 | API token | [servers/gavel/](servers/gavel/) |
 | [Motion](servers/motion/) | project-management | 11 | API token | [servers/motion/](servers/motion/) |
-| [Chatwoot](servers/chatwoot/) | support | 22 | API token | [servers/chatwoot/](servers/chatwoot/) |
+| [Chatwoot](servers/chatwoot/) | support | 24 | API token | [servers/chatwoot/](servers/chatwoot/) |
 | [AcademyOcean](servers/academyocean/) | education | 21 | API token | [servers/academyocean/](servers/academyocean/) |
 | [Searchanise](servers/searchanise/) | ecommerce | 10 | API token | [servers/searchanise/](servers/searchanise/) |
 | [ShippingEasy](servers/shippingeasy/) | shipping | 10 | API token | [servers/shippingeasy/](servers/shippingeasy/) |

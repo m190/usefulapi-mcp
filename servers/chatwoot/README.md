@@ -42,6 +42,8 @@ On first connect you provide a **Chatwoot access token** (Profile Settings → A
 | `chatwoot_search_contacts` | read | Search contacts |
 | `chatwoot_get_contact` | read | Get contact |
 | `chatwoot_list_contact_conversations` | read | List contact conversations |
+| `chatwoot_list_csat_responses` | read | List CSAT survey responses |
+| `chatwoot_get_csat_summary` | read | Get CSAT summary |
 | `chatwoot_list_labels` | read | List labels |
 | `chatwoot_list_inboxes` | read | List inboxes |
 | `chatwoot_list_agents` | read | List agents |
