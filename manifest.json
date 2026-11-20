@@ -182804,6 +182804,448 @@
         "Make a searchable PDF from this scanned contract URL.",
         "Which OCR languages and engines can I use, and what are the free plan limits?"
       ]
+    },
+    {
+      "slug": "return-prime",
+      "name": "Return Prime",
+      "category": "ecommerce",
+      "description": "Read return and exchange requests, with status, order and customer, in Return Prime.",
+      "endpoint": "https://return-prime.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Return Prime app access token (x-rp-token)"
+          }
+        ],
+        "hint": "Create the app in your Return Prime dashboard: **Settings → Integrations → Develop apps**. Open it and copy the token under **API credentials**. The API is included from the Grow plan. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "returnprime_list_requests",
+          "type": "read",
+          "title": "List return and exchange requests",
+          "description": "List return and exchange requests from the merchant's Return Prime account, with optional filters. Use request_number to find one request. Each request shows its status, type, order and customer. Return Prime API: GET /return-exchange/v2."
+        },
+        {
+          "name": "returnprime_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "returnprime_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Return Prime tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "returnprime_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Return Prime (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "returnprime_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Return Prime Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run returnprime_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which return requests came in this week?",
+        "What is the status of return RET322, and which items does it cover?",
+        "Which exchanges were created in October, and who asked for them?",
+        "Show me the exchange requests created in the last 7 days."
+      ]
+    },
+    {
+      "slug": "a2x-accounting",
+      "name": "A2X",
+      "category": "accounting",
+      "description": "Read accounts, SKU costs, products and subledger queries, and create data exports in A2X.",
+      "endpoint": "https://a2x-accounting.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "A2X public API token"
+          }
+        ],
+        "hint": "Create it in A2X under **User Settings → Public API**. Give it the read scope (add write only if you want data exports). Each user can hold 2 active tokens. The token is used only to call the A2X API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "a2xaccounting_list_organizations",
+          "type": "read",
+          "title": "List organizations",
+          "description": "List the A2X organizations this token's user can access. Use the organization id in the product, subledger and sku tools. Paginated: pass nextCursor as cursor. A2X: GET /api/v1/organizations."
+        },
+        {
+          "name": "a2xaccounting_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List the A2X accounts (sales channel connections such as Amazon, Shopify, PayPal) this token's user can access. Closed accounts are not included. Paginated. A2X: GET /api/v1/accounts."
+        },
+        {
+          "name": "a2xaccounting_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the products in an organization's product catalog, optionally from one product import. Paginated. A2X: GET /api/v1/products."
+        },
+        {
+          "name": "a2xaccounting_list_product_imports",
+          "type": "read",
+          "title": "List product imports",
+          "description": "List product catalog imports for an organization. Paginated. A2X: GET /api/v1/product-imports."
+        },
+        {
+          "name": "a2xaccounting_list_sku_cost_files",
+          "type": "read",
+          "title": "List latest SKU cost files",
+          "description": "List the latest SKU cost files for an account (the costs used for COGS). Paginated. A2X: GET /api/v1/latest-sku-cost-files."
+        },
+        {
+          "name": "a2xaccounting_list_sku_costs",
+          "type": "read",
+          "title": "List SKU costs",
+          "description": "List the SKU costs for an account, optionally from one SKU cost file. Paginated. A2X: GET /api/v1/sku-costs."
+        },
+        {
+          "name": "a2xaccounting_list_data_exports",
+          "type": "read",
+          "title": "List data exports",
+          "description": "List the data exports the token's user created (kept 15 days). Paginated. A2X: GET /api/v1/data-exports."
+        },
+        {
+          "name": "a2xaccounting_list_data_export_rows",
+          "type": "read",
+          "title": "List data export rows",
+          "description": "List the rows of one data export for an account. Paginated. A2X: GET /api/v1/data-exports/rows."
+        },
+        {
+          "name": "a2xaccounting_create_data_export",
+          "type": "write",
+          "title": "Create a data export",
+          "description": "WRITE: generate a CSV export (SKUS_BY_QUANTITY, SALES_BY_GL_AND_TYPE or SALES_BY_GL_TYPE_AND_DESC) for one account and calendar month. It stores the file for 15 days and counts against the 15-per-day quota. Not available for SKUS_BY_QUANTITY on PayPal. A2X: POST /api/v1/data-exports."
+        },
+        {
+          "name": "a2xaccounting_list_subledger_topics",
+          "type": "read",
+          "title": "List subledger topics",
+          "description": "List the subledger topics (queryable data sets) for an organization. Needs an A2X Clarity or Subledger subscription and the subledger API enabled; otherwise HTTP 403. A2X: GET /api/v1/subledger/topics."
+        },
+        {
+          "name": "a2xaccounting_get_subledger_topic",
+          "type": "read",
+          "title": "Get a subledger topic",
+          "description": "Get one subledger topic: its fields, query rules, default filters and sample queries. Needs the Clarity or Subledger subscription. A2X: GET /api/v1/subledger/topics/{topic}."
+        },
+        {
+          "name": "a2xaccounting_estimate_subledger_query",
+          "type": "read",
+          "title": "Estimate a subledger query",
+          "description": "Check a subledger query and return how much data it would scan, without running it. Free; refuses the same queries the run tool refuses. Use it before a large query. Needs the Clarity or Subledger subscription. A2X: POST /api/v1/subledger/query/estimate."
+        },
+        {
+          "name": "a2xaccounting_run_subledger_query",
+          "type": "read",
+          "title": "Run a subledger query",
+          "description": "Run a read-only query on one subledger topic and return its rows (at most 5000 per call; use offset to page). Scan limit 50 GB, 60 s. Limited per organization across all tokens. Needs the Clarity or Subledger subscription. A2X: POST /api/v1/subledger/query."
+        },
+        {
+          "name": "a2xaccounting_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "a2xaccounting_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the A2X tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "a2xaccounting_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for A2X (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "a2xaccounting_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's A2X Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run a2xaccounting_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which A2X accounts are connected, and when was each last synced?",
+        "List the latest SKU cost file for my Amazon account and show the first 20 costs.",
+        "Run a subledger query for orders by month this year and show the totals.",
+        "Create a SALES_BY_GL_AND_TYPE data export for my Shopify account for last month."
+      ]
+    },
+    {
+      "slug": "packeta",
+      "name": "Packeta",
+      "category": "shipping",
+      "description": "Validate, create and cancel packets, and read their status and tracking in Packeta.",
+      "endpoint": "https://packeta.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Packeta API password"
+          }
+        ],
+        "hint": "Find it in the Packeta client section under **API credentials**. Your password is used only to call the Packeta API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "packeta_validate_packet",
+          "type": "read",
+          "title": "Validate a packet",
+          "description": "Check packet data against Packeta's rules without creating anything. Use it before packeta_create_packet. Packeta API: packetAttributesValid."
+        },
+        {
+          "name": "packeta_packet_status",
+          "type": "read",
+          "title": "Get packet status",
+          "description": "Get the current status of a packet: its state, whether it is returning to the sender, the last day it can be picked up, and its carrier. Packeta API: packetStatus."
+        },
+        {
+          "name": "packeta_packet_tracking",
+          "type": "read",
+          "title": "Get packet tracking history",
+          "description": "Get the full tracking history of a packet, one record per status change. Packeta API: packetTracking."
+        },
+        {
+          "name": "packeta_packet_info",
+          "type": "read",
+          "title": "Get packet info",
+          "description": "Get a packet's destination branch, verified invoice weight, and courier consignment details (courier, courier numbers, barcodes), when there is one. Packeta API: packetInfo."
+        },
+        {
+          "name": "packeta_shipment_packets",
+          "type": "read",
+          "title": "List packets in a shipment",
+          "description": "List the packets inside a shipment, given its D-code or B-code shipment ID. Packeta API: shipmentPackets."
+        },
+        {
+          "name": "packeta_return_routing",
+          "type": "read",
+          "title": "Get return routing strings",
+          "description": "Get the two return routing strings of a sender, to print on return labels. They change with account settings, so fetch them each time. Packeta API: senderGetReturnRouting."
+        },
+        {
+          "name": "packeta_create_packet",
+          "type": "write",
+          "title": "Create a packet",
+          "description": "Create a packet in the customer's Packeta account and return its ID and barcode. This is a live action: the packet is registered at once and can be handed to a carrier. Run packeta_validate_packet first. Packeta API: createPacket."
+        },
+        {
+          "name": "packeta_cancel_packet",
+          "type": "write",
+          "title": "Cancel a packet",
+          "description": "Cancel a packet that has not been physically handed over yet. The cancellation cannot be undone. Packeta API: cancelPacket."
+        },
+        {
+          "name": "packeta_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "packeta_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Packeta tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "packeta_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Packeta (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "packeta_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Packeta Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run packeta_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Create a Packeta packet for order 1042 to branch 79, COD 1450 CZK, 2 kg.",
+        "Where is packet 1234567890 right now, and when does it reach the pick-up point?",
+        "Show the full tracking history of packet 1234567890.",
+        "Check these packet details before I create the packet.",
+        "Cancel packet 1234567890, it has not been handed over yet."
+      ]
+    },
+    {
+      "slug": "barion",
+      "name": "Barion",
+      "category": "payments",
+      "description": "Read Barion wallet balances, transaction history and item details in Barion.",
+      "endpoint": "https://barion.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Barion wallet API key"
+          }
+        ],
+        "hint": "Create or copy it on secure.barion.com under **Wallet → Access**. Wallet keys work for business accounts only, and a shop POS key will not work here. The key is used only to call the Barion API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "barion_list_accounts",
+          "type": "read",
+          "title": "List wallet accounts",
+          "description": "List the currency accounts in the Barion wallet of the key's owner, with their balances. Barion: GET /v2/Accounts."
+        },
+        {
+          "name": "barion_list_history",
+          "type": "read",
+          "title": "List wallet transaction history",
+          "description": "List wallet transaction history items, newest first, up to 20 per call. Page by passing the last item's Id as lastVisibleItemId: only older items come back. Not for reconciliation: use barion_list_accounts and the statement download in Barion for that. Barion: GET /v3/UserHistory/GetHistory."
+        },
+        {
+          "name": "barion_get_history_item",
+          "type": "read",
+          "title": "Get wallet transaction details",
+          "description": "Get the full details of one wallet history item (payment, fee, transfer, withdrawal, refund or top-up), by the item Id from barion_list_history. Barion: GET /v3/TransactionHistory/GetDetail."
+        },
+        {
+          "name": "barion_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "barion_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Barion tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "barion_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Barion (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "barion_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Barion Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run barion_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "What balance does each of my Barion accounts hold?",
+        "Show my Barion wallet transactions from today.",
+        "Give me the details of the last Barion payment that came in."
+      ]
     }
   ]
 }

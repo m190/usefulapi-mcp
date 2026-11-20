@@ -1091,6 +1091,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [e-conomic](servers/visma-e-conomic/) | accounting | 32 | API token | [servers/visma-e-conomic/](servers/visma-e-conomic/) |
 | [BoxHero](servers/boxhero/) | inventory | 27 | API token | [servers/boxhero/](servers/boxhero/) |
 | [OCR.space](servers/ocr-space/) | document-ai | 8 | API token | [servers/ocr-space/](servers/ocr-space/) |
+| [Return Prime](servers/return-prime/) | ecommerce | 5 | API token | [servers/return-prime/](servers/return-prime/) |
+| [A2X](servers/a2x-accounting/) | accounting | 17 | API token | [servers/a2x-accounting/](servers/a2x-accounting/) |
+| [Packeta](servers/packeta/) | shipping | 12 | API token | [servers/packeta/](servers/packeta/) |
+| [Barion](servers/barion/) | payments | 7 | API token | [servers/barion/](servers/barion/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
