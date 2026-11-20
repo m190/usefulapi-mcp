@@ -895,6 +895,13 @@ for (const f of readdirSync(new URL("prelaunch/", ROOT))) {
   mkdirSync(`${outDir}/${slug}`, { recursive: true });
   writeFileSync(`${outDir}/${slug}/index.html`, SHELL(esc(title), mdToHtml(md)));
 }
+// Review demo videos (prelaunch/<slug>.mp4 → /<slug>/demo.mp4); kept after launch so links sent to a vendor still work.
+for (const f of readdirSync(new URL("prelaunch/", ROOT))) {
+  if (!/^[a-z0-9-]+\.mp4$/.test(f)) continue;
+  const slug = f.replace(/\.mp4$/, "");
+  mkdirSync(`${outDir}/${slug}`, { recursive: true });
+  copyFileSync(new URL(`prelaunch/${f}`, ROOT), `${outDir}/${slug}/demo.mp4`);
+}
 mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
 writeFileSync(`${outDir}${SERVICES_PATH}index.html`, servicesPage());
 for (const s of manifest.servers) {

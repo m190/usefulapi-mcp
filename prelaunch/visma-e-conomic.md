@@ -34,3 +34,7 @@ Companies that already use e-conomic and an AI assistant that supports remote MC
 - Your AI provider keeps the chat under your own account and its settings.
 
 See the [Privacy Policy](/privacy/) and the [Terms of Service](/terms/).
+
+## Demo
+
+A 2-minute [demo video](/visma-e-conomic/demo.mp4) shows the connection, two questions, a new draft invoice and the disconnect on an e-conomic trial agreement with sample data.
