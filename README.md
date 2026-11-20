@@ -1100,6 +1100,8 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Interparcel](servers/interparcel/) | shipping | 13 | API token | [servers/interparcel/](servers/interparcel/) |
 | [Tempika](servers/tempika/) | time-tracking | 8 | API token | [servers/tempika/](servers/tempika/) |
 | [GreenRope](servers/greenrope/) | crm | 14 | API token | [servers/greenrope/](servers/greenrope/) |
+| [Pool Service Software](servers/pool-service-software/) | scheduling | 36 | API token | [servers/pool-service-software/](servers/pool-service-software/) |
+| [AbaNinja](servers/abaninja/) | billing | 15 | API token | [servers/abaninja/](servers/abaninja/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
