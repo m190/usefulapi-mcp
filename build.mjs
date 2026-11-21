@@ -1057,6 +1057,33 @@ function serverLlms(s) {
     `## FAQ\n\n${faqFor(s).map((f) => `### ${mdFromHtml(f.q, pageUrl)}\n\n${mdFromHtml(f.a, pageUrl)}`).join("\n\n")}\n\n` + links;
 }
 for (const s of manifest.servers) writeFileSync(`${outDir}${pagePath(s)}llms.txt`, serverLlms(s));
+// claude/marketplace.json: a Claude Code plugin marketplace by URL (`/plugin marketplace add https://usefulapi.io/claude/marketplace.json`).
+// One entry per live server. No entry has its own plugin.json, so the entry is the manifest and carries the server URL
+// in mcpServers; every entry fetches the same tiny README-only zip (portal/claude/usefulapi-plugin.zip). Only data that is
+// already public (manifest.json) goes in. Skills come from the server itself after sign-in, not from this file.
+{
+  mkdirSync(`${outDir}/claude`, { recursive: true });
+  const zip = readFileSync(new URL("portal/claude/usefulapi-plugin.zip", import.meta.url));
+  copyFileSync(new URL("portal/claude/usefulapi-plugin.zip", import.meta.url), `${outDir}/claude/usefulapi-plugin.zip`);
+  const sha256 = createHash("sha256").update(zip).digest("hex");
+  const plugins = manifest.servers.filter((s) => s.status === "live").map((s) => ({
+    name: s.slug,
+    displayName: s.name,
+    description: `${s.name}: ${s.description}`,
+    version: s.version,
+    category: s.category,
+    homepage: `${base}${pagePath(s)}`,
+    author: { name: "UsefulAPI", url: base },
+    source: { source: "archive", url: `${base}/claude/usefulapi-plugin.zip`, sha256 },
+    mcpServers: { [s.slug]: { type: "http", url: s.endpoint } },
+  }));
+  writeFileSync(`${outDir}/claude/marketplace.json`, JSON.stringify({
+    name: "usefulapi",
+    description: "Hosted MCP servers for business apps by usefulapi.io. Each plugin adds one server; sign in with /mcp.",
+    owner: { name: "UsefulAPI", url: base, email: "support@usefulapi.io" },
+    plugins,
+  }, null, 1) + "\n");
+}
 // <slug>/server-card and <slug>/ai-catalog.json: the static copies of the Worker's v1 server card and AI Catalog
 // (portal/_cards, written by codegen.mjs). A zone redirect rule sends <slug>.usefulapi.io/mcp/server-card and
 // /.well-known/ai-catalog.json here, so no Worker runs; _headers below sets their media types and CORS.
