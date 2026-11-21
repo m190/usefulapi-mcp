@@ -9,6 +9,7 @@
 //   portal/lastmod.json         — the sitemap date of each product page (lastmod.mjs: changes only with the page's data)
 //   portal/_probe/<slug>.json   — static discovery reply for crawlers the zone redirects (from fleet discovery.json)
 //   portal/_cards/<slug>.json   — the v1 server card and AI Catalog bodies (fleet scripts/export-cards.ts)
+//   .agents/plugins/marketplace.json + plugins/<slug>/{plugin,mcp}.json — the Codex / ChatGPT desktop plugin catalog
 // Needs the fleet checkout next to this repo (../fleet); a missing fleet input is an error.
 // Only DEPLOYED fleet data is published: a listed product whose fleet inputs differ from the commit its live Worker
 // was deployed from (fleet/scripts/changes.mjs: refs/deployed/<slug>, else the tag "deployed"; uncommitted files
@@ -284,6 +285,75 @@ for (const s of manifest.servers) {
 }
 const cardDir = new URL("portal/_cards/", ROOT);
 if (existsSync(cardDir)) for (const f of readdirSync(cardDir)) if (f.endsWith(".json") && !cards.has(f)) remove.add(`portal/_cards/${f}`);
+
+// Codex / ChatGPT desktop plugin marketplace (they add a marketplace only from a Git repo, never from a URL):
+//   .agents/plugins/marketplace.json  — one entry per live server, source ./plugins/<slug>
+//   plugins/<slug>/plugin.json        — portable Agent Plugins manifest + extensions.com.openai interface
+//   plugins/<slug>/mcp.json           — the remote server (streamable-http, OAuth)
+// Add: codex plugin marketplace add m190/usefulapi-mcp --sparse .agents/plugins --sparse plugins
+// Only public manifest data. Claude Code uses usefulapi.io/claude/marketplace.json instead (build.mjs).
+{
+  const site = manifest.portal.domain.replace(/\/$/, "");
+  const live = manifest.servers.filter((s) => s.status === "live");
+  const keep = new Set(live.map((s) => s.slug));
+  const json = (v) => JSON.stringify(v, null, 2) + "\n";
+  for (const s of live) {
+    const types = new Set((s.tools || []).map((t) => t.type));
+    emit(`plugins/${s.slug}/plugin.json`, json({
+      $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+      name: s.slug,
+      version: s.version,
+      description: s.description,
+      author: { name: "UsefulAPI", email: "support@usefulapi.io", url: site },
+      homepage: `${site}/${s.slug}/`,
+      repository: repository.url,
+      keywords: [s.category, "mcp", "usefulapi"],
+      extensions: {
+        "com.openai": {
+          interface: {
+            displayName: s.name,
+            shortDescription: s.description,
+            developerName: "UsefulAPI",
+            category: s.category,
+            capabilities: [...(types.has("read") ? ["Read"] : []), ...(types.has("write") ? ["Write"] : [])],
+            websiteURL: `${site}/${s.slug}/`,
+            privacyPolicyURL: `${site}/privacy/`,
+            termsOfServiceURL: `${site}/terms/`,
+            ...((s.examples || []).length ? { defaultPrompt: s.examples.slice(0, 3) } : {}),
+          },
+        },
+      },
+    }));
+    emit(`plugins/${s.slug}/mcp.json`, json({
+      $schema: "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+      mcpServers: { [s.slug]: { type: "streamable-http", url: s.endpoint, extensions: { "com.openai": { auth: { type: "oauth" } } } } },
+    }));
+    // Codex compatibility layout, as in OpenAI's own plugins (openai/plugins: .codex-plugin/plugin.json + .mcp.json):
+    // older hosts read only this pair.
+    const iface = { displayName: s.name, shortDescription: s.description, developerName: "UsefulAPI", category: s.category,
+      capabilities: [...(types.has("read") ? ["Read"] : []), ...(types.has("write") ? ["Write"] : [])],
+      websiteURL: `${site}/${s.slug}/`, privacyPolicyURL: `${site}/privacy/`, termsOfServiceURL: `${site}/terms/`,
+      ...((s.examples || []).length ? { defaultPrompt: s.examples.slice(0, 3) } : {}) };
+    emit(`plugins/${s.slug}/.codex-plugin/plugin.json`, json({
+      name: s.slug, version: s.version, description: s.description,
+      author: { name: "UsefulAPI", email: "support@usefulapi.io", url: site }, homepage: `${site}/${s.slug}/`,
+      repository: repository.url, mcpServers: "./.mcp.json", interface: iface,
+    }));
+    emit(`plugins/${s.slug}/.mcp.json`, json({ mcpServers: { [s.slug]: { type: "http", url: s.endpoint } } }));
+  }
+  emit(".agents/plugins/marketplace.json", json({
+    name: "usefulapi",
+    interface: { displayName: "usefulapi.io" },
+    plugins: live.map((s) => ({
+      name: s.slug,
+      source: { source: "local", path: `./plugins/${s.slug}` },
+      policy: { installation: "AVAILABLE", authentication: "ON_INSTALL" },
+      category: s.category,
+    })),
+  }));
+  const pluginDir = new URL("plugins/", ROOT);
+  if (existsSync(pluginDir)) for (const d of readdirSync(pluginDir)) if (!keep.has(d)) for (const f of ["plugin.json", "mcp.json", ".codex-plugin/plugin.json", ".mcp.json"]) if (existsSync(new URL(`plugins/${d}/${f}`, ROOT))) remove.add(`plugins/${d}/${f}`);
+}
 
 // ---- write or check -----------------------------------------------------------
 const changed = [...out].filter(([path, content]) => {
