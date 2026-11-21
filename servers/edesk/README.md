@@ -41,6 +41,7 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `edesk_get_template` | read | Get reply template |
 | `edesk_list_tickets` | read | List tickets |
 | `edesk_get_ticket` | read | Get ticket |
+| `edesk_list_ticket_messages` | read | List ticket messages |
 | `edesk_get_message` | read | Get message |
 | `edesk_list_contacts` | read | List contacts |
 | `edesk_list_sales_orders` | read | List sales orders |

@@ -15895,7 +15895,7 @@
       "transport": "streamable-http",
       "auth": "none",
       "status": "live",
-      "version": "1.41.5",
+      "version": "1.42.0",
       "pricing": [
         {
           "plan": "Free",
@@ -33116,6 +33116,24 @@
           "description": "Create a normal invoice (type RE) with its line items, ALWAYS saved as a DRAFT (status 100): it is not sent, not booked and stays editable in sevdesk. contact_person_id is the sevdesk USER responsible for it — copy contactPerson.id from any existing invoice (sevdesk_get_invoice). Bookkeeping 2.0 accounts use tax_rule_id (1 = taxable sales in Germany, the usual choice); 1.0 accounts pass tax_type instead (check sevdesk_get_bookkeeping_system_version). sevdesk: POST /Invoice/Factory/saveInvoice."
         },
         {
+          "name": "sevdesk_get_invoice_pdf",
+          "type": "read",
+          "title": "Get an invoice PDF",
+          "description": "Return the PDF of an invoice (also a draft) to check it before sending: metadata as text, then the PDF as an embedded file. The request always sets preventSendBy=true, so reading the PDF does not mark the invoice as sent and does not change its status. Up to 10 MB. sevdesk: GET /Invoice/{invoiceId}/getPdf."
+        },
+        {
+          "name": "sevdesk_list_document_layouts",
+          "type": "read",
+          "title": "List document templates and letterpapers",
+          "description": "List the document templates (for one document type) and the letterpapers of the account, with id, name and default flag. Use the ids with sevdesk_update_draft_invoice (template_id, letterpaper_id). Page breaks, margins and footer spacing are part of a template and are edited only in the sevdesk app. sevdesk: GET /DocServer/getTemplatesWithThumb and GET /DocServer/getLetterpapersWithThumb."
+        },
+        {
+          "name": "sevdesk_update_draft_invoice",
+          "type": "write",
+          "title": "Edit a draft invoice",
+          "description": "Change an existing DRAFT invoice (status 100) in place instead of creating a new draft: header fields and texts, dates, payment term, address, line items (change, add, remove) and its template, letterpaper or language. Only the fields you pass change; the tool reads the invoice first and keeps every other value. It refuses an invoice that is not a draft. It never sends, books or finalises the invoice. After saving, it reads the invoice again and reports the result, including any requested change that sevdesk did not apply. Check the result with sevdesk_get_invoice_pdf. Page breaks and margins cannot be set through the API (they belong to the template). sevdesk: POST /Invoice/Factory/saveInvoice (with the invoice id) and PUT /Invoice/{invoiceId}/changeParameter."
+        },
+        {
           "name": "sevdesk_usage_status",
           "type": "meta",
           "title": "Usage status (free-tier meter)",
@@ -33140,7 +33158,7 @@
           "description": "Cancel the caller's sevdesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sevdesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.41.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -43672,7 +43690,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.27.6",
+      "version": "1.28.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -43729,19 +43747,25 @@
           "name": "edesk_list_tickets",
           "type": "read",
           "title": "List tickets",
-          "description": "List support tickets from all channels with subject, type, status, channel, owner, contact, linked sales order id, tag ids, message ids, reply count and AI classification. Filter by status, type, channel, contact, owner, sales order, seller (marketplace) order id and last-updated date. GET /tickets."
+          "description": "List support tickets from all channels with subject, type, status, channel, owner, contact, linked sales order id, tag ids, message ids, reply count and AI classification. Filter by status, type, channel, contact, owner, sales order, seller (marketplace) order id, tags, ticket ids, created time, last-updated time and reply deadline (eDesk's Time left). Time filters take a date or an exact date-time. For an hourly sync, use order_by last_updated_at and order_direction asc, and set updated_after to the smaller of the last run's largest last_updated_at and that run's start time (a ticket can carry a future last update), minus a few minutes, with Z. Follow next_cursor (pass it as cursor with the same filters) to reach every ticket; page reaches only the first 10,000. eDesk keeps no status history: it has no time when a ticket entered Pending; reply_by is the reply deadline. Read the messages of a ticket with edesk_list_ticket_messages. GET /tickets."
         },
         {
           "name": "edesk_get_ticket",
           "type": "read",
           "title": "Get ticket",
-          "description": "One ticket by id with its status, owner, tags, custom fields, linked sales order and the ids of its messages (read each with edesk_get_message). GET /tickets/{id}."
+          "description": "One ticket by id with its status, owner, tags, custom fields, linked sales order and the ids of its messages (read them all at once with edesk_list_ticket_messages). GET /tickets/{id}."
+        },
+        {
+          "name": "edesk_list_ticket_messages",
+          "type": "read",
+          "title": "List ticket messages",
+          "description": "All messages and internal notes of one ticket in one call, oldest first (ordered by id; created_at can be out of order for a message eDesk imported later): full body, direction, type (Message or Note), author, timestamps and attachments, each as edesk_get_message returns it. Up to 100 per page (default 100, enough for almost every ticket); follow next_page while it is not null. GET /tickets/{id}/messages."
         },
         {
           "name": "edesk_get_message",
           "type": "read",
           "title": "Get message",
-          "description": "One ticket message or internal note by id (from a ticket's message ids): body, direction, type (Message or Note), author and attachments. GET /messages/{id}."
+          "description": "One ticket message or internal note by id (from a ticket's message ids): body, direction, type (Message or Note), author and attachments. For all messages of a ticket use edesk_list_ticket_messages (one call). GET /messages/{id}."
         },
         {
           "name": "edesk_list_contacts",

@@ -55,6 +55,9 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `sevdesk_update_contact` | **write** | Update a contact |
 | `sevdesk_add_communication_way` | **write** | Add an email, phone or website to a contact |
 | `sevdesk_create_draft_invoice` | **write** | Create a draft invoice |
+| `sevdesk_get_invoice_pdf` | read | Get an invoice PDF |
+| `sevdesk_list_document_layouts` | read | List document templates and letterpapers |
+| `sevdesk_update_draft_invoice` | **write** | Edit a draft invoice |
 | `sevdesk_usage_status` | meta | Usage status (free-tier meter) |
 | `sevdesk_request_feature` | meta | Request a missing feature |
 | `sevdesk_upgrade` | meta | Upgrade to Pro or Pro+ |
