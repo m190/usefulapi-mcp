@@ -479,7 +479,11 @@ ${copyLine(urlShown)}
 <li>In Plugins, install <b>${name}</b>, then choose it in a chat.</li></ol>
 <p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p>` },
     { c: "claude-code", label: "Claude Code", html: `<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
-${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}` },
+${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}
+<details class="inline"><summary>or install it as a plugin</summary>
+<div class="fold"><p>Add the usefulapi plugin marketplace once, then install <b>${name}</b> from it. Run <code>/mcp</code> to log in.</p>
+${copyLine(`claude plugin marketplace add ${SITE}/claude/marketplace.json`)}
+${copyLine(`claude plugin install ${esc(s.slug)}@usefulapi`)}</div></details>` },
     { c: "cursor", label: "Cursor", html: `<p class="lead"><a class="btn" href="${attr(cursorLink)}">Add to Cursor</a> or add this to <code>~/.cursor/mcp.json</code>:</p>
 ${copyBlock(`{
   "mcpServers": {
@@ -1044,7 +1048,8 @@ function serverLlms(s) {
     `- Server URL: ${s.endpoint}\n- Transport: Streamable HTTP, OAuth sign-in\n- Status: ${s.status === "live" ? "live" : "launching soon"}\n- Page: ${pageUrl}\n\n` +
     `## Connect\n\n` +
     `- Claude (claude.ai, Desktop): Customize → Connectors → Add custom connector, name ${s.name}, URL ${s.endpoint}. Prefilled dialog: ${claudeAddLink(s)}\n` +
-    `- Claude Code: \`claude mcp add --transport http ${s.slug} ${s.endpoint}\`, then run \`/mcp\` to log in.\n` +
+    `- Claude Code: \`claude mcp add --transport http ${s.slug} ${s.endpoint}\`, then run \`/mcp\` to log in. ` +
+    `As a plugin: \`claude plugin marketplace add ${base}/claude/marketplace.json\`, then \`claude plugin install ${s.slug}@usefulapi\`.\n` +
     `- Codex: \`codex mcp add ${s.slug} --url ${s.endpoint}\`, then \`codex mcp login ${s.slug}\`.\n` +
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
     `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
