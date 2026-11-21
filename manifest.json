@@ -184625,6 +184625,356 @@
         "Look up payment 12345 and tell me its state.",
         "Which webhook endpoints are set up on my account?"
       ]
+    },
+    {
+      "slug": "just-in",
+      "name": "Just-In",
+      "category": "hr",
+      "description": "Read employees, attendance, leave, shifts and timesheets; create leave and draft shifts in Just-In.",
+      "endpoint": "https://just-in.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Just-In API token"
+          }
+        ],
+        "hint": "Create it in Just-In → **Company Settings → API Tokens**. Choose only the abilities you need. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "justin_get_account",
+          "type": "read",
+          "title": "Check the API token",
+          "description": "Confirm the API token works. Returns the company it belongs to, its abilities, expiry, whether an IP allowlist is active, and the client IP as Just-In sees it. No business data. Just-In API: GET /api/v1/me."
+        },
+        {
+          "name": "justin_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees of the company, with department and branch. Supports incremental sync with updated_since. Just-In API: GET /api/v1/employees."
+        },
+        {
+          "name": "justin_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by Just-In id. Just-In API: GET /api/v1/employees/{id}."
+        },
+        {
+          "name": "justin_list_attendance",
+          "type": "read",
+          "title": "List attendance records",
+          "description": "List attendance records (one working day per employee) between two dates, with optional employee, department, branch and status filters. Just-In API: GET /api/v1/attendance."
+        },
+        {
+          "name": "justin_get_attendance_record",
+          "type": "read",
+          "title": "Get an attendance record",
+          "description": "Get one attendance record by id. Just-In API: GET /api/v1/attendance/{id}."
+        },
+        {
+          "name": "justin_list_leave_requests",
+          "type": "read",
+          "title": "List leave requests",
+          "description": "List leave and absence requests for one month. approval_status: open, signed_by_employee or approved. Just-In API: GET /api/v1/leave."
+        },
+        {
+          "name": "justin_get_leave_request",
+          "type": "read",
+          "title": "Get a leave request",
+          "description": "Get one leave or absence request by id. Just-In API: GET /api/v1/leave/{id}."
+        },
+        {
+          "name": "justin_list_schedule_shifts",
+          "type": "read",
+          "title": "List scheduled shifts",
+          "description": "List the shift roster between two dates (default: today to today + 28 days, max 93 days). Includes drafts; check the published flag. Needs the Work Scheduling plan feature. Just-In API: GET /api/v1/schedule/shifts."
+        },
+        {
+          "name": "justin_get_schedule_shift",
+          "type": "read",
+          "title": "Get a scheduled shift",
+          "description": "Get one scheduled shift by id, with its assignees. Just-In API: GET /api/v1/schedule/shifts/{id}."
+        },
+        {
+          "name": "justin_list_sites",
+          "type": "read",
+          "title": "List sites",
+          "description": "List the company's work sites, used for shift locations. Just-In API: GET /api/v1/sites."
+        },
+        {
+          "name": "justin_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List the company's departments. Just-In API: GET /api/v1/departments."
+        },
+        {
+          "name": "justin_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List the company's branches. Just-In API: GET /api/v1/branches."
+        },
+        {
+          "name": "justin_get_timesheets",
+          "type": "read",
+          "title": "Get monthly timesheets",
+          "description": "Get computed monthly hours per employee (100%, 125%, 150%, 200%, night shifts), absence days and the report's approval status. No pay amounts. Pull a month once its status is approved. Just-In API: GET /api/v1/timesheets."
+        },
+        {
+          "name": "justin_create_leave_request",
+          "type": "write",
+          "title": "Create a leave request",
+          "description": "Create a leave or absence request for an employee. It stays pending for a manager to approve in Just-In; it is never auto-approved by this tool. Needs the leave:write ability. Just-In API: POST /api/v1/leave."
+        },
+        {
+          "name": "justin_resolve_leave_requests",
+          "type": "write",
+          "title": "Approve or reject leave requests",
+          "description": "Approve or reject up to 100 leave requests in one call. Approved leave becomes an absence day in the timesheet. Needs the leave:write ability. Just-In API: POST /api/v1/leave/resolve."
+        },
+        {
+          "name": "justin_create_schedule_shift",
+          "type": "write",
+          "title": "Create a draft shift",
+          "description": "Create a one-off shift as a draft. Staff do not see a draft until someone publishes it in Just-In; this tool never publishes. Needs the schedule:write ability and the Work Scheduling feature. Just-In API: POST /api/v1/schedule/shifts."
+        },
+        {
+          "name": "justin_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "justin_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Just-In tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "justin_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Just-In (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "justin_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Just-In Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run justin_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on the shift roster for next Tuesday, and which shifts are still open?",
+        "List the leave requests waiting for approval this month.",
+        "Show each employee's computed hours for last month.",
+        "Create a draft evening shift at the main site for two employees."
+      ]
+    },
+    {
+      "slug": "dreamclass",
+      "name": "DreamClass",
+      "category": "education",
+      "description": "Read students, guardians, classes, attendance, assignments and fees; add notes in DreamClass.",
+      "endpoint": "https://dreamclass.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "DreamClass API key"
+          },
+          {
+            "label": "School code"
+          },
+          {
+            "label": "Tenant code"
+          }
+        ],
+        "hint": "API access must first be switched on for your school: ask DreamClass support (support@dreamclass.io). Then an administrator creates the key in DreamClass under **Settings → Integrations**; name it **UsefulAPI**. The school code is on the same page. The tenant code is your subdomain (`myschool` for myschool.dreamclass.io). The full key is shown only once. Your key is stored encrypted and used only to call the DreamClass API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "dreamclass_list_school_periods",
+          "type": "read",
+          "title": "List school periods",
+          "description": "List the school periods (school years and terms) with their ids, names and dates. Call this first: most other tools need a schoolPeriodId from this list. GET /curriculum/schoolperiods/list."
+        },
+        {
+          "name": "dreamclass_list_courses",
+          "type": "read",
+          "title": "List courses",
+          "description": "List the courses the school offers, with their ids. GET /curriculum/courses/list."
+        },
+        {
+          "name": "dreamclass_list_period_classes",
+          "type": "read",
+          "title": "List classes in a period",
+          "description": "List the classes (student groups) of one school period. GET /curriculum/schoolperiod/{schoolPeriodId}/classes."
+        },
+        {
+          "name": "dreamclass_list_period_class_courses",
+          "type": "read",
+          "title": "List class courses in a period",
+          "description": "List the class courses of one school period: each course taught to a class, with its id. Assignments and gradebooks use these class-course ids. GET /curriculum/schoolperiod/{schoolPeriodId}/classcourses."
+        },
+        {
+          "name": "dreamclass_list_period_students",
+          "type": "read",
+          "title": "List students in a period",
+          "description": "List the students enrolled in one school period, with their enrollment ids and levels. Pass studentId to get one student's enrollment. GET /students/schoolperiod/{schoolPeriodId}/list."
+        },
+        {
+          "name": "dreamclass_search_students",
+          "type": "read",
+          "title": "Search students",
+          "description": "Find students whose last name or email matches the text. Returns contact details and birthdate for each match. GET /students/records/list/{nameOrEmail}."
+        },
+        {
+          "name": "dreamclass_get_student",
+          "type": "read",
+          "title": "Get a student",
+          "description": "Get one student's record: contact details, birthdate, address and custom fields. GET /students/records/get/{studentId}."
+        },
+        {
+          "name": "dreamclass_get_student_guardians",
+          "type": "read",
+          "title": "List a student's guardians",
+          "description": "List the guardians (parents or carers) linked to a student, with their contact details. GET /students/records/get/{studentId}/guardians."
+        },
+        {
+          "name": "dreamclass_list_attendance_statuses",
+          "type": "read",
+          "title": "List attendance statuses",
+          "description": "List the attendance status values the school uses (for example present or absent), with their ids. GET /students/attendance/status/list."
+        },
+        {
+          "name": "dreamclass_list_daily_attendance",
+          "type": "read",
+          "title": "List daily attendance",
+          "description": "List daily attendance records, for classes that use daily attendance. Filter by period, student or date range. GET /students/attendance/daily/list."
+        },
+        {
+          "name": "dreamclass_list_assignments",
+          "type": "read",
+          "title": "List assignments",
+          "description": "List assignments of one class course. Without classCourseId, list all class-course assignments of a school period. classCourseId wins when both are set. GET /assignments/list."
+        },
+        {
+          "name": "dreamclass_get_gradebook",
+          "type": "read",
+          "title": "Get a gradebook",
+          "description": "Get the gradebook of one class course: its grade columns, weights and types. Use the grade ids with the grade-value tools. GET /grading/gradebook."
+        },
+        {
+          "name": "dreamclass_list_professors",
+          "type": "read",
+          "title": "List teachers",
+          "description": "List the teachers (professors) of the school, or only those in one school period. GET /professors/list."
+        },
+        {
+          "name": "dreamclass_list_announcements",
+          "type": "read",
+          "title": "List announcements",
+          "description": "List the announcements of the school, or of one school period. GET /announcements/list."
+        },
+        {
+          "name": "dreamclass_list_period_fees",
+          "type": "read",
+          "title": "List fees in a period",
+          "description": "List the fee definitions of one school period: description, amount, period, interval and start date. GET /financial/fees/schoolperiod/{schoolPeriodId}/list."
+        },
+        {
+          "name": "dreamclass_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice: status (1 unpaid, 2 partly paid, 3 fully paid), amounts, dates, payer and fee lines. GET /financial/invoices/get/{invoiceId}."
+        },
+        {
+          "name": "dreamclass_add_note",
+          "type": "write",
+          "title": "Add a student note",
+          "description": "Add a note to a student record. Each visibility flag defaults to false: set every flag you need, because the note is shown only where its flag is true. POST /notes."
+        },
+        {
+          "name": "dreamclass_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "dreamclass_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the DreamClass tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "dreamclass_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for DreamClass (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "dreamclass_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's DreamClass Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run dreamclass_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which students in 2026/27 have an unpaid invoice?",
+        "Show the attendance of class 4B for this month.",
+        "Who are the guardians of the student Sarah Lee?",
+        "List the assignments due this week for the Maths class courses."
+      ]
     }
   ]
 }
