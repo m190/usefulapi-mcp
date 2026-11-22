@@ -185759,6 +185759,160 @@
         "Mark me as attending the training on Tuesday.",
         "List the members of the U18 team with their contact details."
       ]
+    },
+    {
+      "slug": "jumbula",
+      "name": "Jumbula",
+      "category": "education",
+      "description": "Read orders, forms, installments, families and payments; create and update coupons in Jumbula.",
+      "endpoint": "https://jumbula.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Jumbula client ID"
+          },
+          {
+            "label": "Jumbula client secret"
+          },
+          {
+            "label": "Jumbula username (email)"
+          },
+          {
+            "label": "Jumbula password"
+          }
+        ],
+        "hint": "Jumbula's documented sign-in needs the user's username and password with the client credentials. The password is stored only in your encrypted MCP connection and is used to sign in to Jumbula on each tool call. Client credentials need an Ascend or Enterprise plan."
+      },
+      "tools": [
+        {
+          "name": "jumbula_search_orders",
+          "type": "read",
+          "title": "Search orders",
+          "description": "Search registration orders by season, program, status, family name, email, confirmation id or date range. Returns order details. Filters are optional. Jumbula: POST /v2/orders (a read-only search)."
+        },
+        {
+          "name": "jumbula_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order by id. Use include to add nested data such as the form or installments. Jumbula: GET /v2/orders/{id}."
+        },
+        {
+          "name": "jumbula_get_order_forms",
+          "type": "read",
+          "title": "Get an order's forms",
+          "description": "Get the registration form answers for one order. Jumbula: GET /v2/orders/Form-By-OrderId?orderId=."
+        },
+        {
+          "name": "jumbula_get_order_waiver",
+          "type": "read",
+          "title": "Get a waiver",
+          "description": "Get one signed waiver (legal agreement) by its id. Jumbula: GET /v2/orders/waiver/{id}."
+        },
+        {
+          "name": "jumbula_list_order_transactions",
+          "type": "read",
+          "title": "List payment transactions",
+          "description": "List payment transactions for orders, with amount, date and status. Use it to check payments or investigate a disputed charge. Jumbula: GET /v2/orders/transaction."
+        },
+        {
+          "name": "jumbula_list_installments",
+          "type": "read",
+          "title": "List installments",
+          "description": "List payment installments for orders: due dates, amounts, status and payment errors. Use it to find overdue or failed installments. Jumbula: GET /v2/orders/installment."
+        },
+        {
+          "name": "jumbula_search_families",
+          "type": "read",
+          "title": "Search families",
+          "description": "Search family accounts by parent email, phone, participant name, external id or business. Returns the matching families. Jumbula: POST /v1/Family/GetAllFamily (a read-only search)."
+        },
+        {
+          "name": "jumbula_get_family",
+          "type": "read",
+          "title": "Get a family",
+          "description": "Get one family account by id, with its contact details and linked records. Jumbula: GET /v1/Family/{id}."
+        },
+        {
+          "name": "jumbula_list_family_participants",
+          "type": "read",
+          "title": "List a family's participants",
+          "description": "List the participants (children or students) in one family. Jumbula: GET /v1/Family/{familyId}/participants."
+        },
+        {
+          "name": "jumbula_list_family_parents",
+          "type": "read",
+          "title": "List a family's parents",
+          "description": "List the parents and guardians in one family. Jumbula: GET /v1/Family/{familyId}/Parents."
+        },
+        {
+          "name": "jumbula_create_coupon",
+          "type": "write",
+          "title": "Create a coupon",
+          "description": "Create a discount coupon code that families enter at checkout. This is a live change: it can cut real prices. Jumbula: POST /v1/Coupon."
+        },
+        {
+          "name": "jumbula_update_coupon",
+          "type": "write",
+          "title": "Update a coupon",
+          "description": "Change the fields you pass on an existing coupon. Fields you leave out stay as they are. This is a live change to a discount in use. Jumbula: PUT /v1/Coupon/{id}."
+        },
+        {
+          "name": "jumbula_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "jumbula_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Jumbula tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "jumbula_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Jumbula (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "jumbula_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Jumbula Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run jumbula_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which families still owe an installment this month?",
+        "Find the order for jane.doe@example.com and show its registration form.",
+        "How many registrations does our summer camp have this season?",
+        "Create a 15% coupon called EARLYBIRD that is valid until the end of January."
+      ]
     }
   ]
 }

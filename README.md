@@ -1112,6 +1112,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Repricer.com](servers/repricer-com/) | ecommerce | 11 | API token | [servers/repricer-com/](servers/repricer-com/) |
 | [Comgate](servers/comgate/) | payments | 11 | API token | [servers/comgate/](servers/comgate/) |
 | [Holdsport (SportMember)](servers/holdsport/) | sports | 15 | API token | [servers/holdsport/](servers/holdsport/) |
+| [Jumbula](servers/jumbula/) | education | 16 | API token | [servers/jumbula/](servers/jumbula/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
