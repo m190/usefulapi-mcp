@@ -1107,6 +1107,10 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Just-In](servers/just-in/) | hr | 20 | API token | [servers/just-in/](servers/just-in/) |
 | [DreamClass](servers/dreamclass/) | education | 21 | API token | [servers/dreamclass/](servers/dreamclass/) |
 | [urlscan.io](servers/urlscan/) | security | 9 | API token | [servers/urlscan/](servers/urlscan/) |
+| [Rasayel](servers/rasayel/) | messaging | 10 | API token | [servers/rasayel/](servers/rasayel/) |
+| [VeriClock](servers/vericlock/) | time-tracking | 18 | API token | [servers/vericlock/](servers/vericlock/) |
+| [Repricer.com](servers/repricer-com/) | ecommerce | 11 | API token | [servers/repricer-com/](servers/repricer-com/) |
+| [Comgate](servers/comgate/) | payments | 11 | API token | [servers/comgate/](servers/comgate/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
