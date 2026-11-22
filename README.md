@@ -1106,6 +1106,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Ablefy (elopage)](servers/elopage/) | digital-commerce | 18 | API token | [servers/elopage/](servers/elopage/) |
 | [Just-In](servers/just-in/) | hr | 20 | API token | [servers/just-in/](servers/just-in/) |
 | [DreamClass](servers/dreamclass/) | education | 21 | API token | [servers/dreamclass/](servers/dreamclass/) |
+| [urlscan.io](servers/urlscan/) | security | 9 | API token | [servers/urlscan/](servers/urlscan/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
