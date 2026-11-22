@@ -1111,6 +1111,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [VeriClock](servers/vericlock/) | time-tracking | 18 | API token | [servers/vericlock/](servers/vericlock/) |
 | [Repricer.com](servers/repricer-com/) | ecommerce | 11 | API token | [servers/repricer-com/](servers/repricer-com/) |
 | [Comgate](servers/comgate/) | payments | 11 | API token | [servers/comgate/](servers/comgate/) |
+| [Holdsport (SportMember)](servers/holdsport/) | sports | 15 | API token | [servers/holdsport/](servers/holdsport/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
