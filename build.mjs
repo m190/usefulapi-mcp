@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } fro
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { loadContent } from "./content.mjs";
+import { sharedPlans } from "./pricing.mjs";
 import { pageHash, readLastmod, w3cTime } from "./lastmod.mjs";
 import { loadBlog, BLOG_LOCALES } from "./blog.mjs";
 import { blogPath, blogIndexPath, alternates } from "./locales.mjs";
@@ -108,7 +109,7 @@ footer.site a{color:var(--muted);text-decoration:none}footer.site a:hover{color:
 .category-links.collapsible .category-link:nth-child(n+7){display:none}.category-links.collapsible .category-more{display:inline-flex}}`;
 const siteFooter = (lang = "en") => {
   const c = BLOG_LOCALES[lang];
-  return `<footer class="site"><p>${c.footerText}</p><nav aria-label="${c.footer}"><a href="/servers/">${c.allIntegrations}</a><a href="/services/">${c.customPlural}</a><a href="${blogIndexPath(lang)}">Blog</a><a href="/privacy/">${c.privacy}</a><a href="/terms/">${c.terms}</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
+  return `<footer class="site"><p>${c.footerText}</p><nav aria-label="${c.footer}"><a href="/servers/">${c.allIntegrations}</a><a href="/services/">${c.customPlural}</a><a href="${blogIndexPath(lang)}">Blog</a><a href="/pricing/">${c.pricing}</a><a href="/privacy/">${c.privacy}</a><a href="/terms/">${c.terms}</a><a href="mailto:support@usefulapi.io">support@usefulapi.io</a></nav></footer>`;
 };
 const SITE_FOOTER = siteFooter();
 // Category pills (homepage, category pages, 404). On phones the script shows the first PILLS_PHONE and a
@@ -864,6 +865,51 @@ function servicesPage() {
     .replace("<style>", "<style>\n ol{margin:0 0 14px;padding-left:22px}");
 }
 
+// /pricing/: the plans that every server shares, from the manifest. The build fails if the servers' plans differ
+// (the billing unit, `scope`, may differ: each product page states it). Directories and crawlers look for /pricing/.
+const PRICING_PATH = "/pricing/";
+function pricingPage() {
+  const { ft, pt, plus } = sharedPlans(manifest.servers);
+  const ex = manifest.servers.find((s) => s.slug === "pipedrive") || manifest.servers[0];
+  const exTool = (suffix) => (ex.tools || []).find((t) => t.type === "meta" && t.name.endsWith(suffix))?.name;
+  const up = exTool("_upgrade"), cancel = exTool("_cancel_subscription"), usage = exTool("_usage_status");
+  if (!up || !cancel) throw new Error(`/pricing/ example server ${ex.slug} has no _upgrade or _cancel_subscription tool`);
+  const or = (p) => esc(priceText(p).replace(" · ", " or "));
+  const calls = (p) => esc(String(p.limit).replace(/\s*\/\s*month$/i, " a month"));
+  const title = "Pricing";
+  const desc = `Every usefulapi MCP server has the same plans: Free (${ft.limit}), Pro (${priceText(pt)}, ${pt.limit}) and Pro+ (${priceText(plus)}, ${plus.limit}). Each plan covers one server.`;
+  const plan = (name, price, limit, note) => `<div class="plan"><h2>${name}</h2><p class="price">${price}</p><p class="limit">${limit}</p><p class="note">${note}</p></div>`;
+  const body = `<h1>${title}</h1>
+<p class="sub">All ${manifest.servers.length} servers have the same three plans. Each plan covers one server: you subscribe only on the servers that you need.</p>
+<div class="plans">
+${plan(esc(ft.plan), "$0", calls(ft), "No card. Sign in and start.")}
+${plan(esc(pt.plan), or(pt), calls(pt), "For regular use of one server.")}
+${plan(esc(plus.plan), or(plus), calls(plus), "For automations and heavy use.")}
+</div>
+<h2>How billing works</h2>
+<ul>
+<li><strong>One plan for one server.</strong> A subscription covers only the server that you subscribed on. If you use two servers, each server has its own plan, and each server has its own free calls.</li>
+<li><strong>Automatic renewal.</strong> Pro and Pro+ renew each month or year until you cancel, also in a period when you make no calls.</li>
+<li><strong>Billing unit.</strong> Each server's page states its billing unit, for example per user or per account.</li>
+<li><strong>Monthly limits.</strong> The limits count tool calls in each calendar month (UTC). When a server reaches its limit, its tool calls stop until the next month or until you change the plan.</li>
+<li><strong>7-day Pro trial.</strong> When you use all free calls on a server, the server can offer Pro free for 7 days, once per account on each server. Stripe asks for a card and charges nothing at the start. If you do not cancel, the trial continues as monthly Pro, and Stripe charges the first monthly payment when the trial ends. A change to Pro+ during the trial ends the trial and charges the full Pro+ price at once.</li>
+<li><strong>Subscribe.</strong> Ask your AI assistant to run the server's upgrade tool, for example <code>${esc(up)}</code>, and choose Pro or Pro+, monthly or yearly. The tool returns a Stripe Checkout link.</li>
+<li><strong>Change to Pro+.</strong> If you have paid Pro, ask for Pro+. The change keeps your billing interval and charges the price difference for the rest of the period at once.</li>
+<li><strong>Cancel at any time.</strong> Run the server's cancel tool, for example <code>${esc(cancel)}</code>, or email <a href="mailto:support@usefulapi.io">support@usefulapi.io</a> from the address that you paid with. Your plan continues to the end of the paid period. We do not refund partial periods, except where the law requires it.</li>
+${usage ? `<li><strong>Usage.</strong> Run the server's usage tool, for example <code>${esc(usage)}</code>, to see how many calls you used this month.</li>\n` : ""}<li><strong>Currency and tax.</strong> Prices are in USD. VAT can be added where it applies.</li>
+</ul>
+<p>Do you need more than ${calls(plus)} on one server, or a server for your company only? Email <a href="mailto:support@usefulapi.io">support@usefulapi.io</a>, or see <a href="${SERVICES_PATH}">custom integrations</a>. The full billing terms are in <a href="/terms/#3-plans-billing-and-cancellation">Terms, section 3</a>.</p>
+<p><a href="/servers/">Find a server for your tool →</a></p>`;
+  const css = `.sub{color:var(--muted);font-size:17px;margin:-8px 0 28px;max-width:60ch}
+ .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:0 0 12px}
+ .plan{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
+ .plan h2{font-size:18px;margin:0 0 8px}.plan p{margin:0}.plan .price{font-size:22px;font-weight:700;letter-spacing:-.01em}
+ .plan .limit{margin-top:6px}.plan .note{color:var(--muted);font-size:14px;margin-top:10px}`;
+  return SHELL(title, body)
+    .replace(`<title>${title} — usefulapi</title>`, `<title>${title} — usefulapi</title>\n${headMeta({ title: `${title} — usefulapi`, desc, url: `${SITE}${PRICING_PATH}` })}`)
+    .replace("<style>", `<style>\n ${css}`);
+}
+
 mkdirSync(`${outDir}/privacy`, { recursive: true });
 mkdirSync(`${outDir}/terms`, { recursive: true });
 writeFileSync(`${outDir}/index.html`, catalogPage());
@@ -914,6 +960,8 @@ for (const f of readdirSync(new URL("prelaunch/", ROOT))) {
 }
 mkdirSync(`${outDir}${SERVICES_PATH}`, { recursive: true });
 writeFileSync(`${outDir}${SERVICES_PATH}index.html`, servicesPage());
+mkdirSync(`${outDir}${PRICING_PATH}`, { recursive: true });
+writeFileSync(`${outDir}${PRICING_PATH}index.html`, pricingPage());
 for (const s of manifest.servers) {
   mkdirSync(`${outDir}/${s.slug}`, { recursive: true });
   writeFileSync(`${outDir}/${s.slug}/index.html`, productPage(s));
@@ -944,7 +992,7 @@ ${categoryPills(groups)}</div>`).replace("<head>", '<head><meta name="robots" co
 // for a missing /sitemap.xml or /robots.txt, so without these search engines get no page list). ----
 // <lastmod>: a product page = the date its own data last changed (portal/lastmod.json via lastmod.mjs; data changed
 // after the last codegen run = the built commit's time) or its newest blog post; a list page = its newest member; a post = its
-// date. Pages without a data source (services, privacy, terms) have no <lastmod>. Search engines and IndexNow use it.
+// date. Pages without a data source (services, pricing, privacy, terms) have no <lastmod>. Search engines and IndexNow use it.
 const base = SITE;
 // The build (/_build.json below): the commit and its committer time. Pages sets CF_PAGES_COMMIT_SHA; local builds ask git.
 const gitOut = (...a) => { try { return execFileSync("git", a, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch { return ""; } };
@@ -957,7 +1005,7 @@ const productDate = (s) => maxDate([LASTMOD[s.slug]?.hash === pageHash(s, ROOT) 
 const productDates = new Map(manifest.servers.map((s) => [s.slug, productDate(s)]));
 const allDate = maxDate([...productDates.values()]);
 const urls = [[`${base}/`, allDate], ...Array.from({ length: directoryPageCount }, (_, i) => [`${base}${staticPagePath(i + 1)}`, allDate]),
-  [`${base}${SERVICES_PATH}`], [`${base}/privacy/`], [`${base}/terms/`], [`${base}/dpa/`], [`${base}/outreach-privacy/`],
+  [`${base}${SERVICES_PATH}`], [`${base}${PRICING_PATH}`], [`${base}/privacy/`], [`${base}/terms/`], [`${base}/dpa/`], [`${base}/outreach-privacy/`],
   ...groupsPresent.map((g) => [`${base}${categoryPath(g)}`, maxDate(manifest.servers.filter((x) => groupOf(x) === g).map((x) => productDates.get(x.slug)))]),
   ...manifest.servers.map((s) => [`${base}${pagePath(s)}`, productDates.get(s.slug)]),
   ...(POSTS.length ? [...BLOG_LANGS.map(lang => [`${base}${blogIndexPath(lang)}`, maxDate(POSTS.filter((p) => p.lang === lang).map((p) => p.date))]), ...POSTS.map((p) => [`${base}${postPath(p)}`, p.date])] : [])];
@@ -976,7 +1024,7 @@ writeFileSync(`${outDir}/llms.txt`,
   `with your vendor account or API key (a few public-data servers ask only for an email code). ` +
   (ft0 && pt0 ? `Free: ${ft0.limit}. Pro: ${priceText(pt0)}, ${limitText(pt0)}. ` +
     (plus0 ? `Pro+: ${priceText(plus0)}, ${limitText(plus0)}. ` : "") +
-    `Paid plans are per server; each server's page states its billing unit (for example per user or per account).` : "") + `\n\n` +
+    `Paid plans are per server; each server's page states its billing unit (for example per user or per account). All plans: ${base}${PRICING_PATH}` : "") + `\n\n` +
   groupsPresent.map((g) => `## ${g}\n\n` + manifest.servers.filter((x) => groupOf(x) === g).sort((x, y) => x.name.localeCompare(y.name))
     .map((x) => `- [${x.name} MCP server](${base}${pagePath(x)}): ${x.description.replace(/^MCP server for [^—]+— */, "").replace(/^./, (c) => c.toUpperCase())} Server URL: ${x.endpoint}`).join("\n")).join("\n\n") +
   (POSTS.length ? `\n\n## Blog\n\n` + POSTS.map((p) => `- [${p.title}](${base}${postPath(p)}): ${p.description}`).join("\n") : "") +

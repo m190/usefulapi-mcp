@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadBlog } from "../blog.mjs";
+import { sharedPlans } from "../pricing.mjs";
 import { PAGE_SIZE, cardsHtml, directoryHref, paginate, paginationHtml, selectServers, staticPagePath } from "../portal/catalog-model.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -136,7 +137,7 @@ test("links inside sentences keep an underline (colour alone is not a link cue)"
 
 test("every page type has the shared top bar with the custom-integration link; the section link is marked current", () => {
   const pages = { "index.html": "", "servers/index.html": "/servers/", "servers/page/2/index.html": "/servers/", "pipedrive/index.html": "",
-    "category/crm-and-sales/index.html": "", "blog/index.html": "/blog/", "services/index.html": "/services/", "privacy/index.html": "", "terms/index.html": "", "404.html": "" };
+    "category/crm-and-sales/index.html": "", "blog/index.html": "/blog/", "services/index.html": "/services/", "pricing/index.html": "", "privacy/index.html": "", "terms/index.html": "", "404.html": "" };
   const post = readdirSync(join(output, "blog"), { withFileTypes: true }).find((d) => d.isDirectory()).name;
   pages[`blog/${post}/index.html`] = "/blog/";
   for (const [path, current] of Object.entries(pages)) {
@@ -155,7 +156,7 @@ test("every page type has the shared top bar with the custom-integration link; t
 
 test("every page type shares one width, one footer and the same base CSS", () => {
   const post = readdirSync(join(output, "blog"), { withFileTypes: true }).find((d) => d.isDirectory()).name;
-  const pages = ["index.html", "servers/index.html", "category/crm-and-sales/index.html", "pipedrive/index.html", "blog/index.html", `blog/${post}/index.html`, "services/index.html", "privacy/index.html", "terms/index.html", "404.html"];
+  const pages = ["index.html", "servers/index.html", "category/crm-and-sales/index.html", "pipedrive/index.html", "blog/index.html", `blog/${post}/index.html`, "services/index.html", "pricing/index.html", "privacy/index.html", "terms/index.html", "404.html"];
   for (const path of pages) {
     const html = read(path);
     const css = html.includes('href="/catalog.css?v=') ? read("catalog.css") : html.match(/<style>([\s\S]*?)<\/style>/)[1];
@@ -272,4 +273,34 @@ test("every server has its static v1 server card and AI Catalog, with the media 
     const catalog = JSON.parse(read(`${s.slug}/ai-catalog.json`));
     assert.deepEqual(catalog.entries.map((e) => e.url), [`${new URL(s.endpoint).origin}/mcp/server-card`], s.slug);
   }
+});
+
+test("/pricing/ shows the shared plans from the manifest and is linked from every footer, the sitemap and llms.txt", () => {
+  const html = read("pricing/index.html");
+  const plans = manifest.servers[0].pricing;
+  for (const p of plans) {
+    assert.ok(html.includes(`<h2>${p.plan.replace(/&/g, "&amp;")}</h2>`), p.plan);
+    assert.ok(html.includes(p.limit.replace(/\s*\/\s*month$/i, " a month")), p.limit);
+    if (p.yearly) assert.ok(html.includes(`${p.monthly}/mo or ${p.yearly}/yr`), p.plan);
+  }
+  assert.ok(html.includes('<link rel="canonical" href="https://usefulapi.io/pricing/">'));
+  assert.ok(html.includes("<code>pipedrive_upgrade</code>") && html.includes("<code>pipedrive_cancel_subscription</code>"));
+  // The billing facts must match Terms §3: renewal, trial charge and its Pro+ exception, email from the payer, refunds, VAT.
+  for (const fact of ["renew each month or year until you cancel", "charges the first monthly payment when the trial ends",
+    "A change to Pro+ during the trial ends the trial and charges the full Pro+ price at once", "from the address that you paid with",
+    "We do not refund partial periods, except where the law requires it", "VAT can be added", "once per account on each server"]) assert.ok(html.includes(fact), fact);
+  const terms = readFileSync(join(root, "legal/terms.md"), "utf8").replace(/\s+/g, " ");
+  for (const fact of ["renew automatically", "**7 days**, once per account on each server", "ends the trial and charges the full Pro+ price at once", "from the address you paid with", "non-refundable"]) assert.ok(terms.includes(fact), `Terms changed: ${fact}`);
+  assert.ok(html.includes('href="/terms/#3-plans-billing-and-cancellation"') && read("terms/index.html").includes('id="3-plans-billing-and-cancellation"'));
+  for (const path of ["index.html", "pipedrive/index.html", "services/index.html", "pricing/index.html"]) assert.ok(read(path).includes('<a href="/pricing/">Pricing</a>'), path);
+  assert.ok(read("sitemap.xml").includes("<loc>https://usefulapi.io/pricing/</loc>"));
+  assert.ok(read("llms.txt").includes("All plans: https://usefulapi.io/pricing/"));
+});
+
+test("sharedPlans: one plan list for every server; only the billing unit may differ", () => {
+  const plans = (scope, pro = "$9") => [{ plan: "Free", limit: "50 tool calls / month", monthly: "$0" },
+    { plan: "Pro", limit: "10,000 tool calls / month", monthly: pro, yearly: "$90", scope }, { plan: "Pro+", limit: "100,000 tool calls / month", monthly: "$39", yearly: "$390", scope }];
+  assert.equal(sharedPlans([{ pricing: plans("per user") }, { pricing: plans("per account") }]).pt.monthly, "$9");
+  assert.throws(() => sharedPlans([{ pricing: plans("per user") }, { pricing: plans("per user", "$12") }]), /one shared plan list/);
+  assert.throws(() => sharedPlans([{ pricing: plans().slice(0, 2) }]), /Free, Pro and Pro\+/);
 });
