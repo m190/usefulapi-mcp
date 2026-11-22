@@ -55,6 +55,10 @@ Your credentials are validated, stored per-user, and scoped to you — no keys i
 | `churchsuite_list_ministry_teams` | read | List ministry teams |
 | `churchsuite_list_ministry_members` | read | List ministry members |
 | `churchsuite_list_unavailability` | read | List rota unavailability |
+| `churchsuite_list_rotas` | read | List rotas |
+| `churchsuite_list_rota_dates` | read | List rota dates |
+| `churchsuite_list_rota_servings` | read | List rota servings |
+| `churchsuite_list_servings_on_date` | read | Who serves on a date |
 | `churchsuite_list_service_plans` | read | List service plans |
 | `churchsuite_list_plan_items` | read | List service plan items |
 | `churchsuite_list_giving_funds` | read | List giving funds |
