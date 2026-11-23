@@ -186309,6 +186309,106 @@
         "Where is consignment WRR1406658 now, and when was it delivered?",
         "Validate this rural address and tell me which services reach it."
       ]
+    },
+    {
+      "slug": "viva-com",
+      "name": "Viva.com",
+      "category": "payments",
+      "description": "Get transactions, search wallet activity, list merchant wallets, create payment orders in Viva.com.",
+      "endpoint": "https://viva-com.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Viva.com Client ID"
+          },
+          {
+            "label": "Viva.com Client Secret"
+          }
+        ],
+        "hint": "Find them in your Viva account under **Settings → API Access** (Client (Smart Checkout) credentials). They are used only to request access tokens for your calls; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "viva_get_transaction",
+          "type": "read",
+          "title": "Get a transaction",
+          "description": "Get one card or wallet transaction by its id: amount, status (F finished, C captured, R refunded, X cancelled, E error), order code, card scheme and customer e-mail. Viva API: GET /checkout/v2/transactions/{transactionId}."
+        },
+        {
+          "name": "viva_search_account_transactions",
+          "type": "read",
+          "title": "Search account transactions",
+          "description": "Search account (wallet) transactions between two dates, optionally for one wallet, transaction subtypes or an amount range. Dates use the Viva format, for example \"2026-11-01 00:00:00 +00:00\". Viva API: POST /dataservices/v2/accounttransactions/Search."
+        },
+        {
+          "name": "viva_list_merchant_wallets",
+          "type": "read",
+          "title": "List merchant wallets",
+          "description": "List the merchant wallets on this account with their ids, currency and balance. Use the wallet id in viva_search_account_transactions. Viva API: GET /merchants/v1/wallets."
+        },
+        {
+          "name": "viva_create_payment_order",
+          "type": "write",
+          "title": "Create a payment order",
+          "description": "Create a payment order for a customer and return its orderCode. This creates a payable order; no money moves until the customer pays it on Viva's checkout. Amount is in the currency's smallest unit (1037 = 10.37 EUR), at least 30. Viva API: POST /checkout/v2/orders."
+        },
+        {
+          "name": "viva_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "viva_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Viva.com tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "viva_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Viva.com (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "viva_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Viva.com Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run viva_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the card payments from yesterday and which ones failed.",
+        "What is the status of transaction 0f8c2d1e-5b7a-4c3e-9a1b-2d3e4f5a6b7c?",
+        "List my merchant wallets and their balances.",
+        "Create a 25.00 EUR payment order for order 1042 and send me the order code."
+      ]
     }
   ]
 }

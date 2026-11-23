@@ -1,0 +1,59 @@
+# Viva.com MCP by usefulapi
+
+Use your [Viva.com](https://www.viva.com) account from Claude, Cursor, or any MCP client. Look up card and wallet transactions, search account activity, list merchant wallets, and create payment orders. Hosted, no local install: connect with your own credentials.
+
+**Live endpoint:** `https://viva-com.usefulapi.io/mcp` · **Homepage:** https://usefulapi.io
+
+## Connect
+
+- **Claude** (claude.ai, Desktop): open **Customize → Connectors**, click **+ Add → Add custom connector**, and paste `https://viva-com.usefulapi.io/mcp`.
+- **Claude Code:** `claude mcp add --transport http viva-com https://viva-com.usefulapi.io/mcp`, then run `/mcp` to log in.
+- **VS Code:** [Add to VS Code](https://vscode.dev/redirect/mcp/install?name=viva-com&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fviva-com.usefulapi.io%2Fmcp%22%7D).
+- **Cursor and other clients:** add the URL as a remote MCP server:
+
+```json
+{
+  "mcpServers": {
+    "viva-com": {
+      "url": "https://viva-com.usefulapi.io/mcp"
+    }
+  }
+}
+```
+
+Add only the URL. Do not add an `Authorization` header or an API key to the client config: the server signs you in with OAuth, and the login page asks for your Viva.com credentials.
+
+Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.io/viva-com/
+
+<!-- connect:end (generated above, edit below) -->
+
+On first connect you provide your **Viva.com Client ID** and **Client Secret** (Viva dashboard → Settings → API Access → Client (Smart Checkout) credentials). The server validates it and stores it per user. No keys go in config files.
+
+## Tools
+
+| Tool | Type | What it does |
+|------|------|--------------|
+| `viva_get_transaction` | read | Get a transaction |
+| `viva_search_account_transactions` | read | Search account transactions |
+| `viva_list_merchant_wallets` | read | List merchant wallets |
+| `viva_create_payment_order` | **write** | Create a payment order |
+| `viva_usage_status` | meta | Usage status (free-tier meter) |
+| `viva_request_feature` | meta | Request a missing feature |
+| `viva_upgrade` | meta | Upgrade to Pro or Pro+ |
+| `viva_cancel_subscription` | meta | Cancel the Pro subscription |
+
+`read` tools are read-only; `write` tools mutate data (clients should confirm them); `meta` tools report usage, manage your subscription or send a feature request.
+
+## Pricing
+
+| Plan | Price | Limit |
+|------|-------|-------|
+| **Free** | $0 | 50 tool calls / month |
+| **Pro** (per user) | **$9/mo** or **$90/yr** (2 months free) | 10,000 tool calls / month |
+| **Pro+** (per user) | **$39/mo** or **$390/yr** (2 months free) | 100,000 tool calls / month |
+
+Each paid plan covers this server only. Ask your AI to run `viva_upgrade` and choose Pro or Pro+, billed monthly or yearly (it returns a Stripe Checkout link). If you already have Pro, ask to change it to Pro+. The change requires your confirmation, keeps your billing interval and charges the price difference for the rest of the period immediately. Cancel any time with `viva_cancel_subscription`: your paid plan continues to the end of the paid period, with no refund for the current period, and asking to resume the same plan with `viva_upgrade` before then undoes the cancel. Or write to support@usefulapi.io.
+
+## License
+
+MIT — see [LICENSE](../LICENSE). Documentation only; the server is hosted.
