@@ -185913,6 +185913,402 @@
         "How many registrations does our summer camp have this season?",
         "Create a 15% coupon called EARLYBIRD that is valid until the end of January."
       ]
+    },
+    {
+      "slug": "inpost-shipx",
+      "name": "InPost ShipX",
+      "category": "shipping",
+      "description": "Track parcels, list shipments and dispatch orders, and read statuses in InPost.",
+      "endpoint": "https://inpost-shipx.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ShipX API token"
+          },
+          {
+            "label": "Organisation ID"
+          }
+        ],
+        "hint": "Both are in Parcel Manager → **My Account → API**. Your company address and invoice details must be filled in first. Your token is used only to call the ShipX API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "inpost_list_organizations",
+          "type": "read",
+          "title": "List organisations",
+          "description": "List the ShipX organisations this token can access. Good first call to find the organisation id. ShipX API: GET /v1/organizations."
+        },
+        {
+          "name": "inpost_get_organization",
+          "type": "read",
+          "title": "Get an organisation",
+          "description": "Get one organisation by id, as ShipX returns it. ShipX API: GET /v1/organizations/{id}."
+        },
+        {
+          "name": "inpost_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "Search the organisation's shipments by id, creation date range, tracking number, status, service or carrier. Returns a paged collection. Rates are null for debit clients. ShipX API: GET /v1/organizations/{id}/shipments."
+        },
+        {
+          "name": "inpost_track_shipment",
+          "type": "read",
+          "title": "Track a shipment",
+          "description": "Get the current status, service, locker details and status history (newest first) for a tracking number. Available for 45 days after creation; not on the sandbox. ShipX API: GET /v1/tracking/{tracking_number}."
+        },
+        {
+          "name": "inpost_list_statuses",
+          "type": "read",
+          "title": "List shipment statuses",
+          "description": "List the shipment status codes ShipX uses, to read the status values in tracking and shipment results. ShipX API: GET /v1/statuses."
+        },
+        {
+          "name": "inpost_list_dispatch_orders",
+          "type": "read",
+          "title": "List dispatch orders",
+          "description": "List the organisation's dispatch orders (courier pickups booked for shipments), paged. ShipX API: GET /v1/organizations/{id}/dispatch_orders."
+        },
+        {
+          "name": "inpost_get_dispatch_order",
+          "type": "read",
+          "title": "Get a dispatch order",
+          "description": "Get one dispatch order by id, as ShipX returns it. ShipX API: GET /v1/dispatch_orders/{id}."
+        },
+        {
+          "name": "inpost_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "inpost_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the InPost ShipX tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "inpost_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for InPost ShipX (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "inpost_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's InPost ShipX Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run inpost_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our shipments were created yesterday, and what is their status?",
+        "Track parcel 630000328531876219900746 and show me its status history.",
+        "List the dispatch orders we have booked this month.",
+        "Which shipment statuses mean a parcel is still on its way?"
+      ]
+    },
+    {
+      "slug": "przelewy24",
+      "name": "Przelewy24",
+      "category": "payments",
+      "description": "Look up payments, refunds and settlements; register payment links and refunds in Przelewy24.",
+      "endpoint": "https://przelewy24.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Environment"
+          },
+          {
+            "label": "Account ID (posId)"
+          },
+          {
+            "label": "Reports key (API key)"
+          },
+          {
+            "label": "CRC key"
+          }
+        ],
+        "hint": "Find them in the Przelewy24 panel, in the **API integration** settings. The account ID is also in your registration confirmation email. Use the sandbox panel for test payments. Your keys are used only to call the API on your behalf; they are never shown to anyone. The CRC key is checked on the first payment request, not at sign-in."
+      },
+      "tools": [
+        {
+          "name": "przelewy24_check_access",
+          "type": "read",
+          "title": "Check API access",
+          "description": "Check that the account ID and reports key are accepted by Przelewy24 for the configured environment. Does not check the CRC key. REST: GET /api/v1/testAccess."
+        },
+        {
+          "name": "przelewy24_list_payment_methods",
+          "type": "read",
+          "title": "List payment methods",
+          "description": "List the payment methods enabled for the account, optionally for one amount and currency. Use it to choose the method ID for przelewy24_register_transaction. REST: GET /api/v1/payment/methods/{lang}."
+        },
+        {
+          "name": "przelewy24_get_transaction",
+          "type": "read",
+          "title": "Get a transaction",
+          "description": "Get one transaction by your session ID: status, amount, order ID, payment method and dates. REST: GET /api/v1/transaction/by/sessionId/{sessionId}."
+        },
+        {
+          "name": "przelewy24_get_refunds_for_order",
+          "type": "read",
+          "title": "Get refunds for an order",
+          "description": "List the refund requests and their status for one Przelewy24 order ID. REST: GET /api/v1/refund/by/orderId/{orderId}."
+        },
+        {
+          "name": "przelewy24_list_history",
+          "type": "read",
+          "title": "List transaction history",
+          "description": "List the settlement history (batches, transactions, refunds) for a date range of at most 31 days. Dates are YYYYMMDD. REST: GET /api/v1/report/history."
+        },
+        {
+          "name": "przelewy24_get_batch_details",
+          "type": "read",
+          "title": "Get batch details",
+          "description": "Get the transactions in one settlement batch. Pass the token from the previous page to read the next page. REST: GET /api/v1/report/batch/details."
+        },
+        {
+          "name": "przelewy24_register_transaction",
+          "type": "write",
+          "title": "Register a payment",
+          "description": "Register a new payment and get its payment-page link (redirect the buyer to paymentUrl). The buyer pays on Przelewy24's page. sessionId must be unique. Sign is calculated with the CRC key. REST: POST /api/v1/transaction/register."
+        },
+        {
+          "name": "przelewy24_refund_transaction",
+          "type": "write",
+          "title": "Refund a transaction",
+          "description": "Request a refund of one or more transactions. requestId and refundsUuid must be unique per request. The refund result is sent asynchronously to urlStatus. REST: POST /api/v1/transaction/refund."
+        },
+        {
+          "name": "przelewy24_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "przelewy24_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Przelewy24 tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "przelewy24_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Przelewy24 (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "przelewy24_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Przelewy24 Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run przelewy24_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which payments did we receive yesterday, and which are still waiting for the buyer?",
+        "Refund 50 PLN of order 123456 for session shop-7781.",
+        "Which payment methods are available for a 120 PLN order in PLN?",
+        "List the settlement batches from the last 14 days."
+      ]
+    },
+    {
+      "slug": "gosweetspot",
+      "name": "GoSweetSpot",
+      "category": "logistics",
+      "description": "Get rates, track shipments, check addresses; save orders and delete shipments in GoSweetSpot.",
+      "endpoint": "https://gosweetspot.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "GoSweetSpot API key (access_key)"
+          },
+          {
+            "label": "GoSweetSpot site number (site_id)"
+          }
+        ],
+        "hint": "Find the key in GoSweetSpot → **Administration → Integrations & Apps**, search for the **API** integration and create a key. The site number is the site this server acts for. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "gosweetspot_list_services",
+          "type": "read",
+          "title": "List carriers and services",
+          "description": "List the carriers and services this API key can book, with account numbers. Good first call before creating shipments or rates. GoSweetSpot API: GET /api/availableservices."
+        },
+        {
+          "name": "gosweetspot_list_stock_sizes",
+          "type": "read",
+          "title": "List stock sizes",
+          "description": "List the package stock sizes set up for this site, with their dimensions. Use a stock size name in gosweetspot_get_rates. GoSweetSpot API: GET /api/stocksizes."
+        },
+        {
+          "name": "gosweetspot_list_printers",
+          "type": "read",
+          "title": "List printers",
+          "description": "List the printers available to this user, with label type and online status. GoSweetSpot API: GET /api/printers."
+        },
+        {
+          "name": "gosweetspot_list_customer_orders",
+          "type": "read",
+          "title": "List customer orders",
+          "description": "List customer orders published to the GoSweetSpot queue, with optional filters by packing slip number, created date range and completion. GoSweetSpot API: GET /api/customerorders."
+        },
+        {
+          "name": "gosweetspot_list_pending_orders",
+          "type": "read",
+          "title": "List pending orders",
+          "description": "List orders that were published but not yet processed (no shipment ticket). GoSweetSpot API: GET /v2/pendingorders."
+        },
+        {
+          "name": "gosweetspot_get_order_status",
+          "type": "read",
+          "title": "Get order status",
+          "description": "Get the current status of one order by its packing slip number: PENDING, PICKED or DELIVERED, with ticket number and tracking URL. GoSweetSpot API: GET /v2/order/{packingslipno}."
+        },
+        {
+          "name": "gosweetspot_list_shipments",
+          "type": "read",
+          "title": "List shipments",
+          "description": "List shipments with their status and last update, filtered by consignment numbers, order numbers or a last-update window. If consignments or order numbers are given, the window is ignored. GoSweetSpot API: GET /api/shipments."
+        },
+        {
+          "name": "gosweetspot_get_shipment_status",
+          "type": "read",
+          "title": "Get shipment status",
+          "description": "Get the current status, pickup and delivery times, tracking URL and line events for up to the consignment numbers given. GoSweetSpot API: POST /v2/shipmentstatus."
+        },
+        {
+          "name": "gosweetspot_get_rates",
+          "type": "read",
+          "title": "Get shipping rates",
+          "description": "Get the courier services and prices for one destination and its packages, without creating a shipment. Returns available rates with QuoteId, plus rejected rates and validation errors. GoSweetSpot API: POST /api/rates."
+        },
+        {
+          "name": "gosweetspot_validate_address",
+          "type": "read",
+          "title": "Validate an address",
+          "description": "Check one address for state, suburb, postcode and country. For NZ it also flags rural, Saturday and residential delivery, and lists the services that reach it. GoSweetSpot API: POST /v2/addressvalidation."
+        },
+        {
+          "name": "gosweetspot_save_customer_orders",
+          "type": "write",
+          "title": "Save customer orders",
+          "description": "Create orders in GoSweetSpot or update pending ones, in one batch. An order whose packing slip number was already processed is ignored. Does not book any carrier. GoSweetSpot API: PUT /api/customerorders."
+        },
+        {
+          "name": "gosweetspot_delete_shipments",
+          "type": "write",
+          "title": "Delete unprocessed shipments",
+          "description": "Delete consignments that are not yet picked up, in one call (max 50). Returns the outcome per consignment, e.g. Deleted, or the reason it could not be deleted (already in transit, delivered or manifested). GoSweetSpot API: DELETE /api/shipments."
+        },
+        {
+          "name": "gosweetspot_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gosweetspot_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GoSweetSpot tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gosweetspot_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for GoSweetSpot (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gosweetspot_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GoSweetSpot Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gosweetspot_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which carriers and services can I book for this site, and what do they cost to New Zealand addresses?",
+        "Show me all pending orders from today and create ones that are missing from the queue.",
+        "Where is consignment WRR1406658 now, and when was it delivered?",
+        "Validate this rural address and tell me which services reach it."
+      ]
     }
   ]
 }
