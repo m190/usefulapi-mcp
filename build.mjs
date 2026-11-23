@@ -429,7 +429,7 @@ function faqFor(s) {
   if (feature) faq.push({ q: `What if a ${n} tool that I need is missing?`, a:
     `Tell the AI what you wanted to do. It can send the request with <code>${esc(feature.name)}</code>. We store the text with the server name, the type of AI client and the tool you tried, not with your account, and read every request when we plan new tools. You can send up to 5 requests per day.` });
   faq.push({ q: `Which AI clients can I use?`, a:
-    `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, ChatGPT, Codex, Cursor, VS Code, Windsurf and others.` });
+    `Any client that supports remote MCP servers (Streamable HTTP) with OAuth login: Claude (web and desktop), Claude Code, ChatGPT, Codex, Perplexity, Cursor, VS Code, Windsurf and others.` });
   return faq;
 }
 const faqSection = (faq) => `<h2 class="sec">FAQ</h2>\n<div class="faq">${faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join("")}</div>`;
@@ -480,7 +480,13 @@ ${copyLine(urlShown)}
 <li>${authStepFor(s, "ChatGPT")}.</li>
 <li>In Plugins, install <b>${name}</b>, then choose it in a chat.</li></ol>
 <p class="lead small">No <b>Add custom MCP server</b> option? It depends on your account or workspace settings: see <a href="${OPENAI_MCP_GUIDE}" rel="nofollow noopener">OpenAI's guide</a>.</p>` },
-    { c: "claude-code", label: "Claude Code", html: `<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
+    // Path from Perplexity's help center (articles 13915507 and 11502712, read 2026-11-23); no prefill link exists.
+    { c: "perplexity", label: "Perplexity", for: "perplexity.ai · Mac", html: `<ol><li>Open <a href="https://www.perplexity.ai/computer/plugins" rel="nofollow noopener">Plugins</a> in the sidebar, then <b>Add custom → Add MCP connector</b> (Mac app: <b>Add custom → Connector → Add MCP connector</b>) and select <b>Remote</b>.</li>
+<li>Enter the name <b>${name}</b> and this URL. Under <b>Advanced</b>, choose <b>OAuth</b> and <b>Streamable HTTP</b>:${copyLine(urlShown)}</li>
+<li>Select the risk checkbox, then <b>Add</b>.</li>
+<li>Select the <b>${name}</b> card. ${authStepFor(s, "Perplexity")}.</li></ol>
+<p class="lead small">Custom connectors need Perplexity Pro, Max or Enterprise. Enterprise: an admin adds it in <b>Organization settings → Connectors</b> and turns it on.</p>` },
+    { c: "claude-code", label: "Claude Code", html:`<p class="lead">Run this command, then run <code>/mcp</code> in Claude Code to log in:</p>
 ${copyLine(`claude mcp add --transport http ${esc(s.slug)} ${urlShown}`)}
 <details class="inline"><summary>or install it as a plugin</summary>
 <div class="fold"><p>Add the usefulapi plugin marketplace once, then install <b>${name}</b> from it. Run <code>/mcp</code> to log in.</p>
@@ -1103,6 +1109,7 @@ function serverLlms(s) {
     `As a plugin: \`claude plugin marketplace add ${base}/claude/marketplace.json\`, then \`claude plugin install ${s.slug}@usefulapi\`.\n` +
     `- Codex: \`codex mcp add ${s.slug} --url ${s.endpoint}\`, then \`codex mcp login ${s.slug}\`.\n` +
     `- ChatGPT: Plugins → Add custom MCP server, authentication OAuth.\n` +
+    `- Perplexity (Pro, Max, Enterprise): Plugins → Add custom → Add MCP connector → Remote, URL ${s.endpoint}, Advanced: OAuth, Streamable HTTP.\n` +
     `- Cursor, VS Code and other MCP clients: add the URL as a remote MCP server.\n\n` +
     `${mdFromHtml(noHeaderText(s), pageUrl)}\n\n` +
     ([s.login?.appHint, s.keyHelp, s.login?.hint].some(Boolean) ? `## Before you connect\n\n${[s.login?.appHint, s.keyHelp, s.login?.hint].filter(Boolean).map((h) => mdEscapeProse(decodeHint(h).trim(), /[<>`]/g, true)).join("\n\n")}\n\n` : "") +
