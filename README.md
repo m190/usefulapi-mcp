@@ -1117,6 +1117,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Przelewy24](servers/przelewy24/) | payments | 12 | API token | [servers/przelewy24/](servers/przelewy24/) |
 | [GoSweetSpot](servers/gosweetspot/) | logistics | 16 | API token | [servers/gosweetspot/](servers/gosweetspot/) |
 | [Viva.com](servers/viva-com/) | payments | 8 | API token | [servers/viva-com/](servers/viva-com/) |
+| [tipee](servers/tipee/) | time-tracking | 19 | API token | [servers/tipee/](servers/tipee/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
