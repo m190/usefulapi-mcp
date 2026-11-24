@@ -425,7 +425,7 @@
           "name": "acuity_list_appointments",
           "type": "read",
           "title": "List appointments",
-          "description": "List appointments scheduled on the account. For bulk contact/parent lists, use view: contacts to return only id, firstName, lastName, email, phone and datetime, without forms/formsText. Contacts view or an explicit offset returns {appointments, pagination}; follow pagination.nextOffset with identical filters until null. Pages fit below the tool output cap and can contain fewer than max rows. Offsets are connector-managed by fetching a prefix (Acuity has no documented native offset); at 10,000 appointments per filter/date window, narrow minDate/maxDate and restart at 0. Appointments may change between calls; deduplicate by id. Default full view without offset preserves the original array response. Acuity REST: GET /appointments."
+          "description": "List appointments scheduled on the account. For bulk contact/parent lists, use view: contacts to return only id, firstName, lastName, email, phone and datetime, without forms/formsText. Contacts view or an explicit offset returns {appointments, pagination}; follow pagination.nextOffset with identical filters until null. Pages fit below the tool output cap and can contain fewer than max rows. Offsets are connector-managed by fetching a prefix (Acuity has no documented native offset); at 10,000 appointments per filter/date window, narrow minDate/maxDate and restart at 0. Appointments may change between calls; deduplicate by id. Default full view without offset preserves the original array response but returns up to 10 appointments (25 with excludeForms); pass offset to page with pagination. Acuity REST: GET /appointments."
         },
         {
           "name": "acuity_get_appointment",
@@ -437,7 +437,7 @@
           "name": "acuity_list_appointment_types",
           "type": "read",
           "title": "List appointment types",
-          "description": "List the account's appointment types (services and classes), including price, duration and calendars. Acuity REST: GET /appointment-types."
+          "description": "List the account's appointment types (services and classes), including price, duration and calendars. Returns {appointmentTypes, total, returned, next_offset}; pass next_offset as offset until it is null. Acuity REST: GET /appointment-types."
         },
         {
           "name": "acuity_list_calendars",
@@ -467,13 +467,13 @@
           "name": "acuity_list_clients",
           "type": "read",
           "title": "List clients",
-          "description": "List clients on the account, optionally filtered by a search string (name/email/phone). Acuity REST: GET /clients."
+          "description": "List clients on the account, optionally filtered by a search string (name/email/phone). Returns {clients, total, returned, next_offset}; pass next_offset as offset until it is null. Acuity REST: GET /clients."
         },
         {
           "name": "acuity_list_forms",
           "type": "read",
           "title": "List intake forms",
-          "description": "List the account's custom intake forms and their fields. Acuity REST: GET /forms."
+          "description": "List the account's custom intake forms and their fields. Returns {forms, total, returned, next_offset}; pass next_offset as offset until it is null. Acuity REST: GET /forms."
         },
         {
           "name": "acuity_list_products",
@@ -566,7 +566,7 @@
           "description": "Cancel the caller's Acuity Scheduling Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run acuity_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.43.6",
+      "version": "1.43.7",
       "examples": [
         "What appointments do I have tomorrow? Group them by calendar.",
         "Find the next three free 60-minute slots for a consultation next week.",
@@ -795,7 +795,7 @@
           "description": "Cancel the caller's Aircall Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run aircall_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -3833,7 +3833,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.41.4",
+      "version": "1.41.5",
       "pricing": [
         {
           "plan": "Free",
@@ -4609,7 +4609,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.41.4",
+      "version": "1.41.5",
       "pricing": [
         {
           "plan": "Free",
@@ -6959,7 +6959,7 @@
           "description": "Cancel the caller's Ecwid Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ecwid_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -10186,7 +10186,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.40.5",
+      "version": "1.40.6",
       "pricing": [
         {
           "plan": "Free",
@@ -13267,7 +13267,7 @@
           "description": "Cancel the caller's Mailchimp Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mailchimp_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.0",
+      "version": "1.42.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -13660,7 +13660,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.41.4",
+      "version": "1.41.5",
       "pricing": [
         {
           "plan": "Free",
@@ -13691,7 +13691,7 @@
           "name": "memberful_list_members",
           "type": "read",
           "title": "List members",
-          "description": "List members (Relay connection): each edge has a cursor + node (profile, Stripe customer id, unrestricted-access flag, total spend, and their subscriptions). Paginate with `first` + `after` (pass the last edge's `cursor`); `first` defaults to 50. Set `activeOnly` to return only members with an ACTIVE membership state. For member-state filters beyond active, use memberful_query. Memberful GraphQL: members connection."
+          "description": "List members (Relay connection): each edge has a cursor + node (profile, Stripe customer id, unrestricted-access flag, total spend, and their subscriptions). Paginate with `first` + `after` (pass the last edge's `cursor`); `first` defaults to 25 (max 1000). Set `activeOnly` to return only members with an ACTIVE membership state. For member-state filters beyond active, use memberful_query. Memberful GraphQL: members connection."
         },
         {
           "name": "memberful_get_subscription",
@@ -15150,7 +15150,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.41.4",
+      "version": "1.41.5",
       "pricing": [
         {
           "plan": "Free",
@@ -15572,7 +15572,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.40.5",
+      "version": "1.40.6",
       "pricing": [
         {
           "plan": "Free",
@@ -15609,7 +15609,7 @@
           "name": "nylas_list_messages",
           "type": "read",
           "title": "List messages",
-          "description": "List email messages for the connected account, with optional filters. Replies with full message bodies are large and get cut off: pass select (e.g. id,thread_id,subject,from,to,date,snippet,unread,folders) and a limit of about 20, then read single messages with nylas_get_message. Narrow by date with received_after / received_before rather than search_query_native: native search runs in the mail provider and can take over a minute on a large mailbox. For Google and Microsoft accounts, search_query_native can be combined only with in, limit and page_token (other filters return HTTP 400). Nylas v3: GET /v3/grants/{grant_id}/messages."
+          "description": "List email messages for the connected account, with optional filters. Replies with full message bodies are large and get cut off: pass select (e.g. id,thread_id,subject,from,to,date,snippet,unread,folders) and a limit of about 20 (the default is 10 when no limit is given), then read single messages with nylas_get_message. Narrow by date with received_after / received_before rather than search_query_native: native search runs in the mail provider and can take over a minute on a large mailbox. For Google and Microsoft accounts, search_query_native can be combined only with in, limit and page_token (other filters return HTTP 400). Nylas v3: GET /v3/grants/{grant_id}/messages."
         },
         {
           "name": "nylas_get_message",
@@ -18241,7 +18241,7 @@
           "name": "printify_list_catalog_blueprints",
           "type": "read",
           "title": "List catalog blueprints",
-          "description": "List all blueprints (product types, e.g. 'Unisex T-Shirt') available in the Printify catalog. Printify REST: GET /v1/catalog/blueprints.json."
+          "description": "List blueprints (product types, e.g. 'Unisex T-Shirt') in the Printify catalog, one page at a time. Returns {blueprints, total, returned, next_offset}; next_offset is null on the last page, otherwise pass it as offset to get the next page. Default 25 per page, max 100. Printify REST: GET /v1/catalog/blueprints.json (the full list is fetched once, then sliced)."
         },
         {
           "name": "printify_get_blueprint",
@@ -18259,7 +18259,7 @@
           "name": "printify_get_variants",
           "type": "read",
           "title": "Get variants",
-          "description": "List the variants (sizes, colors) a print provider offers for a blueprint. Printify REST: GET /v1/catalog/blueprints/{blueprint_id}/print_providers/{print_provider_id}/variants.json."
+          "description": "List the variants (sizes, colors) a print provider offers for a blueprint, one page at a time. Returns the vendor object with `variants` limited to this page, plus total, returned and next_offset (null on the last page; pass it as offset for the next page). Default 25 variants per page, max 100. Printify REST: GET /v1/catalog/blueprints/{blueprint_id}/print_providers/{print_provider_id}/variants.json (the full list is fetched once, then sliced)."
         },
         {
           "name": "printify_list_print_providers",
@@ -18310,7 +18310,7 @@
           "description": "Cancel the caller's Printify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run printify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.43.5",
+      "version": "1.43.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -19765,7 +19765,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.41.5",
+      "version": "1.41.6",
       "pricing": [
         {
           "plan": "Free",
@@ -22920,7 +22920,7 @@
       "transport": "streamable-http",
       "auth": "token",
       "status": "live",
-      "version": "1.42.4",
+      "version": "1.42.5",
       "pricing": [
         {
           "plan": "Free",
@@ -22987,7 +22987,7 @@
           "name": "youcanbookme_list_available_accounts",
           "type": "read",
           "title": "List available accounts (calendars)",
-          "description": "List the accounts/calendars available to your account — used to find the calendarId for a team member. YCBM API: GET /v1/{accountId}/availableAccounts (accountId is taken from your configured credentials). Returns a JSON array."
+          "description": "List the accounts/calendars available to your account — used to find the calendarId for a team member. YCBM API: GET /v1/{accountId}/availableAccounts (accountId is taken from your configured credentials). Paged with limit and offset: returns {accounts, total, returned, next_offset}; next_offset is null on the last page."
         },
         {
           "name": "youcanbookme_request",
@@ -23132,7 +23132,7 @@
           "name": "zendesk_list_tickets",
           "type": "read",
           "title": "List tickets",
-          "description": "List recent tickets (offset pagination). Zendesk REST: GET /tickets.json."
+          "description": "List recent tickets (offset pagination, 25 per page by default; use page to read on). Zendesk REST: GET /tickets.json."
         },
         {
           "name": "zendesk_get_ticket",
@@ -23261,7 +23261,7 @@
           "description": "Cancel the caller's Zendesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run zendesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -24625,7 +24625,7 @@
           "description": "Cancel the caller's Bloomerang Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bloomerang_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -24900,7 +24900,7 @@
           "name": "eventbrite_list_events",
           "type": "read",
           "title": "List an organization's events",
-          "description": "List the events of an organization, filterable by status, name and past/upcoming. Eventbrite: GET /organizations/{organization_id}/events/."
+          "description": "List the events of an organization, filterable by status, name and past/upcoming. Default 25 events per page; follow pagination.continuation for more. Eventbrite: GET /organizations/{organization_id}/events/."
         },
         {
           "name": "eventbrite_get_event",
@@ -25065,7 +25065,7 @@
           "description": "Cancel the caller's Eventbrite Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run eventbrite_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.5",
+      "version": "1.40.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -25276,7 +25276,7 @@
           "description": "Cancel the caller's Less Annoying CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lacrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.6",
+      "version": "1.40.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -26099,7 +26099,7 @@
           "description": "Cancel the caller's Buildium Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run buildium_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.46.5",
+      "version": "1.46.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -26390,7 +26390,7 @@
           "name": "hostaway_list_listings",
           "type": "read",
           "title": "List listings",
-          "description": "List the account's properties (listings) with name, address, capacity, base price, fees and check-in times. Filter by name, city, country, property type, availability for a date range and guest count, or active/archived status. Hostaway: GET /v1/listings."
+          "description": "List the account's properties (listings) with name, address, capacity, base price, fees and check-in times. Filter by name, city, country, property type, availability for a date range and guest count, or active/archived status. Returns 10 listings per page by default; use limit (max 500) and offset to get more. Hostaway: GET /v1/listings."
         },
         {
           "name": "hostaway_get_listing",
@@ -26402,7 +26402,7 @@
           "name": "hostaway_list_reservations",
           "type": "read",
           "title": "List reservations",
-          "description": "List reservations across all channels (Airbnb, Vrbo, Booking.com, direct…) with guest, dates, status, price and channel. Filter by listing, channel, arrival/departure window, guest name or email, unread messages, and more. Default order is newest first; for large accounts page with afterId (the id of the last reservation on the previous page). Channel ids: 2000 direct, 2018 airbnbOfficial, 2002 homeaway/Vrbo, 2005 bookingcom, 2007 expedia, 2013 bookingengine, 2019 marriott, 2020 partner, 2022 google. Hostaway: GET /v1/reservations."
+          "description": "List reservations across all channels (Airbnb, Vrbo, Booking.com, direct…) with guest, dates, status, price and channel. Filter by listing, channel, arrival/departure window, guest name or email, unread messages, and more. Default order is newest first; for large accounts page with afterId (the id of the last reservation on the previous page). Returns 10 reservations per page by default (limit, max 500). Channel ids: 2000 direct, 2018 airbnbOfficial, 2002 homeaway/Vrbo, 2005 bookingcom, 2007 expedia, 2013 bookingengine, 2019 marriott, 2020 partner, 2022 google. Hostaway: GET /v1/reservations."
         },
         {
           "name": "hostaway_get_reservation",
@@ -26420,7 +26420,7 @@
           "name": "hostaway_get_calendar",
           "type": "read",
           "title": "Get listing calendar",
-          "description": "Day-by-day availability and pricing for one listing over a date range: status (available, blocked, reserved, pending), nightly price, min/max stay, closed-to-arrival/departure and notes. Set includeResources to see the reservations occupying each day. Hostaway: GET /v1/listings/{listingId}/calendar."
+          "description": "Day-by-day availability and pricing for one listing over a date range: status (available, blocked, reserved, pending), nightly price, min/max stay, closed-to-arrival/departure and notes. Set includeResources to see the reservations occupying each day. Hostaway returns the whole range at once, so this tool pages the days: 25 per page by default (limit max 100, offset). The response adds total, returned and next_offset (null on the last page). Hostaway: GET /v1/listings/{listingId}/calendar."
         },
         {
           "name": "hostaway_calculate_price",
@@ -26432,13 +26432,13 @@
           "name": "hostaway_list_conversations",
           "type": "read",
           "title": "List guest conversations",
-          "description": "List guest conversations (the unified inbox across channels), each with its latest message and linked reservation. Filter to one reservation. Hostaway: GET /v1/conversations."
+          "description": "List guest conversations (the unified inbox across channels), each with its latest message and linked reservation. Filter to one reservation. Returns 10 conversations per page by default (limit, offset). Hostaway: GET /v1/conversations."
         },
         {
           "name": "hostaway_list_conversation_messages",
           "type": "read",
           "title": "Read a conversation",
-          "description": "The messages in one guest conversation — body, direction (isIncoming), channel/email/SMS type, send status and timestamps. By default only sent messages; set includeScheduledMessages to also see scheduled, paused or failed ones. Hostaway: GET /v1/conversations/{conversationId}/messages."
+          "description": "The messages in one guest conversation — body, direction (isIncoming), channel/email/SMS type, send status and timestamps. By default only sent messages; set includeScheduledMessages to also see scheduled, paused or failed ones. Returns 10 messages per page by default (limit, offset). Hostaway: GET /v1/conversations/{conversationId}/messages."
         },
         {
           "name": "hostaway_list_message_templates",
@@ -26456,7 +26456,7 @@
           "name": "hostaway_list_reviews",
           "type": "read",
           "title": "List reviews",
-          "description": "List guest-to-host and host-to-guest reviews with rating (0-10), public review, private feedback and the host's reply. Filter by listings, reservation, type, status, rating range, dates, guest name, or whether the host has replied. Hostaway: GET /v1/reviews."
+          "description": "List guest-to-host and host-to-guest reviews with rating (0-10), public review, private feedback and the host's reply. Filter by listings, reservation, type, status, rating range, dates, guest name, or whether the host has replied. Returns 25 reviews per page by default (limit, offset). Hostaway: GET /v1/reviews."
         },
         {
           "name": "hostaway_list_tasks",
@@ -26543,7 +26543,7 @@
           "description": "Cancel the caller's Hostaway Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run hostaway_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.5",
+      "version": "1.42.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -26960,7 +26960,7 @@
           "description": "Cancel the caller's Atera Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run atera_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -27361,7 +27361,7 @@
           "description": "Cancel the caller's Booqable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run booqable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.41.4",
+      "version": "1.41.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -28051,7 +28051,7 @@
           "name": "current_rms_list_opportunities",
           "type": "read",
           "title": "List opportunities",
-          "description": "List opportunities — the enquiries, drafts, quotations and orders for a rental job — with their dates, state and charge totals. Free-text search covers subject, description, number, customer name and tags. filtermode e.g. live, all, inactive, enquiries, drafts, quotations, orders, invoiced, not_invoiced, needing_prep. Line items are NOT included here: use current_rms_get_opportunity or current_rms_list_opportunity_items. Max 25 per page. Current RMS: GET /opportunities."
+          "description": "List opportunities — the enquiries, drafts, quotations and orders for a rental job — with their dates, state and charge totals. Free-text search covers subject, description, number, customer name and tags. filtermode e.g. live, all, inactive, enquiries, drafts, quotations, orders, invoiced, not_invoiced, needing_prep. Line items are NOT included here: use current_rms_get_opportunity or current_rms_list_opportunity_items. Max 25 per page, default 10 (page through the rest with page). Current RMS: GET /opportunities."
         },
         {
           "name": "current_rms_get_opportunity",
@@ -28063,13 +28063,13 @@
           "name": "current_rms_list_opportunity_items",
           "type": "read",
           "title": "List an opportunity's line items",
-          "description": "List the line items on one opportunity — products, services and groups, with quantity, rate, discount, dates and charge totals. Current RMS: GET /opportunities/{opportunity_id}/opportunity_items."
+          "description": "List the line items on one opportunity — products, services and groups, with quantity, rate, discount, dates and charge totals. Returns 10 lines per page by default (per_page up to 100); page through with page. Current RMS: GET /opportunities/{opportunity_id}/opportunity_items."
         },
         {
           "name": "current_rms_list_products",
           "type": "read",
           "title": "List products",
-          "description": "List products (rental and sale items) with their group, stock method, rates, weight and barcode. Free-text search covers name, product group name and tags. filtermode: active (default), inactive, all. Current RMS: GET /products."
+          "description": "List products (rental and sale items) with their group, stock method, rates, weight and barcode. Free-text search covers name, product group name and tags. filtermode: active (default), inactive, all. Returns 10 products per page by default (per_page up to 100); page through with page. Current RMS: GET /products."
         },
         {
           "name": "current_rms_get_product",
@@ -28180,7 +28180,7 @@
           "description": "Cancel the caller's Current RMS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run current_rms_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -28382,7 +28382,7 @@
           "description": "Cancel the caller's Deputy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run deputy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.5",
+      "version": "1.40.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -28792,7 +28792,7 @@
           "description": "Cancel the caller's Elvanto Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run elvanto_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.41.4",
+      "version": "1.41.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -29015,7 +29015,7 @@
           "description": "Cancel the caller's Follow Up Boss Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fub_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.44.5",
+      "version": "1.44.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -29079,7 +29079,7 @@
           "name": "formstack_list_form_fields",
           "type": "read",
           "title": "List a form's fields",
-          "description": "List every field on a form — id, label, type, required flag, options and logic. Use this to learn field IDs before searching or creating submissions. Formstack: GET /forms/{formId}/fields."
+          "description": "List the fields on a form — id, label, type, required flag, options and logic — 25 per call by default (limit 1-100, offset to continue). Follow next_offset until it is null. Use this to learn field IDs before searching or creating submissions. Formstack: GET /forms/{formId}/fields."
         },
         {
           "name": "formstack_list_form_submissions",
@@ -29214,7 +29214,7 @@
           "description": "Cancel the caller's Formstack Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run formstack_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.41.4",
+      "version": "1.41.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -30374,7 +30374,7 @@
           "description": "Cancel the caller's JobNimbus Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run jobnimbus_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.41.6",
+      "version": "1.41.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -31996,7 +31996,7 @@
           "description": "Cancel the caller's OfficeRnD Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run officernd_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.41.0",
+      "version": "1.41.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -32652,13 +32652,13 @@
           "name": "recruitee_list_candidate_notes",
           "type": "read",
           "title": "List a candidate's notes",
-          "description": "List the notes on a candidate's profile, with replies, author admin_id and visibility. Recruitee: GET /c/{company_id}/candidates/{candidate_id}/notes."
+          "description": "List the notes on a candidate's profile, with replies, author admin_id and visibility. Returns 25 notes per call by default: pass limit (1-100) and offset, and continue with next_offset until it is null (total gives the count). Recruitee: GET /c/{company_id}/candidates/{candidate_id}/notes."
         },
         {
           "name": "recruitee_list_offers",
           "type": "read",
           "title": "List jobs",
-          "description": "List the company's jobs (Recruitee calls them offers) with id, title, status, slug, department_id, recruiter_id, hiring_manager_id and pipeline_template_id. Filter by status, department, location, recruiter, hiring manager, tag and more; add heavy fields with `include` (e.g. counters for candidate counts, description, salary, location_ids). Paginated with limit + page (default 1000 per page); `meta.total_count` gives the total. Recruitee: GET /c/{company_id}/offers."
+          "description": "List the company's jobs (Recruitee calls them offers) with id, title, status, slug, department_id, recruiter_id, hiring_manager_id and pipeline_template_id. Filter by status, department, location, recruiter, hiring manager, tag and more; add heavy fields with `include` (e.g. counters for candidate counts, description, salary, location_ids). Paginated with limit + page (default 25 per page, max 1000); `meta.total_count` gives the total. Recruitee: GET /c/{company_id}/offers."
         },
         {
           "name": "recruitee_get_offer",
@@ -32676,7 +32676,7 @@
           "name": "recruitee_list_departments",
           "type": "read",
           "title": "List departments",
-          "description": "List the company's departments with their ids and job counts. Recruitee: GET /c/{company_id}/departments."
+          "description": "List the company's departments with their ids and job counts. Returns 25 per call by default: pass limit (1-100) and offset, and continue with next_offset until it is null (total gives the count). Recruitee: GET /c/{company_id}/departments."
         },
         {
           "name": "recruitee_list_tags",
@@ -32775,7 +32775,7 @@
           "description": "Cancel the caller's Recruitee Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run recruitee_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.5",
+      "version": "1.42.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -33182,7 +33182,7 @@
           "description": "Cancel the caller's sevdesk Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sevdesk_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.0",
+      "version": "1.42.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -33288,7 +33288,7 @@
           "name": "shopmonkey_search_orders",
           "type": "read",
           "title": "Search orders by name and creation date",
-          "description": "Find work orders by case-insensitive name substring, creation date, customer or status. Reads pages and checks filters locally because some shops ignore GET filters. Scans 300 orders by default and at most 500 per call; continue with nextScanSkip. On vendor throttling, wait retryAfterSeconds before continuing; do not restart from 0. Matches are sorted by createdDate, newest first, then paged with limit/matchSkip (default 100 results). complete: false means only a segment was scanned: newer matches may exist outside it; continue with nextScanSkip or increase maxOrders. scanSkip is a scan offset, not a matched-result offset. A changing order list can shift offsets; restart from 0 for a fresh search. Shopmonkey: GET /v3/order."
+          "description": "Find work orders by case-insensitive name substring, creation date, customer or status. Reads pages and checks filters locally because some shops ignore GET filters. Scans 300 orders by default and at most 500 per call; continue with nextScanSkip. On vendor throttling, wait retryAfterSeconds before continuing; do not restart from 0. Matches are sorted by createdDate, newest first, then paged with limit/matchSkip (default 10 results). complete: false means only a segment was scanned: newer matches may exist outside it; continue with nextScanSkip or increase maxOrders. scanSkip is a scan offset, not a matched-result offset. A changing order list can shift offsets; restart from 0 for a fresh search. Shopmonkey: GET /v3/order."
         },
         {
           "name": "shopmonkey_list_purchase_orders",
@@ -33330,7 +33330,7 @@
           "name": "shopmonkey_list_order_services",
           "type": "read",
           "title": "List an order's services",
-          "description": "List the services (jobs) on a work order with their line items — labor, parts, tires, fees, subcontracts — authorization status and totals. Shopmonkey: GET /v3/order/:orderId/service."
+          "description": "List the services (jobs) on a work order with their line items — labor, parts, tires, fees, subcontracts — authorization status and totals. Paged here (the vendor returns the whole list): limit (default 25, max 100) and offset (default 0) select a page of data; the reply also has total, returned and next_offset (null when no services are left). Shopmonkey: GET /v3/order/:orderId/service."
         },
         {
           "name": "shopmonkey_search_appointments",
@@ -33525,7 +33525,7 @@
           "description": "Cancel the caller's Shopmonkey Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shopmonkey_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.48.5",
+      "version": "1.48.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -33825,7 +33825,7 @@
           "name": "smoobu_list_custom_placeholders",
           "type": "read",
           "title": "List custom placeholders",
-          "description": "List the account's custom message placeholders (key, default value, and whether they are global, per booking or per property). Smoobu: GET /api/custom-placeholders."
+          "description": "List the account's custom message placeholders (key, default value, and whether they are global, per booking or per property), paginated with limit and offset. Smoobu: GET /api/custom-placeholders."
         },
         {
           "name": "smoobu_create_reservation",
@@ -33882,7 +33882,7 @@
           "description": "Cancel the caller's Smoobu Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run smoobu_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.5",
+      "version": "1.42.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -34803,7 +34803,7 @@
           "name": "unleashed_list_sales_orders",
           "type": "read",
           "title": "List sales orders",
-          "description": "List sales orders, filtered by status, customer, order number, warehouse or date range. Deleted orders are excluded unless asked for. For slow responses, use a smaller pageSize (for example 25) and follow Pagination.NumberOfPages; Unleashed warns large pages can be slow. Unleashed: GET /SalesOrders/{page}."
+          "description": "List sales orders, filtered by status, customer, order number, warehouse or date range. Deleted orders are excluded unless asked for. Pages hold 10 orders by default (each order carries its lines); follow Pagination.NumberOfPages for the rest, and raise pageSize only when needed since Unleashed warns large pages can be slow. Unleashed: GET /SalesOrders/{page}."
         },
         {
           "name": "unleashed_get_sales_order",
@@ -34884,7 +34884,7 @@
           "description": "Cancel the caller's Unleashed Software Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run unleashed_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -34951,13 +34951,13 @@
           "name": "upcloud_list_plans",
           "type": "read",
           "title": "List server plans",
-          "description": "Fixed-price server plans: name (e.g. 2xCPU-4GB), cores, memory, included storage size/tier and transfer, plus GPU model/amount for GPU plans. UpCloud: GET /1.3/plan."
+          "description": "Fixed-price server plans: name (e.g. 2xCPU-4GB), cores, memory, included storage size/tier and transfer, plus GPU model/amount for GPU plans. Paged client-side: use limit and offset, the reply carries total, returned and next_offset. UpCloud: GET /1.3/plan."
         },
         {
           "name": "upcloud_list_prices",
           "type": "read",
           "title": "List prices",
-          "description": "The price list per zone in the account's currency: per-hour prices for plans, cores, memory, storage tiers, backups, IPv4 addresses and traffic. UpCloud: GET /1.3/price."
+          "description": "The price list per zone in the account's currency: per-hour prices for plans, cores, memory, storage tiers, backups, IPv4 addresses and traffic. Paged by zone (each zone carries many prices): use limit and offset, the reply carries total (zone count), returned and next_offset. UpCloud: GET /1.3/price."
         },
         {
           "name": "upcloud_get_billing_summary",
@@ -35092,7 +35092,7 @@
           "description": "Cancel the caller's UpCloud Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run upcloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.40.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -35391,7 +35391,7 @@
           "name": "virtuous_get_query_options",
           "type": "read",
           "title": "Get query options",
-          "description": "List the parameters, their types, allowed operators and value options that virtuous_query accepts for one record type. Call this BEFORE building a query. Virtuous: GET /api/<Resource>/QueryOptions."
+          "description": "List the parameters, their types, allowed operators and value options that virtuous_query accepts for one record type. Call this BEFORE building a query. Paged client-side over options (each carries its value options): use limit and offset, the reply carries total, returned and next_offset. Virtuous: GET /api/<Resource>/QueryOptions."
         },
         {
           "name": "virtuous_query",
@@ -35448,7 +35448,7 @@
           "description": "Cancel the caller's Virtuous Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run virtuous_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.42.5",
+      "version": "1.42.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -35506,7 +35506,7 @@
           "name": "wheniwork_list_users",
           "type": "read",
           "title": "List users",
-          "description": "List the employees, supervisors, managers and admins in the account, optionally limited to some schedules or searched by name/email. Role codes: 1 admin, 2 manager, 3 employee, 5 supervisor. When I Work: GET /2/users."
+          "description": "List the employees, supervisors, managers and admins in the account, optionally limited to some schedules or searched by name/email. Returns 25 per call by default; page with offset (next_offset is null on the last page). Role codes: 1 admin, 2 manager, 3 employee, 5 supervisor. When I Work: GET /2/users."
         },
         {
           "name": "wheniwork_get_user",
@@ -35530,7 +35530,7 @@
           "name": "wheniwork_list_shifts",
           "type": "read",
           "title": "List shifts",
-          "description": "List scheduled shifts in a time window — who works when, where and in which position — optionally including open shifts and unpublished drafts. Answers \"who is on on Friday?\" and \"what open shifts are left?\". When I Work: GET /2/shifts."
+          "description": "List scheduled shifts in a time window — who works when, where and in which position — optionally including open shifts and unpublished drafts. Answers \"who is on on Friday?\" and \"what open shifts are left?\". Returns up to 25 shifts by default (limit up to 1000); narrow the window to see more. When I Work: GET /2/shifts."
         },
         {
           "name": "wheniwork_get_shift",
@@ -35548,7 +35548,7 @@
           "name": "wheniwork_list_times",
           "type": "read",
           "title": "List clocked times (timesheets)",
-          "description": "List clocked time entries — actual hours worked, clock-in/out times, length and approval state. Use only_open to see who is clocked in right now. When I Work: GET /2/times."
+          "description": "List clocked time entries — actual hours worked, clock-in/out times, length and approval state. Use only_open to see who is clocked in right now. Returns 25 per call by default; page with offset (next_offset is null on the last page). When I Work: GET /2/times."
         },
         {
           "name": "wheniwork_list_time_off_requests",
@@ -35647,7 +35647,7 @@
           "description": "Cancel the caller's When I Work Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run wheniwork_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.5",
+      "version": "1.40.6",
       "examples": [
         "Who works tomorrow, and which shifts are still open?",
         "List the pending time-off requests for next week.",
@@ -36245,7 +36245,7 @@
           "description": "Cancel the caller's Lightspeed Retail (R-Series) Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lightspeedrseries_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.38.0",
+      "version": "1.38.1",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -36683,7 +36683,7 @@
           "description": "Cancel the caller's FreeAgent Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run freeagent_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.33.6",
+      "version": "1.33.7",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -37077,7 +37077,7 @@
           "description": "Cancel the caller's ChurchSuite Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run churchsuite_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.32.0",
+      "version": "1.32.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -37255,7 +37255,7 @@
           "description": "Cancel the caller's Cin7 Core Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cin7core_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.4",
+      "version": "1.31.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -37445,7 +37445,7 @@
           "description": "Cancel the caller's Connecteam Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run connecteam_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.4",
+      "version": "1.31.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -37867,7 +37867,7 @@
           "description": "Cancel the caller's Kisi Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run kisi_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.4",
+      "version": "1.31.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -38021,7 +38021,7 @@
           "name": "lexware_list_posting_categories",
           "type": "read",
           "title": "List posting categories",
-          "description": "Bookkeeping posting categories (id, name, group, income or outgo, whether a contact is required and split tax rates are allowed), used by bookkeeping vouchers' categoryId. Optionally only income or outgo. GET /v1/posting-categories."
+          "description": "Bookkeeping posting categories (id, name, group, income or outgo, whether a contact is required and split tax rates are allowed), used by bookkeeping vouchers' categoryId. Optionally only income or outgo. Paged: pass next_offset as offset. count and total are the number of matching categories; returned is the number on this page. GET /v1/posting-categories."
         },
         {
           "name": "lexware_create_contact",
@@ -38066,7 +38066,7 @@
           "description": "Cancel the caller's Lexware Office Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lexware_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.32.4",
+      "version": "1.32.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -38389,7 +38389,7 @@
           "description": "Cancel the caller's Ordoro Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run ordoro_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.4",
+      "version": "1.31.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -38838,7 +38838,7 @@
           "description": "Cancel the caller's RotaCloud Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run rotacloud_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.32.5",
+      "version": "1.32.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -39043,7 +39043,7 @@
           "description": "Cancel the caller's Shiftbase Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shiftbase_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.5",
+      "version": "1.31.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -39107,7 +39107,7 @@
           "name": "shipday_query_orders",
           "type": "read",
           "title": "Search orders (history)",
-          "description": "Search delivery orders, including completed ones, by placement-time window and status, with row-based paging: start_cursor/end_cursor select rows (e.g. 1–100, then 101–200; at most 100 per call) sorted newest first. Dates must be real ISO 8601 times with a timezone; they are sent in UTC, and start_time must not be later than end_time. Each row has timestamps (placement, assigned, picked up, delivered, failed), totals, driver payment, distance and carrier. Shipday: POST /orders/query."
+          "description": "Search delivery orders, including completed ones, by placement-time window and status, with row-based paging: start_cursor/end_cursor select rows (10 per call by default, e.g. 1–10, then 11–20; at most 100 per call) sorted newest first. Dates must be real ISO 8601 times with a timezone; they are sent in UTC, and start_time must not be later than end_time. Each row has timestamps (placement, assigned, picked up, delivered, failed), totals, driver payment, distance and carrier. Shipday: POST /orders/query."
         },
         {
           "name": "shipday_get_pickup_order",
@@ -39200,7 +39200,7 @@
           "description": "Cancel the caller's Shipday Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shipday_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.33.4",
+      "version": "1.33.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -41012,7 +41012,7 @@
           "description": "Cancel the caller's Clockify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run clockify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.28.5",
+      "version": "1.28.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -41206,7 +41206,7 @@
           "description": "Cancel the caller's Gelato Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gelato_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.28.5",
+      "version": "1.28.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -43756,7 +43756,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.29.1",
+      "version": "1.29.2",
       "login": {
         "kind": "key",
         "fields": [
@@ -43801,7 +43801,7 @@
           "name": "edesk_list_templates",
           "type": "read",
           "title": "List reply templates",
-          "description": "List saved reply templates (id, name, subject, body text, channels, usage). GET /templates."
+          "description": "List saved reply templates (id, name, subject, body text, channels, usage). Default 10 per page; follow next_page for more. GET /templates."
         },
         {
           "name": "edesk_get_template",
@@ -43813,7 +43813,7 @@
           "name": "edesk_list_tickets",
           "type": "read",
           "title": "List tickets",
-          "description": "List support tickets from all channels with subject, type, status, channel, owner, contact, linked sales order id, tag ids, message ids, reply count and AI classification. Filter by status, type, channel, contact, owner, sales order, seller (marketplace) order id, tags, ticket ids, created time, last-updated time and reply deadline (eDesk's Time left). Time filters take a date or an exact date-time. For an hourly sync, use order_by last_updated_at and order_direction asc, and set updated_after to the smaller of the last run's largest last_updated_at and that run's start time (a ticket can carry a future last update), minus a few minutes, with Z. Follow next_cursor (pass it as cursor with the same filters) to reach every ticket; page reaches only the first 10,000. eDesk keeps no status history: it has no time when a ticket entered Pending; reply_by is the reply deadline. Read the messages of a ticket with edesk_list_ticket_messages. GET /tickets."
+          "description": "List support tickets from all channels with subject, type, status, channel, owner, contact, linked sales order id, tag ids, message ids, reply count and AI classification. Filter by status, type, channel, contact, owner, sales order, seller (marketplace) order id, tags, ticket ids, created time, last-updated time and reply deadline (eDesk's Time left). Time filters take a date or an exact date-time. For an hourly sync, use order_by last_updated_at and order_direction asc, and set updated_after to the smaller of the last run's largest last_updated_at and that run's start time (a ticket can carry a future last update), minus a few minutes, with Z. Default 10 tickets per page. Follow next_cursor (pass it as cursor with the same filters) to reach every ticket; page reaches only the first 10,000. eDesk keeps no status history: it has no time when a ticket entered Pending; reply_by is the reply deadline. Read the messages of a ticket with edesk_list_ticket_messages. GET /tickets."
         },
         {
           "name": "edesk_get_ticket",
@@ -46132,7 +46132,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -47596,7 +47596,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.6",
+      "version": "1.27.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -47665,7 +47665,7 @@
           "name": "finale_list_inventory_items",
           "type": "read",
           "title": "List stock entries",
-          "description": "Current stock as Finale stores it: one entry per product, location, lot and order with quantityOnHand, quantityOnOrder (committed purchase orders) and quantityReserved (committed sales orders). The inventoryitem collection has no server-side filter, so the WHOLE collection is downloaded (one collection read of the 300 per hour; can be large on big accounts, up to the 50,000 character result cap) and filtered here: pass product_id or facility_url. For per-product totals use finale_get_product_stock. GET /{account}/api/inventoryitem/."
+          "description": "Current stock as Finale stores it: one entry per product, location, lot and order with quantityOnHand, quantityOnOrder (committed purchase orders) and quantityReserved (committed sales orders). The inventoryitem collection has no server-side filter, so the WHOLE collection is downloaded (one collection read of the 300 per hour; can be large on big accounts) and filtered here: pass product_id or facility_url. Returns one page of entries (limit, default 25): when next_offset is set, pass it as offset to read the next page. For per-product totals use finale_get_product_stock. GET /{account}/api/inventoryitem/."
         },
         {
           "name": "finale_get_product_stock",
@@ -48127,7 +48127,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -48347,7 +48347,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -48365,7 +48365,7 @@
           "name": "inventoryplanner_list_variants",
           "type": "read",
           "title": "List variants (forecast and replenishment)",
-          "description": "List product variants with Inventory Planner's computed metrics (forecast, replenishment, days to sell out, lost revenue, lead time, review period and ~200 more). Always pass `fields` to pick the metrics you need (default: id,sku,lead_time,review_period,replenishment,oos,under_value; oos = forecasted days to sell out, under_value = forecasted lost revenue, replenishment = recommended order quantity). Use `filters` and `sort` for questions like \"which SKUs need reordering\". Removed variants are excluded unless include_removed. GET /api/v1/variants."
+          "description": "List product variants with Inventory Planner's computed metrics (forecast, replenishment, days to sell out, lost revenue, lead time, review period and ~200 more). Always pass `fields` to pick the metrics you need (default: id,sku,lead_time,review_period,replenishment,oos,under_value; oos = forecasted days to sell out, under_value = forecasted lost revenue, replenishment = recommended order quantity). Use `filters` and `sort` for questions like \"which SKUs need reordering\". Removed variants are excluded unless include_removed. Returns 10 variants per page by default: follow next_page for more. GET /api/v1/variants."
         },
         {
           "name": "inventoryplanner_get_variant",
@@ -48389,7 +48389,7 @@
           "name": "inventoryplanner_list_purchase_orders",
           "type": "read",
           "title": "List purchase orders (and transfers, assembly orders)",
-          "description": "List stock orders: purchase orders, transfers and assembly orders (the `type` field is \"po\"/empty, \"transfer\" or \"assembly\"). Filter with `filters`, e.g. {\"status\": \"OPEN\", \"vendor\": \"Acme\", \"expected_date_lt\": \"2026-11-01\"}. Default fields: id,reference,status,type,vendor,warehouse,source,created_date,expected_date,received_date,currency,total,total_ordered,total_received. GET /api/v1/purchase-orders."
+          "description": "List stock orders: purchase orders, transfers and assembly orders (the `type` field is \"po\"/empty, \"transfer\" or \"assembly\"). Filter with `filters`, e.g. {\"status\": \"OPEN\", \"vendor\": \"Acme\", \"expected_date_lt\": \"2026-11-01\"}. Default fields: id,reference,status,type,vendor,warehouse,source,created_date,expected_date,received_date,currency,total,total_ordered,total_received. Returns 10 orders per page by default: follow next_page for more. GET /api/v1/purchase-orders."
         },
         {
           "name": "inventoryplanner_get_purchase_order",
@@ -49017,7 +49017,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -49412,7 +49412,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.27.7",
+      "version": "1.27.8",
       "login": {
         "kind": "key",
         "fields": [
@@ -50996,7 +50996,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.5",
+      "version": "1.27.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -51041,7 +51041,7 @@
           "name": "wincher_list_websites",
           "type": "read",
           "title": "List tracked websites",
-          "description": "List the websites tracked in Wincher: id, domain, display name, search engine, location, language, mobile flag, keyword/group/competitor counts, competitors and brand keywords. Optionally with the ranking summary for a period. GET /websites."
+          "description": "List the websites tracked in Wincher: id, domain, display name, search engine, location, language, mobile flag, keyword/group/competitor counts, competitors and brand keywords. Optionally with the ranking summary for a period. Page with limit and offset (default 10 websites per page). GET /websites."
         },
         {
           "name": "wincher_get_website",
@@ -51053,7 +51053,7 @@
           "name": "wincher_list_keywords",
           "type": "read",
           "title": "List keywords",
-          "description": "List the keywords tracked for a website with groups, volume, CPC, difficulty, competition, search intents and, with include_ranking, the latest position, traffic, ranking pages, SERP features and best position in the period. Positions are tracked down to the top 30. GET /websites/{website_id}/keywords."
+          "description": "List the keywords tracked for a website with groups, volume, CPC, difficulty, competition, search intents and, with include_ranking, the latest position, traffic, ranking pages, SERP features and best position in the period. Positions are tracked down to the top 30. Page with limit and offset: default 25 keywords, or 10 when include_ranking is true (ranking data is large). GET /websites/{website_id}/keywords."
         },
         {
           "name": "wincher_get_keyword",
@@ -53462,7 +53462,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -53495,7 +53495,7 @@
           "name": "ns1_search",
           "type": "read",
           "title": "Search zones and records",
-          "description": "Search the account's zones and records by name (substring match). Returns matching zones and/or records with their answers when expand is true. GET /v1/search."
+          "description": "Search the account's zones and records by name (substring match). Returns matching zones and/or records with their answers when expand is true. Returns at most 25 results unless max is given (up to 1000); raise max for more. GET /v1/search."
         },
         {
           "name": "ns1_list_monitoring_jobs",
@@ -55540,7 +55540,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.27.5",
+      "version": "1.27.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -55564,7 +55564,7 @@
           "name": "zammad_search_tickets",
           "type": "read",
           "title": "Search tickets",
-          "description": "Search tickets with Zammad's query syntax. With Elasticsearch on the instance you can use fields, e.g. `state.name:open AND group.name:Sales`, `customer.email:\"a@b.com\"`, `title:invoice`, `number:20001`; a plain word searches ticket text. Replies carry ids plus names (group, state, priority, owner, customer). GET /api/v1/tickets/search?expand=true."
+          "description": "Search tickets with Zammad's query syntax. With Elasticsearch on the instance you can use fields, e.g. `state.name:open AND group.name:Sales`, `customer.email:\"a@b.com\"`, `title:invoice`, `number:20001`; a plain word searches ticket text. Replies carry ids plus names (group, state, priority, owner, customer). Returns 10 tickets per page by default; page through with page and next_page. GET /api/v1/tickets/search?expand=true."
         },
         {
           "name": "zammad_list_tickets",
@@ -56038,7 +56038,7 @@
           "scope": "per API token"
         }
       ],
-      "version": "1.27.5",
+      "version": "1.27.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -56479,7 +56479,7 @@
           "scope": "per company"
         }
       ],
-      "version": "1.27.4",
+      "version": "1.27.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -56516,7 +56516,7 @@
           "name": "smartbill_get_stock",
           "type": "read",
           "title": "Get stock levels",
-          "description": "Stock quantities per warehouse as of a date (needs the SmartBill stock module). Optional filters: warehouse_name (case-sensitive), product_name, product_code. No filters = all products in all warehouses. GET /stocks."
+          "description": "Stock quantities per warehouse as of a date (needs the SmartBill stock module). Optional filters: warehouse_name (case-sensitive), product_name, product_code. No filters = all products in all warehouses. Paged by product rows: limit (default 25, max 100) and offset (default 0); the reply gives total, returned and next_offset (pass it as offset, null on the last page). GET /stocks."
         },
         {
           "name": "smartbill_get_invoice_payment_status",
@@ -59567,7 +59567,7 @@
           "scope": "per store"
         }
       ],
-      "version": "1.24.4",
+      "version": "1.24.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -60644,7 +60644,7 @@
         "Which shipments are still unshipped?",
         "Skip the next renewal of subscription 12345678."
       ],
-      "version": "1.24.4",
+      "version": "1.24.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -62271,7 +62271,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.23.5",
+      "version": "1.23.6",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -62508,7 +62508,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.26.0",
+      "version": "1.26.1",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -62818,7 +62818,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.24.5",
+      "version": "1.24.6",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -64074,7 +64074,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.23.4",
+      "version": "1.23.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -65307,7 +65307,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.21.5",
+      "version": "1.21.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -65594,7 +65594,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.23.0",
+      "version": "1.23.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -65630,7 +65630,7 @@
           "name": "nocrm_list_lead_comments",
           "type": "read",
           "title": "List lead comments",
-          "description": "The comments (notes, logged calls/meetings/emails) on a lead, newest first by default. GET /leads/{id}/comments."
+          "description": "The comments (notes, logged calls/meetings/emails) on a lead, newest first by default. Paged: 25 per call by default (limit 1-100); pass next_offset as offset for the next page. GET /leads/{id}/comments."
         },
         {
           "name": "nocrm_summarize_lead_activities",
@@ -65821,7 +65821,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.21.4",
+      "version": "1.21.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -66400,7 +66400,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.21.5",
+      "version": "1.21.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -66418,7 +66418,7 @@
           "name": "agencybloc_search_individuals",
           "type": "read",
           "title": "Search individuals",
-          "description": "Search individuals (clients and contacts) in AgencyBloc. All filters are optional and combine; with none you get the first records. Returns id, name, email, birth date, phones and last-updated time (national ids such as SSN are never returned). Use updated_since to find recently changed people. POST individuals/search."
+          "description": "Search individuals (clients and contacts) in AgencyBloc. All filters are optional and combine; with none you get the first records. Returns id, name, email, birth date, phones and last-updated time (national ids such as SSN are never returned); 25 per call by default (limit up to 500). Use updated_since to find recently changed people. POST individuals/search."
         },
         {
           "name": "agencybloc_get_individual",
@@ -66442,7 +66442,7 @@
           "name": "agencybloc_search_policies",
           "type": "read",
           "title": "Search policies",
-          "description": "Search policies by number, coverage type, carrier, holder, servicing agent, application date or last update. Returns id, holder, policy number, carrier, status, coverage type, effective and renewal dates. Use submitted_after/updated_since for recent business. POST policies/search."
+          "description": "Search policies by number, coverage type, carrier, holder, servicing agent, application date or last update. Returns id, holder, policy number, carrier, status, coverage type, effective and renewal dates; 25 per call by default (limit up to 500). Use submitted_after/updated_since for recent business. POST policies/search."
         },
         {
           "name": "agencybloc_get_policy",
@@ -68481,7 +68481,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.20.4",
+      "version": "1.20.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -69286,7 +69286,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.20.6",
+      "version": "1.20.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -75626,7 +75626,7 @@
           "scope": "per API key"
         }
       ],
-      "version": "1.19.4",
+      "version": "1.19.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -75641,7 +75641,7 @@
           "name": "parsley_list_menu_items",
           "type": "read",
           "title": "List menu items",
-          "description": "List the recipes, sub-recipes and ingredients in the Parsley account that can be used on events: id, name, item number, price, tags, active flag, chef and last-modified time. Use the ids with parsley_get_menu_item for nutrition, allergens and ingredients, and on events. The API returns the whole list at once; search/limit/offset slice it here. GET /menu_items."
+          "description": "List the recipes, sub-recipes and ingredients in the Parsley account that can be used on events: id, name, item number, price, tags, active flag, chef and last-modified time. Use the ids with parsley_get_menu_item for nutrition, allergens and ingredients, and on events. The API returns the whole list at once; search/limit/offset slice it here (25 per page by default; page with next_offset). GET /menu_items."
         },
         {
           "name": "parsley_get_menu_item",
@@ -77125,7 +77125,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.20.5",
+      "version": "1.20.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -78330,7 +78330,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.21.4",
+      "version": "1.21.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -78354,7 +78354,7 @@
           "name": "papierkram_list_companies",
           "type": "read",
           "title": "List companies",
-          "description": "List contacts (companies: customers and suppliers) with address, VAT id and contact data. Paged."
+          "description": "List contacts (companies: customers and suppliers) with address, VAT id and contact data. Paged: 25 per page by default (page_size up to 100)."
         },
         {
           "name": "papierkram_get_company",
@@ -78378,7 +78378,7 @@
           "name": "papierkram_list_invoices",
           "type": "read",
           "title": "List invoices",
-          "description": "List outgoing invoices (Ausgangsrechnungen) with state (draft, ...), dates, totals and outstanding_amount. Filter by company, project or document date range. Paged."
+          "description": "List outgoing invoices (Ausgangsrechnungen) with state (draft, ...), dates, totals and outstanding_amount. Filter by company, project or document date range. Paged: 25 per page by default (page_size up to 100)."
         },
         {
           "name": "papierkram_get_invoice",
@@ -79054,7 +79054,7 @@
         "Add jane@example.com to my newsletter list with her first name.",
         "Create a draft campaign for the October newsletter and attach my customers list."
       ],
-      "version": "1.18.4",
+      "version": "1.18.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -79245,7 +79245,7 @@
         "Create a task for tomorrow 9am to call the contact Marie Martin, and add a note on her company.",
         "Preview a draft quote with catalog and free-text lines for a customer and opportunity, then save it after my approval."
       ],
-      "version": "1.21.5",
+      "version": "1.21.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -80080,7 +80080,7 @@
         "Show the properties that went under offer this month in my main branch.",
         "Add a note to this vendor: asked for a revaluation in March."
       ],
-      "version": "1.17.6",
+      "version": "1.17.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -82966,7 +82966,7 @@
         "Find the customer with phone number 0901234567 and list their latest orders.",
         "Create a sales order for customer 1024 with 3 units of product 5531 at 120000 each."
       ],
-      "version": "1.16.4",
+      "version": "1.16.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -85604,7 +85604,7 @@
           "scope": "per organization"
         }
       ],
-      "version": "1.15.5",
+      "version": "1.15.6",
       "login": {
         "kind": "key",
         "fields": [
@@ -85922,7 +85922,7 @@
           "scope": "per connected account"
         }
       ],
-      "version": "1.13.4",
+      "version": "1.13.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -86623,7 +86623,7 @@
         "Show the line items on a sales document.",
         "Find the product with item code 100 and its sales price."
       ],
-      "version": "1.11.4",
+      "version": "1.11.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -91036,7 +91036,7 @@
           "scope": "per company"
         }
       ],
-      "version": "1.11.6",
+      "version": "1.11.7",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -91219,7 +91219,7 @@
           "scope": "per property-management account"
         }
       ],
-      "version": "1.11.6",
+      "version": "1.11.7",
       "login": {
         "kind": "upstream",
         "fields": [
@@ -92541,7 +92541,7 @@
           "scope": "per API token and organization"
         }
       ],
-      "version": "1.11.7",
+      "version": "1.11.8",
       "login": {
         "kind": "key",
         "fields": [
@@ -93681,7 +93681,7 @@
           "scope": "per helpdesk subdomain"
         }
       ],
-      "version": "1.13.4",
+      "version": "1.13.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -96482,7 +96482,7 @@
           "scope": "per verified tenant (API key when tenant is unavailable)"
         }
       ],
-      "version": "1.11.6",
+      "version": "1.11.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -99277,7 +99277,7 @@
           "scope": "per Rex user and region"
         }
       ],
-      "version": "1.12.4",
+      "version": "1.12.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -101456,7 +101456,7 @@
           "scope": "per API key"
         }
       ],
-      "version": "1.11.6",
+      "version": "1.11.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -102955,7 +102955,7 @@
           "yearly": "$390"
         }
       ],
-      "version": "1.11.6",
+      "version": "1.11.7",
       "login": {
         "kind": "key",
         "fields": [
@@ -102976,7 +102976,7 @@
           "name": "hdphotohub_list_users",
           "type": "read",
           "title": "List users",
-          "description": "List clients and team members, optionally filtered by email or name. Returns one page: total, items and next_offset when more exist (limit, offset). Filter by email or name when you look for one person. API: GET /users."
+          "description": "List clients and team members, optionally filtered by email or name. Returns one page (default 25 users): total, items and next_offset when more exist (limit, offset). Filter by email or name when you look for one person. API: GET /users."
         },
         {
           "name": "hdphotohub_get_user",
@@ -102994,7 +102994,7 @@
           "name": "hdphotohub_list_sites",
           "type": "read",
           "title": "List sites",
-          "description": "List property sites, filtered by user id, user email or an address search string. Returns one page: total, items and next_offset when more exist (limit, offset). Rows leave out media and description (media_count instead); hdphotohub_get_site returns both. A list without a filter can be slow on large accounts: prefer uid, email or address. API: GET /sites."
+          "description": "List property sites, filtered by user id, user email or an address search string. Returns one page (default 10 sites): total, items and next_offset when more exist (limit, offset). Rows leave out media and description (media_count instead); hdphotohub_get_site returns both. A list without a filter can be slow on large accounts: prefer uid, email or address. API: GET /sites."
         },
         {
           "name": "hdphotohub_get_site",
@@ -103024,7 +103024,7 @@
           "name": "hdphotohub_list_groups",
           "type": "read",
           "title": "List groups",
-          "description": "List groups (brokerages and teams), optionally filtered by name. API: GET /groups."
+          "description": "List groups (brokerages and teams), optionally filtered by name. Returns one page (default 25 groups): total, returned, items and next_offset (null when no more groups). API: GET /groups."
         },
         {
           "name": "hdphotohub_get_group",
@@ -112223,7 +112223,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -117411,7 +117411,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.9.0",
+      "version": "1.9.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -117462,7 +117462,7 @@
           "name": "ziflow_list_comments",
           "type": "read",
           "title": "List comments",
-          "description": "List all comments on one proof, with their author, location (page or time), and resolved state. Ziflow API: GET /proofs/{id}/comments."
+          "description": "List the comments on one proof, with their author, location (page or time), and resolved state. Returns one page: items, total, returned and next_offset (null when no comments are left); use limit and offset to read the rest. Ziflow API: GET /proofs/{id}/comments."
         },
         {
           "name": "ziflow_get_comment",
@@ -118992,7 +118992,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -121233,7 +121233,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.9.0",
+      "version": "1.9.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -125204,7 +125204,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -125246,7 +125246,7 @@
           "name": "captivate_list_episodes",
           "type": "read",
           "title": "List episodes of a show",
-          "description": "List the episodes of a show with their status, publish date, titles and shownotes, plus a total count. Captivate API: GET /shows/{id}/episodes."
+          "description": "List the episodes of a show with their status, publish date, titles and shownotes, plus a total count. Returns 10 episodes per call by default: pass limit and offset (next_offset from the reply) to read more. Captivate API: GET /shows/{id}/episodes."
         },
         {
           "name": "captivate_list_scheduled_episodes",
@@ -127195,7 +127195,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.9.0",
+      "version": "1.9.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -128655,7 +128655,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -129777,7 +129777,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.7.0",
+      "version": "1.7.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -129798,7 +129798,7 @@
           "name": "pubmed_summary",
           "type": "read",
           "title": "Get article summaries",
-          "description": "Get short metadata for up to 100 PubMed articles by PMID: title, authors, journal, publication date, DOI and PubMed Central ID. Does not return abstracts (use pubmed_fetch_abstracts). E-utilities: esummary.fcgi?db=pubmed."
+          "description": "Get short metadata for PubMed articles by PMID: title, authors, journal, publication date, DOI and PubMed Central ID. Does not return abstracts (use pubmed_fetch_abstracts). Up to 100 PMIDs are accepted, but each call summarises one page of limit PMIDs (default 25) starting at offset; when next_offset is not null, call again with offset set to next_offset. E-utilities: esummary.fcgi?db=pubmed."
         },
         {
           "name": "pubmed_fetch_abstracts",
@@ -130547,7 +130547,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -131329,7 +131329,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.7.0",
+      "version": "1.7.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -132090,7 +132090,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.8.0",
+      "version": "1.8.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -132114,7 +132114,7 @@
           "name": "kommo_list_pipelines",
           "type": "read",
           "title": "List pipelines",
-          "description": "List the lead pipelines with their stages (status ids, names, sort order). Use it to find the pipeline_id and status_id values for lead filters and writes. GET /api/v4/leads/pipelines."
+          "description": "List the lead pipelines with their stages (status ids, names, sort order). Use it to find the pipeline_id and status_id values for lead filters and writes. Returns 25 pipelines per call by default: pass offset = next_offset to get the rest. GET /api/v4/leads/pipelines (paged in our code: Kommo returns the whole list in one response)."
         },
         {
           "name": "kommo_list_users",
@@ -132409,7 +132409,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.7.0",
+      "version": "1.7.1",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -132438,7 +132438,7 @@
           "name": "patreon_list_members",
           "type": "read",
           "title": "List campaign members",
-          "description": "List the patrons (members) of a campaign: patron status, lifetime support, current entitlement, last and next charge dates and their tiers. Names can be empty when a patron hides them. Email and address are not returned. Patreon: GET /campaigns/{campaign_id}/members (needs campaigns.members)."
+          "description": "List the patrons (members) of a campaign: patron status, lifetime support, current entitlement, last and next charge dates and their tiers. Names can be empty when a patron hides them. Email and address are not returned. Pages of 10 members by default (page_count up to 100). Patreon: GET /campaigns/{campaign_id}/members (needs campaigns.members)."
         },
         {
           "name": "patreon_get_member",
@@ -132667,7 +132667,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.6.0",
+      "version": "1.6.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -132739,7 +132739,7 @@
           "name": "proofhub_list_people",
           "type": "read",
           "title": "List people",
-          "description": "List the people (users) of the account with their roles and emails. GET /people."
+          "description": "List the people (users) of the account with their roles and emails, one page at a time (limit default 25). ProofHub returns the whole list, so this tool slices it: when next_offset is not null, call again with offset set to next_offset. GET /people."
         },
         {
           "name": "proofhub_get_person",
@@ -134686,7 +134686,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.13.0",
+      "version": "1.13.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -134788,7 +134788,7 @@
           "name": "agencyzoom_list_employees",
           "type": "read",
           "title": "List employees",
-          "description": "The agency's employees: id, name, e-mail, phone, whether producer, active or owner. Use the ids to assign leads and tasks. GET /v1/api/employees."
+          "description": "The agency's employees: id, name, e-mail, phone, whether producer, active or owner. Use the ids to assign leads and tasks. Pages with limit + offset (default 25 per page); total is the full count, next_offset the offset of the next page (null when done). GET /v1/api/employees (the whole list is fetched, then sliced)."
         },
         {
           "name": "agencyzoom_list_lead_sources",
@@ -138312,7 +138312,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.6.1",
+      "version": "1.6.2",
       "login": {
         "kind": "key",
         "fields": [
@@ -138375,7 +138375,7 @@
           "name": "stelorder_list_ordinary_invoices",
           "type": "read",
           "title": "List ordinary invoices",
-          "description": "List ordinary invoices with their reference, title, date, client and document state. For a specific client or period, supply account_id and start_date/end_date rather than scanning every invoice. Begin with limit 25-100; use start offsets to page only as needed. Repeated broad reads can be slow upstream; do not launch parallel full-history scans. For incremental synchronization use utc_last_modification_date, or use stelorder_get_ordinary_invoice for a known id. Sorting fields include date, reference and utc-last-modification-date. API: GET /app/ordinaryInvoices. Usage limits: 60 calls per minute per key, and 300 (Lite), 1000 (Business) or 2000 (Pro) calls per day."
+          "description": "List ordinary invoices with their reference, title, date, client and document state. For a specific client or period, supply account_id and start_date/end_date rather than scanning every invoice. Returns 10 invoices per page by default; use limit (up to 500) and start offsets (start 10, 20, ...) to page through more. Repeated broad reads can be slow upstream; do not launch parallel full-history scans. For incremental synchronization use utc_last_modification_date, or use stelorder_get_ordinary_invoice for a known id. Sorting fields include date, reference and utc-last-modification-date. API: GET /app/ordinaryInvoices. Usage limits: 60 calls per minute per key, and 300 (Lite), 1000 (Business) or 2000 (Pro) calls per day."
         },
         {
           "name": "stelorder_get_ordinary_invoice",
@@ -146643,7 +146643,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.5.0",
+      "version": "1.5.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -148340,7 +148340,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.5.0",
+      "version": "1.5.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -148445,7 +148445,7 @@
           "name": "action1_list_reports",
           "type": "read",
           "title": "List reports",
-          "description": "List the Action1 report definitions available to these credentials (built-in and custom). Use the report ids with action1_get_report_rows. Action1 API: GET /reports/all."
+          "description": "List the Action1 report definitions available to these credentials (built-in and custom). Use the report ids with action1_get_report_rows. Returns one page of the list (limit, offset). Action1 API: GET /reports/all."
         },
         {
           "name": "action1_get_report_rows",
@@ -152446,7 +152446,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.5.0",
+      "version": "1.5.1",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -152653,7 +152653,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.6.0",
+      "version": "1.6.1",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -152742,7 +152742,7 @@
           "name": "fattureincloud_list_cashbook_entries",
           "type": "read",
           "title": "List cashbook entries",
-          "description": "Cashbook (Prima nota) entries of a company between two dates: money in and out, with the linked documents and payment accounts."
+          "description": "Cashbook (Prima nota) entries of a company between two dates: money in and out, with the linked documents and payment accounts. Returns 25 entries per reply by default; use limit and offset to read the rest (next_offset is null on the last page)."
         },
         {
           "name": "fattureincloud_list_settings",
@@ -166920,7 +166920,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.2.0",
+      "version": "1.2.1",
       "login": {
         "kind": "key",
         "fields": [
@@ -182653,7 +182653,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.1.1",
+      "version": "1.1.2",
       "login": {
         "kind": "key",
         "fields": [
