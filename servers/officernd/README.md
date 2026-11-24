@@ -55,6 +55,10 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `officernd_create_booking` | **write** | Create a booking |
 | `officernd_create_ticket` | **write** | Open a helpdesk ticket |
 | `officernd_add_ticket_comment` | **write** | Comment on a ticket |
+| `officernd_list_plans` | read | List plans |
+| `officernd_create_membership` | **write** | Create a membership |
+| `officernd_update_membership` | **write** | Change or end a membership |
+| `officernd_create_contract` | **write** | Create a contract |
 | `officernd_usage_status` | meta | Usage status (free-tier meter) |
 | `officernd_request_feature` | meta | Request a missing feature |
 | `officernd_upgrade` | meta | Upgrade to Pro or Pro+ |

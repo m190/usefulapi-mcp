@@ -31948,6 +31948,30 @@
           "description": "WRITE. Post a comment on a helpdesk ticket. Public comments are visible to the member; comments attributed to members must be public. Needs scope flex.collaboration.ticketComments.create. OfficeRnD: POST /ticket-comments/{ticketId}."
         },
         {
+          "name": "officernd_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List price plans (membership and one-off plans) with _id, name, code, type, price, deposit, interval and locations. Use a plan _id for officernd_create_membership or officernd_create_contract. Needs the Plans read permission (flex.billing.plans.read) on the application. OfficeRnD: GET /plans."
+        },
+        {
+          "name": "officernd_create_membership",
+          "type": "write",
+          "title": "Create a membership",
+          "description": "WRITE. Create a membership (a plan sold to a member or company) at a location; OfficeRnD bills it per the plan. Confirm plan, price and dates with the user first. For a plan switch: end the current membership with officernd_update_membership (end_date = its last day), then create the new one starting the next day. Needs Memberships create on the application. OfficeRnD: POST /memberships."
+        },
+        {
+          "name": "officernd_update_membership",
+          "type": "write",
+          "title": "Change or end a membership",
+          "description": "WRITE. Change a membership's price, start date or end date. Setting end_date ends the membership after that day (it stays in the history). OfficeRnD cannot change a membership's plan: to switch plan, end this one and create a new membership on the new plan with officernd_create_membership. Confirm with the user first. Needs Memberships update on the application. OfficeRnD: PUT /memberships/{membershipId}."
+        },
+        {
+          "name": "officernd_create_contract",
+          "type": "write",
+          "title": "Create a contract",
+          "description": "WRITE. Create an unsigned contract for a company and member with recurring plans, one-off plans and/or resources (the contract type, from Settings → Platform → Contracts, decides which are required). This tool does not sign, send or terminate contracts; do that in OfficeRnD. Confirm the items, prices and dates with the user first. Needs Contracts create on the application. OfficeRnD: POST /contracts."
+        },
+        {
           "name": "officernd_usage_status",
           "type": "meta",
           "title": "Usage status (free-tier meter)",
@@ -31972,7 +31996,7 @@
           "description": "Cancel the caller's OfficeRnD Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run officernd_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.40.4",
+      "version": "1.41.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -36125,6 +36149,24 @@
           "description": "One sale by saleID with its line items (SaleLines with Item), payments (SalePayments with PaymentType) and customer. GET /Account/{accountID}/Sale/{saleID}.json."
         },
         {
+          "name": "lightspeedrseries_sales_by_category",
+          "type": "read",
+          "title": "Sales by category report",
+          "description": "Server-side sales-by-category report for a date range on completeTime: per item category the quantity, net revenue excluding tax (after discounts, refunds subtracted), cost of goods sold, gross profit and gross margin %, plus totals. Counts completed, non-voided sales only. Reads up to max_pages pages of 100 sales in one call; if the range has more, complete is false: call again with the same arguments plus resume_token, and that result holds the totals for the whole range so far. A date without a time covers the whole day; times are UTC unless an offset is given. Uses GET Sale.json with SaleLines and SaleLines.Item, and Category.json for names."
+        },
+        {
+          "name": "lightspeedrseries_list_workorders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "Service / repair work orders: workorderID (the work order number), timeIn (received), etaOut (due date), workorderStatusID with the WorkorderStatus name, shopID, customerID with the Customer, employeeID, note, internalNote, hookIn/hookOut, warranty, saleID. Filter by due date (etaOut range), received date (timeIn range), status ids (from lightspeedrseries_list_workorder_statuses), shop, customer and employee. For work due today pass due_from and due_to as today's date. A date without a time covers the whole day; times are UTC unless an offset is given (e.g. 2026-11-24T00:00:00-05:00). Paginate with next_url. GET /Account/{accountID}/Workorder.json."
+        },
+        {
+          "name": "lightspeedrseries_list_workorder_statuses",
+          "type": "read",
+          "title": "List work order statuses",
+          "description": "The account's work order statuses: workorderStatusID, name, sortOrder, systemValue (open, estimate, waiting, finished, paid for the built-in ones). Use the ids to filter lightspeedrseries_list_workorders. GET /Account/{accountID}/WorkorderStatus.json."
+        },
+        {
           "name": "lightspeedrseries_list_customers",
           "type": "read",
           "title": "List customers",
@@ -36203,7 +36245,7 @@
           "description": "Cancel the caller's Lightspeed Retail (R-Series) Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run lightspeedrseries_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.37.5",
+      "version": "1.38.0",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -62466,7 +62508,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.25.6",
+      "version": "1.26.0",
       "login": {
         "kind": "upstream",
         "fields": [],
@@ -62480,10 +62522,16 @@
           "description": "WRITE: preview up to five invoice drafts from zero-based quotation group/line positions. Full lines only, no repeated lines or recurring items. After approval, confirm with preview_hash and a stable operation_id; creates up to batch_size drafts per call with persistent duplicate protection. Preserves source prices, taxes, customer, currency and percentage discounts; shows vendor totals for review. Never books or sends invoices."
         },
         {
+          "name": "teamleader_create_custom_invoice_draft",
+          "type": "write",
+          "title": "Preview or create a custom invoice draft",
+          "description": "WRITE: preview one invoice draft with your own lines (description, quantity, unit price excluding tax, tax_rate_id from teamleader_list_tax_rates, optional percentage discount) in optional sections, plus remarks, invoice date, PO number and project, without a source quotation. Preview first and show it to the user; then repeat with confirm:true, the preview_hash and the same operation_id. Persistent duplicate protection: one operation_id creates at most one draft. Reads the draft back and checks its fields. Never books or sends invoices."
+        },
+        {
           "name": "teamleader_invoice_draft_operation_status",
           "type": "read",
-          "title": "Check invoice draft batch",
-          "description": "Read persistent batch progress and known invoice IDs. Uncertain writes are not replayed. This does not create, book or send invoices."
+          "title": "Check invoice draft operation",
+          "description": "Read the persistent progress and known invoice IDs of a quotation draft batch (kind quotation_batch, the default) or of a custom draft (kind custom). Uncertain writes are not replayed. This does not create, book or send invoices."
         },
         {
           "name": "teamleader_get_current_user",
@@ -62592,6 +62640,12 @@
           "type": "read",
           "title": "List departments",
           "description": "List the account's departments (company entities that issue invoices and quotations). A department id is needed to filter subscriptions and product categories or to create a deal for a specific entity. Teamleader: departments.list."
+        },
+        {
+          "name": "teamleader_list_tax_rates",
+          "type": "read",
+          "title": "List tax rates",
+          "description": "List the account's tax (VAT) rates with id, description and rate, optionally for one department. A tax rate id is required for every line of teamleader_create_custom_invoice_draft. Teamleader: taxRates.list."
         },
         {
           "name": "teamleader_list_products",
@@ -132036,7 +132090,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.7.0",
+      "version": "1.8.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -132133,6 +132187,30 @@
           "type": "write",
           "title": "Update lead",
           "description": "Change one lead: name, value, pipeline, stage or owner. Only the given fields change. Repeating the same call gives the same result. PATCH /api/v4/leads/{id}."
+        },
+        {
+          "name": "kommo_create_custom_field",
+          "type": "write",
+          "title": "Create custom field",
+          "description": "WRITE (administrator token). Create one custom field on leads, contacts or companies: name, type, optional code, sort, group, API-only flag, options for select/multiselect/radiobutton, required or hidden stages for lead fields, currency for monetary, reminder for birthday. Creates a new field on every call: check kommo_list_custom_fields first. POST /api/v4/{entity}/custom_fields."
+        },
+        {
+          "name": "kommo_update_custom_field",
+          "type": "write",
+          "title": "Update custom field",
+          "description": "WRITE (administrator token). Change one custom field: name, sort, group, API-only flag, required or hidden stages (lead fields; each list replaces the current one), currency, birthday reminder, and add new options with enums_add. The tool reads the field, sends its current options plus the new ones (Kommo deletes options left out), then reads it back and reports any option that went missing. Do not run two enums_add calls on the same field at the same time. It cannot delete fields or options. PATCH /api/v4/{entity}/custom_fields/{id}."
+        },
+        {
+          "name": "kommo_create_pipeline_stage",
+          "type": "write",
+          "title": "Create pipeline stage",
+          "description": "WRITE (administrator token). Add one stage to a lead pipeline: name, position (sort), color and optional descriptions per user level. Creates a new stage on every call: check kommo_list_pipelines first. POST /api/v4/leads/pipelines/{pipeline_id}/statuses."
+        },
+        {
+          "name": "kommo_update_pipeline_stage",
+          "type": "write",
+          "title": "Update pipeline stage",
+          "description": "WRITE (administrator token). Change one pipeline stage: name, position (sort), color or descriptions (the list replaces the current descriptions). It cannot delete stages. PATCH /api/v4/leads/pipelines/{pipeline_id}/statuses/{status_id}."
         },
         {
           "name": "kommo_usage_status",

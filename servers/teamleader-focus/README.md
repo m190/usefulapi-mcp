@@ -35,7 +35,8 @@ You can remove the access any time in Teamleader Focus. One subscription covers 
 | Tool | Type | What it does |
 |------|------|--------------|
 | `teamleader_create_invoice_drafts` | **write** | Preview or create invoice drafts from quotation lines |
-| `teamleader_invoice_draft_operation_status` | read | Check invoice draft batch |
+| `teamleader_create_custom_invoice_draft` | **write** | Preview or create a custom invoice draft |
+| `teamleader_invoice_draft_operation_status` | read | Check invoice draft operation |
 | `teamleader_get_current_user` | read | Get the current user |
 | `teamleader_list_users` | read | List users |
 | `teamleader_list_contacts` | read | List contacts |
@@ -54,6 +55,7 @@ You can remove the access any time in Teamleader Focus. One subscription covers 
 | `teamleader_list_tickets` | read | List tickets |
 | `teamleader_list_work_types` | read | List work types |
 | `teamleader_list_departments` | read | List departments |
+| `teamleader_list_tax_rates` | read | List tax rates |
 | `teamleader_list_products` | read | List products |
 | `teamleader_get_product` | read | Get a product |
 | `teamleader_list_product_categories` | read | List product categories |

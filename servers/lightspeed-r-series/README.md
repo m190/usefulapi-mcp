@@ -45,6 +45,9 @@ access any time from your Lightspeed Retail account settings. One subscription c
 | `lightspeedrseries_list_categories` | read | List categories |
 | `lightspeedrseries_list_sales` | read | List sales |
 | `lightspeedrseries_get_sale` | read | Get a sale |
+| `lightspeedrseries_sales_by_category` | read | Sales by category report |
+| `lightspeedrseries_list_workorders` | read | List work orders |
+| `lightspeedrseries_list_workorder_statuses` | read | List work order statuses |
 | `lightspeedrseries_list_customers` | read | List customers |
 | `lightspeedrseries_get_customer` | read | Get a customer |
 | `lightspeedrseries_list_vendors` | read | List vendors |

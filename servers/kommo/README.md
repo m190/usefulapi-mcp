@@ -47,6 +47,10 @@ On first connect you provide your **account subdomain** (the `yourcompany` part 
 | `kommo_list_notes` | read | List notes |
 | `kommo_create_lead` | **write** | Create lead |
 | `kommo_update_lead` | **write** | Update lead |
+| `kommo_create_custom_field` | **write** | Create custom field |
+| `kommo_update_custom_field` | **write** | Update custom field |
+| `kommo_create_pipeline_stage` | **write** | Create pipeline stage |
+| `kommo_update_pipeline_stage` | **write** | Update pipeline stage |
 | `kommo_usage_status` | meta | Usage status (free-tier meter) |
 | `kommo_request_feature` | meta | Request a missing feature |
 | `kommo_upgrade` | meta | Upgrade to Pro or Pro+ |
