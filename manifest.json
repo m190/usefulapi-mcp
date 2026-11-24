@@ -186653,6 +186653,157 @@
         "How many hours did each project get in the last month, split by validation status?",
         "Which day tasks are still waiting for validation for my team?"
       ]
+    },
+    {
+      "slug": "mathpix",
+      "name": "Mathpix",
+      "category": "document-ai",
+      "description": "Run OCR billed by Mathpix on images and PDFs, read results and usage, delete outputs in Mathpix.",
+      "endpoint": "https://mathpix.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Mathpix app_id"
+          },
+          {
+            "label": "Mathpix app_key"
+          },
+          {
+            "label": "Data region"
+          }
+        ],
+        "hint": "Create the key pair at **console.mathpix.com** → your OCR API organization → **API keys** (a one-time setup fee activates the API). Pick the **EU** region only if you use the EU data-residency endpoint. OCR and document calls made through this server are **billed by Mathpix** to your account at its pay-as-you-go prices. Your keys are used only to call the Mathpix API on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "mathpix_get_usage",
+          "type": "read",
+          "title": "Get API usage",
+          "description": "API usage counts for this Mathpix account over a date range, grouped by usage type (image, image-async, pdf ...), request arguments or app id and aggregated by a timespan. Use it to reconcile billing and watch consumption. Free to call. GET /v3/ocr-usage."
+        },
+        {
+          "name": "mathpix_list_image_results",
+          "type": "read",
+          "title": "List image OCR results",
+          "description": "Search and list stored results of earlier image/strokes OCR requests (/v3/text etc.), newest first: the recognized text, confidence, detected content types and the request options. Requests made with improve_mathpix=false are not stored. Free to call. GET /v3/ocr-results."
+        },
+        {
+          "name": "mathpix_list_documents",
+          "type": "read",
+          "title": "List processed documents",
+          "description": "List documents previously submitted for async processing (/v3/pdf), newest first: pdf_id, input file or URL, status (received, loaded, split, completed, error), page counts and timestamps. Use the pdf_id with the get/output tools. Free to call. GET /v3/pdf-results."
+        },
+        {
+          "name": "mathpix_get_document_status",
+          "type": "read",
+          "title": "Get document status",
+          "description": "Processing status of a submitted document: status (received, loaded, split, completed, error), pages done, and the status of each requested conversion. Poll this until status is completed before reading the output (percent_done reaches 100 before the output files exist). Free to call. GET /v3/pdf/{pdf_id}."
+        },
+        {
+          "name": "mathpix_get_conversion_status",
+          "type": "read",
+          "title": "Get conversion status",
+          "description": "Status of the output-format conversions of a document (the pdf_id) or of a Markdown conversion (the conversion_id): one entry per requested format with status processing, completed or error. Free to call. GET /v3/converter/{id}."
+        },
+        {
+          "name": "mathpix_get_document_output",
+          "type": "read",
+          "title": "Get document output",
+          "description": "Read the TEXT result of a processed document: mmd (Mathpix Markdown, the primary output), md (plain Markdown), html, latex (single .tex) or lines.json (line-by-line data with geometry). Long outputs come back in slices (offset / next_offset). Binary formats (docx, pdf, zip, images) cannot be fetched through this server. Only call once mathpix_get_document_status says completed. Free to call. GET /v3/pdf/{pdf_id}.{ext}."
+        },
+        {
+          "name": "mathpix_get_conversion_output",
+          "type": "read",
+          "title": "Get Markdown conversion output",
+          "description": "Read the TEXT result of a Markdown conversion started with mathpix_convert_markdown: md, html or latex. Long outputs come back in slices (offset / next_offset). Binary formats cannot be fetched through this server. Free to call. GET /v3/converter/{conversion_id}.{ext}."
+        },
+        {
+          "name": "mathpix_ocr_image",
+          "type": "write",
+          "title": "OCR an image (billed)",
+          "description": "BILLED BY MATHPIX (pay as you go, per image; see mathpix.com/pricing/api): recognize math, text, tables and chemistry in ONE image and return Mathpix Markdown (LaTeX math inside \\( \\) / \\[ \\]), and optionally HTML, styled LaTeX or structured data. The image must be a public URL (or a small data URI); local files are not reachable. Each call is a new billed request. POST /v3/text."
+        },
+        {
+          "name": "mathpix_submit_document",
+          "type": "write",
+          "title": "Submit a document (billed)",
+          "description": "BILLED BY MATHPIX (pay as you go, per page processed; see mathpix.com/pricing/api): start async conversion of a PDF, DOCX, PPTX, EPUB or similar document at a PUBLIC URL into Mathpix Markdown. Returns a pdf_id immediately; poll mathpix_get_document_status until completed, then read it with mathpix_get_document_output. Use page_ranges to limit the pages billed. Each call is a new billed job. POST /v3/pdf."
+        },
+        {
+          "name": "mathpix_convert_markdown",
+          "type": "write",
+          "title": "Convert Markdown",
+          "description": "Convert Mathpix Markdown (MMD) text into plain Markdown, HTML or LaTeX. Returns a conversion_id; read the result with mathpix_get_conversion_output (check mathpix_get_conversion_status first). Conversions may be billed by Mathpix under your plan; see mathpix.com/pricing/api. Each call creates a new conversion. POST /v3/converter."
+        },
+        {
+          "name": "mathpix_delete_document",
+          "type": "write",
+          "title": "Delete a document",
+          "description": "PERMANENTLY delete a processed document's output at Mathpix (Markdown, JSON lines, images, all converted formats) and the uploaded source copy. Cannot be undone; read what you need first. Only billing metadata is kept. DELETE /v3/pdf/{pdf_id}."
+        },
+        {
+          "name": "mathpix_delete_conversion",
+          "type": "write",
+          "title": "Delete a Markdown conversion",
+          "description": "PERMANENTLY delete the output files of a Markdown conversion at Mathpix. Cannot be undone; read what you need first. DELETE /v3/converter/{conversion_id}."
+        },
+        {
+          "name": "mathpix_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "mathpix_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Mathpix tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "mathpix_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Mathpix (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "mathpix_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Mathpix Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run mathpix_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Turn the equation in this image into LaTeX: https://example.com/equation.png",
+        "Convert the PDF at this public URL into Markdown and show me the first section.",
+        "Which documents did I convert this week, and did any of them fail?",
+        "How many images and PDF pages did my Mathpix account process this month?"
+      ]
     }
   ]
 }
