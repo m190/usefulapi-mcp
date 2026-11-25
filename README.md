@@ -1128,6 +1128,19 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Onfleet](servers/onfleet/) | logistics | 17 | API token | [servers/onfleet/](servers/onfleet/) |
 | [Routific](servers/routific/) | logistics | 9 | API token | [servers/routific/](servers/routific/) |
 | [Transifex](servers/transifex/) | localization | 18 | API token | [servers/transifex/](servers/transifex/) |
+| [Tapfiliate](servers/tapfiliate/) | marketing | 29 | API token | [servers/tapfiliate/](servers/tapfiliate/) |
+| [Cobot](servers/cobot/) | membership | 33 | OAuth | [servers/cobot/](servers/cobot/) |
+| [Katana MRP](servers/katana-mrp/) | inventory | 27 | API token | [servers/katana-mrp/](servers/katana-mrp/) |
+| [Featurebase](servers/featurebase/) | support | 14 | API token | [servers/featurebase/](servers/featurebase/) |
+| [FirstPromoter](servers/firstpromoter/) | marketing | 23 | API token | [servers/firstpromoter/](servers/firstpromoter/) |
+| [Yousign](servers/yousign/) | e-sign | 18 | API token | [servers/yousign/](servers/yousign/) |
+| [Lithic](servers/lithic/) | fintech | 14 | API token | [servers/lithic/](servers/lithic/) |
+| [Crisp](servers/crisp-chat/) | chat | 12 | API token | [servers/crisp-chat/](servers/crisp-chat/) |
+| [Zenduty](servers/zenduty/) | devops | 18 | API token | [servers/zenduty/](servers/zenduty/) |
+| [Short.io](servers/short-io/) | marketing | 13 | API token | [servers/short-io/](servers/short-io/) |
+| [PostGrid](servers/postgrid/) | direct-mail | 14 | API token | [servers/postgrid/](servers/postgrid/) |
+| [Nexudus](servers/nexudus/) | membership | 14 | API token | [servers/nexudus/](servers/nexudus/) |
+| [Nutshell](servers/nutshell/) | crm | 25 | API token | [servers/nutshell/](servers/nutshell/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
