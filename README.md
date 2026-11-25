@@ -1165,6 +1165,13 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Raklet](servers/raklet/) | membership | 26 | API token | [servers/raklet/](servers/raklet/) |
 | [Firmao](servers/firmao/) | crm | 18 | API token | [servers/firmao/](servers/firmao/) |
 | [Beyond Pricing](servers/beyond-pricing/) | property-management | 17 | API token | [servers/beyond-pricing/](servers/beyond-pricing/) |
+| [Appstle](servers/appstle/) | billing | 18 | API token | [servers/appstle/](servers/appstle/) |
+| [GymMaster](servers/gymmaster/) | membership | 12 | API token | [servers/gymmaster/](servers/gymmaster/) |
+| [1CRM](servers/1crm/) | crm | 11 | API token | [servers/1crm/](servers/1crm/) |
+| [Referral Factory](servers/referral-factory/) | marketing | 18 | API token | [servers/referral-factory/](servers/referral-factory/) |
+| [Sitemate](servers/sitemate/) | business-operations | 34 | API token | [servers/sitemate/](servers/sitemate/) |
+| [vCita](servers/vcita/) | crm | 16 | API token | [servers/vcita/](servers/vcita/) |
+| [FenoFin](servers/fenofin/) | accounting-practice | 23 | API token | [servers/fenofin/](servers/fenofin/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

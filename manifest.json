@@ -195132,6 +195132,1157 @@
         "Compare my occupancy last month with the neighborhood benchmark.",
         "Set the base price of listing 123 to 189 and show me the change history afterwards."
       ]
+    },
+    {
+      "slug": "appstle",
+      "name": "Appstle",
+      "category": "billing",
+      "description": "Read subscriptions, orders and groups; skip orders, move billing dates, pause or cancel in Appstle.",
+      "endpoint": "https://appstle.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Appstle Admin API key"
+          }
+        ],
+        "hint": "In your Appstle admin go to **More → API Access** and create a key (**Read & Write** to allow changes, **Read only** for reporting). Your store's Appstle plan must include API access. Your key is used only to call the Appstle API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "appstle_list_subscription_contracts",
+          "type": "read",
+          "title": "List subscription contracts",
+          "description": "List the store's subscription contracts with optional filters: status (ACTIVE, PAUSED, CANCELLED, EXPIRED, FAILED), customer name, order name, next billing date window, product or variant. Paged (page from 0, size up to 50). GET /subscription-contract-details."
+        },
+        {
+          "name": "appstle_get_contract_analytics",
+          "type": "read",
+          "title": "Get contract analytics",
+          "description": "Revenue and cycle metrics for one subscription contract. GET /subscription-contract-details/analytics/{contractId}."
+        },
+        {
+          "name": "appstle_search_customers",
+          "type": "read",
+          "title": "Search customers with subscriptions",
+          "description": "List customers who have subscriptions, filtered by name or email, optionally only customers with more than one active subscription. Paged (page from 0, size up to 50). GET /subscription-contract-details/customers."
+        },
+        {
+          "name": "appstle_get_customer_subscriptions",
+          "type": "read",
+          "title": "Get a customer's subscriptions",
+          "description": "Detailed subscription information for one Shopify customer id. GET /subscription-customers-detail/valid/{customerId}."
+        },
+        {
+          "name": "appstle_get_upcoming_orders",
+          "type": "read",
+          "title": "Get upcoming orders",
+          "description": "The next upcoming orders for a contract or a customer (give one of the two ids). GET /subscription-billing-attempts/top-orders."
+        },
+        {
+          "name": "appstle_list_past_orders",
+          "type": "read",
+          "title": "List past orders",
+          "description": "Past billing attempts and orders for a contract or a customer (give one of the two ids). Paged (page from 0, size up to 50). GET /subscription-billing-attempts/past-orders."
+        },
+        {
+          "name": "appstle_list_subscription_groups",
+          "type": "read",
+          "title": "List subscription groups",
+          "description": "All subscription groups (selling plan groups) of the store, with their plans and product counts. GET /subscription-groups."
+        },
+        {
+          "name": "appstle_get_subscription_group",
+          "type": "read",
+          "title": "Get a subscription group",
+          "description": "One subscription group by id, with its plans and assigned products. GET /subscription-groups/{id}."
+        },
+        {
+          "name": "appstle_skip_next_order",
+          "type": "write",
+          "title": "Skip the next order",
+          "description": "Skip the next upcoming order of a subscription contract. Each call skips the order after that, so a repeat call is not safe to retry. Reversible with appstle_unskip_order. PUT /subscription-billing-attempts/skip-upcoming-order."
+        },
+        {
+          "name": "appstle_unskip_order",
+          "type": "write",
+          "title": "Unskip an order",
+          "description": "Undo a skipped order (billing attempt id from appstle_get_upcoming_orders). PUT /subscription-billing-attempts/unskip-order/{id}."
+        },
+        {
+          "name": "appstle_set_next_billing_date",
+          "type": "write",
+          "title": "Set the next billing date",
+          "description": "Move the next billing date of a subscription contract to a date-time (ISO 8601). Set reschedule_future_order to also move later orders. PUT /subscription-contracts-update-billing-date."
+        },
+        {
+          "name": "appstle_update_delivery_interval",
+          "type": "write",
+          "title": "Change the delivery interval",
+          "description": "Set how often a subscription contract delivers, for example every 2 MONTH. PUT /subscription-contracts-update-delivery-interval."
+        },
+        {
+          "name": "appstle_set_contract_status",
+          "type": "write",
+          "title": "Pause or resume a subscription",
+          "description": "Set a subscription contract to ACTIVE (resume) or PAUSED (pause). To cancel, use appstle_cancel_contract. PUT /subscription-contracts-update-status."
+        },
+        {
+          "name": "appstle_cancel_contract",
+          "type": "write",
+          "title": "Cancel a subscription",
+          "description": "Cancel a subscription contract for good. Pending orders are cancelled and the plan's minimum billing cycles are enforced. Give an optional reason and note. DELETE /subscription-contracts/{id}."
+        },
+        {
+          "name": "appstle_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "appstle_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Appstle tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "appstle_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Appstle (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "appstle_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Appstle Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run appstle_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which subscriptions are due to bill next week?",
+        "Show the subscriptions of customer 1234567890 and their upcoming orders.",
+        "Skip the next order of subscription contract 987654321.",
+        "Pause subscription 987654321 until I resume it."
+      ]
+    },
+    {
+      "slug": "gymmaster",
+      "name": "GymMaster",
+      "category": "membership",
+      "description": "Read KPI figures, standard reports and dashboard widgets in GymMaster.",
+      "endpoint": "https://gymmaster.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Club name"
+          },
+          {
+            "label": "Report API key"
+          }
+        ],
+        "hint": "Find the key in GymMaster → **Settings → Integrations → Report API**. The club name is the first part of your GymMaster address, for example `yourclub` in yourclub.gymmasteronline.com. The key is used only to call the Report API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "gymmaster_list_kpi_categories",
+          "type": "read",
+          "title": "List KPI categories",
+          "description": "List the KPI category names (for example member_statistics, sales_made, class_summary). Use them with gymmaster_get_kpi_categories. GymMaster Report API: GET /api/v2/report/kpi/categories/list."
+        },
+        {
+          "name": "gymmaster_list_kpi_fields",
+          "type": "read",
+          "title": "List KPI fields",
+          "description": "List the KPI field names (for example current_members, new_memberships, membership_retention). Use them with gymmaster_get_kpi_fields. GymMaster Report API: GET /api/v2/report/kpi/fields/list."
+        },
+        {
+          "name": "gymmaster_get_kpi_categories",
+          "type": "read",
+          "title": "Get KPI categories",
+          "description": "Get the KPI values for one or more categories over a date range. Set grouped_categories to false for one flat list. GymMaster Report API: POST /api/v2/report/kpi/categories."
+        },
+        {
+          "name": "gymmaster_get_kpi_fields",
+          "type": "read",
+          "title": "Get KPI fields",
+          "description": "Get individual KPI field values over a date range, for example current members or new memberships. GymMaster Report API: POST /api/v2/report/kpi/fields."
+        },
+        {
+          "name": "gymmaster_list_standard_reports",
+          "type": "read",
+          "title": "List standard reports",
+          "description": "List the standard report ids and names (for example Current Members, All Bookings). Use an id with gymmaster_run_standard_report. GymMaster Report API: GET /api/v2/report/standard_report/list."
+        },
+        {
+          "name": "gymmaster_run_standard_report",
+          "type": "read",
+          "title": "Run a standard report",
+          "description": "Run one standard report for a date range, the same data as Report and Till → Standard Report. Member reports can include member names. GymMaster Report API: POST /api/v2/report/standard_report."
+        },
+        {
+          "name": "gymmaster_list_dashboards",
+          "type": "read",
+          "title": "List dashboard widgets",
+          "description": "List the dashboard widget endpoints (type kpi or graph) for gymmaster_get_dashboard. GymMaster Report API: GET /api/v2/dashboard/list."
+        },
+        {
+          "name": "gymmaster_get_dashboard",
+          "type": "read",
+          "title": "Get a dashboard widget",
+          "description": "Get the figures for one dashboard widget. Without dates, GymMaster uses the current date. GymMaster Report API: GET /api/v2/dashboard."
+        },
+        {
+          "name": "gymmaster_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "gymmaster_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the GymMaster tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "gymmaster_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for GymMaster (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "gymmaster_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's GymMaster Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run gymmaster_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many current members do we have, and how did that change this month?",
+        "Run the Current Members standard report for the last 30 days.",
+        "Show the membership retention and new memberships for this year.",
+        "What are today's dashboard figures for new members?"
+      ]
+    },
+    {
+      "slug": "1crm",
+      "name": "1CRM",
+      "category": "crm",
+      "description": "Read module records and their links; create or update records in 1CRM.",
+      "endpoint": "https://1crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "1CRM cloud instance"
+          },
+          {
+            "label": "1CRM user name"
+          },
+          {
+            "label": "1CRM password"
+          }
+        ],
+        "hint": "The instance is the first part of your 1CRM address (`https://**yourname**.1crmcloud.com`). Your administrator must enable **Basic authentication** for the API in the 1CRM administration interface (it is off by default). Use a dedicated 1CRM user for this connection, with only the rights the AI client needs. Your password is sent to 1CRM on each call, as 1CRM requires for Basic authentication. Disable the user or change its password in 1CRM to stop access."
+      },
+      "tools": [
+        {
+          "name": "onecrm_whoami",
+          "type": "read",
+          "title": "Show the signed-in user",
+          "description": "Show the 1CRM user the connection signs in as (id, user name, name). Use it to check the connection."
+        },
+        {
+          "name": "onecrm_get_module_fields",
+          "type": "read",
+          "title": "List the fields of a module",
+          "description": "List the fields of a 1CRM module with their types and labels. Use it before you filter, sort or write a module."
+        },
+        {
+          "name": "onecrm_list_records",
+          "type": "read",
+          "title": "List records",
+          "description": "List records of a 1CRM module, with optional equality filters, text search, sort, fields, offset and limit (max 100). Returns records and total_results. Use onecrm_get_module_fields for the field names."
+        },
+        {
+          "name": "onecrm_get_record",
+          "type": "read",
+          "title": "Get a record",
+          "description": "Get one record of a 1CRM module by id, with all fields or only the fields you pass."
+        },
+        {
+          "name": "onecrm_list_related_records",
+          "type": "read",
+          "title": "List related records",
+          "description": "List the records linked to one record through a relationship link (for example the contacts of an account). The link name is the relationship name from onecrm_get_module_fields. Same paging and filters as onecrm_list_records."
+        },
+        {
+          "name": "onecrm_create_record",
+          "type": "write",
+          "title": "Create a record",
+          "description": "Create one record in a 1CRM module from the field values you pass (for example a new Lead). Creates only; it changes no existing record. Returns the new id."
+        },
+        {
+          "name": "onecrm_update_record",
+          "type": "write",
+          "title": "Update a record",
+          "description": "Change the fields you pass on one existing record of a 1CRM module. Only the given fields change. It never deletes a record; use the 1CRM interface for that."
+        },
+        {
+          "name": "onecrm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "onecrm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the 1CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "onecrm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for 1CRM (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "onecrm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's 1CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run onecrm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open opportunities are worth more than 10,000 and close this month?",
+        "Show the contacts of the account Acme Ltd.",
+        "Create a new lead for Jan Novak from the website form.",
+        "Update the status of the case 4711 to Closed."
+      ]
+    },
+    {
+      "slug": "referral-factory",
+      "name": "Referral Factory",
+      "category": "marketing",
+      "description": "Read campaigns, referrers, leads and rewards; add referrers, qualify leads in Referral Factory.",
+      "endpoint": "https://referral-factory.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Referral Factory API access token"
+          }
+        ],
+        "hint": "Find it in Referral Factory → **Settings → Webhooks and API**, then the API section. Generating a new token deactivates the old one. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "referralfactory_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List all referral campaigns in the account (name, code, status, dates, rewards). Start here to find a campaign id. Referral Factory API: GET /campaigns."
+        },
+        {
+          "name": "referralfactory_get_campaign",
+          "type": "read",
+          "title": "Get a campaign",
+          "description": "Get one campaign by its id or code, including its settings and rewards. Referral Factory API: GET /campaigns/{identifier}."
+        },
+        {
+          "name": "referralfactory_list_referrers",
+          "type": "read",
+          "title": "List referrers",
+          "description": "List referrers (the people who share referral links) in chunks of 25 by default. Each item has id, campaign_id, name, email, code and sign-up date. For more results, pass links.next from the last result as next_page_url. Referral Factory API: GET /referrers."
+        },
+        {
+          "name": "referralfactory_get_referrer",
+          "type": "read",
+          "title": "Get a referrer",
+          "description": "Get one referrer with all their data: referral link, sharing links, referrals and rewards. Referral Factory API: GET /referrers/{id}."
+        },
+        {
+          "name": "referralfactory_search_referrers",
+          "type": "read",
+          "title": "Search referrers",
+          "description": "Search referrers with filters, for example all referrers from one campaign or with a given source. Filter values are strings. Referral Factory API: POST /referrers/search."
+        },
+        {
+          "name": "referralfactory_create_referrer",
+          "type": "write",
+          "title": "Create a referrer",
+          "description": "Create a referrer in a campaign. It appears with source API and gets a referral link. Set notify to true only when the person should get the invitation email. Referral Factory API: POST /referrers."
+        },
+        {
+          "name": "referralfactory_update_referrer",
+          "type": "write",
+          "title": "Update a referrer",
+          "description": "Update a referrer's first name or email. Only the fields you pass are changed. Referral Factory API: PUT /referrers/{id}."
+        },
+        {
+          "name": "referralfactory_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads (people referred by a referrer, not yet qualified or qualified) in chunks of 25 by default. For more results, pass links.next from the last result as next_page_url. Referral Factory API: GET /leads."
+        },
+        {
+          "name": "referralfactory_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead with its referrer, qualification state and goals. Referral Factory API: GET /leads/{id}."
+        },
+        {
+          "name": "referralfactory_update_lead_qualification",
+          "type": "write",
+          "title": "Qualify or unqualify a lead",
+          "description": "Mark a lead as qualified or not qualified. Identify the lead by id, or by code, or by email plus campaign_id. Qualification can trigger the rewards set for it. Referral Factory API: PUT /leads/qualification."
+        },
+        {
+          "name": "referralfactory_list_goals",
+          "type": "read",
+          "title": "List goals",
+          "description": "List goals across all campaigns (25 per page by default, up to 250). Each campaign also has a built-in Qualification goal. Referral Factory API: GET /goals."
+        },
+        {
+          "name": "referralfactory_get_goal",
+          "type": "read",
+          "title": "Get a goal",
+          "description": "Get one goal by id. A campaign's built-in Qualification goal uses the negative campaign id. Referral Factory API: GET /goals/{identifier}."
+        },
+        {
+          "name": "referralfactory_list_due_rewards",
+          "type": "read",
+          "title": "List due rewards",
+          "description": "List rewards that are due but not yet issued, for all campaigns, or for one campaign when campaign_id is set. Read only: this tool does not issue or cancel rewards. Referral Factory API: GET /rewards/due/all or GET /rewards/due/{campaign_id}."
+        },
+        {
+          "name": "referralfactory_list_issued_rewards",
+          "type": "read",
+          "title": "List issued rewards",
+          "description": "List rewards already issued, for all campaigns, or for one campaign when campaign_id is set. Referral Factory API: GET /rewards/issued/all or GET /rewards/issued/{campaign_id}."
+        },
+        {
+          "name": "referralfactory_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "referralfactory_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Referral Factory tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "referralfactory_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Referral Factory (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "referralfactory_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Referral Factory Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run referralfactory_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which referrers joined our spring campaign this month?",
+        "Show me the leads that are not qualified yet and mark the ones with a paid order as qualified.",
+        "How many rewards are due right now, and for which campaigns?",
+        "Find the referrer with the email jane@example.com and show her referral link."
+      ]
+    },
+    {
+      "slug": "sitemate",
+      "name": "Sitemate",
+      "category": "business-operations",
+      "description": "Read assets, issues, work orders, inspections and schedules in Sitemate.",
+      "endpoint": "https://sitemate.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          },
+          {
+            "label": "Gearbelt workspace id"
+          }
+        ],
+        "hint": "The client secret is shown only once when Flowsite generates it. It is stored **encrypted** in this connection's authorization grant and used only to request access tokens for the Gearbelt API. It is never shown to anyone; the client ID and workspace id are hashed into a private account id for usage metering."
+      },
+      "tools": [
+        {
+          "name": "sitemate_list_assets",
+          "type": "read",
+          "title": "List Gearbelt assets",
+          "description": "List assets in the Gearbelt workspace. Paginated: pass page_cursor from the previous next link. GET /assets."
+        },
+        {
+          "name": "sitemate_list_issues",
+          "type": "read",
+          "title": "List Gearbelt issues",
+          "description": "List issues in the Gearbelt workspace. Paginated. GET /issues."
+        },
+        {
+          "name": "sitemate_list_work_orders",
+          "type": "read",
+          "title": "List Gearbelt work orders",
+          "description": "List work orders in the Gearbelt workspace. Paginated. GET /work-orders."
+        },
+        {
+          "name": "sitemate_list_inspections",
+          "type": "read",
+          "title": "List Gearbelt inspections",
+          "description": "List inspections in the Gearbelt workspace. Paginated. GET /inspections."
+        },
+        {
+          "name": "sitemate_list_repairs",
+          "type": "read",
+          "title": "List Gearbelt repairs",
+          "description": "List repairs in the Gearbelt workspace. Paginated. GET /repairs."
+        },
+        {
+          "name": "sitemate_list_documents",
+          "type": "read",
+          "title": "List Gearbelt documents",
+          "description": "List documents in the Gearbelt workspace. Paginated. GET /documents."
+        },
+        {
+          "name": "sitemate_list_schedules",
+          "type": "read",
+          "title": "List Gearbelt schedules",
+          "description": "List maintenance schedules in the Gearbelt workspace. Paginated. GET /schedules."
+        },
+        {
+          "name": "sitemate_list_schedule_checks",
+          "type": "read",
+          "title": "List Gearbelt schedule checks",
+          "description": "List schedule checks (due and completed maintenance checks). Paginated. GET /schedule-checks."
+        },
+        {
+          "name": "sitemate_list_schedule_records",
+          "type": "read",
+          "title": "List Gearbelt schedule records",
+          "description": "List completed schedule records (service history). Paginated. GET /schedule-records."
+        },
+        {
+          "name": "sitemate_list_locations",
+          "type": "read",
+          "title": "List Gearbelt locations",
+          "description": "List locations in the Gearbelt workspace. Paginated. GET /locations."
+        },
+        {
+          "name": "sitemate_list_forms",
+          "type": "read",
+          "title": "List Gearbelt forms",
+          "description": "List forms in the Gearbelt workspace. Paginated. GET /forms."
+        },
+        {
+          "name": "sitemate_list_users",
+          "type": "read",
+          "title": "List Gearbelt users",
+          "description": "List users in the Gearbelt workspace. Paginated. GET /users."
+        },
+        {
+          "name": "sitemate_list_categories",
+          "type": "read",
+          "title": "List Gearbelt categories",
+          "description": "List categories of one kind. GET /categories."
+        },
+        {
+          "name": "sitemate_list_tags",
+          "type": "read",
+          "title": "List Gearbelt tags",
+          "description": "List tags, optionally for one entity kind. GET /tags."
+        },
+        {
+          "name": "sitemate_list_manufacturers",
+          "type": "read",
+          "title": "List Gearbelt manufacturers",
+          "description": "List manufacturers. GET /manufacturers."
+        },
+        {
+          "name": "sitemate_list_units",
+          "type": "read",
+          "title": "List Gearbelt units",
+          "description": "List measurement units used by unit readings. GET /units."
+        },
+        {
+          "name": "sitemate_list_unit_readings",
+          "type": "read",
+          "title": "List Gearbelt unit readings",
+          "description": "List unit readings (meter values) per asset or unit. Paginated. GET /unit-readings."
+        },
+        {
+          "name": "sitemate_list_location_logs",
+          "type": "read",
+          "title": "List Gearbelt location logs",
+          "description": "List location logs (asset moves). Paginated. GET /location-logs."
+        },
+        {
+          "name": "sitemate_list_lists",
+          "type": "read",
+          "title": "List Gearbelt lists",
+          "description": "List Gearbelt lists (reusable value lists). Paginated. GET /lists."
+        },
+        {
+          "name": "sitemate_get_asset",
+          "type": "read",
+          "title": "Get a Gearbelt asset",
+          "description": "Get one asset by id. GET /assets/{assetId}."
+        },
+        {
+          "name": "sitemate_get_issue",
+          "type": "read",
+          "title": "Get a Gearbelt issue",
+          "description": "Get one issue by id. GET /issues/{issueId}."
+        },
+        {
+          "name": "sitemate_get_work_order",
+          "type": "read",
+          "title": "Get a Gearbelt work order",
+          "description": "Get one work order by id. GET /work-orders/{workOrderId}."
+        },
+        {
+          "name": "sitemate_get_inspection",
+          "type": "read",
+          "title": "Get a Gearbelt inspection",
+          "description": "Get one inspection by id. GET /inspections/{inspectionId}."
+        },
+        {
+          "name": "sitemate_get_repair",
+          "type": "read",
+          "title": "Get a Gearbelt repair",
+          "description": "Get one repair by id. GET /repairs/{repairId}."
+        },
+        {
+          "name": "sitemate_get_document",
+          "type": "read",
+          "title": "Get a Gearbelt document",
+          "description": "Get one document by id. GET /documents/{documentId}."
+        },
+        {
+          "name": "sitemate_get_schedule",
+          "type": "read",
+          "title": "Get a Gearbelt schedule",
+          "description": "Get one schedule by id. GET /schedules/{scheduleId}."
+        },
+        {
+          "name": "sitemate_get_schedule_check",
+          "type": "read",
+          "title": "Get a Gearbelt schedule check",
+          "description": "Get one schedule check by id. GET /schedule-checks/{scheduleCheckId}."
+        },
+        {
+          "name": "sitemate_get_location",
+          "type": "read",
+          "title": "Get a Gearbelt location",
+          "description": "Get one location by id. GET /locations/{locationId}."
+        },
+        {
+          "name": "sitemate_get_form",
+          "type": "read",
+          "title": "Get a Gearbelt form",
+          "description": "Get one form by id. GET /forms/{formId}."
+        },
+        {
+          "name": "sitemate_resolve_qr_code",
+          "type": "read",
+          "title": "Resolve a Gearbelt QR code",
+          "description": "Resolve a QR-code value to the record it marks. GET /qr-codes/resolve."
+        },
+        {
+          "name": "sitemate_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sitemate_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sitemate tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sitemate_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Sitemate (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sitemate_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sitemate Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sitemate_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the open work orders for the Forklift 3 asset.",
+        "Which schedule checks are due in the next 14 days?",
+        "Show the issues raised this month with high severity.",
+        "Find the inspection forms for the warehouse location.",
+        "List the assets that were archived last quarter."
+      ]
+    },
+    {
+      "slug": "vcita",
+      "name": "vCita",
+      "category": "crm",
+      "description": "Read clients, appointments, invoices and payments; create or update clients in vCita.",
+      "endpoint": "https://vcita.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "vCita business API token"
+          }
+        ],
+        "hint": "Find it in vCita → **Settings → Integrations**, then the Webhooks tile → **Connect**. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "vcita_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List or search the business clients (contacts). Returns name, email, phone, status, source and timestamps. Use search_term with search_by to find one client. vCita API: GET /platform/v1/clients."
+        },
+        {
+          "name": "vcita_get_client",
+          "type": "read",
+          "title": "Get client",
+          "description": "Get one client by ID, with all stored fields. vCita API: GET /platform/v1/clients/{client_id}."
+        },
+        {
+          "name": "vcita_list_client_invoices",
+          "type": "read",
+          "title": "List client invoices",
+          "description": "List the invoices of one client. vCita API: GET /platform/v1/clients/{client_id}/invoices."
+        },
+        {
+          "name": "vcita_list_client_payments",
+          "type": "read",
+          "title": "List client payments",
+          "description": "List the payments of one client. vCita API: GET /platform/v1/clients/{client_id}/payments."
+        },
+        {
+          "name": "vcita_create_client",
+          "type": "write",
+          "title": "Create client",
+          "description": "Create a new client record in the business. Fails with a conflict when a client with the same email already exists. vCita API: POST /platform/v1/clients."
+        },
+        {
+          "name": "vcita_update_client",
+          "type": "write",
+          "title": "Update client",
+          "description": "Change fields of one existing client. Send only the fields to change. This tool does not clear fields. vCita API: PUT /platform/v1/clients/{client_id}."
+        },
+        {
+          "name": "vcita_get_invoice",
+          "type": "read",
+          "title": "Get invoice",
+          "description": "Get one invoice by ID, with line items and status. vCita API: GET /platform/v1/invoices/{invoice_id}."
+        },
+        {
+          "name": "vcita_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List the business payments. Needs the vCita payments module on the business account. vCita API: GET /platform/v1/payments."
+        },
+        {
+          "name": "vcita_get_payment",
+          "type": "read",
+          "title": "Get payment",
+          "description": "Get one payment by its UID. vCita API: GET /platform/v1/payments/{payment_uid}."
+        },
+        {
+          "name": "vcita_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List the business estimates (quotes). The token needs the payments management permission. vCita API: GET /platform/v1/estimates."
+        },
+        {
+          "name": "vcita_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List appointments on the business calendar. Filter by client and state. Sort with e.g. start_at:ASC. vCita API: GET /platform/v1/scheduling/appointments."
+        },
+        {
+          "name": "vcita_get_appointment",
+          "type": "read",
+          "title": "Get appointment",
+          "description": "Get one appointment by ID. vCita API: GET /platform/v1/scheduling/appointments/{appointment_id}."
+        },
+        {
+          "name": "vcita_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "vcita_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the vCita tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "vcita_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for vCita (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "vcita_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's vCita Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run vcita_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the client with the email jane@example.com and show her status.",
+        "Which clients were updated since last Monday?",
+        "List the scheduled appointments for this week.",
+        "Show the payments and invoices of client 6vc9t1hthvlvz34f."
+      ]
+    },
+    {
+      "slug": "fenofin",
+      "name": "FenoFin",
+      "category": "accounting-practice",
+      "description": "Read trial balances, invoices and projects; create customers and draft invoices in FenoFin.",
+      "endpoint": "https://fenofin.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "FenoFin API key"
+          }
+        ],
+        "hint": "Create the key in FenoFin under your account's API settings. A **fenofin_test_** key reaches only sandbox administraties; a **fenofin_live_** key reaches your live books. Your key is used only to call the FenoFin API for you."
+      },
+      "tools": [
+        {
+          "name": "fenofin_api_key_status",
+          "type": "read",
+          "title": "Check the API key",
+          "description": "Show the API key's environment (live or sandbox), its scopes, whether it may write, and when it expires. Call it first to learn which tools the key can use. FenoFin API: GET /api/v1/status/."
+        },
+        {
+          "name": "fenofin_list_administraties",
+          "type": "read",
+          "title": "List administraties",
+          "description": "List the FenoFin administraties (bookkeeping files) this API key can reach, with basic company data. Use the returned id in the other tools. FenoFin API: GET /api/v1/administraties/."
+        },
+        {
+          "name": "fenofin_get_administratie",
+          "type": "read",
+          "title": "Get an administratie",
+          "description": "Get one administratie: company name, legal form, KvK number, VAT id, place and whether it is a sandbox file. FenoFin API: GET /api/v1/administraties/{administratie_id}/."
+        },
+        {
+          "name": "fenofin_list_boekjaren",
+          "type": "read",
+          "title": "List financial years (boekjaren)",
+          "description": "List the financial years (boekjaren) of an administratie. Use a boekjaar id in fenofin_get_saldibalans. FenoFin API: GET /api/v1/administraties/{administratie_id}/boekjaren/."
+        },
+        {
+          "name": "fenofin_get_saldibalans",
+          "type": "read",
+          "title": "Get the trial balance (saldibalans)",
+          "description": "Get the trial balance (saldibalans) of one financial year: debit and credit totals, result and one line per ledger account. Optional period dates must fall inside the year. FenoFin API: GET /api/v1/administraties/{administratie_id}/boekjaren/{boekjaar_id}/saldibalans/."
+        },
+        {
+          "name": "fenofin_list_grootboekrekeningen",
+          "type": "read",
+          "title": "List ledger accounts (grootboekrekeningen)",
+          "description": "List the ledger accounts (chart of accounts) of an administratie. Set actief to true for active accounts only. FenoFin API: GET /api/v1/administraties/{administratie_id}/grootboekrekeningen/."
+        },
+        {
+          "name": "fenofin_list_btw_codes",
+          "type": "read",
+          "title": "List VAT codes (btw-codes)",
+          "description": "List the VAT codes of an administratie, optionally valid on a given date. FenoFin API: GET /api/v1/administraties/{administratie_id}/btw-codes/."
+        },
+        {
+          "name": "fenofin_list_afnemers",
+          "type": "read",
+          "title": "List customers (afnemers)",
+          "description": "List the customers (debtors, afnemers) of an administratie. Use gewijzigd_na for a delta sync. FenoFin API: GET /api/v1/administraties/{administratie_id}/afnemers/."
+        },
+        {
+          "name": "fenofin_get_afnemer",
+          "type": "read",
+          "title": "Get a customer (afnemer)",
+          "description": "Get one customer: contact data, VAT and KvK numbers, and payment settings. FenoFin API: GET /api/v1/administraties/{administratie_id}/afnemers/{afnemer_id}/."
+        },
+        {
+          "name": "fenofin_list_leveranciers",
+          "type": "read",
+          "title": "List suppliers (leveranciers)",
+          "description": "List the suppliers (creditors, leveranciers) of an administratie. Use gewijzigd_na for a delta sync. FenoFin API: GET /api/v1/administraties/{administratie_id}/leveranciers/."
+        },
+        {
+          "name": "fenofin_get_leverancier",
+          "type": "read",
+          "title": "Get a supplier (leverancier)",
+          "description": "Get one supplier: contact data, VAT and KvK numbers, and payment settings. FenoFin API: GET /api/v1/administraties/{administratie_id}/leveranciers/{leverancier_id}/."
+        },
+        {
+          "name": "fenofin_list_verkoopfacturen",
+          "type": "read",
+          "title": "List sales invoices (verkoopfacturen)",
+          "description": "List sales invoices, with status (Concept, Openstaand, Deels Betaald, Betaald, Teveel Betaald), totals and paid parts. Filter by status or project_id. FenoFin API: GET /api/v1/administraties/{administratie_id}/verkoopfacturen/."
+        },
+        {
+          "name": "fenofin_list_inkoopfacturen",
+          "type": "read",
+          "title": "List purchase invoices (inkoopfacturen)",
+          "description": "List purchase invoices (supplier bills) of an administratie. FenoFin API: GET /api/v1/administraties/{administratie_id}/inkoopfacturen/."
+        },
+        {
+          "name": "fenofin_list_producten",
+          "type": "read",
+          "title": "List active products",
+          "description": "List the active sales products of an administratie, with their product ids. Use a product id in fenofin_create_concept_invoice. FenoFin API: GET /api/v1/administraties/{administratie_id}/producten/."
+        },
+        {
+          "name": "fenofin_list_kasboeken",
+          "type": "read",
+          "title": "List cash books (kasboeken)",
+          "description": "List the cash books (kasboeken) of an administratie. FenoFin API: GET /api/v1/administraties/{administratie_id}/kasboeken/."
+        },
+        {
+          "name": "fenofin_list_projecten",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects with their customer, status (concept, actief, afgerond), fixed price (aanneemsom), invoiced and remaining amounts. FenoFin API: GET /api/v1/administraties/{administratie_id}/projecten/."
+        },
+        {
+          "name": "fenofin_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one project: customer, status, dates, fixed price, team and the invoiced and remaining amounts. FenoFin API: GET /api/v1/administraties/{administratie_id}/projecten/{project_id}/."
+        },
+        {
+          "name": "fenofin_create_customer",
+          "type": "write",
+          "title": "Create a customer (afnemer)",
+          "description": "Create a customer (debtor) in an administratie. Writes data to the books. Pass a new idempotency_key per record and the same key when you retry. FenoFin API: POST /api/v1/administraties/{administratie_id}/afnemers/."
+        },
+        {
+          "name": "fenofin_create_concept_invoice",
+          "type": "write",
+          "title": "Create a draft sales invoice (concept)",
+          "description": "Create a draft (Concept) sales invoice for a customer. FenoFin does not number or send a draft; making it final is a separate step that this server does not offer. Writes data to the books. Pass a new idempotency_key per record and the same key when you retry. FenoFin API: POST /api/v1/administraties/{administratie_id}/verkoopfacturen/."
+        },
+        {
+          "name": "fenofin_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fenofin_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the FenoFin tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fenofin_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for FenoFin (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fenofin_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's FenoFin Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fenofin_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the open sales invoices in our FenoFin administratie.",
+        "Show the trial balance (saldibalans) for the current financial year.",
+        "Which projects are still active, and what is left of their fixed price?",
+        "Create a draft invoice for customer 42 with two units of product 7."
+      ]
     }
   ]
 }
