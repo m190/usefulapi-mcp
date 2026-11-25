@@ -48086,7 +48086,7 @@
           "scope": "per account"
         }
       ],
-      "version": "1.27.7",
+      "version": "1.28.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -48180,6 +48180,18 @@
           "type": "write",
           "title": "Create a draft purchase order (WRITE)",
           "description": "WRITE. Creates a purchase order for a supplier in status ORDER_CREATED, i.e. an editable draft. It is NOT locked (committed), received, completed or emailed, no stock changes and no money moves: review and commit it in Finale. Products are looked up first (one single read each; products whose resource URL differs from the SKU cost collection reads, bounded to 3 or one full product-list read), then ONE POST creates the order; the call is never retried, so check finale_list_orders before repeating it after an error. POST /{account}/api/order/."
+        },
+        {
+          "name": "finale_create_sales_order",
+          "type": "write",
+          "title": "Create a sales order (WRITE)",
+          "description": "WRITE. Creates a sales order for a customer. By default it stays a draft (ORDER_CREATED, editable in Finale). With commit: true the tool then commits it through the lock action Finale returns (ORDER_LOCKED: the order can no longer be edited until unlocked in Finale, and Finale reserves stock for it); nothing is shipped, invoiced or completed. Products are looked up first (up to 20 lines: one single read each; more lines: ONE read of the whole product list), then ONE POST creates the order. The call is never retried. order_id is required and must be unique, so repeating a call with the same order_id never creates a second order (Finale refuses the duplicate id); after an unclear error check finale_get_order with that id. POST /{account}/api/order/, then POST {actionUrlLock}."
+        },
+        {
+          "name": "finale_receive_purchase_order",
+          "type": "write",
+          "title": "Receive a purchase order (WRITE, changes stock)",
+          "description": "WRITE, CHANGES STOCK. Records goods received against a COMMITTED purchase order (ORDER_LOCKED): creates a purchase receipt (PURCHASE_SHIPMENT) with the received lines and sublocations, then receives it through the receive action Finale returns, which adds the quantities to stock at the order's cost (status SHIPMENT_DELIVERED = Received). Partial receipts are fine. Checks first, and changes nothing when one fails: the order is a committed purchase order; every product is a line on it; every facility_url is a sublocation of this account; each quantity is at most the ordered quantity minus what earlier received receipts of this order already received (order lines with a packing such as cases are refused: receive those in Finale). With receive: false the receipt is created but NOT received (editable in Finale, no stock change). The call is never retried. receipt_id is required: when the order already has a (not cancelled) receipt with that name, the tool refuses, so repeating a call is safe. Two DIFFERENT calls for the same order at the same moment are not coordinated: do not run them in parallel. Reads: the order, its existing receipts (at most 25), the location list and the products; then POST /{account}/api/shipment/ and POST {actionUrlReceive}."
         },
         {
           "name": "finale_usage_status",

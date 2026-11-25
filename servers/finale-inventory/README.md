@@ -45,6 +45,8 @@ Step-by-step setup, where to find your credentials, and FAQ: https://usefulapi.i
 | `finale_list_inventory_transfers` | read | List stock transfers |
 | `finale_list_stock_changes` | read | List stock changes (inventory variances) |
 | `finale_create_draft_purchase_order` | **write** | Create a draft purchase order (WRITE) |
+| `finale_create_sales_order` | **write** | Create a sales order (WRITE) |
+| `finale_receive_purchase_order` | **write** | Receive a purchase order (WRITE, changes stock) |
 | `finale_usage_status` | meta | Usage status (free-tier meter) |
 | `finale_request_feature` | meta | Request a missing feature |
 | `finale_upgrade` | meta | Upgrade to Pro or Pro+ |
