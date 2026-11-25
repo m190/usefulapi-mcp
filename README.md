@@ -1141,6 +1141,16 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [PostGrid](servers/postgrid/) | direct-mail | 14 | API token | [servers/postgrid/](servers/postgrid/) |
 | [Nexudus](servers/nexudus/) | membership | 14 | API token | [servers/nexudus/](servers/nexudus/) |
 | [Nutshell](servers/nutshell/) | crm | 25 | API token | [servers/nutshell/](servers/nutshell/) |
+| [Benchling](servers/benchling/) | data | 17 | API token | [servers/benchling/](servers/benchling/) |
+| [Sender.net](servers/sender-net/) | email-marketing | 23 | API token | [servers/sender-net/](servers/sender-net/) |
+| [Omnisend](servers/omnisend/) | marketing | 18 | API token | [servers/omnisend/](servers/omnisend/) |
+| [Livestorm](servers/livestorm/) | video-hosting | 20 | API token | [servers/livestorm/](servers/livestorm/) |
+| [Teachable](servers/teachable/) | education | 19 | API token | [servers/teachable/](servers/teachable/) |
+| [Proposify](servers/proposify/) | documents | 21 | OAuth | [servers/proposify/](servers/proposify/) |
+| [Campaign Monitor](servers/campaign-monitor/) | email-marketing | 22 | API token | [servers/campaign-monitor/](servers/campaign-monitor/) |
+| [Canny](servers/canny/) | project-management | 21 | API token | [servers/canny/](servers/canny/) |
+| [Baseten](servers/baseten/) | ai-infra | 23 | API token | [servers/baseten/](servers/baseten/) |
+| [Raygun](servers/raygun/) | observability | 32 | API token | [servers/raygun/](servers/raygun/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

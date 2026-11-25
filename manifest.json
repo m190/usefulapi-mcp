@@ -190311,6 +190311,1800 @@
         "Create a follow-up task for the owner of lead 1003 due next Monday.",
         "Close the Brightwell lead as won and add a note that the contract was signed."
       ]
+    },
+    {
+      "slug": "benchling",
+      "name": "Benchling",
+      "category": "data",
+      "description": "List projects, folders, notebook entries, DNA sequences and users, and create folders in Benchling.",
+      "endpoint": "https://benchling.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Benchling tenant"
+          },
+          {
+            "label": "Personal API key"
+          }
+        ],
+        "hint": "Your tenant is the part before **.benchling.com** in your Benchling address. Create the key in Benchling → **Profile Settings → API key**. The key acts as you, so the tools see only what your Benchling user can see. It is used only to call the API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "benchling_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects in the tenant (GET /projects). Use to find a projectId for other list calls."
+        },
+        {
+          "name": "benchling_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one project by id (GET /projects/{project_id})."
+        },
+        {
+          "name": "benchling_list_folders",
+          "type": "read",
+          "title": "List folders",
+          "description": "List folders (GET /folders). Filter by projectId, parent folder, or name."
+        },
+        {
+          "name": "benchling_get_folder",
+          "type": "read",
+          "title": "Get a folder",
+          "description": "Get one folder by id (GET /folders/{folder_id})."
+        },
+        {
+          "name": "benchling_list_entries",
+          "type": "read",
+          "title": "List notebook entries",
+          "description": "List notebook entries (GET /entries). Filter by project, schema, name, or modifiedAt (ISO time, Benchling filter syntax)."
+        },
+        {
+          "name": "benchling_get_entry",
+          "type": "read",
+          "title": "Get a notebook entry",
+          "description": "Get one notebook entry by id (GET /entries/{entry_id})."
+        },
+        {
+          "name": "benchling_list_dna_sequences",
+          "type": "read",
+          "title": "List DNA sequences",
+          "description": "List DNA sequences (GET /dna-sequences). Filter by project, folder, registry, schema, or name."
+        },
+        {
+          "name": "benchling_get_dna_sequence",
+          "type": "read",
+          "title": "Get a DNA sequence",
+          "description": "Get one DNA sequence by id, including its bases (GET /dna-sequences/{dna_sequence_id})."
+        },
+        {
+          "name": "benchling_list_registries",
+          "type": "read",
+          "title": "List registries",
+          "description": "List registries (GET /registries). Use to find a registryId for DNA sequence and entity calls."
+        },
+        {
+          "name": "benchling_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List users in the tenant (GET /users). Filter by name or by team membership."
+        },
+        {
+          "name": "benchling_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one user by id (GET /users/{user_id})."
+        },
+        {
+          "name": "benchling_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams (GET /teams), optionally filtered by name or organization."
+        },
+        {
+          "name": "benchling_create_folder",
+          "type": "write",
+          "title": "Create a folder",
+          "description": "Create a folder inside a parent folder (POST /folders). Creates a new record in the tenant; it does not change existing records."
+        },
+        {
+          "name": "benchling_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "benchling_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Benchling tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "benchling_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Benchling (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "benchling_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Benchling Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run benchling_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the DNA sequences in the cloning project and show their lengths.",
+        "Find notebook entries modified this week in project Assay Development.",
+        "Create a folder called Plasmid Maps inside folder lib_abc123.",
+        "Which teams is user jane have access to, and who is in each team?"
+      ]
+    },
+    {
+      "slug": "sender-net",
+      "name": "Sender.net",
+      "category": "email-marketing",
+      "description": "Manage subscribers and groups, read campaign stats and create draft campaigns in Sender.net.",
+      "endpoint": "https://sender-net.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Sender API token"
+          }
+        ],
+        "hint": "Find it in Sender → **Account settings** → auth tokens. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sendernet_list_subscribers",
+          "type": "read",
+          "title": "List subscribers",
+          "description": "List subscribers in the account, one page at a time. Sender API: GET /v2/subscribers."
+        },
+        {
+          "name": "sendernet_get_subscriber",
+          "type": "read",
+          "title": "Get a subscriber",
+          "description": "Get one subscriber by email address, phone number or subscriber id, with status and group data. Sender API: GET /v2/subscribers/{id}."
+        },
+        {
+          "name": "sendernet_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List subscriber groups with their ids and subscriber counts. Sender API: GET /v2/groups."
+        },
+        {
+          "name": "sendernet_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "Get one subscriber group by id. Sender API: GET /v2/groups/{id}."
+        },
+        {
+          "name": "sendernet_list_group_subscribers",
+          "type": "read",
+          "title": "List subscribers in a group",
+          "description": "List the subscribers of one group. Sender API: GET /v2/groups/{id}/subscribers."
+        },
+        {
+          "name": "sendernet_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List saved subscriber segments (rule-based audiences). Sender API: GET /v2/segments/."
+        },
+        {
+          "name": "sendernet_get_segment",
+          "type": "read",
+          "title": "Get a segment",
+          "description": "Get one segment by id. Sender API: GET /v2/segments/{id}."
+        },
+        {
+          "name": "sendernet_list_segment_subscribers",
+          "type": "read",
+          "title": "List subscribers in a segment",
+          "description": "List the subscribers that match one segment. Sender API: GET /v2/segments/{id}/subscribers."
+        },
+        {
+          "name": "sendernet_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns, optionally filtered by one status (DRAFT, SCHEDULED, SENDING or SENT). Sender API: GET /v2/campaigns."
+        },
+        {
+          "name": "sendernet_get_campaign",
+          "type": "read",
+          "title": "Get a campaign",
+          "description": "Get one campaign by id, with its subject, sender and status. Sender API: GET /v2/campaigns/{id}."
+        },
+        {
+          "name": "sendernet_get_campaign_stats",
+          "type": "read",
+          "title": "Get campaign statistics",
+          "description": "Get one campaign's sent emails, opens, clicks or unsubscribes. Sender API: GET /v2/campaigns/{id}/emails-sent, /opens, /clicks, /unsubscribes."
+        },
+        {
+          "name": "sendernet_list_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom subscriber fields of the account, with their names. Sender API: GET /v2/fields."
+        },
+        {
+          "name": "sendernet_add_subscriber",
+          "type": "write",
+          "title": "Add a subscriber",
+          "description": "Create a subscriber with an email, optional names, groups, custom fields and phone. Does not send email unless trigger_automation is true. Sender API: POST /v2/subscribers."
+        },
+        {
+          "name": "sendernet_update_subscriber",
+          "type": "write",
+          "title": "Update a subscriber",
+          "description": "Change a subscriber's names, groups, custom fields, phone or status (ACTIVE, UNSUBSCRIBED, BOUNCED, SPAM_REPORTED). Overwrites the fields you pass. Sender API: PATCH /v2/subscribers/{id}."
+        },
+        {
+          "name": "sendernet_add_subscribers_to_group",
+          "type": "write",
+          "title": "Add subscribers to a group",
+          "description": "Add existing subscribers, by email address, to one group. Does not send email unless trigger_automation is true. Sender API: POST /v2/subscribers/groups/{groupId}."
+        },
+        {
+          "name": "sendernet_remove_subscribers_from_group",
+          "type": "write",
+          "title": "Remove subscribers from a group",
+          "description": "Remove subscribers, by email address, from one group. The subscribers stay in the account. Sender API: DELETE /v2/subscribers/groups/{groupId}."
+        },
+        {
+          "name": "sendernet_create_group",
+          "type": "write",
+          "title": "Create a group",
+          "description": "Create an empty subscriber group with a name. Sender API: POST /v2/groups."
+        },
+        {
+          "name": "sendernet_rename_group",
+          "type": "write",
+          "title": "Rename a group",
+          "description": "Change the name of one group. Sender API: PATCH /v2/groups/{id}."
+        },
+        {
+          "name": "sendernet_create_campaign",
+          "type": "write",
+          "title": "Create a draft campaign",
+          "description": "Create a DRAFT email campaign with a subject, sender name, reply-to address, HTML or text content and target groups. It is not sent: a person must send it in Sender. Sender API: POST /v2/campaigns."
+        },
+        {
+          "name": "sendernet_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sendernet_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sender.net tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sendernet_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Sender.net (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sendernet_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sender.net Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sendernet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many subscribers are in our 'Newsletter' group, and how many joined this month?",
+        "Show the open and click counts for our last sent campaign.",
+        "Create a draft campaign with the subject 'Our year-end offer' for the VIP group, so I can review it in Sender.",
+        "Add jane@example.com to the 'Webinar 2026' group without starting any automation."
+      ]
+    },
+    {
+      "slug": "omnisend",
+      "name": "Omnisend",
+      "category": "marketing",
+      "description": "Read contacts, campaigns, segments and automations, and tag or update contacts in Omnisend.",
+      "endpoint": "https://omnisend.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Omnisend API key"
+          }
+        ],
+        "hint": "Find it in Omnisend → **Integrations → API keys**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "omnisend_get_brand",
+          "type": "read",
+          "title": "Get brand",
+          "description": "Get the connected Omnisend brand: id, name, website, currency, timezone, and platform. Good first call to confirm which store the key belongs to. GET /brands/current."
+        },
+        {
+          "name": "omnisend_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts with cursor paging and optional filters (email, phone, subscription status, segment, tag, or updatedAtFrom). Note: tag and status cannot be combined, and updatedAtFrom cannot be combined with email, phone, status, segmentID, or tag. GET /contacts."
+        },
+        {
+          "name": "omnisend_get_contact",
+          "type": "read",
+          "title": "Get contact",
+          "description": "Get one contact by id: email, phone, name, status, tags, segments, custom properties, and consent. GET /contacts/{id}."
+        },
+        {
+          "name": "omnisend_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List catalog products with offset paging. Optional title search and sort by date, updatedAt, or createdAt. GET /products."
+        },
+        {
+          "name": "omnisend_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Get one product by id: title, description, status, tags, vendor, category ids, images, and variants with prices. GET /products/{productID}."
+        },
+        {
+          "name": "omnisend_list_product_categories",
+          "type": "read",
+          "title": "List product categories",
+          "description": "List product categories with offset paging. Sort by title, updatedAt, or createdAt. GET /product-categories."
+        },
+        {
+          "name": "omnisend_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List campaigns (email, SMS, push) with cursor paging and filters for status, channel, type, name, and date ranges. GET /campaigns."
+        },
+        {
+          "name": "omnisend_get_campaign",
+          "type": "read",
+          "title": "Get campaign",
+          "description": "Get one campaign by id: name, status, channel, type, audience, content reference, sending settings, and start/end times. GET /campaigns/{id}."
+        },
+        {
+          "name": "omnisend_list_segments",
+          "type": "read",
+          "title": "List segments",
+          "description": "List contact segments with cursor paging. Sort by createdAt or name. GET /segments."
+        },
+        {
+          "name": "omnisend_get_segment_statistics",
+          "type": "read",
+          "title": "Get segment statistics",
+          "description": "Get the number of contacts in a segment (contactsCount). Returns 409 while the segment is still building. GET /segments/{segmentID}/statistics."
+        },
+        {
+          "name": "omnisend_list_automations",
+          "type": "read",
+          "title": "List automations",
+          "description": "List automation workflows with cursor paging and filters for enabled state, name, and date ranges. GET /automations."
+        },
+        {
+          "name": "omnisend_get_automation",
+          "type": "read",
+          "title": "Get automation",
+          "description": "Get one automation workflow by id: name, enabled state, trigger, blocks, exit conditions, and settings. GET /automations/{id}."
+        },
+        {
+          "name": "omnisend_create_or_update_contact",
+          "type": "write",
+          "title": "Create or update contact",
+          "description": "Create a contact, or update it when the email or phone already exists (upsert). Give at least one of email or phone. The welcome message is off unless send_welcome_message is true. POST /contacts."
+        },
+        {
+          "name": "omnisend_add_contact_tags",
+          "type": "write",
+          "title": "Add tags to contacts",
+          "description": "Add one or more tags to contacts chosen by contact ids, emails, phone numbers, or a segment (up to 250 per list). Re-adding a tag does nothing new. POST /contacts/tags."
+        },
+        {
+          "name": "omnisend_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "omnisend_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Omnisend tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "omnisend_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Omnisend (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "omnisend_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Omnisend Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run omnisend_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which automations are enabled right now, and when did each one last change?",
+        "How many contacts are in our VIP segment?",
+        "Find the contact jane@example.com and show her tags and subscription status.",
+        "Tag every contact in the Black Friday segment with bf-2026."
+      ]
+    },
+    {
+      "slug": "livestorm",
+      "name": "Livestorm",
+      "category": "video-hosting",
+      "description": "List events, sessions, attendees and recordings, and create events and sessions in Livestorm.",
+      "endpoint": "https://livestorm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Livestorm API token"
+          }
+        ],
+        "hint": "Create it in Livestorm → **Account Settings → Integrations → Public API**. The Public API must be enabled for your workspace (contact Livestorm support if it is not). Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "livestorm_get_organization",
+          "type": "read",
+          "title": "Get organization",
+          "description": "Get the Livestorm organization (workspace) that the API token belongs to. Good first call to confirm which workspace is connected. Livestorm API: GET /organization (identity scope)."
+        },
+        {
+          "name": "livestorm_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events of the workspace, with title, status (draft, published, ...), scheduling status and timestamps. Filter by title, tag or created/updated dates. Livestorm API: GET /events."
+        },
+        {
+          "name": "livestorm_get_event",
+          "type": "read",
+          "title": "Get an event",
+          "description": "Get one event by id: title, slug, registration link, status, recording and chat settings. Livestorm API: GET /events/{id}."
+        },
+        {
+          "name": "livestorm_list_event_sessions",
+          "type": "read",
+          "title": "List event sessions",
+          "description": "List the sessions (single occurrences) of one event, with status and start time. Livestorm API: GET /events/{id}/sessions."
+        },
+        {
+          "name": "livestorm_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "List all sessions across the workspace, filtered by status and date range. Use it for upcoming or past sessions across all events. Livestorm API: GET /sessions."
+        },
+        {
+          "name": "livestorm_get_session",
+          "type": "read",
+          "title": "Get a session",
+          "description": "Get one session by id: start time, timezone, status, name and duration. Livestorm API: GET /sessions/{id}."
+        },
+        {
+          "name": "livestorm_list_session_people",
+          "type": "read",
+          "title": "List session attendees",
+          "description": "List the registrants and attendees of one session, with role and attendance. Filter to attended people or to one email. Livestorm API: GET /sessions/{id}/people."
+        },
+        {
+          "name": "livestorm_list_session_questions",
+          "type": "read",
+          "title": "List session questions",
+          "description": "List the questions that attendees asked in one session. Livestorm API: GET /sessions/{id}/questions."
+        },
+        {
+          "name": "livestorm_list_session_recordings",
+          "type": "read",
+          "title": "List session recordings",
+          "description": "List the recordings of one session. Each recording URL is signed and expires after url_expires_in seconds. Livestorm API: GET /sessions/{id}/recordings."
+        },
+        {
+          "name": "livestorm_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List all people in the workspace who engaged with one of its events at some point, including team members. Filter by role or email. Livestorm API: GET /people."
+        },
+        {
+          "name": "livestorm_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "Get one person by id: name, email, role and custom attributes. Livestorm API: GET /people/{id}."
+        },
+        {
+          "name": "livestorm_list_event_people",
+          "type": "read",
+          "title": "List event people",
+          "description": "List all people linked to any session of one event, with role. Filter by role or email. Livestorm API: GET /events/{id}/people."
+        },
+        {
+          "name": "livestorm_list_people_attributes",
+          "type": "read",
+          "title": "List people attributes",
+          "description": "List the custom people attributes (registration fields) defined in the workspace. Livestorm API: GET /people_attributes."
+        },
+        {
+          "name": "livestorm_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the team members of the organization, including pending invitations. Needs the admin scope on the API token. Livestorm API: GET /users."
+        },
+        {
+          "name": "livestorm_create_event",
+          "type": "write",
+          "title": "Create an event",
+          "description": "Create one new event in the workspace (draft by default), or duplicate an existing one with copy_from_event_id. Creates one event per call. Livestorm API: POST /events."
+        },
+        {
+          "name": "livestorm_create_event_session",
+          "type": "write",
+          "title": "Create an event session",
+          "description": "Create one new session for an existing event: start time, timezone and name. Creates one session per call. Livestorm API: POST /events/{id}/sessions."
+        },
+        {
+          "name": "livestorm_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "livestorm_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Livestorm tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "livestorm_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Livestorm (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "livestorm_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Livestorm Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run livestorm_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which webinars are scheduled for next week, and how many people are registered for each?",
+        "Who attended our product demo session last Tuesday, and who did not show up?",
+        "Show me the questions people asked in our onboarding webinar.",
+        "Create a draft event called 'Q1 roadmap review' and add a session on 2027-01-15 at 10:00 Amsterdam time."
+      ]
+    },
+    {
+      "slug": "teachable",
+      "name": "Teachable",
+      "category": "education",
+      "description": "List courses, students and sales, enroll users and read webhooks in Teachable.",
+      "endpoint": "https://teachable.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Teachable school API key"
+          }
+        ],
+        "hint": "Find it in Teachable → **Settings → API** → Create API Key. Only school owners can create keys, and the API needs the Growth plan or higher. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "teachable_list_courses",
+          "type": "read",
+          "title": "List courses",
+          "description": "List the courses at your school, with name, publish state and author. Good first call to find course ids. Teachable API: GET /v1/courses."
+        },
+        {
+          "name": "teachable_get_course",
+          "type": "read",
+          "title": "Get course",
+          "description": "Fetch one course by ID, with its lectures and sections. Teachable API: GET /v1/courses/{course_id}."
+        },
+        {
+          "name": "teachable_list_course_enrollments",
+          "type": "read",
+          "title": "List course enrollments",
+          "description": "List the active students enrolled in one course, with their progress. Filter by enrolment date. Teachable API: GET /v1/courses/{course_id}/enrollments."
+        },
+        {
+          "name": "teachable_get_course_progress",
+          "type": "read",
+          "title": "Get student course progress",
+          "description": "Fetch one student's progress through one course: completed lectures and sections. Teachable API: GET /v1/courses/{course_id}/progress."
+        },
+        {
+          "name": "teachable_get_lecture",
+          "type": "read",
+          "title": "Get lecture",
+          "description": "Fetch the content of one lecture in a course: text, attachments and video metadata. Teachable API: GET /v1/courses/{course_id}/lectures/{lecture_id}."
+        },
+        {
+          "name": "teachable_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users (students, owners, affiliates) of your school. Filter by email. Teachable API: GET /v1/users."
+        },
+        {
+          "name": "teachable_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Fetch one user by ID, with their role, sign-in details and course enrollments. Teachable API: GET /v1/users/{user_id}."
+        },
+        {
+          "name": "teachable_list_pricing_plans",
+          "type": "read",
+          "title": "List pricing plans",
+          "description": "List the pricing plans at your school. Teachable API: GET /v1/pricing_plans."
+        },
+        {
+          "name": "teachable_get_pricing_plan",
+          "type": "read",
+          "title": "Get pricing plan",
+          "description": "Fetch one pricing plan by ID. Only course pricing plans are supported. Teachable API: GET /v1/pricing_plans/{pricing_plan_id}."
+        },
+        {
+          "name": "teachable_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List sales transactions at your school. New sales can take up to two minutes to appear. Teachable API: GET /v1/transactions."
+        },
+        {
+          "name": "teachable_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks configured for your school. Teachable API: GET /v1/webhooks."
+        },
+        {
+          "name": "teachable_list_webhook_events",
+          "type": "read",
+          "title": "List webhook deliveries",
+          "description": "List the delivery attempts of one webhook, with HTTP status codes. Use it to find failing deliveries. Teachable API: GET /v1/webhooks/{webhook_id}/events."
+        },
+        {
+          "name": "teachable_enroll_user",
+          "type": "write",
+          "title": "Enroll user in course",
+          "description": "Enroll an existing user in a course. The student gets access to the course at once. Teachable API: POST /v1/enroll."
+        },
+        {
+          "name": "teachable_unenroll_user",
+          "type": "write",
+          "title": "Unenroll user from course",
+          "description": "Remove a user's access to a course. The student loses access at once. Use only when the user asked for it. Teachable API: POST /v1/unenroll."
+        },
+        {
+          "name": "teachable_update_user",
+          "type": "write",
+          "title": "Update user name or source",
+          "description": "Change a user's name or signup source (src). No other profile field can be changed. Teachable API: PATCH /v1/users/{user_id}."
+        },
+        {
+          "name": "teachable_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "teachable_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Teachable tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "teachable_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Teachable (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "teachable_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Teachable Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run teachable_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which students are enrolled in our onboarding course, and how far have they got?",
+        "Show me the sales transactions from last week, including refunds.",
+        "Enroll the user with ID 4821 in the spring cohort course.",
+        "Which of our webhook deliveries failed in the last day?"
+      ]
+    },
+    {
+      "slug": "proposify",
+      "name": "Proposify",
+      "category": "documents",
+      "description": "Read templates and documents, create and edit proposals, clients and companies in Proposify.",
+      "endpoint": "https://proposify.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "This server reads your templates, users, companies, clients and documents. It can create and edit companies, clients and documents, add sections and custom fields, and archive or unarchive documents, when you ask it to. It never deletes anything and never sends a document to a client. It can see only what your Proposify user can see. You can revoke access any time in Proposify.",
+        "customerClient": true,
+        "appHint": "Create the client in Proposify under **Settings > Connect API** (an account admin; the API is part of the Business plan; one connection per account). Enter the redirect URI **https://proposify.usefulapi.io/callback**. If the form asks for scopes, select all of them. Then enter the client ID and secret on the login page. The secret is stored encrypted and is used only to sign you in and refresh your Proposify access."
+      },
+      "tools": [
+        {
+          "name": "proposify_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "The account's proposal templates: id and name. Use the id as fromTemplateId in proposify_create_document."
+        },
+        {
+          "name": "proposify_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "The users of the account: id, email, first name, last name and title."
+        },
+        {
+          "name": "proposify_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "The account's companies (client organisations). Filter by id or name."
+        },
+        {
+          "name": "proposify_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "The account's clients (people): id, company, name, email. Filter by id, company, name or email."
+        },
+        {
+          "name": "proposify_list_documents",
+          "type": "read",
+          "title": "List documents or templates",
+          "description": "The v3 documents or templates of the account, with their ids, names, status and dates."
+        },
+        {
+          "name": "proposify_get_document",
+          "type": "read",
+          "title": "Get a document",
+          "description": "One v3 document by id: name, status, locked flag, dates, creator, last editor and its content data."
+        },
+        {
+          "name": "proposify_list_sections",
+          "type": "read",
+          "title": "List content-library sections",
+          "description": "The sections of the content library (reusable blocks): id, name, sort order and path. Use the id as section_id in proposify_add_document_section."
+        },
+        {
+          "name": "proposify_create_company",
+          "type": "write",
+          "title": "Create a company",
+          "description": "WRITE: creates a company (a client organisation) in the account. Creates a record; it does not check for duplicates."
+        },
+        {
+          "name": "proposify_update_company",
+          "type": "write",
+          "title": "Update a company",
+          "description": "WRITE: changes a company's name or address. Only the fields you give are sent."
+        },
+        {
+          "name": "proposify_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "WRITE: creates a client (a person) in the account, optionally inside a company. Creates a record; it does not check for duplicates."
+        },
+        {
+          "name": "proposify_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "WRITE: changes a client's name, contact details, company or address. Only the fields you give are sent."
+        },
+        {
+          "name": "proposify_create_document",
+          "type": "write",
+          "title": "Create a document",
+          "description": "WRITE: creates a v3 document (a proposal) with the given name, optionally from a template. It does not send the document to anyone."
+        },
+        {
+          "name": "proposify_update_document",
+          "type": "write",
+          "title": "Update a document",
+          "description": "WRITE: changes a v3 document's name, folder or expiry date. It cannot delete or unlock a document. Only the fields you give are sent."
+        },
+        {
+          "name": "proposify_add_document_section",
+          "type": "write",
+          "title": "Add a section to a document",
+          "description": "WRITE: adds a content-library section to a document, optionally at a given position."
+        },
+        {
+          "name": "proposify_set_document_custom_fields",
+          "type": "write",
+          "title": "Set a document's custom fields",
+          "description": "WRITE: sets or changes custom field values on a document (by field name). Other custom fields are kept."
+        },
+        {
+          "name": "proposify_archive_document",
+          "type": "write",
+          "title": "Archive a document",
+          "description": "WRITE: archives a document (it leaves the active list). proposify_unarchive_document brings it back."
+        },
+        {
+          "name": "proposify_unarchive_document",
+          "type": "write",
+          "title": "Unarchive a document",
+          "description": "WRITE: brings an archived document back to the active list."
+        },
+        {
+          "name": "proposify_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "proposify_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Proposify tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "proposify_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Proposify (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "proposify_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Proposify Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run proposify_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the proposal templates of my Proposify account.",
+        "Which of my documents are archived?",
+        "Create a client Jane Doe at the company Acme Ltd.",
+        "Archive the proposal named Q4 website redesign."
+      ]
+    },
+    {
+      "slug": "campaign-monitor",
+      "name": "Campaign Monitor",
+      "category": "email-marketing",
+      "description": "Read clients, lists, subscribers, scheduled campaigns and campaign results in Campaign Monitor.",
+      "endpoint": "https://campaign-monitor.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Campaign Monitor API key"
+          }
+        ],
+        "hint": "Find it in Campaign Monitor → **Account settings → API keys**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "campaignmonitor_get_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List the clients (client accounts) the API key can see, with their ClientID and Name. Start here to find a client id. Campaign Monitor API: GET /clients.json."
+        },
+        {
+          "name": "campaignmonitor_get_client_lists",
+          "type": "read",
+          "title": "List subscriber lists",
+          "description": "List the subscriber lists of one client, with their ListID, name and unsubscribe settings. Use a ListID with the list and subscriber tools. Campaign Monitor API: GET /clients/{clientID}/lists.json."
+        },
+        {
+          "name": "campaignmonitor_get_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List the email templates of one client, with their TemplateID, name and preview URLs. Campaign Monitor API: GET /clients/{clientID}/templates.json."
+        },
+        {
+          "name": "campaignmonitor_get_suppression_list",
+          "type": "read",
+          "title": "Get suppression list",
+          "description": "List the email addresses that a client has suppressed (blocked from sending), with the date and reason. Campaign Monitor API: GET /clients/{clientID}/suppressionlist.json."
+        },
+        {
+          "name": "campaignmonitor_get_list",
+          "type": "read",
+          "title": "Get a list",
+          "description": "Get one subscriber list's details: name, unsubscribe page, confirmed opt-in and bounce settings. Campaign Monitor API: GET /lists/{listID}.json."
+        },
+        {
+          "name": "campaignmonitor_get_list_stats",
+          "type": "read",
+          "title": "Get list statistics",
+          "description": "Get the totals for one list: active, unsubscribed, bounced and deleted subscriber counts, and the list's growth figures. Campaign Monitor API: GET /lists/{listID}/stats.json."
+        },
+        {
+          "name": "campaignmonitor_get_active_subscribers",
+          "type": "read",
+          "title": "List active subscribers",
+          "description": "List the active (subscribed) subscribers of one list, page by page, with email, name, joined date and custom fields. Campaign Monitor API: GET /lists/{listID}/active.json."
+        },
+        {
+          "name": "campaignmonitor_get_unsubscribed_subscribers",
+          "type": "read",
+          "title": "List unsubscribed subscribers",
+          "description": "List the subscribers who unsubscribed from one list, with the date they left. Campaign Monitor API: GET /lists/{listID}/unsubscribed.json."
+        },
+        {
+          "name": "campaignmonitor_get_bounced_subscribers",
+          "type": "read",
+          "title": "List bounced subscribers",
+          "description": "List the subscribers whose address bounced on one list, with the bounce type and date. Campaign Monitor API: GET /lists/{listID}/bounced.json."
+        },
+        {
+          "name": "campaignmonitor_get_subscriber",
+          "type": "read",
+          "title": "Get a subscriber",
+          "description": "Get one subscriber on a list by email address: state (active, unsubscribed, bounced), name, custom fields and tags. Campaign Monitor API: GET /subscribers/{listID}.json?email=."
+        },
+        {
+          "name": "campaignmonitor_get_sent_campaigns",
+          "type": "read",
+          "title": "List sent campaigns",
+          "description": "List the sent campaigns of one client, with CampaignID, subject, sent date and recipient counts. Use a CampaignID with the campaign report tools. Campaign Monitor API: GET /clients/{clientID}/sent.json."
+        },
+        {
+          "name": "campaignmonitor_get_scheduled_campaigns",
+          "type": "read",
+          "title": "List scheduled campaigns",
+          "description": "List the campaigns of one client that are scheduled to send, with CampaignID, subject and scheduled date. Campaign Monitor API: GET /clients/{clientID}/scheduled.json."
+        },
+        {
+          "name": "campaignmonitor_get_draft_campaigns",
+          "type": "read",
+          "title": "List draft campaigns",
+          "description": "List the unsent draft campaigns of one client, with CampaignID, name and subject. Campaign Monitor API: GET /clients/{clientID}/drafts.json."
+        },
+        {
+          "name": "campaignmonitor_get_campaign_summary",
+          "type": "read",
+          "title": "Get campaign summary",
+          "description": "Get the headline results of one sent campaign: recipients, opens, clicks, bounces, unsubscribes, spam complaints and the unique and total counts. Campaign Monitor API: GET /campaigns/{campaignID}/summary.json."
+        },
+        {
+          "name": "campaignmonitor_get_campaign_opens",
+          "type": "read",
+          "title": "List campaign opens",
+          "description": "List the subscribers who opened one sent campaign, with the open time and the number of opens. Campaign Monitor API: GET /campaigns/{campaignID}/opens.json."
+        },
+        {
+          "name": "campaignmonitor_get_campaign_clicks",
+          "type": "read",
+          "title": "List campaign clicks",
+          "description": "List the link clicks of one sent campaign: subscriber, clicked URL and click time. Campaign Monitor API: GET /campaigns/{campaignID}/clicks.json."
+        },
+        {
+          "name": "campaignmonitor_get_campaign_bounces",
+          "type": "read",
+          "title": "List campaign bounces",
+          "description": "List the bounced recipients of one sent campaign, with the bounce type and time. Campaign Monitor API: GET /campaigns/{campaignID}/bounces.json."
+        },
+        {
+          "name": "campaignmonitor_get_campaign_unsubscribes",
+          "type": "read",
+          "title": "List campaign unsubscribes",
+          "description": "List the subscribers who unsubscribed after one sent campaign, with the time they left. Campaign Monitor API: GET /campaigns/{campaignID}/unsubscribes.json."
+        },
+        {
+          "name": "campaignmonitor_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "campaignmonitor_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Campaign Monitor tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "campaignmonitor_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Campaign Monitor (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "campaignmonitor_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Campaign Monitor Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run campaignmonitor_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our lists lost the most subscribers this month?",
+        "How did our last sent campaign perform: opens, clicks and bounces?",
+        "Is jane@example.com subscribed to our newsletter list, and when did she join?",
+        "Show me the scheduled campaigns and drafts for this client."
+      ]
+    },
+    {
+      "slug": "canny",
+      "name": "Canny",
+      "category": "project-management",
+      "description": "List posts, votes and customers, and create posts, comments and status changes in Canny.",
+      "endpoint": "https://canny.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Canny secret API key"
+          }
+        ],
+        "hint": "Find it in your Canny company settings (the secret API key). It is sent only to Canny's API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "canny_list_boards",
+          "type": "read",
+          "title": "List boards",
+          "description": "List every feedback board in the Canny workspace (for example Feature Requests). Start here to get board ids for other tools. Canny API: POST /api/v1/boards/list."
+        },
+        {
+          "name": "canny_retrieve_board",
+          "type": "read",
+          "title": "Get a board",
+          "description": "Get one board: name, post count, privacy and URL. Canny API: POST /api/v1/boards/retrieve."
+        },
+        {
+          "name": "canny_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List categories, optionally for one board. Canny API: POST /api/v1/categories/list."
+        },
+        {
+          "name": "canny_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List tags, optionally for one board. Canny API: POST /api/v1/tags/list."
+        },
+        {
+          "name": "canny_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List customer groups (segments of companies or users). Cursor-paged. Canny API: POST /api/v1/groups/list."
+        },
+        {
+          "name": "canny_list_posts",
+          "type": "read",
+          "title": "List posts",
+          "description": "List feedback posts (feature requests) with status, score and comment count. Filter by board, author, company, tags, status or search text. Canny API: POST /api/v1/posts/list (skip pagination)."
+        },
+        {
+          "name": "canny_retrieve_post",
+          "type": "read",
+          "title": "Get a post",
+          "description": "Get one feedback post with its details, status, score, tags, ETA and roadmaps. Canny API: POST /api/v1/posts/retrieve."
+        },
+        {
+          "name": "canny_list_comments",
+          "type": "read",
+          "title": "List comments",
+          "description": "List portal comments, optionally for one post, board, author or company. Cursor-paged. Canny API: POST /api/v2/comments/list."
+        },
+        {
+          "name": "canny_list_votes",
+          "type": "read",
+          "title": "List votes",
+          "description": "List votes, newest first. Filter by post, board, user or company. Cursor-paged. Canny API: POST /api/v2/votes/list."
+        },
+        {
+          "name": "canny_list_status_changes",
+          "type": "read",
+          "title": "List status changes",
+          "description": "List post status changes (for example open to planned), newest first. Cursor-paged. Canny API: POST /api/v2/status_changes/list."
+        },
+        {
+          "name": "canny_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List end-users in the workspace. Cursor-paged. Canny API: POST /api/v2/users/list."
+        },
+        {
+          "name": "canny_retrieve_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one end-user by Canny id, your own user id, or email. Give exactly one. Canny API: POST /api/v1/users/retrieve."
+        },
+        {
+          "name": "canny_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List companies (customer accounts) with name, domain, MRR and custom fields. Search by name or segment. Cursor-paged. Canny API: POST /api/v2/companies/list."
+        },
+        {
+          "name": "canny_list_changelog_entries",
+          "type": "read",
+          "title": "List changelog entries",
+          "description": "List changelog entries (release notes): draft, scheduled or published, with type new, improved or fixed. Canny API: POST /api/v1/entries/list."
+        },
+        {
+          "name": "canny_create_post",
+          "type": "write",
+          "title": "Create a post",
+          "description": "Create a new feedback post on a board, as a user (author_id). It is visible to other users of the portal. Canny API: POST /api/v1/posts/create."
+        },
+        {
+          "name": "canny_change_post_status",
+          "type": "write",
+          "title": "Change a post's status",
+          "description": "Set a post's status, for example 'planned' or 'complete'. Logged under the admin who changes it (changer_id). Setting the same status again changes nothing. Canny API: POST /api/v1/posts/change_status."
+        },
+        {
+          "name": "canny_create_comment",
+          "type": "write",
+          "title": "Add a comment to a post",
+          "description": "Add a portal comment to a post, as a user (author_id). Set internal=true for an admin-only comment. Canny API: POST /api/v1/comments/create."
+        },
+        {
+          "name": "canny_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "canny_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Canny tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "canny_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Canny (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "canny_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Canny Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run canny_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which feature requests have the most votes this month?",
+        "Show every post on the Feature Requests board that is still open.",
+        "Move the post about SSO to planned and tell the voters.",
+        "Which companies asked for the export feature, and what is their MRR?"
+      ]
+    },
+    {
+      "slug": "baseten",
+      "name": "Baseten",
+      "category": "ai-infra",
+      "description": "Read models, deployments, logs, metrics and training jobs in Baseten.",
+      "endpoint": "https://baseten.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Baseten API key"
+          }
+        ],
+        "hint": "Create it in your Baseten workspace under **API keys**. The key is used only to call the Baseten management API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "baseten_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams in the Baseten workspace with ids, names and the default flag. Good first call: team ids scope the team-level tools. GET /v1/teams."
+        },
+        {
+          "name": "baseten_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "Get one team by id: name, default flag and creation time. GET /v1/teams/{team_id}."
+        },
+        {
+          "name": "baseten_list_regions",
+          "type": "read",
+          "title": "List regions",
+          "description": "List the cloud regions available to the organization, where deployments can run. GET /v1/regions."
+        },
+        {
+          "name": "baseten_list_instance_types",
+          "type": "read",
+          "title": "List instance types",
+          "description": "List the instance types that deployments can use, as the Baseten API reports them. GET /v1/instance_types."
+        },
+        {
+          "name": "baseten_list_instance_type_prices",
+          "type": "read",
+          "title": "List instance type prices",
+          "description": "List the prices of each instance type, as the Baseten API reports them. Read only: no charge is made here. GET /v1/instance_type_prices."
+        },
+        {
+          "name": "baseten_list_models",
+          "type": "read",
+          "title": "List models",
+          "description": "List models in the workspace, or in one team when team_id is set, with their production and development deployment ids. GET /v1/models or /v1/teams/{team_id}/models."
+        },
+        {
+          "name": "baseten_get_model",
+          "type": "read",
+          "title": "Get model",
+          "description": "Get one model: name, team, instance type, deployment count and the production and development deployment ids. GET /v1/models/{model_id}."
+        },
+        {
+          "name": "baseten_list_model_deployments",
+          "type": "read",
+          "title": "List model deployments",
+          "description": "List the deployments of one model, with status, region, environment, instance type and active replica count. GET /v1/models/{model_id}/deployments."
+        },
+        {
+          "name": "baseten_get_model_deployment",
+          "type": "read",
+          "title": "Get model deployment",
+          "description": "Get one deployment: status, failure reason, autoscaling and backpressure settings, labels and region. Pass `production` or `development` as deployment_id for those. GET /v1/models/{model_id}/deployments/{deployment_id}."
+        },
+        {
+          "name": "baseten_get_deployment_logs",
+          "type": "read",
+          "title": "Get deployment logs",
+          "description": "Read log lines of one deployment, filtered by time, level, replica, request id or text. At most 1000 lines per call (default 500). GET /v1/models/{model_id}/deployments/{deployment_id}/logs."
+        },
+        {
+          "name": "baseten_get_deployment_metrics",
+          "type": "read",
+          "title": "Get deployment metrics",
+          "description": "Read metrics of one deployment: CURRENT values, a SUMMARY, or a time SERIES between two times. GET /v1/models/{model_id}/deployments/{deployment_id}/metrics."
+        },
+        {
+          "name": "baseten_list_deployment_replicas",
+          "type": "read",
+          "title": "List deployment replicas",
+          "description": "List the replicas of one deployment with their status (starting, active, unhealthy, terminated). GET /v1/models/{model_id}/deployments/{deployment_id}/replicas."
+        },
+        {
+          "name": "baseten_list_model_environments",
+          "type": "read",
+          "title": "List model environments",
+          "description": "List the environments of one model, with the deployment promoted to each. GET /v1/models/{model_id}/environments."
+        },
+        {
+          "name": "baseten_get_model_environment",
+          "type": "read",
+          "title": "Get model environment",
+          "description": "Get one environment of a model: its current and candidate deployments, any promotion in progress, and autoscaling settings. GET /v1/models/{model_id}/environments/{env_name}."
+        },
+        {
+          "name": "baseten_list_training_projects",
+          "type": "read",
+          "title": "List training projects",
+          "description": "List training projects in the workspace. GET /v1/training_projects."
+        },
+        {
+          "name": "baseten_list_training_jobs",
+          "type": "read",
+          "title": "List training jobs",
+          "description": "List the training jobs of one training project. GET /v1/training_projects/{training_project_id}/jobs."
+        },
+        {
+          "name": "baseten_get_training_job",
+          "type": "read",
+          "title": "Get training job",
+          "description": "Get one training job with its training project. GET /v1/training_projects/{training_project_id}/jobs/{training_job_id}."
+        },
+        {
+          "name": "baseten_list_secrets",
+          "type": "read",
+          "title": "List secrets",
+          "description": "List the workspace secrets, metadata only (no plain text values). GET /v1/secrets."
+        },
+        {
+          "name": "baseten_list_audit_logs",
+          "type": "read",
+          "title": "List audit logs",
+          "description": "List workspace audit events, filtered by time, text or source (UI, API, MCP, SYSTEM, OTHER). GET /v1/audit_logs."
+        },
+        {
+          "name": "baseten_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "baseten_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Baseten tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "baseten_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Baseten (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "baseten_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Baseten Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run baseten_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our model deployments are unhealthy right now?",
+        "Show the last 50 error log lines from the production deployment of our reranker model.",
+        "How many replicas does each environment of our chat model run, and what instance type do they use?",
+        "List the training jobs in our fine-tuning project and their latest status."
+      ]
+    },
+    {
+      "slug": "raygun",
+      "name": "Raygun",
+      "category": "observability",
+      "description": "List error groups, traces and deployments, and resolve errors or create deployments in Raygun.",
+      "endpoint": "https://raygun.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Raygun personal access token"
+          }
+        ],
+        "hint": "Create it in Raygun → **My Settings → Personal access tokens**, with the scopes you want this server to use (for example applications:read and deployments:write). Your token is used only to call the Raygun API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "raygun_list_applications",
+          "type": "read",
+          "title": "List applications",
+          "description": "List the Raygun applications the token can access. Start here to get application identifiers. GET /applications (scope applications:read)."
+        },
+        {
+          "name": "raygun_get_application",
+          "type": "read",
+          "title": "Get application",
+          "description": "Get one application by identifier: name, plan, whether crash, APM and RUM data have arrived. GET /applications/{application-identifier}."
+        },
+        {
+          "name": "raygun_list_error_groups",
+          "type": "read",
+          "title": "List error groups",
+          "description": "List error groups (distinct errors) for an application, with status and last occurrence. GET /applications/{id}/error-groups."
+        },
+        {
+          "name": "raygun_get_error_group",
+          "type": "read",
+          "title": "Get error group",
+          "description": "Get one error group: message, status (active, resolved, ignored), first and last occurrence. GET /applications/{id}/error-groups/{group}."
+        },
+        {
+          "name": "raygun_list_error_instances",
+          "type": "read",
+          "title": "List error instances",
+          "description": "List individual occurrences of one error group, newest first. GET /applications/{id}/error-groups/{group}/instances."
+        },
+        {
+          "name": "raygun_get_error_instance",
+          "type": "read",
+          "title": "Get error instance",
+          "description": "Get one error occurrence with its stack trace, client, request and breadcrumbs. Omit error_instance_id to get the latest occurrence of the group. GET .../instance/{instance} or .../instance/latest."
+        },
+        {
+          "name": "raygun_resolve_error_group",
+          "type": "write",
+          "title": "Resolve error group",
+          "description": "Mark an error group as resolved. Reversible with raygun_activate_error_group. POST /applications/{id}/error-groups/{group}/resolve."
+        },
+        {
+          "name": "raygun_ignore_error_group",
+          "type": "write",
+          "title": "Ignore error group",
+          "description": "Ignore an error group, so new occurrences do not raise alerts. Reversible with raygun_activate_error_group. POST .../ignore."
+        },
+        {
+          "name": "raygun_activate_error_group",
+          "type": "write",
+          "title": "Activate error group",
+          "description": "Set an error group back to active (undo resolve or ignore). POST .../activate."
+        },
+        {
+          "name": "raygun_comment_error_group",
+          "type": "write",
+          "title": "Comment on error group",
+          "description": "Add a comment to an error group. Creates a new comment each call. POST .../comment."
+        },
+        {
+          "name": "raygun_list_deployments",
+          "type": "read",
+          "title": "List deployments",
+          "description": "List deployments of an application (release markers used for error tracking). GET /applications/{id}/deployments."
+        },
+        {
+          "name": "raygun_get_latest_deployment",
+          "type": "read",
+          "title": "Get latest deployment",
+          "description": "Get the most recent deployment of an application. GET /applications/{id}/deployments/latest."
+        },
+        {
+          "name": "raygun_get_deployment",
+          "type": "read",
+          "title": "Get deployment",
+          "description": "Get one deployment by identifier: version, owner, commit and deploy time. GET /applications/{id}/deployments/{deployment}."
+        },
+        {
+          "name": "raygun_create_deployment",
+          "type": "write",
+          "title": "Create deployment",
+          "description": "Record a deployment (release marker) for an application. Creates a new record each call. POST /applications/{id}/deployments."
+        },
+        {
+          "name": "raygun_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List end-user customers seen by an application (identified users). GET /applications/{id}/customers."
+        },
+        {
+          "name": "raygun_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Get one customer seen by an application. GET /applications/{id}/customers/{customer}."
+        },
+        {
+          "name": "raygun_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "List real-user sessions for an application. GET /applications/{id}/sessions."
+        },
+        {
+          "name": "raygun_get_session",
+          "type": "read",
+          "title": "Get session",
+          "description": "Get one real-user session: page views and errors in order. GET /applications/{id}/sessions/{session}."
+        },
+        {
+          "name": "raygun_list_pages",
+          "type": "read",
+          "title": "List pages",
+          "description": "List monitored web or mobile pages of an application with their performance data. GET /applications/{id}/pages."
+        },
+        {
+          "name": "raygun_get_page",
+          "type": "read",
+          "title": "Get page",
+          "description": "Get one monitored page by identifier. GET /applications/{id}/pages/{page}."
+        },
+        {
+          "name": "raygun_search_apm_issues",
+          "type": "read",
+          "title": "Search APM issues",
+          "description": "Search APM issues (performance problems such as slow queries or N+1 queries) in a time window of at most 30 days. POST /applications/{id}/apm/issues/search."
+        },
+        {
+          "name": "raygun_get_apm_issue",
+          "type": "read",
+          "title": "Get APM issue",
+          "description": "Get one APM issue with its occurrence metrics and example traces. GET /applications/{id}/apm/issues/{issue}."
+        },
+        {
+          "name": "raygun_search_apm_traces",
+          "type": "read",
+          "title": "Search APM traces",
+          "description": "Search APM request traces in a time window of at most 30 days, optionally by duration or HTTP status. POST /applications/{id}/apm/traces/search."
+        },
+        {
+          "name": "raygun_get_apm_trace",
+          "type": "read",
+          "title": "Get APM trace",
+          "description": "Get one APM trace: its calls, threads and issues. GET /applications/{id}/apm/traces/{trace}."
+        },
+        {
+          "name": "raygun_get_error_time_series",
+          "type": "read",
+          "title": "Get error time series",
+          "description": "Count error instances over time for an application, optionally for some error groups. POST /metrics/{id}/errors/time-series."
+        },
+        {
+          "name": "raygun_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List the teams of the plan the token belongs to. GET /teams (scope teams:read)."
+        },
+        {
+          "name": "raygun_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "Get one team by identifier. GET /teams/{team}."
+        },
+        {
+          "name": "raygun_list_plans",
+          "type": "read",
+          "title": "List plans",
+          "description": "List the Raygun plan(s) the token belongs to, with limits. GET /plans."
+        },
+        {
+          "name": "raygun_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "raygun_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Raygun tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "raygun_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Raygun (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "raygun_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Raygun Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run raygun_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which errors are new in our latest deployment, and how often did they happen?",
+        "Show the slowest API traces from the last 24 hours.",
+        "Resolve the error group about the checkout timeout and add a comment with the fix.",
+        "Create a deployment marker for version 2.4.0 with today's commit."
+      ]
     }
   ]
 }
