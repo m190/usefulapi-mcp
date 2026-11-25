@@ -1208,6 +1208,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Eden AI](servers/eden-ai/) | ai-infra | 9 | API token | [servers/eden-ai/](servers/eden-ai/) |
 | [HelpDocs](servers/helpdocs/) | knowledge-base | 20 | API token | [servers/helpdocs/](servers/helpdocs/) |
 | [Finch](servers/finch/) | hr | 20 | OAuth | [servers/finch/](servers/finch/) |
+| [Cognito Forms](servers/cognito-forms/) | forms | 14 | API token | [servers/cognito-forms/](servers/cognito-forms/) |
+| [Recall.ai](servers/recall-ai/) | speech-to-text | 14 | API token | [servers/recall-ai/](servers/recall-ai/) |
+| [Templated](servers/templated/) | image-generation | 15 | API token | [servers/templated/](servers/templated/) |
+| [bsport](servers/bsport/) | sports | 31 | API token | [servers/bsport/](servers/bsport/) |
+| [AlexisHR](servers/alexishr/) | hr | 19 | API token | [servers/alexishr/](servers/alexishr/) |
+| [BoldTrail kvCORE](servers/boldtrail-kvcore/) | real-estate | 6 | API token | [servers/boldtrail-kvcore/](servers/boldtrail-kvcore/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

@@ -202380,6 +202380,907 @@
         "Which employees are enrolled in our 401(k) deduction, and how much do they contribute?",
         "Show the job title and manager for everyone in the Engineering department."
       ]
+    },
+    {
+      "slug": "cognito-forms",
+      "name": "Cognito Forms",
+      "category": "forms",
+      "description": "List forms and entries, read files, and create, update or delete entries in Cognito Forms.",
+      "endpoint": "https://cognito-forms.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Cognito Forms API key"
+          }
+        ],
+        "hint": "Create it in Cognito Forms → your organization → **Integrations → + New API Key**. Give it Form scope (to list forms) and Entry scope (to read and change entries). Copy the key at once: Cognito Forms cannot show it again."
+      },
+      "tools": [
+        {
+          "name": "cognitoforms_list_forms",
+          "type": "read",
+          "title": "List forms",
+          "description": "List the forms the API key can access, with each form's id and name. Good first call to find a form id. REST: GET /api/forms."
+        },
+        {
+          "name": "cognitoforms_get_form_schema",
+          "type": "read",
+          "title": "Get a form schema",
+          "description": "Get a form's schema: field names, types and choices. Use the field names when you create or update entries. REST: GET /api/forms/{formId}/schema."
+        },
+        {
+          "name": "cognitoforms_list_entries",
+          "type": "read",
+          "title": "List entries in a view",
+          "description": "List the entries of one form view through the OData service. Set count to get the total, or ids_only to get entry ids only. The vendor OData reference does not list view ids, so pass the id of the view you want. OData: GET /api/odata/Forms({formId})/Views({viewId})/Entries."
+        },
+        {
+          "name": "cognitoforms_get_entry",
+          "type": "read",
+          "title": "Get an entry",
+          "description": "Get one entry with its field values and metadata (links to documents and the admin view). REST: GET /api/forms/{formId}/entries/{entryId}."
+        },
+        {
+          "name": "cognitoforms_get_entry_file",
+          "type": "read",
+          "title": "Get an entry file",
+          "description": "Get an uploaded file from an entry: name, type, size and file link. The base64 body comes only when include_content is true. REST: GET /api/forms/{formId}/entries/{entryId}/files/{fileId}."
+        },
+        {
+          "name": "cognitoforms_get_entry_document",
+          "type": "read",
+          "title": "Get a generated document",
+          "description": "Get a document generated from an entry by a document template: name, type, size and file link. The base64 body comes only when include_content is true. REST: GET /api/forms/{formId}/entries/{entryId}/documents/{templateId}."
+        },
+        {
+          "name": "cognitoforms_create_entry",
+          "type": "write",
+          "title": "Create an entry",
+          "description": "Submit a new entry to a form with the given field values. The form's notifications, workflows and payments run as they do for a submission. REST: POST /api/forms/{formId}/entries."
+        },
+        {
+          "name": "cognitoforms_update_entry",
+          "type": "write",
+          "title": "Update an entry",
+          "description": "Update the given field values of an existing entry. Fields you leave out keep their values. REST: PATCH /api/forms/{formId}/entries/{entryId}."
+        },
+        {
+          "name": "cognitoforms_delete_entry",
+          "type": "write",
+          "title": "Delete an entry",
+          "description": "Permanently delete one entry, with its files and documents. Confirm the entry id first. REST: DELETE /api/forms/{formId}/entries/{entryId}."
+        },
+        {
+          "name": "cognitoforms_set_public_link_availability",
+          "type": "write",
+          "title": "Set public link availability",
+          "description": "Set when the form's public link accepts submissions, with an optional message shown while it is closed. Dates use ISO 8601 date-times. REST: POST /api/forms/{formId}/public-link-availability."
+        },
+        {
+          "name": "cognitoforms_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "cognitoforms_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Cognito Forms tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "cognitoforms_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Cognito Forms (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "cognitoforms_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Cognito Forms Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run cognitoforms_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which forms do we have, and how many entries did each receive this week?",
+        "Show me the latest entry on our job application form.",
+        "Update the status field on entry 42 of the support form to Resolved.",
+        "Download the file attached to entry 11 on the proof of insurance form."
+      ]
+    },
+    {
+      "slug": "recall-ai",
+      "name": "Recall.ai",
+      "category": "speech-to-text",
+      "description": "List bots, recordings and transcripts, and send or remove meeting bots in Recall.ai.",
+      "endpoint": "https://recall-ai.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Recall.ai API key"
+          },
+          {
+            "label": "Region where the key was created"
+          }
+        ],
+        "hint": "Create or view the key in Recall.ai under **Developers → API keys**, in the region dashboard you signed up in. Keys belong to one region: a key from one region fails in another. Your key is used only to call the Recall.ai API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "recallai_list_bots",
+          "type": "read",
+          "title": "List bots",
+          "description": "List meeting bots in the workspace with their status, meeting URL and schedule. Use it to find a bot id. Recall.ai API: GET /api/v1/bot/."
+        },
+        {
+          "name": "recallai_get_bot",
+          "type": "read",
+          "title": "Get bot",
+          "description": "Get one meeting bot: its status changes, recordings, meeting URL and settings. Recall.ai API: GET /api/v1/bot/{id}/."
+        },
+        {
+          "name": "recallai_list_recordings",
+          "type": "read",
+          "title": "List recordings",
+          "description": "List recordings, optionally for one bot. A recording holds the media and transcript shortcuts. Recall.ai API: GET /api/v1/recording/."
+        },
+        {
+          "name": "recallai_get_recording",
+          "type": "read",
+          "title": "Get recording",
+          "description": "Get one recording: its status, expiry and media_shortcuts (download URLs for video, audio, transcript, participant events). Recall.ai API: GET /api/v1/recording/{id}/."
+        },
+        {
+          "name": "recallai_list_transcripts",
+          "type": "read",
+          "title": "List transcripts",
+          "description": "List transcripts, optionally for one recording. Recall.ai API: GET /api/v1/transcript/."
+        },
+        {
+          "name": "recallai_get_transcript",
+          "type": "read",
+          "title": "Get transcript",
+          "description": "Get one transcript: its status, provider and data (the download URL of the transcript JSON). Recall.ai API: GET /api/v1/transcript/{id}/."
+        },
+        {
+          "name": "recallai_create_bot",
+          "type": "write",
+          "title": "Create bot",
+          "description": "Send a recording bot to a meeting now, or at join_at. The bot joins and records, and usage is billed by Recall.ai. Recall.ai API: POST /api/v1/bot/."
+        },
+        {
+          "name": "recallai_send_chat_message",
+          "type": "write",
+          "title": "Send chat message",
+          "description": "Post a message in the meeting chat as the bot. Other participants see it. Recall.ai API: POST /api/v1/bot/{id}/send_chat_message/."
+        },
+        {
+          "name": "recallai_leave_call",
+          "type": "write",
+          "title": "Remove bot from call",
+          "description": "Make the bot leave the meeting now. Recording stops for that bot. Recall.ai API: POST /api/v1/bot/{id}/leave_call/."
+        },
+        {
+          "name": "recallai_delete_scheduled_bot",
+          "type": "write",
+          "title": "Delete scheduled bot",
+          "description": "Delete a scheduled bot that has not joined a call yet. A bot that already joined cannot be deleted this way. Recall.ai API: DELETE /api/v1/bot/{id}/."
+        },
+        {
+          "name": "recallai_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "recallai_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Recall.ai tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "recallai_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Recall.ai (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "recallai_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Recall.ai Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run recallai_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our meetings are being recorded right now?",
+        "Send a bot to the 10:00 client call and tell me when it has joined.",
+        "Get the transcript of last week's sales call and summarize the decisions.",
+        "Remove the bot from the all-hands call now."
+      ]
+    },
+    {
+      "slug": "templated",
+      "name": "Templated",
+      "category": "image-generation",
+      "description": "Create images, PDFs and videos from templates, and list layers and renders in Templated.",
+      "endpoint": "https://templated.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Templated API key"
+          }
+        ],
+        "hint": "Find it in Templated → **API Key** (sidebar). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "templated_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Show your Templated account: name, plan, and API credit usage against your quota. Good first call to check the key works. Templated API: GET /v1/account."
+        },
+        {
+          "name": "templated_list_templates",
+          "type": "read",
+          "title": "List templates",
+          "description": "List your templates with their id, name, size and layer count. Optionally include layers or pages. Templated API: GET /v1/templates."
+        },
+        {
+          "name": "templated_get_template",
+          "type": "read",
+          "title": "Get a template",
+          "description": "Get one template by id, optionally with its layers or pages. Templated API: GET /v1/template/{id}."
+        },
+        {
+          "name": "templated_list_template_layers",
+          "type": "read",
+          "title": "List template layers",
+          "description": "List the layers of one template: each layer name, type (text, image, shape, …) and group. Use the layer names as keys in templated_create_render. Templated API: GET /v1/template/{id}/layers."
+        },
+        {
+          "name": "templated_list_template_renders",
+          "type": "read",
+          "title": "List renders of a template",
+          "description": "List the renders made from one template, newest first, with their file urls. Templated API: GET /v1/template/{id}/renders."
+        },
+        {
+          "name": "templated_get_render",
+          "type": "read",
+          "title": "Get a render",
+          "description": "Get one render by id: its file url, size, format, template and creation time. Templated API: GET /v1/render/{id}."
+        },
+        {
+          "name": "templated_list_folders",
+          "type": "read",
+          "title": "List folders",
+          "description": "List your template and render folders. Templated API: GET /v1/folders."
+        },
+        {
+          "name": "templated_create_render",
+          "type": "write",
+          "title": "Create a render",
+          "description": "Create an image, PDF, or video from a template with new layer values. Each call uses API credits and stores a new file. Returns the render with its file url. Templated API: POST /v1/render."
+        },
+        {
+          "name": "templated_delete_render",
+          "type": "write",
+          "title": "Delete a render",
+          "description": "Permanently delete one render: its file, the data sent to create it, and its record. This cannot be undone. Templated API: DELETE /v1/render/{id}."
+        },
+        {
+          "name": "templated_clone_template",
+          "type": "write",
+          "title": "Clone a template",
+          "description": "Copy one template into a new template with a new id. The copy keeps a link to the source. Templated API: POST /v1/template/{id}/clone."
+        },
+        {
+          "name": "templated_delete_template",
+          "type": "write",
+          "title": "Delete a template",
+          "description": "Permanently delete one template by id. This is irreversible: a deleted template cannot be recovered. Check the id with templated_get_template first. Templated API: DELETE /v1/template/{id}."
+        },
+        {
+          "name": "templated_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "templated_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Templated tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "templated_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Templated (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "templated_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Templated Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run templated_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Make a 1080×1080 JPG from my 'Sale banner' template with the headline 'Summer sale 30% off'.",
+        "List the layers of my invoice template so I know what to fill in.",
+        "Show my remaining API credits and plan.",
+        "Clone my certificate template and name the copy 'Course 2027'."
+      ]
+    },
+    {
+      "slug": "bsport",
+      "name": "bsport",
+      "category": "sports",
+      "description": "List clients, classes and bookings, and book clients or record attendance in bsport.",
+      "endpoint": "https://bsport.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "bsport API key"
+          },
+          {
+            "label": "Client ID (X-Client-ID)"
+          },
+          {
+            "label": "Company ID (company keys)",
+            "optional": true
+          },
+          {
+            "label": "Franchisor ID (franchise keys)",
+            "optional": true
+          }
+        ],
+        "hint": "bsport issues these during its beta on request: ask the bsport team for an API key with its client ID and company ID (franchise keys use a franchisor ID). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "bsport_get_api_key_info",
+          "type": "read",
+          "title": "Show API key info",
+          "description": "Show which client, company or franchise the API key uses, its expiry date, and the successful API calls counted per month. Use it to check that the connection works. Endpoint: GET /api/v2/monitoring/me/."
+        },
+        {
+          "name": "bsport_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients of the company, with optional filters by id, email or archived state. Endpoint: GET /api/v2/management/clients/."
+        },
+        {
+          "name": "bsport_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client by id, with name, contact details, tags and account balance. Endpoint: GET /api/v2/management/clients/{id}/."
+        },
+        {
+          "name": "bsport_list_client_notes",
+          "type": "read",
+          "title": "List client notes",
+          "description": "List internal notes, optionally for one client. Endpoint: GET /api/v2/management/client-notes/."
+        },
+        {
+          "name": "bsport_list_client_class_passes",
+          "type": "read",
+          "title": "List client passes",
+          "description": "List class passes owned by clients (credits, validity, disabled state), optionally for some clients. Endpoint: GET /api/v2/management/client-class-passes/."
+        },
+        {
+          "name": "bsport_list_client_subscriptions",
+          "type": "read",
+          "title": "List client subscriptions",
+          "description": "List subscriptions owned by clients, optionally for one client. Endpoint: GET /api/v2/management/client-subscriptions/."
+        },
+        {
+          "name": "bsport_list_bookings",
+          "type": "read",
+          "title": "List bookings",
+          "description": "List bookings with filters by client, class, class start window or attendance. Endpoint: GET /api/v2/management/bookings/."
+        },
+        {
+          "name": "bsport_get_booking",
+          "type": "read",
+          "title": "Get a booking",
+          "description": "Get one booking by id, with its status, class, client pass and attendance. Endpoint: GET /api/v2/management/bookings/{id}/."
+        },
+        {
+          "name": "bsport_list_classes",
+          "type": "read",
+          "title": "List classes",
+          "description": "List classes (sessions) with optional filters by start window, teacher, venue or service. Endpoint: GET /api/v2/management/classes/."
+        },
+        {
+          "name": "bsport_get_class",
+          "type": "read",
+          "title": "Get a class",
+          "description": "Get one class by id, with its start time, capacity, bookings, waitlist size and cancellation state. Endpoint: GET /api/v2/management/classes/{id}/."
+        },
+        {
+          "name": "bsport_get_class_waitlist",
+          "type": "read",
+          "title": "Get a class waitlist",
+          "description": "List the waitlist of one class in position order. Endpoint: GET /api/v2/management/classes/{id}/waitlist/."
+        },
+        {
+          "name": "bsport_list_appointments",
+          "type": "read",
+          "title": "List appointments",
+          "description": "List one-to-one appointments with filters by client, teacher, venue or start window. Endpoint: GET /api/v2/management/appointments/."
+        },
+        {
+          "name": "bsport_list_teachers",
+          "type": "read",
+          "title": "List teachers",
+          "description": "List teachers (staff who lead classes), optionally only active or disabled ones. Endpoint: GET /api/v2/management/teachers/."
+        },
+        {
+          "name": "bsport_list_venues",
+          "type": "read",
+          "title": "List venues",
+          "description": "List venues (studios, rooms or locations), with optional filters by city or zip code. Endpoint: GET /api/v2/management/venues/."
+        },
+        {
+          "name": "bsport_list_tags",
+          "type": "read",
+          "title": "List tags",
+          "description": "List client tags, optionally for one tag group. Endpoint: GET /api/v2/management/tags/."
+        },
+        {
+          "name": "bsport_list_tag_groups",
+          "type": "read",
+          "title": "List tag groups",
+          "description": "List tag groups, which hold tags. Endpoint: GET /api/v2/management/tag-groups/."
+        },
+        {
+          "name": "bsport_list_webhook_registrations",
+          "type": "read",
+          "title": "List webhook registrations",
+          "description": "List the webhook registrations of the company (the URLs that receive bsport events). Endpoint: GET /api/v2/management/webhook-registrations/."
+        },
+        {
+          "name": "bsport_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "Create a client record. This stores personal data and sets no marketing consent. Endpoint: POST /api/v2/management/clients/."
+        },
+        {
+          "name": "bsport_create_booking",
+          "type": "write",
+          "title": "Book a client into classes",
+          "description": "Book one client into one or more classes with a client pass. This uses credits and can notify the client. Endpoint: POST /api/v2/management/bookings/."
+        },
+        {
+          "name": "bsport_cancel_booking",
+          "type": "write",
+          "title": "Cancel a booking",
+          "description": "Cancel one booking. Choose whether the client is notified and whether the credit is refunded. Endpoint: POST /api/v2/management/bookings/{id}/cancel/."
+        },
+        {
+          "name": "bsport_record_attendance",
+          "type": "write",
+          "title": "Record attendance",
+          "description": "Mark one booking as attended or not attended. Attendance can trigger no-show rules. Endpoint: POST /api/v2/management/bookings/{id}/attendance/."
+        },
+        {
+          "name": "bsport_tag_client",
+          "type": "write",
+          "title": "Add a tag to a client",
+          "description": "Add one tag to one client. Adding a tag that is already set changes nothing. Endpoint: POST /api/v2/management/clients/{id}/tag/."
+        },
+        {
+          "name": "bsport_untag_client",
+          "type": "write",
+          "title": "Remove a tag from a client",
+          "description": "Remove one tag from one client. Removing a tag that is not set changes nothing. Endpoint: POST /api/v2/management/clients/{id}/untag/."
+        },
+        {
+          "name": "bsport_create_client_note",
+          "type": "write",
+          "title": "Add an internal note",
+          "description": "Add an internal note to one client. Staff can see it, the client cannot. Endpoint: POST /api/v2/management/client-notes/."
+        },
+        {
+          "name": "bsport_create_tag",
+          "type": "write",
+          "title": "Create a tag",
+          "description": "Create a tag in a tag group. The name must be unique within the group. Endpoint: POST /api/v2/management/tags/."
+        },
+        {
+          "name": "bsport_archive_client",
+          "type": "write",
+          "title": "Archive a client",
+          "description": "Archive one client, which hides the client from active lists. Endpoint: POST /api/v2/management/clients/{id}/archive/."
+        },
+        {
+          "name": "bsport_set_client_class_pass_enabled",
+          "type": "write",
+          "title": "Enable or disable a client pass",
+          "description": "Enable or disable one client pass. A disabled pass cannot pay for bookings. Endpoint: POST /api/v2/management/client-class-passes/{id}/enable/ or /disable/."
+        },
+        {
+          "name": "bsport_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "bsport_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the bsport tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "bsport_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for bsport (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "bsport_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's bsport Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run bsport_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which classes are on at the central venue tomorrow morning, and how many spots are left?",
+        "Show the clients booked into the 09:00 class on Friday.",
+        "Find the client with the email anna@example.com and list her current class passes.",
+        "Add the tag 'Returning' to client 4821 and add an internal note that she asked about the timetable."
+      ]
+    },
+    {
+      "slug": "alexishr",
+      "name": "AlexisHR",
+      "category": "hr",
+      "description": "List employees, leave, vacation balances and timesheets in AlexisHR.",
+      "endpoint": "https://alexishr.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "AlexisHR access token"
+          }
+        ],
+        "hint": "Create it in Simployer One as an **account Owner** (access tokens page). The token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "alexishr_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List employees with work-related fields: name, work email, employee number, department, office, manager, hire and end dates. Personal fields are not returned. API: GET /v1/employee."
+        },
+        {
+          "name": "alexishr_get_employee",
+          "type": "read",
+          "title": "Get an employee",
+          "description": "Get one employee by id with work-related fields only (no SSN, bank account, address or private contact). API: GET /v1/employee/{id}."
+        },
+        {
+          "name": "alexishr_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the companies in the account (name, organisation number, VAT number, contact details). API: GET /v1/company."
+        },
+        {
+          "name": "alexishr_list_departments",
+          "type": "read",
+          "title": "List departments",
+          "description": "List departments with their parent department and cost centre. API: GET /v1/department."
+        },
+        {
+          "name": "alexishr_list_offices",
+          "type": "read",
+          "title": "List offices",
+          "description": "List offices with their name, time zone and contact details. API: GET /v1/office."
+        },
+        {
+          "name": "alexishr_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams with their name and description. API: GET /v1/team."
+        },
+        {
+          "name": "alexishr_list_cost_centers",
+          "type": "read",
+          "title": "List cost centres",
+          "description": "List cost centres with their code and name. API: GET /v1/cost-center."
+        },
+        {
+          "name": "alexishr_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List projects with their name, code and lead user. API: GET /v1/project."
+        },
+        {
+          "name": "alexishr_list_employment_types",
+          "type": "read",
+          "title": "List employment types",
+          "description": "List employment types (for example full-time or part-time) with country and vacation settings. API: GET /v1/employment-type."
+        },
+        {
+          "name": "alexishr_list_leave_types",
+          "type": "read",
+          "title": "List leave types",
+          "description": "List leave types (for example vacation or sick leave) with their kind and paid flag. API: GET /v1/leave-type."
+        },
+        {
+          "name": "alexishr_list_leaves",
+          "type": "read",
+          "title": "List leave requests",
+          "description": "List leave requests (dates, status, duration, type). Filter by employee, leave type, status or start-date range. API: GET /v1/leave."
+        },
+        {
+          "name": "alexishr_get_vacation_balance",
+          "type": "read",
+          "title": "Get an employee's vacation balance",
+          "description": "Get the current vacation balance of one employee: available days, pools and cycle dates. API: GET /v1/vacation-balance/{employeeId}."
+        },
+        {
+          "name": "alexishr_list_vacation_balances",
+          "type": "read",
+          "title": "List vacation balances",
+          "description": "List the current vacation balance of every employee that has one, optionally for one employee. API: GET /v1/vacation-balance."
+        },
+        {
+          "name": "alexishr_list_timesheets",
+          "type": "read",
+          "title": "List timesheets",
+          "description": "List timesheets (period, status, approver, submit and approval dates). Filter by employee, status or period start. API: GET /v1/timesheet."
+        },
+        {
+          "name": "alexishr_list_timesheet_entries",
+          "type": "read",
+          "title": "List timesheet entries",
+          "description": "List time entries (date, minutes, type, project, note). Filter by employee, timesheet, project or date range. API: GET /v1/timesheet-entry."
+        },
+        {
+          "name": "alexishr_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "alexishr_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the AlexisHR tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "alexishr_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for AlexisHR (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "alexishr_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's AlexisHR Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run alexishr_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is on leave this week, and what type of leave is it?",
+        "Show the vacation balance of everyone in the Sales department.",
+        "List the employees in the Berlin office who were hired this year.",
+        "Which timesheets are still waiting for approval?"
+      ]
+    },
+    {
+      "slug": "boldtrail-kvcore",
+      "name": "BoldTrail kvCORE",
+      "category": "real-estate",
+      "description": "List or search contacts, and create contacts (leads) in BoldTrail kvCORE.",
+      "endpoint": "https://boldtrail-kvcore.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "BoldTrail API token"
+          }
+        ],
+        "hint": "Create it in BoldTrail → **Lead Engine → Lead Dropbox → My API Tokens** (Contacts or All). The token lasts one year. It is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "boldtrail_list_contacts",
+          "type": "read",
+          "title": "List or search contacts",
+          "description": "List or search contacts (leads) in BoldTrail kvCORE. Filter by exact email, hashtags, assigned agent id, or registration time (Unix timestamps). Paged: page starts at 1, limit 1-500 (default 100). Endpoint: GET /v2/public/contacts."
+        },
+        {
+          "name": "boldtrail_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a new contact (lead) in BoldTrail kvCORE. Search first with boldtrail_list_contacts: the API accepts duplicates. Set assigned_agent_id to assign the lead to an agent, and owned_by_assigned to true to keep it private to that agent. Endpoint: POST /v2/public/contact."
+        },
+        {
+          "name": "boldtrail_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "boldtrail_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the BoldTrail kvCORE tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "boldtrail_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for BoldTrail kvCORE (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "boldtrail_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's BoldTrail kvCORE Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run boldtrail_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Find the contact with the email address jane@example.com and show her hashtags.",
+        "List the contacts assigned to agent 12432 who registered after 1 January 2026.",
+        "Add a new lead named John Lead for agent 12432 and keep it private to that agent."
+      ]
     }
   ]
 }
