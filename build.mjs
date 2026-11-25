@@ -322,6 +322,14 @@ const credentialText = (s) => {
   const req = requiredFields(s);
   return req.length ? `your ${andList(req.map((l) => `<b>${esc(l)}</b>`))}` : `your <b>${esc(s.name)}</b> credentials`;
 };
+// "An Eventbrite account", "A Kommo account".
+const an = (name) => (/^[aeiou]/i.test(name) ? "An" : "A");
+// keyLogin (fleet runtime): the vendor sign-in comes first; the login page also offers the key form ("keyAlternative").
+const keyAlt = (s) => (loginKind(s) === "upstream" && s.login?.keyAlternative) || null;
+const keyAltText = (s) => {
+  const req = (keyAlt(s)?.fields || []).filter((f) => !f.optional).map((f) => `<b>${esc(f.label)}</b>`);
+  return req.length ? `your ${andList(req)}` : `your ${esc(s.name)} credentials`;
+};
 // customerClient (fleet runtime): the customer's own vendor app; the login page asks for its client ID + secret first.
 const ownApp = (s) => loginKind(s) === "upstream" && !!s.login?.customerClient;
 function authStepFor(s, client = "Claude") {
@@ -364,6 +372,9 @@ function setupSection(s) {
   let lead;
   if (ownApp(s)) lead = `<p>You need your own ${esc(s.name)} API app. The login page asks for its <b>Client ID</b> and <b>Client secret</b>; then you sign in with your ${esc(s.name)} account and approve the access (OAuth).</p>` +
     (s.login.appHint ? `<p>${hintHtml(s.login.appHint)}</p>` : "");
+  else if (keyAlt(s)) lead = `<p>You sign in with your ${esc(s.name)} account and approve the access (OAuth). You do not need an API key.</p>` +
+    `<p>If you prefer, the login page also accepts ${keyAltText(s)} instead (under the sign-in button).</p>` +
+    (keyAlt(s).hint ? `<p>${hintHtml(keyAlt(s).hint)}</p>` : "");
   else if (k === "upstream") lead = `<p>You sign in with your ${esc(s.name)} account and approve the access (OAuth). You do not need an API key.</p>`;
   else if (k === "email") lead = `<p>You do not need an account or a key for ${esc(s.name)}. You log in with your email address and a 6-digit code.</p>`;
   else lead = `<p>The login page asks for ${credentialText(s)}.</p>`;
@@ -406,7 +417,8 @@ function faqFor(s) {
     `Then log in once. Cursor, VS Code, Claude Code and Codex work too. See <a href="#connect">the setup steps</a>.` });
   faq.push({ q: `What do I need to connect?`, a:
     ownApp(s) ? `A ${n} account with API access and your own ${n} API app (its client ID and secret). See <a href="#setup">Before you connect</a> for how to create it.`
-    : k === "upstream" ? `A ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
+    : keyAlt(s) ? `${an(n)} ${n} account. You sign in to ${n} and approve the access. You do not need an API key, but you can enter ${keyAltText(s)} instead.`
+    : k === "upstream" ? `${an(n)} ${n} account. You sign in to ${n} and approve the access. You do not need an API key.`
     : k === "email" ? `Only an email address. You do not need a key for ${n}.`
     : `The login page asks for ${credentialText(s)}. See <a href="#setup">Before you connect</a> for where to find ${requiredFields(s).length > 1 ? "them" : "it"}.` });
   faq.push({ q: k === "key" ? `Do I put my ${n} key or an Authorization header in the client config?` : `Do I add an Authorization header to the client config?`,
