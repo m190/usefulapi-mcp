@@ -1231,6 +1231,9 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Rivo](servers/rivo/) | marketing | 19 | API token | [servers/rivo/](servers/rivo/) |
 | [Granatum](servers/granatum/) | accounting | 20 | API token | [servers/granatum/](servers/granatum/) |
 | [Wagepoint](servers/wagepoint/) | hr | 15 | API token | [servers/wagepoint/](servers/wagepoint/) |
+| [Bookboost](servers/bookboost/) | crm | 21 | API token | [servers/bookboost/](servers/bookboost/) |
+| [Burq](servers/burq/) | logistics | 17 | API token | [servers/burq/](servers/burq/) |
+| [Assignar](servers/assignar/) | scheduling | 27 | API token | [servers/assignar/](servers/assignar/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
