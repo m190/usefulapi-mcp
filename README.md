@@ -1224,6 +1224,13 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Arketa](servers/arketa/) | scheduling | 15 | API token | [servers/arketa/](servers/arketa/) |
 | [Facturama](servers/facturama/) | tax | 15 | API token | [servers/facturama/](servers/facturama/) |
 | [Rise.ai](servers/rise-ai/) | retail | 10 | API token | [servers/rise-ai/](servers/rise-ai/) |
+| [ShipMonk](servers/shipmonk/) | logistics | 14 | API token | [servers/shipmonk/](servers/shipmonk/) |
+| [Vindi](servers/vindi/) | billing | 18 | API token | [servers/vindi/](servers/vindi/) |
+| [Stay AI](servers/stay-ai/) | ecommerce | 15 | API token | [servers/stay-ai/](servers/stay-ai/) |
+| [WorkGuru](servers/workguru/) | project-management | 12 | API token | [servers/workguru/](servers/workguru/) |
+| [Rivo](servers/rivo/) | marketing | 19 | API token | [servers/rivo/](servers/rivo/) |
+| [Granatum](servers/granatum/) | accounting | 20 | API token | [servers/granatum/](servers/granatum/) |
+| [Wagepoint](servers/wagepoint/) | hr | 15 | API token | [servers/wagepoint/](servers/wagepoint/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
