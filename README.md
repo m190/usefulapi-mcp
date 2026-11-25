@@ -1239,6 +1239,29 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [MRPeasy](servers/mrpeasy/) | inventory | 27 | API token | [servers/mrpeasy/](servers/mrpeasy/) |
 | [Vinsight](servers/vinsight/) | winery-production | 12 | API token | [servers/vinsight/](servers/vinsight/) |
 | [Yoco](servers/yoco/) | payments | 21 | API token | [servers/yoco/](servers/yoco/) |
+| [Point of Rental](servers/point-of-rental/) | rental | 29 | API token | [servers/point-of-rental/](servers/point-of-rental/) |
+| [Directo](servers/directo/) | business-operations | 11 | API token | [servers/directo/](servers/directo/) |
+| [Shoprenter](servers/shoprenter/) | ecommerce | 15 | API token | [servers/shoprenter/](servers/shoprenter/) |
+| [MerchantPro](servers/merchantpro/) | ecommerce | 13 | API token | [servers/merchantpro/](servers/merchantpro/) |
+| [Oxygen Pelatologio](servers/oxygen-pelatologio/) | accounting | 18 | API token | [servers/oxygen-pelatologio/](servers/oxygen-pelatologio/) |
+| [ZenHR](servers/zenhr/) | hr | 14 | OAuth | [servers/zenhr/](servers/zenhr/) |
+| [Bumpa](servers/bumpa/) | commerce | 10 | API token | [servers/bumpa/](servers/bumpa/) |
+| [Omise](servers/omise/) | payments | 23 | API token | [servers/omise/](servers/omise/) |
+| [ActiveTrail](servers/activetrail/) | email-marketing | 23 | API token | [servers/activetrail/](servers/activetrail/) |
+| [Agiliron](servers/agiliron/) | crm | 30 | API token | [servers/agiliron/](servers/agiliron/) |
+| [EducateMe](servers/educateme/) | education | 28 | API token | [servers/educateme/](servers/educateme/) |
+| [Workbooks](servers/workbooks-crm/) | crm | 11 | API token | [servers/workbooks-crm/](servers/workbooks-crm/) |
+| [Hubflo](servers/hubflo/) | project-management | 29 | API token | [servers/hubflo/](servers/hubflo/) |
+| [OneHash](servers/onehash/) | crm | 9 | API token | [servers/onehash/](servers/onehash/) |
+| [eTermin](servers/etermin/) | scheduling | 15 | API token | [servers/etermin/](servers/etermin/) |
+| [FreshLearn](servers/freshlearn/) | membership | 19 | API token | [servers/freshlearn/](servers/freshlearn/) |
+| [Hailey HR](servers/hailey-hr/) | hr | 11 | API token | [servers/hailey-hr/](servers/hailey-hr/) |
+| [Kizeo Forms](servers/kizeo-forms/) | forms | 14 | API token | [servers/kizeo-forms/](servers/kizeo-forms/) |
+| [LoyJoy](servers/loyjoy/) | knowledge-base | 18 | API token | [servers/loyjoy/](servers/loyjoy/) |
+| [NeetoCal](servers/neetocal/) | scheduling | 15 | API token | [servers/neetocal/](servers/neetocal/) |
+| [NeetoDesk](servers/neetodesk/) | support | 20 | API token | [servers/neetodesk/](servers/neetodesk/) |
+| [NeetoInvoice](servers/neetoinvoice/) | billing | 24 | API token | [servers/neetoinvoice/](servers/neetoinvoice/) |
+| [Picqer](servers/picqer/) | inventory | 17 | API token | [servers/picqer/](servers/picqer/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
