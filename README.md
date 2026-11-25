@@ -1262,6 +1262,25 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [NeetoDesk](servers/neetodesk/) | support | 20 | API token | [servers/neetodesk/](servers/neetodesk/) |
 | [NeetoInvoice](servers/neetoinvoice/) | billing | 24 | API token | [servers/neetoinvoice/](servers/neetoinvoice/) |
 | [Picqer](servers/picqer/) | inventory | 17 | API token | [servers/picqer/](servers/picqer/) |
+| [ProWorkflow](servers/proworkflow/) | project-management | 22 | API token | [servers/proworkflow/](servers/proworkflow/) |
+| [Sociamonials](servers/sociamonials/) | marketing | 17 | API token | [servers/sociamonials/](servers/sociamonials/) |
+| [RAYNET CRM](servers/raynetcrm/) | crm | 19 | API token | [servers/raynetcrm/](servers/raynetcrm/) |
+| [HTML/CSS to Image](servers/html-css-to-image/) | image-generation | 10 | API token | [servers/html-css-to-image/](servers/html-css-to-image/) |
+| [Keyword.com](servers/keyword-com/) | marketing | 16 | API token | [servers/keyword-com/](servers/keyword-com/) |
+| [Refersion](servers/refersion/) | marketing | 11 | API token | [servers/refersion/](servers/refersion/) |
+| [PushPress](servers/pushpress/) | membership | 22 | API token | [servers/pushpress/](servers/pushpress/) |
+| [Plivo](servers/plivo/) | communications | 11 | API token | [servers/plivo/](servers/plivo/) |
+| [Thinkific](servers/thinkific/) | education | 14 | API token | [servers/thinkific/](servers/thinkific/) |
+| [Document360](servers/document360/) | knowledge-base | 14 | API token | [servers/document360/](servers/document360/) |
+| [Hugging Face](servers/huggingface/) | ai-infra | 18 | API token | [servers/huggingface/](servers/huggingface/) |
+| [Axiom](servers/axiom/) | observability | 16 | API token | [servers/axiom/](servers/axiom/) |
+| [Juro](servers/juro/) | documents | 11 | API token | [servers/juro/](servers/juro/) |
+| [7shifts](servers/7shifts/) | scheduling | 19 | API token | [servers/7shifts/](servers/7shifts/) |
+| [Metronome](servers/metronome/) | billing | 18 | API token | [servers/metronome/](servers/metronome/) |
+| [Drip](servers/drip/) | email-marketing | 22 | API token | [servers/drip/](servers/drip/) |
+| [AssemblyAI](servers/assemblyai/) | speech-to-text | 11 | API token | [servers/assemblyai/](servers/assemblyai/) |
+| [inFlow Inventory](servers/inflow-inventory/) | inventory | 25 | API token | [servers/inflow-inventory/](servers/inflow-inventory/) |
+| [Voyage AI](servers/voyage-ai/) | ai-infra | 11 | API token | [servers/voyage-ai/](servers/voyage-ai/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
