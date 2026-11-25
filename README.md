@@ -1214,6 +1214,16 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [bsport](servers/bsport/) | sports | 31 | API token | [servers/bsport/](servers/bsport/) |
 | [AlexisHR](servers/alexishr/) | hr | 19 | API token | [servers/alexishr/](servers/alexishr/) |
 | [BoldTrail kvCORE](servers/boldtrail-kvcore/) | real-estate | 6 | API token | [servers/boldtrail-kvcore/](servers/boldtrail-kvcore/) |
+| [Urbanise Strata](servers/urbanise-strata/) | property-management | 18 | API token | [servers/urbanise-strata/](servers/urbanise-strata/) |
+| [Mighty Networks](servers/mighty-networks/) | membership | 16 | API token | [servers/mighty-networks/](servers/mighty-networks/) |
+| [Projul](servers/projul/) | project-management | 24 | API token | [servers/projul/](servers/projul/) |
+| [HelpSpot](servers/helpspot/) | support | 16 | API token | [servers/helpspot/](servers/helpspot/) |
+| [Financial Cents](servers/financial-cents/) | accounting-practice | 19 | API token | [servers/financial-cents/](servers/financial-cents/) |
+| [Zoho Invoice](servers/zoho-invoice/) | billing | 14 | OAuth | [servers/zoho-invoice/](servers/zoho-invoice/) |
+| [WiziShop](servers/wizishop/) | ecommerce | 12 | API token | [servers/wizishop/](servers/wizishop/) |
+| [Arketa](servers/arketa/) | scheduling | 15 | API token | [servers/arketa/](servers/arketa/) |
+| [Facturama](servers/facturama/) | tax | 15 | API token | [servers/facturama/](servers/facturama/) |
+| [Rise.ai](servers/rise-ai/) | retail | 10 | API token | [servers/rise-ai/](servers/rise-ai/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
