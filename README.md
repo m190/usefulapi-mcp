@@ -1183,6 +1183,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [360Learning](servers/360learning/) | education | 22 | API token | [servers/360learning/](servers/360learning/) |
 | [Communico](servers/communico/) | scheduling | 19 | API token | [servers/communico/](servers/communico/) |
 | [Pocketlaw](servers/pocketlaw/) | documents | 15 | API token | [servers/pocketlaw/](servers/pocketlaw/) |
+| [Evobulut](servers/evobulut/) | accounting | 19 | API token | [servers/evobulut/](servers/evobulut/) |
+| [Weel](servers/weels/) | Finance | 28 | API token | [servers/weels/](servers/weels/) |
+| [Vporiadku](servers/vporiadku/) | billing | 31 | OAuth | [servers/vporiadku/](servers/vporiadku/) |
+| [RoofLink](servers/rooflink/) | crm | 20 | API token | [servers/rooflink/](servers/rooflink/) |
+| [timr](servers/timr/) | time-tracking | 23 | API token | [servers/timr/](servers/timr/) |
+| [Qvoo CRM](servers/qvoo/) | real-estate | 37 | API token | [servers/qvoo/](servers/qvoo/) |
+| [Quoter](servers/quoter/) | crm | 18 | API token | [servers/quoter/](servers/quoter/) |
+| [Claritysoft CRM](servers/claritysoft-crm/) | crm | 18 | API token | [servers/claritysoft-crm/](servers/claritysoft-crm/) |
+| [Inventory Now](servers/inventory-now/) | inventory | 15 | API token | [servers/inventory-now/](servers/inventory-now/) |
+| [SleekTech](servers/sleektech/) | property-management | 24 | API token | [servers/sleektech/](servers/sleektech/) |
+| [Rental Software](servers/rental-software/) | rental | 22 | API token | [servers/rental-software/](servers/rental-software/) |
+| [Shirtigo](servers/shirtigo/) | commerce | 19 | API token | [servers/shirtigo/](servers/shirtigo/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

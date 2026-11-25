@@ -198135,6 +198135,2250 @@
         "Create a draft NDA from our standard template for Acme Ltd.",
         "Show the folders under our customer contracts folder."
       ]
+    },
+    {
+      "slug": "evobulut",
+      "name": "Evobulut",
+      "category": "accounting",
+      "description": "Read customers, stock, invoices, orders and leads; create company cards and tasks in Evobulut.",
+      "endpoint": "https://evobulut.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Evobulut user code"
+          },
+          {
+            "label": "Evobulut password"
+          }
+        ],
+        "hint": "Use a dedicated Evobulut user for this connection, with only the permissions you need. Evobulut has no separate API key: the server signs in with this user code and password on each request. Requested accounting, customer, stock and order data passes to your chosen AI client and its LLM provider. Two write tools create company cards and tasks; they never delete, issue invoices, record payments or send e-mail. Change the password in Evobulut to stop access. Billing follows the company of the login, so it survives a password change. Your vendor plan and its limit of 60 requests per minute per user still apply."
+      },
+      "tools": [
+        {
+          "name": "evobulut_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customer, supplier and contact cards (cari) with an optional text search. Evobulut API: POST /cari/base, cmd jq_list. Use an item's id with evobulut_get_customer."
+        },
+        {
+          "name": "evobulut_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer card (cari) by id: name, tax data, addresses and contact fields. Evobulut API: POST /cari/base, cmd sql."
+        },
+        {
+          "name": "evobulut_create_customer",
+          "type": "write",
+          "title": "Create a company card",
+          "description": "Create a company card (Firma Ekleme): name, tax office and tax number, with an optional code and related person. Creates a record and returns its new id; nothing is deleted. Evobulut API: POST /Firma/base, cmd ins."
+        },
+        {
+          "name": "evobulut_list_stock",
+          "type": "read",
+          "title": "List stock items",
+          "description": "List stock items (products and services) with an optional text search, code, name and prices. Evobulut API: POST /stok/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_get_stock",
+          "type": "read",
+          "title": "Get a stock item",
+          "description": "Get one stock item by id: code, name, prices, VAT rates, units and barcodes. Evobulut API: POST /stok/base, cmd sql."
+        },
+        {
+          "name": "evobulut_get_stock_by_warehouse",
+          "type": "read",
+          "title": "Get stock by warehouse",
+          "description": "Get the stock quantity of one item in each warehouse. Evobulut API: POST /stok/base, cmd sql_stok_depo."
+        },
+        {
+          "name": "evobulut_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices by text, customer and invoice date range. document_type is the vendor's document type code (optional, no filter when empty). Evobulut API: POST /fatura/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice by id: header, customer, dates, totals and lines. Evobulut API: POST /fatura/base, cmd sql (sql_id)."
+        },
+        {
+          "name": "evobulut_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments (tahsilat) applied to one invoice. Evobulut API: POST /fatura/base, cmd kapama_list (gg_id)."
+        },
+        {
+          "name": "evobulut_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "List quotes (teklif) by text, customer and date range. document_type defaults to 61, the given-quote type in the vendor sample. Evobulut API: POST /Teklif/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_get_quote",
+          "type": "read",
+          "title": "Get a quote",
+          "description": "Get one quote by id: header, customer, totals and lines. Evobulut API: POST /Teklif/base, cmd sql."
+        },
+        {
+          "name": "evobulut_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders (sipariş) by text, customer, date range, and open or partly delivered status. document_type defaults to 51, the type in the vendor sample. Evobulut API: POST /Siparis/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks (görev) for one assigned user id. Evobulut API: POST /Gorevler/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task (görev) for an Evobulut user, with a due date. The start date is today. Creates a record; nothing is deleted. Evobulut API: POST /Gorevler/base, cmd gorev_ins."
+        },
+        {
+          "name": "evobulut_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads (potansiyel müşteri) by text and date range. Evobulut API: POST /Potansiyel/base, cmd jq_list."
+        },
+        {
+          "name": "evobulut_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "evobulut_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Evobulut tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "evobulut_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Evobulut (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "evobulut_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Evobulut Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run evobulut_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which customers have open invoices, and how much do they owe?",
+        "Show the orders from this month that are still open.",
+        "Which stock items are running low, and how much is in each warehouse?",
+        "Create a task for my colleague to call the customer about the quote by Friday."
+      ]
+    },
+    {
+      "slug": "weels",
+      "name": "Weel",
+      "category": "Finance",
+      "description": "Read users, transactions, budgets, balances, custom fields and tax rates in Weel.",
+      "endpoint": "https://weels.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Weel API key"
+          },
+          {
+            "label": "Business ID (client_id)"
+          }
+        ],
+        "hint": "Create the key in Weel → **Settings → API → Create New API Key**. The Business ID is the numeric `client_id` of the business that issued the key. Your key is used only to call the Weel API on your behalf."
+      },
+      "tools": [
+        {
+          "name": "weel_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List the active employees of the business. Weel API: GET /v1/businesses/{client_id}/users."
+        },
+        {
+          "name": "weel_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one employee by id, with role and delegation settings. Weel API: GET /v1/businesses/{client_id}/users/{user_id}."
+        },
+        {
+          "name": "weel_list_user_budget_members",
+          "type": "read",
+          "title": "List budgets for a user",
+          "description": "List the budgets a user is a member of. Weel API: GET /v1/businesses/{client_id}/users/{user_id}/budget-members."
+        },
+        {
+          "name": "weel_list_invites",
+          "type": "read",
+          "title": "List invites",
+          "description": "List pending and accepted user invites (cancelled ones are excluded). Weel API: GET /v1/businesses/{client_id}/invites."
+        },
+        {
+          "name": "weel_list_roles",
+          "type": "read",
+          "title": "List roles",
+          "description": "List the roles that can be assigned to users in the business. Weel API: GET /v1/businesses/{client_id}/roles."
+        },
+        {
+          "name": "weel_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List card and reimbursement transactions, newest first, with optional date, status and expense-completion filters. Purchases have negative amounts. Weel API: GET /v3/businesses/{client_id}/transactions."
+        },
+        {
+          "name": "weel_get_transaction",
+          "type": "read",
+          "title": "Get a transaction",
+          "description": "Get one transaction by id, including GST (same sign as amount). Weel API: GET /v3/businesses/{client_id}/transactions/{transaction_id}."
+        },
+        {
+          "name": "weel_list_budgets",
+          "type": "read",
+          "title": "List budgets",
+          "description": "List budgets and subscriptions, with optional type and member-limit filters. Weel API: GET /v1/businesses/{client_id}/budgets."
+        },
+        {
+          "name": "weel_get_budget",
+          "type": "read",
+          "title": "Get a budget",
+          "description": "Get one budget's settings and available amount. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}."
+        },
+        {
+          "name": "weel_list_budget_members",
+          "type": "read",
+          "title": "List budget members",
+          "description": "List the users invited to a budget. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}/members."
+        },
+        {
+          "name": "weel_get_budget_member",
+          "type": "read",
+          "title": "Get a budget member",
+          "description": "Get one budget member, including its reset amount when the budget has member limits. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}/members/{budget_member_id}."
+        },
+        {
+          "name": "weel_list_budget_owners",
+          "type": "read",
+          "title": "List budget owners",
+          "description": "List the owners of a budget. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}/owners."
+        },
+        {
+          "name": "weel_list_budget_topups",
+          "type": "read",
+          "title": "List budget top-ups",
+          "description": "List the top-ups (available-amount changes) of a budget. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}/topups."
+        },
+        {
+          "name": "weel_list_budget_member_topups",
+          "type": "read",
+          "title": "List budget member top-ups",
+          "description": "List the top-ups of one budget member. Weel API: GET /v1/businesses/{client_id}/budgets/{budget_id}/members/{budget_member_id}/topups."
+        },
+        {
+          "name": "weel_list_statements",
+          "type": "read",
+          "title": "List statements",
+          "description": "List account balance statements for a date range. Weel API: GET /v1/businesses/{client_id}/statements."
+        },
+        {
+          "name": "weel_get_balances",
+          "type": "read",
+          "title": "Get account balances",
+          "description": "Get the real-time balance for each currency of the business. Weel API: GET /v1/businesses/{client_id}/balance."
+        },
+        {
+          "name": "weel_list_custom_fields",
+          "type": "read",
+          "title": "List custom fields",
+          "description": "List the custom fields of the business (tags for expenses). Weel API: GET /v1/businesses/{client_id}/custom-fields."
+        },
+        {
+          "name": "weel_get_custom_field",
+          "type": "read",
+          "title": "Get a custom field",
+          "description": "Get one custom field by id. Weel API: GET /v1/businesses/{client_id}/custom-fields/{custom_field_id}."
+        },
+        {
+          "name": "weel_list_custom_field_options",
+          "type": "read",
+          "title": "List custom field options",
+          "description": "List the options of a LIST custom field, including disabled ones. Weel API: GET /v1/businesses/{client_id}/custom-fields/{custom_field_id}/options."
+        },
+        {
+          "name": "weel_list_custom_field_budgets",
+          "type": "read",
+          "title": "List budgets linked to a custom field",
+          "description": "List the budgets that have this custom field assigned. Weel API: GET /v1/businesses/{client_id}/custom-fields/{custom_field_id}/budgets."
+        },
+        {
+          "name": "weel_list_accounting_codes",
+          "type": "read",
+          "title": "List accounting codes",
+          "description": "List the GL (general ledger) accounting codes of the business. Weel API: GET /v1/businesses/{client_id}/accounting-codes."
+        },
+        {
+          "name": "weel_list_categories",
+          "type": "read",
+          "title": "List expense categories",
+          "description": "List expense categories, system and custom. Set custom to true for custom ones only. Weel API: GET /v1/businesses/{client_id}/categories."
+        },
+        {
+          "name": "weel_list_tax_rates",
+          "type": "read",
+          "title": "List tax rates",
+          "description": "List the tax rates configured for the business (read-only). Weel API: GET /v1/businesses/{client_id}/tax-rates."
+        },
+        {
+          "name": "weel_get_tax_rate",
+          "type": "read",
+          "title": "Get a tax rate",
+          "description": "Get one tax rate by id. Weel API: GET /v1/businesses/{client_id}/tax-rates/{tax_rate_id}."
+        },
+        {
+          "name": "weel_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "weel_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Weel tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "weel_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Weel (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "weel_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Weel Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run weel_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which card transactions still need an expense completed?",
+        "What is the current balance in each currency?",
+        "List the budgets and how many members each one has.",
+        "Show all transactions cleared in the last 7 days."
+      ]
+    },
+    {
+      "slug": "vporiadku",
+      "name": "Vporiadku",
+      "category": "billing",
+      "description": "Read invoices, clients and payments; create, issue and send invoices in Vporiadku.",
+      "endpoint": "https://vporiadku.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "oauth",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "upstream",
+        "fields": [],
+        "hint": "This server reads and changes invoices, clients, catalogue items, payments and expenses in the company you choose, within the scopes you approve. Only the workspace owner or an admin can approve, and the workspace needs the Firma module. You can disconnect it any time in Vporiadku → Settings → API → Connected apps."
+      },
+      "tools": [
+        {
+          "name": "vporiadku_list_invoices",
+          "type": "read",
+          "title": "List invoices",
+          "description": "List invoices and other documents (invoice, proforma, advance, quote, …) with filters. Dates are YYYY-MM-DD. Returns { data, total, page, limit }. Vporiadku API: GET /invoices."
+        },
+        {
+          "name": "vporiadku_get_invoice",
+          "type": "read",
+          "title": "Get an invoice",
+          "description": "Get one invoice or document with its lines, VAT, totals, amount due and bank details. Vporiadku API: GET /invoices/{id}."
+        },
+        {
+          "name": "vporiadku_list_invoice_payments",
+          "type": "read",
+          "title": "List invoice payments",
+          "description": "List the payments recorded against one invoice. Vporiadku API: GET /invoices/{id}/payments."
+        },
+        {
+          "name": "vporiadku_list_clients",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (the client directory) with search by name, IČO, DIČ or e-mail. Vporiadku API: GET /clients."
+        },
+        {
+          "name": "vporiadku_get_client",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client with its address, IČO, DIČ and contacts. Vporiadku API: GET /clients/{id}."
+        },
+        {
+          "name": "vporiadku_list_items",
+          "type": "read",
+          "title": "List catalogue items",
+          "description": "List items and services of the catalogue (Profi plan). Vporiadku API: GET /items."
+        },
+        {
+          "name": "vporiadku_get_item",
+          "type": "read",
+          "title": "Get a catalogue item",
+          "description": "Get one catalogue item with its price, VAT rate and unit. Vporiadku API: GET /items/{id}."
+        },
+        {
+          "name": "vporiadku_list_expenses",
+          "type": "read",
+          "title": "List expenses",
+          "description": "List received documents (expenses) with filters for status, category, period and changes. Profi plan. Vporiadku API: GET /expenses."
+        },
+        {
+          "name": "vporiadku_get_expense",
+          "type": "read",
+          "title": "Get an expense",
+          "description": "Get one received document (expense) with its lines, VAT breakdown and payment details. Vporiadku API: GET /expenses/{id}."
+        },
+        {
+          "name": "vporiadku_list_due_payments",
+          "type": "read",
+          "title": "List supplier payments due",
+          "description": "List the supplier payments that are due up to a date. Vporiadku API: GET /supplier-payments/due."
+        },
+        {
+          "name": "vporiadku_list_payment_orders",
+          "type": "read",
+          "title": "List payment orders",
+          "description": "List payment orders (batches of supplier payments). Vporiadku API: GET /payment-orders."
+        },
+        {
+          "name": "vporiadku_list_received_invoices",
+          "type": "read",
+          "title": "List received e-invoices",
+          "description": "List e-invoices received in the inbox. Reading marks nothing as read. Vporiadku API: GET /received-invoices."
+        },
+        {
+          "name": "vporiadku_get_received_invoice",
+          "type": "read",
+          "title": "Get a received e-invoice",
+          "description": "Get one received e-invoice with its lines and VAT breakdown. Vporiadku API: GET /received-invoices/{id}."
+        },
+        {
+          "name": "vporiadku_list_recurring_invoices",
+          "type": "read",
+          "title": "List recurring invoices",
+          "description": "List recurring invoice schedules and their latest runs (read-only). Vporiadku API: GET /recurring-invoices."
+        },
+        {
+          "name": "vporiadku_list_companies",
+          "type": "read",
+          "title": "List companies",
+          "description": "List the companies the workspace issues documents under; the default one is marked. Vporiadku API: GET /companies."
+        },
+        {
+          "name": "vporiadku_list_bank_accounts",
+          "type": "read",
+          "title": "List bank accounts",
+          "description": "List the bank accounts that documents are paid into; the primary one is marked. Use the id as bank_account_id when creating an invoice. Vporiadku API: GET /bank-accounts."
+        },
+        {
+          "name": "vporiadku_create_invoice",
+          "type": "write",
+          "title": "Create an invoice draft",
+          "description": "Create an invoice or other document with lines and VAT. It is saved as a draft: it is not issued, not sent, and can still change. Vporiadku API: POST /invoices."
+        },
+        {
+          "name": "vporiadku_update_invoice",
+          "type": "write",
+          "title": "Update an invoice",
+          "description": "Change fields of an existing document. Only the fields you pass change. Passing items replaces all lines. The API refuses a change it does not allow (for example to a locked document) and says why. Vporiadku API: PATCH /invoices/{id}."
+        },
+        {
+          "name": "vporiadku_issue_invoice",
+          "type": "write",
+          "title": "Issue an invoice",
+          "description": "Issue a draft: it becomes an issued document and is locked for edits. An issued document cannot be changed later; the app issues a credit note or a cancellation instead. Vporiadku API: POST /invoices/{id}/issue."
+        },
+        {
+          "name": "vporiadku_send_invoice",
+          "type": "write",
+          "title": "Send an invoice by e-mail",
+          "description": "E-mail the document to its client. This sends a real e-mail to the customer; it fails if the client has no e-mail address. Vporiadku API: POST /invoices/{id}/send."
+        },
+        {
+          "name": "vporiadku_send_invoice_reminder",
+          "type": "write",
+          "title": "Send a payment reminder",
+          "description": "E-mail a payment reminder for an unpaid document to its client. This sends a real e-mail to the customer. Vporiadku API: POST /invoices/{id}/reminder."
+        },
+        {
+          "name": "vporiadku_record_invoice_payment",
+          "type": "write",
+          "title": "Record a payment",
+          "description": "Record a payment received for an invoice. The document status follows the payments. Vporiadku API: POST /invoices/{id}/payments."
+        },
+        {
+          "name": "vporiadku_mark_invoice_paid",
+          "type": "write",
+          "title": "Mark an invoice as paid",
+          "description": "Mark the whole open amount of an invoice as paid on a date. Vporiadku API: POST /invoices/{id}/mark-paid."
+        },
+        {
+          "name": "vporiadku_create_client",
+          "type": "write",
+          "title": "Create a client",
+          "description": "Add a client to the directory. The API checks for a duplicate by IČO, DIČ or name unless allow_duplicate is true. Vporiadku API: POST /clients."
+        },
+        {
+          "name": "vporiadku_update_client",
+          "type": "write",
+          "title": "Update a client",
+          "description": "Change fields of a client. Only the fields you pass change. Vporiadku API: PATCH /clients/{id}."
+        },
+        {
+          "name": "vporiadku_create_item",
+          "type": "write",
+          "title": "Create a catalogue item",
+          "description": "Add an item or service to the catalogue (Profi plan). Vporiadku API: POST /items."
+        },
+        {
+          "name": "vporiadku_create_expense",
+          "type": "write",
+          "title": "Record an expense",
+          "description": "Record a received document (an expense) from a supplier, with optional lines. Profi plan. Vporiadku API: POST /expenses."
+        },
+        {
+          "name": "vporiadku_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "vporiadku_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Vporiadku tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "vporiadku_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Vporiadku (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "vporiadku_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Vporiadku Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run vporiadku_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which invoices are overdue, and for which clients?",
+        "Create a draft invoice for client Novák s.r.o. with two lines for consulting, due in 14 days.",
+        "Record a bank payment of 1,200 EUR on invoice 2026-0142 dated today.",
+        "Which supplier payments are due this week?"
+      ]
+    },
+    {
+      "slug": "rooflink",
+      "name": "RoofLink",
+      "category": "crm",
+      "description": "Read jobs, customers, to-dos and work orders; create and complete to-dos in RoofLink.",
+      "endpoint": "https://rooflink.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "RoofLink API key"
+          }
+        ],
+        "hint": "Create the key in RoofLink under **Company Settings → API Keys** (company owner). The key acts for the company account, so the assistant can see all company data the key can reach. Revoke the key in the same place to disconnect."
+      },
+      "tools": [
+        {
+          "name": "rooflink_list_jobs",
+          "type": "read",
+          "title": "List jobs",
+          "description": "List the jobs (leads and sales) of the company, paginated. GET /light/public/jobs/."
+        },
+        {
+          "name": "rooflink_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "Get one job by id: customer, status, address and dates. GET /light/public/jobs/{id}/."
+        },
+        {
+          "name": "rooflink_search_jobs",
+          "type": "read",
+          "title": "Search jobs",
+          "description": "Search jobs by text, status, sales rep, creation date, zip code or customer region. GET /light/jobs/paginated_search/."
+        },
+        {
+          "name": "rooflink_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the customers of the company, paginated, with filters for sales rep and region. GET /light/customers/."
+        },
+        {
+          "name": "rooflink_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Get one customer by id: name, contact details and addresses. GET /light/customers/{id}/."
+        },
+        {
+          "name": "rooflink_list_todos",
+          "type": "read",
+          "title": "List to-dos",
+          "description": "List the to-dos (tasks) of the company, paginated, with filters for employee, job, priority and completion. GET /light/todos/."
+        },
+        {
+          "name": "rooflink_get_todo",
+          "type": "read",
+          "title": "Get to-do",
+          "description": "Get one to-do by id: name, notes, assignee, job and completion state. GET /light/todos/{id}/."
+        },
+        {
+          "name": "rooflink_create_todo",
+          "type": "write",
+          "title": "Create to-do",
+          "description": "Create a to-do for one employee, optionally linked to a job. Not idempotent: a repeated call creates a second to-do. POST /light/todos/."
+        },
+        {
+          "name": "rooflink_set_todo_completed",
+          "type": "write",
+          "title": "Mark to-do complete or open",
+          "description": "Mark one to-do as complete (true) or open again (false). Repeating the same call gives the same result. POST /light/todos/{id}/complete/."
+        },
+        {
+          "name": "rooflink_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the calendar events of the company, paginated, by start date range, job or employee. GET /light/events/."
+        },
+        {
+          "name": "rooflink_list_estimates",
+          "type": "read",
+          "title": "List estimates",
+          "description": "List the estimates of the company, paginated, by job or text. GET /light/estimates/."
+        },
+        {
+          "name": "rooflink_list_payments",
+          "type": "read",
+          "title": "List payments",
+          "description": "List the payments recorded in the company, paginated, by job or text. GET /light/payments/."
+        },
+        {
+          "name": "rooflink_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List the notes of the company, paginated, by job, employee, read state or text. GET /light/notes/."
+        },
+        {
+          "name": "rooflink_list_employees",
+          "type": "read",
+          "title": "List employees",
+          "description": "List the employees of the company, paginated, with an active filter. Use user.id from a row as the to-do assignee. GET /light/employees/."
+        },
+        {
+          "name": "rooflink_list_crews",
+          "type": "read",
+          "title": "List crews",
+          "description": "List the installation crews of the company, paginated, by active state, trade, region or text. GET /light/crews/."
+        },
+        {
+          "name": "rooflink_list_work_orders",
+          "type": "read",
+          "title": "List work orders",
+          "description": "List the work orders of the company, paginated, by crew, job, start or completion dates, or text. GET /light/workorders/."
+        },
+        {
+          "name": "rooflink_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "rooflink_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the RoofLink tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "rooflink_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for RoofLink (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "rooflink_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's RoofLink Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run rooflink_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which jobs did we create this week, and what is their status?",
+        "Find the customer Smith in our account and show their open jobs.",
+        "List the to-dos that are still open for employee 12.",
+        "Create a to-do 'Call the insurer' for user 5 on job 3381."
+      ]
+    },
+    {
+      "slug": "timr",
+      "name": "timr",
+      "category": "time-tracking",
+      "description": "Read employees, tasks, working times and holidays; create and update time entries in timr.",
+      "endpoint": "https://timr.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client id"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "Create an API client for your timr account (client credentials). The API reference is at **developer.timr.com**. The credentials are used only to call the timr API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "timr_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List employees of the timr client: name, employee number, entry and resign dates. Login and metadata fields are not returned. timr API: GET /users."
+        },
+        {
+          "name": "timr_get_user",
+          "type": "read",
+          "title": "Get user",
+          "description": "Get one employee by id. Login and metadata fields are not returned. timr API: GET /users/{id}."
+        },
+        {
+          "name": "timr_list_teams",
+          "type": "read",
+          "title": "List teams",
+          "description": "List teams of the timr client, with their breadcrumbs (parent path). timr API: GET /teams."
+        },
+        {
+          "name": "timr_get_team",
+          "type": "read",
+          "title": "Get team",
+          "description": "Get one team by id. timr API: GET /teams/{id}."
+        },
+        {
+          "name": "timr_list_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the members of one team. Login and metadata fields are not returned. timr API: GET /teams/{id}/members."
+        },
+        {
+          "name": "timr_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List project tasks: name, parent task, bookable and billable flags, active period. timr API: GET /tasks."
+        },
+        {
+          "name": "timr_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "Get one task by id. timr API: GET /tasks/{id}."
+        },
+        {
+          "name": "timr_list_working_times",
+          "type": "read",
+          "title": "List working times",
+          "description": "List working times (clock-in to clock-out entries): start, end, breaks, duration, type, status. Start and end locations are not returned. timr API: GET /working-times."
+        },
+        {
+          "name": "timr_get_working_time",
+          "type": "read",
+          "title": "Get working time",
+          "description": "Get one working time by id. Start and end locations are not returned. timr API: GET /working-times/{id}."
+        },
+        {
+          "name": "timr_list_deleted_working_times",
+          "type": "read",
+          "title": "List deleted working times",
+          "description": "List working times deleted since a date-time, for sync. timr API: GET /working-times:deleted."
+        },
+        {
+          "name": "timr_create_working_time",
+          "type": "write",
+          "title": "Create working time",
+          "description": "Create a working time for a user. Use an RFC 3339 start with offset. Status changeable keeps it editable. timr API: POST /working-times."
+        },
+        {
+          "name": "timr_update_working_time",
+          "type": "write",
+          "title": "Update working time",
+          "description": "Update the start, end, type, status or notes of one working time. Only the given fields change. timr API: PATCH /working-times/{id}."
+        },
+        {
+          "name": "timr_list_project_times",
+          "type": "read",
+          "title": "List project times",
+          "description": "List project times (time booked on a task): start, end, breaks, task, billable flag, status. Locations are not returned. timr API: GET /project-times."
+        },
+        {
+          "name": "timr_get_project_time",
+          "type": "read",
+          "title": "Get project time",
+          "description": "Get one project time by id. Locations are not returned. timr API: GET /project-times/{id}."
+        },
+        {
+          "name": "timr_create_project_time",
+          "type": "write",
+          "title": "Create project time",
+          "description": "Book time for a user on a task. Use an RFC 3339 start with offset. timr API: POST /project-times."
+        },
+        {
+          "name": "timr_update_project_time",
+          "type": "write",
+          "title": "Update project time",
+          "description": "Update the start, end, task, billable flag, status or notes of one project time. Only the given fields change. timr API: PATCH /project-times/{id}."
+        },
+        {
+          "name": "timr_list_working_time_types",
+          "type": "read",
+          "title": "List working time types",
+          "description": "List working time types (for example work, travel, absence). Use their ids in working-time calls. timr API: GET /working-time-types."
+        },
+        {
+          "name": "timr_list_holiday_calendars",
+          "type": "read",
+          "title": "List holiday calendars",
+          "description": "List holiday calendars. Use a calendar id with timr_list_holidays. timr API: GET /holiday-calendars."
+        },
+        {
+          "name": "timr_list_holidays",
+          "type": "read",
+          "title": "List holidays",
+          "description": "List the public holidays of one holiday calendar, sorted by date. timr API: GET /holiday-calendars/{id}/holidays."
+        },
+        {
+          "name": "timr_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "timr_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the timr tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "timr_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for timr (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "timr_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's timr Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run timr_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Who is clocked in right now, and who has not recorded hours this week?",
+        "Show the working times of Anna in October, with breaks and total minutes.",
+        "Book 3 hours on the Website task for Max today, marked as billable.",
+        "Which holidays fall in December in our holiday calendar?"
+      ]
+    },
+    {
+      "slug": "qvoo",
+      "name": "Qvoo CRM",
+      "category": "real-estate",
+      "description": "Read leads, contacts, properties and tasks; create, update and complete records in Qvoo CRM.",
+      "endpoint": "https://qvoo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Qvoo workspace ID"
+          },
+          {
+            "label": "Qvoo API key"
+          }
+        ],
+        "hint": "Find the workspace ID in Qvoo CRM → **Settings**. Create the API key in **Developer Settings**. The key is used only to call the Qvoo API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "qvoo_get_workspace",
+          "type": "read",
+          "title": "Get workspace",
+          "description": "Get the workspace name, timezone, currency and active modules. Good first call to confirm the connection. Qvoo API: GET /api/v1/workspaces/{workspaceId}."
+        },
+        {
+          "name": "qvoo_get_schema",
+          "type": "read",
+          "title": "Get field schema",
+          "description": "List the standard and custom field definitions for leads, contacts and customers. Use it before you create records with custom fields. Qvoo API: GET /schema."
+        },
+        {
+          "name": "qvoo_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads in the workspace, one page at a time. Qvoo API: GET /leads."
+        },
+        {
+          "name": "qvoo_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead with its status, stage, tags and custom fields. Qvoo API: GET /leads/{leadId}."
+        },
+        {
+          "name": "qvoo_list_recent_leads",
+          "type": "read",
+          "title": "List recent leads",
+          "description": "List leads created in the last N hours (default set by Qvoo). Qvoo API: GET /leads/recent."
+        },
+        {
+          "name": "qvoo_sync_leads",
+          "type": "read",
+          "title": "Sync leads",
+          "description": "Incremental lead sync: leads changed since a timestamp, with a cursor for the next page. Qvoo API: GET /leads/sync."
+        },
+        {
+          "name": "qvoo_get_lead_comments",
+          "type": "read",
+          "title": "Get lead comments",
+          "description": "List the comments on one lead. Qvoo API: GET /leads/{leadId}/comments."
+        },
+        {
+          "name": "qvoo_check_duplicate_lead",
+          "type": "read",
+          "title": "Check for a duplicate lead",
+          "description": "Check whether a lead with this phone number already exists. It only reads and creates nothing. Qvoo API: POST /leads/check-duplicate."
+        },
+        {
+          "name": "qvoo_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List properties in the workspace, one page at a time. Qvoo API: GET /properties."
+        },
+        {
+          "name": "qvoo_get_property",
+          "type": "read",
+          "title": "Get a property",
+          "description": "Get one property with its price, type, location and status. Qvoo API: GET /properties/{propertyId}."
+        },
+        {
+          "name": "qvoo_list_property_units",
+          "type": "read",
+          "title": "List property units",
+          "description": "List the units of one property. Qvoo API: GET /properties/{propertyId}/units."
+        },
+        {
+          "name": "qvoo_list_property_towers",
+          "type": "read",
+          "title": "List property towers",
+          "description": "List the towers or blocks of one property. Qvoo API: GET /properties/{propertyId}/towers."
+        },
+        {
+          "name": "qvoo_get_property_inventory",
+          "type": "read",
+          "title": "Get property inventory",
+          "description": "Get the property inventory summary for the workspace. Qvoo API: GET /properties/inventory."
+        },
+        {
+          "name": "qvoo_get_property_availability",
+          "type": "read",
+          "title": "Get property availability",
+          "description": "Get the availability list for properties in the workspace. Qvoo API: GET /properties/availability."
+        },
+        {
+          "name": "qvoo_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts in the workspace, one page at a time. Qvoo API: GET /contacts."
+        },
+        {
+          "name": "qvoo_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact with its name, phone, email and custom fields. Qvoo API: GET /contacts/{id}."
+        },
+        {
+          "name": "qvoo_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers (won deals) in the workspace, one page at a time. Qvoo API: GET /customers."
+        },
+        {
+          "name": "qvoo_get_customer",
+          "type": "read",
+          "title": "Get a customer",
+          "description": "Get one customer with its deal date, amounts and linked property. Qvoo API: GET /customers/{id}."
+        },
+        {
+          "name": "qvoo_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks in the workspace, one page at a time. Qvoo API: GET /tasks."
+        },
+        {
+          "name": "qvoo_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one task with its title, due date, status, priority and assignee. Qvoo API: GET /tasks/{id}."
+        },
+        {
+          "name": "qvoo_get_team_members",
+          "type": "read",
+          "title": "List team members",
+          "description": "List the team members of the workspace. Their ids are the assignee values for tasks. Qvoo API: GET /team."
+        },
+        {
+          "name": "qvoo_get_metadata",
+          "type": "read",
+          "title": "Get workspace metadata",
+          "description": "List the workspace's lead statuses, lead stages, lead sources, lead tags or property types. Qvoo API: GET /metadata/{kind}."
+        },
+        {
+          "name": "qvoo_list_whatsapp_conversations",
+          "type": "read",
+          "title": "List WhatsApp conversations",
+          "description": "List WhatsApp conversations, with optional search and status filters. Qvoo API: GET /whatsapp/conversations."
+        },
+        {
+          "name": "qvoo_list_whatsapp_templates",
+          "type": "read",
+          "title": "List WhatsApp templates",
+          "description": "List the WhatsApp message templates approved for the workspace. Qvoo API: GET /whatsapp/templates."
+        },
+        {
+          "name": "qvoo_create_lead",
+          "type": "write",
+          "title": "Create a lead",
+          "description": "Create a lead. Name and mobile number are required by Qvoo. Creates a new record in the CRM. Qvoo API: POST /leads."
+        },
+        {
+          "name": "qvoo_update_lead",
+          "type": "write",
+          "title": "Update a lead",
+          "description": "Replace a lead's details. Qvoo takes the full lead body, so send name and mobile_number with every change. Qvoo API: PUT /leads/{leadId}."
+        },
+        {
+          "name": "qvoo_add_lead_comment",
+          "type": "write",
+          "title": "Add a lead comment",
+          "description": "Add a comment to a lead. It is visible to the team in Qvoo. Qvoo API: POST /leads/{leadId}/comments."
+        },
+        {
+          "name": "qvoo_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a contact. Name and mobile number are required by Qvoo. Qvoo API: POST /contacts."
+        },
+        {
+          "name": "qvoo_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Replace a contact's details. Qvoo takes the full contact body, so send name and mobile_number with every change. Qvoo API: PUT /contacts/{id}."
+        },
+        {
+          "name": "qvoo_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task. Title and assignee are required by Qvoo; the assignee is a team member id (see qvoo_get_team_members). Qvoo API: POST /tasks."
+        },
+        {
+          "name": "qvoo_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Replace a task's details. Qvoo takes the full task body, so send title and assigned_to with every change. Qvoo API: PUT /tasks/{id}."
+        },
+        {
+          "name": "qvoo_complete_task",
+          "type": "write",
+          "title": "Complete a task",
+          "description": "Mark a task as complete. Completing a task that is already complete changes nothing. Qvoo API: POST /tasks/{id}/complete."
+        },
+        {
+          "name": "qvoo_reopen_task",
+          "type": "write",
+          "title": "Reopen a task",
+          "description": "Mark a completed task as open again. Qvoo API: POST /tasks/{id}/reopen."
+        },
+        {
+          "name": "qvoo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "qvoo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Qvoo CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "qvoo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Qvoo CRM (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "qvoo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Qvoo CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run qvoo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which leads came in during the last 24 hours, and what is their status?",
+        "Show the open tasks assigned to each team member.",
+        "List the properties that are currently available, with their prices.",
+        "Add a comment to the lead Jane Smith saying the viewing is confirmed for Friday."
+      ]
+    },
+    {
+      "slug": "quoter",
+      "name": "Quoter",
+      "category": "crm",
+      "description": "Read quotes, contacts and catalog items; create quotes, line items and contacts in Quoter.",
+      "endpoint": "https://quoter.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Client ID"
+          },
+          {
+            "label": "Client secret"
+          }
+        ],
+        "hint": "Create them in Quoter → **Account → API Keys**. Only the **Account Owner** can create them. Your client secret is sent only to Quoter's token endpoint; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "quoter_list_quotes",
+          "type": "read",
+          "title": "List quotes",
+          "description": "List quotes with their name, status, draft flag, email status, contact and totals. Filter by draft flag, status, email status, name, custom number or creation date. Quoter API: GET /quotes."
+        },
+        {
+          "name": "quoter_create_quote",
+          "type": "write",
+          "title": "Create a quote",
+          "description": "Create a new quote for a contact from a quote template. Creates a record in the account. Quoter API: POST /quotes."
+        },
+        {
+          "name": "quoter_add_line_item",
+          "type": "write",
+          "title": "Add a line item to a quote",
+          "description": "Add one line item (a product or service with quantity and prices) to an existing quote. Quoter API: POST /line_items."
+        },
+        {
+          "name": "quoter_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customer contacts with name, organization, email, phone and billing address. Filter by email, city, country or region. Quoter API: GET /contacts."
+        },
+        {
+          "name": "quoter_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id, with name, organization, email, phone, billing and shipping address. Quoter API: GET /contacts/{id}."
+        },
+        {
+          "name": "quoter_create_contact",
+          "type": "write",
+          "title": "Create a contact",
+          "description": "Create a customer contact. Email, first name, last name, organization and billing country are required by Quoter. Quoter API: POST /contacts."
+        },
+        {
+          "name": "quoter_update_contact",
+          "type": "write",
+          "title": "Update a contact",
+          "description": "Change some fields of one contact. Only the fields you pass are changed; the tool returns the updated contact. Quoter API: PATCH /contacts/{id}."
+        },
+        {
+          "name": "quoter_list_items",
+          "type": "read",
+          "title": "List catalog items",
+          "description": "List catalog items with name, code, SKU, category, manufacturer, supplier, prices and cost. Filter by name, code, SKU, category, manufacturer or supplier id. Quoter API: GET /items."
+        },
+        {
+          "name": "quoter_get_item",
+          "type": "read",
+          "title": "Get a catalog item",
+          "description": "Get one catalog item by id, with its prices, cost, category, manufacturer and supplier. Quoter API: GET /items/{id}."
+        },
+        {
+          "name": "quoter_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List catalog categories, with their parent category. Filter by name or parent category id. Quoter API: GET /categories."
+        },
+        {
+          "name": "quoter_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List suppliers that catalog items are bought from. Quoter API: GET /suppliers."
+        },
+        {
+          "name": "quoter_list_manufacturers",
+          "type": "read",
+          "title": "List manufacturers",
+          "description": "List manufacturers of catalog items. Quoter API: GET /manufacturers."
+        },
+        {
+          "name": "quoter_list_item_groups",
+          "type": "read",
+          "title": "List item groups",
+          "description": "List item groups, which bundle catalog items together. Quoter API: GET /item_groups."
+        },
+        {
+          "name": "quoter_list_quote_templates",
+          "type": "read",
+          "title": "List quote templates",
+          "description": "List the quote templates that a new quote can be created from. Quoter API: GET /quote_templates."
+        },
+        {
+          "name": "quoter_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "quoter_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Quoter tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "quoter_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Quoter (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "quoter_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Quoter Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run quoter_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the draft quotes we created this week.",
+        "Find the contact with the email address jane@example.com.",
+        "List the catalog items in the category Desktop.",
+        "Create a quote for this contact from our standard template."
+      ]
+    },
+    {
+      "slug": "claritysoft-crm",
+      "name": "Claritysoft CRM",
+      "category": "crm",
+      "description": "Read accounts, contacts, leads, opportunities and invoices; create and update records in ClarityCRM.",
+      "endpoint": "https://claritysoft-crm.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ClarityCRM API key"
+          }
+        ],
+        "hint": "Create an API key in your ClarityCRM account settings. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "claritysoft_get_accounts",
+          "type": "read",
+          "title": "Get accounts",
+          "description": "List or find CRM accounts (companies). Pass account_id for one account. Resource Account, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_contacts",
+          "type": "read",
+          "title": "Get contacts",
+          "description": "List or find CRM contacts (people). Pass contact_id for one contact. Resource Contact, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_leads",
+          "type": "read",
+          "title": "Get leads",
+          "description": "List or find CRM leads (prospects). Pass lead_id for one lead. Resource Lead, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_opportunities",
+          "type": "read",
+          "title": "Get opportunities",
+          "description": "List or find sales opportunities (deals) with amount and close date. Resource Opportunity, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_quotations",
+          "type": "read",
+          "title": "Get quotations",
+          "description": "List or find quotations (price offers). Pass quotation_id for one quotation. Resource Quotation, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_sales_orders",
+          "type": "read",
+          "title": "Get sales orders",
+          "description": "List or find sales orders. Pass sales_order_id for one order. Resource SalesOrder, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_invoices",
+          "type": "read",
+          "title": "Get invoices",
+          "description": "List or find invoices. Pass invoice_id for one invoice. Resource Invoice, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_products",
+          "type": "read",
+          "title": "Get products",
+          "description": "List or find products in the price list. Pass product_id for one product. Resource Product, Operation Get."
+        },
+        {
+          "name": "claritysoft_get_activities",
+          "type": "read",
+          "title": "Get activities",
+          "description": "List or find activities (tasks, calls, meetings) and their completion status. Resource Activity, Operation Get."
+        },
+        {
+          "name": "claritysoft_create_account",
+          "type": "write",
+          "title": "Create account",
+          "description": "Create a CRM account (company). Writes a new record. Resource Account, Operation Create."
+        },
+        {
+          "name": "claritysoft_update_account",
+          "type": "write",
+          "title": "Update account",
+          "description": "Change fields of one CRM account. Overwrites the given fields. Resource Account, Operation Edit."
+        },
+        {
+          "name": "claritysoft_create_opportunity",
+          "type": "write",
+          "title": "Create opportunity",
+          "description": "Create a sales opportunity (deal) for an account. Writes a new record. Resource Opportunity, Operation Create."
+        },
+        {
+          "name": "claritysoft_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "Change fields of one lead. Overwrites the given fields. Resource Lead, Operation Edit."
+        },
+        {
+          "name": "claritysoft_update_activity",
+          "type": "write",
+          "title": "Update activity",
+          "description": "Change fields of one activity, for example its Status. Resource Activity, Operation Edit."
+        },
+        {
+          "name": "claritysoft_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "claritysoft_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Claritysoft CRM tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "claritysoft_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Claritysoft CRM (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "claritysoft_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Claritysoft CRM Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run claritysoft_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which open opportunities close this month, and what is their total amount?",
+        "Find the contact Smith and show their account and recent activities.",
+        "List the leads added this week that have no phone number.",
+        "Mark the follow-up call for the Apex account as completed."
+      ]
+    },
+    {
+      "slug": "inventory-now",
+      "name": "Inventory Now",
+      "category": "inventory",
+      "description": "Read items and orders; create and update items; record, complete and cancel orders in Inventory Now.",
+      "endpoint": "https://inventory-now.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Inventory Now API key"
+          }
+        ],
+        "hint": "Create the key in the web app at inventorynow.app → **Developer API**, as the account owner on an active Pro subscription. Pick **Read Only** if the assistant should only look. Your key is used only to call the API on your behalf; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "inventorynow_list_items",
+          "type": "read",
+          "title": "List items",
+          "description": "List inventory items, newest change first, with stock on hand (bought − sold − loss), prices, custom fields and barcodes. Filter by search text, category, location or stock status. Inventory Now API: GET /items."
+        },
+        {
+          "name": "inventorynow_get_item",
+          "type": "read",
+          "title": "Get an item",
+          "description": "Get one item by id, with its photos, its expenses and profit figures (true_profit, true_margin). Inventory Now API: GET /items/{id}."
+        },
+        {
+          "name": "inventorynow_get_items_summary",
+          "type": "read",
+          "title": "Get items summary",
+          "description": "Quick checksum of the whole inventory: sum, count, bought_sum and sold_sum (deleted items excluded). This is not a stock value or profit report. Inventory Now API: GET /items/summary."
+        },
+        {
+          "name": "inventorynow_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List buy (supplier purchase) and sell (customer sale) orders, newest first, 100 per page, cancelled orders excluded. Use updated_since to see changes, including cancellations. Inventory Now API: GET /orders."
+        },
+        {
+          "name": "inventorynow_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order with its lines, items, expenses and expense-aware profit. Inventory Now API: GET /orders/{id}."
+        },
+        {
+          "name": "inventorynow_get_settings",
+          "type": "read",
+          "title": "Get account settings",
+          "description": "Get the account's settings: currency symbol, the labels for category, location and custom fields, the low-stock default and which order status steps are on. Inventory Now API: GET /user_settings."
+        },
+        {
+          "name": "inventorynow_create_item",
+          "type": "write",
+          "title": "Create an item",
+          "description": "Create an inventory item. Starts at zero stock: add stock with inventorynow_create_order (buy). If an item with the same internal_id already exists it is updated instead, so a stable internal_id makes a retry safe. Inventory Now API: POST /items."
+        },
+        {
+          "name": "inventorynow_update_item",
+          "type": "write",
+          "title": "Update an item",
+          "description": "Update an item. Only the fields you send change. Stock counts are not changed here: use inventorynow_create_order. Inventory Now API: PUT /items/{id}."
+        },
+        {
+          "name": "inventorynow_create_order",
+          "type": "write",
+          "title": "Record a buy or sell order",
+          "description": "Record a purchase (buy, adds stock) or a sale (sell, removes stock) with one or more lines. A sale of more units than are on hand fails unless back orders are on. Set adjust_stock to false to record the order without moving stock. Inventory Now API: POST /orders."
+        },
+        {
+          "name": "inventorynow_complete_order",
+          "type": "write",
+          "title": "Complete an order",
+          "description": "Mark an order completed and paid. If the account uses order status steps, completing also moves them. Inventory Now API: PUT /orders/{id}/complete."
+        },
+        {
+          "name": "inventorynow_cancel_order",
+          "type": "write",
+          "title": "Cancel an order",
+          "description": "Cancel an order and put its stock back: the counts the order moved are reversed. The order stays on record as cancelled. Inventory Now API: PUT /orders/{id}/cancel."
+        },
+        {
+          "name": "inventorynow_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "inventorynow_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Inventory Now tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "inventorynow_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Inventory Now (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "inventorynow_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Inventory Now Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run inventorynow_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many blue mugs are left, and where are they stored?",
+        "What is low on stock in the back room?",
+        "Record a sale of 5 Widget A to Acme Corp with 7% tax.",
+        "Show me the buy and sell orders from the last week.",
+        "Cancel order 456 and put its stock back."
+      ]
+    },
+    {
+      "slug": "sleektech",
+      "name": "SleekTech",
+      "category": "property-management",
+      "description": "Read properties, tenancies, certificates and jobs; add notes and save maintenance jobs in SleekTech.",
+      "endpoint": "https://sleektech.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "SleekTech Open API key"
+          }
+        ],
+        "hint": "Find it in SleekTech → **Settings → Web → API Keys**: name the key, choose **Open API** as the provider and click **Issue key**. Only admins can issue a key, and SleekTech shows it once. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sleektech_list_properties",
+          "type": "read",
+          "title": "List properties",
+          "description": "List properties as a paged list with landlord, status, type, current tenant, monthly rent and arrears. Filter by landlord, status or parent property. SleekTech Open API: GET /v1/properties/list."
+        },
+        {
+          "name": "sleektech_list_tenancies",
+          "type": "read",
+          "title": "List tenancies",
+          "description": "List every tenancy across the portfolio (past, present and future) as a paged list. Filter by property, status or date range. SleekTech Open API: GET /v1/tenancies/list."
+        },
+        {
+          "name": "sleektech_get_property_tenancy",
+          "type": "read",
+          "title": "Get the current tenancy of a property",
+          "description": "Get the current tenancy for one property: dates, rent, status and deposit fields. SleekTech Open API: GET /v1/tenancies/property/{propertyId}."
+        },
+        {
+          "name": "sleektech_list_tenancy_people",
+          "type": "read",
+          "title": "List tenancy people",
+          "description": "List the people on every tenancy in one paged call, with their contact details. Filter by property, tenancy ids or current tenancies only. SleekTech Open API: GET /v1/tenancies/people."
+        },
+        {
+          "name": "sleektech_list_landlords",
+          "type": "read",
+          "title": "List landlords",
+          "description": "List landlords ordered by company name. Set view_all to include archived landlords. SleekTech Open API: GET /v1/landlords."
+        },
+        {
+          "name": "sleektech_list_suppliers",
+          "type": "read",
+          "title": "List suppliers",
+          "description": "List active suppliers with id, name and classification. SleekTech Open API: GET /v1/suppliers."
+        },
+        {
+          "name": "sleektech_list_staff",
+          "type": "read",
+          "title": "List staff",
+          "description": "List your active staff with id and name. Use these ids for assignedToId on notes. SleekTech Open API: GET /v1/users/list."
+        },
+        {
+          "name": "sleektech_list_maintenance_jobs",
+          "type": "read",
+          "title": "List maintenance jobs",
+          "description": "List maintenance jobs across the portfolio as a paged list. Filter by property, landlord, status, open state or date range. SleekTech Open API: GET /v1/maintenance/list."
+        },
+        {
+          "name": "sleektech_get_maintenance_lookups",
+          "type": "read",
+          "title": "Get maintenance lookups",
+          "description": "List the values accepted by maintenance writes: 'categories' (with sub-categories), 'statuses' or 'priorities'. SleekTech Open API: GET /v1/maintenance/{categories|statuses|priorities}."
+        },
+        {
+          "name": "sleektech_save_maintenance_job",
+          "type": "write",
+          "title": "Create or update a maintenance job",
+          "description": "Create a maintenance job for a property, or update it when external_id matches an existing job (upsert). Category and supplier are matched by name; an unmatched name creates a new record. Use sleektech_get_maintenance_lookups first. Nothing is deleted. SleekTech Open API: POST /v1/maintenance."
+        },
+        {
+          "name": "sleektech_list_certificates",
+          "type": "read",
+          "title": "List certificates",
+          "description": "List certificates across the portfolio as a paged list. Filter by expiry or issue date, property or certificate type. Use it to find certificates that expire soon. SleekTech Open API: GET /v1/certificates/list."
+        },
+        {
+          "name": "sleektech_get_property_certificates",
+          "type": "read",
+          "title": "Get the certificates of a property",
+          "description": "List the active certificates for one property: id, type code and description, and dates. SleekTech Open API: GET /v1/certificates/property/{propertyId}."
+        },
+        {
+          "name": "sleektech_list_certificate_types",
+          "type": "read",
+          "title": "List certificate types",
+          "description": "List the certificate types you can record against a property. SleekTech Open API: GET /v1/certificates/types."
+        },
+        {
+          "name": "sleektech_list_notes",
+          "type": "read",
+          "title": "List notes",
+          "description": "List notes, tasks and reminders, newest first. Filter by record, assignee, open state or due date. SleekTech Open API: GET /v1/notes/list."
+        },
+        {
+          "name": "sleektech_add_note",
+          "type": "write",
+          "title": "Add a note, task or reminder",
+          "description": "Add a note, task or reminder to one record: a property, tenancy, landlord, job, supplier, certificate or expense. Give exactly one record id and the message. Set remind_at to email the assignee. SleekTech Open API: POST /v1/notes."
+        },
+        {
+          "name": "sleektech_list_changes",
+          "type": "read",
+          "title": "List changes since a position",
+          "description": "List the records created, updated or deleted since your last read. Each event names a type and an entity id; read that record again for its current state. SleekTech Open API: GET /v1/events."
+        },
+        {
+          "name": "sleektech_list_statements",
+          "type": "read",
+          "title": "List owner statements",
+          "description": "List owner statements across the portfolio as a paged list. Filter by landlord or date range. SleekTech Open API: GET /v1/statements/list."
+        },
+        {
+          "name": "sleektech_list_tenant_invoices",
+          "type": "read",
+          "title": "List tenant invoices",
+          "description": "List tenant invoices and credit notes (raw documents) as a paged list, for a date range. SleekTech Open API: GET /v1/accounts/tenant-invoices."
+        },
+        {
+          "name": "sleektech_list_tenant_payments",
+          "type": "read",
+          "title": "List tenant payments",
+          "description": "List tenant payments and refunds as a paged list; each row is one payment applied to one invoice. SleekTech Open API: GET /v1/accounts/tenant-payments."
+        },
+        {
+          "name": "sleektech_list_supplier_invoices",
+          "type": "read",
+          "title": "List supplier invoices",
+          "description": "List supplier invoices and credit notes (raw documents) as a paged list, for a date range. SleekTech Open API: GET /v1/accounts/supplier-invoices."
+        },
+        {
+          "name": "sleektech_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sleektech_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the SleekTech tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sleektech_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for SleekTech (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sleektech_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's SleekTech Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sleektech_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our properties have a gas safety certificate expiring in the next 60 days?",
+        "List the open maintenance jobs for the Elm Road flats and their supplier.",
+        "Show each landlord's latest owner statement.",
+        "Add a high-priority task for the lettings team to call the tenant at 14 Oak Street tomorrow."
+      ]
+    },
+    {
+      "slug": "rental-software",
+      "name": "Rental Software",
+      "category": "rental",
+      "description": "Check availability and prices; read leads and customers; create or update them in Rental Software.",
+      "endpoint": "https://rental-software.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Rental Software API key"
+          }
+        ],
+        "hint": "Create it in Rental Software → **Settings → API Keys** (admin account). The API & WordPress add-on must be active. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "rentalsoftware_list_rentals",
+          "type": "read",
+          "title": "List rental items",
+          "description": "List the active rental items in the inventory, optionally one category. Returns short records; set include_details for full records. Uses GET /rentals."
+        },
+        {
+          "name": "rentalsoftware_get_rental",
+          "type": "read",
+          "title": "Get rental item",
+          "description": "Read one rental item with its options, category, images and optionally its hourly prices. Uses GET /rentals/{id}."
+        },
+        {
+          "name": "rentalsoftware_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List the inventory categories with their IDs and names. Uses GET /categories_list."
+        },
+        {
+          "name": "rentalsoftware_list_popular_items",
+          "type": "read",
+          "title": "List popular items",
+          "description": "List the most rented items, most rented first, over the last N days (times rented on completed events). Uses GET /popular_items."
+        },
+        {
+          "name": "rentalsoftware_availability_on_day",
+          "type": "read",
+          "title": "Availability on a day",
+          "description": "Show how many of each item are rented and available on one day (midnight to midnight, account time zone). Uses GET /availability_list. An empty day returns one entry named 'No items to display'."
+        },
+        {
+          "name": "rentalsoftware_check_availability_and_price",
+          "type": "read",
+          "title": "Check availability and price",
+          "description": "Check whether items are free for a start and end time and get the price. Read-only: it changes nothing. Uses POST /availability_pricing with a JSON body."
+        },
+        {
+          "name": "rentalsoftware_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List customers. Returns short records; set include_details for full records. Uses GET /customers."
+        },
+        {
+          "name": "rentalsoftware_get_customer",
+          "type": "read",
+          "title": "Get customer",
+          "description": "Read one customer: contact, address, tags and custom fields. Uses GET /customers/{id}."
+        },
+        {
+          "name": "rentalsoftware_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List or search leads (quotes, bookings). Use a saved filter name, or the search fields, not both. An unknown filter name returns leads with no filter applied. Uses GET /leads."
+        },
+        {
+          "name": "rentalsoftware_get_lead",
+          "type": "read",
+          "title": "Get lead",
+          "description": "Read one lead: its rentals and prices, status, customer and totals. Set include_details for worker shifts and attachments. Uses GET /leads/{id}."
+        },
+        {
+          "name": "rentalsoftware_list_setup_list",
+          "type": "read",
+          "title": "List setup list",
+          "description": "Read one of the account's setup lists: lead statuses, surfaces, delivery methods, customer types, payment types or referral sources. Uses GET /{list}_list."
+        },
+        {
+          "name": "rentalsoftware_get_stats",
+          "type": "read",
+          "title": "Get dashboard statistics",
+          "description": "Read the dashboard statistics for a time window (default: the last 30 days). Needs the Dashboard Stats permission. Uses GET /stats."
+        },
+        {
+          "name": "rentalsoftware_create_customer",
+          "type": "write",
+          "title": "Create customer",
+          "description": "Create a customer record. Returns the new record ID in recordid. Uses POST /customers."
+        },
+        {
+          "name": "rentalsoftware_update_customer",
+          "type": "write",
+          "title": "Update customer",
+          "description": "Update fields on one customer. Fields you do not send stay the same; an empty value is ignored, so a field cannot be blanked. Uses POST /customers/{id}."
+        },
+        {
+          "name": "rentalsoftware_create_lead",
+          "type": "write",
+          "title": "Create lead",
+          "description": "Create a lead (a quote or booking) for an event. Pass an existing customer_id, or customer fields to match or create one. event_zip is required. Uses POST /leads."
+        },
+        {
+          "name": "rentalsoftware_update_lead",
+          "type": "write",
+          "title": "Update lead",
+          "description": "Update fields on one lead. Fields you do not send stay the same. Availability is checked again when dates change. Uses POST /leads/{id}."
+        },
+        {
+          "name": "rentalsoftware_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "Create a task linked to a customer, lead or organization, with an optional reminder. Needs the Sales CRM add-on. Uses POST /tasks."
+        },
+        {
+          "name": "rentalsoftware_add_journal_entry",
+          "type": "write",
+          "title": "Add journal entry",
+          "description": "Add a journal (CRM log) entry to a lead or a customer. Give lead_id or customer_id. Needs the Sales CRM add-on. Uses POST /journals."
+        },
+        {
+          "name": "rentalsoftware_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "rentalsoftware_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Rental Software tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "rentalsoftware_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Rental Software (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "rentalsoftware_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Rental Software Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run rentalsoftware_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our rental items are free on Saturday 7/25/2026?",
+        "What are our most rented items over the last 90 days?",
+        "Show me the open leads for this month and their totals.",
+        "Create a task to call the customer about the delivery window on lead 520247."
+      ]
+    },
+    {
+      "slug": "shirtigo",
+      "name": "Shirtigo",
+      "category": "commerce",
+      "description": "Read orders, projects, products and designs; create designs and projects in Shirtigo.",
+      "endpoint": "https://shirtigo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Shirtigo Cockpit API key"
+          }
+        ],
+        "hint": "Find it in Shirtigo Cockpit → **Integrations** (API key). The key is used only to call the Cockpit API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "shirtigo_get_account",
+          "type": "read",
+          "title": "Get account",
+          "description": "Return the Shirtigo account behind the API key: name, company, country, user group, billing validity and integration count. Good first call to confirm the connection. Cockpit API: GET /user."
+        },
+        {
+          "name": "shirtigo_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List product collections (projects) of the account, newest first by default. A project groups the products built from its base products and designs. Cockpit API: GET /projects."
+        },
+        {
+          "name": "shirtigo_get_project",
+          "type": "read",
+          "title": "Get project",
+          "description": "Return one project (collection) by its reference, including its status and processing areas. Cockpit API: GET /projects/{reference}."
+        },
+        {
+          "name": "shirtigo_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the account's finished or in-progress products (base product + design combinations), with optional filters by project, design, base product, tag or name search. Cockpit API: GET /products."
+        },
+        {
+          "name": "shirtigo_get_product",
+          "type": "read",
+          "title": "Get product",
+          "description": "Return one product by its numeric id, optionally with live stock per variant. Cockpit API: GET /products/{product-id}."
+        },
+        {
+          "name": "shirtigo_list_base_products",
+          "type": "read",
+          "title": "List base products",
+          "description": "Search the Shirtigo catalog of blank base products (shirts, hoodies, mugs, ...). Filter by category id or by SKU substring. Cockpit API: GET /base-products."
+        },
+        {
+          "name": "shirtigo_get_base_product",
+          "type": "read",
+          "title": "Get base product",
+          "description": "Return one base product by id, with its colors and sizes. Cockpit API: GET /base-products/{base-product-id}."
+        },
+        {
+          "name": "shirtigo_list_categories",
+          "type": "read",
+          "title": "List base product categories",
+          "description": "List the category ids of the base product catalog (use them to filter shirtigo_list_base_products). Cockpit API: GET /base-categories."
+        },
+        {
+          "name": "shirtigo_list_designs",
+          "type": "read",
+          "title": "List designs",
+          "description": "List the print designs (motifs) uploaded to the account. A design is reused across products. Cockpit API: GET /designs."
+        },
+        {
+          "name": "shirtigo_get_design",
+          "type": "read",
+          "title": "Get design",
+          "description": "Return one design by reference: file info, colors, preview URLs and processing status. Cockpit API: GET /designs/{design-reference}."
+        },
+        {
+          "name": "shirtigo_create_design_from_url",
+          "type": "write",
+          "title": "Create design from URL",
+          "description": "Upload a print design to the account from a public image URL. It creates a new design record only; no product is ordered. Cockpit API: POST /designs/url."
+        },
+        {
+          "name": "shirtigo_create_project",
+          "type": "write",
+          "title": "Create project",
+          "description": "Create an empty project (product collection) that later receives products. It is a new account record; no product is ordered. Cockpit API: POST /projects."
+        },
+        {
+          "name": "shirtigo_predict_order_price",
+          "type": "read",
+          "title": "Predict order price",
+          "description": "Calculate the total price (products, shipping, VAT) for a planned order of existing products by SKU, without placing an order. Cockpit API: POST /orders/predict-price."
+        },
+        {
+          "name": "shirtigo_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List orders placed by the account, paginated. Filter by order status id and sort the list. Cockpit API: GET /orders."
+        },
+        {
+          "name": "shirtigo_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "Return one order by its reference: status, prices, delivery address, products and shipments. Cockpit API: GET /orders/{order_reference}."
+        },
+        {
+          "name": "shirtigo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "shirtigo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Shirtigo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "shirtigo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Shirtigo (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "shirtigo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Shirtigo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run shirtigo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of my orders are still open, and when were they placed?",
+        "List my projects and how many products each one has.",
+        "What would an order of 20 black shirts to Germany cost before I place it?",
+        "Upload this design from a URL and show me its preview."
+      ]
     }
   ]
 }
