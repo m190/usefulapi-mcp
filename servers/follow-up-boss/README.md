@@ -60,6 +60,41 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `fub_update_task` | **write** | Update a task |
 | `fub_create_deal` | **write** | Create a deal |
 | `fub_update_deal` | **write** | Update a deal |
+| `fub_get_note` | read | Get one note |
+| `fub_get_task` | read | Get one task |
+| `fub_get_deal` | read | Get one deal |
+| `fub_get_appointment` | read | Get one appointment |
+| `fub_list_appointment_types` | read | List appointment types |
+| `fub_list_appointment_outcomes` | read | List appointment outcomes |
+| `fub_list_smart_lists` | read | List Smart Lists |
+| `fub_get_smart_list` | read | Get one Smart List |
+| `fub_list_ponds` | read | List ponds |
+| `fub_list_teams` | read | List teams |
+| `fub_list_groups` | read | List lead routing groups |
+| `fub_list_timeframes` | read | List timeframes |
+| `fub_list_deal_custom_fields` | read | List deal custom fields |
+| `fub_list_email_templates` | read | List email templates |
+| `fub_list_text_templates` | read | List text templates |
+| `fub_merge_email_template` | read | Fill an email template for a contact |
+| `fub_merge_text_template` | read | Fill a text template for a contact |
+| `fub_list_relationships` | read | List contact relationships |
+| `fub_list_unclaimed_leads` | read | List leads I can claim |
+| `fub_daily_brief` | read | My daily brief |
+| `fub_team_follow_up_report` | read | Team follow-up report |
+| `fub_create_person` | **write** | Add a contact |
+| `fub_claim_lead` | **write** | Claim a lead |
+| `fub_create_appointment` | **write** | Create an appointment |
+| `fub_update_appointment` | **write** | Update an appointment |
+| `fub_delete_appointment` | **write** | Delete an appointment |
+| `fub_update_note` | **write** | Edit a note |
+| `fub_delete_note` | **write** | Delete a note |
+| `fub_delete_task` | **write** | Delete a task |
+| `fub_delete_deal` | **write** | Delete a deal |
+| `fub_create_relationship` | **write** | Add a relationship |
+| `fub_update_relationship` | **write** | Update a relationship |
+| `fub_apply_action_plan` | **write** | Start an action plan for a contact |
+| `fub_set_action_plan_status` | **write** | Pause or resume an action plan |
+| `fub_bulk_update_people` | **write** | Update many contacts |
 | `fub_usage_status` | meta | Usage status (free-tier meter) |
 | `fub_request_feature` | meta | Request a missing feature |
 | `fub_upgrade` | meta | Upgrade to Pro or Pro+ |

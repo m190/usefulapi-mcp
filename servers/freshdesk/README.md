@@ -54,6 +54,52 @@ keys in config files.
 | `freshdesk_create_contact` | **write** | Create contact |
 | `freshdesk_update_contact` | **write** | Update contact |
 | `freshdesk_create_company` | **write** | Create company |
+| `freshdesk_bulk_update_tickets` | **write** | Update many tickets |
+| `freshdesk_get_job` | read | Get background job status |
+| `freshdesk_forward_ticket` | **write** | Forward ticket by email |
+| `freshdesk_merge_tickets` | **write** | Merge tickets |
+| `freshdesk_delete_ticket` | **write** | Delete ticket (to trash) |
+| `freshdesk_restore_ticket` | **write** | Restore deleted ticket |
+| `freshdesk_create_outbound_email` | **write** | Send outbound email (new ticket) |
+| `freshdesk_list_ticket_fields` | read | List ticket fields |
+| `freshdesk_list_email_configs` | read | List support email addresses |
+| `freshdesk_update_note` | **write** | Edit ticket note |
+| `freshdesk_list_time_entries` | read | List time entries |
+| `freshdesk_create_time_entry` | **write** | Log time on ticket |
+| `freshdesk_update_time_entry` | **write** | Update time entry |
+| `freshdesk_toggle_timer` | **write** | Start or stop timer |
+| `freshdesk_list_satisfaction_ratings` | read | List CSAT ratings |
+| `freshdesk_list_surveys` | read | List surveys |
+| `freshdesk_find_contacts` | read | Find contacts by name |
+| `freshdesk_list_contact_fields` | read | List contact fields |
+| `freshdesk_get_current_agent` | read | Who am I |
+| `freshdesk_find_agents` | read | Find agents by name or email |
+| `freshdesk_create_agent` | **write** | Create agent |
+| `freshdesk_update_agent` | **write** | Update agent |
+| `freshdesk_list_roles` | read | List roles |
+| `freshdesk_get_group` | read | Get group |
+| `freshdesk_create_group` | **write** | Create group |
+| `freshdesk_update_group` | **write** | Update group |
+| `freshdesk_find_companies` | read | Find companies by name |
+| `freshdesk_search_companies` | read | Search companies |
+| `freshdesk_list_company_fields` | read | List company fields |
+| `freshdesk_update_company` | **write** | Update company |
+| `freshdesk_list_canned_response_folders` | read | List canned response folders |
+| `freshdesk_list_canned_responses` | read | List canned responses in folder |
+| `freshdesk_get_canned_response` | read | Get canned response |
+| `freshdesk_create_canned_response` | **write** | Create canned response |
+| `freshdesk_search_solution_articles` | read | Search knowledge base |
+| `freshdesk_list_solution_categories` | read | List knowledge base categories |
+| `freshdesk_create_solution_category` | **write** | Create knowledge base category |
+| `freshdesk_list_solution_folders` | read | List knowledge base folders |
+| `freshdesk_create_solution_folder` | **write** | Create knowledge base folder |
+| `freshdesk_list_solution_articles` | read | List knowledge base articles |
+| `freshdesk_get_solution_article` | read | Get knowledge base article |
+| `freshdesk_create_solution_article` | **write** | Create knowledge base article |
+| `freshdesk_update_solution_article` | **write** | Update knowledge base article |
+| `freshdesk_list_products` | read | List products |
+| `freshdesk_list_sla_policies` | read | List SLA policies |
+| `freshdesk_list_business_hours` | read | List business hours |
 | `freshdesk_usage_status` | meta | Usage status (free-tier meter) |
 | `freshdesk_request_feature` | meta | Request a missing feature |
 | `freshdesk_upgrade` | meta | Upgrade to Pro or Pro+ |
