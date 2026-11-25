@@ -1195,6 +1195,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SleekTech](servers/sleektech/) | property-management | 24 | API token | [servers/sleektech/](servers/sleektech/) |
 | [Rental Software](servers/rental-software/) | rental | 22 | API token | [servers/rental-software/](servers/rental-software/) |
 | [Shirtigo](servers/shirtigo/) | commerce | 19 | API token | [servers/shirtigo/](servers/shirtigo/) |
+| [Sellize](servers/sellize/) | digital-commerce | 17 | API token | [servers/sellize/](servers/sellize/) |
+| [Junip](servers/junip/) | ecommerce | 11 | API token | [servers/junip/](servers/junip/) |
+| [Burst SMS](servers/burst-sms/) | messaging | 13 | API token | [servers/burst-sms/](servers/burst-sms/) |
+| [Spectora](servers/spectora/) | real-estate | 19 | API token | [servers/spectora/](servers/spectora/) |
+| [Swoogo](servers/swoogo/) | marketing | 17 | API token | [servers/swoogo/](servers/swoogo/) |
+| [Coevera](servers/pipeliner-crm-coevera/) | crm | 21 | API token | [servers/pipeliner-crm-coevera/](servers/pipeliner-crm-coevera/) |
+| [ChMeetings](servers/chmeetings/) | membership | 30 | API token | [servers/chmeetings/](servers/chmeetings/) |
+| [Fundraise Up](servers/fundraise-up/) | fundraising | 19 | API token | [servers/fundraise-up/](servers/fundraise-up/) |
+| [ReferralCandy](servers/referralcandy/) | marketing | 18 | API token | [servers/referralcandy/](servers/referralcandy/) |
+| [Murf AI](servers/murf-ai/) | localization | 10 | API token | [servers/murf-ai/](servers/murf-ai/) |
+| [Eden AI](servers/eden-ai/) | ai-infra | 9 | API token | [servers/eden-ai/](servers/eden-ai/) |
+| [HelpDocs](servers/helpdocs/) | knowledge-base | 20 | API token | [servers/helpdocs/](servers/helpdocs/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._

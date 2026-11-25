@@ -200379,6 +200379,1833 @@
         "What would an order of 20 black shirts to Germany cost before I place it?",
         "Upload this design from a URL and show me its preview."
       ]
+    },
+    {
+      "slug": "sellize",
+      "name": "Sellize",
+      "category": "digital-commerce",
+      "description": "Read orders, products and licence keys; add stock, create products and coupons in Sellize.",
+      "endpoint": "https://sellize.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Sellize store API key"
+          }
+        ],
+        "hint": "Create it in Sellize → **System & Security → API keys**. Start with read scopes. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "sellize_get_store",
+          "type": "read",
+          "title": "Get the store",
+          "description": "Get the store's id, name, address, currency and the scopes this key holds. Good first call to check the connection. Sellize API: GET /v1/store."
+        },
+        {
+          "name": "sellize_list_products",
+          "type": "read",
+          "title": "List products",
+          "description": "List the store's products, newest first, with prices, status and stock counts (stock is a number only for automatic products). Sellize API: GET /v1/products."
+        },
+        {
+          "name": "sellize_get_product",
+          "type": "read",
+          "title": "Get a product",
+          "description": "Get one product by id, with its price, status, delivery type and stock. Sellize API: GET /v1/products/{id}."
+        },
+        {
+          "name": "sellize_list_orders",
+          "type": "read",
+          "title": "List orders",
+          "description": "List the store's orders, newest first, filtered by status or creation time. Delivered items are never included. Sellize API: GET /v1/orders."
+        },
+        {
+          "name": "sellize_get_order",
+          "type": "read",
+          "title": "Get an order",
+          "description": "Get one order with its items, the buyer's store credit used, and its kind (order, topup or giftcard). A gift card code is never included. Sellize API: GET /v1/orders/{id}."
+        },
+        {
+          "name": "sellize_list_customers",
+          "type": "read",
+          "title": "List customers",
+          "description": "List the store's customers, or find one by email. Sellize API: GET /v1/customers."
+        },
+        {
+          "name": "sellize_list_coupons",
+          "type": "read",
+          "title": "List coupons",
+          "description": "List the store's coupons, newest first. Sellize API: GET /v1/coupons."
+        },
+        {
+          "name": "sellize_check_license",
+          "type": "read",
+          "title": "Check a licence key",
+          "description": "Check whether a licence key from the store's stock was sold. The answer gives valid and status (sold, refunded, disputed, replaced, unsold or unknown). Sellize API: POST /v1/licenses/check."
+        },
+        {
+          "name": "sellize_validate_license",
+          "type": "read",
+          "title": "Validate a licence key on an installation",
+          "description": "Check whether a sold licence key is active on one installation. Answers valid true only for a sold key active on that instance. Sellize API: POST /v1/licenses/validate."
+        },
+        {
+          "name": "sellize_create_product",
+          "type": "write",
+          "title": "Create a product",
+          "description": "Create a product in the store. It starts as a draft unless status is sent. An active product is visible to buyers at once. Sellize API: POST /v1/products."
+        },
+        {
+          "name": "sellize_update_product",
+          "type": "write",
+          "title": "Update a product",
+          "description": "Change the fields you send on one product, for example price or status. Fields you leave out stay as they are. A change is visible to buyers at once. Sellize API: PATCH /v1/products/{id}."
+        },
+        {
+          "name": "sellize_add_stock",
+          "type": "write",
+          "title": "Add stock to a product",
+          "description": "Add keys, accounts or codes to an automatic product's stock, up to 1000 at a time. Items already in its stock are skipped. Added items can be sold to buyers. Sellize API: POST /v1/products/{id}/stock."
+        },
+        {
+          "name": "sellize_create_coupon",
+          "type": "write",
+          "title": "Create a coupon",
+          "description": "Create a discount coupon. discount_type is percentage or fixed. Buyers can use it at once. Sellize API: POST /v1/coupons."
+        },
+        {
+          "name": "sellize_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "sellize_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Sellize tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "sellize_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Sellize (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "sellize_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Sellize Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sellize_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many orders did my store take this week, and what did they contain?",
+        "Which products are out of stock right now?",
+        "Create a 15% coupon called SPRING15 that expires on 31 March.",
+        "Add these 20 license keys to the stock of my Pro bundle product."
+      ]
+    },
+    {
+      "slug": "junip",
+      "name": "Junip",
+      "category": "ecommerce",
+      "description": "Read product and store reviews; post or clear public replies to reviews in Junip.",
+      "endpoint": "https://junip.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Junip private-app access token"
+          }
+        ],
+        "hint": "In Junip Admin, open **Integrations**, then your private app, then **Credentials**. The app needs the **reviews:read** permission (add **reviews:write** for replies). The API needs Junip's API & custom apps feature (Premium on the pricing page). The token is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "junip_get_token_info",
+          "type": "read",
+          "title": "Get token info",
+          "description": "Show the access token's status, granted scope (reviews:read, reviews:write) and the store it belongs to. Good first call to confirm access. Admin API: GET /admin/oauth/token/info."
+        },
+        {
+          "name": "junip_list_product_reviews",
+          "type": "read",
+          "title": "List product reviews",
+          "description": "List product reviews for the store, newest first by default. Filter by state or by one product (its remote id, for example the Shopify product id). Returns data[] and meta.after / meta.before cursors. Admin API: GET /admin/v2/product_reviews."
+        },
+        {
+          "name": "junip_get_product_review",
+          "type": "read",
+          "title": "Get a product review",
+          "description": "Get one product review by id: body, rating, state, pinned, response, product and customer details. Admin API: GET /admin/v2/product_reviews/{id}."
+        },
+        {
+          "name": "junip_list_store_reviews",
+          "type": "read",
+          "title": "List store reviews",
+          "description": "List store reviews (reviews of the shop itself, not of a product), newest first by default. Returns data[] and meta.after / meta.before cursors. Admin API: GET /admin/v2/store_reviews."
+        },
+        {
+          "name": "junip_get_store_review",
+          "type": "read",
+          "title": "Get a store review",
+          "description": "Get one store review by id. Admin API: GET /admin/v2/store_reviews/{id}."
+        },
+        {
+          "name": "junip_reply_product_review",
+          "type": "write",
+          "title": "Reply to a product review",
+          "description": "Set the store's public reply on a product review. This is visible to every shopper. Pass response null to clear an existing reply. response_alert true emails the reviewer; it is allowed only for confirmed reviews and defaults to false. Admin API: PUT /admin/v2/product_reviews/{id}/reply (needs reviews:write)."
+        },
+        {
+          "name": "junip_reply_store_review",
+          "type": "write",
+          "title": "Reply to a store review",
+          "description": "Set the store's public reply on a store review. This is visible to every shopper. Pass response null to clear an existing reply. response_alert true emails the reviewer; it is allowed only for confirmed reviews and defaults to false. Admin API: PUT /admin/v2/store_reviews/{id}/reply (needs reviews:write)."
+        },
+        {
+          "name": "junip_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "junip_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Junip tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "junip_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Junip (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "junip_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Junip Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run junip_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Show me the 1-3 star product reviews from the last 7 days.",
+        "Which products have the most pending reviews?",
+        "Reply to the newest store review and thank the customer.",
+        "Summarize what customers said about our store this month."
+      ]
+    },
+    {
+      "slug": "burst-sms",
+      "name": "Burst SMS",
+      "category": "messaging",
+      "description": "Send SMS and MMS, read delivery status, and manage webhooks for replies in Burst SMS.",
+      "endpoint": "https://burst-sms.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Burst SMS API key"
+          }
+        ],
+        "hint": "Find it in the Kudosity platform → **Settings → API Settings** (the account formerly called Burst SMS). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "burstsms_list_sms",
+          "type": "read",
+          "title": "List SMS messages",
+          "description": "List sent and received SMS messages with delivery status. Filter by date range, sender, recipient, message_ref, or direction. Returns smses, total_records and total_segments."
+        },
+        {
+          "name": "burstsms_get_sms",
+          "type": "read",
+          "title": "Get an SMS message",
+          "description": "Get one SMS message by its id: recipient, sender, status, segment count and timestamps."
+        },
+        {
+          "name": "burstsms_send_sms",
+          "type": "write",
+          "title": "Send an SMS",
+          "description": "Send one SMS to one recipient. This sends a real message that costs account credit and is not reversed. Long messages are split into segments. Add [opt-out-link] in the text to add an opt-out link."
+        },
+        {
+          "name": "burstsms_send_mms",
+          "type": "write",
+          "title": "Send an MMS",
+          "description": "Send one MMS with one or more media files (https URLs of jpg, gif, png, mp3 or mp4). This sends a real message that costs account credit and is not reversed."
+        },
+        {
+          "name": "burstsms_get_mms",
+          "type": "read",
+          "title": "Get an MMS message",
+          "description": "Get one MMS message by its id: recipient, sender, status and timestamps."
+        },
+        {
+          "name": "burstsms_list_webhooks",
+          "type": "read",
+          "title": "List webhooks",
+          "description": "List the webhooks configured on the account. An account can have at most 25."
+        },
+        {
+          "name": "burstsms_get_webhook",
+          "type": "read",
+          "title": "Get a webhook",
+          "description": "Get one webhook by its id: name, URL, filter and rate limit."
+        },
+        {
+          "name": "burstsms_create_webhook",
+          "type": "write",
+          "title": "Create a webhook",
+          "description": "Create a webhook that sends JSON events (for example SMS_STATUS or SMS_INBOUND) to an https URL you control. Event data includes phone numbers and message text. An account can have at most 25 webhooks."
+        },
+        {
+          "name": "burstsms_delete_webhook",
+          "type": "write",
+          "title": "Delete a webhook",
+          "description": "Delete a webhook by its id. Events stop at once; this cannot be undone."
+        },
+        {
+          "name": "burstsms_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "burstsms_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Burst SMS tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "burstsms_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Burst SMS (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "burstsms_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Burst SMS Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run burstsms_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Send an SMS to 61412345678 saying the order has shipped.",
+        "Show me the SMS messages that failed to deliver today.",
+        "List the inbound SMS replies from the last 24 hours.",
+        "Create a webhook that tells my app when a reply arrives."
+      ]
+    },
+    {
+      "slug": "spectora",
+      "name": "Spectora",
+      "category": "real-estate",
+      "description": "Read inspections, clients, agents and availability; create and update clients in Spectora.",
+      "endpoint": "https://spectora.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Spectora API key"
+          }
+        ],
+        "hint": "Create a key on the API keys page of your Spectora account. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "spectora_list_inspections",
+          "type": "read",
+          "title": "List inspections",
+          "description": "List inspections for your company, with filters for date range, status, inspector, service and location. Canceled, deleted and archived inspections are excluded unless you ask for them. Spectora API: GET /v2/inspections."
+        },
+        {
+          "name": "spectora_get_inspection",
+          "type": "read",
+          "title": "Get an inspection",
+          "description": "Get one inspection by id, optionally with related records (buyer, property, custom fields). Spectora API: GET /v2/inspections/{id}."
+        },
+        {
+          "name": "spectora_list_inspection_attachments",
+          "type": "read",
+          "title": "List inspection attachments",
+          "description": "List files attached to inspections (for example, reports). Filter by inspection id. Spectora API: GET /v2/inspection_attachments."
+        },
+        {
+          "name": "spectora_list_availabilities",
+          "type": "read",
+          "title": "List inspector availability",
+          "description": "Find open inspector time slots for a date range of up to one month, for the services you want to book. Use it before creating an inspection to offer a real time. Slots ignore service areas and lead time. Spectora API: GET /v2/availabilities."
+        },
+        {
+          "name": "spectora_list_contacts",
+          "type": "read",
+          "title": "List clients",
+          "description": "List clients (Spectora calls them contacts) for your company. Filter by full-text search, tag or buyer id. Spectora API: GET /v2/contacts."
+        },
+        {
+          "name": "spectora_get_contact",
+          "type": "read",
+          "title": "Get a client",
+          "description": "Get one client (contact) by id. Spectora API: GET /v2/contacts/{id}."
+        },
+        {
+          "name": "spectora_create_contact",
+          "type": "write",
+          "title": "Create a client",
+          "description": "Create a client (contact) in your company. Creates a new record each time, so check spectora_list_contacts first. Spectora API: POST /v2/contacts."
+        },
+        {
+          "name": "spectora_update_contact",
+          "type": "write",
+          "title": "Update a client",
+          "description": "Update fields of one client (contact). Only the fields you send change. The email cannot be changed here. Spectora API: PUT /v2/contacts/{id}."
+        },
+        {
+          "name": "spectora_list_agents",
+          "type": "read",
+          "title": "List agents",
+          "description": "List real estate agents (Spectora calls them connections) that refer your inspections. Filter by full-text search, email, agency or tag. Spectora API: GET /v2/connections."
+        },
+        {
+          "name": "spectora_get_agent",
+          "type": "read",
+          "title": "Get an agent",
+          "description": "Get one agent (connection) by connection id. Spectora API: GET /v2/connections/{id}."
+        },
+        {
+          "name": "spectora_get_agent_stats",
+          "type": "read",
+          "title": "Get agent statistics",
+          "description": "Get aggregated referral and inspection statistics per agent, for scorecards and referral tracking. Spectora API: GET /v2/connection_stats."
+        },
+        {
+          "name": "spectora_list_inspectors",
+          "type": "read",
+          "title": "List inspectors",
+          "description": "List the inspectors on your staff, with an active filter. Spectora API: GET /v2/inspectors."
+        },
+        {
+          "name": "spectora_get_inspector",
+          "type": "read",
+          "title": "Get an inspector",
+          "description": "Get one inspector by id. Spectora API: GET /v2/inspectors/{id}."
+        },
+        {
+          "name": "spectora_list_services",
+          "type": "read",
+          "title": "List services",
+          "description": "List the services your company offers for inspections. Spectora API: GET /v2/services."
+        },
+        {
+          "name": "spectora_list_events",
+          "type": "read",
+          "title": "List calendar events",
+          "description": "List calendar events for your company. Filter by inspection, inspector, event type or start date range. Spectora API: GET /v2/events."
+        },
+        {
+          "name": "spectora_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "spectora_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Spectora tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "spectora_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Spectora (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "spectora_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Spectora Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run spectora_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which inspections do we have booked for this week?",
+        "Show me the agents who referred the most inspections this year.",
+        "Find the inspections in Austin, TX from the last 30 days that are still unpaid.",
+        "Which inspectors have open slots next Thursday for a standard inspection?"
+      ]
+    },
+    {
+      "slug": "swoogo",
+      "name": "Swoogo",
+      "category": "marketing",
+      "description": "Read events, registrants, sessions, speakers, sponsors and attendance in Swoogo.",
+      "endpoint": "https://swoogo.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Consumer key"
+          },
+          {
+            "label": "Consumer secret"
+          }
+        ],
+        "hint": "In Swoogo open **My Profile → API Credentials** and copy the consumer key and secret. If that page does not show them, your Swoogo plan may not include API access. The credentials are used only to call the Swoogo API for you and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "swoogo_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List the events in the Swoogo account with dates, timezone, status and registration URL. Start here to find an event_id. Swoogo API: GET /events."
+        },
+        {
+          "name": "swoogo_get_event",
+          "type": "read",
+          "title": "Get an event",
+          "description": "Get one event by id, with its full settings: name, dates, timezone, capacity, status and registration URL. Swoogo API: GET /events/{event_id}."
+        },
+        {
+          "name": "swoogo_list_registrants",
+          "type": "read",
+          "title": "List registrants",
+          "description": "List the registrants of one event with their registration type and status. Use search to filter, for example registration_status=confirmed. Swoogo API: GET /registrants (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_get_registrant",
+          "type": "read",
+          "title": "Get a registrant",
+          "description": "Get one registrant by id, with their registration details and status. Swoogo API: GET /registrants/{registrant_id}."
+        },
+        {
+          "name": "swoogo_list_sessions",
+          "type": "read",
+          "title": "List sessions",
+          "description": "List the sessions (agenda items) of one event with their times, track and location. Swoogo API: GET /sessions (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_get_session",
+          "type": "read",
+          "title": "Get a session",
+          "description": "Get one session by id, with its title, times, track and location. Swoogo API: GET /sessions/{session_id}."
+        },
+        {
+          "name": "swoogo_list_speakers",
+          "type": "read",
+          "title": "List speakers",
+          "description": "List the speakers of one event. Swoogo API: GET /speakers (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_sponsors",
+          "type": "read",
+          "title": "List sponsors",
+          "description": "List the sponsors of one event. Swoogo API: GET /sponsors (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_tracks",
+          "type": "read",
+          "title": "List tracks",
+          "description": "List the session tracks of one event. Swoogo API: GET /tracks (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_locations",
+          "type": "read",
+          "title": "List locations",
+          "description": "List the rooms and venues of one event. Swoogo API: GET /locations (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_registrant_types",
+          "type": "read",
+          "title": "List registration types",
+          "description": "List the registration types (ticket or badge categories) of one event. Swoogo API: GET /reg-types (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_transactions",
+          "type": "read",
+          "title": "List transactions",
+          "description": "List the payment transactions of one event. Swoogo API: GET /transactions (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_list_session_attendance",
+          "type": "read",
+          "title": "List session attendance",
+          "description": "List session attendance records (which registrant attended which session) for one event. Swoogo API: GET /session-attendances (costs 10 API credits per call)."
+        },
+        {
+          "name": "swoogo_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "swoogo_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Swoogo tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "swoogo_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Swoogo (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "swoogo_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Swoogo Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run swoogo_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which events do we have coming up, and what are their dates?",
+        "How many confirmed registrants does our spring conference have?",
+        "List the speakers and sessions for the keynote track.",
+        "Which sponsors are booked for this year's event?"
+      ]
+    },
+    {
+      "slug": "pipeliner-crm-coevera",
+      "name": "Coevera",
+      "category": "crm",
+      "description": "Read accounts, leads and opportunities; create or update leads and tasks, add notes in Coevera.",
+      "endpoint": "https://pipeliner-crm-coevera.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Coevera region of your space"
+          },
+          {
+            "label": "Space ID"
+          },
+          {
+            "label": "API application user name"
+          },
+          {
+            "label": "API application password"
+          }
+        ],
+        "hint": "In Coevera, a space admin opens **Administration → API applications** and creates an application. **Show Access** shows the space ID and the region. Give the application only the permissions the assistant needs. Your password is sent to Coevera on each call, as Coevera requires for HTTP Basic. Disable the application in Coevera to stop access."
+      },
+      "tools": [
+        {
+          "name": "coevera_list_accounts",
+          "type": "read",
+          "title": "List accounts",
+          "description": "List accounts (companies) in the Coevera space, optionally by name. Returns data and page_info; pass page_info.end_cursor as after for the next page."
+        },
+        {
+          "name": "coevera_get_account",
+          "type": "read",
+          "title": "Get an account",
+          "description": "Get one account by id, with all its fields."
+        },
+        {
+          "name": "coevera_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List contacts (people) in the Coevera space, by last name or exact e-mail. Returns data and page_info."
+        },
+        {
+          "name": "coevera_get_contact",
+          "type": "read",
+          "title": "Get a contact",
+          "description": "Get one contact by id, with all its fields."
+        },
+        {
+          "name": "coevera_list_leads",
+          "type": "read",
+          "title": "List leads",
+          "description": "List leads in the Coevera space, by name, pipeline step or owner. Returns data and page_info."
+        },
+        {
+          "name": "coevera_get_lead",
+          "type": "read",
+          "title": "Get a lead",
+          "description": "Get one lead by id, with all its fields."
+        },
+        {
+          "name": "coevera_list_opportunities",
+          "type": "read",
+          "title": "List opportunities",
+          "description": "List opportunities (deals) in the Coevera space, by name, owner and closing date range. Returns data and page_info."
+        },
+        {
+          "name": "coevera_get_opportunity",
+          "type": "read",
+          "title": "Get an opportunity",
+          "description": "Get one opportunity by id, with all its fields."
+        },
+        {
+          "name": "coevera_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks in the Coevera space, by status, owner or due date. Status: 1 NotStarted, 2 InProgress, 3 Waiting, 4 Completed, 5 Deferred."
+        },
+        {
+          "name": "coevera_list_pipelines",
+          "type": "read",
+          "title": "List pipelines",
+          "description": "List the sales pipelines of the Coevera space, optionally by name. Use their ids with coevera_list_steps."
+        },
+        {
+          "name": "coevera_list_steps",
+          "type": "read",
+          "title": "List pipeline steps",
+          "description": "List the steps of a pipeline, in their sort order. Step ids are used by opportunities and leads."
+        },
+        {
+          "name": "coevera_list_clients",
+          "type": "read",
+          "title": "List users",
+          "description": "List the users (clients) of the Coevera space, optionally by name. Their ids are the owner_id of records and tasks."
+        },
+        {
+          "name": "coevera_create_lead",
+          "type": "write",
+          "title": "Create a lead",
+          "description": "Create a lead. Needs a name and an owner_id (a user id from coevera_list_clients) or a unit_id. Creates one record; nothing else changes."
+        },
+        {
+          "name": "coevera_update_lead",
+          "type": "write",
+          "title": "Update a lead",
+          "description": "Change a lead: its name, description, step or owner. Send only the fields to change. Pass the revision from get_lead when the lead may have changed."
+        },
+        {
+          "name": "coevera_create_task",
+          "type": "write",
+          "title": "Create a task",
+          "description": "Create a task. Needs a subject; the owner, due date, priority and status are optional. Creates one record."
+        },
+        {
+          "name": "coevera_update_task",
+          "type": "write",
+          "title": "Update a task",
+          "description": "Change a task: its subject, status, due date, priority, owner or description. Send only the fields to change."
+        },
+        {
+          "name": "coevera_create_note",
+          "type": "write",
+          "title": "Add a note",
+          "description": "Add a note to an account, a contact or a lead/opportunity. Needs the note text and the author's owner_id. Creates one record."
+        },
+        {
+          "name": "coevera_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "coevera_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Coevera tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "coevera_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Coevera (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "coevera_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Coevera Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run coevera_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which opportunities close this month, and which of them are still open?",
+        "Find the contacts of the account Northwind and show their e-mail addresses.",
+        "Create a lead for Jan Novak from the website form and assign it to me.",
+        "Add a note to the account Acme Ltd: we agreed to a demo on Friday."
+      ]
+    },
+    {
+      "slug": "chmeetings",
+      "name": "ChMeetings",
+      "category": "membership",
+      "description": "Read people, groups, events and giving; add notes, group members and follow-ups in ChMeetings.",
+      "endpoint": "https://chmeetings.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "ChMeetings API key"
+          }
+        ],
+        "hint": "Find it in ChMeetings → **Settings → Integrations → Manage API Keys** (Owners and Admins only). Use the Master key, or a scoped key with Read access to the modules you need. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "chmeetings_list_people",
+          "type": "read",
+          "title": "List people",
+          "description": "List people (members and attendees) with optional filters on name, email, mobile, groups, gender, family role, creation date and contact preferences. ChMeetings API: GET /api/v1/people."
+        },
+        {
+          "name": "chmeetings_get_person",
+          "type": "read",
+          "title": "Get a person",
+          "description": "Get one person by id, with profile details. ChMeetings API: GET /api/v1/people/{id}."
+        },
+        {
+          "name": "chmeetings_list_person_fields",
+          "type": "read",
+          "title": "List member fields",
+          "description": "List the custom member fields defined for the account. ChMeetings API: GET /api/v1/people/fields."
+        },
+        {
+          "name": "chmeetings_list_person_notes",
+          "type": "read",
+          "title": "List member notes",
+          "description": "List the notes on one person. ChMeetings API: GET /api/v1/people/{person_id}/notes."
+        },
+        {
+          "name": "chmeetings_create_person_note",
+          "type": "write",
+          "title": "Add a note to a person",
+          "description": "WRITE: add a new note to one person's profile. Existing notes are not changed. ChMeetings API: POST /api/v1/people/{person_id}/notes."
+        },
+        {
+          "name": "chmeetings_list_groups",
+          "type": "read",
+          "title": "List groups",
+          "description": "List groups (ministries, teams, small groups). ChMeetings API: GET /api/v1/groups."
+        },
+        {
+          "name": "chmeetings_get_group",
+          "type": "read",
+          "title": "Get a group",
+          "description": "Get one group by id. ChMeetings API: GET /api/v1/groups/{group_id}."
+        },
+        {
+          "name": "chmeetings_list_group_people",
+          "type": "read",
+          "title": "List people in groups",
+          "description": "List the members of one or more groups (the union of their members). ChMeetings API: GET /api/v1/groups/people."
+        },
+        {
+          "name": "chmeetings_add_person_to_group",
+          "type": "write",
+          "title": "Add a person to a group",
+          "description": "WRITE: add one person to a group. ChMeetings API: POST /api/v1/groups/{group_id}/memberships."
+        },
+        {
+          "name": "chmeetings_list_families",
+          "type": "read",
+          "title": "List families",
+          "description": "List families with optional name search and paging. ChMeetings API: GET /api/v1/families."
+        },
+        {
+          "name": "chmeetings_get_family",
+          "type": "read",
+          "title": "Get a family",
+          "description": "Get one family and its members by id. ChMeetings API: GET /api/v1/families/{id}."
+        },
+        {
+          "name": "chmeetings_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List events that fall within a date range (maximum 366 days). ChMeetings API: GET /api/v1/events."
+        },
+        {
+          "name": "chmeetings_get_event",
+          "type": "read",
+          "title": "Get an event",
+          "description": "Get one event by id. ChMeetings API: GET /api/v1/events/{event_id}."
+        },
+        {
+          "name": "chmeetings_list_event_occurrences",
+          "type": "read",
+          "title": "List event occurrences",
+          "description": "List the dated occurrences of one event within a date range (maximum 366 days). ChMeetings API: GET /api/v1/events/{event_id}/occurrences."
+        },
+        {
+          "name": "chmeetings_get_occurrence",
+          "type": "read",
+          "title": "Get an occurrence",
+          "description": "Get one dated occurrence by id. ChMeetings API: GET /api/v1/occurrences/{occurrence_id}."
+        },
+        {
+          "name": "chmeetings_get_attendance_summary",
+          "type": "read",
+          "title": "Get attendance summary",
+          "description": "Get the attendance totals for one occurrence. ChMeetings API: GET /api/v1/occurrences/{occurrence_id}/attendance/summary."
+        },
+        {
+          "name": "chmeetings_list_attendance",
+          "type": "read",
+          "title": "List attendance",
+          "description": "List the people for one occurrence with attended or absent status (paged). ChMeetings API: GET /api/v1/occurrences/{occurrence_id}/attendance."
+        },
+        {
+          "name": "chmeetings_list_follow_ups",
+          "type": "read",
+          "title": "List follow-ups",
+          "description": "List follow-ups (pastoral and visitor follow-up tasks) with filters on status, type, person, assignee, action and scheduled date. ChMeetings API: GET /api/v1/follow-ups."
+        },
+        {
+          "name": "chmeetings_list_follow_up_actions",
+          "type": "read",
+          "title": "List follow-up actions",
+          "description": "List the follow-up action types defined for the account. ChMeetings API: GET /api/v1/follow-ups/actions."
+        },
+        {
+          "name": "chmeetings_create_follow_up",
+          "type": "write",
+          "title": "Create a follow-up",
+          "description": "WRITE: create a follow-up task for one person, assigned to at least one assignee (ids from the assignable-members list). Assignees with a user account are notified while it is pending. ChMeetings API: POST /api/v1/follow-ups."
+        },
+        {
+          "name": "chmeetings_update_follow_up",
+          "type": "write",
+          "title": "Update a follow-up",
+          "description": "WRITE: update one follow-up (for example, set status to done). The API replaces the fields it receives, so pass person_id and assignee_ids again. ChMeetings API: PUT /api/v1/follow-ups/{follow_up_id}."
+        },
+        {
+          "name": "chmeetings_list_contributions",
+          "type": "read",
+          "title": "List contributions",
+          "description": "List giving records (contributions) with filters on person, date range, batch and reference. Financial data: read-only. ChMeetings API: GET /api/v1/contributions."
+        },
+        {
+          "name": "chmeetings_list_contribution_funds",
+          "type": "read",
+          "title": "List contribution funds",
+          "description": "List giving funds, with an optional tax-deductible filter. ChMeetings API: GET /api/v1/contributions/funds."
+        },
+        {
+          "name": "chmeetings_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List giving campaigns (pledge drives). ChMeetings API: GET /api/v1/campaigns."
+        },
+        {
+          "name": "chmeetings_list_campaign_pledges",
+          "type": "read",
+          "title": "List campaign pledges",
+          "description": "List the pledges made to one campaign. ChMeetings API: GET /api/v1/campaigns/{id}/pledges."
+        },
+        {
+          "name": "chmeetings_list_organizations",
+          "type": "read",
+          "title": "List organizations",
+          "description": "List the organizations (churches or sites) the API key can see. ChMeetings API: GET /api/v1/organizations."
+        },
+        {
+          "name": "chmeetings_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "chmeetings_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ChMeetings tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "chmeetings_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ChMeetings (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "chmeetings_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ChMeetings Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run chmeetings_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which people are in the youth group, and who has no group yet?",
+        "Show me the follow-ups that are still pending this week.",
+        "What was the attendance for last Sunday's 10:00 service?",
+        "Add a note to Jane Smith's profile that she asked for a home visit."
+      ]
+    },
+    {
+      "slug": "fundraise-up",
+      "name": "Fundraise Up",
+      "category": "fundraising",
+      "description": "Read campaigns, donations, recurring plans and supporters in Fundraise Up.",
+      "endpoint": "https://fundraise-up.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Fundraise Up live API key"
+          }
+        ],
+        "hint": "Create it in Fundraise Up → **Settings → API keys** (an Organization Administrator can create keys). Give it **read** permission for Donations at least. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "fundraiseup_list_campaigns",
+          "type": "read",
+          "title": "List campaigns",
+          "description": "List fundraising campaigns (name, status, type, currency, designations, frequencies). Filter by parent or subaccount id, or by designation. Fundraise Up API: GET /v1/campaigns."
+        },
+        {
+          "name": "fundraiseup_get_campaign",
+          "type": "read",
+          "title": "Get a campaign",
+          "description": "Get one campaign with its settings, content blocks, media, designations and frequencies. Fundraise Up API: GET /v1/campaigns/{id}."
+        },
+        {
+          "name": "fundraiseup_list_donations",
+          "type": "read",
+          "title": "List donations",
+          "description": "List one-time and recurring-installment donations, newest first: amount, currency, status, campaign, designation, supporter, payment times. Fundraise Up API: GET /v1/donations."
+        },
+        {
+          "name": "fundraiseup_get_donation",
+          "type": "read",
+          "title": "Get a donation",
+          "description": "Get one donation with its amounts, fees, status, campaign, designation, supporter, payment and recurring-plan links. Fundraise Up API: GET /v1/donations/{id}."
+        },
+        {
+          "name": "fundraiseup_list_recurring_plans",
+          "type": "read",
+          "title": "List recurring plans",
+          "description": "List recurring donation plans: amount, frequency, status, next installment date, cancellation details, supporter and campaign. Fundraise Up API: GET /v1/recurring_plans."
+        },
+        {
+          "name": "fundraiseup_get_recurring_plan",
+          "type": "read",
+          "title": "Get a recurring plan",
+          "description": "Get one recurring plan with its amount, frequency, status, cancellation reason and supporter. Fundraise Up API: GET /v1/recurring_plans/{id}."
+        },
+        {
+          "name": "fundraiseup_list_supporters",
+          "type": "read",
+          "title": "List supporters",
+          "description": "List donor (supporter) records with contact details and supporter-level fields, as shown in the Fundraise Up Supporters view. Fundraise Up API: GET /v1/supporters."
+        },
+        {
+          "name": "fundraiseup_get_supporter",
+          "type": "read",
+          "title": "Get a supporter",
+          "description": "Get one supporter (donor) record with contact details and supporter-level fields. Fundraise Up API: GET /v1/supporters/{id}."
+        },
+        {
+          "name": "fundraiseup_list_events",
+          "type": "read",
+          "title": "List events",
+          "description": "List account events (audit log): changes to donations, recurring plans and supporters, with the type and the affected object. Use it to see what changed and when. Fundraise Up API: GET /v1/events."
+        },
+        {
+          "name": "fundraiseup_list_fundraisers",
+          "type": "read",
+          "title": "List fundraisers",
+          "description": "List peer-to-peer fundraiser records (the individual supporter pages that raise money for a campaign). Fundraise Up API: GET /v1/fundraisers."
+        },
+        {
+          "name": "fundraiseup_get_fundraiser",
+          "type": "read",
+          "title": "Get a fundraiser",
+          "description": "Get one fundraiser record. Fundraise Up API: GET /v1/fundraisers/{id}."
+        },
+        {
+          "name": "fundraiseup_list_designations",
+          "type": "read",
+          "title": "List designations",
+          "description": "List designations (the funds or purposes donors choose). Filter by campaign id. Fundraise Up API: GET /v1/designations."
+        },
+        {
+          "name": "fundraiseup_get_designation",
+          "type": "read",
+          "title": "Get a designation",
+          "description": "Get one designation with its name, code and status. Fundraise Up API: GET /v1/designations/{id}."
+        },
+        {
+          "name": "fundraiseup_list_subaccounts",
+          "type": "read",
+          "title": "List subaccounts",
+          "description": "List subaccounts under the account of the API key. Use their ids to filter campaigns. Fundraise Up API: GET /v1/subaccounts."
+        },
+        {
+          "name": "fundraiseup_get_subaccount",
+          "type": "read",
+          "title": "Get a subaccount",
+          "description": "Get one subaccount record. Fundraise Up API: GET /v1/subaccounts/{id}."
+        },
+        {
+          "name": "fundraiseup_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "fundraiseup_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Fundraise Up tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "fundraiseup_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Fundraise Up (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "fundraiseup_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Fundraise Up Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run fundraiseup_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which campaigns are live right now, and how much has each raised?",
+        "List the donations from the last 7 days with their campaign and designation.",
+        "Show the recurring plans that were cancelled this month and their reasons.",
+        "Find the supporter record for this donor and list their donations."
+      ]
+    },
+    {
+      "slug": "referralcandy",
+      "name": "ReferralCandy",
+      "category": "marketing",
+      "description": "Read campaigns and rewards; enroll advocates, record purchases, update rewards in ReferralCandy.",
+      "endpoint": "https://referralcandy.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "API Access ID"
+          },
+          {
+            "label": "API Secret Key"
+          }
+        ],
+        "hint": "Find both in ReferralCandy → **Account → Profile → API Tokens**. The secret signs every request. It is used only to call the ReferralCandy API for your account and is never shown to anyone. Reset the secret in ReferralCandy to stop access."
+      },
+      "tools": [
+        {
+          "name": "referralcandy_list_campaigns",
+          "type": "read",
+          "title": "List referral campaigns",
+          "description": "List the campaigns in the account with their IDs, names, join URLs and state (ACTIVE, PAUSED or STOPPED). Call this first: other tools take campaign IDs. GET /campaigns.json."
+        },
+        {
+          "name": "referralcandy_list_segments",
+          "type": "read",
+          "title": "List static segments",
+          "description": "List the static contact segments with their IDs. Dynamic segments are not included. Use a segment ID with the segment tools and referralcandy_signup_advocate. GET /segments.json."
+        },
+        {
+          "name": "referralcandy_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "Read contacts enrolled in a campaign, with purchase history and unsubscribe state. Page with id (lowest contact ID to start at) and limit (max 100). GET /contacts.json."
+        },
+        {
+          "name": "referralcandy_get_referrer",
+          "type": "read",
+          "title": "Get a customer's referrer",
+          "description": "Look up who referred a customer, if anyone. Returns the referrer's email and the campaign ID, or null. GET /referrer.json."
+        },
+        {
+          "name": "referralcandy_list_referrals",
+          "type": "read",
+          "title": "List referred purchases",
+          "description": "List referred purchases in a time window (UNIX seconds). Filter by the advocate's email or only those still in the review period. Recent referrals appear a few minutes after purchase. GET /referrals.json."
+        },
+        {
+          "name": "referralcandy_list_rewards",
+          "type": "read",
+          "title": "List rewards",
+          "description": "List earned advocate rewards, first 200 matches. Filter by advocate email, status (pending_fulfillment or delivered), type (cash, coupon, custom or none), campaign, or start after a reward ID. GET /rewards.json."
+        },
+        {
+          "name": "referralcandy_list_reward_purchases",
+          "type": "read",
+          "title": "List purchases behind a reward",
+          "description": "List the referred purchases that a reward is based on. GET /reward_purchases.json."
+        },
+        {
+          "name": "referralcandy_signup_advocate",
+          "type": "write",
+          "title": "Enroll an advocate",
+          "description": "Add a contact and try to enroll them in every campaign. Returns the advocate's referral link and sharing page for each enrolled campaign. Check enrollments: a contact can exist without any enrollment. POST /signup.json."
+        },
+        {
+          "name": "referralcandy_record_purchase",
+          "type": "write",
+          "title": "Record a purchase",
+          "description": "Register a completed order so ReferralCandy can detect referrals and reward advocates. order_timestamp must be within 10 minutes of the buyer's visit to the purchase-complete page. Sending the same external_reference_id twice is deduplicated. POST /purchase.json."
+        },
+        {
+          "name": "referralcandy_update_referral",
+          "type": "write",
+          "title": "Mark a referred purchase as returned",
+          "description": "Mark a referred customer's purchase as returned. The referral is disregarded and no reward is paid. By default the advocate is emailed. POST /referral.json."
+        },
+        {
+          "name": "referralcandy_add_segment_contact",
+          "type": "write",
+          "title": "Add a contact to a segment",
+          "description": "Add an existing contact to a static segment. The contact then enrolls in every campaign that targets the segment. The contact must already exist (use referralcandy_signup_advocate for a new one). POST /segment_contacts.json."
+        },
+        {
+          "name": "referralcandy_remove_segment_contact",
+          "type": "write",
+          "title": "Remove a contact from a segment",
+          "description": "Remove a contact from a static segment. The contact is unenrolled from campaigns that no longer match them. DELETE /segment_contacts.json."
+        },
+        {
+          "name": "referralcandy_send_invite",
+          "type": "write",
+          "title": "Send the welcome invite",
+          "description": "Send the welcome email to a contact who is enrolled in a campaign. No email is sent if the contact is not enrolled. POST /invite.json."
+        },
+        {
+          "name": "referralcandy_update_reward_status",
+          "type": "write",
+          "title": "Set a reward's status",
+          "description": "Set a custom reward to pending_fulfillment or delivered, for example after you ship the reward. It can also move a delivered reward back to pending_fulfillment. POST /rewards.json."
+        },
+        {
+          "name": "referralcandy_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "referralcandy_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the ReferralCandy tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "referralcandy_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for ReferralCandy (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "referralcandy_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's ReferralCandy Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run referralcandy_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our referral campaigns are active, and what are their join links?",
+        "List referred purchases from the last 30 days that are still in the review period.",
+        "Enroll jane@example.com as an advocate and give me her referral link.",
+        "Show the rewards that are still pending fulfilment."
+      ]
+    },
+    {
+      "slug": "murf-ai",
+      "name": "Murf AI",
+      "category": "localization",
+      "description": "List voices, generate speech, translate text and delete cloned voices in Murf AI.",
+      "endpoint": "https://murf-ai.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Murf API key"
+          }
+        ],
+        "hint": "Create or copy a key in the **Murf dashboard** (murf.ai/api/dashboard). Your key is used only to call the Murf API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "murfai_list_voices",
+          "type": "read",
+          "title": "List voices",
+          "description": "List the stock voices for one model: falcon-2.1 (streaming voices) or gen2 (synthesis voices). Returns voiceId, displayName, locale, gender and available styles. Use a voiceId from here in murfai_generate_speech. Murf API: GET /v1/speech/voices."
+        },
+        {
+          "name": "murfai_list_cloned_voices",
+          "type": "read",
+          "title": "List cloned voices",
+          "description": "List the cloned voices in this workspace: voiceId (prefix cln_), displayName, tag and createdAt. Murf API: GET /v1/speech/voices/cloned."
+        },
+        {
+          "name": "murfai_get_voice_clone_status",
+          "type": "read",
+          "title": "Get voice clone status",
+          "description": "Check a voice-cloning job by its requestId: status is QUEUED, PROCESSING, COMPLETED or FAILED. On COMPLETED it returns the voiceId; on FAILED it returns errorMessage. Murf API: GET /v1/speech/voice-clone-creation-status/{requestId}."
+        },
+        {
+          "name": "murfai_generate_speech",
+          "type": "write",
+          "title": "Generate speech",
+          "description": "Convert text to speech with the GEN2 model and return a URL to the audio file, its length, the characters used and the characters left. WRITE action: each call spends Murf credits. Murf API: POST /v1/speech/generate."
+        },
+        {
+          "name": "murfai_translate_text",
+          "type": "write",
+          "title": "Translate text",
+          "description": "Translate a list of texts into one target language and return the translations in the same order. Spends Murf credits. Murf API: POST /v1/text/translate."
+        },
+        {
+          "name": "murfai_delete_cloned_voice",
+          "type": "write",
+          "title": "Delete a cloned voice",
+          "description": "Delete one cloned voice by its voiceId (prefix cln_). This cannot be undone: the voice can no longer generate speech. Murf API: DELETE /v1/speech/voices/cloned/{voiceId}."
+        },
+        {
+          "name": "murfai_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "murfai_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Murf AI tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "murfai_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Murf AI (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "murfai_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Murf AI Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run murfai_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List the English voices I can use for a short narration.",
+        "Generate a WAV file from this paragraph with the voice Natalie, a little slower.",
+        "Translate these three product lines into German and Spanish.",
+        "Show my cloned voices and whether a new voice clone has finished."
+      ]
+    },
+    {
+      "slug": "eden-ai",
+      "name": "Eden AI",
+      "category": "ai-infra",
+      "description": "List LLM models and expert features; chat with LLMs and run expert AI models in Eden AI.",
+      "endpoint": "https://eden-ai.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Eden AI API key"
+          }
+        ],
+        "hint": "Find it in the Eden AI dashboard under **API Keys**. Use an inference key (it starts with **sk-eden-**), not a management key. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "eden_ai_list_models",
+          "type": "read",
+          "title": "List LLM models",
+          "description": "List the LLM chat models available through Eden AI, with context length, pricing, regions and capabilities. Use the returned id as the `model` of eden_ai_chat. Eden AI API: GET /v3/models."
+        },
+        {
+          "name": "eden_ai_list_features",
+          "type": "read",
+          "title": "List expert features",
+          "description": "List the expert-model features (OCR, text, image, web, translation, audio, video) and their subfeatures. Use it to find the `feature/subfeature` for eden_ai_run_expert. Eden AI API: GET /v3/info."
+        },
+        {
+          "name": "eden_ai_get_feature",
+          "type": "read",
+          "title": "Get expert feature details",
+          "description": "Get one expert feature (its subfeatures) or one subfeature (its providers, models, pricing and input/output schemas). Pass `subfeature` for the schemas. Eden AI API: GET /v3/info/{feature} or GET /v3/info/{feature}/{subfeature}."
+        },
+        {
+          "name": "eden_ai_chat",
+          "type": "write",
+          "title": "Chat with an LLM (billed)",
+          "description": "Send a chat request to an LLM through Eden AI and return the reply (OpenAI-compatible response: choices[0].message.content). Each call is billed to the account. Find model ids with eden_ai_list_models. Eden AI API: POST /v3/chat/completions."
+        },
+        {
+          "name": "eden_ai_run_expert",
+          "type": "write",
+          "title": "Run an expert model (billed)",
+          "description": "Run one expert model synchronously (OCR, moderation, translation, speech, image and more) and return its result. Each call is billed to the account. `model` is 'feature/subfeature/provider', for example 'text/moderation/google'; `input` depends on the feature (see eden_ai_get_feature with `subfeature`). Eden AI API: POST /v3/universal-ai."
+        },
+        {
+          "name": "eden_ai_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "eden_ai_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Eden AI tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "eden_ai_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Eden AI (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "eden_ai_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Eden AI Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run eden_ai_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which LLM models on Eden AI support function calling and cost the least per token?",
+        "Extract the text from this scanned invoice with OCR.",
+        "Ask a Claude model to summarise this paragraph in three bullet points.",
+        "Check whether this user comment is flagged by text moderation."
+      ]
+    },
+    {
+      "slug": "helpdocs",
+      "name": "HelpDocs",
+      "category": "knowledge-base",
+      "description": "Search and read articles and reader stats; create and publish article drafts in HelpDocs.",
+      "endpoint": "https://helpdocs.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "HelpDocs API key"
+          }
+        ],
+        "hint": "Find it in HelpDocs → **Settings → API** (create a key with read permission, and write permission if you want drafts and publishing). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "helpdocs_list_articles",
+          "type": "read",
+          "title": "List articles",
+          "description": "List knowledge base articles, with optional filters by category, tag, language, search term or update time. Set include_body to get article text. Good first call to see what the help center holds. HelpDocs API: GET /v1/article."
+        },
+        {
+          "name": "helpdocs_get_article",
+          "type": "read",
+          "title": "Get an article",
+          "description": "Get one article by id: title, body, category, tags, permission groups and publish state. Set working_copy to read the unpublished draft. HelpDocs API: GET /v1/article/{article_id}."
+        },
+        {
+          "name": "helpdocs_list_article_versions",
+          "type": "read",
+          "title": "List article versions",
+          "description": "List the saved versions of one article, newest first, to see its edit history. HelpDocs API: GET /v1/article/{article_id}/versions."
+        },
+        {
+          "name": "helpdocs_list_tags",
+          "type": "read",
+          "title": "List article tags",
+          "description": "List every article tag in use, with how many articles carry each one. HelpDocs API: GET /v1/article/tags."
+        },
+        {
+          "name": "helpdocs_search_articles",
+          "type": "read",
+          "title": "Search articles",
+          "description": "Full-text search across the account's published articles, with relevance scores. Use it to find the article that answers a question. HelpDocs API: GET /v1/search."
+        },
+        {
+          "name": "helpdocs_list_categories",
+          "type": "read",
+          "title": "List categories",
+          "description": "List the categories that organise articles, with their parent links. Set include_article_counts to see how many articles each holds. HelpDocs API: GET /v1/category."
+        },
+        {
+          "name": "helpdocs_get_category",
+          "type": "read",
+          "title": "Get a category",
+          "description": "Get one category by id: title, description, parent, permission groups and language. HelpDocs API: GET /v1/category/{category_id}."
+        },
+        {
+          "name": "helpdocs_list_languages",
+          "type": "read",
+          "title": "List languages",
+          "description": "List the languages the account's articles and categories are translated into. HelpDocs API: GET /v1/languages."
+        },
+        {
+          "name": "helpdocs_list_permission_groups",
+          "type": "read",
+          "title": "List permission groups",
+          "description": "List the permission groups that limit which readers may see which articles and categories. HelpDocs API: GET /v1/account/group."
+        },
+        {
+          "name": "helpdocs_list_variables",
+          "type": "read",
+          "title": "List variables",
+          "description": "List reusable variables, such as a product name, that articles fill in when they render. HelpDocs API: GET /v1/variable."
+        },
+        {
+          "name": "helpdocs_list_clips",
+          "type": "read",
+          "title": "List clips",
+          "description": "List reusable content clips that articles embed, so shared copy is written once. Set template to list only template clips. HelpDocs API: GET /v1/clip."
+        },
+        {
+          "name": "helpdocs_get_top_articles",
+          "type": "read",
+          "title": "Get most-viewed articles",
+          "description": "Get the most-viewed articles for a period, to see what readers use most. HelpDocs API: GET /v1/stats/article."
+        },
+        {
+          "name": "helpdocs_get_search_terms",
+          "type": "read",
+          "title": "Get reader search terms",
+          "description": "Get what readers searched for in the help center during a period, to find missing or unclear articles. HelpDocs API: GET /v1/stats/search."
+        },
+        {
+          "name": "helpdocs_create_article",
+          "type": "write",
+          "title": "Create an article draft",
+          "description": "Create a new article as an unpublished draft in a category. It is not visible to readers until helpdocs_publish_article runs. HelpDocs API: POST /v1/article."
+        },
+        {
+          "name": "helpdocs_update_article",
+          "type": "write",
+          "title": "Update an article draft",
+          "description": "Change an article's title, body, description, slug, tags or category. The change is saved to the working copy (a draft) and is not live until helpdocs_publish_article runs. HelpDocs API: PATCH /v1/article/{article_id}?working_copy=true."
+        },
+        {
+          "name": "helpdocs_publish_article",
+          "type": "write",
+          "title": "Publish an article",
+          "description": "Publish an article's working copy, so readers see the latest draft on the live help center. Readers see it at once. HelpDocs API: POST /v1/article/{article_id}/publish."
+        },
+        {
+          "name": "helpdocs_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "helpdocs_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the HelpDocs tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "helpdocs_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for HelpDocs (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "helpdocs_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's HelpDocs Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run helpdocs_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our help articles are about refunds, and which of them are out of date?",
+        "What did readers search for last month that we have no article for?",
+        "Draft a new article about changing a password, then show me the draft.",
+        "Publish the draft of the billing FAQ article once I have checked it."
+      ]
     }
   ]
 }
