@@ -206883,6 +206883,127 @@
         "List the purchase orders waiting for delivery from our top vendors.",
         "Which manufacturing orders are running late, and by how many days?"
       ]
+    },
+    {
+      "slug": "vinsight",
+      "name": "Vinsight",
+      "category": "winery-production",
+      "description": "Read contacts, stock items and sales orders; create sales orders in Vinsight.",
+      "endpoint": "https://vinsight.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Vinsight Personal Access Token"
+          }
+        ],
+        "hint": "Create it in Vinsight → **OAuth Application → Personal Access Tokens**, with read or write scopes for the resources you need. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "vinsight_list_resources",
+          "type": "read",
+          "title": "List resources",
+          "description": "List the Vinsight API resources (endpoints) this token can reach, with their key names. Start here to find a resource name. Vinsight API: GET /Metadata.json."
+        },
+        {
+          "name": "vinsight_describe_resource",
+          "type": "read",
+          "title": "Describe a resource",
+          "description": "Get one resource's fields (type, nullable, read-only), navigation properties, writable child collections and custom actions. Use it before a create. Vinsight API: GET /Metadata/{Resource}.json?$expand=Metadata."
+        },
+        {
+          "name": "vinsight_list_records",
+          "type": "read",
+          "title": "List records of any resource",
+          "description": "List records of any Vinsight resource with OData $filter, $select, $orderby, $skip and $top. Use vinsight_list_resources to find the name. Vinsight API: GET /{Resource}.json."
+        },
+        {
+          "name": "vinsight_get_record",
+          "type": "read",
+          "title": "Get one record",
+          "description": "Get one record of any Vinsight resource by its key, with optional $select. Numeric keys such as 8821 work; string keys are encoded for you. Vinsight API: GET /{Resource}/{key}.json."
+        },
+        {
+          "name": "vinsight_list_contacts",
+          "type": "read",
+          "title": "List contacts",
+          "description": "List customers and suppliers (Contacts) with filter, order and paging. Default fields: ContactNum, LegalName, IsActive. Vinsight API: GET /Contacts.json."
+        },
+        {
+          "name": "vinsight_list_stock_items",
+          "type": "read",
+          "title": "List stock items",
+          "description": "List stock items (products and SKUs) with filter, order and paging. Default fields: StockItemNum, StockItemCode, Description, BaseUOM. Vinsight API: GET /StockItems.json."
+        },
+        {
+          "name": "vinsight_list_sales_orders",
+          "type": "read",
+          "title": "List sales orders",
+          "description": "List sales orders with filter, order and paging. Default fields: SalesOrderNum, Status, InvoiceDate, ContactNum. Vinsight API: GET /SalesOrders.json."
+        },
+        {
+          "name": "vinsight_create_sales_order",
+          "type": "write",
+          "title": "Create a sales order",
+          "description": "Create a sales order for a contact, with optional line items. This writes a new numbered order that uses the next number in the sequence; it does not email anyone. Required: ContactNum, DivisionNum, CurrencyNum, InvoiceDate. Vinsight API: POST /SalesOrders.json."
+        },
+        {
+          "name": "vinsight_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "vinsight_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Vinsight tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "vinsight_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Vinsight (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan, a free account gets both Pro and Pro+, each with a payment link, for the user to choose, and a Pro subscriber gets the Pro+ link; with a plan, one link. An existing Pro subscription changes to Pro+ in place: the reply gives a link to Stripe's page, which shows the exact charge (the price difference for the rest of the period; in a free Pro trial the full Pro+ price, as the trial ends) and changes the plan only when the user confirms there. This tool never charges. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "vinsight_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Vinsight Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run vinsight_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sales orders are still open, and for which customers?",
+        "Find the stock item for our 2024 Shiraz and show its price list.",
+        "Create a sales order for 2 cases of stock item 117 for contact 42.",
+        "List the Vinsight resources I can reach, then describe SalesOrders."
+      ]
     }
   ]
 }

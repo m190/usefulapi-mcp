@@ -1237,6 +1237,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Joy Subscriptions](servers/joy-subscriptions/) | billing | 22 | API token | [servers/joy-subscriptions/](servers/joy-subscriptions/) |
 | [Bridgit](servers/bridgit/) | hr | 16 | API token | [servers/bridgit/](servers/bridgit/) |
 | [MRPeasy](servers/mrpeasy/) | inventory | 27 | API token | [servers/mrpeasy/](servers/mrpeasy/) |
+| [Vinsight](servers/vinsight/) | winery-production | 12 | API token | [servers/vinsight/](servers/vinsight/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
