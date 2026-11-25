@@ -186804,6 +186804,1335 @@
         "Which documents did I convert this week, and did any of them fail?",
         "How many images and PDF pages did my Mathpix account process this month?"
       ]
+    },
+    {
+      "slug": "segment",
+      "name": "Segment",
+      "category": "data",
+      "description": "Read sources, destinations, tracking plans and warehouses, and their connections in Segment.",
+      "endpoint": "https://segment.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Workspace region"
+          },
+          {
+            "label": "Public API token"
+          }
+        ],
+        "hint": "Create it in Segment under Settings → Workspace settings → Access Management → Tokens → Create Token → Public API (Workspace Owners only; Team or Business plan). Your token is used only to call the Public API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "segment_get_workspace",
+          "type": "read",
+          "title": "Get the workspace",
+          "description": "Get the Segment workspace this token belongs to (id, name, slug). Good first call to confirm the connection and the region. Public API: GET /."
+        },
+        {
+          "name": "segment_list_sources",
+          "type": "read",
+          "title": "List sources",
+          "description": "List the sources in the workspace: each source's id, name, slug, enabled flag, write keys and metadata (the catalog type). Public API: GET /sources."
+        },
+        {
+          "name": "segment_get_source",
+          "type": "read",
+          "title": "Get a source",
+          "description": "Get one source by id: its settings, labels, enabled flag and write keys. Public API: GET /sources/{sourceId}."
+        },
+        {
+          "name": "segment_list_source_destinations",
+          "type": "read",
+          "title": "List destinations connected to a source",
+          "description": "List the destinations connected to one source: each connection's id, name, enabled flag and metadata. Public API: GET /sources/{sourceId}/connected-destinations."
+        },
+        {
+          "name": "segment_list_destinations",
+          "type": "read",
+          "title": "List destinations",
+          "description": "List the destinations in the workspace: each destination's id, enabled flag, sourceId and metadata (the catalog type). Public API: GET /destinations."
+        },
+        {
+          "name": "segment_get_destination",
+          "type": "read",
+          "title": "Get a destination",
+          "description": "Get one destination by id: its settings, enabled flag, the source it is connected to and its metadata. Public API: GET /destinations/{destinationId}."
+        },
+        {
+          "name": "segment_list_tracking_plans",
+          "type": "read",
+          "title": "List tracking plans",
+          "description": "List the tracking plans in the workspace: each plan's id, name, type and last update time. Public API: GET /tracking-plans."
+        },
+        {
+          "name": "segment_get_tracking_plan",
+          "type": "read",
+          "title": "Get a tracking plan",
+          "description": "Get one tracking plan by id: its name, description, type and timestamps. Public API: GET /tracking-plans/{trackingPlanId}."
+        },
+        {
+          "name": "segment_list_warehouses",
+          "type": "read",
+          "title": "List warehouses",
+          "description": "List the warehouses connected to the workspace: each warehouse's id, name, type and status. Public API: GET /warehouses."
+        },
+        {
+          "name": "segment_get_warehouse",
+          "type": "read",
+          "title": "Get a warehouse",
+          "description": "Get one warehouse by id: its settings, type and status. Public API: GET /warehouses/{warehouseId}."
+        },
+        {
+          "name": "segment_list_warehouse_sources",
+          "type": "read",
+          "title": "List sources synced to a warehouse",
+          "description": "List the sources connected to one warehouse: each source's id, name and sync settings. Public API: GET /warehouses/{warehouseId}/connected-sources."
+        },
+        {
+          "name": "segment_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "segment_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Segment tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "segment_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Segment (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "segment_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Segment Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run segment_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which sources in our workspace are disabled, and which destinations do they feed?",
+        "List our tracking plans and show when each one was last updated.",
+        "Which warehouses are connected, and which sources sync into each one?",
+        "Show the configuration of the Mixpanel destination on our website source."
+      ]
+    },
+    {
+      "slug": "knock",
+      "name": "Knock",
+      "category": "notifications",
+      "description": "Read users, messages, delivery logs and workflow runs; trigger or cancel workflows in Knock.",
+      "endpoint": "https://knock.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Knock secret API key"
+          }
+        ],
+        "hint": "Find it in the Knock dashboard → **Developers → API keys**. The key picks the environment (development or production). Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "knock_list_users",
+          "type": "read",
+          "title": "List users",
+          "description": "List users in the current Knock environment, newest first unless ordered otherwise. Use it to find a user id before other calls. Knock API: GET /v1/users."
+        },
+        {
+          "name": "knock_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one Knock user by id: name, email, phone number, timezone and timestamps. Knock API: GET /v1/users/{user_id}."
+        },
+        {
+          "name": "knock_list_user_messages",
+          "type": "read",
+          "title": "List a user's messages",
+          "description": "List the in-app and channel messages sent to one user, filterable by channel, status, workflow run and insertion time. Knock API: GET /v1/users/{user_id}/messages."
+        },
+        {
+          "name": "knock_list_messages",
+          "type": "read",
+          "title": "List messages",
+          "description": "List messages across the environment, filterable by channel, status, source, tenant, workflow run and insertion time. Knock API: GET /v1/messages."
+        },
+        {
+          "name": "knock_get_message",
+          "type": "read",
+          "title": "Get a message",
+          "description": "Get one message by id: channel, status, recipient, workflow, engagement timestamps (seen, read, interacted, archived). Knock API: GET /v1/messages/{message_id}."
+        },
+        {
+          "name": "knock_get_message_content",
+          "type": "read",
+          "title": "Get message content",
+          "description": "Get the rendered content (subject, body, and channel data) of one message. Knock API: GET /v1/messages/{message_id}/content."
+        },
+        {
+          "name": "knock_list_message_delivery_logs",
+          "type": "read",
+          "title": "List delivery logs",
+          "description": "List the delivery attempts and provider responses for one message, to see why a delivery failed. Knock API: GET /v1/messages/{message_id}/delivery_logs."
+        },
+        {
+          "name": "knock_list_workflow_recipient_runs",
+          "type": "read",
+          "title": "List workflow recipient runs",
+          "description": "List workflow runs per recipient, filterable by workflow key, status, recipient, tenant, errors and time range. Use it to check whether a triggered workflow ran for a user. Knock API: GET /v1/workflow_recipient_runs."
+        },
+        {
+          "name": "knock_get_workflow_recipient_run",
+          "type": "read",
+          "title": "Get a workflow recipient run",
+          "description": "Get one workflow recipient run with its events, to see each step a workflow ran for one recipient. Knock API: GET /v1/workflow_recipient_runs/{id}."
+        },
+        {
+          "name": "knock_list_tenants",
+          "type": "read",
+          "title": "List tenants",
+          "description": "List tenants (groups of users, such as customer accounts) in the current environment. Knock API: GET /v1/tenants."
+        },
+        {
+          "name": "knock_get_tenant",
+          "type": "read",
+          "title": "Get a tenant",
+          "description": "Get one tenant by id: name and settings. Knock API: GET /v1/tenants/{id}."
+        },
+        {
+          "name": "knock_trigger_workflow",
+          "type": "write",
+          "title": "Trigger a workflow",
+          "description": "Run a Knock workflow for the given recipients. This SENDS real notifications through the channels the workflow defines (email, SMS, push, in-app). Set cancellation_key to cancel the run later. Knock API: POST /v1/workflows/{key}/trigger."
+        },
+        {
+          "name": "knock_cancel_workflow",
+          "type": "write",
+          "title": "Cancel queued workflow runs",
+          "description": "Cancel queued runs of a workflow that match a cancellation_key set when the run was triggered. Runs already sent cannot be recalled. Knock API: POST /v1/workflows/{key}/cancel."
+        },
+        {
+          "name": "knock_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "knock_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Knock tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "knock_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Knock (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "knock_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Knock Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run knock_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Did the password-reset workflow run for user 4821 today?",
+        "Show the delivery logs for the last failed email message.",
+        "List tenants and find the one named Acme.",
+        "Cancel the queued reminder for the cancellation key trial-ending-42."
+      ]
+    },
+    {
+      "slug": "neon",
+      "name": "Neon",
+      "category": "paas",
+      "description": "Read projects, branches, endpoints and usage; create branches, start or suspend endpoints in Neon.",
+      "endpoint": "https://neon.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Neon API key"
+          }
+        ],
+        "hint": "Create one in the Neon console → **Account settings → API keys** (a personal key, or an organization or project-scoped key). Your key is used only to call the Neon API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "neon_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List Neon projects the API key can see (personal, organization or project-scoped key). Good first call to find project ids. Neon API: GET /projects."
+        },
+        {
+          "name": "neon_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one Neon project: name, region, Postgres version, storage, compute settings and quotas. Neon API: GET /projects/{project_id}."
+        },
+        {
+          "name": "neon_list_branches",
+          "type": "read",
+          "title": "List branches",
+          "description": "List the branches of a Neon project (main, dev, preview and restored copies). Each branch has its id, parent and state. Neon API: GET /projects/{project_id}/branches."
+        },
+        {
+          "name": "neon_get_branch",
+          "type": "read",
+          "title": "Get a branch",
+          "description": "Get one branch: state, parent, logical size, creation time and whether it is the default branch. Neon API: GET /projects/{project_id}/branches/{branch_id}."
+        },
+        {
+          "name": "neon_create_branch",
+          "type": "write",
+          "title": "Create a branch",
+          "description": "Create a branch in a Neon project, copied from a parent branch (copy-on-write, no data is duplicated). Optionally add a read-write compute endpoint, which is billed while it runs. Neon API: POST /projects/{project_id}/branches."
+        },
+        {
+          "name": "neon_list_databases",
+          "type": "read",
+          "title": "List databases",
+          "description": "List the Postgres databases on a branch (name, owner). Neon API: GET /projects/{project_id}/branches/{branch_id}/databases."
+        },
+        {
+          "name": "neon_list_roles",
+          "type": "read",
+          "title": "List roles",
+          "description": "List the Postgres roles on a branch (names and protection flags only; passwords are never returned). Neon API: GET /projects/{project_id}/branches/{branch_id}/roles."
+        },
+        {
+          "name": "neon_get_branch_schema",
+          "type": "read",
+          "title": "Get a branch schema",
+          "description": "Get the schema (DDL) of one database on a branch, as text. Neon API: GET /projects/{project_id}/branches/{branch_id}/schema."
+        },
+        {
+          "name": "neon_list_endpoints",
+          "type": "read",
+          "title": "List compute endpoints",
+          "description": "List the compute endpoints of a project: id, branch, type (read_write or read_only), state and autoscaling limits. Neon API: GET /projects/{project_id}/endpoints."
+        },
+        {
+          "name": "neon_start_endpoint",
+          "type": "write",
+          "title": "Start a compute endpoint",
+          "description": "Start a suspended compute endpoint so it accepts connections again. Starting compute is billed while it runs. Neon API: POST /projects/{project_id}/endpoints/{endpoint_id}/start."
+        },
+        {
+          "name": "neon_suspend_endpoint",
+          "type": "write",
+          "title": "Suspend a compute endpoint",
+          "description": "Suspend a running compute endpoint now. Connections to it stop until it starts again. Neon API: POST /projects/{project_id}/endpoints/{endpoint_id}/suspend."
+        },
+        {
+          "name": "neon_list_operations",
+          "type": "read",
+          "title": "List operations",
+          "description": "List recent operations of a project (branch creation, endpoint start and suspend, restores). Use it to check whether a change finished. Neon API: GET /projects/{project_id}/operations."
+        },
+        {
+          "name": "neon_get_operation",
+          "type": "read",
+          "title": "Get an operation",
+          "description": "Get one operation: status (running, finished, failed), action and timestamps. Neon API: GET /projects/{project_id}/operations/{operation_id}."
+        },
+        {
+          "name": "neon_get_consumption",
+          "type": "read",
+          "title": "Get consumption metrics",
+          "description": "Get usage per project for an organization over a time range: compute time, active time, written data. Neon API: GET /consumption_history/v2/projects."
+        },
+        {
+          "name": "neon_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "neon_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Neon tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "neon_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Neon (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "neon_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Neon Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run neon_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "List my Neon projects and their regions.",
+        "Show the branches of my production project and which one is the default.",
+        "Create a branch called preview-login from main, with a read-write endpoint.",
+        "Which compute endpoints are running now, and how much compute time did we use this month?"
+      ]
+    },
+    {
+      "slug": "smarty",
+      "name": "Smarty",
+      "category": "data-enrichment",
+      "description": "Verify US and international addresses, look up ZIP Codes and read property data in Smarty.",
+      "endpoint": "https://smarty.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Smarty Auth ID"
+          },
+          {
+            "label": "Smarty Auth Token"
+          }
+        ],
+        "hint": "Find both values in your Smarty dashboard. Each tool call uses one lookup on your Smarty plan, and connecting makes one test lookup that may count against it. Your values are used only to call Smarty on your behalf; they are never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "smarty_verify_us_address",
+          "type": "read",
+          "title": "Verify a US address",
+          "description": "Check one US address against USPS reference data and return the standardized form, delivery and ZIP+4, and the match and DPV codes. Each call uses one Smarty lookup. Use smarty_reverse_geocode_us for coordinates and smarty_us_address_property for property data."
+        },
+        {
+          "name": "smarty_lookup_us_zipcode",
+          "type": "read",
+          "title": "Look up US ZIP Codes",
+          "description": "Find the valid city, state and ZIP Code combinations for a city and state, or confirm a ZIP Code. Send city with state, or zipcode alone. Each call uses one Smarty lookup."
+        },
+        {
+          "name": "smarty_reverse_geocode_us",
+          "type": "read",
+          "title": "Find US addresses near coordinates",
+          "description": "Find the US street addresses near a latitude and longitude. Returns an empty result when no address is near the point. Each call uses one Smarty lookup."
+        },
+        {
+          "name": "smarty_verify_international_address",
+          "type": "read",
+          "title": "Verify an international address",
+          "description": "Check one address outside the US against Smarty's international reference data and return the standardized form and the match status. Each call uses one Smarty lookup. US addresses belong in smarty_verify_us_address."
+        },
+        {
+          "name": "smarty_us_address_property",
+          "type": "read",
+          "title": "US property and financial data",
+          "description": "Return property and financial data for one US address from Smarty's enrichment data (owner and assessment fields, when the plan includes them). Each call uses one Smarty lookup."
+        },
+        {
+          "name": "smarty_us_address_geo_reference",
+          "type": "read",
+          "title": "US census geography for an address",
+          "description": "Return the census geographic reference of one US address: tract, block, and FIPS codes. Each call uses one Smarty lookup."
+        },
+        {
+          "name": "smarty_us_address_secondary_units",
+          "type": "read",
+          "title": "List units at a US address",
+          "description": "List the secondary units (apartments, suites, floors) of one US building address, for example to identify multi-unit buildings. Each call uses one Smarty lookup."
+        },
+        {
+          "name": "smarty_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "smarty_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Smarty tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "smarty_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Smarty (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "smarty_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Smarty Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run smarty_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Is 1600 Amphitheatre Pkwy, Mountain View, CA a deliverable USPS address? Give me the standard form.",
+        "Which ZIP Codes are valid for Provo, Utah?",
+        "What census tract and block is 1 Rosedale St, Baltimore, MD 21229 in?",
+        "Check this Brazilian address and tell me the standard form: Rua Padre Antonio D'Angelo 121, Sao Paulo SP 02516-040."
+      ]
+    },
+    {
+      "slug": "courier",
+      "name": "Courier",
+      "category": "notifications",
+      "description": "Read messages, templates, brands and lists; send messages and manage list subscribers in Courier.",
+      "endpoint": "https://courier.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Courier region"
+          },
+          {
+            "label": "Courier API key"
+          }
+        ],
+        "hint": "Find it in Courier → **Platform → API Keys**. Choose the environment (Test or Production) and the region where the workspace lives. The key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "courier_list_messages",
+          "type": "read",
+          "title": "List messages",
+          "description": "List recently sent messages, newest first, with status, recipient, channel and provider. Filter by status, event, list, recipient, tag or enqueued_after. Paged by cursor. GET /messages."
+        },
+        {
+          "name": "courier_get_message",
+          "type": "read",
+          "title": "Get a message",
+          "description": "Get one message by id (the requestId returned by courier_send_message), with its delivery status and provider. GET /messages/{message_id}."
+        },
+        {
+          "name": "courier_get_message_history",
+          "type": "read",
+          "title": "Get message history",
+          "description": "Get the delivery history events for one message (status changes per channel). GET /messages/{message_id}/history."
+        },
+        {
+          "name": "courier_list_notification_templates",
+          "type": "read",
+          "title": "List notification templates",
+          "description": "List the workspace notification templates with their name, tags, brand, routing and draft or published state. GET /notifications."
+        },
+        {
+          "name": "courier_get_notification_template",
+          "type": "read",
+          "title": "Get a notification template",
+          "description": "Get one notification template by id or alias. Returns the published version by default; version=draft returns the unpublished one. GET /notifications/{id}."
+        },
+        {
+          "name": "courier_list_brands",
+          "type": "read",
+          "title": "List brands",
+          "description": "List the brands (logo, colors, layout) that templates can use. GET /brands."
+        },
+        {
+          "name": "courier_get_brand",
+          "type": "read",
+          "title": "Get a brand",
+          "description": "Get one brand by id, with its colors, logo and layout settings. GET /brands/{brand_id}."
+        },
+        {
+          "name": "courier_list_lists",
+          "type": "read",
+          "title": "List lists",
+          "description": "List the static recipient lists in the workspace. Optionally filter by list id pattern. GET /lists."
+        },
+        {
+          "name": "courier_get_list",
+          "type": "read",
+          "title": "Get a list",
+          "description": "Get one list by id, with its name and metadata. GET /lists/{list_id}."
+        },
+        {
+          "name": "courier_list_list_subscribers",
+          "type": "read",
+          "title": "List subscribers of a list",
+          "description": "List the user subscriptions of one list, with their preferences. Paged by cursor. GET /lists/{list_id}/subscriptions."
+        },
+        {
+          "name": "courier_get_profile",
+          "type": "read",
+          "title": "Get a user profile",
+          "description": "Get one user profile: the contact details Courier delivers to (email, phone, push tokens) and custom data. GET /profiles/{user_id}."
+        },
+        {
+          "name": "courier_get_user_preferences",
+          "type": "read",
+          "title": "Get user preferences",
+          "description": "Get one user's notification preferences per topic and per channel. GET /users/{user_id}/preferences."
+        },
+        {
+          "name": "courier_list_providers",
+          "type": "read",
+          "title": "List providers",
+          "description": "List the channel providers configured in the workspace (email, SMS, push, chat). GET /providers."
+        },
+        {
+          "name": "courier_list_journeys",
+          "type": "read",
+          "title": "List journeys",
+          "description": "List the multi-step journeys (workflows) in the workspace. GET /journeys."
+        },
+        {
+          "name": "courier_list_broadcasts",
+          "type": "read",
+          "title": "List broadcasts",
+          "description": "List one-off broadcasts (sends to a list or audience), with their state. GET /broadcasts."
+        },
+        {
+          "name": "courier_list_automations",
+          "type": "read",
+          "title": "List automations",
+          "description": "List the automation templates that you can invoke with courier_invoke_automation. GET /automations."
+        },
+        {
+          "name": "courier_list_tenants",
+          "type": "read",
+          "title": "List tenants",
+          "description": "List tenants (organizations, teams or accounts that users belong to). GET /tenants."
+        },
+        {
+          "name": "courier_list_audit_events",
+          "type": "read",
+          "title": "List audit events",
+          "description": "List workspace audit events (who changed what in the console or through the API). Paged by cursor. GET /audit-events."
+        },
+        {
+          "name": "courier_send_message",
+          "type": "write",
+          "title": "Send a message",
+          "description": "Send a notification from a template to one recipient, a list or a tenant. Courier routes it to the channels in the template. Sends real messages. Pass an idempotency_key to make retries safe. Returns a requestId. POST /send."
+        },
+        {
+          "name": "courier_cancel_message",
+          "type": "write",
+          "title": "Cancel a message",
+          "description": "Cancel a message that is queued or scheduled and not yet delivered. POST /messages/{message_id}/cancel."
+        },
+        {
+          "name": "courier_subscribe_user_to_list",
+          "type": "write",
+          "title": "Subscribe a user to a list",
+          "description": "Subscribe one user to a list, with optional per-topic preferences. Idempotent: subscribing again updates the subscription. PUT /lists/{list_id}/subscriptions/{user_id}."
+        },
+        {
+          "name": "courier_unsubscribe_user_from_list",
+          "type": "write",
+          "title": "Unsubscribe a user from a list",
+          "description": "Remove one user's subscription from a list, so the list no longer sends to that user. DELETE /lists/{list_id}/subscriptions/{user_id}."
+        },
+        {
+          "name": "courier_invoke_automation",
+          "type": "write",
+          "title": "Invoke an automation",
+          "description": "Run an automation template for one recipient, with data. The automation sends its messages. POST /automations/{templateId}/invoke."
+        },
+        {
+          "name": "courier_track_event",
+          "type": "write",
+          "title": "Track an event",
+          "description": "Send a track event for one user, tied to a message id, so journeys and automations can react to it. Records a real event in the workspace. POST /inbound/courier."
+        },
+        {
+          "name": "courier_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "courier_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Courier tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "courier_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Courier (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "courier_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Courier Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run courier_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which messages failed to deliver in the last day, and why?",
+        "Show the delivery history for message 2c1f3e…, channel by channel.",
+        "Send the order-shipped template to user_1042 with the tracking link in its data.",
+        "Subscribe user_1042 to the newsletter list and show the list's subscriber count."
+      ]
+    },
+    {
+      "slug": "countly",
+      "name": "Countly",
+      "category": "analytics",
+      "description": "Read apps, dashboard summaries, sessions, countries and user loyalty in Countly.",
+      "endpoint": "https://countly.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Countly host",
+            "optional": true
+          },
+          {
+            "label": "API key"
+          }
+        ],
+        "hint": "The API key is in your Countly dashboard under **Management → API Key**. The key reads what that dashboard user can read. Self-hosted customers type their own host name (for example analytics.yourcompany.com), without https:// and without a path. Connecting makes one read request to check the key."
+      },
+      "tools": [
+        {
+          "name": "countly_get_current_user",
+          "type": "read",
+          "title": "Current Countly user",
+          "description": "Show the Countly dashboard user this API key belongs to: name, username, whether it is a global admin, and its permissions. Use it first to check the connection. Countly: GET /o/users/me."
+        },
+        {
+          "name": "countly_list_apps",
+          "type": "read",
+          "title": "List apps",
+          "description": "List the apps this user can see, split into apps the user administers and apps the user can read. Each app has its ID, name, country and timezone. Countly: GET /o/apps/mine."
+        },
+        {
+          "name": "countly_get_app",
+          "type": "read",
+          "title": "Get app details",
+          "description": "Show one app's settings, owner, creation and last-data times, and its member lists. Needs app administrator rights for that app. Countly: GET /o/apps/details."
+        },
+        {
+          "name": "countly_get_dashboard",
+          "type": "read",
+          "title": "Dashboard summary",
+          "description": "Summary cards for one app and period: total sessions, new users, total users, time spent and requests, each with its change against the previous period. Countly: GET /o/analytics/dashboard."
+        },
+        {
+          "name": "countly_get_sessions",
+          "type": "read",
+          "title": "Sessions over time",
+          "description": "Session timeline for one app and period: one row per day (or per month with bucket=monthly) with sessions, new users, total users, duration and events. Countly: GET /o/analytics/sessions."
+        },
+        {
+          "name": "countly_get_countries",
+          "type": "read",
+          "title": "Users by country",
+          "description": "Top countries for one app in fixed blocks: today, the last 7 days and the last 30 days, each with users, new users and sessions. Countly: GET /o/analytics/countries."
+        },
+        {
+          "name": "countly_get_metric",
+          "type": "read",
+          "title": "Metric breakdown",
+          "description": "One breakdown list for one app and period, for example users by platform, device, screen resolution, carrier or app version. An unknown metric returns an empty list. Countly: GET /o/analytics/metric."
+        },
+        {
+          "name": "countly_get_tops",
+          "type": "read",
+          "title": "Top lists",
+          "description": "Top-ten lists for one app and period. Without metric it returns the built-in lists (platforms, versions, countries and more); with metric it returns that one list. Countly: GET /o/analytics/tops."
+        },
+        {
+          "name": "countly_get_loyalty",
+          "type": "read",
+          "title": "User loyalty",
+          "description": "How often users return in one app and period: the share of users per session-count bucket. Countly: GET /o/analytics/loyalty."
+        },
+        {
+          "name": "countly_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "countly_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Countly tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "countly_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Countly (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "countly_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Countly Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run countly_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "How many users and sessions did my app have in the last 30 days?",
+        "Which countries bring the most users to my iOS app this week?",
+        "Show the top app versions and platforms for my Android app.",
+        "How often do users come back? Show the loyalty breakdown for the last 30 days."
+      ]
+    },
+    {
+      "slug": "onfleet",
+      "name": "Onfleet",
+      "category": "logistics",
+      "description": "Read tasks, orders and route plans; create tasks, cancel orders and update webhooks in Onfleet.",
+      "endpoint": "https://onfleet.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Onfleet API key"
+          }
+        ],
+        "hint": "Find it in Onfleet → **Settings → API & Webhooks**. Your key is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "onfleet_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List tasks created or completed in a time range. Returns up to 64 tasks per page; pass the returned lastId as lastId to get the next page. Onfleet API: GET /tasks/all."
+        },
+        {
+          "name": "onfleet_get_task",
+          "type": "read",
+          "title": "Get task",
+          "description": "Get one task by its ID, with its state, destination, recipients and completion details. Onfleet API: GET /tasks/{taskId}."
+        },
+        {
+          "name": "onfleet_get_task_by_short_id",
+          "type": "read",
+          "title": "Get task by short ID",
+          "description": "Get one task by its short ID (the 8-character code shown in the Onfleet dashboard). Onfleet API: GET /tasks/shortId/{shortId}."
+        },
+        {
+          "name": "onfleet_get_order",
+          "type": "read",
+          "title": "Get order",
+          "description": "Get one delivery order (a pickup task and its dropoff task) by its short ID. Onfleet API: GET /taskOrders/{orderShortId}."
+        },
+        {
+          "name": "onfleet_list_route_plans",
+          "type": "read",
+          "title": "List route plans",
+          "description": "List route plans, optionally for one worker. Onfleet API: GET /routePlans."
+        },
+        {
+          "name": "onfleet_get_route_plan",
+          "type": "read",
+          "title": "Get route plan",
+          "description": "Get one route plan by its ID. Onfleet API: GET /routePlans/{routePlanId}."
+        },
+        {
+          "name": "onfleet_get_delivery_manifest",
+          "type": "read",
+          "title": "Get delivery manifest",
+          "description": "Generate the compliance delivery manifest for the tasks on one worker's route at one hub. Onfleet API: GET /integrations/manifest/generate."
+        },
+        {
+          "name": "onfleet_create_destination",
+          "type": "write",
+          "title": "Create destination",
+          "description": "Create a delivery destination from an address. Onfleet geocodes the address when no location is given. Returns the destination ID for onfleet_create_task. Onfleet API: POST /destinations."
+        },
+        {
+          "name": "onfleet_create_worker",
+          "type": "write",
+          "title": "Create worker",
+          "description": "Create a driver (worker) that belongs to one or more teams. Onfleet API: POST /workers."
+        },
+        {
+          "name": "onfleet_create_task",
+          "type": "write",
+          "title": "Create task",
+          "description": "Create a delivery task for an existing destination. Recipients may get SMS notifications unless skipped. Create the destination first with onfleet_create_destination. Onfleet API: POST /tasks."
+        },
+        {
+          "name": "onfleet_cancel_orders",
+          "type": "write",
+          "title": "Cancel orders",
+          "description": "Cancel delivery orders before they complete. Completed orders cannot be cancelled. Onfleet API: POST /taskOrders/cancel."
+        },
+        {
+          "name": "onfleet_delete_route_plan",
+          "type": "write",
+          "title": "Delete route plan",
+          "description": "Delete a route plan. This cannot be undone. Onfleet API: DELETE /routePlans/{routePlanId}."
+        },
+        {
+          "name": "onfleet_update_webhook",
+          "type": "write",
+          "title": "Update webhook",
+          "description": "Replace a webhook's settings: its receiving URL, trigger and options. Onfleet API: PUT /webhooks/{webhookId}."
+        },
+        {
+          "name": "onfleet_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "onfleet_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Onfleet tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "onfleet_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Onfleet (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "onfleet_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Onfleet Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run onfleet_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which deliveries are still unassigned for today?",
+        "Show the status of the task with short ID e5f0cc28.",
+        "Create a destination for our new store and add a delivery task to it.",
+        "Cancel the two orders our customer asked us to stop."
+      ]
+    },
+    {
+      "slug": "routific",
+      "name": "Routific",
+      "category": "logistics",
+      "description": "Optimize vehicle routes and same-day pickups and deliveries, and read job results in Routific.",
+      "endpoint": "https://routific.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Routific API token"
+          }
+        ],
+        "hint": "Get the token from the **Routing Engine API** in your Routific account (sign up at dev.routific.com for a 30-day free trial). Your token is used only to call the API on your behalf and to derive a private account id."
+      },
+      "tools": [
+        {
+          "name": "routific_optimize_routes",
+          "type": "read",
+          "title": "Optimize routes",
+          "description": "Plan the fastest routes for a fleet that serves a set of stops, with time windows and capacity. Synchronous; times out after about 20 seconds, so use routific_submit_route_job above 60 visits. Routific API: POST /v1/vrp."
+        },
+        {
+          "name": "routific_submit_route_job",
+          "type": "read",
+          "title": "Submit route job",
+          "description": "Start a route plan for a large problem (up to 2500 visits) as a background job. Returns a job_id; read it with routific_get_job. Routific API: POST /v1/vrp-long."
+        },
+        {
+          "name": "routific_optimize_pickups_deliveries",
+          "type": "read",
+          "title": "Optimize pickups and deliveries",
+          "description": "Plan same-day pickup and delivery routes: each order is picked up before it is dropped off by the same driver. Synchronous; use routific_submit_pickups_deliveries_job above 30 orders. Routific API: POST /v1/pdp."
+        },
+        {
+          "name": "routific_submit_pickups_deliveries_job",
+          "type": "read",
+          "title": "Submit pickup and delivery job",
+          "description": "Start a same-day pickup and delivery plan for a large problem as a background job. Returns a job_id; read it with routific_get_job. Routific API: POST /v1/pdp-long."
+        },
+        {
+          "name": "routific_get_job",
+          "type": "read",
+          "title": "Get job",
+          "description": "Read a background route job by job_id. Status is pending, processing, finished or error; a finished job's route plan is in output. Routific API: GET /jobs/{id}."
+        },
+        {
+          "name": "routific_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "routific_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Routific tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "routific_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Routific (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "routific_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Routific Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run routific_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Plan one van for these five stops, starting and ending at our depot, with an 8:00 to 16:00 shift.",
+        "Plan tomorrow's pickups and deliveries for our three couriers.",
+        "Check whether route job 5f3c2a is finished and show the stop order."
+      ]
+    },
+    {
+      "slug": "transifex",
+      "name": "Transifex",
+      "category": "localization",
+      "description": "Read projects, resources, strings, progress and tasks; create projects in Transifex.",
+      "endpoint": "https://transifex.usefulapi.io/mcp",
+      "transport": "streamable-http",
+      "auth": "token",
+      "status": "live",
+      "pricing": [
+        {
+          "plan": "Free",
+          "limit": "50 tool calls / month",
+          "monthly": "$0"
+        },
+        {
+          "plan": "Pro",
+          "limit": "10,000 tool calls / month",
+          "monthly": "$9",
+          "yearly": "$90",
+          "scope": "per user"
+        },
+        {
+          "plan": "Pro+",
+          "limit": "100,000 tool calls / month",
+          "monthly": "$39",
+          "yearly": "$390",
+          "scope": "per user"
+        }
+      ],
+      "version": "1.0.0",
+      "login": {
+        "kind": "key",
+        "fields": [
+          {
+            "label": "Transifex API token"
+          }
+        ],
+        "hint": "Create it in Transifex → your profile → **User settings → API token** → Generate a token. Your token is used only to call the API on your behalf and to derive a private account id; it is never shown to anyone."
+      },
+      "tools": [
+        {
+          "name": "transifex_get_user",
+          "type": "read",
+          "title": "Get a user",
+          "description": "Get one Transifex user by id: name, username and account details the token can see. Use it to check who the token belongs to. Transifex API: GET /users/{user_id}."
+        },
+        {
+          "name": "transifex_list_organizations",
+          "type": "read",
+          "title": "List organizations",
+          "description": "List the organizations the token belongs to, with their slugs and ids. Start here to find the organization id for other tools. Transifex API: GET /organizations."
+        },
+        {
+          "name": "transifex_get_organization",
+          "type": "read",
+          "title": "Get an organization",
+          "description": "Get one organization by id: name, slug and settings. Transifex API: GET /organizations/{organization_id}."
+        },
+        {
+          "name": "transifex_list_projects",
+          "type": "read",
+          "title": "List projects",
+          "description": "List the projects of one organization: name, slug, archived state and target languages. Transifex API: GET /projects (filter[organization] is required)."
+        },
+        {
+          "name": "transifex_get_project",
+          "type": "read",
+          "title": "Get a project",
+          "description": "Get one project by id: name, description, privacy, archived state and maintainers. Transifex API: GET /projects/{project_id}."
+        },
+        {
+          "name": "transifex_create_project",
+          "type": "write",
+          "title": "Create a project",
+          "description": "Create a new project in an organization with a name, slug and privacy flag. It only creates; it deletes nothing and adds no translations. A repeat with the same slug fails and changes nothing. Transifex API: POST /projects."
+        },
+        {
+          "name": "transifex_list_languages",
+          "type": "read",
+          "title": "List languages",
+          "description": "List the languages Transifex supports, with codes, names and plural rules. Use it to check a language code before you use it in other tools. Transifex API: GET /languages."
+        },
+        {
+          "name": "transifex_list_resources",
+          "type": "read",
+          "title": "List resources",
+          "description": "List the resources (translatable files) of one project: name, slug, priority and categories. Transifex API: GET /resources (filter[project] is required)."
+        },
+        {
+          "name": "transifex_get_resource",
+          "type": "read",
+          "title": "Get a resource",
+          "description": "Get one resource by id: name, slug, priority, categories and whether it accepts translations. Transifex API: GET /resources/{resource_id}."
+        },
+        {
+          "name": "transifex_list_resource_strings",
+          "type": "read",
+          "title": "List source strings",
+          "description": "List the source strings of one resource: key, source text, context and tags, a page at a time. Transifex API: GET /resource_strings (filter[resource] is required)."
+        },
+        {
+          "name": "transifex_list_resource_language_stats",
+          "type": "read",
+          "title": "List translation progress",
+          "description": "Show translation progress per resource and language: translated, reviewed and proofread counts and last update times. Transifex API: GET /resource_language_stats (filter[project] is required)."
+        },
+        {
+          "name": "transifex_list_tasks",
+          "type": "read",
+          "title": "List tasks",
+          "description": "List translation tasks of one organization: name, status, languages, due date and owner. Transifex API: GET /tasks (filter[organization] is required)."
+        },
+        {
+          "name": "transifex_get_task",
+          "type": "read",
+          "title": "Get a task",
+          "description": "Get one translation task by id: name, status, languages, assignees, due date and completion time. Transifex API: GET /tasks/{task_id}."
+        },
+        {
+          "name": "transifex_list_glossaries",
+          "type": "read",
+          "title": "List glossaries",
+          "description": "List the glossaries of one organization: name, slug and source language. Transifex API: GET /glossaries (filter[organization] is required)."
+        },
+        {
+          "name": "transifex_usage_status",
+          "type": "meta",
+          "title": "Usage status (free-tier meter)",
+          "description": "Report the caller's current usage: the plan, calls used this month, the limit of the plan (the free monthly cap or the Pro fair use limit), remaining, and whether the limit is reached. Read-only; does not count against the meter."
+        },
+        {
+          "name": "transifex_request_feature",
+          "type": "meta",
+          "title": "Request a missing feature",
+          "description": "Tell usefulapi that the user needs something the Transifex tools cannot do yet (a missing tool, field or filter). Call it only when the user asks for something none of the tools can do, and tell the user that you send the request. Do not call it for errors or for normal requests. Do not include personal data, credentials or customer records. Stored with the product name and the client type (for example Claude or Cursor), without the user's account. At most 5 requests per day. Does not count against the meter."
+        },
+        {
+          "name": "transifex_upgrade",
+          "type": "meta",
+          "title": "Upgrade to Pro or Pro+",
+          "description": "Get a paid plan for Transifex (the free tier caps monthly usage). Pro: 10,000 tool calls a month, for normal use — plan \"monthly\" ($9/month) or \"yearly\" ($90/year, 2 months free). Pro+: 100,000 tool calls a month, for automations and heavy use — plan \"plus\" ($39/month) or \"plus_yearly\" ($390/year). Without a plan it returns both Pro and Pro+, each with a payment link, for the user to choose; with a plan, one link. An existing Pro subscription changes to Pro+ in place: call without confirm first, as the reply states the exact charge for this account (the price difference for the rest of the period, or in a free Pro trial the full Pro+ price, as the trial ends); then call with confirm: true. Cancel any time: the plan then runs to the end of the paid period, so it also suits a one-time job. A link opens Stripe Checkout in the browser; after payment the account upgrades automatically. Does not count against the meter."
+        },
+        {
+          "name": "transifex_cancel_subscription",
+          "type": "meta",
+          "title": "Cancel the Pro subscription",
+          "description": "Cancel the caller's Transifex Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run transifex_upgrade later to undo the cancel before the period ends. Does not count against the meter."
+        }
+      ],
+      "examples": [
+        "Which of our projects still have untranslated strings, and for which languages?",
+        "List the translation tasks that are open in our organization and when they are due.",
+        "Show the translation progress for the French language in the website project.",
+        "Create a private project called Mobile App Strings in our organization."
+      ]
     }
   ]
 }

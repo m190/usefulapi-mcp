@@ -1119,6 +1119,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Viva.com](servers/viva-com/) | payments | 8 | API token | [servers/viva-com/](servers/viva-com/) |
 | [tipee](servers/tipee/) | time-tracking | 19 | API token | [servers/tipee/](servers/tipee/) |
 | [Mathpix](servers/mathpix/) | document-ai | 16 | API token | [servers/mathpix/](servers/mathpix/) |
+| [Segment](servers/segment/) | data | 15 | API token | [servers/segment/](servers/segment/) |
+| [Knock](servers/knock/) | notifications | 17 | API token | [servers/knock/](servers/knock/) |
+| [Neon](servers/neon/) | paas | 18 | API token | [servers/neon/](servers/neon/) |
+| [Smarty](servers/smarty/) | data-enrichment | 11 | API token | [servers/smarty/](servers/smarty/) |
+| [Courier](servers/courier/) | notifications | 28 | API token | [servers/courier/](servers/courier/) |
+| [Countly](servers/countly/) | analytics | 13 | API token | [servers/countly/](servers/countly/) |
+| [Onfleet](servers/onfleet/) | logistics | 17 | API token | [servers/onfleet/](servers/onfleet/) |
+| [Routific](servers/routific/) | logistics | 9 | API token | [servers/routific/](servers/routific/) |
+| [Transifex](servers/transifex/) | localization | 18 | API token | [servers/transifex/](servers/transifex/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
