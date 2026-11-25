@@ -1207,6 +1207,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Murf AI](servers/murf-ai/) | localization | 10 | API token | [servers/murf-ai/](servers/murf-ai/) |
 | [Eden AI](servers/eden-ai/) | ai-infra | 9 | API token | [servers/eden-ai/](servers/eden-ai/) |
 | [HelpDocs](servers/helpdocs/) | knowledge-base | 20 | API token | [servers/helpdocs/](servers/helpdocs/) |
+| [Finch](servers/finch/) | hr | 20 | OAuth | [servers/finch/](servers/finch/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
