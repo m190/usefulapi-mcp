@@ -1172,6 +1172,17 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Sitemate](servers/sitemate/) | business-operations | 34 | API token | [servers/sitemate/](servers/sitemate/) |
 | [vCita](servers/vcita/) | crm | 16 | API token | [servers/vcita/](servers/vcita/) |
 | [FenoFin](servers/fenofin/) | accounting-practice | 23 | API token | [servers/fenofin/](servers/fenofin/) |
+| [ChannelDock](servers/channeldock/) | inventory | 25 | API token | [servers/channeldock/](servers/channeldock/) |
+| [Vidyard](servers/vidyard/) | video-hosting | 24 | API token | [servers/vidyard/](servers/vidyard/) |
+| [Pingboard](servers/pingboard/) | hr | 15 | API token | [servers/pingboard/](servers/pingboard/) |
+| [Thought Industries](servers/thought-industries/) | education | 27 | API token | [servers/thought-industries/](servers/thought-industries/) |
+| [AskNicely](servers/asknicely/) | forms-surveys | 12 | API token | [servers/asknicely/](servers/asknicely/) |
+| [DynaPictures](servers/dynapictures/) | image-generation | 13 | API token | [servers/dynapictures/](servers/dynapictures/) |
+| [Calamari](servers/calamari/) | hr | 25 | API token | [servers/calamari/](servers/calamari/) |
+| [Sendspark](servers/sendspark/) | marketing | 16 | API token | [servers/sendspark/](servers/sendspark/) |
+| [360Learning](servers/360learning/) | education | 22 | API token | [servers/360learning/](servers/360learning/) |
+| [Communico](servers/communico/) | scheduling | 19 | API token | [servers/communico/](servers/communico/) |
+| [Pocketlaw](servers/pocketlaw/) | documents | 15 | API token | [servers/pocketlaw/](servers/pocketlaw/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
