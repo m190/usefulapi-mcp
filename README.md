@@ -1281,6 +1281,26 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [AssemblyAI](servers/assemblyai/) | speech-to-text | 11 | API token | [servers/assemblyai/](servers/assemblyai/) |
 | [inFlow Inventory](servers/inflow-inventory/) | inventory | 25 | API token | [servers/inflow-inventory/](servers/inflow-inventory/) |
 | [Voyage AI](servers/voyage-ai/) | ai-infra | 11 | API token | [servers/voyage-ai/](servers/voyage-ai/) |
+| [Flagsmith](servers/flagsmith/) | feature-flags | 17 | API token | [servers/flagsmith/](servers/flagsmith/) |
+| [ServiceM8](servers/servicem8/) | business-operations | 20 | API token | [servers/servicem8/](servers/servicem8/) |
+| [CloudTalk](servers/cloudtalk/) | communications | 25 | API token | [servers/cloudtalk/](servers/cloudtalk/) |
+| [Helpjuice](servers/helpjuice/) | knowledge-base | 17 | API token | [servers/helpjuice/](servers/helpjuice/) |
+| [PDF.co](servers/pdf-co/) | documents | 22 | API token | [servers/pdf-co/](servers/pdf-co/) |
+| [Beebole](servers/beebole/) | time-tracking | 13 | API token | [servers/beebole/](servers/beebole/) |
+| [ManyRequests](servers/manyrequests/) | business-operations | 23 | API token | [servers/manyrequests/](servers/manyrequests/) |
+| [Betterworks](servers/betterworks/) | hr | 28 | API token | [servers/betterworks/](servers/betterworks/) |
+| [AccuRanker](servers/accuranker/) | analytics | 14 | API token | [servers/accuranker/](servers/accuranker/) |
+| [Navixy](servers/navixy/) | logistics | 15 | API token | [servers/navixy/](servers/navixy/) |
+| [Simplicate](servers/simplicate/) | crm | 22 | API token | [servers/simplicate/](servers/simplicate/) |
+| [awork](servers/awork/) | project-management | 19 | API token | [servers/awork/](servers/awork/) |
+| [LeadSquared](servers/leadsquared/) | crm | 13 | API token | [servers/leadsquared/](servers/leadsquared/) |
+| [ikas](servers/ikas/) | ecommerce | 8 | API token | [servers/ikas/](servers/ikas/) |
+| [Imweb](servers/imweb/) | ecommerce | 17 | API token | [servers/imweb/](servers/imweb/) |
+| [Ragic](servers/ragic/) | no-code-database | 11 | API token | [servers/ragic/](servers/ragic/) |
+| [Breezy HR](servers/breezy-hr/) | hr | 21 | API token | [servers/breezy-hr/](servers/breezy-hr/) |
+| [Medplum](servers/medplum/) | healthcare | 14 | API token | [servers/medplum/](servers/medplum/) |
+| [Teamtailor](servers/teamtailor/) | hr | 20 | API token | [servers/teamtailor/](servers/teamtailor/) |
+| [Bria](servers/bria/) | image-generation | 7 | API token | [servers/bria/](servers/bria/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
