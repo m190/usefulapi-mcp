@@ -54,6 +54,7 @@ On first connect you sign in to Fatture in Cloud and approve access. The server 
 | `fattureincloud_create_client` | **write** | Create a client |
 | `fattureincloud_create_product` | **write** | Create a product |
 | `fattureincloud_create_issued_document` | **write** | Create an issued document |
+| `fattureincloud_record_issued_document_payment` | **write** | Record a payment on an issued document |
 | `fattureincloud_send_document_email` | **write** | E-mail an issued document |
 | `fattureincloud_send_einvoice` | **write** | Send an e-invoice to the SDI |
 | `fattureincloud_usage_status` | meta | Usage status (free-tier meter) |

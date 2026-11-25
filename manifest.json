@@ -40124,7 +40124,7 @@
           "description": "Cancel the caller's Spruce Health Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run sprucehealth_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.31.4",
+      "version": "1.31.5",
       "login": {
         "kind": "key",
         "fields": [
@@ -44246,7 +44246,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.29.2",
+      "version": "1.30.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -44363,7 +44363,7 @@
           "name": "edesk_reply_to_ticket",
           "type": "write",
           "title": "Reply to customer",
-          "description": "WRITE, CUSTOMER-VISIBLE: send a reply on a ticket. eDesk queues it for delivery to the marketplace or email channel, so it cannot be recalled once queued. This API cannot choose recipients: on a Mirakl channel connected with OAuth the audience is the channel's \"Default messages recipients\" setting (customer, operator or both; unset = eDesk error 4024), and an older Mirakl channel connected with an API key always writes to the customer. Use the eDesk reply box when recipients matter. Only call this when the user has approved the exact text and audience. Pass in_reply_to_message_id (the incoming customer message you answer) to have the server check, right before sending, that the customer has not written again and that no reply or automatic reply follows that message; the check is best effort, not a guarantee against duplicates. If the call fails in transit, the reply may still be queued: check the ticket before retrying. Use edesk_add_ticket_note for an internal note. POST /messages with type Message."
+          "description": "WRITE, CUSTOMER-VISIBLE: send a reply on a ticket. eDesk queues it for delivery to the marketplace or email channel, so it cannot be recalled once queued. This API cannot choose recipients: on a Mirakl channel connected with OAuth the audience is the channel's \"Default messages recipients\" setting (customer, operator or both; unset = eDesk error 4024), and an older Mirakl channel connected with an API key always writes to the customer. Use the eDesk reply box when recipients matter. Only call this when the user has approved the exact text and audience. Pass in_reply_to_message_id (the incoming customer message you answer) to have the server check, right before sending, that the customer has not written again and that no reply or automatic reply follows that message; the check is best effort, not a guarantee against duplicates. A generic receipt acknowledgement (type AutoReply, such as 'we received your message') also blocks, unless you read it and name its id in acknowledged_auto_reply_ids; AI auto-replies and substantive or unclear automatic replies must never be named. If the call fails in transit, the reply may still be queued: check the ticket before retrying. Use edesk_add_ticket_note for an internal note. POST /messages with type Message."
         },
         {
           "name": "edesk_add_order_note",
@@ -66902,7 +66902,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.21.6",
+      "version": "1.22.0",
       "login": {
         "kind": "key",
         "fields": [
@@ -66950,7 +66950,7 @@
           "name": "agencybloc_get_policy",
           "type": "read",
           "title": "Get policy",
-          "description": "One policy by id: holder, agent, carrier, status, dates, premium, coverages and custom fields. POST policies/detail."
+          "description": "One policy by id: holder, agent, carrier, status, dates, premium, coverages and custom fields. The Commission Number is not in this reply (AgencyBloc's REST API does not expose it). POST policies/detail."
         },
         {
           "name": "agencybloc_search_agents",
@@ -67034,7 +67034,7 @@
           "name": "agencybloc_update_policy",
           "type": "write",
           "title": "Update policy",
-          "description": "WRITE: change fields of an existing policy (status, carrier, dates, premium ...); fields you leave out are not sent. carrier_product requires carrier and first reads the policy: it creates the first coverage or changes the sole existing coverage, but refuses multiple coverages to avoid adding an unintended one. effective_date and premium remain policy-level fields. Returns the policyID. POST policies/update."
+          "description": "WRITE: change fields of an existing policy (status, carrier, dates, premium ...); fields you leave out are not sent. carrier_product requires carrier and first reads the policy: it creates the first coverage or changes the sole existing coverage, but refuses multiple coverages to avoid adding an unintended one. effective_date and premium remain policy-level fields. clear empties policy_number or term_date and reads the policy back to confirm. The Commission Number (policy > Commissions > Settings) is not in AgencyBloc's REST API, so no tool can read or set it. Returns the policyID. POST policies/update."
         },
         {
           "name": "agencybloc_create_activity",
@@ -117913,7 +117913,7 @@
           "scope": "per user"
         }
       ],
-      "version": "1.9.1",
+      "version": "1.9.2",
       "login": {
         "kind": "key",
         "fields": [
@@ -153155,11 +153155,11 @@
           "scope": "per user"
         }
       ],
-      "version": "1.6.1",
+      "version": "1.7.0",
       "login": {
         "kind": "upstream",
         "fields": [],
-        "hint": "This server reads your clients, suppliers, products, issued and received documents, cashbook and settings. It can create clients, products and documents (invoices, quotes, proformas, receipts, delivery notes, credit notes, orders), and, only when you ask, e-mail a document to a customer or send an e-invoice to the SDI (both cannot be undone). It has no tools that edit or delete existing records; a send can update the sending status of a document. The records you ask for go to your AI client and its model provider. You can revoke access any time in Fatture in Cloud: Impostazioni, Applicazioni collegate."
+        "hint": "This server reads your clients, suppliers, products, issued and received documents, cashbook and settings. It can create clients, products and documents (invoices, quotes, proformas, receipts, delivery notes, credit notes, orders), and, only when you ask, e-mail a document to a customer or send an e-invoice to the SDI (both cannot be undone). It can mark an existing document's installment as paid (paid date and account); it has no other tools that edit, and none that delete, existing records; a send can update the sending status of a document. The records you ask for go to your AI client and its model provider. You can revoke access any time in Fatture in Cloud: Impostazioni, Applicazioni collegate."
       },
       "tools": [
         {
@@ -153287,6 +153287,12 @@
           "type": "write",
           "title": "Create an issued document",
           "description": "Create an invoice, quote, proforma, receipt, delivery note, credit note or order. It gets the next number unless you give one. Give client_id (the tool copies the stored client's details, as Fatture in Cloud does not fill them in) or a client object. Each item needs a vat_id (fattureincloud_list_settings kind vat_types). Without payments, invoices, proformas, receipts and credit notes get one unpaid payment of the full total, due on due_date or the document date. This does NOT send anything: e-mail it with fattureincloud_send_document_email or send an e-invoice with fattureincloud_send_einvoice."
+        },
+        {
+          "name": "fattureincloud_record_issued_document_payment",
+          "type": "write",
+          "title": "Record a payment on an issued document",
+          "description": "Mark an existing invoice, proforma, receipt or credit note as paid (saldata), in full or in part: one unpaid installment gets status paid, the paid date and the payment account (conto di saldo). A part payment splits that installment into a paid part and an unpaid rest with the same due date. Items, totals and the other installments stay as they are. payment_account_id comes from fattureincloud_list_settings kind payment_accounts (Fatture in Cloud refuses a paid installment without one). Not idempotent: after an uncertain result, read the document with fattureincloud_get_issued_document before you call again. The API has no lock: a change made to the same document's payments in the same second elsewhere can be overwritten; the reply compares the saved installments with the intended ones. PUT /c/{company_id}/issued_documents/{document_id}."
         },
         {
           "name": "fattureincloud_send_document_email",

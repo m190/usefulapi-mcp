@@ -889,7 +889,7 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [INWX](servers/inwx/) | dns | 15 | API token | [servers/inwx/](servers/inwx/) |
 | [Comet Backup](servers/comet-backup/) | devops | 16 | API token | [servers/comet-backup/](servers/comet-backup/) |
 | [Dotypos](servers/dotypos/) | retail | 27 | OAuth | [servers/dotypos/](servers/dotypos/) |
-| [Fatture in Cloud](servers/fatture-in-cloud/) | accounting | 27 | OAuth | [servers/fatture-in-cloud/](servers/fatture-in-cloud/) |
+| [Fatture in Cloud](servers/fatture-in-cloud/) | accounting | 28 | OAuth | [servers/fatture-in-cloud/](servers/fatture-in-cloud/) |
 | [Maqplan ERP](servers/erp-saas-maqplan/) | business-operations | 26 | API token | [servers/erp-saas-maqplan/](servers/erp-saas-maqplan/) |
 | [Vendty](servers/vendty/) | retail | 32 | API token | [servers/vendty/](servers/vendty/) |
 | [NubeFact](servers/nubefact/) | tax | 8 | API token | [servers/nubefact/](servers/nubefact/) |
