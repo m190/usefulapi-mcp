@@ -1151,6 +1151,12 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Canny](servers/canny/) | project-management | 21 | API token | [servers/canny/](servers/canny/) |
 | [Baseten](servers/baseten/) | ai-infra | 23 | API token | [servers/baseten/](servers/baseten/) |
 | [Raygun](servers/raygun/) | observability | 32 | API token | [servers/raygun/](servers/raygun/) |
+| [Heymarket](servers/heymarket/) | messaging | 18 | API token | [servers/heymarket/](servers/heymarket/) |
+| [Semaphore CI](servers/semaphore-ci/) | dev-infra | 35 | API token | [servers/semaphore-ci/](servers/semaphore-ci/) |
+| [Intruder](servers/intruder/) | security | 21 | API token | [servers/intruder/](servers/intruder/) |
+| [Trustmary](servers/trustmary/) | forms-surveys | 27 | API token | [servers/trustmary/](servers/trustmary/) |
+| [Snipcart](servers/snipcart/) | ecommerce | 18 | API token | [servers/snipcart/](servers/snipcart/) |
+| [Woodpecker](servers/woodpecker/) | email-marketing | 21 | API token | [servers/woodpecker/](servers/woodpecker/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
