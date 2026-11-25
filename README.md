@@ -1157,6 +1157,14 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Trustmary](servers/trustmary/) | forms-surveys | 27 | API token | [servers/trustmary/](servers/trustmary/) |
 | [Snipcart](servers/snipcart/) | ecommerce | 18 | API token | [servers/snipcart/](servers/snipcart/) |
 | [Woodpecker](servers/woodpecker/) | email-marketing | 21 | API token | [servers/woodpecker/](servers/woodpecker/) |
+| [Friendbuy](servers/friendbuy/) | marketing | 30 | API token | [servers/friendbuy/](servers/friendbuy/) |
+| [PerfectGym](servers/perfectgym/) | membership | 18 | API token | [servers/perfectgym/](servers/perfectgym/) |
+| [Sesame HR](servers/sesame-hr/) | hr | 22 | API token | [servers/sesame-hr/](servers/sesame-hr/) |
+| [Runn](servers/runn/) | project-management | 17 | API token | [servers/runn/](servers/runn/) |
+| [Attentive](servers/attentive/) | messaging | 16 | API token | [servers/attentive/](servers/attentive/) |
+| [Raklet](servers/raklet/) | membership | 26 | API token | [servers/raklet/](servers/raklet/) |
+| [Firmao](servers/firmao/) | crm | 18 | API token | [servers/firmao/](servers/firmao/) |
+| [Beyond Pricing](servers/beyond-pricing/) | property-management | 17 | API token | [servers/beyond-pricing/](servers/beyond-pricing/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
