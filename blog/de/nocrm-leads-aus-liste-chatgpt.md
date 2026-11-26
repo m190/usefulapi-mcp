@@ -5,7 +5,7 @@ date: 2026-11-08
 products: nocrm-io
 lang: de
 translation: nocrm-add-leads-from-a-list-in-chatgpt
-source: 54d96e5171459e2d3d6bd12950328426f5ee64f07d5f4948dc9a4f3e21b38176
+source: b756e51f8906af455c957709ddf9b1b17f2fbad255d2897a6d982f0469b18661
 ---
 Du kannst ChatGPT oder Claude eine Kontaktliste geben, zum Beispiel von einer Messe, aus einem E-Mail-Verlauf oder einer Tabelle, und die Kontakte als Leads in noCRM.io anlegen lassen. Bitte die KI, zuerst jede E-Mail-Adresse in deinen vorhandenen Leads zu suchen. So kannst du bereits erfasste Kontakte überspringen. Füge `https://nocrm-io.usefulapi.io/mcp` als Konnektor hinzu und beschreibe deinen Auftrag.
 
@@ -33,7 +33,7 @@ Die schreibenden Tools sind `nocrm_create_lead`, `nocrm_update_lead`, `nocrm_ass
 
 Es gibt kein Tool zum Löschen eines Leads, Kommentars oder Kundenordners.
 
-Der Server hat außerdem Tools, die keine noCRM.io-Daten bearbeiten: `nocrm_usage_status` zeigt deine UsefulAPI-Nutzung und deinen Tarif. `nocrm_upgrade` und `nocrm_cancel_subscription` verwalten deinen Tarif, und `nocrm_request_feature` sendet uns einen Funktionswunsch. Das Upgrade-Tool belastet deine Karte nie: Einen Kauf oder einen Wechsel von Pro zu Pro+ bestätigst du auf der Zahlungsseite von Stripe. Eine Kündigung benötigt `confirm: true`.
+Die Tools für dein UsefulAPI-Konto sind davon getrennt. `nocrm_usage_status` zeigt deine Nutzung und deinen Tarif. `nocrm_upgrade` gibt Tarifoptionen oder einen Zahlungslink; ein Wechsel von Pro zu Pro+ erfordert eine Bestätigung. `nocrm_cancel_subscription` erfordert ebenfalls eine Bestätigung und beendet das Abonnement zum Ende des aktuellen Zeitraums. `nocrm_request_feature` sendet uns einen Funktionswunsch. Diese Tools ändern keine noCRM.io-Daten.
 
 ## Was brauche ich dafür?
 

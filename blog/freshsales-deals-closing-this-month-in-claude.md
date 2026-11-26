@@ -32,7 +32,7 @@ The server has these tools that write Freshsales data: `freshsales_create_contac
 
 For a review, ask the AI not to call a write tool. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Freshsales data: `freshsales_usage_status` shows your UsefulAPI usage and plan, `freshsales_upgrade` returns a payment link or undoes a scheduled cancellation, `freshsales_cancel_subscription` cancels at the end of the current period, and `freshsales_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `freshsales_usage_status` shows your usage and plan. `freshsales_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `freshsales_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `freshsales_request_feature` sends us a feature request. These tools do not change Freshsales data.
 
 ## What do I need?
 

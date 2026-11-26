@@ -5,7 +5,7 @@ date: 2026-11-26
 products: service-fusion
 lang: es
 translation: find-unpaid-service-fusion-invoices-in-chatgpt
-source: 0dd6f4a8377cbf93470022f4a841d5e26ceebb3576c197b2045b0aa46af351a3
+source: 5f31ce5fd58ece5b868021cb44cf0f65d5e5b7970f0e2a9dec740af7c018f2d2
 ---
 Puedes preguntarle a ChatGPT, Claude o Cursor cuáles de tus facturas recientes de Service Fusion siguen sin pagar. La IA lee tus facturas página por página, se queda con las que no están marcadas como pagadas y las agrupa por cliente. Si lo pides, también busca el trabajo asociado a una factura. Añade `https://service-fusion.usefulapi.io/mcp` como servidor MCP y pregunta con tus propias palabras.
 
@@ -31,7 +31,7 @@ Ninguna herramienta cambia, envía o elimina una factura, ni la marca como pagad
 
 El servidor tiene tres herramientas que escriben datos de Service Fusion. `servicefusion_create_customer`, `servicefusion_create_job` y `servicefusion_create_estimate` crean un cliente, un trabajo o un presupuesto nuevo. Un trabajo nuevo aparece en la agenda de tu equipo. Estos registros no se pueden eliminar a través de la API, y una segunda llamada crea un segundo registro. Estas herramientas actúan cuando se llaman; no exigen un paso de vista previa por separado. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Service Fusion: `servicefusion_usage_status` muestra tu uso y plan de UsefulAPI, `servicefusion_upgrade` devuelve un enlace de pago o anula una cancelación programada, `servicefusion_cancel_subscription` cancela al final del periodo actual, y `servicefusion_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
+Las herramientas de tu cuenta de UsefulAPI son independientes. `servicefusion_usage_status` muestra tu uso y tu plan. `servicefusion_upgrade` da opciones de plan o un enlace de pago; el cambio de Pro a Pro+ requiere confirmación. `servicefusion_cancel_subscription` también requiere confirmación y termina la suscripción al final del periodo actual. `servicefusion_request_feature` nos envía una solicitud de función. Estas herramientas no cambian datos de Service Fusion.
 
 ## ¿Qué necesito?
 

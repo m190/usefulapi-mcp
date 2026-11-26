@@ -5,7 +5,7 @@ date: 2026-11-16
 products: finale-inventory
 lang: es
 translation: finale-inventory-stock-by-location-in-claude
-source: b9876afff58a8786b4b5dce5f017a4dc441858b8b95eda10d594f50c7f0f15f8
+source: 4f2af61853c8c5cf0203393f077eeb47083e1d488a86f3145dce0ba40117019d
 ---
 Puedes preguntar a Claude o ChatGPT cuánto stock tienes en Finale Inventory, producto por producto y ubicación por ubicación. La IA lee tus ubicaciones y las entradas de stock de Finale, las suma por ubicación y muestra la cantidad en almacén junto a las cantidades pedidas y reservadas. Añade `https://finale-inventory.usefulapi.io/mcp` como conector y describe lo que necesitas.
 
@@ -31,7 +31,7 @@ No. El servidor no tiene ninguna herramienta que cambie el stock, registre un re
 
 `finale_create_draft_purchase_order` escribe datos de Finale. Crea una orden de compra para un proveedor como borrador. El borrador no se confirma, no se recibe ni se envía al proveedor, y no cambia el stock. Tú lo revisas y lo confirmas en Finale. La herramienta actúa cuando se llama; no exige un paso de vista previa por separado. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta esta herramienta y rechaza las llamadas a ella. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Finale: `finale_usage_status` muestra tu uso y plan de UsefulAPI, `finale_upgrade` devuelve un enlace de pago o anula una cancelación programada, `finale_cancel_subscription` cancela al final del periodo actual, y `finale_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
+Las herramientas de tu cuenta de UsefulAPI son independientes. `finale_usage_status` muestra tu uso y tu plan. `finale_upgrade` da opciones de plan o un enlace de pago; el cambio de Pro a Pro+ requiere confirmación. `finale_cancel_subscription` también requiere confirmación y termina la suscripción al final del periodo actual. `finale_request_feature` nos envía una solicitud de función. Estas herramientas no cambian datos de Finale.
 
 ## ¿Qué necesito?
 

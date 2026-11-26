@@ -5,7 +5,7 @@ date: 2026-11-17
 products: booqable
 lang: es
 translation: booqable-upcoming-rentals-and-invoices-in-chatgpt
-source: 2bb6292e46e22058613efc1762301bef4fef4a88bdcc896f52c2ebc975f78ada
+source: dd6f7fee3f55cd15d4c38adbc59875deafa58fb4181c34978b7aca843be02efa
 ---
 Puedes pedir a ChatGPT o Claude que prepare los alquileres de los próximos días a partir de tu cuenta de Booqable. La IA busca los pedidos que empiezan en un periodo, lee los datos del cliente y las líneas de cada pedido, y comprueba las facturas y los pagos. Añade `https://booqable.usefulapi.io/mcp` como conector y describe lo que necesitas.
 
@@ -31,7 +31,7 @@ No puede cobrar un pago. Las herramientas de Booqable pueden leer pagos, pero no
 
 El servidor tiene estas herramientas que escriben datos de Booqable: `booqable_create_customer`, `booqable_update_customer`, `booqable_create_order`, `booqable_update_order`, `booqable_book_product`, `booqable_transition_order_status` y `booqable_create_note`. Actúan cuando se llaman; no exigen un paso de vista previa por separado. La revisión de arriba usa solo herramientas de lectura. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Booqable: `booqable_usage_status` muestra tu uso y plan de UsefulAPI, `booqable_upgrade` devuelve un enlace de pago o anula una cancelación programada, `booqable_cancel_subscription` cancela al final del periodo actual, y `booqable_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
+Las herramientas de tu cuenta de UsefulAPI son independientes. `booqable_usage_status` muestra tu uso y tu plan. `booqable_upgrade` da opciones de plan o un enlace de pago; el cambio de Pro a Pro+ requiere confirmación. `booqable_cancel_subscription` también requiere confirmación y termina la suscripción al final del periodo actual. `booqable_request_feature` nos envía una solicitud de función. Estas herramientas no cambian datos de Booqable.
 
 ## ¿Qué necesito?
 

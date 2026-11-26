@@ -31,7 +31,7 @@ No. No tool enrolls a student, drops an enrollment, removes a waitlist entry or 
 
 The server has two tools that write Jackrabbit data. `jackrabbit_create_student` adds a student to an existing family, and a second call adds a second student. `jackrabbit_create_waitlist_entry` puts a student on a class waitlist; it does not enroll the student. These tools act when they are called; they do not enforce a separate preview step. If you choose **Read only** when you connect, the server hides the write tools and refuses calls to them. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Jackrabbit data: `jackrabbit_usage_status` shows your UsefulAPI usage and plan, `jackrabbit_upgrade` returns a payment link or undoes a scheduled cancellation, `jackrabbit_cancel_subscription` cancels at the end of the current period, and `jackrabbit_request_feature` sends us a feature request. These tools stay available in a Read only connection. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `jackrabbit_usage_status` shows your usage and plan. `jackrabbit_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `jackrabbit_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `jackrabbit_request_feature` sends us a feature request. These tools do not change Jackrabbit data.
 
 ## What do I need?
 

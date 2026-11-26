@@ -29,7 +29,7 @@ No. The server has no tool that sends, schedules, changes or deletes a message, 
 
 The AI can write a draft reply in the chat. You then send it yourself in Text Request. The messages come from your customers, so read a draft before you use it.
 
-The server also has tools that are not about Text Request data: `textrequest_usage_status` shows your UsefulAPI usage and plan, `textrequest_upgrade` returns a payment link or undoes a scheduled cancellation, `textrequest_cancel_subscription` cancels at the end of the current period, and `textrequest_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `textrequest_usage_status` shows your usage and plan. `textrequest_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `textrequest_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `textrequest_request_feature` sends us a feature request. These tools do not change Text Request data.
 
 ## What do I need?
 

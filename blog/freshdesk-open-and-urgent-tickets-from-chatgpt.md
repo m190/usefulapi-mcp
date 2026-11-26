@@ -32,7 +32,7 @@ The server has these tools that write Freshdesk data: `freshdesk_create_ticket`,
 
 For a review, ask the AI not to call a write tool. If you want a reply, ask the AI to show you the text first. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Freshdesk data: `freshdesk_usage_status` shows your UsefulAPI usage and plan, `freshdesk_upgrade` returns a payment link or undoes a scheduled cancellation, `freshdesk_cancel_subscription` cancels at the end of the current period, and `freshdesk_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `freshdesk_usage_status` shows your usage and plan. `freshdesk_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `freshdesk_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `freshdesk_request_feature` sends us a feature request. These tools do not change Freshdesk data.
 
 ## What do I need?
 

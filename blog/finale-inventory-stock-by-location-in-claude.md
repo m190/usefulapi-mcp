@@ -28,7 +28,7 @@ No. The server has no tool that changes stock, records a count, ships an order o
 
 `finale_create_draft_purchase_order` writes Finale data. It creates a purchase order for a supplier as a draft. The draft is not committed, received or sent to the supplier, and it does not change stock. You review and commit it in Finale. The tool acts when it is called; it does not enforce a separate preview step. If you choose **Read only** when you connect, the server hides this tool and refuses calls to it. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Finale data: `finale_usage_status` shows your UsefulAPI usage and plan, `finale_upgrade` returns a payment link or undoes a scheduled cancellation, `finale_cancel_subscription` cancels at the end of the current period, and `finale_request_feature` sends us a feature request. These tools stay available in a Read only connection. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `finale_usage_status` shows your usage and plan. `finale_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `finale_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `finale_request_feature` sends us a feature request. These tools do not change Finale data.
 
 ## What do I need?
 

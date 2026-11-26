@@ -30,7 +30,7 @@ It can use up keyword slots. Each keyword that `wincher_add_keywords` adds takes
 
 The write tools are `wincher_add_keywords`, `wincher_create_group` and `wincher_create_annotation`. They act when they are called; they do not enforce a separate preview or confirmation step. An annotation is a note on the ranking graphs, and everyone with access to the website sees it. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Wincher data: `wincher_usage_status` shows your UsefulAPI usage and plan, `wincher_upgrade` returns a payment link or undoes a scheduled cancellation, `wincher_cancel_subscription` cancels at the end of the current period, and `wincher_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
+The UsefulAPI account tools are separate. `wincher_usage_status` shows your usage and plan. `wincher_upgrade` gives plan options or a payment link; a change from Pro to Pro+ requires confirmation. `wincher_cancel_subscription` also requires confirmation and ends the subscription at the end of the current period. `wincher_request_feature` sends us a feature request. These tools do not change Wincher data.
 
 ## What do I need?
 
