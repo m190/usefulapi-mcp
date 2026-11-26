@@ -1481,6 +1481,21 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Reftab](servers/reftab/) | inventory | 21 | API token | [servers/reftab/](servers/reftab/) |
 | [Gumlet](servers/gumlet/) | video-hosting | 25 | API token | [servers/gumlet/](servers/gumlet/) |
 | [Sell.app](servers/sell-app/) | ecommerce | 15 | API token | [servers/sell-app/](servers/sell-app/) |
+| [Pentest-Tools.com](servers/pentest-tools-com/) | security | 21 | API token | [servers/pentest-tools-com/](servers/pentest-tools-com/) |
+| [Docsumo](servers/docsumo/) | document-ai | 16 | API token | [servers/docsumo/](servers/docsumo/) |
+| [Usermaven](servers/usermaven/) | analytics | 7 | API token | [servers/usermaven/](servers/usermaven/) |
+| [Survicate](servers/survicate/) | forms-surveys | 11 | API token | [servers/survicate/](servers/survicate/) |
+| [Retently](servers/retently/) | forms-surveys | 26 | API token | [servers/retently/](servers/retently/) |
+| [Route4Me](servers/route4me/) | logistics | 24 | API token | [servers/route4me/](servers/route4me/) |
+| [Linkly](servers/linkly/) | marketing | 14 | API token | [servers/linkly/](servers/linkly/) |
+| [Kiyoh](servers/kiyoh/) | marketing | 6 | API token | [servers/kiyoh/](servers/kiyoh/) |
+| [SmartEmailing](servers/smartemailing/) | email-marketing | 21 | API token | [servers/smartemailing/](servers/smartemailing/) |
+| [Bitly](servers/bitly/) | marketing | 17 | API token | [servers/bitly/](servers/bitly/) |
+| [eSignatures](servers/esignatures-io/) | esignature | 18 | API token | [servers/esignatures-io/](servers/esignatures-io/) |
+| [Planable](servers/planable/) | marketing | 23 | API token | [servers/planable/](servers/planable/) |
+| [Formcarry](servers/formcarry/) | forms | 19 | API token | [servers/formcarry/](servers/formcarry/) |
+| [Apicbase](servers/apicbase/) | inventory | 26 | OAuth | [servers/apicbase/](servers/apicbase/) |
+| [Resource Guru](servers/resource-guru/) | scheduling | 27 | OAuth | [servers/resource-guru/](servers/resource-guru/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
