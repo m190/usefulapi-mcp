@@ -1301,6 +1301,25 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Medplum](servers/medplum/) | healthcare | 14 | API token | [servers/medplum/](servers/medplum/) |
 | [Teamtailor](servers/teamtailor/) | hr | 20 | API token | [servers/teamtailor/](servers/teamtailor/) |
 | [Bria](servers/bria/) | image-generation | 7 | API token | [servers/bria/](servers/bria/) |
+| [PipeRun](servers/piperun/) | crm | 24 | API token | [servers/piperun/](servers/piperun/) |
+| [DeBounce](servers/debounce/) | email-validation | 10 | API token | [servers/debounce/](servers/debounce/) |
+| [Logz.io](servers/logz-io/) | observability | 18 | API token | [servers/logz-io/](servers/logz-io/) |
+| [Mercury](servers/mercury/) | fintech | 23 | API token | [servers/mercury/](servers/mercury/) |
+| [Typesense](servers/typesense/) | data | 20 | API token | [servers/typesense/](servers/typesense/) |
+| [Geocodio](servers/geocodio/) | maps | 15 | API token | [servers/geocodio/](servers/geocodio/) |
+| [ConvertAPI](servers/convertapi/) | documents | 8 | API token | [servers/convertapi/](servers/convertapi/) |
+| [Wistia](servers/wistia/) | video-hosting | 27 | API token | [servers/wistia/](servers/wistia/) |
+| [Honeycomb](servers/honeycomb/) | observability | 20 | API token | [servers/honeycomb/](servers/honeycomb/) |
+| [Plain](servers/plain/) | support | 18 | API token | [servers/plain/](servers/plain/) |
+| [Jotform](servers/jotform/) | forms-surveys | 21 | API token | [servers/jotform/](servers/jotform/) |
+| [Mailjet](servers/mailjet/) | email | 15 | API token | [servers/mailjet/](servers/mailjet/) |
+| [Pinecone](servers/pinecone/) | ai-infra | 15 | API token | [servers/pinecone/](servers/pinecone/) |
+| [Synthesia](servers/synthesia/) | video-hosting | 8 | API token | [servers/synthesia/](servers/synthesia/) |
+| [flespi](servers/flespi/) | logistics | 15 | API token | [servers/flespi/](servers/flespi/) |
+| [Channel Talk](servers/channel-talk/) | chat | 20 | API token | [servers/channel-talk/](servers/channel-talk/) |
+| [Nanonets](servers/nanonets/) | document-ai | 9 | API token | [servers/nanonets/](servers/nanonets/) |
+| [GorillaDesk](servers/gorilladesk/) | business-operations | 27 | API token | [servers/gorilladesk/](servers/gorilladesk/) |
+| [Veyra](servers/veyra/) | payments | 11 | API token | [servers/veyra/](servers/veyra/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
