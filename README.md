@@ -1352,6 +1352,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [NFe.io](servers/nfe-io/) | tax | 15 | API token | [servers/nfe-io/](servers/nfe-io/) |
 | [Typeform](servers/typeform/) | forms-surveys | 18 | API token | [servers/typeform/](servers/typeform/) |
 | [Time Doctor](servers/time-doctor/) | time-tracking | 17 | API token | [servers/time-doctor/](servers/time-doctor/) |
+| [Jenkins](servers/jenkins/) | devops | 13 | API token | [servers/jenkins/](servers/jenkins/) |
+| [Twilio](servers/twilio/) | messaging | 16 | API token | [servers/twilio/](servers/twilio/) |
+| [Sentry](servers/sentry/) | observability | 16 | API token | [servers/sentry/](servers/sentry/) |
+| [Cal.com](servers/calcom/) | scheduling | 18 | API token | [servers/calcom/](servers/calcom/) |
+| [Dixa](servers/dixa/) | support | 35 | API token | [servers/dixa/](servers/dixa/) |
+| [Leat](servers/piggy/) | marketing | 19 | API token | [servers/piggy/](servers/piggy/) |
+| [Scaleway](servers/scaleway/) | cloud | 15 | API token | [servers/scaleway/](servers/scaleway/) |
+| [Planning Center](servers/planning-center/) | scheduling | 29 | API token | [servers/planning-center/](servers/planning-center/) |
+| [ShipStation](servers/shipstation/) | shipping | 31 | API token | [servers/shipstation/](servers/shipstation/) |
+| [Amplitude](servers/amplitude/) | analytics | 16 | API token | [servers/amplitude/](servers/amplitude/) |
+| [ElevenLabs](servers/elevenlabs/) | speech-to-text | 14 | API token | [servers/elevenlabs/](servers/elevenlabs/) |
+| [Cloudways](servers/cloudways/) | paas | 26 | API token | [servers/cloudways/](servers/cloudways/) |
+| [Ploomes](servers/ploomes/) | crm | 32 | API token | [servers/ploomes/](servers/ploomes/) |
+| [Resend](servers/resend/) | email | 22 | API token | [servers/resend/](servers/resend/) |
+| [Nango](servers/nango/) | devtools | 14 | API token | [servers/nango/](servers/nango/) |
+| [Discord](servers/discord/) | chat | 14 | API token | [servers/discord/](servers/discord/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
