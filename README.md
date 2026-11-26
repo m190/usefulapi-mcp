@@ -1423,6 +1423,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Metricool](servers/metricool/) | marketing | 16 | API token | [servers/metricool/](servers/metricool/) |
 | [Signaturit](servers/signaturit/) | e-sign | 16 | API token | [servers/signaturit/](servers/signaturit/) |
 | [Bonusly](servers/bonusly/) | hr | 21 | API token | [servers/bonusly/](servers/bonusly/) |
+| [Findymail](servers/findymail/) | data-enrichment | 24 | API token | [servers/findymail/](servers/findymail/) |
+| [Shotstack](servers/shotstack/) | video-hosting | 16 | API token | [servers/shotstack/](servers/shotstack/) |
+| [ShipBob](servers/shipbob/) | logistics | 24 | API token | [servers/shipbob/](servers/shipbob/) |
+| [beehiiv](servers/beehiiv/) | email-marketing | 26 | API token | [servers/beehiiv/](servers/beehiiv/) |
+| [Rossum](servers/rossum/) | document-ai | 22 | API token | [servers/rossum/](servers/rossum/) |
+| [Balena](servers/balena/) | devops | 14 | API token | [servers/balena/](servers/balena/) |
+| [Baremetrics](servers/baremetrics/) | analytics | 24 | API token | [servers/baremetrics/](servers/baremetrics/) |
+| [Workable](servers/workable/) | hr | 18 | API token | [servers/workable/](servers/workable/) |
+| [Bugsnag](servers/bugsnag/) | monitoring | 20 | API token | [servers/bugsnag/](servers/bugsnag/) |
+| [Toggl Track](servers/toggl-track/) | time-tracking | 18 | API token | [servers/toggl-track/](servers/toggl-track/) |
+| [Loop Returns](servers/loop-returns/) | ecommerce | 16 | API token | [servers/loop-returns/](servers/loop-returns/) |
+| [Qwilr](servers/qwilr/) | documents | 12 | API token | [servers/qwilr/](servers/qwilr/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
