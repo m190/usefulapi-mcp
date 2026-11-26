@@ -1384,6 +1384,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SignWell](servers/signwell/) | esignature | 18 | API token | [servers/signwell/](servers/signwell/) |
 | [TimeCamp](servers/timecamp/) | time-tracking | 13 | API token | [servers/timecamp/](servers/timecamp/) |
 | [Turso](servers/turso/) | data | 20 | API token | [servers/turso/](servers/turso/) |
+| [Addigy](servers/addigy/) | devops | 22 | API token | [servers/addigy/](servers/addigy/) |
+| [Kustomer](servers/kustomer/) | support | 20 | API token | [servers/kustomer/](servers/kustomer/) |
+| [Vultr](servers/vultr/) | cloud | 30 | API token | [servers/vultr/](servers/vultr/) |
+| [Meilisearch](servers/meilisearch/) | data | 19 | API token | [servers/meilisearch/](servers/meilisearch/) |
+| [Klaviyo](servers/klaviyo/) | email-marketing | 23 | API token | [servers/klaviyo/](servers/klaviyo/) |
+| [Kiwify](servers/kiwify/) | digital-commerce | 20 | API token | [servers/kiwify/](servers/kiwify/) |
+| [Atlassian Jira](servers/atlassian-jira/) | project-management | 23 | OAuth | [servers/atlassian-jira/](servers/atlassian-jira/) |
+| [Azure DevOps](servers/azure-devops/) | devops | 16 | API token | [servers/azure-devops/](servers/azure-devops/) |
+| [X (Twitter)](servers/twitter-x/) | marketing | 17 | API token | [servers/twitter-x/](servers/twitter-x/) |
+| [Stytch](servers/stytch/) | security | 11 | API token | [servers/stytch/](servers/stytch/) |
+| [LiveAgent](servers/liveagent/) | support | 21 | API token | [servers/liveagent/](servers/liveagent/) |
+| [Nash](servers/nash/) | logistics | 14 | API token | [servers/nash/](servers/nash/) |
+| [OnePageCRM](servers/onepagecrm/) | crm | 20 | API token | [servers/onepagecrm/](servers/onepagecrm/) |
+| [Mobile Field Report](servers/mfr/) | business-operations | 23 | API token | [servers/mfr/](servers/mfr/) |
+| [NEURONwriter](servers/neuronwriter/) | marketing | 11 | API token | [servers/neuronwriter/](servers/neuronwriter/) |
+| [Airtable](servers/airtable/) | no-code-database | 11 | API token | [servers/airtable/](servers/airtable/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
