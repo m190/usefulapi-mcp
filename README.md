@@ -1335,6 +1335,23 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [HubSpot](servers/hubspot/) | crm | 13 | API token | [servers/hubspot/](servers/hubspot/) |
 | [Vero](servers/vero/) | email-marketing | 8 | API token | [servers/vero/](servers/vero/) |
 | [SimplyBook.me](servers/simplybook-me/) | scheduling | 21 | API token | [servers/simplybook-me/](servers/simplybook-me/) |
+| [Koyeb](servers/koyeb/) | paas | 30 | API token | [servers/koyeb/](servers/koyeb/) |
+| [Rollbar](servers/rollbar/) | observability | 19 | API token | [servers/rollbar/](servers/rollbar/) |
+| [Everhour](servers/everhour/) | time-tracking | 21 | API token | [servers/everhour/](servers/everhour/) |
+| [WooCommerce](servers/woocommerce/) | ecommerce | 19 | API token | [servers/woocommerce/](servers/woocommerce/) |
+| [Ghost](servers/ghost/) | membership | 18 | API token | [servers/ghost/](servers/ghost/) |
+| [Supabase](servers/supabase/) | dev-infra | 23 | API token | [servers/supabase/](servers/supabase/) |
+| [Fakturoid](servers/fakturoid/) | accounting | 18 | API token | [servers/fakturoid/](servers/fakturoid/) |
+| [ImageKit](servers/imagekit/) | image-cdn | 19 | API token | [servers/imagekit/](servers/imagekit/) |
+| [AWeber](servers/aweber/) | email-marketing | 16 | OAuth | [servers/aweber/](servers/aweber/) |
+| [Cartesia](servers/cartesia/) | speech-to-text | 14 | API token | [servers/cartesia/](servers/cartesia/) |
+| [Close](servers/close/) | crm | 24 | API token | [servers/close/](servers/close/) |
+| [Coinbase](servers/coinbase/) | fintech | 19 | API token | [servers/coinbase/](servers/coinbase/) |
+| [PlanetScale](servers/planetscale/) | data | 17 | API token | [servers/planetscale/](servers/planetscale/) |
+| [Capsule CRM](servers/capsule-crm/) | crm | 21 | API token | [servers/capsule-crm/](servers/capsule-crm/) |
+| [NFe.io](servers/nfe-io/) | tax | 15 | API token | [servers/nfe-io/](servers/nfe-io/) |
+| [Typeform](servers/typeform/) | forms-surveys | 18 | API token | [servers/typeform/](servers/typeform/) |
+| [Time Doctor](servers/time-doctor/) | time-tracking | 17 | API token | [servers/time-doctor/](servers/time-doctor/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
