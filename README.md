@@ -1414,6 +1414,15 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Moxie](servers/moxie/) | business-operations | 20 | API token | [servers/moxie/](servers/moxie/) |
 | [Teamwork.com](servers/teamwork/) | project-management | 17 | API token | [servers/teamwork/](servers/teamwork/) |
 | [JustCall](servers/justcall/) | communications | 18 | API token | [servers/justcall/](servers/justcall/) |
+| [Luma](servers/luma/) | calendar | 25 | API token | [servers/luma/](servers/luma/) |
+| [PartnerStack](servers/partnerstack/) | business-operations | 20 | API token | [servers/partnerstack/](servers/partnerstack/) |
+| [TidyCal](servers/tidycal/) | scheduling | 27 | API token | [servers/tidycal/](servers/tidycal/) |
+| [Particle](servers/particle/) | cloud | 13 | API token | [servers/particle/](servers/particle/) |
+| [Qovery](servers/qovery/) | paas | 24 | API token | [servers/qovery/](servers/qovery/) |
+| [Discourse](servers/discourse/) | communications | 18 | API token | [servers/discourse/](servers/discourse/) |
+| [Metricool](servers/metricool/) | marketing | 16 | API token | [servers/metricool/](servers/metricool/) |
+| [Signaturit](servers/signaturit/) | e-sign | 16 | API token | [servers/signaturit/](servers/signaturit/) |
+| [Bonusly](servers/bonusly/) | hr | 21 | API token | [servers/bonusly/](servers/bonusly/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
