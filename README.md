@@ -1435,6 +1435,18 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Toggl Track](servers/toggl-track/) | time-tracking | 18 | API token | [servers/toggl-track/](servers/toggl-track/) |
 | [Loop Returns](servers/loop-returns/) | ecommerce | 16 | API token | [servers/loop-returns/](servers/loop-returns/) |
 | [Qwilr](servers/qwilr/) | documents | 12 | API token | [servers/qwilr/](servers/qwilr/) |
+| [Detrack](servers/detrack/) | logistics | 14 | API token | [servers/detrack/](servers/detrack/) |
+| [Salesflare](servers/salesflare/) | crm | 25 | API token | [servers/salesflare/](servers/salesflare/) |
+| [Sematext](servers/sematext/) | monitoring | 10 | API token | [servers/sematext/](servers/sematext/) |
+| [Detectify](servers/detectify/) | security | 18 | API token | [servers/detectify/](servers/detectify/) |
+| [LeadDyno](servers/leaddyno/) | marketing | 17 | API token | [servers/leaddyno/](servers/leaddyno/) |
+| [Hive](servers/hive/) | project-management | 21 | API token | [servers/hive/](servers/hive/) |
+| [Calendesk](servers/calendesk/) | scheduling | 16 | API token | [servers/calendesk/](servers/calendesk/) |
+| [Buddy Punch](servers/buddy-punch/) | time-tracking | 21 | API token | [servers/buddy-punch/](servers/buddy-punch/) |
+| [Robaws](servers/robaws/) | business-operations | 19 | API token | [servers/robaws/](servers/robaws/) |
+| [SHOPLINE](servers/shopline/) | ecommerce | 7 | API token | [servers/shopline/](servers/shopline/) |
+| [Growave](servers/growave/) | marketing | 20 | API token | [servers/growave/](servers/growave/) |
+| [Agendor](servers/agendor/) | crm | 23 | API token | [servers/agendor/](servers/agendor/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
