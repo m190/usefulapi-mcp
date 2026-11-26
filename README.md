@@ -1447,6 +1447,24 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [SHOPLINE](servers/shopline/) | ecommerce | 7 | API token | [servers/shopline/](servers/shopline/) |
 | [Growave](servers/growave/) | marketing | 20 | API token | [servers/growave/](servers/growave/) |
 | [Agendor](servers/agendor/) | crm | 23 | API token | [servers/agendor/](servers/agendor/) |
+| [Flex HR](servers/flex-hr/) | hr | 20 | API token | [servers/flex-hr/](servers/flex-hr/) |
+| [EasyBroker](servers/easybroker/) | real-estate | 16 | API token | [servers/easybroker/](servers/easybroker/) |
+| [Partnerize](servers/partnerize/) | marketing | 20 | API token | [servers/partnerize/](servers/partnerize/) |
+| [Findmyshift](servers/findmyshift/) | scheduling | 23 | API token | [servers/findmyshift/](servers/findmyshift/) |
+| [Blink](servers/blink-de/) | time-tracking | 10 | API token | [servers/blink-de/](servers/blink-de/) |
+| [Timeero](servers/timeero/) | time-tracking | 22 | API token | [servers/timeero/](servers/timeero/) |
+| [Taxmo](servers/taxmo/) | tax | 17 | API token | [servers/taxmo/](servers/taxmo/) |
+| [StoreFeeder](servers/storefeeder/) | inventory | 21 | API token | [servers/storefeeder/](servers/storefeeder/) |
+| [Plumsail Documents](servers/plumsail-documents/) | documents | 9 | API token | [servers/plumsail-documents/](servers/plumsail-documents/) |
+| [Oneflow](servers/oneflow/) | e-sign | 20 | API token | [servers/oneflow/](servers/oneflow/) |
+| [DealHub](servers/dealhub/) | crm | 13 | API token | [servers/dealhub/](servers/dealhub/) |
+| [GanttPRO](servers/ganttpro/) | project-management | 22 | API token | [servers/ganttpro/](servers/ganttpro/) |
+| [MemberArea](servers/memberarea/) | membership | 22 | API token | [servers/memberarea/](servers/memberarea/) |
+| [SKU.io](servers/sku-io/) | inventory | 19 | API token | [servers/sku-io/](servers/sku-io/) |
+| [WisePops](servers/wisepops/) | marketing | 6 | API token | [servers/wisepops/](servers/wisepops/) |
+| [Mixmax](servers/mixmax/) | email | 19 | API token | [servers/mixmax/](servers/mixmax/) |
+| [Klenty](servers/klenty/) | email-marketing | 15 | API token | [servers/klenty/](servers/klenty/) |
+| [Dropcontact](servers/dropcontact/) | data-enrichment | 8 | API token | [servers/dropcontact/](servers/dropcontact/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
