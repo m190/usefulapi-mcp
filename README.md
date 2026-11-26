@@ -1368,6 +1368,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Resend](servers/resend/) | email | 22 | API token | [servers/resend/](servers/resend/) |
 | [Nango](servers/nango/) | devtools | 14 | API token | [servers/nango/](servers/nango/) |
 | [Discord](servers/discord/) | chat | 14 | API token | [servers/discord/](servers/discord/) |
+| [GitHub](servers/github/) | devtools | 25 | API token | [servers/github/](servers/github/) |
+| [Shopify](servers/shopify/) | ecommerce | 14 | API token | [servers/shopify/](servers/shopify/) |
+| [Attio](servers/attio/) | crm | 20 | API token | [servers/attio/](servers/attio/) |
+| [Upstash](servers/upstash/) | data | 15 | API token | [servers/upstash/](servers/upstash/) |
+| [OpenRouter](servers/openrouter/) | ai-infra | 20 | API token | [servers/openrouter/](servers/openrouter/) |
+| [Elasticsearch](servers/elasticsearch/) | data | 17 | API token | [servers/elasticsearch/](servers/elasticsearch/) |
+| [Groq](servers/groq/) | ai-infra | 14 | API token | [servers/groq/](servers/groq/) |
+| [Hookdeck](servers/hookdeck/) | dev-infra | 23 | API token | [servers/hookdeck/](servers/hookdeck/) |
+| [Cloudflare](servers/cloudflare/) | cloud | 24 | API token | [servers/cloudflare/](servers/cloudflare/) |
+| [GitLab](servers/gitlab/) | devtools | 20 | OAuth | [servers/gitlab/](servers/gitlab/) |
+| [PostHog](servers/posthog/) | analytics | 23 | API token | [servers/posthog/](servers/posthog/) |
+| [Ayrshare](servers/ayrshare/) | marketing | 17 | API token | [servers/ayrshare/](servers/ayrshare/) |
+| [WorkOS](servers/workos/) | security | 25 | API token | [servers/workos/](servers/workos/) |
+| [SignWell](servers/signwell/) | esignature | 18 | API token | [servers/signwell/](servers/signwell/) |
+| [TimeCamp](servers/timecamp/) | time-tracking | 13 | API token | [servers/timecamp/](servers/timecamp/) |
+| [Turso](servers/turso/) | data | 20 | API token | [servers/turso/](servers/turso/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
