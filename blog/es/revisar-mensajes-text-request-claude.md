@@ -5,7 +5,7 @@ date: 2026-11-14
 products: text-request
 lang: es
 translation: text-request-messages-and-failed-texts-in-claude
-source: 425bbaa0e519d3aacff6a7f02bfa8430f49d89ce7fce35c77d24f1fb400fa5c6
+source: d83c4e63f129c311a3e3f44ed0f85e1ffde3e206a289680162ce7cc61439aa7d
 ---
 Puedes pedir a Claude o ChatGPT que repase los mensajes de tu panel de Text Request al final del día. La IA lee las conversaciones sin resolver, te dice qué preguntó cada cliente y lista los SMS que no llegaron. Añade `https://text-request.usefulapi.io/mcp` como conector y describe lo que necesitas.
 
@@ -32,7 +32,7 @@ No. El servidor no tiene ninguna herramienta que envíe, programe, cambie o elim
 
 La IA puede escribir un borrador de respuesta en el chat. Después lo envías tú en Text Request. Los mensajes proceden de tus clientes, así que lee el borrador antes de usarlo.
 
-El servidor también tiene herramientas que no tratan datos de Text Request: `textrequest_usage_status` muestra tu uso y plan de UsefulAPI, `textrequest_upgrade` devuelve un enlace de pago o cambia una suscripción existente, `textrequest_cancel_subscription` cancela al final del periodo actual, y `textrequest_request_feature` nos envía una solicitud de función. La cancelación y el cambio de Pro a Pro+ requieren `confirm: true`.
+El servidor también tiene herramientas que no tratan datos de Text Request: `textrequest_usage_status` muestra tu uso y plan de UsefulAPI, `textrequest_upgrade` devuelve un enlace de pago o anula una cancelación programada, `textrequest_cancel_subscription` cancela al final del periodo actual, y `textrequest_request_feature` nos envía una solicitud de función. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

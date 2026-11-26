@@ -5,7 +5,7 @@ date: 2026-11-23
 products: edesk
 lang: de
 translation: summarize-open-edesk-tickets-in-chatgpt
-source: 3fbaf539d3794307cac6ce0e2dfca863a0b79c672c14c4a897723dccfe5c8801
+source: 4dfc50a0c607b122c95f47bf2072f7659e408f4b559166b4c0f8e2e1dcbd222c
 ---
 Du kannst ChatGPT oder Claude deine offenen eDesk-Tickets durchgehen lassen, bevor du mit dem Antworten beginnst. Die KI listet die Tickets aus allen deinen Verkaufskanälen auf, öffnet jedes Ticket, liest die Nachrichten des Kunden und sagt dir in wenigen Zeilen, was jeder Kunde möchte. Füge `https://edesk.usefulapi.io/mcp` als Konnektor hinzu und stelle deine Frage in normalen Worten.
 
@@ -31,7 +31,7 @@ Die Übersicht oben verwendet nur lesende Tools. Kein Tool löscht ein Ticket, e
 
 Der Server hat diese Tools, die eDesk-Daten schreiben: `edesk_update_ticket` ändert Status, zuständige Person, Tags oder Betreff eines Tickets. `edesk_add_ticket_note` und `edesk_add_order_note` fügen interne Notizen hinzu, die nicht an den Kunden gehen. `edesk_reply_to_ticket` sendet eine Antwort an die Standardempfänger des Kanals. Bei einem Mirakl-Kanal kann die Einstellung „Default messages recipients“ den Kunden, den Betreiber oder beide auswählen, und die API kann die Empfänger nicht wählen. Wenn die Empfänger wichtig sind, verwende das Antwortfeld in eDesk. eDesk stellt die Antwort zur Zustellung an den Marktplatz- oder E-Mail-Kanal in die Warteschlange, und danach lässt sie sich nicht mehr zurückholen. Diese Tools handeln, sobald sie aufgerufen werden, und erzwingen keine separate Vorschau. Wenn du den Text zuerst freigeben möchtest, bitte die KI, einen Entwurf im Chat zu schreiben. Wenn du beim Verbinden **Read only** wählst, blendet der Server die schreibenden Tools aus und lehnt Aufrufe an sie ab. Dein KI-Client kann vor jedem Tool-Aufruf um Zustimmung bitten. Das hängt vom Client und seinen Einstellungen ab.
 
-Der Server hat außerdem Tools, die keine eDesk-Daten bearbeiten: `edesk_usage_status` zeigt deine UsefulAPI-Nutzung und deinen Tarif, `edesk_upgrade` gibt einen Zahlungslink zurück oder ändert ein bestehendes Abonnement, `edesk_cancel_subscription` kündigt zum Ende des aktuellen Zeitraums, und `edesk_request_feature` sendet uns einen Funktionswunsch. Diese Tools bleiben auch in einer Verbindung mit **Read only** verfügbar. Ein Upgrade kann deine Karte belasten. Eine Kündigung und ein Wechsel von Pro zu Pro+ benötigen `confirm: true`.
+Der Server hat außerdem Tools, die keine eDesk-Daten bearbeiten: `edesk_usage_status` zeigt deine UsefulAPI-Nutzung und deinen Tarif, `edesk_upgrade` gibt einen Zahlungslink zurück oder hebt eine geplante Kündigung auf, `edesk_cancel_subscription` kündigt zum Ende des aktuellen Zeitraums, und `edesk_request_feature` sendet uns einen Funktionswunsch. Diese Tools bleiben auch in einer Verbindung mit **Read only** verfügbar. Das Upgrade-Tool belastet deine Karte nie: Einen Kauf oder einen Wechsel von Pro zu Pro+ bestätigst du auf der Zahlungsseite von Stripe. Eine Kündigung benötigt `confirm: true`.
 
 ## Was brauche ich dafür?
 

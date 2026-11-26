@@ -30,7 +30,7 @@ The check above uses read tools only. An issued invoice in Oblio is a fiscal doc
 
 If you choose **Read only** when you connect, the server hides all these tools and refuses calls to them. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about Oblio data: `oblio_usage_status` shows your UsefulAPI usage and plan, `oblio_upgrade` returns a payment link or changes an existing subscription, `oblio_cancel_subscription` cancels at the end of the current period, and `oblio_request_feature` sends us a feature request. These tools stay available in a Read only connection. An upgrade can charge your card. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about Oblio data: `oblio_usage_status` shows your UsefulAPI usage and plan, `oblio_upgrade` returns a payment link or undoes a scheduled cancellation, `oblio_cancel_subscription` cancels at the end of the current period, and `oblio_request_feature` sends us a feature request. These tools stay available in a Read only connection. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

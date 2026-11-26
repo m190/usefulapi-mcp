@@ -30,7 +30,7 @@ The write tools are `nocrm_create_lead`, `nocrm_update_lead`, `nocrm_assign_lead
 
 There is no tool that deletes a lead, a comment or a client folder.
 
-The server also has tools that are not about noCRM.io data: `nocrm_usage_status` shows your UsefulAPI usage and plan, `nocrm_upgrade` and `nocrm_cancel_subscription` change your plan, and `nocrm_request_feature` sends us a feature request. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about noCRM.io data: `nocrm_usage_status` shows your UsefulAPI usage and plan, `nocrm_upgrade` and `nocrm_cancel_subscription` manage your plan, and `nocrm_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

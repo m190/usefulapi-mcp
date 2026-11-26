@@ -5,7 +5,7 @@ date: 2026-11-19
 products: exaktime
 lang: es
 translation: exaktime-timecards-before-payroll-in-chatgpt
-source: b22f6347695f434da06dce4bf360c45dd6c389964bf57a395b6ba17b35abe620
+source: 27c43b298aad24193fc0b1cfb4ddb4e146030f4500924a97cd984e6b40bff756
 ---
 Puedes pedir a ChatGPT o Claude que revise las hojas de horas de una semana de pago en ExakTime (Arcoro Time) antes de procesar la nómina. La IA lee los registros de tiempo de cada empleado, suma las horas regulares y las horas extra, compara un registro con las marcaciones sin procesar del reloj cuando se lo pides y lista las infracciones de pausa para comer. Añade `https://exaktime.usefulapi.io/mcp` como conector y describe lo que necesitas.
 
@@ -32,7 +32,7 @@ No. Ninguna herramienta de este servidor crea, cambia ni elimina un registro de 
 
 El servidor tiene seis herramientas que escriben datos de ExakTime: `exaktime_create_job`, `exaktime_update_job`, `exaktime_create_cost_code`, `exaktime_update_cost_code`, `exaktime_create_location` y `exaktime_update_location`. Actúan cuando se llaman; no exigen un paso de vista previa por separado. La revisión de arriba usa solo herramientas de lectura. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Una clave de API de Arcoro de solo lectura también bloquea las escrituras en Arcoro. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de ExakTime: `exaktime_usage_status` muestra tu uso y plan de UsefulAPI, `exaktime_upgrade` devuelve un enlace de pago o cambia una suscripción existente, `exaktime_cancel_subscription` cancela al final del periodo actual, y `exaktime_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. Un cambio a un plan superior puede generar un cargo en tu tarjeta. La cancelación y el cambio de Pro a Pro+ requieren `confirm: true`.
+El servidor también tiene herramientas que no tratan datos de ExakTime: `exaktime_usage_status` muestra tu uso y plan de UsefulAPI, `exaktime_upgrade` devuelve un enlace de pago o anula una cancelación programada, `exaktime_cancel_subscription` cancela al final del periodo actual, y `exaktime_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

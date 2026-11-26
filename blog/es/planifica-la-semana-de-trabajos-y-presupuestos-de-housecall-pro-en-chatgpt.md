@@ -5,7 +5,7 @@ date: 2026-11-29
 products: housecall-pro
 lang: es
 translation: plan-the-week-housecall-pro-jobs-and-estimates-in-chatgpt
-source: 8af65f9b3d3fda68700baa3ee71f71ff4f411e278857a769a0453a0eab9fb555
+source: 813ae0823cd4463e709019d6c46dd320ae2ab5abf91c5a323cc91107bc41461f
 ---
 Puedes pedirle a ChatGPT, Claude o Cursor un resumen de tu semana en Housecall Pro. La IA lee los trabajos y las visitas de presupuesto programados para esta semana, los agrupa por día y por empleado, y muestra los trabajos que todavía están sin programar. Añade `https://housecall-pro.usefulapi.io/mcp` como servidor MCP y pregunta con tus propias palabras.
 
@@ -35,7 +35,7 @@ El resumen de arriba usa solo herramientas de lectura. Ninguna herramienta elimi
 
 El servidor tiene herramientas que escriben datos de Housecall Pro. `housecall_create_customer`, `housecall_update_customer` y `housecall_create_customer_address` crean o cambian clientes. `housecall_create_job`, `housecall_create_estimate` y `housecall_create_lead` crean registros nuevos. `housecall_add_job_note` añade una nota a un trabajo. `housecall_update_job_schedule` cambia la hora de un trabajo y puede avisar al cliente. `housecall_dispatch_job` reemplaza la lista de empleados asignados a un trabajo. Estas herramientas actúan cuando se llaman; no exigen un paso de vista previa por separado. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Housecall Pro: `housecall_usage_status` muestra tu uso y plan de UsefulAPI, `housecall_upgrade` devuelve un enlace de pago, `housecall_cancel_subscription` cancela al final del periodo actual, y `housecall_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
+El servidor también tiene herramientas que no tratan datos de Housecall Pro: `housecall_usage_status` muestra tu uso y plan de UsefulAPI, `housecall_upgrade` devuelve un enlace de pago o anula una cancelación programada, `housecall_cancel_subscription` cancela al final del periodo actual, y `housecall_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

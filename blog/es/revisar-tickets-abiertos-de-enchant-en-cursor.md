@@ -5,7 +5,7 @@ date: 2026-11-25
 products: enchant
 lang: es
 translation: review-open-enchant-tickets-in-cursor
-source: 75ece39bea1ed02625a376a3c5be2927856e0d37ec403799498734cd02455be9
+source: bc2623e1bc1a2fb4b505137db0cd405c572328d8d38f52e3c5bb94647e85b505
 ---
 Puedes pedir a Cursor, Claude o ChatGPT que revise tus tickets abiertos de Enchant antes de empezar a responder. La IA lista los tickets abiertos, abre cada conversación y te dice en pocas líneas qué necesita cada cliente. Añade `https://enchant.usefulapi.io/mcp` como servidor MCP y pregunta con tus propias palabras.
 
@@ -31,7 +31,7 @@ La revisión de arriba usa solo herramientas de lectura. Ninguna herramienta eli
 
 El servidor tiene herramientas que escriben datos de Enchant. `enchant_reply_to_ticket` envía un correo real a la dirección que indica la IA. `enchant_add_note` añade una nota interna que no se envía al cliente. `enchant_update_ticket` cambia el estado, el agente, la bandeja de entrada, el asunto o las etiquetas de un ticket, y puede marcar un ticket como spam o moverlo a la papelera. `enchant_add_ticket_labels` y `enchant_remove_ticket_labels` cambian etiquetas. `enchant_create_ticket`, `enchant_create_customer`, `enchant_update_customer` y `enchant_add_customer_contact` crean o cambian registros, y `enchant_delete_customer_contact` quita un contacto de un cliente. Estas herramientas actúan cuando se llaman; no exigen un paso de vista previa por separado. Si quieres aprobar una respuesta primero, pide a la IA que escriba un borrador en el chat. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Enchant: `enchant_usage_status` muestra tu uso y plan de UsefulAPI, `enchant_upgrade` devuelve un enlace de pago o cambia una suscripción existente, `enchant_cancel_subscription` cancela al final del periodo actual, y `enchant_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. Un cambio a un plan superior puede generar un cargo en tu tarjeta. La cancelación y el cambio de Pro a Pro+ requieren `confirm: true`.
+El servidor también tiene herramientas que no tratan datos de Enchant: `enchant_usage_status` muestra tu uso y plan de UsefulAPI, `enchant_upgrade` devuelve un enlace de pago o anula una cancelación programada, `enchant_cancel_subscription` cancela al final del periodo actual, y `enchant_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

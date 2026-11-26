@@ -5,7 +5,7 @@ date: 2026-11-11
 products: stel-order
 lang: es
 translation: stel-order-sales-by-client-and-product-in-chatgpt
-source: 862b0562c8cb037f5adcbbce150271a3a425f3ec0a0a4d8d9b56a1b98242108f
+source: f9e2f91029031d3ec21167cb1b2acaea5fb78b3f691e0dbe069a08faa479e396
 ---
 Puedes pedir a ChatGPT o Claude que revise las facturas de tu cuenta de STEL Order de un periodo y sume sus importes por cliente y por producto. La IA lee las facturas y sus líneas dentro del intervalo indicado, y añade el nombre del cliente a cada total. Añade `https://stel-order.usefulapi.io/mcp` como conector y pregunta en español.
 
@@ -32,7 +32,7 @@ Las herramientas de facturas solo leen datos. Este servidor no tiene herramienta
 
 Sí dispone de tres herramientas que escriben datos en STEL Order: `stelorder_create_client`, `stelorder_update_client` y `stelorder_create_contact`. Actúan cuando se ejecutan y no incorporan un paso separado de vista previa o confirmación. `stelorder_update_client` modifica el cliente real; los campos que no se envían conservan sus valores. Para una revisión como esta, pide a la IA que no ejecute herramientas de escritura. Tu cliente de IA puede solicitar autorización antes de cada llamada, según su configuración.
 
-Las herramientas de tu cuenta de UsefulAPI son independientes de los datos de STEL Order. `stelorder_usage_status` muestra tu uso y plan; `stelorder_upgrade` devuelve un enlace de pago o cambia una suscripción existente; `stelorder_cancel_subscription` la cancela al final del periodo actual, y `stelorder_request_feature` permite solicitar una función. La cancelación y el cambio de Pro a Pro+ requieren confirmación.
+Las herramientas de tu cuenta de UsefulAPI son independientes de los datos de STEL Order. `stelorder_usage_status` muestra tu uso y plan; `stelorder_upgrade` devuelve un enlace de pago o anula una cancelación programada; `stelorder_cancel_subscription` cancela tu suscripción de UsefulAPI al final del periodo actual, y `stelorder_request_feature` permite solicitar una función. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

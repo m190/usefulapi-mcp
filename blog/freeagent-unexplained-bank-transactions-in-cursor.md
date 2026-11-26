@@ -28,7 +28,7 @@ No. The server has no tool that explains, edits or deletes a bank transaction, a
 
 The server can make four everyday changes when you ask: `freeagent_create_contact`, `freeagent_update_contact`, `freeagent_create_draft_invoice` and `freeagent_create_timeslip`. A draft invoice is not sent and is not income until you mark it as sent in FreeAgent. These tools do not ask for a separate confirmation. If you choose **Read only** when you connect, the server hides these four tools and refuses calls to them. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about FreeAgent data: `freeagent_usage_status` shows your UsefulAPI usage and plan, `freeagent_upgrade` returns a payment link or changes an existing subscription, `freeagent_cancel_subscription` cancels at the end of the current period, and `freeagent_request_feature` sends us a feature request. These tools stay available in a Read only connection. An upgrade can charge your card. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about FreeAgent data: `freeagent_usage_status` shows your UsefulAPI usage and plan, `freeagent_upgrade` returns a payment link or undoes a scheduled cancellation, `freeagent_cancel_subscription` cancels at the end of the current period, and `freeagent_request_feature` sends us a feature request. These tools stay available in a Read only connection. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

@@ -32,7 +32,7 @@ The server also has tools that write to Street: `street_create_enquiry`, `street
 
 There is no tool that deletes a Street record, pays a Street invoice or uploads a document. The token acts with the permissions of your own Street account.
 
-The server also has tools that are not about Street data: `street_usage_status` shows your UsefulAPI usage and plan, `street_upgrade` and `street_cancel_subscription` change your plan, and `street_request_feature` sends us a feature request. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about Street data: `street_usage_status` shows your UsefulAPI usage and plan, `street_upgrade` and `street_cancel_subscription` manage your plan, and `street_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

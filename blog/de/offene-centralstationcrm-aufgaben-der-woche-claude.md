@@ -5,7 +5,7 @@ date: 2026-11-24
 products: centralstationcrm
 lang: de
 translation: centralstationcrm-open-tasks-this-week-in-claude
-source: 311deb7af26da1d4916b5c3c0b242ce7eb467f4d7766aac584ca809d1982a277
+source: 597f98dfadb1ed9bcb6ae34b965a4fda1941b730f0a39949c2536e9b6eb92632
 ---
 Du kannst Claude oder ChatGPT deine Woche anhand deiner CentralStationCRM-Aufgaben planen lassen. Die KI listet deine offenen Anrufe, E-Mails, Besuche und To-dos für die Tage auf, die du nennst, sortiert sie nach Tag und sagt dir, um welche Person, Firma oder welchen Deal es bei jeder Aufgabe geht. Füge `https://centralstationcrm.usefulapi.io/mcp` als Konnektor hinzu und stelle deine Frage in normalen Worten.
 
@@ -30,7 +30,7 @@ Die Übersicht oben verwendet nur lesende Tools. Kein Tool löscht eine Person, 
 
 Der Server hat diese Tools, die CentralStationCRM-Daten schreiben: `centralstationcrm_create_task` legt eine Aufgabe an, und `centralstationcrm_update_task` ändert eine Aufgabe, indem es sie zum Beispiel als erledigt markiert oder ihren Fälligkeitszeitpunkt verschiebt. `centralstationcrm_create_person`, `centralstationcrm_update_person`, `centralstationcrm_create_company`, `centralstationcrm_update_company`, `centralstationcrm_create_deal` und `centralstationcrm_update_deal` legen Kontakte, Firmen und Deals an oder ändern sie. `centralstationcrm_create_note` fügt einem Datensatz eine Notiz hinzu. Diese Tools handeln, sobald sie aufgerufen werden, und erzwingen keine separate Vorschau. Wenn du eine Änderung zuerst freigeben möchtest, bitte die KI, sie im Chat zu zeigen, bevor sie schreibt. Wenn du beim Verbinden **Read only** wählst, blendet der Server die schreibenden Tools aus und lehnt Aufrufe an sie ab. Dein KI-Client kann vor jedem Tool-Aufruf um Zustimmung bitten. Das hängt vom Client und seinen Einstellungen ab.
 
-Der Server hat außerdem Tools, die keine CentralStationCRM-Daten bearbeiten: `centralstationcrm_usage_status` zeigt deine UsefulAPI-Nutzung und deinen Tarif, `centralstationcrm_upgrade` gibt einen Zahlungslink zurück oder ändert ein bestehendes Abonnement, `centralstationcrm_cancel_subscription` kündigt zum Ende des aktuellen Zeitraums, und `centralstationcrm_request_feature` sendet uns einen Funktionswunsch. Diese Tools bleiben auch in einer Verbindung mit **Read only** verfügbar. Ein Upgrade kann deine Karte belasten. Eine Kündigung und ein Wechsel von Pro zu Pro+ benötigen `confirm: true`.
+Der Server hat außerdem Tools, die keine CentralStationCRM-Daten bearbeiten: `centralstationcrm_usage_status` zeigt deine UsefulAPI-Nutzung und deinen Tarif, `centralstationcrm_upgrade` gibt einen Zahlungslink zurück oder hebt eine geplante Kündigung auf, `centralstationcrm_cancel_subscription` kündigt zum Ende des aktuellen Zeitraums, und `centralstationcrm_request_feature` sendet uns einen Funktionswunsch. Diese Tools bleiben auch in einer Verbindung mit **Read only** verfügbar. Das Upgrade-Tool belastet deine Karte nie: Einen Kauf oder einen Wechsel von Pro zu Pro+ bestätigst du auf der Zahlungsseite von Stripe. Eine Kündigung benötigt `confirm: true`.
 
 ## Was brauche ich dafür?
 

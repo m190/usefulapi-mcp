@@ -5,7 +5,7 @@ date: 2026-11-28
 products: jackrabbit-class
 lang: es
 translation: match-jackrabbit-waitlists-to-open-class-spots-in-chatgpt
-source: 9b809adec87a9cc3d8824e2fa7c3d60f491dbc212e85d967e891bb877c1034ef
+source: 3d9458da0edc428de7c9376e13aaaf02ecfcc136e8f7c0c7db41f586bd5a7bb8
 ---
 Puedes preguntarle a ChatGPT, Claude o Cursor cuáles de tus clases de Jackrabbit tienen plazas libres mientras hay alumnos en la lista de espera. La IA lee tus clases, se queda con las que tienen plazas libres y entradas en la lista de espera, y muestra los alumnos que esperan en el orden de la lista. Después, tú inscribes a los alumnos en Jackrabbit. Añade `https://jackrabbit-class.usefulapi.io/mcp` como servidor MCP y pregunta con tus propias palabras.
 
@@ -34,7 +34,7 @@ No. Ninguna herramienta inscribe a un alumno, da de baja una inscripción, quita
 
 El servidor tiene dos herramientas que escriben datos de Jackrabbit. `jackrabbit_create_student` añade un alumno a una familia existente, y una segunda llamada añade un segundo alumno. `jackrabbit_create_waitlist_entry` pone a un alumno en la lista de espera de una clase; no lo inscribe. Estas herramientas actúan cuando se llaman; no exigen un paso de vista previa por separado. Si eliges **Read only** (solo lectura) al conectar, el servidor oculta las herramientas de escritura y rechaza las llamadas a ellas. Tu cliente de IA puede pedirte que apruebes cada llamada a una herramienta; esto depende del cliente y de su configuración.
 
-El servidor también tiene herramientas que no tratan datos de Jackrabbit: `jackrabbit_usage_status` muestra tu uso y plan de UsefulAPI, `jackrabbit_upgrade` devuelve un enlace de pago, `jackrabbit_cancel_subscription` cancela al final del periodo actual, y `jackrabbit_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
+El servidor también tiene herramientas que no tratan datos de Jackrabbit: `jackrabbit_usage_status` muestra tu uso y plan de UsefulAPI, `jackrabbit_upgrade` devuelve un enlace de pago o anula una cancelación programada, `jackrabbit_cancel_subscription` cancela al final del periodo actual, y `jackrabbit_request_feature` nos envía una solicitud de función. Estas herramientas siguen disponibles en una conexión Read only. La herramienta de mejora de plan nunca genera un cargo en tu tarjeta: confirmas una compra, o un cambio de Pro a Pro+, en la página de pago de Stripe. La cancelación requiere `confirm: true`.
 
 ## ¿Qué necesito?
 

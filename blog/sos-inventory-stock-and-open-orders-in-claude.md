@@ -30,7 +30,7 @@ The create tools act when they are called. They do not enforce a separate previe
 
 SOS Inventory gives the server the permissions of the user who signs in. To limit what the AI can see and create, sign in with a SOS user that has only the permissions you want to grant.
 
-The server also has tools for your UsefulAPI account. `sosinventory_usage_status` shows your usage and plan, and `sosinventory_request_feature` sends us a feature request. `sosinventory_upgrade` can give you a checkout link, change an existing Pro subscription to Pro+, or undo a scheduled cancellation. `sosinventory_cancel_subscription` ends the subscription at the end of the paid period. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools for your UsefulAPI account. `sosinventory_usage_status` shows your usage and plan, and `sosinventory_request_feature` sends us a feature request. `sosinventory_upgrade` can give you a checkout link, give you a link to change an existing Pro subscription to Pro+, or undo a scheduled cancellation. `sosinventory_cancel_subscription` ends the subscription at the end of the paid period. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

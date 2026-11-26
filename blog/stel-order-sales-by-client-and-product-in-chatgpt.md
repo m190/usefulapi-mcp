@@ -29,7 +29,7 @@ No. The invoice tools only read. The server has no tool that creates, changes or
 
 The server has three tools that write STEL Order data: `stelorder_create_client`, `stelorder_update_client` and `stelorder_create_contact`. They act when they are called; they do not enforce a separate preview or confirmation step. `stelorder_update_client` changes the live client record, and the fields you leave out keep their values. For a review like this one, ask the AI not to call a write tool. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about STEL Order data: `stelorder_usage_status` shows your UsefulAPI usage and plan, `stelorder_upgrade` returns a payment link or changes an existing subscription, `stelorder_cancel_subscription` cancels at the end of the current period, and `stelorder_request_feature` sends us a feature request. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about STEL Order data: `stelorder_usage_status` shows your UsefulAPI usage and plan, `stelorder_upgrade` returns a payment link or undoes a scheduled cancellation, `stelorder_cancel_subscription` cancels at the end of the current period, and `stelorder_request_feature` sends us a feature request. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 

@@ -29,7 +29,7 @@ The check above uses read tools only. The server has no tool made to delete a se
 
 The server has seven tools that act on your server: `runcloud_control_service` (start, restart or reload one service; stop is not offered), `runcloud_deploy_git`, `runcloud_force_deploy_atomic`, `runcloud_run_cronjob`, `runcloud_reload_supervisor`, `runcloud_renew_ssl` and `runcloud_install_letsencrypt_ssl`. They act when they are called; they do not enforce a separate preview step. If you choose **Read only** when you connect, the server hides these tools and refuses calls to them. Your AI client can ask you to approve each tool call; this depends on the client and its settings.
 
-The server also has tools that are not about RunCloud data: `runcloud_usage_status` shows your UsefulAPI usage and plan, `runcloud_upgrade` returns a payment link or changes an existing subscription, `runcloud_cancel_subscription` cancels at the end of the current period, and `runcloud_request_feature` sends us a feature request. These tools stay available in a Read only connection. An upgrade can charge your card. A cancellation, and a change from Pro to Pro+, need `confirm: true`.
+The server also has tools that are not about RunCloud data: `runcloud_usage_status` shows your UsefulAPI usage and plan, `runcloud_upgrade` returns a payment link or undoes a scheduled cancellation, `runcloud_cancel_subscription` cancels at the end of the current period, and `runcloud_request_feature` sends us a feature request. These tools stay available in a Read only connection. The upgrade tool never charges your card: you confirm a purchase, or a change from Pro to Pro+, on the Stripe payment page. A cancellation needs `confirm: true`.
 
 ## What do I need?
 
