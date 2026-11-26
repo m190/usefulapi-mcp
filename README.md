@@ -1400,6 +1400,20 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Mobile Field Report](servers/mfr/) | business-operations | 23 | API token | [servers/mfr/](servers/mfr/) |
 | [NEURONwriter](servers/neuronwriter/) | marketing | 11 | API token | [servers/neuronwriter/](servers/neuronwriter/) |
 | [Airtable](servers/airtable/) | no-code-database | 11 | API token | [servers/airtable/](servers/airtable/) |
+| [Productive.io](servers/productive-io/) | project-management | 21 | API token | [servers/productive-io/](servers/productive-io/) |
+| [Browserbase](servers/browserbase/) | devtools | 12 | API token | [servers/browserbase/](servers/browserbase/) |
+| [Ploi](servers/ploi/) | devops | 19 | API token | [servers/ploi/](servers/ploi/) |
+| [Grafana](servers/grafana/) | observability | 17 | API token | [servers/grafana/](servers/grafana/) |
+| [Runpod](servers/runpod/) | ai-infra | 23 | API token | [servers/runpod/](servers/runpod/) |
+| [HaloPSA](servers/halopsa/) | support | 18 | API token | [servers/halopsa/](servers/halopsa/) |
+| [SamCart](servers/samcart/) | billing | 21 | API token | [servers/samcart/](servers/samcart/) |
+| [WordPress](servers/wordpress/) | marketing | 18 | API token | [servers/wordpress/](servers/wordpress/) |
+| [Microsoft Dynamics 365](servers/microsoft-dynamics-365/) | crm | 12 | API token | [servers/microsoft-dynamics-365/](servers/microsoft-dynamics-365/) |
+| [Manatal](servers/manatal/) | hr | 19 | API token | [servers/manatal/](servers/manatal/) |
+| [Fourthwall](servers/fourthwall/) | ecommerce | 29 | API token | [servers/fourthwall/](servers/fourthwall/) |
+| [Moxie](servers/moxie/) | business-operations | 20 | API token | [servers/moxie/](servers/moxie/) |
+| [Teamwork.com](servers/teamwork/) | project-management | 17 | API token | [servers/teamwork/](servers/teamwork/) |
+| [JustCall](servers/justcall/) | communications | 18 | API token | [servers/justcall/](servers/justcall/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
