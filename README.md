@@ -1320,6 +1320,21 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Nanonets](servers/nanonets/) | document-ai | 9 | API token | [servers/nanonets/](servers/nanonets/) |
 | [GorillaDesk](servers/gorilladesk/) | business-operations | 27 | API token | [servers/gorilladesk/](servers/gorilladesk/) |
 | [Veyra](servers/veyra/) | payments | 11 | API token | [servers/veyra/](servers/veyra/) |
+| [Ringover](servers/ringover/) | communications | 26 | API token | [servers/ringover/](servers/ringover/) |
+| [LearnUpon](servers/learnupon/) | education | 14 | API token | [servers/learnupon/](servers/learnupon/) |
+| [Sonix](servers/sonix/) | speech-to-text | 23 | API token | [servers/sonix/](servers/sonix/) |
+| [RD Station](servers/rd-station/) | crm | 21 | API token | [servers/rd-station/](servers/rd-station/) |
+| [Lucca](servers/lucca/) | hr | 16 | API token | [servers/lucca/](servers/lucca/) |
+| [Algolia](servers/algolia/) | devtools | 21 | API token | [servers/algolia/](servers/algolia/) |
+| [Tinybird](servers/tinybird/) | analytics | 13 | API token | [servers/tinybird/](servers/tinybird/) |
+| [Donorbox](servers/donorbox/) | fundraising | 11 | API token | [servers/donorbox/](servers/donorbox/) |
+| [AgencyAnalytics](servers/agencyanalytics/) | marketing | 20 | API token | [servers/agencyanalytics/](servers/agencyanalytics/) |
+| [Project Insight](servers/project-insight/) | project-management | 10 | API token | [servers/project-insight/](servers/project-insight/) |
+| [PDF Generator API](servers/pdf-generator-api/) | documents | 13 | API token | [servers/pdf-generator-api/](servers/pdf-generator-api/) |
+| [Agiled](servers/agiled/) | business-operations | 25 | API token | [servers/agiled/](servers/agiled/) |
+| [HubSpot](servers/hubspot/) | crm | 13 | API token | [servers/hubspot/](servers/hubspot/) |
+| [Vero](servers/vero/) | email-marketing | 8 | API token | [servers/vero/](servers/vero/) |
+| [SimplyBook.me](servers/simplybook-me/) | scheduling | 21 | API token | [servers/simplybook-me/](servers/simplybook-me/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
