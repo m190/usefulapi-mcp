@@ -1465,6 +1465,22 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Mixmax](servers/mixmax/) | email | 19 | API token | [servers/mixmax/](servers/mixmax/) |
 | [Klenty](servers/klenty/) | email-marketing | 15 | API token | [servers/klenty/](servers/klenty/) |
 | [Dropcontact](servers/dropcontact/) | data-enrichment | 8 | API token | [servers/dropcontact/](servers/dropcontact/) |
+| [Smartsupp](servers/smartsupp/) | chat | 21 | API token | [servers/smartsupp/](servers/smartsupp/) |
+| [Nolt](servers/nolt/) | project-management | 17 | API token | [servers/nolt/](servers/nolt/) |
+| [Timeneye](servers/timeneye/) | time-tracking | 16 | API token | [servers/timeneye/](servers/timeneye/) |
+| [15Five](servers/15five/) | hr | 22 | API token | [servers/15five/](servers/15five/) |
+| [Capmo](servers/capmo/) | project-management | 27 | API token | [servers/capmo/](servers/capmo/) |
+| [Qualio](servers/qualio/) | documents | 31 | API token | [servers/qualio/](servers/qualio/) |
+| [Clinked](servers/clinked/) | productivity | 30 | API token | [servers/clinked/](servers/clinked/) |
+| [Wayfront](servers/wayfront/) | business-operations | 30 | API token | [servers/wayfront/](servers/wayfront/) |
+| [SproutVideo](servers/sproutvideo/) | video-hosting | 22 | API token | [servers/sproutvideo/](servers/sproutvideo/) |
+| [MxToolbox](servers/mxtoolbox/) | dns | 8 | API token | [servers/mxtoolbox/](servers/mxtoolbox/) |
+| [Motivosity](servers/motivosity/) | hr | 16 | API token | [servers/motivosity/](servers/motivosity/) |
+| [Visualping](servers/visualping/) | monitoring | 11 | API token | [servers/visualping/](servers/visualping/) |
+| [MailReach](servers/mailreach/) | email | 22 | API token | [servers/mailreach/](servers/mailreach/) |
+| [Reftab](servers/reftab/) | inventory | 21 | API token | [servers/reftab/](servers/reftab/) |
+| [Gumlet](servers/gumlet/) | video-hosting | 25 | API token | [servers/gumlet/](servers/gumlet/) |
+| [Sell.app](servers/sell-app/) | ecommerce | 15 | API token | [servers/sell-app/](servers/sell-app/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
