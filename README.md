@@ -1496,6 +1496,25 @@ from Claude, Cursor, or any MCP client. No local install, no key-juggling: autho
 | [Formcarry](servers/formcarry/) | forms | 19 | API token | [servers/formcarry/](servers/formcarry/) |
 | [Apicbase](servers/apicbase/) | inventory | 26 | OAuth | [servers/apicbase/](servers/apicbase/) |
 | [Resource Guru](servers/resource-guru/) | scheduling | 27 | OAuth | [servers/resource-guru/](servers/resource-guru/) |
+| [Streamtime](servers/streamtime/) | project-management | 29 | API token | [servers/streamtime/](servers/streamtime/) |
+| [Kixie](servers/kixie/) | communications | 14 | API token | [servers/kixie/](servers/kixie/) |
+| [Campaigner](servers/campaigner/) | email-marketing | 29 | API token | [servers/campaigner/](servers/campaigner/) |
+| [MemberSpace](servers/memberspace/) | membership | 14 | API token | [servers/memberspace/](servers/memberspace/) |
+| [Zeevou](servers/zeevou/) | property-management | 19 | API token | [servers/zeevou/](servers/zeevou/) |
+| [Wheelhouse](servers/wheelhouse/) | rental | 30 | API token | [servers/wheelhouse/](servers/wheelhouse/) |
+| [Accelevents](servers/accelevents/) | scheduling | 13 | API token | [servers/accelevents/](servers/accelevents/) |
+| [Better Proposals](servers/better-proposals/) | documents | 23 | API token | [servers/better-proposals/](servers/better-proposals/) |
+| [Craftybase](servers/craftybase/) | inventory | 18 | API token | [servers/craftybase/](servers/craftybase/) |
+| [Rebuy](servers/rebuy/) | ecommerce | 14 | API token | [servers/rebuy/](servers/rebuy/) |
+| [Qapla'](servers/qapla/) | shipping | 18 | API token | [servers/qapla/](servers/qapla/) |
+| [Zeffy](servers/zeffy/) | fundraising | 15 | API token | [servers/zeffy/](servers/zeffy/) |
+| [Spacebring](servers/spacebring/) | membership | 26 | API token | [servers/spacebring/](servers/spacebring/) |
+| [Tenant Inc](servers/tenant-inc/) | property-management | 22 | API token | [servers/tenant-inc/](servers/tenant-inc/) |
+| [Facturapi](servers/facturapi/) | accounting | 19 | API token | [servers/facturapi/](servers/facturapi/) |
+| [Loop](servers/loop-subscriptions/) | billing | 22 | API token | [servers/loop-subscriptions/](servers/loop-subscriptions/) |
+| [Joy Loyalty](servers/joy-loyalty/) | marketing | 24 | API token | [servers/joy-loyalty/](servers/joy-loyalty/) |
+| [Kolleno](servers/kolleno/) | payment-operations | 24 | API token | [servers/kolleno/](servers/kolleno/) |
+| [Paidnice](servers/paidnice/) | accounting | 20 | API token | [servers/paidnice/](servers/paidnice/) |
 
 _More servers land here as they launch — each is a folder with its own README + `server.json`,
 and a tile on the [portal](https://usefulapi.io)._
