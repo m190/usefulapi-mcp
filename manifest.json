@@ -33154,13 +33154,13 @@
           "name": "recruitee_get_offer",
           "type": "read",
           "title": "Get one job",
-          "description": "Fetch one job or talent pool by id: title, status, description, requirements, location, salary, employment type, options, candidate counters and pipeline_template_id. Large parts are left out unless named in `include` (the result's `omitted` list shows what was left out and its include name): admins = the team members on the job; translations = default_translations; pipeline = the embedded pipeline_template with its stages (recruitee_get_pipeline_template returns the same stages); formats = the _html/_json copies of description, requirements and highlight; all = the raw record. Recruitee: GET /c/{company_id}/offers/{id}."
+          "description": "Fetch one job or talent pool by id: title, status, description, requirements, location, salary, employment type, options, candidate counters and pipeline_template_id. Large parts are left out unless named in `include` (the result's `omitted` list shows what was left out and its include name): admins = the team members on the job; translations = default_translations; pipeline = the embedded pipeline_template with its stages (recruitee_get_pipeline_template with this offer_id returns the same stages); formats = the _html/_json copies of description, requirements and highlight; all = the raw record. Recruitee: GET /c/{company_id}/offers/{id}."
         },
         {
           "name": "recruitee_get_pipeline_template",
           "type": "read",
           "title": "Get a hiring pipeline",
-          "description": "Fetch a pipeline template with its ordered stages (id, name, group, category). A job's `pipeline_template_id` (from recruitee_list_offers / recruitee_get_offer) names its pipeline; the stage ids here are what recruitee_move_candidate_stage takes. Recruitee: GET /c/{company_id}/pipeline_templates/{id}."
+          "description": "Fetch a pipeline with its ordered stages (id, name, group, category). For a job's pipeline pass the job's `pipeline_template_id` (from recruitee_list_offers / recruitee_get_offer) AND its offer_id: a job whose pipeline was edited has its own custom pipeline, which only the job route returns. The stage ids here are what recruitee_move_candidate_stage takes. Recruitee: GET /c/{company_id}/offers/{offer_id}/pipeline_templates/{id} (with offer_id), else GET /c/{company_id}/pipeline_templates/{id} (company templates only)."
         },
         {
           "name": "recruitee_list_departments",
@@ -33232,7 +33232,7 @@
           "name": "recruitee_move_candidate_stage",
           "type": "write",
           "title": "Move a candidate to another stage",
-          "description": "WRITE: move a candidate to another stage of a job's pipeline. Takes the PLACEMENT id (from recruitee_get_candidate → placements[].id, one per job) and the destination stage id (from recruitee_get_pipeline_template). Moving to a 'hired' stage also requires work_location_id. Stage automations configured in Recruitee may run. Undo by moving back. Recruitee: PATCH /c/{company_id}/placements/{id}/change_stage."
+          "description": "WRITE: move a candidate to another stage of a job's pipeline. Takes the PLACEMENT id (from recruitee_get_candidate → placements[].id, one per job) and the destination stage id (from recruitee_get_offer with include pipeline, or recruitee_get_pipeline_template with the job's offer_id). Moving to a 'hired' stage also requires work_location_id. Stage automations configured in Recruitee may run. Undo by moving back. Recruitee: PATCH /c/{company_id}/placements/{id}/change_stage."
         },
         {
           "name": "recruitee_create_task",
@@ -33265,7 +33265,7 @@
           "description": "Cancel the caller's Recruitee Pro subscription at the end of the paid period (no refund for the current period; Pro continues until then, then the free tier applies). Requires confirm: true. Run recruitee_upgrade later to undo the cancel before the period ends. Does not count against the meter."
         }
       ],
-      "version": "1.43.0",
+      "version": "1.43.1",
       "login": {
         "kind": "key",
         "fields": [
