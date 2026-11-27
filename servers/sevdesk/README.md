@@ -45,6 +45,7 @@ They're validated, stored per-user, and scoped to you — no keys in config file
 | `sevdesk_get_invoice_positions` | read | Get an invoice's line items |
 | `sevdesk_list_vouchers` | read | List vouchers (receipts) |
 | `sevdesk_get_voucher` | read | Get one voucher |
+| `sevdesk_set_draft_voucher_supplier` | **write** | Set the supplier on a draft voucher |
 | `sevdesk_list_credit_notes` | read | List credit notes |
 | `sevdesk_list_orders` | read | List orders and quotes |
 | `sevdesk_list_parts` | read | List parts (products) |
